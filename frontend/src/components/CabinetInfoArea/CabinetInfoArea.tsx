@@ -90,7 +90,8 @@ const CabinetInfoArea: React.FC<{
         title={selectedCabinetInfo!.lentType}
         cabinetType={selectedCabinetInfo!.lentType}
       />
-      <TextStyled fontSize="1rem" fontColor="black">
+      {/* <TextStyled fontSize="1rem" fontColor="black"> */}
+      <TextStyled fontSize="1rem" fontColor="var(--black)">
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>

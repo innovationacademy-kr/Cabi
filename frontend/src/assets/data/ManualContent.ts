@@ -143,6 +143,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연장권은 <strong>해당 월의 마지막 날</strong>까지 사용 가능합니다.<br/>
     공유 사물함에 한 명만 남거나 연체된 상태라면 연장권 사용이 불가합니다.
     </div>`,
-    pointColor: "black",
+    pointColor: "var(--black)",
+    // pointColor: "black",
   },
 };

@@ -232,7 +232,8 @@ const ContentItemInputStyled = styled.input`
   text-indent: 20px;
   font-size: 1.125rem;
   /* cursor: input; */
-  color: black;
+  /* color: black; */
+  color: var(--black);
 
   &::placeholder {
     color: var(--line-color);

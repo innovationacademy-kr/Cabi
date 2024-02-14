@@ -166,7 +166,8 @@ const ModalContent = styled.div<{
     props.contentStatus === ContentStatus.IN_SESSION
       ? "var(--main-color)"
       : props.contentStatus === ContentStatus.EXTENSION
-      ? "black"
+      // ? "black"
+      ? "var(--black)"
       : "white"};
   font-size: 2.5rem;
   font-weight: bold;
@@ -216,7 +217,8 @@ const CloseButton = styled.div<{
       props.contentStatus === ContentStatus.IN_SESSION
         ? "var(--main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
-        ? "black"
+        // ? "black"
+        ? "var(--black)"
         : "white"};
   }
   :hover {

@@ -142,7 +142,8 @@ const AdminCabinetInfoArea: React.FC<{
         title={selectedCabinetInfo!.lentType}
         cabinetType={selectedCabinetInfo!.lentType}
       />
-      <TextStyled fontSize="1rem" fontColor="black">
+      {/* <TextStyled fontSize="1rem" fontColor="black"> */}
+      <TextStyled fontSize="1rem" fontColor="var(--black)">
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
@@ -323,7 +324,8 @@ const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
   align-items: center;
   background-color: ${({ status }) => cabinetStatusColorMap[status]};
   border-radius: 5px;
-  color: ${({ status }) => (status === CabinetStatus.FULL ? "black" : "white")};
+  /* color: ${({ status }) => (status === CabinetStatus.FULL ? "black" : "white")}; */
+  color: ${({ status }) => (status === CabinetStatus.FULL ? "var(--black)" : "white")};
 `;
 
 export default AdminCabinetInfoArea;

@@ -68,7 +68,8 @@ const LentInfoCard = ({
               />
               <CabinetInfoTextStyled
                 fontSize={calculateFontSize(cabinetInfo.userCount)}
-                fontColor="black"
+                // fontColor="black"
+                fontColor="var(--black)"
               >
                 {cabinetInfo.userNameList}
               </CabinetInfoTextStyled>

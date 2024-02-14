@@ -100,7 +100,8 @@ const MaunalContentBoxStyled = styled.div<{
     contentStatus === ContentStatus.EXTENSION &&
     css`
       width: 900px;
-      color: black;
+      /* color: black; */
+      color: var(--black);
       @media screen and (max-width: 1000px) {
         width: 280px;
         .peopleImg {
@@ -130,7 +131,8 @@ const MaunalContentBoxStyled = styled.div<{
       props.contentStatus === ContentStatus.IN_SESSION
         ? "var(--main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
-        ? "black"
+        // ? "black"
+        ? "var(--black)"
         : "white"};
     cursor: pointer;
   }

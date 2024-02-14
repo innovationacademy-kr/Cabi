@@ -172,5 +172,6 @@ export const serverTimeState = atom<Date>({
 
 export const darkModeState = atom<string>({
   key: "darkMode",
-  default: "black",
+  // default: "black",
+  default: "var(--black)",
 });

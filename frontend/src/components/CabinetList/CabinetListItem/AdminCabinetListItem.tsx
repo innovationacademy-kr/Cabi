@@ -232,7 +232,8 @@ const CabinetNumberStyled = styled.p<{
   ${({ status }) =>
     status === "IN_SESSION" &&
     css`
-      color: black;
+      /* color: black; */
+      color: var(--black);
     `}
 `;
 

@@ -38,7 +38,8 @@ const MultiToggleSwitch = <T,>({
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
-      button.style.color = "black";
+      // button.style.color = "black";
+      button.style.color = "var(--black)";
       button.style.backgroundColor = "transparent";
     });
 
@@ -77,7 +78,8 @@ const WrapperStyled = styled.div`
     height: 30px;
     font-weight: 500;
     background-color: transparent;
-    color: black;
+    /* color: black; */
+    color: var(--black);
   }
 `;
 
