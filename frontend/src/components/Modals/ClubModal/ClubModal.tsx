@@ -224,7 +224,7 @@ const ContentItemTitleStyled = styled.h3`
 `;
 
 const ContentItemInputStyled = styled.input`
-  border: 1px solid var(--line-color);
+  border: 1px solid var(--gray-400);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -236,7 +236,7 @@ const ContentItemInputStyled = styled.input`
   color: var(--black);
 
   &::placeholder {
-    color: var(--line-color);
+    color: var(--gray-400);
   }
 `;
 

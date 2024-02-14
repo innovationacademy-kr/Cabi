@@ -258,7 +258,7 @@ const CardInputStyled = styled.input<{ isFocus: boolean }>`
   border: ${(props) =>
     props.isFocus
       ? "1px solid var(--main-color)"
-      : "1px solid var(--line-color)"};
+      : "1px solid var(--gray-400)"};
 `;
 
 const CardGoogleOauthStyled = styled.button`

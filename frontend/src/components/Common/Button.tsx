@@ -56,8 +56,8 @@ const ButtonContainerStyled = styled.button`
     props.theme === "light-grayLine" &&
     css`
       background: var(--white);
-      color: var(--line-color);
-      border: 1px solid var(--line-color);
+      color: var(--gray-400);
+      border: 1px solid var(--gray-400);
     `}
   ${(props) =>
     props.theme === "grayLine" &&

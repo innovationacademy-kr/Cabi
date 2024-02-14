@@ -94,7 +94,7 @@ const LeftNavOptionStyled = styled.div<{
   min-width: 240px;
   height: 100%;
   padding: 32px 10px;
-  border-right: 1px solid var(--line-color);
+  border-right: 1px solid var(--gray-400);
   font-weight: 300;
   position: relative;
 `;
@@ -106,7 +106,7 @@ const ProfileLeftNavOptionStyled = styled.div<{
   min-width: 240px;
   height: 100%;
   padding: 32px 10px;
-  border-right: 1px solid var(--line-color);
+  border-right: 1px solid var(--gray-400);
   font-weight: 300;
   position: relative;
   & hr {

@@ -33,7 +33,7 @@ const Pagination = ({
 const PageButtonStyled = styled.div`
   width: 10px;
   height: 10px;
-  border: 2px solid var(--line-color);
+  border: 2px solid var(--gray-400);
   border-radius: 100%;
   margin: 0 5px;
   cursor: pointer;
