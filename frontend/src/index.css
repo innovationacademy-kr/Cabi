@@ -1,21 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@300;400;700&display=swap");
 
-/* 
-#ffffff
-#f5f5f5
-#eeeeee
-#d9d9d9
-#7b7b7b
-#3c3c3c
-#181818
-*/
-
 :root {
   /* color variable */
-  --main-color: #9747ff;
-  --sub-color: #b18cff;
-  --pale-main-color: #f9f6ff;
   --bg-shadow: rgba(0, 0, 0, 0.4);
+
+  /* main color variable */
+  --main-100: #f9f6ff;
+  --main-200: #dfd0fe;
+  --sub-color: #b18cff;
+  --main-400: #a17bf3;
+  --main-color: #9747ff;
+  --main-600: #8337e5;
+  --main-custom: #a29bfe;
 
   /* white, gray, black color variable */
   --white: #ffffff;
