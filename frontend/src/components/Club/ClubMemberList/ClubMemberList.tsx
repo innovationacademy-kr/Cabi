@@ -42,13 +42,15 @@ const ClubMemberList = ({
   return (
     <>
       <ClubMemberListContainerStyled>
-        <TitleBarStyled>
+        <TitleContainerStyled>
           <p>동아리 멤버</p>
-          <div>
-            <img src={shareIcon} />
-            <p id="membersLength">{clubUserCount}</p>
-          </div>
-        </TitleBarStyled>
+          <UserCountContainerStyled>
+            <UserCountImgStyled src={shareIcon} />
+            <UserCountTextStyled id="membersLength">
+              {clubUserCount}
+            </UserCountTextStyled>
+          </UserCountContainerStyled>
+        </TitleContainerStyled>
         <MemberSectionStyled>
           {myInfo.name === master.userName && (
             <AddMemberCardStyled onClick={() => openModal("addModal")}>
@@ -63,16 +65,14 @@ const ClubMemberList = ({
             selectClubMemberOnClick={selectClubMemberOnClick}
             targetClubUser={targetClubUser}
           />
-          {members
-            ?.filter((member) => member.userName !== master.userName)
-            .map((member, idx) => (
-              <ClubMemberListItem
-                key={`clubMember-${idx}`}
-                member={member}
-                selectClubMemberOnClick={selectClubMemberOnClick}
-                targetClubUser={targetClubUser}
-              />
-            ))}
+          {members?.map((member, idx) => (
+            <ClubMemberListItem
+              key={`clubMember-${idx}`}
+              member={member}
+              selectClubMemberOnClick={selectClubMemberOnClick}
+              targetClubUser={targetClubUser}
+            />
+          ))}
         </MemberSectionStyled>
         {moreButton && (
           <ButtonContainerStyled>
@@ -97,31 +97,26 @@ const ClubMemberListContainerStyled = styled.div`
   align-items: center;
 `;
 
-const TitleBarStyled = styled.div`
+const TitleContainerStyled = styled.div`
   width: 80%;
   max-width: 720px;
   display: flex;
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 1rem;
+`;
 
-  & > div {
-    margin-left: 18px;
-    line-height: 24px;
-    height: 24px;
-    font-size: 1rem;
-    font-weight: normal;
-    display: flex;
-  }
+const UserCountContainerStyled = styled.div`
+  margin-left: 18px;
+  line-height: 24px;
+  height: 24px;
+  font-size: 1rem;
+  font-weight: normal;
+  display: flex;
+`;
 
-  & img {
-    width: 24px;
-    height: 24px;
-  }
-
-  & #membersLength {
-    width: 34px;
-  }
+const UserCountTextStyled = styled.p`
+  width: 34px;
 `;
 
 const MemberSectionStyled = styled.div`
@@ -132,6 +127,11 @@ const MemberSectionStyled = styled.div`
   width: 100%;
   max-width: 720px;
   margin: 1rem 0 1rem;
+`;
+
+const UserCountImgStyled = styled.img`
+  width: 24px;
+  height: 24px;
 `;
 
 const AddMemberCardStyled = styled.div`

@@ -24,6 +24,9 @@ const ClubMemberListContainer = ({
 }: ClubMemberListContainerProps) => {
   const [moreButton, setMoreButton] = useState<boolean>(true);
   const [members, setMembers] = useState<ClubUserResponseDto[]>([]);
+  const [filteredMembers, setFilteredMembers] = useState<ClubUserResponseDto[]>(
+    []
+  );
   const [clubModal, setClubModal] = useState<ICurrentClubMemberModalStateInfo>({
     addModal: false,
   });
@@ -67,9 +70,22 @@ const ClubMemberListContainer = ({
   useEffect(() => {
     if (page === 0) {
       setMembers(clubInfo.clubUsers);
+      setFilteredMembers(
+        clubInfo.clubUsers.filter(
+          (member) => member.userName !== clubInfo.clubMaster.userName
+        )
+      );
     } else {
       setMembers((prev) => {
         return [...prev, ...clubInfo.clubUsers];
+      });
+      setFilteredMembers((prev) => {
+        return [
+          ...prev,
+          ...clubInfo.clubUsers.filter(
+            (member) => member.userName !== clubInfo.clubMaster.userName
+          ),
+        ];
       });
       setIsLoading(false);
     }
@@ -87,7 +103,7 @@ const ClubMemberListContainer = ({
         setMoreButton(true);
       }
     }
-  }, [members]);
+  }, [filteredMembers]);
 
   return (
     <ClubMemberList
@@ -99,7 +115,7 @@ const ClubMemberListContainer = ({
       master={clubInfo.clubMaster}
       moreButton={moreButton}
       clickMoreButton={clickMoreButton}
-      members={members}
+      members={filteredMembers}
       selectClubMemberOnClick={selectClubMemberOnClick}
     />
   );
