@@ -35,10 +35,14 @@ const AdminCabinetLogTable = ({
                   <td title={new Date(startedAt).toLocaleString("ko-KR")}>
                     {new Date(startedAt).toLocaleString("ko-KR", dateOptions)}
                   </td>
-                  <td title={endedAt ? new Date(endedAt).toLocaleString("ko-KR") : '-'}>
-                    {endedAt 
-                      ? new Date(endedAt).toLocaleString("ko-KR", dateOptions) 
-                      : '-'}
+                  <td
+                    title={
+                      endedAt ? new Date(endedAt).toLocaleString("ko-KR") : "-"
+                    }
+                  >
+                    {endedAt
+                      ? new Date(endedAt).toLocaleString("ko-KR", dateOptions)
+                      : "-"}
                   </td>
                 </tr>
               )
@@ -94,7 +98,7 @@ const TbodyStyled = styled.tbody`
     width: 33.3%;
   }
   & > tr:nth-child(2n) {
-    background: #f9f6ff;
+    background: var(--pale-main-color);
   }
   & > tr > td:first-child {
     padding-left: 20px;

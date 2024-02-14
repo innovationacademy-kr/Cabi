@@ -108,7 +108,7 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
-  background-color: ${({ isSelected }) => (isSelected ? "#f1f1f1" : "white")};
+  background-color: ${({ isSelected }) => (isSelected ? "#eeeeee" : "white")};
   border: 1px solid var(--line-color);
   border-width: 0px 1px 1px 1px;
   width: 100%;
@@ -116,8 +116,10 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
   text-align: start;
   padding-left: 20px;
   font-size: 1.125rem;
-  /* color: ${({ isSelected }) => (isSelected ? "var(--main-color)" : "black")}; */
-  color: ${({ isSelected }) => (isSelected ? "var(--main-color)" : "var(--black)")};
+  /* color: ${({ isSelected }) =>
+    isSelected ? "var(--main-color)" : "black"}; */
+  color: ${({ isSelected }) =>
+    isSelected ? "var(--main-color)" : "var(--black)"};
   cursor: pointer;
   &:first-child {
     border-radius: 10px 10px 0px 0px;

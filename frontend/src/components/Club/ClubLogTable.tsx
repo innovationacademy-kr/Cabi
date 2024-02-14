@@ -85,7 +85,7 @@ const TbodyStyled = styled.tbody`
     width: 33.3%;
   }
   & > tr:nth-child(2n) {
-    background: #f9f6ff;
+    background: var(--pale-main-color);
   }
   & > tr.selected {
     background-color: var(--sub-color);

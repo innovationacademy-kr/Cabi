@@ -1,5 +1,5 @@
-import { ITableData } from "src/types/dto/admin.dto";
 import { useState } from "react";
+import { ITableData } from "src/types/dto/admin.dto";
 import styled from "styled-components";
 import Pagination from "./Pagination";
 
@@ -117,7 +117,7 @@ const TbodyStyled = styled.tbody`
     line-height: 45px;
   }
   & > tr:nth-child(2n) {
-    background: #f9f6ff;
+    background: var(--pale-main-color);
   }
   cursor: pointer;
 

@@ -120,8 +120,10 @@ const ClubListDropdItemStyled = styled.div<{ isSelected: boolean }>`
   text-align: start;
   padding-left: 20px;
   font-size: 1.125rem;
-  /* color: ${({ isSelected }) => (isSelected ? "var(--main-color)" : "black")}; */
-  color: ${({ isSelected }) => (isSelected ? "var(--main-color)" : "var(--black)")};
+  /* color: ${({ isSelected }) =>
+    isSelected ? "var(--main-color)" : "black"}; */
+  color: ${({ isSelected }) =>
+    isSelected ? "var(--main-color)" : "var(--black)"};
   cursor: pointer;
   &:first-child {
     border-radius: 10px 10px 0px 0px;
