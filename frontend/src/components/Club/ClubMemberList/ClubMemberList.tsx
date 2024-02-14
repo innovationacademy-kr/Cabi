@@ -8,6 +8,7 @@ import {
 import ClubMemberListItem from "@/components/Club/ClubMemberList/ClubMemberListItem/ClubMemberListItem";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import AddClubMemberModalContainer from "@/components/Modals/ClubModal/AddClubMemberModal.container";
+import { ReactComponent as Select } from "@/assets/images/selectMaincolor.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
 
 interface ClubMemberListProps {
@@ -76,7 +77,20 @@ const ClubMemberList = ({
         {moreButton && (
           <ButtonContainerStyled>
             <MoreButtonStyled onClick={clickMoreButton} isLoading={isLoading}>
-              {isLoading ? <LoadingAnimation /> : "더보기"}
+              {isLoading ? (
+                <LoadingAnimation />
+              ) : (
+                <ButtonContentWrapperStyled>
+                  <ButtonTextWrapperStyled>더보기</ButtonTextWrapperStyled>
+                  <SelectIconWrapperStyled>
+                    <Select
+                      stroke={"var(--main-color)"}
+                      width={13}
+                      height={9}
+                    />
+                  </SelectIconWrapperStyled>
+                </ButtonContentWrapperStyled>
+              )}
             </MoreButtonStyled>
           </ButtonContainerStyled>
         )}
@@ -177,25 +191,32 @@ const MoreButtonStyled = styled.button<{
   margin: 20px auto;
   border: 1px solid var(--main-color);
   border-radius: 30px;
-  text-indent: -20px;
   background-color: var(--white);
   color: var(--main-color);
   position: relative;
+`;
 
-  ${({ isLoading }) =>
-    !isLoading &&
-    css`
-      &::after {
-        content: "";
-        position: absolute;
-        left: 55%;
-        top: 50%;
-        transform: translateY(-40%);
-        width: 20px;
-        height: 20px;
-        background: url(/src/assets/images/selectPurple.svg) no-repeat 100%;
-      }
-    `}
+const ButtonContentWrapperStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
+
+const ButtonTextWrapperStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
+
+const SelectIconWrapperStyled = styled.div`
+  width: 20px;
+  height: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 3px;
 `;
 
 export default ClubMemberList;
