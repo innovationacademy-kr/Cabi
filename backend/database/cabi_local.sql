@@ -661,7 +661,8 @@ CREATE TABLE `club`
     `deleted_at` datetime(6) DEFAULT NULL,
     `name`       varchar(255) NOT NULL,
     `notice`     longtext     NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `club_name_unique_key` (`name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
