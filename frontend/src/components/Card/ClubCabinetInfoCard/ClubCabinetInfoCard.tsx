@@ -19,7 +19,7 @@ const ClubCabinetInfoCard = ({
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
 
-  const handleSettingLogoClick = () => {
+  const handleLockLogoClick = () => {
     setShowPasswordModal(true);
   };
 
@@ -34,8 +34,8 @@ const ClubCabinetInfoCard = ({
           isMaster
             ? [
                 {
-                  onClick: handleSettingLogoClick,
-                  icon: "/src/assets/images/setting.svg",
+                  onClick: handleLockLogoClick,
+                  icon: "/src/assets/images/lock.svg",
                   isClickable: true,
                 },
               ]
