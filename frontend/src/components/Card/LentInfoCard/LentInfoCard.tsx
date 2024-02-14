@@ -3,7 +3,7 @@ import Card from "@/components/Card/Card";
 import {
   CardContentStyled,
   CardContentWrapper,
-  ContentDeatilStyled,
+  ContentDetailStyled,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import { MyCabinetInfo } from "@/components/Card/LentInfoCard/LentInfoCard.container";
@@ -78,39 +78,39 @@ const LentInfoCard = ({
         <CardContentWrapper>
           <CardContentStyled>
             <ContentInfoStyled>사용 기간</ContentInfoStyled>
-            <ContentDeatilStyled>
+            <ContentDetailStyled>
               {cabinetInfo?.isLented && cabinetInfo.status != "IN_SESSION"
                 ? `${cabinetInfo.dateUsed}일`
                 : "-"}
-            </ContentDeatilStyled>
+            </ContentDetailStyled>
           </CardContentStyled>
           <CardContentStyled>
             <ContentInfoStyled>
               {cabinetInfo?.status === "OVERDUE" ? "연체 기간" : "남은 기간"}
             </ContentInfoStyled>
-            <ContentDeatilStyled status={cabinetInfo.status as CabinetStatus}>
+            <ContentDetailStyled status={cabinetInfo.status as CabinetStatus}>
               {cabinetInfo?.expireDate ? `${cabinetInfo.dateLeft}일` : "-"}
-            </ContentDeatilStyled>
+            </ContentDetailStyled>
           </CardContentStyled>
           <CardContentStyled>
             <ContentInfoStyled>
               {!!unbannedAt ? "패널티 종료 일자" : "종료 일자"}
             </ContentInfoStyled>
-            <ContentDeatilStyled>
+            <ContentDetailStyled>
               {!!unbannedAt
                 ? formatDate(new Date(unbannedAt), ".")
                 : cabinetInfo?.expireDate
                 ? formatDate(new Date(cabinetInfo?.expireDate), ".")
                 : "-"}
-            </ContentDeatilStyled>
+            </ContentDetailStyled>
           </CardContentStyled>
         </CardContentWrapper>
         <CardContentWrapper>
           <CardContentStyled>
             <ContentInfoStyled>이전 대여자</ContentInfoStyled>
-            <ContentDeatilStyled>
+            <ContentDetailStyled>
               {cabinetInfo?.previousUserName || "-"}
-            </ContentDeatilStyled>
+            </ContentDetailStyled>
           </CardContentStyled>
         </CardContentWrapper>
       </>

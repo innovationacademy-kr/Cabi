@@ -3,8 +3,7 @@ import styled from "styled-components";
 import Card from "@/components/Card/Card";
 import {
   CardContentStyled,
-  CardContentWrapper,
-  ContentDeatilStyled,
+  ContentDetailStyled,
 } from "@/components/Card/CardStyles";
 import ClubPasswordModalContainer from "@/components/Modals/ClubModal/ClubPasswordModal.container";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
@@ -73,14 +72,14 @@ const ClubCabinetInfoCard = ({
             </CabinetInfoDetailStyled>
           </CabinetInfoWrapper>
           <CardContentWrapper>
-            <CardContentStyled>
+            <CardContentStyled
+              onMouseEnter={() => setShowPassword(true)}
+              onMouseLeave={() => setShowPassword(false)}
+            >
               <ContentInfoStyled>비밀번호</ContentInfoStyled>
-              <ContentDeatilStyled
-                onMouseEnter={() => setShowPassword(true)}
-                onMouseLeave={() => setShowPassword(false)}
-              >
+              <ContentDetailStyled>
                 {showPassword ? password : "****"}
-              </ContentDeatilStyled>
+              </ContentDetailStyled>
             </CardContentStyled>
           </CardContentWrapper>
         </>
@@ -170,6 +169,20 @@ const ContentInfoStyled = styled.div<{
     color: white;
     border-radius: 8px;
   `}
+`;
+
+const CardContentWrapper = styled.div`
+  background-color: var(--white);
+  border-radius: 10px;
+  padding: 10px 0;
+  margin: 5px 5px 5px 5px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export default ClubCabinetInfoCard;
