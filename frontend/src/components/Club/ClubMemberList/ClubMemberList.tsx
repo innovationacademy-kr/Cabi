@@ -8,7 +8,6 @@ import {
 import ClubMemberListItem from "@/components/Club/ClubMemberList/ClubMemberListItem/ClubMemberListItem";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import AddClubMemberModalContainer from "@/components/Modals/ClubModal/AddClubMemberModal.container";
-import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
 
 interface ClubMemberListProps {
@@ -45,7 +44,7 @@ const ClubMemberList = ({
         <TitleContainerStyled>
           <p>동아리 멤버</p>
           <UserCountContainerStyled>
-            <UserCountImgStyled src={shareIcon} />
+            <UserCountImgStyled src={"/src/assets/images/shareIcon.svg"} />
             <UserCountTextStyled id="membersLength">
               {clubUserCount}
             </UserCountTextStyled>

@@ -24,15 +24,11 @@ const ClubMemberListContainer = ({
 }: ClubMemberListContainerProps) => {
   const [moreButton, setMoreButton] = useState<boolean>(true);
   const [members, setMembers] = useState<ClubUserResponseDto[]>([]);
-  const [filteredMembers, setFilteredMembers] = useState<ClubUserResponseDto[]>(
-    []
-  );
   const [clubModal, setClubModal] = useState<ICurrentClubMemberModalStateInfo>({
     addModal: false,
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { openClubMember, closeClubMember } = useMenu();
-  const myInfo = useRecoilValue(userState);
   const [targetClubUser, setTargetClubUser] = useRecoilState(
     targetClubUserInfoState
   );
@@ -70,40 +66,27 @@ const ClubMemberListContainer = ({
   useEffect(() => {
     if (page === 0) {
       setMembers(clubInfo.clubUsers);
-      setFilteredMembers(
-        clubInfo.clubUsers.filter(
-          (member) => member.userName !== clubInfo.clubMaster.userName
-        )
-      );
     } else {
       setMembers((prev) => {
         return [...prev, ...clubInfo.clubUsers];
-      });
-      setFilteredMembers((prev) => {
-        return [
-          ...prev,
-          ...clubInfo.clubUsers.filter(
-            (member) => member.userName !== clubInfo.clubMaster.userName
-          ),
-        ];
       });
       setIsLoading(false);
     }
   }, [clubInfo]);
 
   useEffect(() => {
-    if (clubInfo.clubUserCount) {
-      if (
-        members!.length +
-          (clubInfo.clubMaster.userName !== myInfo.name ? 1 : 0) >=
-        clubInfo.clubUserCount
-      ) {
-        setMoreButton(false);
-      } else {
-        setMoreButton(true);
-      }
-    }
-  }, [filteredMembers]);
+    const displayedMembersCount =
+      members.length +
+      (members.some((member) => member.userId === clubInfo.clubMaster.userId)
+        ? 0
+        : 1);
+
+    setMoreButton(displayedMembersCount < clubInfo.clubUserCount);
+  }, [members, clubInfo.clubUserCount, clubInfo.clubMaster]);
+
+  const filteredMembers = members.filter(
+    (member) => member.userId !== clubInfo.clubMaster.userId
+  );
 
   return (
     <ClubMemberList
