@@ -97,7 +97,7 @@ const TbodyStyled = styled.tbody`
     width: 33.3%;
   }
   & > tr:nth-child(2n) {
-    background-color: #f5f7ff;
+    background-color: var(--pale-main-color);
   }
   & > tr > td:first-child {
     padding-left: 20px;
