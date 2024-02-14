@@ -213,7 +213,7 @@ const DropdownStyled = styled.select`
 `;
 
 const Option = styled.option`
-  background-color: red;
+  background-color: var(--expired);
 `;
 
 export default Modal;
