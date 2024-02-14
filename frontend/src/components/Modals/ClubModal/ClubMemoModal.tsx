@@ -132,7 +132,7 @@ const ContentItemTextAreaStyled = styled.textarea<{
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #bcbcbc;
+    background: var(--line-color);
     border-radius: 50px;
     border: 6px solid transparent;
     background-clip: padding-box;
