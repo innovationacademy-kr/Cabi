@@ -33,7 +33,7 @@ public class LentQueryService {
 	 * @return 유저가 빌렸던 사물함의 대여 기록 {@link Page}
 	 */
 	public Page<LentHistory> findUserLentHistories(Long userId, Pageable pageable) {
-		return lentRepository.findPaginationByUserId(userId, pageable);
+		return lentRepository.findPaginationByUserIdOrderByStartedAtDesc(userId, pageable);
 	}
 
 	/**

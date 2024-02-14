@@ -348,8 +348,8 @@ const CabinetRectangleStyled = styled.div<{
   ${({ cabinetStatus }) =>
     cabinetStatus === "PENDING" &&
     css`
-      border: 5px double var(--white);
-      line-height: 70px;
+      border: 2px double var(--main-color);
+      box-shadow: inset 0px 0px 0px 2px var(--white);
     `}
 `;
 

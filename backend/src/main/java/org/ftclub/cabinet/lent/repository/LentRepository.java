@@ -191,7 +191,8 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 * @param pageable pagination 정보
 	 * @return {@link LentHistory}의 {@link Page}
 	 */
-	Page<LentHistory> findPaginationByUserId(@Param("userId") Long userId, Pageable pageable);
+	Page<LentHistory> findPaginationByUserIdOrderByStartedAtDesc(
+			@Param("userId") Long userId, Pageable pageable);
 
 	/**
 	 * 특정 사물함의 아직 반납하지 않은 대여기록들를 모두 가져옵니다.

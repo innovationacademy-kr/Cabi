@@ -85,7 +85,8 @@ const MaunalContentBoxStyled = styled.div<{
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.PENDING &&
     css`
-      border: 10px double var(--white);
+      border: 5px double var(--main-color);
+      box-shadow: inset 0px 0px 0px 5px var(--white);
     `}
 
   ${({ contentStatus }) =>
@@ -136,7 +137,16 @@ const MaunalContentBoxStyled = styled.div<{
 
   :hover {
     transition: all 0.3s ease-in-out;
-    box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
+    ${({ contentStatus }) =>
+      contentStatus === ContentStatus.PENDING
+        ? css`
+            border: 5px double var(--main-color);
+            box-shadow: inset 0px 0px 0px 5px var(--white),
+              10px 10px 25px 0 rgba(0, 0, 0, 0.2);
+          `
+        : css`
+            box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
+          `}
     p {
       transition: all 0.3s ease-in-out;
       transform: translateY(-5px);

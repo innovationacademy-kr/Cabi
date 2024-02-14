@@ -12,5 +12,5 @@ import lombok.ToString;
 @AllArgsConstructor
 public class LentExpirationAlarm implements Alarm {
 
-    private final Long daysLeftFromExpireDate;
+	private final Long daysFromExpireDate;
 }
