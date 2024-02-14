@@ -100,7 +100,6 @@ const ClubMemberInfoArea = ({
           closeModal={() => closeModal("mandateModal")}
           clubId={selectedClubInfo.clubId}
           targetMember={selectedClubMemberInfo}
-          clubName={selectedClubInfo.clubName}
         />
       ) : clubModal.deleteModal ? (
         <DeleteClubMemberModal

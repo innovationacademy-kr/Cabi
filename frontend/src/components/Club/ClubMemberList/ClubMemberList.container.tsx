@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  targetClubCabinetInfoState,
-  targetClubUserInfoState,
-  userState,
-} from "@/recoil/atoms";
-import ClubMember from "@/components/Club/ClubMember";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { targetClubUserInfoState, userState } from "@/recoil/atoms";
+import ClubMemberList from "@/components/Club/ClubMemberList/ClubMemberList";
 import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import useMenu from "@/hooks/useMenu";
 
@@ -15,27 +11,28 @@ export interface ICurrentClubMemberModalStateInfo {
   addModal: boolean;
 }
 
-interface ClubMemberContainerProps {
+interface ClubMemberListContainerProps {
   clubInfo: ClubInfoResponseDto;
   page: number;
   setPage: (page: number) => void;
 }
 
-const ClubMemberContainer = ({
+const ClubMemberListContainer = ({
   clubInfo,
   page,
   setPage,
-}: ClubMemberContainerProps) => {
+}: ClubMemberListContainerProps) => {
   const [moreButton, setMoreButton] = useState<boolean>(true);
   const [members, setMembers] = useState<ClubUserResponseDto[]>([]);
   const [clubModal, setClubModal] = useState<ICurrentClubMemberModalStateInfo>({
     addModal: false,
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { toggleClubMember } = useMenu();
+  const { openClubMember, closeClubMember } = useMenu();
   const myInfo = useRecoilValue(userState);
-  const setTargetClubUser = useSetRecoilState(targetClubUserInfoState);
-  const setTargetClubCabinet = useSetRecoilState(targetClubCabinetInfoState);
+  const [targetClubUser, setTargetClubUser] = useRecoilState(
+    targetClubUserInfoState
+  );
 
   const clickMoreButton = () => {
     setIsLoading(true);
@@ -45,14 +42,12 @@ const ClubMemberContainer = ({
   };
 
   const selectClubMemberOnClick = (member: ClubUserResponseDto) => {
-    setTargetClubCabinet({
-      building: clubInfo.building,
-      floor: clubInfo.floor,
-      section: clubInfo.section,
-      visibleNum: clubInfo.visibleNum,
-    });
+    if (targetClubUser.userId === member.userId) {
+      closeClubMember();
+      return;
+    }
     setTargetClubUser(member);
-    toggleClubMember();
+    openClubMember();
   };
 
   const openModal = (modalName: TClubMemberModalState) => {
@@ -95,7 +90,7 @@ const ClubMemberContainer = ({
   }, [members]);
 
   return (
-    <ClubMember
+    <ClubMemberList
       isLoading={isLoading}
       clubUserCount={clubInfo.clubUserCount}
       clubModal={clubModal}
@@ -110,4 +105,4 @@ const ClubMemberContainer = ({
   );
 };
 
-export default ClubMemberContainer;
+export default ClubMemberListContainer;
