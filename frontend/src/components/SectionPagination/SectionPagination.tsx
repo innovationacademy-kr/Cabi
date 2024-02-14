@@ -22,7 +22,7 @@ const SectionPagination: React.FC<{
     <IndexRectangleStyled
       key={sectionName}
       filledColor={
-        sectionName === currentSectionName ? "var(--main-color)" : "#D9D9D9"
+        sectionName === currentSectionName ? "var(--main-color)" : "var(--gray-300)"
       }
       onClick={() => changeSectionOnClickIndexButton(index)}
       className="cabiButton"

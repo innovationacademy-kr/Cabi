@@ -62,7 +62,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
         }}
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
         colors={[
-          "#d9d9d9",
+          "var(--gray-300)",
           "var(--expired)",
           "var(--main-color)",
           "var(--gray-600)",

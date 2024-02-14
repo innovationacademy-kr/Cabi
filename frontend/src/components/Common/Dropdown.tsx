@@ -129,7 +129,7 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
     border-radius: 0px 0px 10px 10px;
   }
   &:hover {
-    background-color: #f1f1f1;
+    background-color: var(--gray-200);
   }
 `;
 

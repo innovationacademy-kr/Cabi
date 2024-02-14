@@ -121,7 +121,7 @@ const TitleContainerStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #d9d9d9;
+  border-bottom: 2px solid var(--gray-300);
   margin-bottom: 70px;
   color: var(--main-color);
   font-weight: 700;
@@ -148,7 +148,7 @@ const NotionBtn = styled.button`
   font-size: 0.875rem;
   color: #333333;
   background: white;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--gray-300);
   :hover {
     /* color: black; */
     color: var(--black);

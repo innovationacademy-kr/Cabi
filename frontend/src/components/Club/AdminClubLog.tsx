@@ -20,7 +20,7 @@ const AdminClubLog = ({
       indexButtons.push(
         <IndexRectangleStyled
           key={i}
-          filledColor={currentPage === i ? "var(--main-color)" : "#D9D9D9"}
+          filledColor={currentPage === i ? "var(--main-color)" : "var(--gray-300)"}
           onClick={() => changePageOnClickIndexButton(i)}
           className="cabiButton"
         />
