@@ -13,7 +13,9 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
+import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.club.domain.ClubLentHistory;
+import org.ftclub.cabinet.club.service.ClubQueryService;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
@@ -49,6 +51,7 @@ public class LentFacadeService {
 	private final LentRedisService lentRedisService;
 	private final LentQueryService lentQueryService;
 	private final LentCommandService lentCommandService;
+	private final ClubQueryService clubQueryService;
 	private final ClubLentCommandService clubLentCommandService;
 	private final ClubLentQueryService clubLentQueryService;
 	private final UserQueryService userQueryService;
@@ -239,6 +242,7 @@ public class LentFacadeService {
 	public void startLentClubCabinet(Long clubId, Long cabinetId) {
 		LocalDateTime now = LocalDateTime.now();
 		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		Club club = clubQueryService.getClub(clubId);
 		int userCount = lentQueryService.countCabinetUser(cabinetId);
 
 		lentPolicyService.verifyCabinetLentCount(cabinet.getLentType(), cabinet.getMaxUser(),
@@ -249,6 +253,7 @@ public class LentFacadeService {
 		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now,
 				cabinet.getLentType(), 1);
 		clubLentCommandService.startLent(clubId, cabinetId, expiredAt);
+		cabinetCommandService.updateTitle(cabinet, club.getName());
 		cabinetCommandService.changeUserCount(cabinet, userCount + 1);
 	}
 
