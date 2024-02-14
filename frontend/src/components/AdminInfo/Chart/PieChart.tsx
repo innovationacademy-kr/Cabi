@@ -77,7 +77,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
           modifiers: [["darker", 0.2]],
         }}
         arcLinkLabelsSkipAngle={10}
-        arcLinkLabelsTextColor="#333333"
+        arcLinkLabelsTextColor="var(--gray-600)"
         arcLinkLabelsThickness={2}
         arcLinkLabelsColor={{ from: "color" }}
         arcLabelsSkipAngle={10}
@@ -95,7 +95,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
             itemsSpacing: 5,
             itemWidth: 70,
             itemHeight: 18,
-            itemTextColor: "#999",
+            itemTextColor: "var(--gray-500)",
             itemDirection: "top-to-bottom",
             itemOpacity: 1,
             symbolSize: 12,

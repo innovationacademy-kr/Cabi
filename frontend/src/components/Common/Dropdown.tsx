@@ -108,7 +108,7 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
-  background-color: ${({ isSelected }) => (isSelected ? "#eeeeee" : "white")};
+  background-color: ${({ isSelected }) => (isSelected ? "var(--gray-200)" : "white")};
   border: 1px solid var(--gray-400);
   border-width: 0px 1px 1px 1px;
   width: 100%;
