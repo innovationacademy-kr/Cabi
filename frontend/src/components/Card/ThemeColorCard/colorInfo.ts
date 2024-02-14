@@ -37,6 +37,8 @@ export const customColors = [
   "#74b9ff",
   "#0984e3",
   "#0D4C92",
-  "var(--main-custom)",
-  "var(--main-color)",
+  "var(--custom-purple-100)",
+  "#9747ff",
+  // "var(--main-color)",
+  // TODO : main color 말고 primary를 쓰기
 ];

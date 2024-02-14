@@ -3,8 +3,7 @@
 :root {
   /* color variable */
   --bg-shadow: rgba(0, 0, 0, 0.4);
-  /* subcolor variable */
-  
+
   /* main color variable */
   --main-100: #f9f6ff;
   --main-200: #dfd0fe;
@@ -12,7 +11,16 @@
   --main-400: #a17bf3;
   --main-color: #9747ff;
   --main-600: #8337e5;
-  --main-custom: #a29bfe;
+
+  /* custom color variable */
+  --custom-blue-100: #74b9ff;
+  --custom-blue-200: #0984e3;
+  --custom-blue-300: #0d4c92;
+  --custom-pink: #ff4589;
+  --custom-purple-100: #a29bfe;
+  --custom-purple-200: #9747ff;
+  /* TODO : main color 따로 만든다음에 var 붙이기 */
+  --custom-orange: #ff8b5b;
 
   /* white, gray, black color variable */
   --white: #ffffff;
@@ -24,6 +32,18 @@
   --gray-500: #7b7b7b;
   --gray-600: #3c3c3c;
   --black: #181818;
+
+  /* blue color variable */
+  --blue-100: #f5f7ff;
+  --blue-200: #7ebffb;
+  --blue-300: #406ee4;
+
+  /* pink color variable */
+  --pink-100: #f473b1;
+  --pink-200: #d72766;
+
+  /* orange color variable */
+  --orange: #ef8172;
 
   /* cabinet color variable */
   --mine: #47ffa7;
