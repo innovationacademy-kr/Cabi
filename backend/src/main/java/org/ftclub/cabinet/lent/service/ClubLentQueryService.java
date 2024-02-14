@@ -30,6 +30,11 @@ public class ClubLentQueryService {
 		return clubLentRepository.findAllByEndedAtIsNullJoinClub();
 	}
 
+	public List<ClubLentHistory> getAllActiveClubLentHistoriesWithCabinets(List<Long> cabinetIds) {
+		return clubLentRepository.findByEndedAtIsNullJoinCabinets(cabinetIds)
+				.orElseThrow(ExceptionStatus.NOT_FOUND_CLUB_LENT_HISTORY::asServiceException);
+	}
+
 	public ClubLentHistory getClubActiveLentHistory(Long clubId, Long cabinetId) {
 		return clubLentRepository.findByClubIdAndCabinetIdAndEndedAtIsNull(clubId, cabinetId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_CLUB_LENT_HISTORY::asServiceException);

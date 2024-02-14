@@ -32,4 +32,11 @@ public interface ClubLentRepository extends JpaRepository<ClubLentHistory, Long>
 	Optional<ClubLentHistory> findByEndedAtIsNullJoinCabinet(Long clubId);
 
 	Optional<ClubLentHistory> findByClubIdAndCabinetIdAndEndedAtIsNull(Long clubId, Long cabinetId);
+
+	@Query("SELECT clh "
+			+ "FROM ClubLentHistory clh "
+			+ "LEFT JOIN FETCH clh.club "
+			+ "WHERE clh.cabinetId IN :cabinetIds "
+			+ "AND clh.endedAt IS NULL ")
+	Optional<List<ClubLentHistory>> findByEndedAtIsNullJoinCabinets(List<Long> cabinetIds);
 }
