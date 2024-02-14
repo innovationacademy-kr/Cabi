@@ -37,7 +37,7 @@ public class Club {
 	private long id;
 
 	@NotNull
-	@Column(name = "NAME", nullable = false)
+	@Column(name = "NAME", unique = true, nullable = false)
 	private String name;
 
 	@CreatedDate
