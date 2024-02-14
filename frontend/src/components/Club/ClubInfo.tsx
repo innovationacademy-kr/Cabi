@@ -16,7 +16,7 @@ const ClubInfo = () => {
   const [imMaster, setImMaster] = useState<boolean>(false);
 
   useEffect(() => {
-    if (clubInfo) {
+    if (clubInfo && clubInfo !== STATUS_400_BAD_REQUEST) {
       let clubInfoTest = clubInfo as ClubInfoResponseDto;
       if (clubInfoTest.clubMaster.userName === myInfo.name) setImMaster(true);
     }
