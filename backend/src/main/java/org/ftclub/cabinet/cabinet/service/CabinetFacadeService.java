@@ -154,7 +154,7 @@ public class CabinetFacadeService {
 									.map(c -> c.getClub().getName())
 									.findFirst().ifPresent(clubName -> cabinetPreviewsBySection
 											.computeIfAbsent(section, k -> new ArrayList<>())
-											.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, clubName)));
+											.add(cabinetMapper.toCabinetPreviewDto(cabinet, 1, clubName)));
 						}
 						return;
 					}
