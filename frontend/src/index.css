@@ -3,7 +3,8 @@
 :root {
   /* color variable */
   --bg-shadow: rgba(0, 0, 0, 0.4);
-
+  /* subcolor variable */
+  
   /* main color variable */
   --main-100: #f9f6ff;
   --main-200: #dfd0fe;

@@ -37,6 +37,6 @@ export const customColors = [
   "#74b9ff",
   "#0984e3",
   "#0D4C92",
-  "#a29bfe",
-  "#9747FF",
+  "var(--main-custom)",
+  "var(--main-color)",
 ];
