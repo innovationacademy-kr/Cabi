@@ -65,13 +65,28 @@ const ClubNoticeCard = ({
 
 const ClubNoticeTextStyled = styled.div`
   width: 100%;
-  min-height: 150px;
+  height: 150px;
   font-size: 1rem;
   padding: 0.5rem 1rem;
   word-break: break-all;
   white-space: pre-wrap;
   line-height: 1.2rem;
+  overflow-y: auto;
   letter-spacing: 0.8px;
+
+  ::-webkit-scrollbar {
+    width: 20px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #bcbcbc;
+    border-radius: 50px;
+    border: 6px solid transparent;
+    background-clip: padding-box;
+    display: inline-block;
+  }
+
 `;
 
 export default ClubNoticeCard;

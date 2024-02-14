@@ -126,6 +126,18 @@ const ContentItemTextAreaStyled = styled.textarea<{
     color: ${({ mode }) =>
       mode === "read" ? "var(--main-color)" : "var(--line-color)"};
   }
+  ::-webkit-scrollbar {
+    width: 20px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #bcbcbc;
+    border-radius: 50px;
+    border: 6px solid transparent;
+    background-clip: padding-box;
+    display: inline-block;
+  }
 `;
 
 const BackgroundStyled = styled.div`
