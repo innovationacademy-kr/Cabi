@@ -61,7 +61,7 @@ public class AdminClubFacadeService {
 					.map(c -> c.getUser().getName()).findFirst().orElse(null);
 			return clubMapper.toClubInfoDto(clubId, clubName, clubMasterName);
 		}).collect(Collectors.toList());
-		return clubMapper.toClubInfoPaginationDto(result, (long) result.size());
+		return clubMapper.toClubInfoPaginationDto(result, clubs.getTotalElements());
 	}
 
 	/**
