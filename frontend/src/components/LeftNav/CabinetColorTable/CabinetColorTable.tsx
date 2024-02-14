@@ -36,7 +36,7 @@ const ColorTableStyled = styled.div`
   left: 30px;
   width: auto;
   overflow: hidden;
-  color: var(--gray-color);
+  color: var(--gray-500);
 `;
 
 const ColorTableItemStyled = styled.div<{ color: string }>`

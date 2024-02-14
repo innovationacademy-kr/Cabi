@@ -29,7 +29,7 @@ const SearchDefaultStyled = styled.div`
   & > p {
     margin-top: 10px;
     font-size: 1.125rem;
-    color: var(--gray-color);
+    color: var(--gray-500);
     text-align: center;
     line-height: 1.75rem;
   }

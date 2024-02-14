@@ -97,7 +97,7 @@ export const CardButtonStyled = styled.div<{
       ? props.color
       : props.isExtensible
       ? "var(--main-color)"
-      : "var(--gray-color)"};
+      : "var(--gray-500)"};
   padding: 5px 15px;
   border: none;
   border-radius: 5px;

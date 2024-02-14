@@ -74,7 +74,7 @@ const UlStyled = styled.ul`
 
 const TotalStyled = styled.li`
   font-size: 0.875rem;
-  color: var(--gray-color);
+  color: var(--gray-500);
   text-align: right;
   padding: 10px;
 `;

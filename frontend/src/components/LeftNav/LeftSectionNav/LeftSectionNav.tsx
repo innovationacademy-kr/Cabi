@@ -125,7 +125,7 @@ const FloorSectionStyled = styled.div`
   line-height: 40px;
   border-radius: 10px;
   text-indent: 20px;
-  color: var(--gray-color);
+  color: var(--gray-500);
   margin: 2px 0;
   cursor: pointer;
   @media (hover: hover) and (pointer: fine) {
@@ -146,7 +146,7 @@ const SectionLinkStyled = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--gray-color);
+  color: var(--gray-500);
   & img {
     width: 15px;
     height: 15px;

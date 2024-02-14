@@ -67,7 +67,7 @@ const AdminCabinetInfoArea: React.FC<{
         <CabiLogoStyled>
           <LogoImg />
         </CabiLogoStyled>
-        <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
+        <TextStyled fontSize="1.125rem" fontColor="var(--gray-500)">
           사물함/유저를 <br />
           선택해주세요
         </TextStyled>
@@ -77,7 +77,7 @@ const AdminCabinetInfoArea: React.FC<{
   if (multiSelectTargetInfo) {
     return (
       <CabinetDetailAreaStyled>
-        <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
+        <TextStyled fontSize="1rem" fontColor="var(--gray-500)">
           {currentFloor + "F - " + currentSection}
         </TextStyled>
         <MultiCabinetIconWrapperStyled>
@@ -129,7 +129,7 @@ const AdminCabinetInfoArea: React.FC<{
   return (
     <CabinetDetailAreaStyled>
       <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
+      <TextStyled fontSize="1rem" fontColor="var(--gray-500)">
         {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
       </TextStyled>
       <CabinetRectangleStyled
@@ -324,8 +324,10 @@ const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
   align-items: center;
   background-color: ${({ status }) => cabinetStatusColorMap[status]};
   border-radius: 5px;
-  /* color: ${({ status }) => (status === CabinetStatus.FULL ? "black" : "white")}; */
-  color: ${({ status }) => (status === CabinetStatus.FULL ? "var(--black)" : "white")};
+  /* color: ${({ status }) =>
+    status === CabinetStatus.FULL ? "black" : "white"}; */
+  color: ${({ status }) =>
+    status === CabinetStatus.FULL ? "var(--black)" : "white"};
 `;
 
 export default AdminCabinetInfoArea;

@@ -86,7 +86,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickSearchButton}
               >
-                <SearchImg stroke="var(--gray-color)" />
+                <SearchImg stroke="var(--gray-500)" />
                 Search
               </BottomBtnStyled>
               <BottomBtnStyled className="cabiButton">
@@ -95,7 +95,7 @@ const LeftMainNav = ({
                   target="_blank"
                   title="슬랙 캐비닛 채널 새창으로 열기"
                 >
-                  <SlackImg stroke="var(--gray-color)" />
+                  <SlackImg stroke="var(--gray-500)" />
                   Contact
                 </a>
               </BottomBtnStyled>
@@ -107,14 +107,14 @@ const LeftMainNav = ({
                 }
                 onClick={onClickClubButton}
               >
-                <CulbImg stroke="var(--gray-color)" />
+                <CulbImg stroke="var(--gray-500)" />
                 Club
               </BottomBtnStyled>
               <BottomBtnStyled
                 className="cabiButton"
                 onClick={onClickLogoutButton}
               >
-                <LogoutImg stroke="var(--gray-color)" />
+                <LogoutImg stroke="var(--gray-500)" />
                 Logout
               </BottomBtnStyled>
             </>
@@ -128,7 +128,7 @@ const LeftMainNav = ({
               }
               onClick={onClickProfileButton}
             >
-              <ProfileImg stroke="var(--gray-color)" width={32} height={32} />
+              <ProfileImg stroke="var(--gray-500)" width={32} height={32} />
               Profile
             </BottomBtnStyled>
           )}
@@ -167,7 +167,7 @@ const TopBtnStyled = styled.li`
   font-weight: 300;
   margin-bottom: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-color);
+  color: var(--gray-500);
   cursor: pointer;
   &:last-child {
     margin-bottom: 0;
@@ -208,7 +208,7 @@ const BottomBtnStyled = styled.li`
   font-weight: 300;
   margin-top: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-color);
+  color: var(--gray-500);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -217,7 +217,7 @@ const BottomBtnStyled = styled.li`
     margin-top: 0;
   }
   & a {
-    color: var(--gray-color);
+    color: var(--gray-500);
   }
   & div {
     width: 24px;
