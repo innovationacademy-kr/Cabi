@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { targetClubUserInfoState, userState } from "@/recoil/atoms";
 import {
   ICurrentClubMemberModalStateInfo,
