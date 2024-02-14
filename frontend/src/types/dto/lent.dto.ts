@@ -44,8 +44,9 @@ export interface ILentLog {
 }
 
 export interface ClubUserDto {
-  userId: number;
-  name: string;
+  clubId: number;
+  clubName: string;
+  clubMaster: string;
 }
 
 export type ClubLogResponseType =

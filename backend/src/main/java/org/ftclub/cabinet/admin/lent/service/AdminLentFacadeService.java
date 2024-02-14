@@ -12,10 +12,13 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
+import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.lent.service.ClubLentCommandService;
+import org.ftclub.cabinet.lent.service.ClubLentQueryService;
 import org.ftclub.cabinet.lent.service.LentCommandService;
 import org.ftclub.cabinet.lent.service.LentPolicyService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
@@ -45,6 +48,9 @@ public class AdminLentFacadeService {
 	private final LentQueryService lentQueryService;
 	private final LentCommandService lentCommandService;
 	private final LentRedisService lentRedisService;
+
+	private final ClubLentQueryService clubLentQueryService;
+	private final ClubLentCommandService clubLentCommandService;
 
 	private final LentPolicyService lentPolicyService;
 	private final BanPolicyService banPolicyService;
@@ -107,12 +113,19 @@ public class AdminLentFacadeService {
 
 	@Transactional
 	public void endCabinetLent(List<Long> cabinetIds) {
-		LocalDateTime now = LocalDateTime.now();
 		List<Cabinet> cabinets = cabinetQueryService.findCabinetsForUpdate(cabinetIds);
 		List<LentHistory> lentHistories =
 				lentQueryService.findCabinetsActiveLentHistories(cabinetIds);
 		Map<Long, List<LentHistory>> lentHistoriesByCabinetId = lentHistories.stream()
 				.collect(Collectors.groupingBy(LentHistory::getCabinetId));
+		
+		// is club cabinet
+		if (lentHistories.isEmpty()) {
+			endClubCabinetLent(cabinetIds, cabinets);
+			return;
+		}
+
+		LocalDateTime now = LocalDateTime.now();
 		cabinets.forEach(cabinet -> {
 			List<LentHistory> cabinetLentHistories =
 					lentHistoriesByCabinetId.get(cabinet.getId());
@@ -124,5 +137,22 @@ public class AdminLentFacadeService {
 		});
 		lentCommandService.endLent(lentHistories, now);
 		cabinetCommandService.changeUserCount(cabinets, 0);
+	}
+
+	private void endClubCabinetLent(List<Long> cabinetIds, List<Cabinet> cabinets) {
+		List<ClubLentHistory> allActiveLentHistoriesWithClub = clubLentQueryService.getAllActiveClubLentHistoriesWithCabinets(
+				cabinetIds);
+		cabinets.forEach(cabinet -> {
+			List<ClubLentHistory> clubLentHistories =
+					allActiveLentHistoriesWithClub.stream()
+							.filter(clh -> clh.getCabinetId().equals(cabinet.getId()))
+							.collect(Collectors.toList());
+			clubLentHistories.forEach(
+					clh -> clubLentCommandService.endLent(clh, LocalDateTime.now()));
+			cabinetCommandService.changeUserCount(cabinet, 0);
+			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
+			lentRedisService.setPreviousUserName(
+					cabinet.getId(), clubLentHistories.get(0).getClub().getName());
+		});
 	}
 }

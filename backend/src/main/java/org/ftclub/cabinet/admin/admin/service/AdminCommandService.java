@@ -31,14 +31,4 @@ public class AdminCommandService {
 		});
 		return adminRepository.save(Admin.of(email, AdminRole.NONE));
 	}
-
-	/**
-	 * 관리자 권한을 변경합니다.
-	 *
-	 * @param admin 관리자
-	 */
-	public void changeAdminRole(Admin admin, AdminRole adminRole) {
-		admin.changeAdminRole(adminRole);
-		adminRepository.save(admin);
-	}
 }

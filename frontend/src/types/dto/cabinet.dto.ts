@@ -59,6 +59,6 @@ export interface CabinetInfoByBuildingFloorDto {
   cabinets: CabinetPreviewInfo[];
 }
 
-export interface PendingCabinetsInfo {
+export interface AvailableCabinetsInfo {
   [key: string]: CabinetPreviewInfo[];
 }

@@ -1,8 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.log.LogLevel;
@@ -23,42 +21,34 @@ public class LentExtensionQueryService {
 	/**
 	 * 유저의 사용 가능한 연장권 중 사용 기한이 가장 임박한 연장권을 가져옵니다.
 	 *
-	 * @param userId
+	 * @param userId 유저의 아이디
 	 * @return 사용 기한이 가장 임박한 연장권을 반환합니다.
 	 */
 	public LentExtension findActiveLentExtension(Long userId) {
 
-		List<LentExtension> lentExtensions = lentExtensionRepository.findAllByUserId(userId);
+		List<LentExtension> activeLentExtensions =
+				lentExtensionRepository.findAllByUserIdAndUsedAtIsNull(userId);
 		return LentExtensions.builder()
-				.lentExtensions(lentExtensions)
+				.lentExtensions(activeLentExtensions)
 				.build()
-				.findImminentActiveLentExtension()
-				.orElse(null);
+				.filterActiveLentExtensions()
+				.sortLentExtensions()
+				.getOne();
 	}
 
 	/**
 	 * 유저의 사용 가능한 연장권을 모두 가져옵니다.
 	 *
-	 * @param userId
+	 * @param userId 유저의 아이디
 	 * @return 사용 가능한 연장권을 모두 반환합니다.
 	 */
-	public LentExtensions findActiveLentExtensions(Long userId) {
+	public List<LentExtension> findActiveLentExtensions(Long userId) {
+		List<LentExtension> activeLentExtensions =
+				lentExtensionRepository.findAllByUserIdAndUsedAtIsNull(userId);
 		return LentExtensions.builder()
-				.lentExtensions(lentExtensionRepository.findAllByUserIdAndUsedAtIsNull(userId))
-				.build();
-	}
-
-	/**
-	 * 유저의 모든 연장권을 사용 기한 기준 최신 순서로 가져옵니다.
-	 *
-	 * @param userId
-	 * @return 사용 기한을 기준으로 최신 순서로 정렬된 모든 연장권을 반환합니다.
-	 */
-	public List<LentExtension> findLentExtensionsInLatestOrder(Long userId) {
-		return lentExtensionRepository.findAllByUserId(userId)
-				.stream()
-				.sorted(Comparator.comparing(LentExtension::getExpiredAt,
-						Comparator.reverseOrder()))
-				.collect(Collectors.toList());
+				.lentExtensions(activeLentExtensions)
+				.build()
+				.sortLentExtensions()
+				.get();
 	}
 }

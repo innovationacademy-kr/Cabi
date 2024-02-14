@@ -2,43 +2,45 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { isCurrentSectionRenderState } from "@/recoil/atoms";
-import FloorContainer from "@/pages/PendingPage/components/FloorContainer";
-import PendingCountdown from "@/pages/PendingPage/components/PendingCountdown";
+import AvailableCountdown from "@/components/Available/AvailableCountdown";
+import FloorContainer from "@/components/Available/FloorContainer";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import MultiToggleSwitch, {
   toggleItem,
 } from "@/components/Common/MultiToggleSwitch";
 import {
+  AvailableCabinetsInfo,
   CabinetPreviewInfo,
-  PendingCabinetsInfo,
 } from "@/types/dto/cabinet.dto";
-import { axiosGetPendingCabinets } from "@/api/axios/axios.custom";
+import { axiosGetAvailableCabinets } from "@/api/axios/axios.custom";
 import useDebounce from "@/hooks/useDebounce";
+import { deleteRecoilPersistFloorSection } from "@/utils/recoilPersistUtils";
 
-enum PendingCabinetsType {
+enum AvailableCabinetsType {
   ALL = "ALL",
   PRIVATE = "PRIVATE",
   SHARE = "SHARE",
 }
 
 const toggleList: toggleItem[] = [
-  { name: "전체", key: PendingCabinetsType.ALL },
-  { name: "개인", key: PendingCabinetsType.PRIVATE },
-  { name: "공유", key: PendingCabinetsType.SHARE },
+  { name: "전체", key: AvailableCabinetsType.ALL },
+  { name: "개인", key: AvailableCabinetsType.PRIVATE },
+  { name: "공유", key: AvailableCabinetsType.SHARE },
 ];
 
-const PendingPage = () => {
-  const [toggleType, setToggleType] = useState<PendingCabinetsType>(
-    PendingCabinetsType.ALL
+const AvailablePage = () => {
+  const [toggleType, setToggleType] = useState<AvailableCabinetsType>(
+    AvailableCabinetsType.ALL
   );
-  const [cabinets, setCabinets] = useState<PendingCabinetsInfo>({});
-  const [pendingCabinets, setPendingCabinets] = useState<PendingCabinetsInfo>(
+  const [cabinets, setCabinets] = useState<AvailableCabinetsInfo>({});
+  const [pendingCabinets, setAvailableCabinets] =
+    useState<AvailableCabinetsInfo>({});
+  const [privateCabinets, setPrivateCabinets] = useState<AvailableCabinetsInfo>(
     {}
   );
-  const [privateCabinets, setPrivateCabinets] = useState<PendingCabinetsInfo>(
+  const [sharedCabinets, setSharedCabinets] = useState<AvailableCabinetsInfo>(
     {}
   );
-  const [sharedCabinets, setSharedCabinets] = useState<PendingCabinetsInfo>({});
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isOpenTime, setIsOpenTime] = useState<boolean>(false);
@@ -47,9 +49,9 @@ const PendingPage = () => {
   );
   const { debounce } = useDebounce();
 
-  const getPendingCabinets = async () => {
+  const getAvailableCabinets = async () => {
     try {
-      const response = await axiosGetPendingCabinets();
+      const response = await axiosGetAvailableCabinets();
       const pendingCabinets = response.data.cabinetInfoResponseDtos;
 
       const filterCabinetsByType = (type: string) =>
@@ -62,16 +64,18 @@ const PendingPage = () => {
           ])
         );
 
-      const privateCabinets = filterCabinetsByType(PendingCabinetsType.PRIVATE);
-      const sharedCabinets = filterCabinetsByType(PendingCabinetsType.SHARE);
+      const privateCabinets = filterCabinetsByType(
+        AvailableCabinetsType.PRIVATE
+      );
+      const sharedCabinets = filterCabinetsByType(AvailableCabinetsType.SHARE);
 
       const updatedCabinets =
-        toggleType === PendingCabinetsType.ALL
+        toggleType === AvailableCabinetsType.ALL
           ? pendingCabinets
           : filterCabinetsByType(toggleType);
 
       setCabinets(updatedCabinets);
-      setPendingCabinets(pendingCabinets);
+      setAvailableCabinets(pendingCabinets);
       setPrivateCabinets(privateCabinets);
       setSharedCabinets(sharedCabinets);
     } catch (error) {
@@ -79,85 +83,70 @@ const PendingPage = () => {
     }
   };
 
-  const refreshPendingCabinets = () => {
+  const refreshAvailableCabinets = () => {
     setIsRefreshing(true);
     debounce(
       "refresh",
       () => {
-        getPendingCabinets();
+        getAvailableCabinets();
         setIsRefreshing(false);
       },
       500
     );
   };
 
-  const updateLocalStorage = () => {
-    const recoilPersist = localStorage.getItem("recoil-persist");
-    if (recoilPersist) {
-      let recoilPersistObj = JSON.parse(recoilPersist);
-      delete recoilPersistObj.CurrentFloor;
-      delete recoilPersistObj.CurrentSection;
-      localStorage.setItem("recoil-persist", JSON.stringify(recoilPersistObj));
-    }
-  };
-
   useEffect(() => {
+    deleteRecoilPersistFloorSection();
     setTimeout(() => {
       // 새로고침 광클 방지를 위한 초기 로딩 딜레이
       setIsLoaded(true);
     }, 500);
-    updateLocalStorage();
   }, []);
 
   useEffect(() => {
     // CabinetInfoArea 컴포넌트에서 사물함 정보가 갱신되면 사물함 정보를 다시 가져온다.
-    getPendingCabinets();
+    getAvailableCabinets();
     setIsCurrentSectionRender(false);
   }, [isCurrentSectionRender]);
 
   useEffect(() => {
     // 오프 타임이 되면 업데이트 된 사물함 정보를 다시 가져온다.
     if (isOpenTime) {
-      getPendingCabinets();
+      getAvailableCabinets();
     }
   }, [isOpenTime]);
 
   useEffect(() => {
-    if (toggleType === PendingCabinetsType.ALL) setCabinets(pendingCabinets);
-    else if (toggleType === PendingCabinetsType.PRIVATE)
+    if (toggleType === AvailableCabinetsType.ALL) setCabinets(pendingCabinets);
+    else if (toggleType === AvailableCabinetsType.PRIVATE)
       setCabinets(privateCabinets);
-    else if (toggleType === PendingCabinetsType.SHARE)
+    else if (toggleType === AvailableCabinetsType.SHARE)
       setCabinets(sharedCabinets);
   }, [toggleType]);
 
   return (
     <WrapperStyled>
-      <UtilsSectionStyled></UtilsSectionStyled>
-      <HeaderStyled>사용 가능 사물함</HeaderStyled>
-      <SubHeaderStyled>
-        <h2>
-          <span>매일 오후 1시</span> 사용 가능한 사물함이 업데이트됩니다.
-        </h2>
-        <RefreshButtonStyled onClick={refreshPendingCabinets}>
-          {isRefreshing ? (
-            <LoadingAnimation />
-          ) : (
-            <>
-              <img src="/src/assets/images/rotateRight.svg" alt="새로고침" />
-              <PendingCountdown observeOpenTime={() => setIsOpenTime(true)} />
-            </>
-          )}
-        </RefreshButtonStyled>
-        {/*  */}
-      </SubHeaderStyled>
-      <MultiToggleSwitchStyled>
+      <UtilsSectionStyled>
         <MultiToggleSwitch
           initialState={toggleType}
           setState={setToggleType}
           toggleList={toggleList}
         />
-      </MultiToggleSwitchStyled>
-
+      </UtilsSectionStyled>
+      <HeaderStyled>사용 가능 사물함</HeaderStyled>
+      <SubHeaderStyled>
+        <h2>
+          <span>매일 오후 1시</span> 사용 가능한 사물함이 업데이트됩니다.
+        </h2>
+        <RefreshButtonStyled onClick={refreshAvailableCabinets}>
+          {isRefreshing ? (
+            <LoadingAnimation />
+          ) : (
+            <img src="/src/assets/images/refresh.svg" alt="새로고침" />
+          )}
+        </RefreshButtonStyled>
+      </SubHeaderStyled>
+      <AvailableCountdown observeOpenTime={() => setIsOpenTime(true)} />
       {isLoaded && cabinets ? (
         Object.entries(cabinets).map(([key, value]) => (
           <FloorContainer
@@ -212,18 +201,14 @@ const SubHeaderStyled = styled.div`
 `;
 
 const RefreshButtonStyled = styled.button`
-  margin-top: 60px;
-  width: 280px;
-  height: 47px;
-  background-color: var(--main-color);
+  margin-top: 40px;
+  background-color: initial;
+  width: 35px;
+  height: 35px;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   img {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
+    width: 35px;
+    height: 35px;
   }
   &:hover {
     opacity: 0.7;
@@ -234,14 +219,9 @@ const RefreshButtonStyled = styled.button`
   transition: all 0.3s ease;
 `;
 
-const MultiToggleSwitchStyled = styled.div`
-  width: 70%;
-  margin-top: 58px;
-`;
-
 const FooterStyled = styled.footer`
   color: transparent;
   margin-top: 50px;
 `;
 
-export default PendingPage;
+export default AvailablePage;

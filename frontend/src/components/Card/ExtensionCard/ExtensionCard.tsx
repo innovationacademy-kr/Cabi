@@ -2,7 +2,7 @@ import Card, { IButtonProps } from "@/components/Card/Card";
 import {
   CardContentStyled,
   CardContentWrapper,
-  ContentDeatilStyled,
+  ContentDetailStyled,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import { LentExtensionDto } from "@/types/dto/lent.dto";
@@ -25,17 +25,17 @@ const ExtensionCard = ({ extensionInfo, button }: ExtensionProps) => {
       <CardContentWrapper>
         <CardContentStyled>
           <ContentInfoStyled>사용 기한</ContentInfoStyled>
-          <ContentDeatilStyled>
+          <ContentDetailStyled>
             {!!extensionInfo
               ? formatDate(new Date(extensionInfo.expiredAt), ".")
               : "-"}
-          </ContentDeatilStyled>
+          </ContentDetailStyled>
         </CardContentStyled>
         <CardContentStyled>
           <ContentInfoStyled>연장 기간</ContentInfoStyled>
-          <ContentDeatilStyled>
+          <ContentDetailStyled>
             {!!extensionInfo ? extensionInfo.extensionPeriod + "일" : "-"}
-          </ContentDeatilStyled>
+          </ContentDetailStyled>
         </CardContentStyled>
       </CardContentWrapper>
     </Card>

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import CabinetColorTable from "@/components/LeftNav/CabinetColorTable/CabinetColorTable";
+import LeftSectionNavClubs from "@/components/LeftNav/LeftSectionNav/LeftSectionNavClubs";
 import { ReactComponent as LinkImg } from "@/assets/images/link.svg";
 
 interface ILeftSectionNav {
@@ -13,6 +14,7 @@ interface ILeftSectionNav {
   onClickLentLogButton: Function;
   onClickSlack: Function;
   onClickClubForm: Function;
+  isClub: boolean;
 }
 
 const LeftSectionNav = ({
@@ -26,6 +28,7 @@ const LeftSectionNav = ({
   onClickLentLogButton,
   onClickSlack,
   onClickClubForm,
+  isClub,
 }: ILeftSectionNav) => {
   return (
     <>
@@ -73,16 +76,17 @@ const LeftSectionNav = ({
           title="슬랙 캐비닛 채널 새창으로 열기"
         >
           문의하기
-          <img src="/src/assets/images/link.svg" alt="" />
+          <LinkImg id="linknImg" stroke="var(--gray-color)" />
         </SectionLinkStyled>
         <SectionLinkStyled
           onClick={() => onClickClubForm()}
           title="동아리 사물함 사용 신청서 새창으로 열기"
         >
           동아리 신청서
-          <img src="/src/assets/images/link.svg" alt="" />
+          <LinkImg id="linknImg" stroke="var(--gray-color)" />
         </SectionLinkStyled>
       </ProfileLeftNavOptionStyled>
+      {isClub && <LeftSectionNavClubs />}
     </>
   );
 };
@@ -119,7 +123,7 @@ const ProfileLeftNavOptionStyled = styled.div<{
   }
 `;
 
-const FloorSectionStyled = styled.div`
+export const FloorSectionStyled = styled.div`
   width: 100%;
   height: 40px;
   line-height: 40px;
@@ -147,11 +151,13 @@ const SectionLinkStyled = styled.div`
   display: flex;
   align-items: center;
   color: var(--gray-color);
-  & img {
+
+  #linknImg {
     width: 15px;
     height: 15px;
     margin-left: auto;
   }
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       color: var(--main-color);
