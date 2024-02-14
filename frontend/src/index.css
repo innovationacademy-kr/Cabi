@@ -15,13 +15,14 @@
   --main-color: #9747ff;
   --sub-color: #b18cff;
   --pale-main-color: #f9f6ff;
-  --line-color: #bcbcbc;
   --bg-shadow: rgba(0, 0, 0, 0.4);
 
   /* white, gray, black color variable */
   --white: #ffffff;
+  --gray-100: #f5f5f5;
   --soft-white-color: #eeeeee;
-  --light-gray-color: #f5f5f5;
+  --gray-200: #d9d9d9;
+  --line-color: #bcbcbc;
   --gray-color: #7b7b7b;
   --dark-gray-color: #3c3c3c;
   --black: #181818;
