@@ -1,17 +1,26 @@
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { targetClubUserInfoState, userState } from "@/recoil/atoms";
+import { userState } from "@/recoil/atoms";
 import ClubCabinetInfoCard from "@/components/Card/ClubCabinetInfoCard/ClubCabinetInfoCard";
 import ClubNoticeCard from "@/components/Card/ClubNoticeCard/ClubNoticeCard";
 import ClubMemberListContainer from "@/components/Club/ClubMemberList/ClubMemberList.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 import useClubInfo from "@/hooks/useClubInfo";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const ClubInfo = () => {
   const myInfo = useRecoilValue(userState);
-  const targetClubUser = useRecoilValue(targetClubUserInfoState);
   const { clubState, clubInfo, setPage } = useClubInfo();
+  const [imMaster, setImMaster] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (clubInfo) {
+      let clubInfoTest = clubInfo as ClubInfoResponseDto;
+      if (clubInfoTest.clubMaster.userName === myInfo.name) setImMaster(true);
+    }
+  }, [clubInfo]);
 
   return (
     <>
@@ -28,14 +37,8 @@ const ClubInfo = () => {
         <ClubInfoWrapperStyled>
           <TitleStyled>동아리 정보</TitleStyled>
           <CardGridWrapper>
-            <ClubCabinetInfoCard
-              clubInfo={clubInfo}
-              isMaster={targetClubUser.userName === myInfo.name}
-            />
-            <ClubNoticeCard
-              notice={clubInfo.clubNotice}
-              isMaster={targetClubUser.userName === myInfo.name}
-            />
+            <ClubCabinetInfoCard clubInfo={clubInfo} isMaster={imMaster} />
+            <ClubNoticeCard notice={clubInfo.clubNotice} isMaster={imMaster} />
           </CardGridWrapper>
           <ClubMemberListContainer
             clubInfo={clubInfo}
