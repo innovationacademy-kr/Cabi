@@ -25,7 +25,7 @@
   --gray-400: #bcbcbc;
   /* TODO : bcbcbc는 line-color*/
   --gray-500: #7b7b7b;
-  --dark-gray-color: #3c3c3c;
+  --gray-600: #3c3c3c;
   --black: #181818;
 
   /* cabinet color variable */
@@ -33,8 +33,8 @@
   --expired: #ff4e4e;
   --available: var(--main-color);
   --full: var(--gray-200);
-  --broken: var(--dark-gray-color);
-  --banned: var(--dark-gray-color);
+  --broken: var(--gray-600);
+  --banned: var(--gray-600);
   --session: var(--gray-200);
   --pending: var(--main-color);
 

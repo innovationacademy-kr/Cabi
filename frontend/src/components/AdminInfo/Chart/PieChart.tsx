@@ -65,7 +65,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
           "#d9d9d9",
           "var(--expired)",
           "var(--main-color)",
-          "var(--dark-gray-color)",
+          "var(--gray-600)",
         ]}
         innerRadius={0.5}
         padAngle={0.7}
