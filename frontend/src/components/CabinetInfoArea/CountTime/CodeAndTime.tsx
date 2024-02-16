@@ -60,7 +60,7 @@ const HoverBox = styled.div`
   padding: 10px;
   background-color: rgba(73, 73, 73, 0.99);
   border-radius: 10px;
-  box-shadow: 4px 4px 20px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 4px 4px 20px 0px var(--bg-shadow-300);
   font-size: 0.75rem;
   color: white;
   display: flex;

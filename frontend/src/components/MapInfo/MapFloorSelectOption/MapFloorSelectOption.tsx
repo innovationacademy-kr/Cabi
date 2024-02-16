@@ -25,7 +25,7 @@ const OptionWrapperStyled = styled.div`
   top: 75px;
   background: var(--color-background);
   border-radius: 10px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px 0 var(--bg-shadow-200);
   overflow: hidden;
   z-index: 99;
   display: none;

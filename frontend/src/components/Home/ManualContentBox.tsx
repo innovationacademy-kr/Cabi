@@ -131,8 +131,8 @@ const MaunalContentBoxStyled = styled.div<{
       props.contentStatus === ContentStatus.IN_SESSION
         ? "var(--main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
-        // ? "black"
-        ? "var(--black)"
+        ? // ? "black"
+          "var(--black)"
         : "white"};
     cursor: pointer;
   }
@@ -144,10 +144,10 @@ const MaunalContentBoxStyled = styled.div<{
         ? css`
             border: 5px double var(--main-color);
             box-shadow: inset 0px 0px 0px 5px var(--white),
-              10px 10px 25px 0 rgba(0, 0, 0, 0.2);
+              10px 10px 25px 0 var(--bg-shadow-200);
           `
         : css`
-            box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: 10px 10px 25px 0 var(--bg-shadow-200);
           `}
     p {
       transition: all 0.3s ease-in-out;

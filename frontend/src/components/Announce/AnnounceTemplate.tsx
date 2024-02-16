@@ -122,7 +122,7 @@ const CabiImgStyled = styled.div`
 `;
 
 const ButtonStyled = styled.button`
-  box-shadow: 10px 10px 40px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 10px 10px 40px 0px var(--bg-shadow-200);
 `;
 
 export default AnnounceTemplate;

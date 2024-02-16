@@ -47,7 +47,7 @@ const WarningBox = styled.div`
   white-space: pre-line;
   z-index: 100;
   transition: visibility 0.5s, color 0.5s, background-color 0.5s, width 0.5s,
-  padding 0.5s ease-in-out;
+    padding 0.5s ease-in-out;
 `;
 
 const WarningWrapper = styled.div<{ isVisible: boolean }>`
@@ -59,12 +59,12 @@ const WarningWrapper = styled.div<{ isVisible: boolean }>`
   & ${WarningIcon}:hover + ${WarningBox} {
     visibility: visible;
     color: var(--white);
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: var(--bg-shadow-400);
     &:before {
-      border-color: transparent transparent rgba(0, 0, 0, 0.8)
-      rgba(0, 0, 0, 0.8);
+      border-color: transparent transparent var(--bg-shadow-400)
+        var(--bg-shadow-400);
     }
   }
 `;
-  
+
 export default WarningNotification;

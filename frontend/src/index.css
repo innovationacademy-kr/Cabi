@@ -68,7 +68,10 @@
   --custom-green-200: #00c2ab;
 
   /* shadow variable */
-  --bg-shadow: rgba(0, 0, 0, 0.4);
+  --bg-shadow-100: rgba(0, 0, 0, 0.1);
+  --bg-shadow-200: rgba(0, 0, 0, 0.25);
+  --bg-shadow-300: rgba(0, 0, 0, 0.4);
+  --bg-shadow-400: rgba(0, 0, 0, 0.8);
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;
@@ -182,7 +185,7 @@ input {
 
 .modal {
   border-radius: 10px;
-  box-shadow: 10px 10px 40px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 10px 10px 40px 0px var(--bg-shadow-200);
 }
 
 .textNowrap {

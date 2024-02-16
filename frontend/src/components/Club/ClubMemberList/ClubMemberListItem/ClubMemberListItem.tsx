@@ -27,7 +27,7 @@ const ClubMemberListItem = ({
     >
       <MemberListItemStyled>
         {isMaster ? (
-          <CrownImg stroke="#f5f5f5" width={18} height={18} />
+          <CrownImg stroke="var(--gray-100)" width={18} height={18} />
         ) : (
           <UserImg width={16} height={16} viewBox="0 0 24 24" />
         )}
@@ -45,7 +45,8 @@ const MemberListItemContainerStyled = styled.div<{
 }>`
   width: 80px;
   height: 80px;
-  background-color: ${(props) => (props.bgColor ? props.bgColor : "#F5F5F5")};
+  background-color: ${(props) =>
+    props.bgColor ? props.bgColor : "var(--gray-100)"};
   border-radius: 1rem;
   margin: 7px;
   padding: 10px;
@@ -60,8 +61,8 @@ const MemberListItemContainerStyled = styled.div<{
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
-        0px 4px 4px rgba(0, 0, 0, 0.25);
+      box-shadow: inset 5px 5px 5px var(--bg-shadow-200),
+        0px 4px 4px var(--bg-shadow-200);
     `}
 
   @media (hover: hover) and (pointer: fine) {
