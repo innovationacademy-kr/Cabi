@@ -142,7 +142,10 @@ const AvailablePage = () => {
           {isRefreshing ? (
             <LoadingAnimation />
           ) : (
-            <img src="/src/assets/images/refresh.svg" alt="새로고침" />
+            <>
+              <img src="/src/assets/images/rotateRight.svg" alt="새로고침" />
+              <AvailableCountdown observeOpenTime={() => setIsOpenTime(true)} />
+            </>
           )}
         </RefreshButtonStyled>
       </SubHeaderStyled>

@@ -33,13 +33,20 @@ const ClubMemoModal = ({
             ref={newMemo}
             maxLength={CLUB_MEMO_MAX_LENGTH}
           />
-          <ContentItemWrapperStyledBottomStyled>
-            {charCount <= CLUB_MEMO_MAX_LENGTH && (
-              <LengthCountStyled>
-                {charCount} / {CLUB_MEMO_MAX_LENGTH}
-              </LengthCountStyled>
-            )}
-          </ContentItemWrapperStyledBottomStyled>
+          {mode === "write" ? (
+            <ContentItemWrapperStyledBottomStyled>
+              {charCount <= CLUB_MEMO_MAX_LENGTH && (
+                <LengthCountStyled>
+                  {charCount} / {CLUB_MEMO_MAX_LENGTH}
+                </LengthCountStyled>
+              )}
+              {charCount > CLUB_MEMO_MAX_LENGTH && (
+                <LengthCountStyled>
+                  {CLUB_MEMO_MAX_LENGTH} / {CLUB_MEMO_MAX_LENGTH}
+                </LengthCountStyled>
+              )}
+            </ContentItemWrapperStyledBottomStyled>
+          ) : null}
         </ContentSectionStyled>
         <ButtonWrapperStyled mode={mode}>
           {mode === "write" && (
@@ -118,6 +125,18 @@ const ContentItemTextAreaStyled = styled.textarea<{
   &::placeholder {
     color: ${({ mode }) =>
       mode === "read" ? "var(--main-color)" : "var(--line-color)"};
+  }
+  ::-webkit-scrollbar {
+    width: 20px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--line-color);
+    border-radius: 50px;
+    border: 6px solid transparent;
+    background-clip: padding-box;
+    display: inline-block;
   }
 `;
 

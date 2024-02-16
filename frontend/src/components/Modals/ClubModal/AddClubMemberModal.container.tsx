@@ -26,11 +26,11 @@ const AddClubMemberModalContainer: React.FC<{
   );
   const { clubId } = useRecoilValue(targetClubInfoState);
 
-  const tryAddClubMemRequest = async (name: string) => {
+  const tryAddClubMemberRequest = async (name: string) => {
     setIsLoading(true);
     try {
       await axiosAddClubMember(clubId, name);
-      setModalTitle(`동아리에 ${name} 님을 추가했습니다`);
+      setModalTitle(`동아리에 ${name}님을 추가했습니다`);
       setTimeout(() => {
         setIsCurrentSectionRender(true);
       }, 1000);
@@ -44,7 +44,7 @@ const AddClubMemberModalContainer: React.FC<{
   };
 
   const handleClickSave = () => {
-    tryAddClubMemRequest(newMemo.current!.value);
+    tryAddClubMemberRequest(newMemo.current!.value);
   };
 
   return (

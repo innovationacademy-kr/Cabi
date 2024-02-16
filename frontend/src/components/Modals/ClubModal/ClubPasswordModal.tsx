@@ -14,6 +14,7 @@ const ClubPasswordModal: React.FC<ClubPasswordModalInterface> = ({
   onClickBackground,
   onSendPassword,
   handleEnterPress,
+  tmpPw,
 }) => {
   const {
     type,
@@ -63,7 +64,7 @@ const ClubPasswordModal: React.FC<ClubPasswordModalInterface> = ({
             onClick={onSendPassword}
             text={proceedBtnText!}
             theme="fill"
-            disabled={password.length < 4 || isLoading}
+            disabled={tmpPw.length < 4 || isLoading}
           />
         </ButtonWrapperStyled>
       </ModalStyled>

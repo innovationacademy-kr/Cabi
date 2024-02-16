@@ -3,7 +3,7 @@ import Card, { IButtonProps } from "@/components/Card/Card";
 import {
   CardContentStyled,
   CardContentWrapper,
-  ContentDeatilStyled,
+  ContentDetailStyled,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import { NotificationModal } from "@/components/Modals/NotificationModal/NotificationModal";
@@ -19,6 +19,7 @@ const ExtensionCard = ({ extensionInfo, button }: ExtensionProps) => {
   const [showNotificationModal, setShowNotificationModal] =
     useState<boolean>(false);
   return (
+<<<<<<< HEAD
     <>
       <Card
         title={"연장권"}
@@ -57,6 +58,32 @@ const ExtensionCard = ({ extensionInfo, button }: ExtensionProps) => {
         />
       )}
     </>
+=======
+    <Card
+      title={"연장권"}
+      gridArea={"extension"}
+      width={"350px"}
+      height={"183px"}
+      buttons={[button]}
+    >
+      <CardContentWrapper>
+        <CardContentStyled>
+          <ContentInfoStyled>사용 기한</ContentInfoStyled>
+          <ContentDetailStyled>
+            {!!extensionInfo
+              ? formatDate(new Date(extensionInfo.expiredAt), ".")
+              : "-"}
+          </ContentDetailStyled>
+        </CardContentStyled>
+        <CardContentStyled>
+          <ContentInfoStyled>연장 기간</ContentInfoStyled>
+          <ContentDetailStyled>
+            {!!extensionInfo ? extensionInfo.extensionPeriod + "일" : "-"}
+          </ContentDetailStyled>
+        </CardContentStyled>
+      </CardContentWrapper>
+    </Card>
+>>>>>>> dc7a099f69df811ffb8fb9ec7bc7e6801ac3f723
   );
 };
 

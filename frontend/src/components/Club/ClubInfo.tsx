@@ -1,80 +1,26 @@
-import { useEffect, useRef, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import {
-  isCurrentSectionRenderState,
-  targetClubInfoState,
-  userState,
-} from "@/recoil/atoms";
+import { userState } from "@/recoil/atoms";
 import ClubCabinetInfoCard from "@/components/Card/ClubCabinetInfoCard/ClubCabinetInfoCard";
 import ClubNoticeCard from "@/components/Card/ClubNoticeCard/ClubNoticeCard";
-import ClubMemberContainer from "@/components/Club/ClubMember.container";
+import ClubMemberListContainer from "@/components/Club/ClubMemberList/ClubMemberList.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import {
-  ClubInfoResponseDto,
-  ClubInfoResponseType,
-} from "@/types/dto/club.dto";
-import { UserDto } from "@/types/dto/user.dto";
-import { axiosGetClubInfo } from "@/api/axios/axios.custom";
+import { ClubInfoResponseDto } from "@/types/dto/club.dto";
+import useClubInfo from "@/hooks/useClubInfo";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const ClubInfo = () => {
-  const [clubState, setClubState] = useState({ clubId: 0, page: 0 });
-  const [clubInfo, setClubInfo] = useState<ClubInfoResponseType>(undefined);
-  const [targetClubInfo, setTargetClubInfo] =
-    useRecoilState(targetClubInfoState);
-  const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
-    isCurrentSectionRenderState
-  );
-  const myInfo = useRecoilValue<UserDto>(userState);
-  const prevClubIdRef = useRef(targetClubInfo.clubId);
+  const myInfo = useRecoilValue(userState);
+  const { clubState, clubInfo, setPage } = useClubInfo();
+  const [imMaster, setImMaster] = useState<boolean>(false);
 
-  const setPage = (newPage: number) => {
-    setClubState((prevState) => ({ ...prevState, page: newPage }));
-  };
-
-  const getClubInfo = async (clubId: number, page: number) => {
-    try {
-      const { data }: { data: ClubInfoResponseDto } = await axiosGetClubInfo(
-        clubId,
-        page,
-        2
-      );
-      setTargetClubInfo({
-        clubId,
-        clubName: data.clubName,
-        clubMaster: data.clubMaster.userName,
-      });
-      setTimeout(() => {
-        setClubInfo(data);
-      }, 500);
-    } catch {
-      setTimeout(() => {
-        setClubInfo(STATUS_400_BAD_REQUEST);
-      }, 500);
-    }
-  };
-
-  // NOTE: 컴포넌트가 마운트 될 때, targetClubInfo.clubId 혹은 isCurrentSectionRender 변경 시마다 실행됩니다.
   useEffect(() => {
-    if (targetClubInfo.clubId !== clubState.clubId || isCurrentSectionRender) {
-      setIsCurrentSectionRender(false);
-      setClubState({
-        clubId: targetClubInfo.clubId,
-        page: 0,
-      });
-      setClubInfo(undefined);
-      getClubInfo(targetClubInfo.clubId, 0);
+    if (clubInfo && clubInfo !== STATUS_400_BAD_REQUEST) {
+      let clubInfoTest = clubInfo as ClubInfoResponseDto;
+      if (clubInfoTest.clubMaster.userName === myInfo.name) setImMaster(true);
     }
-    prevClubIdRef.current = targetClubInfo.clubId;
-  }, [targetClubInfo.clubId, isCurrentSectionRender]);
-
-  // NOTE: page가 변경되고 clubId는 변경되지 않았을 때 실행됩니다.
-  useEffect(() => {
-    if (clubState.page !== 0 && clubState.clubId === prevClubIdRef.current) {
-      getClubInfo(clubState.clubId, clubState.page);
-    }
-  }, [clubState.page]);
+  }, [clubInfo]);
 
   return (
     <>
@@ -91,16 +37,10 @@ const ClubInfo = () => {
         <ClubInfoWrapperStyled>
           <TitleStyled>동아리 정보</TitleStyled>
           <CardGridWrapper>
-            <ClubCabinetInfoCard
-              clubInfo={clubInfo}
-              isMaster={targetClubInfo.clubMaster === myInfo.name}
-            />
-            <ClubNoticeCard
-              notice={clubInfo.clubNotice}
-              isMaster={targetClubInfo.clubMaster === myInfo.name}
-            />
+            <ClubCabinetInfoCard clubInfo={clubInfo} isMaster={imMaster} />
+            <ClubNoticeCard notice={clubInfo.clubNotice} isMaster={imMaster} />
           </CardGridWrapper>
-          <ClubMemberContainer
+          <ClubMemberListContainer
             clubInfo={clubInfo}
             page={clubState.page}
             setPage={setPage}

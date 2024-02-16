@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 
 export interface IButtonProps {
   label?: string; // NOTE: icon 이 없을 경우, label 을 표시
+  label?: string; // NOTE: icon 이 없을 경우, label 을 표시
   onClick?: () => void;
   backgroundColor?: string;
   color?: string;
@@ -27,7 +28,7 @@ const Card = ({
   gridArea,
   width = "350px",
   height = "163px",
-  buttons = [],
+  buttons = ([] = []),
   children,
 }: CardProps) => {
   return (

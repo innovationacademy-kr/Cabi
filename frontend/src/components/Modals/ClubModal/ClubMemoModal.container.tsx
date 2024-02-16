@@ -13,7 +13,6 @@ import {
 import { axiosUpdateClubNotice } from "@/api/axios/axios.custom";
 
 export const CLUB_MEMO_MAX_LENGTH = 100;
-// TODO : 메모, 멤버 리렌더링 바로 되게
 interface ClubMemoModalContainerInterface {
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
@@ -25,7 +24,7 @@ export interface ClubMemoModalInterface {
   clubNotice: string;
   newMemo: React.RefObject<HTMLTextAreaElement>;
   mode: string;
-  handleClickWriteMode: (e: any) => void;
+  handleClickWriteMode: () => void;
   handleChange: () => void;
   charCount: number;
   tryMemoRequest: () => Promise<void>;
@@ -55,7 +54,7 @@ const ClubMemoModalContainer = ({
     setShowMemoModal(false);
   };
 
-  const handleClickWriteMode = (e: any) => {
+  const handleClickWriteMode = () => {
     setMode("write");
     if (newMemo.current) {
       newMemo.current.select();
@@ -65,9 +64,10 @@ const ClubMemoModalContainer = ({
   const tryMemoRequest = async () => {
     try {
       await axiosUpdateClubNotice(clubId, text);
-      setIsCurrentSectionRender(true);
       setModalTitle("메모 수정 완료");
-      // const result = await axiosGetClubInfo(clubId, page, 2);
+      setTimeout(() => {
+        setIsCurrentSectionRender(true);
+      }, 1000);
     } catch (error: any) {
       setModalTitle("메모 수정 실패");
       setModalContent(error.response.data.message);

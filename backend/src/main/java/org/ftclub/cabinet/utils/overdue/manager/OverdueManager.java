@@ -58,21 +58,21 @@ public class OverdueManager {
 	}
 
 	public void handleOverdue(ActiveLentHistoryDto activeLent) {
-		OverdueType overdueType = getOverdueType(activeLent.getIsExpired(),
-				activeLent.getDaysLeftFromExpireDate());
+		OverdueType overdueType =
+				getOverdueType(activeLent.getIsExpired(), activeLent.getDaysFromExpireDate());
 		log.info("called handleOverdue: activeLent={}, overdueType={}", activeLent, overdueType);
 		switch (overdueType) {
 			case NONE:
 				return;
 			case SOON_OVERDUE:
 				eventPublisher.publishEvent(AlarmEvent.of(activeLent.getUserId(),
-						new LentExpirationImminentAlarm(activeLent.getDaysLeftFromExpireDate())));
+						new LentExpirationImminentAlarm(activeLent.getDaysFromExpireDate())));
 				break;
 			case OVERDUE:
 				cabinetFacadeService.updateStatus(activeLent.getCabinetId(),
 						CabinetStatus.OVERDUE);
 				eventPublisher.publishEvent(AlarmEvent.of(activeLent.getUserId(),
-						new LentExpirationAlarm(activeLent.getDaysLeftFromExpireDate())));
+						new LentExpirationAlarm(activeLent.getDaysFromExpireDate())));
 				break;
 		}
 	}

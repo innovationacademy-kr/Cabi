@@ -3,8 +3,7 @@ import styled from "styled-components";
 import Card from "@/components/Card/Card";
 import {
   CardContentStyled,
-  CardContentWrapper,
-  ContentDeatilStyled,
+  ContentDetailStyled,
 } from "@/components/Card/CardStyles";
 import ClubPasswordModalContainer from "@/components/Modals/ClubModal/ClubPasswordModal.container";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
@@ -20,7 +19,7 @@ const ClubCabinetInfoCard = ({
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
 
-  const handleSettingLogoClick = () => {
+  const handleLockLogoClick = () => {
     setShowPasswordModal(true);
   };
 
@@ -35,8 +34,8 @@ const ClubCabinetInfoCard = ({
           isMaster
             ? [
                 {
-                  onClick: handleSettingLogoClick,
-                  icon: "/src/assets/images/setting.svg",
+                  onClick: handleLockLogoClick,
+                  icon: "/src/assets/images/lock.svg",
                   isClickable: true,
                 },
               ]
@@ -73,14 +72,14 @@ const ClubCabinetInfoCard = ({
             </CabinetInfoDetailStyled>
           </CabinetInfoWrapper>
           <CardContentWrapper>
-            <CardContentStyled>
+            <CardContentStyled
+              onMouseEnter={() => setShowPassword(true)}
+              onMouseLeave={() => setShowPassword(false)}
+            >
               <ContentInfoStyled>비밀번호</ContentInfoStyled>
-              <ContentDeatilStyled
-                onMouseEnter={() => setShowPassword(true)}
-                onMouseLeave={() => setShowPassword(false)}
-              >
+              <ContentDetailStyled>
                 {showPassword ? password : "****"}
-              </ContentDeatilStyled>
+              </ContentDetailStyled>
             </CardContentStyled>
           </CardContentWrapper>
         </>
@@ -126,7 +125,6 @@ const ClubNameTextStyled = styled.div`
   font-weight: bold;
   height: 30px;
   line-height: 30px;
-  /* margin-bottom: 10px; */
 `;
 
 const CabinetInfoTextStyled = styled.div<{
@@ -171,6 +169,20 @@ const ContentInfoStyled = styled.div<{
     color: white;
     border-radius: 8px;
   `}
+`;
+
+const CardContentWrapper = styled.div`
+  background-color: var(--white);
+  border-radius: 10px;
+  padding: 10px 0;
+  margin: 5px 5px 5px 5px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export default ClubCabinetInfoCard;

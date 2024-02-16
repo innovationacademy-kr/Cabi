@@ -14,5 +14,5 @@ public class ActiveLentHistoryDto {
 	private final String email;
 	private final Long cabinetId;
 	private final Boolean isExpired;
-	private final Long daysLeftFromExpireDate;
+	private final Long daysFromExpireDate;
 }

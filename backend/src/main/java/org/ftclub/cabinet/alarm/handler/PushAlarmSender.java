@@ -2,20 +2,26 @@ package org.ftclub.cabinet.alarm.handler;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.alarm.config.AlarmProperties;
-import org.ftclub.cabinet.alarm.domain.*;
+import org.ftclub.cabinet.alarm.domain.Alarm;
+import org.ftclub.cabinet.alarm.domain.AlarmEvent;
+import org.ftclub.cabinet.alarm.domain.AnnouncementAlarm;
+import org.ftclub.cabinet.alarm.domain.ExtensionExpirationImminentAlarm;
+import org.ftclub.cabinet.alarm.domain.ExtensionIssuanceAlarm;
+import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
+import org.ftclub.cabinet.alarm.domain.LentExpirationImminentAlarm;
+import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
 import org.ftclub.cabinet.alarm.dto.FCMDto;
+import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
 import org.ftclub.cabinet.user.domain.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Log4j2
 @Component
@@ -50,7 +56,8 @@ public class PushAlarmSender {
 		} else if (alarm instanceof ExtensionIssuanceAlarm) {
 			return generateExtensionIssuanceAlarm((ExtensionIssuanceAlarm) alarm);
 		} else if (alarm instanceof ExtensionExpirationImminentAlarm) {
-			return generateExtensionExpirationImminentAlarm((ExtensionExpirationImminentAlarm) alarm);
+			return generateExtensionExpirationImminentAlarm(
+					(ExtensionExpirationImminentAlarm) alarm);
 		} else if (alarm instanceof AnnouncementAlarm) {
 			return generateAnnouncementAlarm();
 		} else {
@@ -66,7 +73,8 @@ public class PushAlarmSender {
 	}
 
 	@NotNull
-	private FCMDto generateExtensionExpirationImminentAlarm(ExtensionExpirationImminentAlarm alarm) {
+	private FCMDto generateExtensionExpirationImminentAlarm(
+			ExtensionExpirationImminentAlarm alarm) {
 		String extensionName = alarm.getExtensionName();
 		LocalDateTime extensionExpireDate = alarm.getExtensionExpirationDate();
 		String title = alarmProperties.getExtensionExpirationImminentSubject();
@@ -87,7 +95,7 @@ public class PushAlarmSender {
 
 	@NotNull
 	private FCMDto generateLentExpirationAlarm(LentExpirationAlarm alarm) {
-		Long daysLeftFromExpireDate = alarm.getDaysLeftFromExpireDate();
+		Long daysLeftFromExpireDate = alarm.getDaysFromExpireDate();
 		String title = alarmProperties.getOverdueSubject();
 		String body = String.format(alarmProperties.getOverdueFcmTemplate(),
 				Math.abs(daysLeftFromExpireDate));
@@ -96,7 +104,7 @@ public class PushAlarmSender {
 
 	@NotNull
 	private FCMDto generateLentExpirationImminentAlarm(LentExpirationImminentAlarm alarm) {
-		Long daysAfterFromExpireDate = alarm.getDaysAfterFromExpireDate();
+		Long daysAfterFromExpireDate = alarm.getDaysFromExpireDate();
 		String title = alarmProperties.getSoonOverdueSubject();
 		String body = String.format(alarmProperties.getSoonOverdueFcmTemplate(),
 				Math.abs(daysAfterFromExpireDate));

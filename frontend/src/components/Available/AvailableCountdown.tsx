@@ -43,26 +43,18 @@ const AvailableCountdown = ({
 
   return (
     <>
-      <AvailableCountdownIconStyled src="/src/assets/images/alarm.svg" />
       <AvailableCountdownStyled>
         {remainingTime === 0
           ? "OPEN"
-          : `${hours}시간 ${minutes}분 ${seconds}초`}
+          : `${twoDigitsHours}:${twoDigitsMinutes}:${twoDigitsSeconds} 남았습니다`}
       </AvailableCountdownStyled>
     </>
   );
 };
 
-const AvailableCountdownIconStyled = styled.img`
-  height: 25px;
-  width: 25px;
-  margin-top: 50px;
-`;
-
 const AvailableCountdownStyled = styled.div`
-  margin-top: 5px;
-  color: var(--main-color);
-  font-size: 1.8rem;
+  color: white;
+  font-size: 1.1rem;
   font-weight: 600;
 `;
 
