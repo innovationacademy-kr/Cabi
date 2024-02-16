@@ -7,6 +7,7 @@ import Layout from "@/pages/Layout";
 import LogPage from "@/pages/LogPage";
 import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
+import PostLogin from "@/pages/PostLogin";
 import ProfilePage from "@/pages/ProfilePage";
 import AdminMainPage from "@/pages/admin/AdminMainPage";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
@@ -27,6 +28,7 @@ function App(): React.ReactElement {
     <BrowserRouter>
       <Suspense fallback={<LoadingAnimation />}>
         <Routes>
+          <Route path="/post-login" element={<PostLogin />} />
           <Route path="/" element={<Layout />}>
             <Route path="login" element={<LoginPage />} />
             <Route path="home" element={<HomePage />} />
