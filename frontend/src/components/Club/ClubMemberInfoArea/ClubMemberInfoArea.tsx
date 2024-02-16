@@ -51,7 +51,7 @@ const ClubMemberInfoArea = ({
             <CabiLogoStyled>
               <LogoImg />
             </CabiLogoStyled>
-            <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
+            <TextStyled fontSize="1.125rem" fontColor="var(--gray-500)">
               동아리를 <br />
               선택해주세요
             </TextStyled>
@@ -184,7 +184,6 @@ const ClubInfoWrapperStyled = styled.div`
   align-items: center;
   width: 100%;
   margin: 1rem 0;
-  /* height: 100%; */
 `;
 
 const ClubMasterIconStyled = styled.div`

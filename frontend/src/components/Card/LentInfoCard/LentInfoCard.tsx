@@ -146,10 +146,12 @@ const CabinetRectangleStyled = styled.div<{
       : "var(--full)"};
   color: ${(props) =>
     props.banned
-      ? "var(--white)"
+      ? "var(--color-background)"
       : props.status === "IN_SESSION"
       ? "var(--main-color)"
-      : "var(--black)"};
+      : "var(--black)"
+      // black text
+      };
   font-size: 2rem;
   text-align: center;
 `;

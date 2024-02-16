@@ -32,7 +32,8 @@ const PillButtonContainerStyled = styled.button<{
     isSelected ? "var(--main-color)" : "transparent"};
   border: ${({ isSelected }) =>
     isSelected ? "1px solid var(--main-color)" : "1px solid var(--color-line)"};
-  color: ${({ isSelected }) => (isSelected ? "var(--white)" : "var(--black)")};
+  color: ${({ isSelected }) => (isSelected ? "var(--color-background)" : "var(--black)")};
+  /* black text */
   padding: 2px 16px 4px 16px;
   text-align: center;
   text-decoration: none;
@@ -45,7 +46,7 @@ const PillButtonContainerStyled = styled.button<{
   transition: background-color 0.3s ease-in-out;
   &:hover {
     background-color: var(--main-color);
-    color: var(--white);
+    color: var(--color-background);
   }
 `;
 

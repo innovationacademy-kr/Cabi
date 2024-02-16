@@ -54,7 +54,7 @@ const MaunalContentBoxStyled = styled.div<{
   flex-direction: column;
   align-items: flex-start;
   font-size: 1.75rem;
-  color: white;
+  color: var(--color-background);
   padding: 25px;
   font-weight: bold;
   cursor: pointer;
@@ -100,8 +100,8 @@ const MaunalContentBoxStyled = styled.div<{
     contentStatus === ContentStatus.EXTENSION &&
     css`
       width: 900px;
-      /* color: black; */
       color: var(--black);
+      /* black text */
       @media screen and (max-width: 1000px) {
         width: 280px;
         .peopleImg {

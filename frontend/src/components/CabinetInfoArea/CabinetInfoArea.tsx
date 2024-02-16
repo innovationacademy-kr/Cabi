@@ -378,7 +378,7 @@ const HoverBox = styled.div<{
   box-shadow: 4px 4px 20px 0px var(--bg-shadow-300);
   font-size: 0.875rem;
   text-align: center;
-  color: white;
+  color: var(--white);
   display: flex;
   flex-direction: column;
   justify-content: space-around;

@@ -31,7 +31,7 @@ const MapFloorSelect = ({ floor, setFloor, floorInfo }: IMapFloorSelect) => {
 const MapFloorSelectStyled = styled.div`
   background: url("/src/assets/images/select.svg") var(--main-color) no-repeat
     80% 55%;
-  color: white;
+  color: var(--color-background);
   cursor: pointer;
   width: 65px;
   height: 40px;

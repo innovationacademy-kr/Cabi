@@ -77,7 +77,7 @@ const TheadStyled = styled.thead`
 `;
 
 const TbodyStyled = styled.tbody`
-  color: var(--gray-color);
+  color: var(--gray-500);
   & > tr {
     text-align: center;
     height: 50px;
@@ -98,7 +98,7 @@ const TbodyStyled = styled.tbody`
   & > tr:hover,
   & > tr.selected {
     background-color: var(--sub-color);
-    color: var(--white);
+    color: var(--color-background);
   }
 `;
 

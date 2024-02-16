@@ -59,7 +59,7 @@ const ClubCabinetInfoCard = ({
               <ClubNameTextStyled>{clubInfo.clubName}</ClubNameTextStyled>
               <CabinetInfoTextStyled
                 fontSize={"1rem"}
-                fontColor="var(--gray-color)"
+                fontColor="var(--gray-500)"
               >
                 {clubInfo.floor + "층 - " + clubInfo.section}
               </CabinetInfoTextStyled>
@@ -110,6 +110,7 @@ const CabinetRectangleStyled = styled.div`
   margin-right: 20px;
   background-color: var(--full);
   color: var(--black);
+  /* black text */
   font-size: 2rem;
   text-align: center;
 `;

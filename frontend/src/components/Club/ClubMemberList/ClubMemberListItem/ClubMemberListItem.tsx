@@ -87,7 +87,7 @@ const MemberNameStyled = styled.p<{
   line-height: 28px;
   height: 28px;
   font-size: 14px;
-  color: ${(props) => (props.isMaster ? "var(--white)" : "")};
+  color: ${(props) => (props.isMaster ? "var(--color-background)" : "")};
 `;
 
 export default memo(ClubMemberListItem);

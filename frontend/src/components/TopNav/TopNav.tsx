@@ -165,6 +165,7 @@ const BuildingListItemStyled = styled.li`
   width: 80px;
   height: 40px;
   color: var(--black);
+  /* black text */
   font-size: 1.25rem;
   font-family: var(--main-font);
   line-height: 40px;

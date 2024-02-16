@@ -136,8 +136,8 @@ const TitleContainerStyled = styled.div`
     margin-bottom: 20px;
   }
   .title > span {
-    /* color: black; */
     color: var(--black);
+    /* black text */
   }
 `;
 
@@ -150,8 +150,8 @@ const NotionBtn = styled.button`
   background: var(--color-background);
   border: 1px solid var(--gray-300);
   :hover {
-    /* color: black; */
     color: var(--black);
+    /* black text */
     font-weight: 400;
   }
 `;

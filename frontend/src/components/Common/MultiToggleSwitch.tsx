@@ -79,6 +79,7 @@ const WrapperStyled = styled.div`
     font-weight: 500;
     background-color: transparent;
     color: var(--black);
+    /* black text */
     padding: 4px 12px;
   }
 `;

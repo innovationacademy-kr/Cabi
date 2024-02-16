@@ -76,14 +76,14 @@ const LeftSectionNav = ({
           title="슬랙 캐비닛 채널 새창으로 열기"
         >
           문의하기
-          <LinkImg id="linknImg" stroke="var(--gray-color)" />
+          <LinkImg id="linknImg" stroke="var(--gray-500)" />
         </SectionLinkStyled>
         <SectionLinkStyled
           onClick={() => onClickClubForm()}
           title="동아리 사물함 사용 신청서 새창으로 열기"
         >
           동아리 신청서
-          <LinkImg id="linknImg" stroke="var(--gray-color)" />
+          <LinkImg id="linknImg" stroke="var(--gray-500)" />
         </SectionLinkStyled>
       </ProfileLeftNavOptionStyled>
       {isClub && <LeftSectionNavClubs />}
@@ -135,7 +135,7 @@ export const FloorSectionStyled = styled.div`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--main-color);
-      color: var(--white);
+      color: var(--color-background);
     }
   }
 `;

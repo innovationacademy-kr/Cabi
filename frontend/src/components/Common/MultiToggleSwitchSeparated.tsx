@@ -78,6 +78,7 @@ const WrapperStyled = styled.div`
     font-weight: 500;
     background-color: var(--gray-100);
     color: black;
+    /* black text */
     padding: 4px 12px;
     margin: 0px 4px;
   }

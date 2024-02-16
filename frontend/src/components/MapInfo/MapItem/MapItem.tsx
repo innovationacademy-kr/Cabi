@@ -43,7 +43,7 @@ const ItemStyled = styled.div<{
   font-size: ${({ info }) => (info.type === "floorInfo" ? "1.8rem" : "0.8rem")};
   cursor: ${({ info }) => (info.type === "floorInfo" ? "default" : "pointer")};
   color: ${({ info }) =>
-    info.type === "floorInfo" ? "var(--gray-400)" : "white"};
+    info.type === "floorInfo" ? "var(--gray-400)" : "var(--color-background)"};
   display: flex;
   justify-content: center;
   align-items: center;
