@@ -18,7 +18,7 @@ const LeftSectionNavClubs = () => {
     <>
       {clubList.totalLength > 0 && (
         <ClubLeftNavOptionStyled>
-          <ListTitleStyled>내 동아리</ListTitleStyled>
+          {/* <ListTitleStyled>내 동아리</ListTitleStyled> */}
           {clubList.result.map((club: ClubResponseDto, index: number) => (
             <FloorSectionStyled
               key={index}
@@ -45,7 +45,7 @@ const ClubLeftNavOptionStyled = styled.div`
   display: block;
   min-width: 240px;
   height: 100%;
-  padding: 20px 10px 32px;
+  padding: 32px 10px 32px;
   border-right: 1px solid var(--line-color);
   font-weight: 300;
   position: relative;
