@@ -180,8 +180,7 @@ const ContentItemInputStyled = styled.input<{
   font-size: 1.125rem;
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
   color: ${({ mode }) =>
-    mode === "read" ? "var(--main-color)" : "var(--black)"};
-  /* black text */
+    mode === "read" ? "var(--main-color)" : "var(--color-text-normal)"};
   &::placeholder {
     color: ${({ mode }) =>
       mode === "read" ? "var(--main-color)" : "var(--gray-400)"};

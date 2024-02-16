@@ -166,9 +166,8 @@ const ModalContent = styled.div<{
     props.contentStatus === ContentStatus.IN_SESSION
       ? "var(--main-color)"
       : props.contentStatus === ContentStatus.EXTENSION
-      ? "var(--black)"
-      : // black text
-        "var(--color-background)"};
+      ? "var(--color-text-normal)"
+      : "var(--color-background)"};
   font-size: 2.5rem;
   font-weight: bold;
   align-items: flex-start;

@@ -109,8 +109,7 @@ const CabinetRectangleStyled = styled.div`
   border-radius: 10px;
   margin-right: 20px;
   background-color: var(--full);
-  color: var(--black);
-  /* black text */
+  color: var(--color-text-normal);
   font-size: 2rem;
   text-align: center;
 `;

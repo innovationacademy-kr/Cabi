@@ -48,8 +48,7 @@ const HeaderStyled = styled.div`
   justify-content: space-between;
   width: 100%;
   align-items: center;
-  color: var(--black);
-  /* black text */
+  color: var(--color-text-normal);
   font-weight: bold;
 `;
 

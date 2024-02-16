@@ -100,8 +100,7 @@ const MaunalContentBoxStyled = styled.div<{
     contentStatus === ContentStatus.EXTENSION &&
     css`
       width: 900px;
-      color: var(--black);
-      /* black text */
+      color: var(--color-text-normal);
       @media screen and (max-width: 1000px) {
         width: 280px;
         .peopleImg {

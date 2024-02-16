@@ -42,8 +42,7 @@ const OptionStyled = styled.div`
   justify-content: center;
   align-items: center;
   background: var(--color-background);
-  color: var(--black);
-  /* black text */
+  color: var(--color-text-normal);
   cursor: pointer;
 `;
 

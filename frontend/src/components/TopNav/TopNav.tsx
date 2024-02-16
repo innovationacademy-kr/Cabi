@@ -164,8 +164,7 @@ const BuildingListStyled = styled.ul<{ clicked: boolean }>`
 const BuildingListItemStyled = styled.li`
   width: 80px;
   height: 40px;
-  color: var(--black);
-  /* black text */
+  color: var(--color-text-normal);
   font-size: 1.25rem;
   font-family: var(--main-font);
   line-height: 40px;

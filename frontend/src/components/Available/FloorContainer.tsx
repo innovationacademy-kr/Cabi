@@ -56,7 +56,7 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   display: flex;
   justify-content: space-between;
   font-size: 1.1rem;
-  color: var(--color-text-title);
+  color: var(--color-text-normal);
   padding-left: 5px;
   padding-right: 5px;
   border-bottom: 1.5px solid var(--gray-300);

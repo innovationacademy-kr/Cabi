@@ -90,7 +90,7 @@
 :root {
   --color-background: var(--white);
   --color-line: var(--gray-400);
-  --color-text-title: var(--black);
+  --color-text-normal: var(--black);
 }
 
 /* @media (prefers-color-scheme: dark) {
