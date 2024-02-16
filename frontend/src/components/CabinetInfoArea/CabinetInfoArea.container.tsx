@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import {
   myCabinetInfoState,
   targetCabinetInfoState,
@@ -157,11 +157,9 @@ export const getDetailMessageColor = (
 };
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
-  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
-    targetCabinetInfoState
-  );
-  const [myCabinetInfo, setMyLentInfo] =
-    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
+  const myCabinetInfo =
+    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const myInfo = useRecoilValue<UserDto>(userState);
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const { closeCabinet, toggleLent } = useMenu();
@@ -258,8 +256,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       [modalName]: true,
     });
   };
-
-  const [state, setState] = useState();
 
   const closeModal = (modalName: TModalState) => {
     setUserModal({
