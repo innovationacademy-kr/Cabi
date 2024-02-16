@@ -39,8 +39,6 @@ const SearchItemByNum = (props: CabinetInfo) => {
   const { floor, section, cabinetId, visibleNum, status, lentType, lents } =
     props;
 
-  console.log(props);
-
   const clickSearchItem = () => {
     if (currentCabinetId === cabinetId) {
       closeCabinet();
