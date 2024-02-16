@@ -86,7 +86,6 @@ const ClubNoticeTextStyled = styled.div`
     background-clip: padding-box;
     display: inline-block;
   }
-
 `;
 
 export default ClubNoticeCard;
