@@ -115,6 +115,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  
   background-color: var(--white);
 
   @media (prefers-color-scheme: dark) {

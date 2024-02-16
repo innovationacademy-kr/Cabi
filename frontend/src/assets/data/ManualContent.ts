@@ -14,7 +14,8 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.PRIVATE]: {
     contentTitle: "개인 사물함",
     imagePath: "/src/assets/images/privateIcon.svg",
-    background: "linear-gradient(to bottom, var(--main-400), #8337E5)",
+    background:
+      "linear-gradient(to bottom, var(--purple-400), var(--purple-600))",
     rentalPeriod: `${import.meta.env.VITE_PRIVATE_LENT_PERIOD}일`,
     capacity: "1인",
     contentText: `<span>◦ 이용 방법</span><br/>
@@ -35,7 +36,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.SHARE]: {
     contentTitle: "공유 사물함",
     imagePath: "/src/assets/images/shareIcon.svg",
-    background: "linear-gradient(to bottom, #7EBFFB, #406EE4)",
+    background: "linear-gradient(to bottom, var(--blue-200), var(--blue-300))",
     rentalPeriod: `${import.meta.env.VITE_SHARE_LENT_PERIOD}일 + n * ${
       import.meta.env.VITE_SHARE_BONUS_PER_PERSON
     }`,
@@ -64,7 +65,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.CLUB]: {
     contentTitle: "동아리 사물함",
     imagePath: "/src/assets/images/clubIcon.svg",
-    background: "linear-gradient(to bottom, #F473B1, #D72766)",
+    background: "linear-gradient(to bottom, var(--pink-100), var(--pink-200))",
     rentalPeriod: "상세내용 참조",
     capacity: "동아리",
     contentText: `<span>◦ 이용 방법</span><br/>

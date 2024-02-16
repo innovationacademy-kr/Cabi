@@ -29,16 +29,14 @@ export const themeColorData: ColorData[] = [
 ];
 
 export const customColors = [
-  "#FF4589",
-  "#FF8B5B",
-  "#FFC74C",
-  "#00cec9",
-  "#00C2AB",
-  "#74b9ff",
-  "#0984e3",
-  "#0D4C92",
+  "var(--custom-pink)",
+  "var(--custom-orange)",
+  "var(--custom-yellow)",
+  "var(--custom-green-100)",
+  "var(--custom-green-200)",
+  "var(--custom-blue-100)",
+  "var(--custom-blue-200)",
+  "var(--custom-blue-300)",
   "var(--custom-purple-100)",
-  "#9747ff",
-  // "var(--main-color)",
-  // TODO : main color 말고 primary를 쓰기
+  "var(--custom-purple-200)",
 ];
