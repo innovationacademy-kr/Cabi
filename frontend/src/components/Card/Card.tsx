@@ -3,7 +3,6 @@ import styled, { css } from "styled-components";
 
 export interface IButtonProps {
   label?: string; // NOTE: icon 이 없을 경우, label 을 표시
-  label?: string; // NOTE: icon 이 없을 경우, label 을 표시
   onClick?: () => void;
   backgroundColor?: string;
   color?: string;
@@ -98,7 +97,7 @@ export const CardTitleStyled = styled.div`
 `;
 
 const ToolTipIcon = styled.div`
-  background-image: url("/src/assets/images/cautionSign.svg");
+  background-image: url("/src/assets/images/notificationSign_grey.svg");
   background-size: contain;
   width: 16px;
   height: 16px;
