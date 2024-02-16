@@ -24,6 +24,7 @@ const ClubMemberListContainer = ({
 }: ClubMemberListContainerProps) => {
   const [moreButton, setMoreButton] = useState<boolean>(true);
   const [members, setMembers] = useState<ClubUserResponseDto[]>([]);
+  // const [sortMembers, setSortMembers] = useState<ClubUserResponseDto[]>([]);
   const [clubModal, setClubModal] = useState<ICurrentClubMemberModalStateInfo>({
     addModal: false,
   });
@@ -88,6 +89,10 @@ const ClubMemberListContainer = ({
     (member) => member.userId !== clubInfo.clubMaster.userId
   );
 
+  const sortMembers = filteredMembers.sort((a, b) =>
+    b.userName < a.userName ? 1 : -1
+  );
+
   return (
     <ClubMemberList
       isLoading={isLoading}
@@ -98,7 +103,7 @@ const ClubMemberListContainer = ({
       master={clubInfo.clubMaster}
       moreButton={moreButton}
       clickMoreButton={clickMoreButton}
-      members={filteredMembers}
+      members={sortMembers}
       selectClubMemberOnClick={selectClubMemberOnClick}
     />
   );

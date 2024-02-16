@@ -36,7 +36,7 @@ const useClubInfo = () => {
       const { data }: { data: ClubInfoResponseDto } = await axiosGetClubInfo(
         clubId,
         page,
-        2
+        100
       );
       setTargetClubInfo({
         clubId,

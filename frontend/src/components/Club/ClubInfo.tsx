@@ -20,6 +20,7 @@ const ClubInfo = () => {
       let clubInfoTest = clubInfo as ClubInfoResponseDto;
       if (clubInfoTest.clubMaster.userName === myInfo.name) setImMaster(true);
     }
+    // console.log(clubInfo);
   }, [clubInfo]);
 
   return (
