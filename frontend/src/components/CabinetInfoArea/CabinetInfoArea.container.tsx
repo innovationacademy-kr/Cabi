@@ -257,8 +257,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     });
   };
 
-  const [state, setState] = useState();
-
   const closeModal = (modalName: TModalState) => {
     setUserModal({
       ...userModal,

@@ -65,9 +65,7 @@ const ExtensionCardContainer = ({
       extensionInfo={extensionInfo}
       button={{
         label: !!extensionInfo ? "보유중" : "미보유",
-        onClick: () => {
-          clickMyCabinet();
-        },
+        onClick: () => clickMyCabinet(),
         isClickable: !!extensionInfo && !!myInfo.cabinetId,
         isExtensible: !!extensionInfo,
       }}
