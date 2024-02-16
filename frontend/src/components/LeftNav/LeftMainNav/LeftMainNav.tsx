@@ -158,7 +158,7 @@ const LeftNavStyled = styled.nav`
   min-width: 90px;
   position: relative;
   height: 100%;
-  border-right: 1px solid var(--gray-400);
+  border-right: 1px solid var(--color-line);
   position: relative;
   display: flex;
   flex-direction: column;

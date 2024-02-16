@@ -271,7 +271,7 @@ const ContentItemTitleStyled = styled.h3`
 `;
 
 const ContentItemInputStyled = styled.input`
-  border: 1px solid var(--gray-400);
+  border: 1px solid var(--color-line);
   width: 100%;
   height: 60px;
   border-radius: 10px;

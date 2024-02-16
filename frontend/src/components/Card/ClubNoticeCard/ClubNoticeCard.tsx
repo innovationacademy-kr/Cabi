@@ -80,13 +80,12 @@ const ClubNoticeTextStyled = styled.div`
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--line-color);
+    background: var(--gray-400);
     border-radius: 50px;
     border: 6px solid transparent;
     background-clip: padding-box;
     display: inline-block;
   }
-
 `;
 
 export default ClubNoticeCard;

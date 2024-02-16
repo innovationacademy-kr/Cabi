@@ -96,7 +96,7 @@ const TopNavContainerStyled = styled.nav`
   justify-content: space-between;
   align-items: center;
   background-color: var(--color-background);
-  border-bottom: 1px solid var(--gray-400);
+  border-bottom: 1px solid var(--color-line);
   padding: 0 28px;
   color: var(--gray-500);
   z-index: 10;
