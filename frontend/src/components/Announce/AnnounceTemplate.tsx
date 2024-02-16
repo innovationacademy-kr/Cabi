@@ -61,7 +61,7 @@ const AnnounceTemplateStyled = styled.div<{ backgroundColor: string }>`
   align-items: center;
   flex-direction: column;
   background-color: ${(props) => props.backgroundColor};
-  color: var(--white);
+  color: var(--color-background);
 `;
 
 const TitleStyled = styled.h1`

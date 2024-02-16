@@ -147,7 +147,7 @@ const ModalWrapper = styled.div<{
       : "none"};
   box-shadow: ${(props) =>
     props.contentStatus === ContentStatus.PENDING &&
-    "inset 0px 0px 0px 5px var(--white);"};
+    "inset 0px 0px 0px 5px var(--color-background);"};
   border-bottom: none;
   @media screen and (max-width: 700px) {
     width: 100%;

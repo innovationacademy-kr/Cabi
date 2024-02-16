@@ -24,13 +24,13 @@ export const cabinetIconSrcMap = {
 };
 
 export const cabinetLabelColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--white)",
+  [CabinetStatus.AVAILABLE]: "var(--color-background)",
   [CabinetStatus.FULL]: "var(--black)",
-  [CabinetStatus.OVERDUE]: "var(--white)",
-  [CabinetStatus.BROKEN]: "var(--white)",
-  [CabinetStatus.BANNED]: "var(--white)",
+  [CabinetStatus.OVERDUE]: "var(--color-background)",
+  [CabinetStatus.BROKEN]: "var(--color-background)",
+  [CabinetStatus.BANNED]: "var(--color-background)",
   [CabinetStatus.IN_SESSION]: "var(--main-color)",
-  [CabinetStatus.PENDING]: "var(--white)",
+  [CabinetStatus.PENDING]: "var(--color-background)",
   MINE: "var(--black)",
 };
 

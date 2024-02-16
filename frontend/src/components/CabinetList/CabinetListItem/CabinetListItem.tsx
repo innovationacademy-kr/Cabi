@@ -205,7 +205,7 @@ const CabinetListItemStyled = styled.div<{
     status === "PENDING" &&
     css`
       border: 2px double var(--main-color);
-      box-shadow: inset 0px 0px 0px 2px var(--white);
+      box-shadow: inset 0px 0px 0px 2px var(--color-background);
     `}
 
   ${({ status }) =>

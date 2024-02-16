@@ -31,7 +31,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연체 페널티는 누적됩니다.
     </div>
   `,
-    pointColor: "var(--white)",
+    pointColor: "var(--color-background)",
   },
   [ContentStatus.SHARE]: {
     contentTitle: "공유 사물함",
@@ -60,7 +60,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연체 페널티는 누적됩니다.
     </div>
   `,
-    pointColor: "var(--white)",
+    pointColor: "var(--color-background)",
   },
   [ContentStatus.CLUB]: {
     contentTitle: "동아리 사물함",
@@ -87,7 +87,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     상세 페이지가 제공되지 않습니다.
     <br />
     비밀번호는 동아리 내에서 공유하여 이용하세요.</div>`,
-    pointColor: "var(--white)",
+    pointColor: "var(--color-background)",
   },
   [ContentStatus.PENDING]: {
     contentTitle: "오픈예정",
@@ -103,7 +103,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     title="슬랙 캐비닛 채널 새창으로 열기"
   >
     슬랙 캐비닛 채널</a>에서 확인하세요.</div>`,
-    pointColor: "var(--white)",
+    pointColor: "var(--color-background)",
   },
   [ContentStatus.IN_SESSION]: {
     contentTitle: "대기중",

@@ -350,7 +350,7 @@ const CabinetRectangleStyled = styled.div<{
     cabinetStatus === "PENDING" &&
     css`
       border: 2px double var(--main-color);
-      box-shadow: inset 0px 0px 0px 2px var(--white);
+      box-shadow: inset 0px 0px 0px 2px var(--color-background);
     `}
 `;
 
@@ -378,7 +378,7 @@ const HoverBox = styled.div<{
   box-shadow: 4px 4px 20px 0px var(--bg-shadow-300);
   font-size: 0.875rem;
   text-align: center;
-  color: var(--white);
+  color: var(--color-background);
   display: flex;
   flex-direction: column;
   justify-content: space-around;

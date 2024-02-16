@@ -86,7 +86,7 @@ const MaunalContentBoxStyled = styled.div<{
     contentStatus === ContentStatus.PENDING &&
     css`
       border: 5px double var(--main-color);
-      box-shadow: inset 0px 0px 0px 5px var(--white);
+      box-shadow: inset 0px 0px 0px 5px var(--color-background);
     `}
 
   ${({ contentStatus }) =>
@@ -142,7 +142,7 @@ const MaunalContentBoxStyled = styled.div<{
       contentStatus === ContentStatus.PENDING
         ? css`
             border: 5px double var(--main-color);
-            box-shadow: inset 0px 0px 0px 5px var(--white),
+            box-shadow: inset 0px 0px 0px 5px var(--color-background),
               10px 10px 25px 0 var(--bg-shadow-200);
           `
         : css`
