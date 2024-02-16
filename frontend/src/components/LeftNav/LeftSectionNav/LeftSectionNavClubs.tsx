@@ -61,8 +61,9 @@ const ClubLeftNavOptionStyled = styled.div`
 
 const ListTitleStyled = styled.div`
   color: var(--gray-color);
-  font-size: 0.9rem;
-  margin: 0.5rem 0.75rem;
+  font-size: 12px;
+  margin: 0.5rem 0 0.5rem 0;
+  font-weight: 500;
 `;
 
 export default LeftSectionNavClubs;
