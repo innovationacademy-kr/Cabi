@@ -9,7 +9,6 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +30,9 @@ public class UserCommandService {
 		if (userRepository.existsByNameAndEmail(profile.getIntraName(), profile.getEmail())) {
 			throw ExceptionStatus.USER_ALREADY_EXISTED.asServiceException();
 		}
-		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
-				UserRole.USER);
+//		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
+//				UserRole.USER);
+		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt());
 		return userRepository.save(user);
 	}
 
@@ -46,7 +46,8 @@ public class UserCommandService {
 		if (userRepository.existsByNameAndEmail(clubName, clubName + "@ftclub.org")) {
 			throw ExceptionStatus.EXISTED_CLUB_USER.asServiceException();
 		}
-		User user = User.of(clubName, clubName + "@ftclub.org", null, UserRole.CLUB);
+//		User user = User.of(clubName, clubName + "@ftclub.org", null, UserRole.CLUB);
+		User user = User.of(clubName, clubName + "@ftclub.org", null);
 		return userRepository.save(user);
 	}
 
@@ -57,9 +58,9 @@ public class UserCommandService {
 	 * @param clubName 변경할 유저 이름
 	 */
 	public void updateClubName(User user, String clubName) {
-		if (!user.isUserRole(UserRole.CLUB)) {
-			throw ExceptionStatus.NOT_CLUB_USER.asServiceException();
-		}
+//		if (!user.isUserRole(UserRole.CLUB)) {
+//			throw ExceptionStatus.NOT_CLUB_USER.asServiceException();
+//		}
 		user.changeName(clubName);
 		userRepository.save(user);
 	}
@@ -80,9 +81,9 @@ public class UserCommandService {
 	 * @param clubUser 삭제할 동아리 유저 객체
 	 */
 	public void deleteClubUser(User clubUser) {
-		if (!clubUser.isUserRole(UserRole.CLUB)) {
-			throw ExceptionStatus.NOT_CLUB_USER.asServiceException();
-		}
+//		if (!clubUser.isUserRole(UserRole.CLUB)) {
+//			throw ExceptionStatus.NOT_CLUB_USER.asServiceException();
+//		}
 		userRepository.deleteById(clubUser.getId(), LocalDateTime.now());
 	}
 

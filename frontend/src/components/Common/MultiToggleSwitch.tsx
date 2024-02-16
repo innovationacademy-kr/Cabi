@@ -28,7 +28,7 @@ const MultiToggleSwitch = <T,>({
         button.style.backgroundColor = "var(--main-color)";
       }
     });
-  }, []);
+  }, [initialState]);
 
   function switchToggle(e: any) {
     const target = e.target as HTMLButtonElement;
@@ -78,8 +78,8 @@ const WrapperStyled = styled.div`
     height: 30px;
     font-weight: 500;
     background-color: transparent;
-    /* color: black; */
     color: var(--black);
+    padding: 4px 12px;
   }
 `;
 

@@ -9,7 +9,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LentExtensionRepository extends JpaRepository<LentExtension, Long> {
 
-	List<LentExtension> findAllByUserId(@Param("userId") Long userId);
-
+	/**
+	 * 특정 유저의 사용 가능한 연장권을 모두 가져옵니다.
+	 *
+	 * @param userId 유저의 아이디
+	 * @return 사용 가능한 연장권 {@link List}.
+	 */
 	List<LentExtension> findAllByUserIdAndUsedAtIsNull(@Param("userId") Long userId);
 }

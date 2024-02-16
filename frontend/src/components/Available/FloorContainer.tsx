@@ -38,10 +38,10 @@ const FloorContainer = ({
           )}
         </FlootCabinetsContainerStyled>
       ) : (
-        <NoPendingCabinetMessageStyled isToggled={isToggled}>
+        <NoAvailableCabinetMessageStyled isToggled={isToggled}>
           <p>해당 층에는 사용 가능한 사물함이 없습니다 </p>
-          <img src="/src/assets/images/sadCcabi.png" alt="noPending" />
-        </NoPendingCabinetMessageStyled>
+          <img src="/src/assets/images/sadCcabi.png" alt="noAvailable" />
+        </NoAvailableCabinetMessageStyled>
       )}
     </FloorContainerStyled>
   );
@@ -85,7 +85,7 @@ const FlootCabinetsContainerStyled = styled.div<{ isToggled: boolean }>`
   }
 `;
 
-const NoPendingCabinetMessageStyled = styled.div<{ isToggled: boolean }>`
+const NoAvailableCabinetMessageStyled = styled.div<{ isToggled: boolean }>`
   display: ${(props) => (props.isToggled ? "none" : "flex")};
   align-items: center;
   margin-top: 20px;

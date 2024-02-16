@@ -14,9 +14,10 @@ interface ILeftMainNav {
   onClickLogoutButton: React.MouseEventHandler;
   onClickLentLogButton: React.MouseEventHandler;
   onClickSearchButton: React.MouseEventHandler;
-  onClickClubButton: React.MouseEventHandler;
+  onClickAdminClubButton: React.MouseEventHandler;
+  onClickMainClubButton: React.MouseEventHandler;
   onClickProfileButton: React.MouseEventHandler;
-  onClickPendingButton: React.MouseEventHandler;
+  onClickAvailableButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
@@ -29,9 +30,10 @@ const LeftMainNav = ({
   onClickLogoutButton,
   onClickLentLogButton,
   onClickSearchButton,
-  onClickClubButton,
+  onClickAdminClubButton,
+  onClickMainClubButton,
   onClickProfileButton,
-  onClickPendingButton,
+  onClickAvailableButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
@@ -64,11 +66,11 @@ const LeftMainNav = ({
             ))}
           <TopBtnStyled
             className={
-              pathname.includes("pending")
+              pathname.includes("available")
                 ? "leftNavButtonActive cabiButton"
                 : "cabiButton"
             }
-            onClick={onClickPendingButton}
+            onClick={onClickAvailableButton}
           >
             사용가능
           </TopBtnStyled>
@@ -105,7 +107,7 @@ const LeftMainNav = ({
                     ? "active cabiButton"
                     : " cabiButton"
                 }
-                onClick={onClickClubButton}
+                onClick={onClickAdminClubButton}
               >
                 <CulbImg stroke="var(--gray-500)" />
                 Club
@@ -120,17 +122,30 @@ const LeftMainNav = ({
             </>
           )}
           {!isAdmin && (
-            <BottomBtnStyled
-              className={
-                pathname.includes("profile")
-                  ? "active cabiButton"
-                  : " cabiButton"
-              }
-              onClick={onClickProfileButton}
-            >
-              <ProfileImg stroke="var(--gray-500)" width={32} height={32} />
-              Profile
-            </BottomBtnStyled>
+            <>
+              <BottomBtnStyled
+                className={
+                  pathname.includes("clubs")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                onClick={onClickMainClubButton}
+              >
+                <CulbImg stroke="var(--gray-500)" />
+                Clubs
+              </BottomBtnStyled>
+              <BottomBtnStyled
+                className={
+                  pathname.includes("profile")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                onClick={onClickProfileButton}
+              >
+                <ProfileImg stroke="var(--gray-500)" width={32} height={32} />
+                Profile
+              </BottomBtnStyled>
+            </>
           )}
         </BottomBtnsStyled>
       </BottomSectionStyled>

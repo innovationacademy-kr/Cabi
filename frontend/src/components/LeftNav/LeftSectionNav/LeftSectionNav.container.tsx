@@ -14,6 +14,7 @@ const LeftSectionNavContainer = ({ isVisible }: { isVisible: boolean }) => {
   const { pathname } = useLocation();
   const { closeLeftNav } = useMenu();
   const isProfilePage: boolean = location.pathname.includes("profile");
+  const isMainClubPage: boolean = location.pathname === "/clubs";
 
   const onClickSection = (section: string) => {
     closeLeftNav();
@@ -58,6 +59,7 @@ const LeftSectionNavContainer = ({ isVisible }: { isVisible: boolean }) => {
       onClickLentLogButton={onClickLentLogButton}
       onClickSlack={onClickSlack}
       onClickClubForm={onClickClubForm}
+      isClub={isMainClubPage}
     />
   );
 };

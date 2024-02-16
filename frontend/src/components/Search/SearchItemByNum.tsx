@@ -18,7 +18,7 @@ import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const reformIntraId = (lents: LentDto[]) => {
-  if (lents.length === 0) {
+  if (!lents || lents.length === 0) {
     return "-";
   } else {
     const intra_id = lents.map((item) => item.name);
@@ -38,6 +38,8 @@ const SearchItemByNum = (props: CabinetInfo) => {
 
   const { floor, section, cabinetId, visibleNum, status, lentType, lents } =
     props;
+
+  console.log(props);
 
   const clickSearchItem = () => {
     if (currentCabinetId === cabinetId) {
