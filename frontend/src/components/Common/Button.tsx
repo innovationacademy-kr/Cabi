@@ -48,21 +48,21 @@ const ButtonContainerStyled = styled.button`
   ${(props) =>
     props.theme === "line" &&
     css`
-      background: var(--white);
+      background: var(--color-background);
       color: var(--main-color);
       border: 1px solid var(--main-color);
     `}
   ${(props) =>
     props.theme === "light-grayLine" &&
     css`
-      background: var(--white);
+      background: var(--color-background);
       color: var(--gray-400);
       border: 1px solid var(--gray-400);
     `}
   ${(props) =>
     props.theme === "grayLine" &&
     css`
-      background: var(--white);
+      background: var(--color-background);
       color: var(--gray-500);
       border: 1px solid var(--gray-500);
     `}
@@ -71,7 +71,7 @@ const ButtonContainerStyled = styled.button`
     css`
       max-width: 200px;
       height: 40px;
-      background: var(--white);
+      background: var(--color-background);
       color: var(--gray-500);
       font-size: 0.875rem;
       border: 1px solid var(--gray-500);

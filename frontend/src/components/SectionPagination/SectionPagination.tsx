@@ -22,7 +22,9 @@ const SectionPagination: React.FC<{
     <IndexRectangleStyled
       key={sectionName}
       filledColor={
-        sectionName === currentSectionName ? "var(--main-color)" : "var(--gray-300)"
+        sectionName === currentSectionName
+          ? "var(--main-color)"
+          : "var(--gray-300)"
       }
       onClick={() => changeSectionOnClickIndexButton(index)}
       className="cabiButton"
@@ -59,7 +61,7 @@ const SectionPaginationStyled = styled.div`
   padding: 10px 0;
   position: sticky;
   top: 0;
-  /* background: rgba(255, 255, 255, 0.95); */
+  background: var(--color-background);
   z-index: 1;
 `;
 

@@ -23,7 +23,7 @@ const OptionWrapperStyled = styled.div`
   position: absolute;
   left: 0;
   top: 75px;
-  background: white;
+  background: var(--color-background);
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -41,8 +41,7 @@ const OptionStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--white);
-  /* color: black; */
+  background: var(--color-background);
   color: var(--black);
   cursor: pointer;
 `;

@@ -82,7 +82,7 @@ const ToggleKnobStyled = styled.span<{ checked: boolean }>`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: var(--white);
+  background: var(--color-background);
   transition: transform 0.2s;
   transform: ${(props) =>
     props.checked ? "translateX(28px)" : "translateX(0)"};

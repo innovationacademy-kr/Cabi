@@ -48,7 +48,7 @@ const LogoStyled = styled.div`
   height: 60px;
   border-radius: 10px;
   margin-right: 20px;
-  background-color: var(--white);
+  background-color: var(--color-background);
 `;
 
 const LogoDivStyled = styled.div`

@@ -109,7 +109,7 @@ export const CardButtonStyled = styled.div<{
       : css`
           background-color: ${props.backgroundColor
             ? props.backgroundColor
-            : "var(--white)"};
+            : "var(--color-background)"};
           color: ${props.color
             ? props.color
             : props.isExtensible

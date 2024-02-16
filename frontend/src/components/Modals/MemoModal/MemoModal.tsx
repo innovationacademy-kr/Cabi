@@ -118,7 +118,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--color-background);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -179,8 +179,10 @@ const ContentItemInputStyled = styled.input<{
   text-indent: 20px;
   font-size: 1.125rem;
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
-  /* color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "black")}; */
-  color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "var(--black)")};
+  /* color: ${({ mode }) =>
+    mode === "read" ? "var(--main-color)" : "black"}; */
+  color: ${({ mode }) =>
+    mode === "read" ? "var(--main-color)" : "var(--black)"};
   &::placeholder {
     color: ${({ mode }) =>
       mode === "read" ? "var(--main-color)" : "var(--gray-400)"};

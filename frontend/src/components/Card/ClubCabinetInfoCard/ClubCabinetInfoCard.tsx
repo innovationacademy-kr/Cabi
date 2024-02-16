@@ -166,13 +166,13 @@ const ContentInfoStyled = styled.div<{
     props.isSelected &&
     `
     background-color: ${props.selectedColor};
-    color: white;
+    color: var(--color-background);
     border-radius: 8px;
   `}
 `;
 
 const CardContentWrapper = styled.div`
-  background-color: var(--white);
+  background-color: var(--color-background);
   border-radius: 10px;
   padding: 10px 0;
   margin: 5px 5px 5px 5px;

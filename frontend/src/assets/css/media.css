@@ -4,7 +4,8 @@
     position: fixed;
     top: 80px;
     left: 0;
-    background-color: var(--white);
+    /* background-color: var(--white); */
+    background-color: var(--color-background);
     height: calc(100% - 80px);
     z-index: 9;
     transform: translateX(-100%);

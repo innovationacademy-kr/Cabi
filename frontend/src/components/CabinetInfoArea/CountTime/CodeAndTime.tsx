@@ -82,7 +82,7 @@ const CodeAndTimeStyled = styled.div`
   flex-direction: column;
   border-radius: 10px;
   margin-bottom: 15px;
-  background: var(--white);
+  background: var(--color-background);
   color: var(--main-color);
   border: 1px solid var(--main-color);
   position: relative;

@@ -230,7 +230,9 @@ const CabinetListItemStyled = styled.div<{
       status === "IN_SESSION" &&
       css`
         animation: ${Rotation} 1s linear infinite;
-        background-color: ${isMine ? "var(--black)" : "var(--main-color)"};
+        background-color: ${isMine
+          ? "var(--color-background)"
+          : "var(--main-color)"};
       `}
   }
 

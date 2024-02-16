@@ -68,7 +68,7 @@ const MapInfoContainerStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--white);
+  background: var(--color-background);
 `;
 
 export default MapInfo;

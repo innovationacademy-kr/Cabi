@@ -145,7 +145,7 @@ const ClubMemberInfoAreaStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--white);
+  background: var(--color-background);
 `;
 
 const TextStyled = styled.p<{

@@ -147,7 +147,7 @@ const NotionBtn = styled.button`
   border-radius: 8px;
   font-size: 0.875rem;
   color: var(--gray-600);
-  background: white;
+  background: var(--color-background);
   border: 1px solid var(--gray-300);
   :hover {
     /* color: black; */
@@ -200,7 +200,7 @@ const InfoSectionStyled = styled.section`
     text-align: center;
   }
   .redColor {
-    color: var(--orange);
+    color: var(--orange-color);
     margin-top: 15px;
   }
   .article > p > span {

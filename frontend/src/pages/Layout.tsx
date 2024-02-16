@@ -4,8 +4,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 import {
+  darkModeState,
   myClubListState,
-  darkModeState, serverTimeState,
+  serverTimeState,
   targetClubInfoState,
   userState,
 } from "@/recoil/atoms";
@@ -190,7 +191,7 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
   padding: 45px 40px 20px;
   position: relative;
   border-left: 1px solid var(--gray-400);
-  /* background-color: var(--white); */
+  background-color: var(--color-background);
   overflow-y: auto;
   ${(props) =>
     props.isHomePage &&

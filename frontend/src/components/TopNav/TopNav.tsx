@@ -95,7 +95,7 @@ const TopNavContainerStyled = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* background-color: white; */
+  background-color: var(--color-background);
   border-bottom: 1px solid var(--gray-400);
   padding: 0 28px;
   color: var(--gray-500);
@@ -152,7 +152,7 @@ const BuildingListStyled = styled.ul<{ clicked: boolean }>`
   top: 30px;
   left: -15px;
   padding: 5px 10px;
-  background: var(--white);
+  background: var(--color-background);
   opacity: 0.9;
   border-radius: 4px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);

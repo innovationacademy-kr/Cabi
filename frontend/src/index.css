@@ -7,19 +7,18 @@
   --gray-200: #eeeeee;
   --gray-300: #d9d9d9;
   --gray-400: #bcbcbc;
-  /* TODO : bcbcbc는 line-color*/
   --gray-500: #7b7b7b;
   --gray-600: #3c3c3c;
   --black: #181818;
 
   /* red color variable */
-  --red: #ff4e4e;
+  --red-color: #ff4e4e;
 
   /* orange color variable */
-  --orange: #ef8172;
+  --orange-color: #ef8172;
 
   /* green color variable */
-  --green: #47ffa7;
+  --green-color: #47ffa7;
 
   /* blue color variable */
   --blue-100: #f5f7ff;
@@ -43,8 +42,8 @@
   --sub-color: var(--purple-300);
 
   /* cabinet color variable */
-  --mine: var(--green);
-  --expired: var(--red);
+  --mine: var(--green-color);
+  --expired: var(--red-color);
   --available: var(--main-color);
   --full: var(--gray-200);
   --broken: var(--gray-600);
@@ -54,7 +53,7 @@
 
   --default-main-color: var(--purple-500);
   --default-sub-color: var(--purple-300);
-  --default-mine-color: var(--green);
+  --default-mine-color: var(--green-color);
 
   /* custom color variable */
   --custom-blue-100: #74b9ff;
@@ -81,9 +80,21 @@
   line-height: 24px;
   font-weight: 400;
 
-  color: var(--black);
+  /* color: var(--black); */
   /* background-color: var(--white); */
 }
+
+:root {
+  --color-background: var(--white);
+  --color-line: var(--gray-400);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--black);
+    --color-line: var(--gray-400);
+  }
+} */
 
 a {
   color: var(--main-color);
@@ -115,12 +126,8 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  
-  background-color: var(--white);
 
-  @media (prefers-color-scheme: dark) {
-    /* background-color: var(--black); */
-  }
+  background-color: var(--color-background);
 }
 
 h1 {
