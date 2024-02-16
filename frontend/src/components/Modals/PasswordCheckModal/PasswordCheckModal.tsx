@@ -71,7 +71,7 @@ const Input = styled.input<{ isEmpty: number | null }>`
   border-radius: 10px;
   outline: none;
   border: ${({ isEmpty }) =>
-    isEmpty ? "1px solid var(--main-color)" : "1px solid var(--main-200)"};
+    isEmpty ? "1px solid var(--main-color)" : "1px solid var(--purple-200)"};
 `;
 
 const PasswordContainer = styled.div`

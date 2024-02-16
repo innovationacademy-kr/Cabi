@@ -217,7 +217,6 @@ const CloseButton = styled.div<{
       props.contentStatus === ContentStatus.IN_SESSION
         ? "var(--main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
-        // ? "black"
         ? "var(--black)"
         : "white"};
   }

@@ -116,8 +116,6 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
   text-align: start;
   padding-left: 20px;
   font-size: 1.125rem;
-  /* color: ${({ isSelected }) =>
-    isSelected ? "var(--main-color)" : "black"}; */
   color: ${({ isSelected }) =>
     isSelected ? "var(--main-color)" : "var(--black)"};
   cursor: pointer;
