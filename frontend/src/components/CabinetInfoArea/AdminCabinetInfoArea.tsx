@@ -239,7 +239,7 @@ const LinkTextStyled = styled.div`
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 0.875rem;
-  color: var(--lightpurple-color);
+  color: var(--sub-color);
   text-decoration: underline;
   :hover {
     cursor: pointer;
@@ -277,14 +277,15 @@ const CabinetRectangleStyled = styled.div<{
       ? cabinetLabelColorMap["MINE"]
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
-
   ${({ cabinetStatus }) => css`
     border: ${cabinetStatus === "IN_SESSION"
       ? "2px solid var(--main-color)"
       : cabinetStatus === "PENDING"
-      ? "5px double var(--white)"
+      ? "2px double var(--main-color)"
       : "none"};
-    ${cabinetStatus === "PENDING" && "line-height: 70px;"};
+  `}
+  ${({ cabinetStatus }) => css`
+    box-shadow: ${cabinetStatus === "PENDING" && "inset 0px 0px 0px 2px white"};
   `}
 `;
 

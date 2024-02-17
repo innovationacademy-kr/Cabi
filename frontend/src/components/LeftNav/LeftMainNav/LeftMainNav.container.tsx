@@ -114,8 +114,13 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
-  const onClickClubButton = () => {
+  const onClickAdminClubButton = () => {
     navigator("club");
+    closeAll();
+  };
+
+  const onClickMainClubButton = () => {
+    navigator("clubs");
     closeAll();
   };
 
@@ -124,8 +129,8 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
-  const onClickPendingButton = () => {
-    navigator("pending");
+  const onClickAvailableButton = () => {
+    navigator("available");
     closeAll();
   };
 
@@ -157,9 +162,10 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickLentLogButton={onClickLentLogButton}
       onClickSearchButton={onClickSearchButton}
       onClickLogoutButton={onClickLogoutButton}
-      onClickClubButton={onClickClubButton}
+      onClickAdminClubButton={onClickAdminClubButton}
+      onClickMainClubButton={onClickMainClubButton}
       onClickProfileButton={onClickProfileButton}
-      onClickPendingButton={onClickPendingButton}
+      onClickAvailableButton={onClickAvailableButton}
       isAdmin={isAdmin}
     />
   );

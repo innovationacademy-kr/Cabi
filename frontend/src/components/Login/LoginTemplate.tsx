@@ -20,7 +20,7 @@ const LoginTemplate = (props: {
           <LoginTitleStyled color="var(--black)">
             42서울 캐비닛 서비스
           </LoginTitleStyled>
-          <LoginTitleStyled color="var(--lightpurple-color)">
+          <LoginTitleStyled color="var(--sub-color)">
             여러분의 일상을 가볍게
           </LoginTitleStyled>
         </TopContentsStyled>

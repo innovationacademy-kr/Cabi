@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
-interface toggleItem {
+export interface toggleItem {
   name: string;
   key: string;
 }
@@ -17,25 +17,27 @@ const MultiToggleSwitch = <T,>({
   setState,
   toggleList,
 }: MultiToggleSwitchProps<T>) => {
-  useEffect(() => {
-    const buttons = document.querySelectorAll("button");
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-    buttons.forEach((button) => {
+  useEffect(() => {
+    const buttons = wrapperRef.current?.querySelectorAll("button");
+
+    buttons?.forEach((button) => {
       if (button.className === initialState) {
         button.style.color = "white";
         button.style.backgroundColor = "var(--main-color)";
       }
     });
-  }, []);
+  }, [initialState]);
 
   function switchToggle(e: any) {
-    const target = e.target;
+    const target = e.target as HTMLButtonElement;
 
     if (target === e.currentTarget) return;
 
-    const buttons = document.querySelectorAll("button");
+    const buttons = wrapperRef.current?.querySelectorAll("button");
 
-    buttons.forEach((button) => {
+    buttons?.forEach((button) => {
       button.style.color = "black";
       button.style.backgroundColor = "transparent";
     });
@@ -43,11 +45,11 @@ const MultiToggleSwitch = <T,>({
     target.style.color = "white";
     target.style.backgroundColor = "var(--main-color)";
 
-    setState(target.className);
+    setState(target.className as React.SetStateAction<T>);
   }
 
   return (
-    <WrapperStyled onClick={switchToggle}>
+    <WrapperStyled ref={wrapperRef} onClick={switchToggle}>
       {toggleList.map((item) => (
         <button key={item.key} className={item.key}>
           {item.name}
@@ -76,6 +78,7 @@ const WrapperStyled = styled.div`
     font-weight: 500;
     background-color: transparent;
     color: black;
+    padding: 4px 12px;
   }
 `;
 

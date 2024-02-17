@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { selectedClubInfoState } from "@/recoil/atoms";
@@ -6,6 +6,7 @@ import AdminClubLogContainer from "@/components/Club/AdminClubLog.container";
 import Button from "@/components/Common/Button";
 import ClubModal from "@/components/Modals/ClubModal/ClubModal";
 import { ClubUserDto } from "@/types/dto/lent.dto";
+import { deleteRecoilPersistFloorSection } from "@/utils/recoilPersistUtils";
 
 const AdminClubPage = () => {
   const [shouldFetchData, setShouldFetchData] = useState(false);
@@ -13,6 +14,10 @@ const AdminClubPage = () => {
   const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(
     selectedClubInfoState
   );
+
+  useEffect(() => {
+    deleteRecoilPersistFloorSection();
+  }, []);
 
   const handleDataChanged = () => {
     setShouldFetchData(true);
@@ -34,7 +39,10 @@ const AdminClubPage = () => {
       <SubTitleStyled>
         현재 등록된 동아리 목록을 확인할 수 있습니다.
       </SubTitleStyled>
-      <AdminClubLogContainer shouldFetchData={shouldFetchData} setShouldFetchData={setShouldFetchData} />
+      <AdminClubLogContainer
+        shouldFetchData={shouldFetchData}
+        setShouldFetchData={setShouldFetchData}
+      />
       <ButtonWrapperStyled>
         <Button
           text={"동아리 생성"}
@@ -88,7 +96,7 @@ const SubTitleStyled = styled.div`
   font-size: 1.2rem;
   letter-spacing: -0.02rem;
   margin-bottom: 5px;
-  color: var(--lightpurple-color);
+  color: var(--sub-color);
 `;
 
 const ButtonWrapperStyled = styled.div`

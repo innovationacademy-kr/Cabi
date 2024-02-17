@@ -1,3 +1,7 @@
+import {
+  deleteFcmToken,
+  requestFcmAndGetDeviceToken,
+} from "@/firebase/firebase-messaging-sw";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -8,25 +12,21 @@ import NotificationCardContainer from "@/components/Card/NotificationCard/Notifi
 import ProfileCardContainer from "@/components/Card/ProfileCard/ProfileCard.container";
 import ThemeColorCardContainer from "@/components/Card/ThemeColorCard/ThemeColorCard.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { axiosMyInfo } from "@/api/axios/axios.custom";
+import { axiosMyInfo, axiosUpdateDeviceToken } from "@/api/axios/axios.custom";
+import { deleteRecoilPersistFloorSection } from "@/utils/recoilPersistUtils";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [myInfo, setMyInfo] = useRecoilState(userState);
 
-  const updateLocalStorage = () => {
-    const recoilPersist = localStorage.getItem("recoil-persist");
-    if (recoilPersist) {
-      let recoilPersistObj = JSON.parse(recoilPersist);
-      delete recoilPersistObj.CurrentFloor;
-      delete recoilPersistObj.CurrentSection;
-      localStorage.setItem("recoil-persist", JSON.stringify(recoilPersistObj));
-    }
-  };
-
   const getMyInfo = async () => {
     try {
       const { data: myInfo } = await axiosMyInfo();
+      if (myInfo.alarmTypes?.push && myInfo.isDeviceTokenExpired) {
+        await deleteFcmToken();
+        const deviceToken = await requestFcmAndGetDeviceToken();
+        await axiosUpdateDeviceToken(deviceToken);
+      }
       setMyInfo(myInfo);
     } catch (error) {
       throw error;
@@ -35,7 +35,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    updateLocalStorage();
+    deleteRecoilPersistFloorSection();
     getMyInfo();
     setTimeout(() => {
       setIsLoading(false);

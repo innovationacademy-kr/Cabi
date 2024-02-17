@@ -1,17 +1,16 @@
 package org.ftclub.cabinet.user.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -20,6 +19,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
+import org.ftclub.cabinet.club.domain.ClubRegistration;
+import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.ExceptionUtil;
@@ -28,55 +30,64 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
 @Table(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"alarmStatus"})
+@ToString(exclude = {"joinedClubs"})
 @Log4j2
 public class User {
 
+
+	@OneToMany(mappedBy = "user")
+	private final List<ClubRegistration> joinedClubs = new ArrayList<>();
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "USER_ID")
-	private Long userId;
-
+	@Column(name = "ID")
+	private Long id;
 	@NotNull
 	@Column(name = "NAME", length = 32, unique = true, nullable = false)
 	private String name;
-
 	@Email
 	@Column(name = "EMAIL", unique = true)
 	private String email;
-
 	@Column(name = "BLACKHOLED_AT")
 	private LocalDateTime blackholedAt = null;
-
 	@Column(name = "DELETED_AT", length = 32)
 	private LocalDateTime deletedAt = null;
+	//	@Enumerated(value = EnumType.STRING)
+//	@Column(name = "ROLE", length = 32, nullable = false)
+//	private UserRole role;
+	@Column(name = "SLACK_ALARM", columnDefinition = "boolean default true")
+	private boolean slackAlarm;
+	@Column(name = "EMAIL_ALARM", columnDefinition = "boolean default true")
+	private boolean emailAlarm;
+	@Column(name = "PUSH_ALARM", columnDefinition = "boolean default false")
+	private boolean pushAlarm;
 
-	@Enumerated(value = EnumType.STRING)
-	@Column(name = "ROLE", length = 32, nullable = false)
-	private UserRole role;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private AlarmStatus alarmStatus;
-
-	protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
+	protected User(String name, String email, LocalDateTime blackholedAt) {
 		this.name = name;
 		this.email = email;
 		this.blackholedAt = blackholedAt;
-		this.role = userRole;
+//		this.role = userRole;
+		setDefaultAlarmStatus();
 	}
 
-	public static User of(String name, String email, LocalDateTime blackholedAt,
-			UserRole userRole) {
-		User user = new User(name, email, blackholedAt, userRole);
+	public static User of(String name, String email, LocalDateTime blackholedAt) {
+		User user = new User(name, email, blackholedAt);
 		ExceptionUtil.throwIfFalse(user.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return user;
 	}
 
+
+	private void setDefaultAlarmStatus() {
+		this.slackAlarm = true;
+		this.emailAlarm = true;
+		this.pushAlarm = false;
+	}
+
 	private boolean isValid() {
 		return name != null && email != null && Pattern.matches(
-				"^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+\\.*[A-Za-z0-9\\-]*", email)
-				&& role != null && role.isValid();
+				"^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+\\.*[A-Za-z0-9\\-]*", email);
+//				&& role != null && role.isValid();
 	}
 
 	@Override
@@ -88,12 +99,12 @@ public class User {
 			return false;
 		}
 		User user = (User) o;
-		return Objects.equals(userId, user.userId);
+		return Objects.equals(id, user.id);
 	}
 
-	public boolean isUserRole(UserRole role) {
-		return role.equals(this.role);
-	}
+//	public boolean isUserRole(UserRole role) {
+//		return role.equals(this.role);
+//	}
 
 	public void changeBlackholedAt(LocalDateTime blackholedAt) {
 		log.info("Called changeBlackholedAt - form {} to {}", this.blackholedAt, blackholedAt);
@@ -110,5 +121,26 @@ public class User {
 		this.name = name;
 		ExceptionUtil.throwIfFalse(this.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+	}
+
+	public String getBlackholedAtString() {
+		if (blackholedAt == null) {
+			return null;
+		}
+		return blackholedAt.toString();
+	}
+
+	public AlarmTypeResponseDto getAlarmTypes() {
+		return new AlarmTypeResponseDto(slackAlarm, emailAlarm, pushAlarm);
+	}
+
+	public void changeAlarmStatus(UpdateAlarmRequestDto updateAlarmRequestDto) {
+		this.slackAlarm = updateAlarmRequestDto.isSlack();
+		this.emailAlarm = updateAlarmRequestDto.isEmail();
+		this.pushAlarm = updateAlarmRequestDto.isPush();
+	}
+
+	public boolean isBlackholed() {
+		return blackholedAt != null && blackholedAt.isBefore(LocalDateTime.now());
 	}
 }

@@ -37,7 +37,7 @@ public class UserRepositoryTest {
 	@Test
 	public void testGetUser() {
 		Long userId = 9L;
-		Optional<User> user = userRepository.findUser(userId);
+		Optional<User> user = userRepository.findById(userId);
 
 		assertTrue(user.isPresent());
 		assertEquals("user1", user.get().getName());
@@ -56,7 +56,7 @@ public class UserRepositoryTest {
 	public void testFindByPartialName() {
 		String partialName = "lent";
 		Pageable pageable = PageRequest.of(0, 10);
-		Page<User> users = userRepository.findByPartialName(partialName, pageable);
+		Page<User> users = userRepository.findPaginationByPartialName(partialName, pageable);
 
 		assertNotNull(users);
 		assertEquals(2, users.getTotalElements());

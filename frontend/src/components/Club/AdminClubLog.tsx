@@ -63,7 +63,6 @@ const AdminClubLogStyled = styled.div`
   border-radius: 10px;
   overflow: hidden;
   margin: 0 auto;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 `;
 
 const SectionPaginationStyled = styled.div`
@@ -119,7 +118,7 @@ const IndexRectangleStyled = styled.div<{ filledColor: string }>`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       transform: scale(1.3);
-      background-color: var(--lightpurple-color);
+      background-color: var(--sub-color);
     }
   }
 `;

@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import {
+  deleteFcmToken,
+  requestFcmAndGetDeviceToken,
+} from "@/firebase/firebase-messaging-sw";
+import { useEffect, useMemo, useState } from "react";
 import { set } from "react-ga";
 import NotificationCard from "@/components/Card/NotificationCard/NotificationCard";
 import ModalPortal from "@/components/Modals/ModalPortal";
@@ -7,55 +11,62 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { AlarmInfo } from "@/types/dto/alarm.dto";
-import { axiosUpdateAlarm } from "@/api/axios/axios.custom";
+import {
+  axiosUpdateAlarm,
+  axiosUpdateDeviceToken,
+} from "@/api/axios/axios.custom";
 
 const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
-  const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
-  const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>("");
-  const [currentAlarms, setCurrentAlarms] = useState<AlarmInfo | null>(alarm);
-  const [originalAlarms, setOriginalAlarms] = useState<AlarmInfo | null>(alarm);
-  const [isModified, setIsModified] = useState<boolean>(false);
-  const [forceRender, setForceRender] = useState<number>(0);
+  const [showResponseModal, setShowResponseModal] = useState(false);
+  const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [alarms, setAlarms] = useState({ current: alarm, original: alarm });
+  const isModified = useMemo(
+    () => JSON.stringify(alarms.current) !== JSON.stringify(alarms.original),
+    [alarms]
+  );
 
   useEffect(() => {
-    setCurrentAlarms(alarm);
-    setOriginalAlarms(alarm);
+    setAlarms({ current: alarm, original: alarm });
   }, [alarm]);
 
-  const handleToggleChange = (newSetting: AlarmInfo) => {
-    setCurrentAlarms(newSetting);
-    if (JSON.stringify(newSetting) === JSON.stringify(originalAlarms)) {
-      setIsModified(false);
-    } else {
-      setIsModified(true);
-    }
+  const handleToggleChange = (type: keyof AlarmInfo, checked: boolean) => {
+    setAlarms((prev) => {
+      const current = prev.current
+        ? { ...prev.current, [type]: checked }
+        : null;
+      return {
+        ...prev,
+        current,
+      };
+    });
   };
 
   const handleSave = async () => {
+    if (!alarms.current) return;
     try {
-      await axiosUpdateAlarm({
-        email: currentAlarms?.email ?? false,
-        push: currentAlarms?.push ?? false,
-        slack: currentAlarms?.slack ?? false,
-      });
-      setOriginalAlarms(currentAlarms);
+      await axiosUpdateAlarm(alarms.current);
+      // 푸쉬 알림 설정이 변경되었을 경우, 토큰을 요청하거나 삭제합니다.
+      if (alarms.current.push) {
+        const deviceToken = await requestFcmAndGetDeviceToken();
+        await axiosUpdateDeviceToken(deviceToken);
+      } else {
+        await deleteFcmToken();
+        await axiosUpdateDeviceToken(null);
+      }
+      setAlarms({ current: alarms.current, original: alarms.current });
       setModalTitle("설정이 저장되었습니다");
     } catch (error: any) {
-      setCurrentAlarms(originalAlarms);
-      setForceRender((prev) => prev + 1);
+      setAlarms((prev) => ({ ...prev, current: prev.original }));
       setHasErrorOnResponse(true);
       setModalTitle(error.response.data.message);
     } finally {
       setShowResponseModal(true);
-      setIsModified(false);
     }
   };
 
   const handleCancel = () => {
-    setCurrentAlarms(originalAlarms);
-    setIsModified(false);
-    setForceRender((prev) => prev + 1);
+    setAlarms((prev) => ({ ...prev, current: prev.original }));
   };
 
   const handleCloseModal = () => {
@@ -65,8 +76,8 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   return (
     <>
       <NotificationCard
-        key={forceRender}
-        alarm={currentAlarms}
+        key={JSON.stringify(alarms)}
+        alarm={alarms.current ?? { email: false, push: false, slack: false }}
         buttons={
           isModified
             ? [
@@ -84,6 +95,7 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
                 },
               ]
             : [
+                // NOTE: 이 부분은 레이아웃을 유지하기 위한 placeholder 버튼입니다.
                 {
                   label: "-",
                   isClickable: false,

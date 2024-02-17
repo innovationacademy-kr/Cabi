@@ -26,7 +26,6 @@ export const cabinetIconSrcMap = {
 export const cabinetLabelColorMap = {
   [CabinetStatus.AVAILABLE]: "var(--white)",
   [CabinetStatus.FULL]: "var(--black)",
-  [CabinetStatus.LIMITED_AVAILABLE]: "var(--white)",
   [CabinetStatus.OVERDUE]: "var(--white)",
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
@@ -38,7 +37,6 @@ export const cabinetLabelColorMap = {
 export const cabinetStatusColorMap = {
   [CabinetStatus.AVAILABLE]: "var(--available)",
   [CabinetStatus.FULL]: "var(--full)",
-  [CabinetStatus.LIMITED_AVAILABLE]: "var(--available)",
   [CabinetStatus.OVERDUE]: "var(--expired)",
   [CabinetStatus.BROKEN]: "var(--broken)",
   [CabinetStatus.BANNED]: "var(--banned)",
@@ -57,11 +55,6 @@ export const modalPropsMap = {
     type: "error",
     title: "이미 사용 중인 사물함입니다",
     confirmMessage: "",
-  },
-  [CabinetStatus.LIMITED_AVAILABLE]: {
-    type: "confirm",
-    title: "이용 시 주의 사항",
-    confirmMessage: "네, 대여할게요",
   },
   [CabinetStatus.OVERDUE]: {
     type: "error",
@@ -158,12 +151,41 @@ export const modalPropsMap = {
     title: "대기열 취소하기",
     confirmMessage: "확인",
   },
+  MODAL_SWAP: {
+    type: "confirm",
+    title: "이사하기",
+    confirmMessage: "네, 이사할게요",
+  },
+  MODAL_CLUB_ADD_MEM: {
+    type: "confirm",
+    title: "동아리 멤버 추가",
+    confirmMessage: "저장",
+  },
+  MODAL_CLUB_DEL_MEM: {
+    type: "confirm",
+    title: "멤버 내보내기",
+    confirmMessage: "확인",
+  },
+  MODAL_CLUB_MANDATE_MEM: {
+    type: "confirm",
+    title: "동아리장 위임",
+    confirmMessage: "네, 위임할게요",
+  },
+  MODAL_CLUB_PAGE_SET_PW: {
+    type: "confirm",
+    title: "비밀번호 설정",
+    confirmMessage: "설정",
+  },
+  MODAL_CLUB_MODIFY_PW: {
+    type: "confirm",
+    title: "비밀번호 수적",
+    confirmMessage: "입력",
+  },
 };
 
 export const cabinetFilterMap = {
   [CabinetStatus.AVAILABLE]: "brightness(100)",
   [CabinetStatus.FULL]: "none",
-  [CabinetStatus.LIMITED_AVAILABLE]: "brightness(100)",
   [CabinetStatus.OVERDUE]: "brightness(100)",
   [CabinetStatus.BROKEN]: "brightness(100)",
   [CabinetStatus.BANNED]: "brightness(100)",
@@ -173,7 +195,6 @@ export const cabinetFilterMap = {
 
 export const cabinetStatusLabelMap = {
   [CabinetStatus.AVAILABLE]: "사용 가능",
-  [CabinetStatus.LIMITED_AVAILABLE]: "사용 가능",
   [CabinetStatus.FULL]: "사용 가능",
   [CabinetStatus.OVERDUE]: "사용 가능",
   [CabinetStatus.BANNED]: "사용 불가",

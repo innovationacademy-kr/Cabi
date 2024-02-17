@@ -109,12 +109,27 @@ cabinet:
         share:
           min-user-count: 2
           max-user-count: 4
+          max-attempt-count: 3
     penalty:
       day:
         share: 3
         padding: 2
   #------------------------------ALARM------------------------------
   alarm:
+    #------------------------------FCM Message------------------------------
+    fcm:
+      lentSuccess:
+        template: "%s 자리의 사물함 대여에 성공했습니다."
+      soonOverdue:
+        template: "대여한 사물함이 %d일 후에 연체됩니다."
+      overdue:
+        template: "대여한 사물함이 %d일 연체되었습니다."
+      extensionIssuance:
+        template: "%d일 짜리 %s 연장권이 발급 되었습니다."
+      extensionExpiration:
+        template: "%s 연장권이 %t일에 만료됩니다."
+      announcement:
+        template: "새로운 공지사항이 있으니 확인해주세요."
     mail:
       display-sender-name: "Cabi"
       lentSuccess:
@@ -137,6 +152,19 @@ cabinet:
       announcement:
         template: "mail/announcement"
         subject: "Cabi 공지사항 안내"
+    slack:
+      lentSuccess:
+        template: "%s 자리의 사물함 대여에 성공했습니다."
+      soonOverdue:
+        template: "대여한 사물함이 %d일 후에 연체됩니다."
+      overdue:
+        template: "대여한 사물함이 %d일 연체되었습니다."
+      extensionIssuance:
+        template: "%d일 짜리 %s 연장권이 발급 되었습니다."
+      extensionExpiration:
+        template: "%s 연장권이 %t일에 만료됩니다."
+      announcement:
+        template: "새로운 공지사항이 있으니 확인해주세요."
 
 #------------------------------SPRING------------------------------
 spring:

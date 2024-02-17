@@ -37,6 +37,7 @@ const calculateDateUsed = (startedAt: Date) => {
   return diffDays;
 };
 
+// NOTE: 내 이름을 볼드처리한 사용자 리스트를 반환
 const getCabinetUserList = (
   selectedCabinetInfo: CabinetInfo,
   myName: string | null

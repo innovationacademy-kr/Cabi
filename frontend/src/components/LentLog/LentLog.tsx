@@ -63,7 +63,7 @@ const PageButtonStyled = styled.div<{
 `;
 
 const GoBackButtonStyled = styled.div`
-  color: var(--lightpurple-color);
+  color: var(--sub-color);
   font-size: 0.875rem;
   text-decoration: underline;
   cursor: pointer;

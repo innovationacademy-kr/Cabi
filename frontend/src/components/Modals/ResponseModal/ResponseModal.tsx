@@ -20,11 +20,13 @@ export const SuccessResponseModal: React.FC<{
 
 export const FailResponseModal: React.FC<{
   modalTitle?: string;
+  modalContents?: string;
   closeModal: React.MouseEventHandler;
 }> = (props) => {
   const modalContents: IModalContents = {
     type: "noBtn",
     title: props.modalTitle ?? "실패했습니다",
+    detail: props.modalContents ?? "",
     closeModal: props.closeModal,
     iconType: IconType.ERRORICON,
   };

@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.app_42seoul.cabi.dev.twa",
+        "sha256_cert_fingerprints": ["89:7E:47:82:AD:49:16:1E:BE:79:53:5D:D9:C4:D9:25:1C:E4:C5:7F:AC:46:95:B1:84:42:AD:56:D8:6A:E1:4E"]
+      }
+    }]

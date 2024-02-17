@@ -14,6 +14,7 @@ import LentModal from "@/components/Modals/LentModal/LentModal";
 import MemoModalContainer from "@/components/Modals/MemoModal/MemoModal.container";
 import PasswordCheckModalContainer from "@/components/Modals/PasswordCheckModal/PasswordCheckModal.container";
 import ReturnModal from "@/components/Modals/ReturnModal/ReturnModal";
+import SwapModal from "@/components/Modals/SwapModal/SwapModal";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import {
   additionalModalType,
@@ -37,6 +38,7 @@ const CabinetInfoArea: React.FC<{
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
+  isSwappable: boolean;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -47,6 +49,7 @@ const CabinetInfoArea: React.FC<{
   userModal,
   openModal,
   closeModal,
+  isSwappable,
 }) => {
   const isExtensionVisible =
     isMine &&
@@ -119,7 +122,7 @@ const CabinetInfoArea: React.FC<{
               />
               <ButtonContainer
                 onClick={() => openModal("memoModal")}
-                text="메모관리"
+                text="사물함 설정"
                 theme="line"
               />
               <ButtonContainer
@@ -138,13 +141,16 @@ const CabinetInfoArea: React.FC<{
                     openModal(
                       selectedCabinetInfo.status == "IN_SESSION"
                         ? "invitationCodeModal"
+                        : isSwappable
+                        ? "swapModal"
                         : "lentModal"
                     )
                   }
-                  text="대여"
+                  text={isSwappable ? "이사하기" : "대여"}
                   theme="fill"
                   disabled={
-                    !isAvailable || selectedCabinetInfo.lentType === "CLUB"
+                    selectedCabinetInfo.lentType === "CLUB" ||
+                    (!isAvailable && !isSwappable)
                   }
                 />
                 <ButtonContainer
@@ -158,7 +164,9 @@ const CabinetInfoArea: React.FC<{
               <CountTimeContainer isMine={false} />
             )}
             {selectedCabinetInfo.status == "PENDING" && (
-              <PendingMessageStyled>매일 13:00 오픈됩니다</PendingMessageStyled>
+              <AvailableMessageStyled>
+                매일 13:00 오픈됩니다
+              </AvailableMessageStyled>
             )}
           </>
         )}
@@ -253,6 +261,12 @@ const CabinetInfoArea: React.FC<{
           cabinetId={selectedCabinetInfo?.cabinetId}
         />
       )}
+      {userModal.swapModal && (
+        <SwapModal
+          lentType={selectedCabinetInfo!.lentType}
+          closeModal={() => closeModal("swapModal")}
+        />
+      )}
     </CabinetDetailAreaStyled>
   );
 };
@@ -334,8 +348,8 @@ const CabinetRectangleStyled = styled.div<{
   ${({ cabinetStatus }) =>
     cabinetStatus === "PENDING" &&
     css`
-      border: 5px double var(--white);
-      line-height: 70px;
+      border: 2px double var(--main-color);
+      box-shadow: inset 0px 0px 0px 2px var(--white);
     `}
 `;
 
@@ -411,7 +425,7 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   text-align: center;
 `;
 
-const PendingMessageStyled = styled.p`
+const AvailableMessageStyled = styled.p`
   font-size: 1rem;
   margin-top: 8px;
   text-align: center;

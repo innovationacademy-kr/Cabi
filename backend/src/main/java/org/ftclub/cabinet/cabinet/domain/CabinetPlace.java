@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +26,8 @@ public class CabinetPlace {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CABINET_PLACE_ID")
-	private Long cabinetPlaceId;
+	@Column(name = "ID")
+	private Long id;
 
 	/**
 	 * {@link Location}
@@ -57,7 +58,7 @@ public class CabinetPlace {
 	}
 
 	public static CabinetPlace of(Location location, SectionFormation sectionFormation,
-			MapArea mapArea) {
+	                              MapArea mapArea) {
 		CabinetPlace cabinetPlace = new CabinetPlace(location, sectionFormation, mapArea);
 		ExceptionUtil.throwIfFalse(cabinetPlace.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
@@ -76,6 +77,6 @@ public class CabinetPlace {
 		if (!(other instanceof CabinetPlace)) {
 			return false;
 		}
-		return this.cabinetPlaceId.equals(((CabinetPlace) other).cabinetPlaceId);
+		return this.id.equals(((CabinetPlace) other).id);
 	}
 }

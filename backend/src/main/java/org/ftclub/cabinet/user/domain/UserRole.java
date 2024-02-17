@@ -2,9 +2,10 @@ package org.ftclub.cabinet.user.domain;
 
 
 public enum UserRole {
-    USER, CLUB;
 
-    public boolean isValid() {
-        return this.equals(USER) || this.equals(CLUB);
-    }
+	CLUB, CLUB_ADMIN;
+
+	public boolean isValid() {
+		return this.equals(CLUB) || this.equals(CLUB_ADMIN);
+	}
 }

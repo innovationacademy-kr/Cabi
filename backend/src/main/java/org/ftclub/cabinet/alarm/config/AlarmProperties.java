@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 @Getter
 public class AlarmProperties {
 
+	@Value("${cabinet.production}")
+	private Boolean isProduction;
+
 	/*===================== lentSuccess =========================*/
 	@Value("${cabinet.alarm.mail.lentSuccess.subject}")
 	private String lentSuccessSubject;
@@ -35,9 +38,6 @@ public class AlarmProperties {
 	private String overdueSlackTemplate;
 
 	/*===================== soonOverdue =========================*/
-	@Value("${cabinet.alarm.mail.soonOverdue.term}")
-	private Long soonOverdueTerm;
-
 	@Value("${cabinet.alarm.mail.soonOverdue.subject}")
 	private String soonOverdueSubject;
 
@@ -49,6 +49,9 @@ public class AlarmProperties {
 
 	@Value("${cabinet.alarm.slack.soonOverdue.template}")
 	private String soonOverdueSlackTemplate;
+
+	@Value("${cabinet.alarm.slack.soonOverdue.template-today}")
+	private String soonOverdueByTodayTemplate;
 
 	/*================== extensionIssuance ======================*/
 	@Value("${cabinet.alarm.mail.extensionIssuance.subject}")
@@ -91,4 +94,17 @@ public class AlarmProperties {
 
 	@Value("${cabinet.alarm.slack.announcement.template}")
 	private String announcementSlackTemplate;
+
+	/*======================== term =============================*/
+	@Value("${cabinet.alarm.overdue-term.week-before}")
+	private Long overdueTermWeekBefore;
+
+	@Value("${cabinet.alarm.overdue-term.three-days-before}")
+	private Long overdueTermThreeDaysBefore;
+
+	@Value("${cabinet.alarm.overdue-term.soon-overdue}")
+	private Long overdueTermSoonOverdue;
+
+	@Value("${cabinet.alarm.overdue-term.overdue}")
+	private Long overdueTermOverdue;
 }

@@ -2,12 +2,12 @@ package org.ftclub.cabinet.utils.overdue.manager;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.config.AlarmProperties;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
 import org.ftclub.cabinet.alarm.domain.LentExpirationImminentAlarm;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.cabinet.service.CabinetService;
-import org.ftclub.cabinet.alarm.config.AlarmProperties;
+import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  */
 public class OverdueManager {
 
-	private final CabinetService cabinetService;
+	private final CabinetFacadeService cabinetFacadeService;
 	private final AlarmProperties alarmProperties;
 	private final ApplicationEventPublisher eventPublisher;
 
@@ -41,29 +41,38 @@ public class OverdueManager {
 		if (isExpired) {
 			return OverdueType.OVERDUE;
 		}
-		if (alarmProperties.getSoonOverdueTerm().equals(daysLeftFromExpireDate)) {
+
+		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermWeekBefore())) {
 			return OverdueType.SOON_OVERDUE;
+		}
+		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermThreeDaysBefore())) {
+			return OverdueType.SOON_OVERDUE;
+		}
+		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermSoonOverdue())) {
+			return OverdueType.SOON_OVERDUE;
+		}
+		if (daysLeftFromExpireDate >= alarmProperties.getOverdueTermOverdue()) {
+			return OverdueType.OVERDUE;
 		}
 		return OverdueType.NONE;
 	}
 
 	public void handleOverdue(ActiveLentHistoryDto activeLent) {
-		log.info("called handleOverdue with {}", activeLent);
-		OverdueType overdueType = getOverdueType(activeLent.getIsExpired(),
-				activeLent.getDaysLeftFromExpireDate());
-
+		OverdueType overdueType =
+				getOverdueType(activeLent.getIsExpired(), activeLent.getDaysFromExpireDate());
+		log.info("called handleOverdue: activeLent={}, overdueType={}", activeLent, overdueType);
 		switch (overdueType) {
 			case NONE:
 				return;
 			case SOON_OVERDUE:
 				eventPublisher.publishEvent(AlarmEvent.of(activeLent.getUserId(),
-						new LentExpirationImminentAlarm(activeLent.getDaysLeftFromExpireDate())));
+						new LentExpirationImminentAlarm(activeLent.getDaysFromExpireDate())));
 				break;
 			case OVERDUE:
-				cabinetService.updateStatus(activeLent.getCabinetId(),
+				cabinetFacadeService.updateStatus(activeLent.getCabinetId(),
 						CabinetStatus.OVERDUE);
 				eventPublisher.publishEvent(AlarmEvent.of(activeLent.getUserId(),
-						new LentExpirationAlarm(activeLent.getDaysLeftFromExpireDate())));
+						new LentExpirationAlarm(activeLent.getDaysFromExpireDate())));
 				break;
 		}
 	}

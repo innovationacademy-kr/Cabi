@@ -10,6 +10,12 @@ import {
   CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
+import {
+  ClubCabinetInfo,
+  ClubPaginationResponseDto,
+  ClubResponseDto,
+  ClubUserResponseDto,
+} from "@/types/dto/club.dto";
 import { ClubUserDto } from "@/types/dto/lent.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
 
@@ -24,6 +30,7 @@ export const userState = atom<UserDto>({
     lentExtensionResponseDto: null,
     unbannedAt: null,
     alarmTypes: null,
+    isDeviceTokenExpired: null,
   },
 });
 
@@ -167,4 +174,35 @@ export const selectedClubInfoState = atom<ClubUserDto | null>({
 export const serverTimeState = atom<Date>({
   key: "serverTime",
   default: new Date(),
+});
+
+/* Club */
+export const myClubListState = atom<ClubPaginationResponseDto>({
+  key: "myClubList",
+  default: {
+    result: [],
+    totalLength: 0,
+  },
+});
+
+export const targetClubInfoState = atom<ClubResponseDto>({
+  key: "targetClub",
+  default: {
+    clubId: 0,
+    clubName: "",
+    clubMaster: "",
+  },
+});
+
+export const targetClubCabinetInfoState = atom<ClubCabinetInfo | null>({
+  key: "targetClubCabinet",
+  default: null,
+});
+
+export const targetClubUserInfoState = atom<ClubUserResponseDto>({
+  key: "targetClubUser",
+  default: {
+    userId: 0,
+    userName: "",
+  },
 });

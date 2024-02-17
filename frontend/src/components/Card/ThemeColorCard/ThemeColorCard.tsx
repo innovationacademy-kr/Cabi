@@ -1,44 +1,41 @@
-import React from "react";
-import { TwitterPicker } from "react-color";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Card from "@/components/Card/Card";
 import {
   CardContentStyled,
   CardContentWrapper,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
+import ColorPicker from "@/components/Card/ThemeColorCard/ColorPicker";
+import {
+  customColors,
+  themeColorData,
+} from "@/components/Card/ThemeColorCard/colorInfo";
 
 interface ThemeColorProps {
   showColorPicker: boolean;
-  setShowColorPicker: React.Dispatch<React.SetStateAction<boolean>>;
-  handleChange: (mainColor: { hex: string }) => void;
+  handleChange: (mainColor: { hex: string }, type: string) => void;
   handleReset: () => void;
   handleSave: () => void;
   handleCancel: () => void;
   mainColor: string;
+  subColor: string;
+  mineColor: string;
+  handleColorButtonClick: (colorType: string) => void;
+  selectedColorType: string;
 }
 
 const ThemeColorCard = ({
   showColorPicker,
-  setShowColorPicker,
   handleChange,
   handleReset,
   handleSave,
   handleCancel,
   mainColor,
+  subColor,
+  mineColor,
+  handleColorButtonClick,
+  selectedColorType,
 }: ThemeColorProps) => {
-  const customColors = [
-    "#FF4589",
-    "#FF8B5B",
-    "#FFC74C",
-    "#00cec9",
-    "#00C2AB",
-    "#74b9ff",
-    "#0984e3",
-    "#0D4C92",
-    "#a29bfe",
-    "#9747FF",
-  ];
   return (
     <>
       {showColorPicker && <BackgroundOverlayStyled />}
@@ -47,7 +44,7 @@ const ThemeColorCard = ({
           title={"테마 컬러"}
           gridArea={"theme"}
           width={"350px"}
-          height={"230px"}
+          height={showColorPicker ? "330px" : "230px"}
           buttons={
             showColorPicker
               ? [
@@ -74,19 +71,29 @@ const ThemeColorCard = ({
           }
         >
           <>
-            <CardContentWrapper style={{ height: "70px" }}>
-              <CardContentStyled>
-                <ContentInfoStyled>메인 컬러</ContentInfoStyled>
-                <MainColorButtonStyled
-                  onClick={() => setShowColorPicker(!showColorPicker)}
-                />
-              </CardContentStyled>
+            <CardContentWrapper>
+              {themeColorData.map(({ title, type, getColor }) => (
+                <CardContentStyled key={type}>
+                  <ContentInfoStyled
+                    isSelected={type === selectedColorType && showColorPicker}
+                    selectedColor={getColor({ mainColor, subColor, mineColor })}
+                    onClick={() => handleColorButtonClick(type)}
+                  >
+                    {title}
+                  </ContentInfoStyled>
+                  <ColorButtonStyled
+                    onClick={() => handleColorButtonClick(type)}
+                    color={getColor({ mainColor, subColor, mineColor })}
+                    isSelected={type === selectedColorType && showColorPicker}
+                    showColorPicker={showColorPicker}
+                  />
+                </CardContentStyled>
+              ))}
               {showColorPicker && (
-                <TwitterPicker
+                <ColorPicker
                   color={mainColor}
-                  triangle={"hide"}
-                  onChangeComplete={handleChange}
-                  colors={customColors}
+                  onChange={(color) => handleChange(color, selectedColorType)}
+                  customColors={customColors}
                 />
               )}
             </CardContentWrapper>
@@ -112,11 +119,17 @@ const ThemeColorCardWrapper = styled.div`
   align-self: start;
 `;
 
-const MainColorButtonStyled = styled.button`
+const ColorButtonStyled = styled.button<{
+  color: string;
+  isSelected: boolean;
+  showColorPicker: boolean;
+}>`
   width: 28px;
   height: 28px;
-  background-color: var(--main-color);
+  background-color: ${(props) => props.color};
   border-radius: 8px;
+  box-shadow: ${(props) =>
+    props.isSelected ? `${props.color} 0px 0px 4px` : "none"};
 `;
 
 export default ThemeColorCard;

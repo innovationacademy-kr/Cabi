@@ -2,7 +2,7 @@
 <a href="https://cabi.oopy.io/">
   <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/13278955/278554161-83bfed83-e148-44e5-8389-b49598725ce4.png" width="400px" alt="Cabi" />
 </a>
-  
+
 [![GitHub Stars](https://img.shields.io/github/stars/innovationacademy-kr/42cabi?style=for-the-badge)](https://github.com/innovationacademy-kr/42cabi/stargazers) [![GitHub Stars](https://img.shields.io/github/issues/innovationacademy-kr/42cabi?style=for-the-badge)](https://github.com/innovationacademy-kr/42cabi/issues) [![Current Version](https://img.shields.io/badge/version-4.0.0-black?style=for-the-badge)](https://github.com/IgorAntun/node-chat) [![GitHub License](https://img.shields.io/github/license/innovationacademy-kr/42cabi?style=for-the-badge)](https://github.com/IgorAntun/node-chat/issues)
 
 </div>
@@ -12,6 +12,7 @@
 - [💬 프로젝트 소개](#-프로젝트-소개)
 - [🛠 기술 스택](#-기술-스택)
 - [🧑‍💻 프로젝트 멤버](#-프로젝트-멤버)
+
 <!-- - [🗂 위키](#-위키) -->
 
 <br/>
@@ -68,7 +69,7 @@
 ## 🛠 기술 스택
 
 <div>
-  
+
 <table border="1">
   <th align="center">분야</th>
   <th align="center">기술스택</th>
@@ -167,7 +168,10 @@
 | ----------------------------------------- | --------------------------------------- | ------------------------------------ | ---------------------------------------- | --------------------------------------------- |
 
 | [ 🌑 daewoole](https://github.com/LeeDaeWook) | [🐝 hyungnoh](https://github.com/YESHYUNGSEOK) | [원 jpark2](https://github.com/Z1park) | [🎨 jusohn](https://github.com/junyoung2015) | [🤓 seong-hui ](https://github.com/seong-hui) | [🚀 wchae](https://github.com/enaenen) |
-| --------------------------------------------- | ---------------------------------------------- | -------------------------------------- | --------------------------------------------- | --------------------------------------------- | -------------------------------------- |
+| --------------------------------------------- | ---------------------------------------------- | -------------------------------------- | -------------------------------------------- | --------------------------------------------- | -------------------------------------- |
+
+| [ 🐶 surlee](https://github.com/Elineely) | [ 🐣 hyowchoi](https://github.com/chyo1/) | [ 👽 sohyupar](https://github.com/saewoo1) | [🦝 jimchoi](https://github.com/jimchoi9) | [ 🛼 jeekim](https://github.com/jnkeniaem) | [🍾 miyu](https://github.com/Minkyu01) | [🧸 gykoh](https://github.com/gykoh42) |
+| ----------------------------------------- | ----------------------------------------- | ------------------------------------------ | ----------------------------------------- | ------------------------------------------ | -------------------------------------- | -------------------------------------- |
 
 | <a href="https://github.com/innovationacademy-kr"><img src="https://img.shields.io/badge/42Seoul-000000?style=flat-square&logo=42&logoColor=white" /></a> |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------- |

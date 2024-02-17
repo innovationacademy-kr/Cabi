@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.alarm.config.AlarmProperties;
 import org.ftclub.cabinet.alarm.domain.Alarm;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
@@ -17,11 +16,11 @@ import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
 import org.ftclub.cabinet.alarm.domain.LentExpirationImminentAlarm;
 import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
 import org.ftclub.cabinet.alarm.dto.FCMDto;
+import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.redis.service.RedisService;
 import org.ftclub.cabinet.user.domain.User;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Log4j2
@@ -29,66 +28,98 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PushAlarmSender {
 
-	private final AlarmProperties alarmProperties;
-	private final RedisService redisService;
-	private final DomainProperties domainProperties;
 	private static final String ICON_FILE_PATH = "/src/assets/images/logo.svg";
+	private final AlarmProperties alarmProperties;
+	private final FCMTokenRedisService fcmTokenRedisService;
+	private final DomainProperties domainProperties;
 
 	public void send(User user, AlarmEvent alarmEvent) {
 		log.info("push alarm Event : user = {}, alarmEvent = {}", user, alarmEvent);
 
-		Optional<String> token = redisService.findByKey(user.getName(), String.class);
+		Optional<String> token = fcmTokenRedisService.findByUserName(user.getName());
 		if (token.isEmpty()) {
 			log.warn("\"{}\"에 해당하는 디바이스 토큰이 존재하지 않습니다.", user.getName());
 			return;
 		}
 
-		FCMDto fcmDto = messageParse(alarmEvent.getAlarm());
+		FCMDto fcmDto = parseMessage(alarmEvent.getAlarm());
 		sendMessage(token.get(), fcmDto);
 	}
 
-	private FCMDto messageParse(Alarm alarm) {
+	private FCMDto parseMessage(Alarm alarm) {
 		if (alarm instanceof LentSuccessAlarm) {
-			String building = ((LentSuccessAlarm) alarm).getLocation().getBuilding();
-			Integer floor = ((LentSuccessAlarm) alarm).getLocation().getFloor();
-			Integer visibleNum = ((LentSuccessAlarm) alarm).getVisibleNum();
-			String title = alarmProperties.getLentSuccessSubject();
-			String body = String.format(alarmProperties.getLentSuccessMailTemplateUrl(),
-					building + " " + floor + "층 " + visibleNum + "번");
-			return new FCMDto(title, body);
+			return generateLentSuccessAlarm((LentSuccessAlarm) alarm);
 		} else if (alarm instanceof LentExpirationImminentAlarm) {
-			Long daysAfterFromExpireDate = ((LentExpirationImminentAlarm) alarm).getDaysAfterFromExpireDate();
-			String title = alarmProperties.getSoonOverdueSubject();
-			String body = String.format(alarmProperties.getSoonOverdueFcmTemplate(),
-					Math.abs(daysAfterFromExpireDate));
-			return new FCMDto(title, body);
+			return generateLentExpirationImminentAlarm((LentExpirationImminentAlarm) alarm);
 		} else if (alarm instanceof LentExpirationAlarm) {
-			Long daysLeftFromExpireDate = ((LentExpirationAlarm) alarm).getDaysLeftFromExpireDate();
-			String title = alarmProperties.getOverdueSubject();
-			String body = String.format(alarmProperties.getOverdueFcmTemplate(),
-					Math.abs(daysLeftFromExpireDate));
-			return new FCMDto(title, body);
+			return generateLentExpirationAlarm((LentExpirationAlarm) alarm);
 		} else if (alarm instanceof ExtensionIssuanceAlarm) {
-			Integer daysToExtend = ((ExtensionIssuanceAlarm) alarm).getDaysToExtend();
-			String extensionName = ((ExtensionIssuanceAlarm) alarm).getExtensionName();
-			String title = alarmProperties.getExtensionIssuanceSubject();
-			String body = String.format(alarmProperties.getExtensionIssuanceMailTemplateUrl(),
-					daysToExtend, extensionName);
-			return new FCMDto(title, body);
+			return generateExtensionIssuanceAlarm((ExtensionIssuanceAlarm) alarm);
 		} else if (alarm instanceof ExtensionExpirationImminentAlarm) {
-			String extensionName = ((ExtensionExpirationImminentAlarm) alarm).getExtensionName();
-			LocalDateTime extensionExpireDate = ((ExtensionExpirationImminentAlarm) alarm).getExtensionExpirationDate();
-			String title = alarmProperties.getExtensionExpirationImminentSubject();
-			String body = String.format(alarmProperties.getExtensionExpirationImminentMailTemplateUrl(),
-					extensionName, extensionExpireDate);
-			return new FCMDto(title, body);
+			return generateExtensionExpirationImminentAlarm(
+					(ExtensionExpirationImminentAlarm) alarm);
 		} else if (alarm instanceof AnnouncementAlarm) {
-			String title = alarmProperties.getAnnouncementSubject();
-			String body = alarmProperties.getAnnouncementMailTemplateUrl();
-			return new FCMDto(title, body);
+			return generateAnnouncementAlarm();
 		} else {
-			throw new ServiceException(ExceptionStatus.NOT_FOUND_ALARM);
+			throw ExceptionStatus.NOT_FOUND_ALARM.asServiceException();
 		}
+	}
+
+	@NotNull
+	private FCMDto generateAnnouncementAlarm() {
+		String title = alarmProperties.getAnnouncementSubject();
+		String body = alarmProperties.getAnnouncementMailTemplateUrl();
+		return new FCMDto(title, body);
+	}
+
+	@NotNull
+	private FCMDto generateExtensionExpirationImminentAlarm(
+			ExtensionExpirationImminentAlarm alarm) {
+		String extensionName = alarm.getExtensionName();
+		LocalDateTime extensionExpireDate = alarm.getExtensionExpirationDate();
+		String title = alarmProperties.getExtensionExpirationImminentSubject();
+		String body = String.format(alarmProperties.getExtensionExpirationImminentMailTemplateUrl(),
+				extensionName, extensionExpireDate);
+		return new FCMDto(title, body);
+	}
+
+	@NotNull
+	private FCMDto generateExtensionIssuanceAlarm(ExtensionIssuanceAlarm alarm) {
+		Integer daysToExtend = alarm.getDaysToExtend();
+		String extensionName = alarm.getExtensionName();
+		String title = alarmProperties.getExtensionIssuanceSubject();
+		String body = String.format(alarmProperties.getExtensionIssuanceMailTemplateUrl(),
+				daysToExtend, extensionName);
+		return new FCMDto(title, body);
+	}
+
+	@NotNull
+	private FCMDto generateLentExpirationAlarm(LentExpirationAlarm alarm) {
+		Long daysLeftFromExpireDate = alarm.getDaysFromExpireDate();
+		String title = alarmProperties.getOverdueSubject();
+		String body = String.format(alarmProperties.getOverdueFcmTemplate(),
+				Math.abs(daysLeftFromExpireDate));
+		return new FCMDto(title, body);
+	}
+
+	@NotNull
+	private FCMDto generateLentExpirationImminentAlarm(LentExpirationImminentAlarm alarm) {
+		Long daysAfterFromExpireDate = alarm.getDaysFromExpireDate();
+		String title = alarmProperties.getSoonOverdueSubject();
+		String body = String.format(alarmProperties.getSoonOverdueFcmTemplate(),
+				Math.abs(daysAfterFromExpireDate));
+		return new FCMDto(title, body);
+	}
+
+	@NotNull
+	private FCMDto generateLentSuccessAlarm(LentSuccessAlarm alarm) {
+		String building = alarm.getLocation().getBuilding();
+		Integer floor = alarm.getLocation().getFloor();
+		Integer visibleNum = alarm.getVisibleNum();
+		String title = alarmProperties.getLentSuccessSubject();
+		String body = String.format(alarmProperties.getLentSuccessFcmTemplate(),
+				building + " " + floor + "층 " + visibleNum + "번");
+		return new FCMDto(title, body);
 	}
 
 	private void sendMessage(String token, FCMDto fcmDto) {

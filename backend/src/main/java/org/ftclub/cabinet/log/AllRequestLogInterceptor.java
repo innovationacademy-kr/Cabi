@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.log;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -10,8 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.CookieManager;
-import org.ftclub.cabinet.auth.domain.TokenValidator;
+import org.ftclub.cabinet.auth.service.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -63,20 +66,23 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 	}
 
 	private String getUserId(HttpServletRequest request) {
-		String ret = null;
+
+		JsonNode payloadJson = null;
 		try {
-			ret = tokenValidator.getPayloadJson(
-							cookieManager.getCookieValue(request, jwtProperties.getMainTokenName()))
-					.get("name")
-					.asText();
-		} catch (Exception ignore) {
+			payloadJson = tokenValidator.getPayloadJson(
+					cookieManager.getCookieValue(request, jwtProperties.getMainTokenName()));
+		} catch (JsonProcessingException e) {
+			log.error("Failed to parse payloadJson", e);
+			throw ExceptionStatus.JSON_PROCESSING_EXCEPTION.asControllerException();
 		}
 
-		if (ret != null) {
-			return ret;
-		} else {
+		if (payloadJson == null || payloadJson.get("name").isEmpty()) {
 			String uuid = UUID.randomUUID().toString();
 			return uuid.substring(uuid.length() - 12);
 		}
+		return payloadJson
+				.get("name")
+				.asText();
+
 	}
 }

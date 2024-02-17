@@ -94,7 +94,7 @@ const MainPage = () => {
   return (
     <>
       {isLoading && <LoadingAnimation />}
-      <WapperStyled
+      <WrapperStyled
         ref={mainWrapperRef}
         onTouchStart={(e: React.TouchEvent) => {
           touchStartPosX.current = e.changedTouches[0].screenX;
@@ -122,12 +122,12 @@ const MainPage = () => {
               </RefreshButtonStyled>
             )}
         </CabinetListWrapperStyled>
-      </WapperStyled>
+      </WrapperStyled>
     </>
   );
 };
 
-const WapperStyled = styled.div`
+const WrapperStyled = styled.div`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
