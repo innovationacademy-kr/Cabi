@@ -9,11 +9,7 @@ import CabinetList from "@/components/CabinetList/CabinetList";
 import EmptySection from "@/components/CabinetList/EmptySection/EmptySection";
 import RealViewNotification from "@/components/CabinetList/RealViewNotification/RealViewNotification";
 import MultiSelectFilterButton from "@/components/Common/MultiSelectFilterButton";
-import {
-  CabinetInfo,
-  CabinetPreview,
-  CabinetPreviewInfo,
-} from "@/types/dto/cabinet.dto";
+import { CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import SectionType from "@/types/enum/map.type.enum";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
