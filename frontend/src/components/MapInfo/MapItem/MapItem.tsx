@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { currentFloorNumberState } from "@/recoil/atoms";
 import { currentBuildingFloorState } from "@/recoil/selectors";
 import { ISectionInfo } from "@/assets/data/mapPositionData";
-import { ReactComponent as StairsIcon } from "@/assets/images/stairs.svg";
 import SectionType from "@/types/enum/map.type.enum";
 import useMenu from "@/hooks/useMenu";
 
@@ -31,7 +30,7 @@ const MapItem: React.FC<{
   const renderMapItem = () => {
     switch (info.type) {
       case SectionType.stairs:
-        return <StairsIcon fill="var(--white)" />;
+        return <IconContainerStyled />;
       default:
         return <>{info.name}</>;
     }
@@ -74,6 +73,14 @@ const ItemStyled = styled.div<{
   &:hover {
     opacity: ${({ info }) => (info.type === "cabinet" ? 0.9 : 1)};
   }
+`;
+
+const IconContainerStyled = styled.div`
+  width: 100%;
+  height: 80%;
+  background-image: url("/src/assets/images/stairs.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
 `;
 
 export default MapItem;
