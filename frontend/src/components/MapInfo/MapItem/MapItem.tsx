@@ -77,7 +77,7 @@ const ItemStyled = styled.div<{
 
 const IconContainerStyled = styled.div`
   width: 100%;
-  height: 80%;
+  height: 48px;
   background-image: url("/src/assets/images/stairs.svg");
   background-size: contain;
   background-repeat: no-repeat;
