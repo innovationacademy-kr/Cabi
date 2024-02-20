@@ -9,6 +9,9 @@ import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
 import PostLogin from "@/pages/PostLogin";
 import ProfilePage from "@/pages/ProfilePage";
+import DetailPage from "@/pages/Wednesday/DetailPage";
+import WednesdayHomePage from "@/pages/Wednesday/HomePage";
+import RegisterPage from "@/pages/Wednesday/RegisterPage";
 import AdminMainPage from "@/pages/admin/AdminMainPage";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 
@@ -37,6 +40,11 @@ function App(): React.ReactElement {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="profile/log" element={<LogPage />} />
             <Route path="clubs" element={<ClubPage />} />
+          </Route>
+          <Route path="/wed/" element={<Layout />}>
+            <Route path="home" element={<WednesdayHomePage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="detail" element={<DetailPage />} />
           </Route>
           {/* admin용 라우터 */}
           <Route path="/admin/" element={<AdminLayout />}>
