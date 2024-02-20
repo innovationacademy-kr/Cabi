@@ -27,6 +27,7 @@ import { removeCookie } from "@/api/react_cookie/cookies";
 import useMenu from "@/hooks/useMenu";
 
 const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
+  const currentBuildingName = useRecoilValue(currentBuildingNameState);
   const floors = useRecoilValue<Array<number>>(currentBuildingFloorState);
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
     currentFloorNumberState
@@ -104,11 +105,6 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
-  const onClickLentLogButton = () => {
-    navigator("log");
-    closeAll();
-  };
-
   const onClickSearchButton = () => {
     navigator("search");
     closeAll();
@@ -134,6 +130,21 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
+  const onClickWedHomeButton = () => {
+    navigator("home");
+    closeAll();
+  };
+
+  const onClickWedRegisterButton = () => {
+    navigator("register");
+    closeAll();
+  };
+
+  const onClickWedDetailButton = () => {
+    navigator("detail");
+    closeAll();
+  };
+
   const onClickLogoutButton = (): void => {
     const adminToken = isAdmin ? "admin_" : "";
     if (import.meta.env.VITE_IS_LOCAL === "true") {
@@ -155,17 +166,20 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   return (
     <LeftMainNav
       pathname={pathname}
+      currentBuildingName={currentBuildingName}
       floors={floors}
       currentFloor={currentFloor}
       onClickHomeButton={onClickHomeButton}
       onClickFloorButton={onClickFloorButton}
-      onClickLentLogButton={onClickLentLogButton}
       onClickSearchButton={onClickSearchButton}
       onClickLogoutButton={onClickLogoutButton}
       onClickAdminClubButton={onClickAdminClubButton}
       onClickMainClubButton={onClickMainClubButton}
       onClickProfileButton={onClickProfileButton}
       onClickAvailableButton={onClickAvailableButton}
+      onClickWedHomeButton={onClickWedHomeButton}
+      onClickWedRegisterButton={onClickWedRegisterButton}
+      onClickWedDetailButton={onClickWedDetailButton}
       isAdmin={isAdmin}
     />
   );

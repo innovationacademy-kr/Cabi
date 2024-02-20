@@ -8,72 +8,116 @@ import { ReactComponent as SlackImg } from "/src/assets/images/slack.svg";
 interface ILeftMainNav {
   pathname: string;
   onClickHomeButton: React.MouseEventHandler;
+  currentBuildingName: string;
   floors: number[];
   currentFloor: number;
   onClickFloorButton: Function;
   onClickLogoutButton: React.MouseEventHandler;
-  onClickLentLogButton: React.MouseEventHandler;
   onClickSearchButton: React.MouseEventHandler;
   onClickAdminClubButton: React.MouseEventHandler;
   onClickMainClubButton: React.MouseEventHandler;
   onClickProfileButton: React.MouseEventHandler;
   onClickAvailableButton: React.MouseEventHandler;
+  onClickWedHomeButton: React.MouseEventHandler;
+  onClickWedRegisterButton: React.MouseEventHandler;
+  onClickWedDetailButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
 const LeftMainNav = ({
   pathname,
+  currentBuildingName,
   floors,
   currentFloor,
   onClickHomeButton,
   onClickFloorButton,
   onClickLogoutButton,
-  onClickLentLogButton,
   onClickSearchButton,
   onClickAdminClubButton,
   onClickMainClubButton,
   onClickProfileButton,
   onClickAvailableButton,
+  onClickWedHomeButton,
+  onClickWedRegisterButton,
+  onClickWedDetailButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
     <LeftNavStyled>
       <TopSectionStyled>
         <TopBtnsStyled>
-          <TopBtnStyled
-            className={
-              pathname.includes("home")
-                ? "leftNavButtonActive cabiButton"
-                : "cabiButton"
-            }
-            onClick={onClickHomeButton}
-          >
-            Home
-          </TopBtnStyled>
-          {floors &&
-            floors.map((floor, index) => (
+          {currentBuildingName === "새롬관" && (
+            <>
               <TopBtnStyled
                 className={
-                  pathname.includes("main") && floor === currentFloor
+                  pathname.includes("home")
                     ? "leftNavButtonActive cabiButton"
                     : "cabiButton"
                 }
-                onClick={() => onClickFloorButton(floor)}
-                key={index}
+                onClick={onClickHomeButton}
               >
-                {floor + "층"}
+                Home
               </TopBtnStyled>
-            ))}
-          <TopBtnStyled
-            className={
-              pathname.includes("available")
-                ? "leftNavButtonActive cabiButton"
-                : "cabiButton"
-            }
-            onClick={onClickAvailableButton}
-          >
-            사용가능
-          </TopBtnStyled>
+              {floors &&
+                floors.map((floor, index) => (
+                  <TopBtnStyled
+                    className={
+                      pathname.includes("main") && floor === currentFloor
+                        ? "leftNavButtonActive cabiButton"
+                        : "cabiButton"
+                    }
+                    onClick={() => onClickFloorButton(floor)}
+                    key={index}
+                  >
+                    {floor + "층"}
+                  </TopBtnStyled>
+                ))}
+              <TopBtnStyled
+                className={
+                  pathname.includes("available")
+                    ? "leftNavButtonActive cabiButton"
+                    : "cabiButton"
+                }
+                onClick={onClickAvailableButton}
+              >
+                사용가능
+              </TopBtnStyled>
+            </>
+          )}
+          {currentBuildingName === "수지회" && (
+            <>
+              <TopBtnStyled
+                className={
+                  pathname.includes("wed/home")
+                    ? "leftNavButtonActive cabiButton"
+                    : "cabiButton"
+                }
+                onClick={onClickWedHomeButton}
+              >
+                Home
+              </TopBtnStyled>
+              <TopBtnStyled
+                className={
+                  pathname.includes("wed/register")
+                    ? "leftNavButtonActive cabiButton"
+                    : "cabiButton"
+                }
+                onClick={onClickWedRegisterButton}
+              >
+                신청하기
+              </TopBtnStyled>
+              <TopBtnStyled
+                className={
+                  pathname.includes("wed/detail")
+                    ? "leftNavButtonActive cabiButton"
+                    : "cabiButton"
+                }
+                onClick={onClickWedDetailButton}
+              >
+                상세정보
+              </TopBtnStyled>
+            </>
+          )}
         </TopBtnsStyled>
       </TopSectionStyled>
       <BottomSectionStyled>

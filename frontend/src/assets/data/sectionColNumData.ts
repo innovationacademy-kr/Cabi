@@ -123,4 +123,18 @@ export const staticColNumData: IBuildingColNum[] = [
       },
     ],
   },
+  {
+    building: "수지회",
+    floorColNum: [
+      {
+        floor: 2,
+        sectionColNum: [
+          {
+            section: "End of Cluster 1",
+            colNum: 4,
+          },
+        ],
+      },
+    ],
+  },
 ];
