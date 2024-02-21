@@ -57,8 +57,7 @@ const DetailTable = () => {
           </div>
         </td>
       </TableBodyStyled>
-      <TableBodyStyled>
-        {/* noEventPast */}
+      {/* <TableBodyStyled>
         <td className="leftEnd" id="noEventPast">
           <span>1월 20일</span>
         </td>
@@ -72,7 +71,7 @@ const DetailTable = () => {
             </NoEventPhraseStyled>
           </div>
         </td>
-      </TableBodyStyled>
+      </TableBodyStyled> */}
     </TableStyled>
   );
 };
@@ -86,15 +85,19 @@ const TableStyled = styled.table`
 `;
 
 const TableHeadStyled = styled.tr`
-  height: 60px;
-  line-height: 60px;
+  height: 50px;
+  line-height: 50px;
+  background-color: #3f69fd;
+  color: var(--white);
 
   & > th {
     font-size: 20px;
+    /* border-radius: 10px; */
   }
 
   & > #date {
     width: 170px;
+    border-radius: 10px 0 0 10px;
   }
 
   & > #intraId {
@@ -111,6 +114,7 @@ const TableHeadStyled = styled.tr`
 
   & > #category {
     width: 120px;
+    border-radius: 0 10px 10px 0;
   }
 `;
 
@@ -122,7 +126,7 @@ const TableBodyStyled = styled.tr`
   font-size: 20px;
 
   & > td {
-    background-color: #f5f7ff;
+    background-color: #dce7fd;
   }
 
   & #noEventCurrent {
@@ -145,6 +149,8 @@ const TableBodyStyled = styled.tr`
     height: 40px;
     margin-left: 100px;
     margin-right: 60px;
+    background-color: #3f69fd;
+    font-weight: bold;
   }
 
   & .leftEnd {
