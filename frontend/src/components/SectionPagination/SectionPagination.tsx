@@ -71,7 +71,7 @@ const SectionBarStyled = styled.div`
   align-items: center;
 `;
 
-const MoveSectionButtonStyled = styled.img<{ arrowReversed?: boolean }>`
+export const MoveSectionButtonStyled = styled.img<{ arrowReversed?: boolean }>`
   width: 24px;
   height: 24px;
   margin: 0px 15px;

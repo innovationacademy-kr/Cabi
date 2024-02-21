@@ -1,11 +1,22 @@
 import styled from "styled-components";
-
-// 170px
+import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 
 const DetailTable = () => {
+  // const tableHeadArray = [
+  //   { date: "날짜" },
+  //   { intraId: "ID" },
+  //   { title: "제목" },
+  //   { time: "시간" },
+  //   { category: "카테고리" },
+  // ];
+
+  // console.log(Object.entries(tableHeadArray));
   return (
     <TableStyled>
       <TableHeadStyled>
+        {/* {tableHeadArray.map((head, idx) => {
+          return <th id={head[idx]}>날짜</th>;
+        })} */}
         <th id="date">날짜</th>
         <th id="intraId">ID</th>
         <th id="title">제목</th>
@@ -30,10 +41,10 @@ const DetailTable = () => {
         </td>
       </TableBodyStyled>
       <TableBodyStyled>
-        <td className="leftEnd" id="noEvent">
+        <td className="leftEnd" id="noEventCurrent">
           <span>1월 20일</span>
         </td>
-        <td className="rightEnd" colSpan={4} id="noEvent">
+        <td className="rightEnd" colSpan={4} id="noEventCurrent">
           <div>
             <NoEventPhraseStyled>
               <span>
@@ -43,6 +54,22 @@ const DetailTable = () => {
               <img src="/src/assets/images/happyCcabi.svg" />
             </NoEventPhraseStyled>
             <button>신청하기</button>
+          </div>
+        </td>
+      </TableBodyStyled>
+      <TableBodyStyled>
+        {/* noEventPast */}
+        <td className="leftEnd" id="noEventPast">
+          <span>1월 20일</span>
+        </td>
+        <td className="rightEnd" colSpan={4} id="noEventPast">
+          <div>
+            <NoEventPhraseStyled>
+              <span>발표가 없었습니다</span>
+              <SadCcabiStyled>
+                <SadCcabiImg />
+              </SadCcabiStyled>
+            </NoEventPhraseStyled>
           </div>
         </td>
       </TableBodyStyled>
@@ -98,16 +125,19 @@ const TableBodyStyled = styled.tr`
     background-color: #f5f7ff;
   }
 
-  & #noEvent {
+  & #noEventCurrent {
     background-color: white;
   }
 
-  & > td > div {
-    /* background-color: green; */
+  & #noEventPast {
+    background-color: #eeeeee;
+  }
 
+  & > td > div {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
   }
 
   & button {
@@ -120,17 +150,18 @@ const TableBodyStyled = styled.tr`
   & .leftEnd {
     border-radius: 10px 0 0 10px;
   }
+
   & .rightEnd {
     border-radius: 0 10px 10px 0;
   }
 `;
 
 const NoEventPhraseStyled = styled.div`
-  /* background-color: yellow; */
   display: flex;
   align-items: center;
   justify-content: end;
   width: 850px;
+
   & > img {
     width: 30px;
     height: 30px;
@@ -139,5 +170,20 @@ const NoEventPhraseStyled = styled.div`
 
   & > span {
     font-weight: bold;
+  }
+`;
+
+const SadCcabiStyled = styled.div`
+  width: 30px;
+  height: 30px;
+  background-color: yellow;
+  display: flex;
+
+  & svg {
+    background-color: pink;
+  }
+
+  & svg > path {
+    fill: var(--black);
   }
 `;
