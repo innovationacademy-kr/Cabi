@@ -38,7 +38,7 @@ const RecentPresentation = ({
     <ConTainer>
       <WedHeader>
         <WedTitle>
-          <p>42 수지회</p>
+          <p>42 수요지식회</p>
           <span>수요지식회 메인페이지입니다. 설명문구 필요합니다.</span>
         </WedTitle>
         <button onClick={""} style={{ backgroundColor: "#3F69FD" }}>
@@ -47,7 +47,22 @@ const RecentPresentation = ({
       </WedHeader>
 
       <WedCard dummy={dummy} />
-      <WedDesc></WedDesc>
+      <WedDescStyle>
+        <WedDescTitle>
+          24일 오후 1시 <span>지하 1층</span>
+          <WedDescTime>45분</WedDescTime>
+        </WedDescTitle>
+        <WedDesc>
+          "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데? "장비 탓인가 싶어서
+          <br />
+          최신 스마트폰으로 바꿔 봤지만 크게 달라지지 않은 결과물😒취미로
+          <br />
+          시작하고 싶은데 도대체 뭐가 뭔지 모르겠는 사진!2년 간 사진 강의만
+          <br />
+          빡시게 해온 jisokang이 엑기스만 쫙쫙 뽑아서 알기 쉽게 알려드립니다! 😉
+          <br />
+        </WedDesc>
+      </WedDescStyle>
     </ConTainer>
   );
 };
@@ -56,34 +71,72 @@ export default RecentPresentation;
 
 const ImageStyled = styled.div``;
 
+const WedDesc = styled.div`
+  color: #fff;
+  text-shadow: 0px 3px 5px black;
+`;
+
+const WedDescTime = styled.div`
+  font-size: 1.5rem;
+  color: #fff;
+`;
+
+const WedDescTitle = styled.div`
+  display: flex;
+  align-items: flex-end;
+
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: -3px -4px 5px black;
+
+  margin-bottom: 20px;
+
+  & > span {
+    font-size: 2rem;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+`;
+
 const WedHeader = styled.div`
   display: flex;
   width: 80%;
   justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
 `;
 
-const WedDesc = styled.div`
+const WedDescStyle = styled.div`
   background-color: #2c49b1;
   width: 80%;
-  height: 250px;
-  border-radius: 30px;
+  height: 400px;
+  border-radius: 30px 30px 0 0;
+  margin-top: 50px;
+
+  padding-top: 30px;
+  padding-left: 30px;
 `;
 
 const ConTainer = styled.div`
+  padding-top: 60px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  // justify-content: center;
   align-items: center;
 
   width: 100%;
   height: 100%;
+  overflow-y: scroll;
 `;
 
 const WedTitle = styled.div`
   & > p {
     font-size: 2.5rem;
+    font-weight: bold;
     margin-bottom: 20px;
   }
+
   $ > span {
   }
 `;

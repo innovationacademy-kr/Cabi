@@ -9,10 +9,6 @@ interface IDummyList {
   cal: string;
 }
 
-// interface IDummy {
-//   image: string;
-// }
-
 const WedCard = ({ dummy }: { dummy: IDummyList[] }) => {
   const [select, setSelect] = useState(1);
 
@@ -43,42 +39,44 @@ export default WedCard;
 
 const restore = keyframes`{
 	0% {
-	  width: 250px;
-	  height: 250px;
+	  width: 370px;
+	  height: 370px;
 	}
 	100% {
-	  width: 180px;
-	  height: 180px;
+	  width: 280px;
+	  height: 280px;
 	}
   }`;
 
 const transform = keyframes`{
 	0% {
-	  width: 180px;
-	  height: 180px;
+	  width: 280px;
+	  height: 280px;
 	}
 	100% {
-	  width: 250px;
-	  height: 250px;
+	  width: 370px;
+	  height: 370px;
 	}
   }`;
 
 const CardContainer = styled.div`
   display: flex;
   justify-content: center;
-
   align-items: center;
 
-  width: 70%;
+  height: 380px;
+  width: 90%;
+  // overflow-y: auto;
+
+  // height: 90%;
+  max-width: 1300px;
+  min-width: 1000px;
   justify-content: space-around;
-  align-items: center;
-
-  height: 300px;
 `;
 
 const Card = styled.div`
-  width: 180px;
-  height: 180px;
+  width: 280px;
+  height: 280px;
 
   display: flex;
   align-items: center;
@@ -93,8 +91,8 @@ const Card = styled.div`
 
   &.check {
     animation: ${transform} 0.5s ease-in-out;
-    width: 250px;
-    height: 250px;
+    width: 370px;
+    height: 370px;
   }
 
   &.not-check {
