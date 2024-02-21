@@ -6,14 +6,10 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.user.domain.User;
 
 @Entity
 public class Presentation {
@@ -31,8 +27,8 @@ public class Presentation {
 	LocalDateTime dateTime;
 
 	@Enumerated(value = EnumType.STRING)
-	@Column(name = "SPEAKING_TIME")
-	SpeakingTime speakingTime;
+	@Column(name = "PRESENTATION_TIME")
+	PresentationTime presentationTime;
 
 	@Column(name = "SUBJECT")
 	String subject;
@@ -49,4 +45,21 @@ public class Presentation {
 
 	@Embedded
 	Location location;
+
+	protected Presentation(Category category, LocalDateTime dateTime,
+			PresentationTime presentationTime, String subject, String summary, String detail) {
+		this.category = category;
+		this.dateTime = dateTime;
+		this.presentationTime = presentationTime;
+		this.subject = subject;
+		this.detail = detail;
+	}
+
+	public static Presentation of(Category category, LocalDateTime dateTime,
+			PresentationTime presentationTime, String subject, String summary, String detail) {
+		Presentation presentation = new Presentation(category, dateTime, presentationTime, subject,
+				summary, detail);
+		return (presentation);
+	}
+
 }
