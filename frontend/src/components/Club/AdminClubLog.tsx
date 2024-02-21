@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import ClubLogTable from "@/components/Club/ClubLogTable";
+import { MoveSectionButtonStyled } from "@/components/SectionPagination/SectionPagination";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 import { IClubLog } from "@/types/dto/lent.dto";
 
@@ -84,22 +85,22 @@ const SectionBarStyled = styled.div`
   align-items: center;
 `;
 
-const MoveSectionButtonStyled = styled.img<{ arrowReversed?: boolean }>`
-  width: 24px;
-  height: 24px;
-  margin: 0px 15px;
-  opacity: 70%;
-  cursor: pointer;
-  transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")});
-  transition: all 0.2s;
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      opacity: 100%;
-      transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")})
-        scale(1.3);
-    }
-  }
-`;
+// const MoveSectionButtonStyled = styled.img<{ arrowReversed?: boolean }>`
+//   width: 24px;
+//   height: 24px;
+//   margin: 0px 15px;
+//   opacity: 70%;
+//   cursor: pointer;
+//   transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")});
+//   transition: all 0.2s;
+//   @media (hover: hover) and (pointer: fine) {
+//     &:hover {
+//       opacity: 100%;
+//       transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")})
+//         scale(1.3);
+//     }
+//   }
+// `;
 
 const SectionIndexStyled = styled.div`
   width: 100%;

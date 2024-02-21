@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { MoveSectionButtonStyled } from "@/components/SectionPagination/SectionPagination";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 import DetailTable from "./DetailTable";
 
@@ -34,6 +35,7 @@ const ContainerStyled = styled.div`
   display: flex;
   justify-content: center;
 `;
+
 const WrapperStyled = styled.div`
   width: 1350px;
   margin-top: 100px;
@@ -57,23 +59,6 @@ const HeaderStyled = styled.div`
   & > img {
     width: 2.5rem;
     height: 2.5rem;
-  }
-`;
-
-const MoveSectionButtonStyled = styled.img<{ arrowReversed?: boolean }>`
-  width: 24px;
-  height: 24px;
-  margin: 0px 15px;
-  opacity: 70%;
-  cursor: pointer;
-  transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")});
-  transition: all 0.2s;
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      opacity: 100%;
-      transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")})
-        scale(1.3);
-    }
   }
 `;
 
