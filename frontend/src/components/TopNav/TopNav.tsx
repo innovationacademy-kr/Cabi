@@ -113,7 +113,30 @@ const LogoDivStyled = styled.div`
   cursor: pointer;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      /* fill: var(--main-color); */
+      /* light */
+      fill: var(--purple-600);
+      /* dark */
+    }
+    .logo_svg__top {
+      /* light */
+      fill: var(--color-background);
+      /* dark */
+    }
+    .logo_svg__left {
+      /* light */
+      fill: var(--color-background);
+      /* dark */
+    }
+    .logo_svg__line {
+      /* light */
+      stroke: var(--color-background);
+      /* dark */
+    }
+    .logo_svg__border {
+      /* light */
+      stroke: var(--color-text-normal);
+      /* dark */
     }
   }
 `;

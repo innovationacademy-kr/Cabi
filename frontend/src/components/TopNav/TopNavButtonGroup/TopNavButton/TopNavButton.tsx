@@ -1,9 +1,14 @@
 import React from "react";
 import styled from "styled-components";
+import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
+import { ReactComponent as MapImg } from "@/assets/images/map.svg";
+import { ReactComponent as MyCabinetIcon } from "@/assets/images/myCabinetIcon.svg";
+import { ReactComponent as SearchImg } from "@/assets/images/searchWhite.svg";
 
 interface ITopNavButton {
   onClick: React.MouseEventHandler<HTMLDivElement>;
-  imgSrc: string;
+  // imgSrc: string;
+  type: string;
   disable?: boolean;
   width?: string;
   height?: string;
@@ -18,7 +23,10 @@ const TopNavButton = (props: ITopNavButton) => {
       onClick={props.onClick}
       disable={props.disable}
     >
-      <ImgStyled w={props.width} h={props.height} src={props.imgSrc} alt="" />
+      {props.type === "happyCcabi" && <HappyCcabiImg />}
+      {props.type === "search" && <SearchImg />}
+      {props.type === "myCabinetIcon" && <MyCabinetIcon />}
+      {props.type === "map" && <MapImg />}
     </TopNavButtonStyled>
   );
 };
@@ -40,11 +48,39 @@ const TopNavButtonStyled = styled.div<{
       opacity: 0.9;
     }
   }
-`;
 
-const ImgStyled = styled.img<{ w?: string; h?: string }>`
-  width: ${({ w }) => (w ? w : "100%")};
-  height: ${({ h }) => (h ? h : "100%")};
+  & svg {
+    .happyCcabi_svg__hair {
+      /* light */
+      fill: var(--color-background);
+      /* dark */
+    }
+    .happyCcabi_svg__leftArm {
+      /* light */
+      fill: var(--color-background);
+      /* dark */
+    }
+    .happyCcabi_svg__rightArm {
+      /* light */
+      fill: var(--color-background);
+      /* dark */
+    }
+    .happyCcabi_svg__leftEye {
+      /* light */
+      fill: var(--color-background);
+      /* dark */
+    }
+    .happyCcabi_svg__rightEye {
+      /* light */
+      fill: var(--color-background);
+      /* dark */
+    }
+    .happyCcabi_svg__mouth {
+      /* light */
+      fill: var(--color-background);
+      /* dark */
+    }
+  }
 `;
 
 export default TopNavButton;

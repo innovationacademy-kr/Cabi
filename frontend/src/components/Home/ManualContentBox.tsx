@@ -18,7 +18,13 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
       contentStatus={contentStatus}
     >
       {contentStatus === ContentStatus.EXTENSION && (
-        <ManualPeopleImg className="peopleImg" fill="var(--main-color)" />
+        <ManualPeopleImg
+          className="peopleImg"
+          //  fill="var(--main-color)"
+          // light
+          fill="var(--purple-600)"
+          //  dark
+        />
       )}
       {contentStatus !== ContentStatus.PENDING &&
         contentStatus !== ContentStatus.IN_SESSION && (
@@ -69,10 +75,16 @@ const MaunalContentBoxStyled = styled.div<{
     width: 80px;
     height: 80px;
     filter: brightness(
-      ${(props) => (props.contentStatus === ContentStatus.EXTENSION ? 0 : 100)}
+      ${(props) => (props.contentStatus === ContentStatus.EXTENSION ? 10 : 0)}
     );
   }
-
+  /* filter: brightness(
+      ${(props) => (props.contentStatus === ContentStatus.EXTENSION ? 0 : 100)}
+        light
+        ${(props) =>
+    props.contentStatus === ContentStatus.EXTENSION ? 100 : 0}
+        dark
+    ); */
   .peopleImg {
     width: 220px;
     height: 500px;
@@ -129,10 +141,14 @@ const MaunalContentBoxStyled = styled.div<{
     stroke: ${(props) =>
       props.contentStatus === ContentStatus.IN_SESSION
         ? "var(--main-color)"
-        : props.contentStatus === ContentStatus.EXTENSION
-        ? // ? "black"
-          "var(--black)"
-        : "white"};
+        : // : props.contentStatus === ContentStatus.EXTENSION
+        // ? "var(--black)"
+        // : "white"};
+        // light
+        props.contentStatus === ContentStatus.EXTENSION
+        ? "var(--color-text-normal)"
+        : "var(--color-background)"};
+    // dark
     cursor: pointer;
   }
 

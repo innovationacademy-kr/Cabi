@@ -9,6 +9,7 @@
   --gray-400: #bcbcbc;
   --gray-500: #7b7b7b;
   --gray-600: #3c3c3c;
+  --gray-700: #262626;
   --black: #181818;
 
   /* red color variable */
@@ -93,12 +94,13 @@
   --color-text-normal: var(--black);
 }
 
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--black);
     --color-line: var(--gray-400);
+    --color-text-normal: var(--gray-100);
   }
-} */
+}
 
 a {
   color: var(--main-color);
@@ -143,6 +145,9 @@ button {
   cursor: pointer;
   border: none;
   background-color: var(--main-color);
+  /* light */
+  background-color: var(--purple-600);
+  /* dark */
   color: var(--white);
   width: 200px;
   height: 60px;

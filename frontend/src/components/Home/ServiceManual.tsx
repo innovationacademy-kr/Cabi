@@ -122,6 +122,9 @@ const TitleContainerStyled = styled.div`
   justify-content: space-between;
   align-items: center;
   border-bottom: 2px solid var(--gray-300);
+  /* light */
+  border-bottom: 2px solid var(--gray-500);
+  /* dark */
   margin-bottom: 70px;
   color: var(--main-color);
   font-weight: 700;
@@ -146,6 +149,9 @@ const NotionBtn = styled.button`
   border-radius: 8px;
   font-size: 0.875rem;
   color: var(--gray-600);
+  /* light */
+  color: var(--gray-300);
+  /* dark */
   background: var(--color-background);
   border: 1px solid var(--gray-300);
   :hover {
@@ -162,6 +168,7 @@ const WrapSectionStyled = styled.div`
     line-height: 1.4;
     text-align: left;
     font-weight: bold;
+    color: var(--color-text-normal);
   }
 `;
 
