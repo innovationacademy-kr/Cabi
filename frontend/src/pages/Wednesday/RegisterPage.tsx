@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { toggleItem } from "@/components/Common/MultiToggleSwitch";
 import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
+import DropdownMenu from "./DropdownMenu";
 
 enum PresentationCategory {
   FORTYTWO = "FORTYTWO",
@@ -40,8 +41,12 @@ const RegisterPage = () => {
           />
         </SubtitleSection>
         <SubtitleSection>
+          <RegisterSubContentStyled>시간</RegisterSubContentStyled>
+          <RegisterTimeInputStyled>
+            <DropdownMenu></DropdownMenu>
+          </RegisterTimeInputStyled>
           <RegisterSubContentStyled>제목</RegisterSubContentStyled>
-          <RegisterSubTitleInputStyled placeholder="제목을 입력해주세요" />
+          <RegisterSubTitleInputStyled />
         </SubtitleSection>
         <SubtitleSection>
           <DateTimeSection>
@@ -128,6 +133,18 @@ const RegisterDetailInputStyled = styled.textarea`
   border: none;
   resize: none;
   outline: none;
+`;
+
+const RegisterTimeInputStyled = styled.div`
+  width: 380px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: var(--white);
+  border: none;
+  resize: none;
+  outline: none;
+  cursor: pointer;
+
 `;
 
 const RegisterButtonStyled = styled.button`
