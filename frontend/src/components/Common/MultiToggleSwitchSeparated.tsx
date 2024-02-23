@@ -77,11 +77,11 @@ const WrapperStyled = styled.div<{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: fit-content;
+    width: 100%;
     min-width: 50px;
     border-radius: 10px;
     font-size: ${(props) => props.fontSize};
-    height: 30px;
+    height: 40px;
     font-weight: 500;
     background-color: var(--lightgray-color);
     color: black;
