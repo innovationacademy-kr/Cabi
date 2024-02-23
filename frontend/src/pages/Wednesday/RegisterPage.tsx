@@ -41,23 +41,27 @@ const RegisterPage = () => {
           />
         </SubtitleSection>
         <SubtitleSection>
-          <RegisterSubContentStyled>시간</RegisterSubContentStyled>
-          <RegisterTimeInputStyled>
-            <DropdownMenu></DropdownMenu>
-          </RegisterTimeInputStyled>
+          <DateTimeContainer>
+            <SubtitleSection>
+              <RegisterSubContentStyled>날짜</RegisterSubContentStyled>
+              <RegisterTimeInputStyled>
+                <DropdownMenu></DropdownMenu>
+              </RegisterTimeInputStyled>
+            </SubtitleSection>
+            <SubtitleSection>
+              <RegisterSubContentStyled>시간</RegisterSubContentStyled>
+              <RegisterTimeInputStyled>
+                <DropdownMenu></DropdownMenu>
+              </RegisterTimeInputStyled>
+            </SubtitleSection>
+          </DateTimeContainer>
           <RegisterSubContentStyled>제목</RegisterSubContentStyled>
-          <RegisterSubTitleInputStyled />
-        </SubtitleSection>
-        <SubtitleSection>
-          <DateTimeSection>
-            <RegisterSubContentStyled>날짜</RegisterSubContentStyled>
-          </DateTimeSection>
+          <RegisterSubTitleInputStyled placeholder="제목을 입력해주세요" />
         </SubtitleSection>
         <SubtitleSection>
           <RegisterSubContentStyled>한줄 요약</RegisterSubContentStyled>
           <RegisterSubTitleInputStyled placeholder="한줄 요약을 입력해주세요" />
         </SubtitleSection>
-
         <SubtitleSection>
           <RegisterSubContentStyled>내용</RegisterSubContentStyled>
           <RegisterDetailInputStyled placeholder="내용을 입력해주세요" />
@@ -113,7 +117,7 @@ const RegisterSubTitleInputStyled = styled.textarea`
   font-size: 1rem;
   background-color: var(--white);
   width: 800px;
-  height: 50px;
+  height: 56px;
   outline: none;
 `;
 
@@ -130,13 +134,14 @@ const RegisterDetailInputStyled = styled.textarea`
   padding: 10px;
   border-radius: 10px;
   font-size: 1rem;
+  word-spacing: -4px;
   border: none;
   resize: none;
   outline: none;
 `;
 
 const RegisterTimeInputStyled = styled.div`
-  width: 380px;
+  width: 350px;
   height: 50px;
   border-radius: 10px;
   background-color: var(--white);
@@ -144,7 +149,6 @@ const RegisterTimeInputStyled = styled.div`
   resize: none;
   outline: none;
   cursor: pointer;
-
 `;
 
 const RegisterButtonStyled = styled.button`
@@ -155,12 +159,21 @@ const RegisterButtonStyled = styled.button`
   background-color: var(--main-color);
 `;
 
-const DateTimeSection = styled.div`
+const DateDropdownStyled = styled.div`
+  width: 200px;
+  height: 40px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  width: 800px;
-  font-size: 1rem;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--white);
+`;
+
+const DateTimeContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export default RegisterPage;
