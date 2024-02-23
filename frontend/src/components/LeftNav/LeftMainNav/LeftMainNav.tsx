@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { ReactComponent as LogoutImg } from "/src/assets/images/close-square.svg";
-import { ReactComponent as CulbImg } from "/src/assets/images/clubIconGray.svg";
-import { ReactComponent as ProfileImg } from "/src/assets/images/profile-circle.svg";
-import { ReactComponent as SearchImg } from "/src/assets/images/search.svg";
-import { ReactComponent as SlackImg } from "/src/assets/images/slack.svg";
+import { ReactComponent as LogoutImg } from "@/assets/images/close-square.svg";
+import { ReactComponent as CulbImg } from "@/assets/images/clubIconGray.svg";
+import { ReactComponent as ProfileImg } from "@/assets/images/profile-circle.svg";
+import { ReactComponent as SearchImg } from "@/assets/images/search.svg";
+import { ReactComponent as SlackImg } from "@/assets/images/slack.svg";
 
 interface ILeftMainNav {
   pathname: string;
@@ -18,9 +18,9 @@ interface ILeftMainNav {
   onClickMainClubButton: React.MouseEventHandler;
   onClickProfileButton: React.MouseEventHandler;
   onClickAvailableButton: React.MouseEventHandler;
-  onClickWedHomeButton: React.MouseEventHandler;
-  onClickWedRegisterButton: React.MouseEventHandler;
-  onClickWedDetailButton: React.MouseEventHandler;
+  onClickPresentationHomeButton: React.MouseEventHandler;
+  onClickPresentationRegisterButton: React.MouseEventHandler;
+  onClickPresentationDetailButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
@@ -37,9 +37,9 @@ const LeftMainNav = ({
   onClickMainClubButton,
   onClickProfileButton,
   onClickAvailableButton,
-  onClickWedHomeButton,
-  onClickWedRegisterButton,
-  onClickWedDetailButton,
+  onClickPresentationHomeButton,
+  onClickPresentationRegisterButton,
+  onClickPresentationDetailButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
@@ -88,33 +88,36 @@ const LeftMainNav = ({
             <>
               <TopBtnStyled
                 className={
-                  pathname.includes("wed/home")
+                  pathname.includes("wed/home") ||
+                  pathname.includes("presentation/home")
                     ? "leftNavButtonActive cabiButton"
                     : "cabiButton"
                 }
-                onClick={onClickWedHomeButton}
+                onClick={onClickPresentationHomeButton}
               >
                 Home
               </TopBtnStyled>
               <TopBtnStyled
                 className={
-                  pathname.includes("wed/register")
+                  pathname.includes("wed/register") ||
+                  pathname.includes("presentation/register")
                     ? "leftNavButtonActive cabiButton"
                     : "cabiButton"
                 }
-                onClick={onClickWedRegisterButton}
+                onClick={onClickPresentationRegisterButton}
               >
                 신청하기
               </TopBtnStyled>
               <TopBtnStyled
                 className={
-                  pathname.includes("wed/detail")
+                  pathname.includes("wed/detail") ||
+                  pathname.includes("presentation/detail")
                     ? "leftNavButtonActive cabiButton"
                     : "cabiButton"
                 }
-                onClick={onClickWedDetailButton}
+                onClick={onClickPresentationDetailButton}
               >
-                상세정보
+                {isAdmin ? "일정관리" : "상세정보"}
               </TopBtnStyled>
             </>
           )}
