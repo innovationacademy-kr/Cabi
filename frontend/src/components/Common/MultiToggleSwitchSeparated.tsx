@@ -3,19 +3,21 @@ import styled from "styled-components";
 
 export interface toggleItem {
   name: string;
-  key: number;
+  key: string;
 }
 
 interface MultiToggleSwitchProps<T> {
   initialState: T;
   setState: React.Dispatch<React.SetStateAction<T>>;
   toggleList: toggleItem[];
+  fontSize?: string;
 }
 
 const MultiToggleSwitchSeparated = <T,>({
   initialState,
   setState,
   toggleList,
+  fontSize = "0.9rem",
 }: MultiToggleSwitchProps<T>) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -26,6 +28,9 @@ const MultiToggleSwitchSeparated = <T,>({
       if (button.className === `${initialState}`) {
         button.style.color = "white";
         button.style.backgroundColor = "var(--main-color)";
+      } else {
+        button.style.color = "black";
+        button.style.backgroundColor = "var(--white)";
       }
     });
   }, [initialState]);
@@ -40,7 +45,7 @@ const MultiToggleSwitchSeparated = <T,>({
 
     buttons?.forEach((button) => {
       button.style.color = "black";
-      button.style.backgroundColor = "var(--lightgray-color)";
+      button.style.backgroundColor = "var(--white)";
     });
 
     target.style.color = "white";
@@ -50,7 +55,7 @@ const MultiToggleSwitchSeparated = <T,>({
   }
 
   return (
-    <WrapperStyled ref={wrapperRef} onClick={switchToggle}>
+    <WrapperStyled ref={wrapperRef} onClick={switchToggle} fontSize={fontSize}>
       {toggleList.map((item) => (
         <button key={item.key} className={`${item.key}`}>
           {item.name}
@@ -60,7 +65,9 @@ const MultiToggleSwitchSeparated = <T,>({
   );
 };
 
-const WrapperStyled = styled.div`
+const WrapperStyled = styled.div<{
+  fontSize: string;
+}>`
   width: 100%;
   display: flex;
   align-items: center;
@@ -70,11 +77,11 @@ const WrapperStyled = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: fit-content;
+    width: 100%;
     min-width: 50px;
     border-radius: 10px;
-    font-size: 0.9rem;
-    height: 30px;
+    font-size: ${(props) => props.fontSize};
+    height: 40px;
     font-weight: 500;
     background-color: var(--lightgray-color);
     color: black;

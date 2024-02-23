@@ -14,7 +14,6 @@ import {
   currentSectionNameState,
   myCabinetInfoState,
   numberOfAdminWorkState,
-  userState,
 } from "@/recoil/atoms";
 import { currentBuildingFloorState } from "@/recoil/selectors";
 import LeftMainNav from "@/components/LeftNav/LeftMainNav/LeftMainNav";
@@ -130,18 +129,22 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
-  const onClickWedHomeButton = () => {
+  const onClickPresentationHomeButton = () => {
     navigator("home");
     closeAll();
   };
 
-  const onClickWedRegisterButton = () => {
+  const onClickPresentationRegisterButton = () => {
     navigator("register");
     closeAll();
   };
 
-  const onClickWedDetailButton = () => {
-    navigator("detail");
+  const onClickPresentationDetailButton = () => {
+    if (isAdmin) {
+      navigator("presentation/detail");
+    } else {
+      navigator("detail");
+    }
     closeAll();
   };
 
@@ -177,9 +180,9 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickMainClubButton={onClickMainClubButton}
       onClickProfileButton={onClickProfileButton}
       onClickAvailableButton={onClickAvailableButton}
-      onClickWedHomeButton={onClickWedHomeButton}
-      onClickWedRegisterButton={onClickWedRegisterButton}
-      onClickWedDetailButton={onClickWedDetailButton}
+      onClickPresentationHomeButton={onClickPresentationHomeButton}
+      onClickPresentationRegisterButton={onClickPresentationRegisterButton}
+      onClickPresentationDetailButton={onClickPresentationDetailButton}
       isAdmin={isAdmin}
     />
   );

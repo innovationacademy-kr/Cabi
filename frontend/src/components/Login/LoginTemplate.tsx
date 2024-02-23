@@ -62,7 +62,6 @@ const LoginPageStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 80px;
   width: 100%;
   height: 100%;
 `;
