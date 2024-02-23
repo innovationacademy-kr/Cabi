@@ -168,7 +168,7 @@ const LeftMainNav = ({
               </BottomBtnStyled>
             </>
           )}
-          {!isAdmin && (
+          {!isAdmin && currentBuildingName === "새롬관" && (
             <>
               <BottomBtnStyled
                 className={
@@ -193,6 +193,15 @@ const LeftMainNav = ({
                 Profile
               </BottomBtnStyled>
             </>
+          )}
+          {!isAdmin && currentBuildingName === "수지회" && (
+            <BottomBtnStyled
+              className="cabiButton"
+              onClick={onClickLogoutButton}
+            >
+              <LogoutImg stroke="var(--gray-color)" />
+              Logout
+            </BottomBtnStyled>
           )}
         </BottomBtnsStyled>
       </BottomSectionStyled>
