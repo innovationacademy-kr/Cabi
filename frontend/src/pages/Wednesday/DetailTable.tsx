@@ -1,7 +1,30 @@
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import EditStatusModal from "@/components/Wednesday/Modals/EditStatusModal/EditStatusModal";
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 
+export interface IAdminCurrentModalStateInfo {
+  statusModal: boolean;
+}
+
+export type TAdminModalState = "statusModal";
+
 const DetailTable = () => {
+  const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
+    statusModal: false,
+  });
+  const { pathname } = useLocation();
+  const isAdmin = pathname.includes("admin/presentation");
+
+  const openAdminModal = (modal: TAdminModalState) => {
+    setAdminModal({ ...adminModal, [modal]: true });
+  };
+
+  const closeAdminModal = (modal: TAdminModalState) => {
+    setAdminModal({ ...adminModal, [modal]: false });
+  };
+
   // const tableHeadArray = [
   //   { date: "날짜" },
   //   { intraId: "ID" },
@@ -12,68 +35,85 @@ const DetailTable = () => {
 
   // console.log(Object.entries(tableHeadArray));
   return (
-    <TableStyled>
-      <TableHeadStyled>
-        {/* {tableHeadArray.map((head, idx) => {
+    <>
+      <TableStyled>
+        <TableHeadStyled>
+          {/* {tableHeadArray.map((head, idx) => {
           return <th id={head[idx]}>날짜</th>;
         })} */}
-        <th id="date">날짜</th>
-        <th id="intraId">ID</th>
-        <th id="title">제목</th>
-        <th id="time">시간</th>
-        <th id="category">카테고리</th>
-      </TableHeadStyled>
-      <TableBodyStyled>
-        <td className="leftEnd">
-          <span>1월 13일</span>
-        </td>
-        <td>
-          <span>aaaaaaaaaa</span>
-        </td>
-        <td>
-          <span>사진을 위한 넓고 얕은 지식눌렀을때는 제목이 모두 보이게</span>
-        </td>
-        <td>
-          <span>30분</span>
-        </td>
-        <td className="rightEnd">
-          <span>취미</span>
-        </td>
-      </TableBodyStyled>
-      <TableBodyStyled>
-        <td className="leftEnd" id="noEventCurrent">
-          <span>1월 20일</span>
-        </td>
-        <td className="rightEnd" colSpan={4} id="noEventCurrent">
-          <div>
-            <NoEventPhraseStyled>
-              <span>
-                다양한 주제와 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를
-                신청해보세요
-              </span>
-              <img src="/src/assets/images/happyCcabi.svg" />
-            </NoEventPhraseStyled>
-            <button>신청하기</button>
-          </div>
-        </td>
-      </TableBodyStyled>
-      <TableBodyStyled>
-        {/* noEventPast */}
-        <td className="leftEnd" id="noEventPast">
-          <span>1월 20일</span>
-        </td>
-        <td className="rightEnd" colSpan={4} id="noEventPast">
-          <div>
-            <NoEventPhraseStyled>
-              <span>발표가 없었습니다</span>
-              <SadCcabiStyled>
-                <SadCcabiImg />
-              </SadCcabiStyled>
-            </NoEventPhraseStyled>
-          </div>
-        </td>
-      </TableBodyStyled>
-    </TableStyled>
+          <th id="date">날짜</th>
+          <th id="intraId">ID</th>
+          <th id="title">제목</th>
+          <th id="time">시간</th>
+          <th id="category">카테고리</th>
+        </TableHeadStyled>
+        <TableBodyStyled
+          onClick={() => {
+            isAdmin && openAdminModal("statusModal");
+          }}
+        >
+          <td className="leftEnd">
+            <span>1월 13일</span>
+          </td>
+          <td>
+            <span>aaaaaaaaaa</span>
+          </td>
+          <td>
+            <span>사진을 위한 넓고 얕은 지식눌렀을때는 제목이 모두 보이게</span>
+          </td>
+          <td>
+            <span>30분</span>
+          </td>
+          <td className="rightEnd">
+            <span>취미</span>
+          </td>
+        </TableBodyStyled>
+        <TableBodyStyled
+          onClick={() => {
+            if (isAdmin) openAdminModal("statusModal");
+          }}
+        >
+          <td className="leftEnd" id="noEventCurrent">
+            <span>1월 20일</span>
+          </td>
+          <td className="rightEnd" colSpan={4} id="noEventCurrent">
+            <div>
+              <NoEventPhraseStyled>
+                <span>
+                  다양한 주제와 관심사를 함께 나누고 싶으신 분은 지금 바로
+                  발표를 신청해보세요
+                </span>
+                <img src="/src/assets/images/happyCcabi.svg" />
+              </NoEventPhraseStyled>
+              <button>신청하기</button>
+            </div>
+          </td>
+        </TableBodyStyled>
+        <TableBodyStyled
+          onClick={() => {
+            if (isAdmin) openAdminModal("statusModal");
+          }}
+        >
+          {/* noEventPast */}
+          <td className="leftEnd" id="noEventPast">
+            <span>1월 20일</span>
+          </td>
+          <td className="rightEnd" colSpan={4} id="noEventPast">
+            <div>
+              <NoEventPhraseStyled>
+                <span>발표가 없었습니다</span>
+                <SadCcabiStyled>
+                  <SadCcabiImg />
+                </SadCcabiStyled>
+              </NoEventPhraseStyled>
+            </div>
+          </td>
+        </TableBodyStyled>
+      </TableStyled>
+      {adminModal.statusModal && (
+        <EditStatusModal closeModal={() => closeAdminModal("statusModal")} />
+      )}
+    </>
   );
 };
 
