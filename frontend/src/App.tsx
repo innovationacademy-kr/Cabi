@@ -54,6 +54,9 @@ function App(): React.ReactElement {
             <Route path="search" element={<SearchPage />} />
             <Route path="club" element={<AdminClubPage />} />
             <Route path="available" element={<AvailablePage />} />
+            <Route path="presentation/">
+              <Route path="detail" element={<DetailPage />} />
+            </Route>
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route

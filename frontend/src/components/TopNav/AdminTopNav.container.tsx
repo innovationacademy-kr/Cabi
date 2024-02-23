@@ -32,7 +32,13 @@ const AdminTopNavContainer: React.FC<{
       try {
         await setTimeoutPromise(500);
         const buildingsFloorData = await axiosBuildingFloor();
-        setBuildingsFloor(buildingsFloorData.data);
+        setBuildingsFloor([
+          ...buildingsFloorData.data,
+          {
+            building: "수지회",
+            floors: [2, 3, 4],
+          },
+        ]);
       } catch (error) {
         console.log(error);
       }
