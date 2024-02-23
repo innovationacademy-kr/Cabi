@@ -19,7 +19,7 @@ const DropdownMenu = () => {
   return (
     <DropdownContainer>
       <RegisterTimeInputStyled onClick={() => setIsVisible(!isVisible)}>
-        {selectedOption || "시간을 선택해주세요"}
+        {selectedOption || "시간을 선택해주세요."}
       </RegisterTimeInputStyled>
       {isVisible && (
         <DropdownOptions>
