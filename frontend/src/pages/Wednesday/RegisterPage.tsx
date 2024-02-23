@@ -92,7 +92,7 @@ const RegisterBackgroundStyled = styled.div`
 `;
 
 const RegisterSubContentStyled = styled.div`
-  margin-left: 5cqminpx;
+  margin-left: 5px;
   margin-top: 20px;
   font-weight: 700;
   font-size: 1.1rem;
