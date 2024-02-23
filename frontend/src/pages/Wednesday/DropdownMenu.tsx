@@ -19,7 +19,7 @@ const DropdownMenu = () => {
   return (
     <DropdownContainer>
       <RegisterTimeInputStyled onClick={() => setIsVisible(!isVisible)}>
-        {selectedOption || "시간을 선택해주세요."}
+        {selectedOption || "시간을 선택해주세요"}
       </RegisterTimeInputStyled>
       {isVisible && (
         <DropdownOptions>
@@ -42,7 +42,7 @@ const DropdownOptions = styled.ul`
   position: absolute;
   top: 50px;
   left: 0;
-  width: 300px;
+  width: 350px;
   border: 1px solid var(--white);
   border-radius: 10px;
   text-align: left;
@@ -68,9 +68,10 @@ const DropdownOption = styled.li`
 `;
 
 const RegisterTimeInputStyled = styled.div`
-  width: 380px;
+  width: 350px;
   height: 50px;
   border-radius: 10px;
+  color: var(--gray-color);
   background-color: var(--white);
   border: none;
   resize: none;
@@ -82,4 +83,3 @@ const RegisterTimeInputStyled = styled.div`
 `;
 
 export default DropdownMenu;
-
