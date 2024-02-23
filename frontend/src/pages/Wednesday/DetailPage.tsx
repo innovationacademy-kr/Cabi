@@ -1,7 +1,7 @@
 import styled from "styled-components";
+import DetailTable from "@/pages/Wednesday/DetailTable";
 import { MoveSectionButtonStyled } from "@/components/SectionPagination/SectionPagination";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
-import DetailTable from "./DetailTable";
 
 const DetailPage = () => {
   return (
@@ -12,7 +12,7 @@ const DetailPage = () => {
             src={LeftSectionButton}
             className="cabiButton"
           />
-          <div>2024년 1월</div>
+          <div>2024년 12월</div>
           <MoveSectionButtonStyled
             src={LeftSectionButton}
             arrowReversed={true}
@@ -37,8 +37,8 @@ const ContainerStyled = styled.div`
 `;
 
 const WrapperStyled = styled.div`
-  width: 1350px;
-  margin-top: 100px;
+  width: 80%;
+  margin-top: 70px;
 `;
 
 const HeaderStyled = styled.div`
@@ -52,8 +52,9 @@ const HeaderStyled = styled.div`
   & > div {
     width: 200px;
     height: 50px;
-    font-size: 40px;
-    margin: 0 40px;
+    font-size: 2rem;
+    line-height: 3rem;
+    font-weight: 600;
   }
 
   & > img {
@@ -63,7 +64,7 @@ const HeaderStyled = styled.div`
 `;
 
 const BodyStyled = styled.div`
-  margin-top: 80px;
+  margin-top: 50px;
   width: 100%;
   padding: 0 20px 10px 20px;
   background-color: var(--lightgray-color);

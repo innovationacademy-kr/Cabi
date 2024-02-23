@@ -33,44 +33,43 @@ const DetailTable = () => {
   //   { category: "카테고리" },
   // ];
 
-  // console.log(Object.entries(tableHeadArray));
   return (
     <>
       <TableStyled>
-        <TableHeadStyled>
-          {/* {tableHeadArray.map((head, idx) => {
-          return <th id={head[idx]}>날짜</th>;
-        })} */}
-          <th id="date">날짜</th>
-          <th id="intraId">ID</th>
-          <th id="title">제목</th>
-          <th id="time">시간</th>
-          <th id="category">카테고리</th>
-        </TableHeadStyled>
-        <TableBodyStyled
+        <TableHeadStyled
           onClick={() => {
             isAdmin && openAdminModal("statusModal");
           }}
         >
+          {/* {tableHeadArray.map((head, idx) => {
+      return <th id={head[idx]}>날짜</th>;
+    })} */}
+          <th id="date">날짜</th>
+          <th id="title">제목</th>
+          <th id="intraId">ID</th>
+          <th id="category">카테고리</th>
+          <th id="time">시간</th>
+        </TableHeadStyled>
+        <TableBodyStyled>
           <td className="leftEnd">
             <span>1월 13일</span>
-          </td>
-          <td>
-            <span>aaaaaaaaaa</span>
           </td>
           <td>
             <span>사진을 위한 넓고 얕은 지식눌렀을때는 제목이 모두 보이게</span>
           </td>
           <td>
-            <span>30분</span>
+            <span>aaaaaaaaaa</span>
+          </td>
+          <td>
+            <span>취미</span>
           </td>
           <td className="rightEnd">
-            <span>취미</span>
+            <span>30분</span>
           </td>
         </TableBodyStyled>
         <TableBodyStyled
           onClick={() => {
-            if (isAdmin) openAdminModal("statusModal");
+            isAdmin && openAdminModal("statusModal");
           }}
         >
           <td className="leftEnd" id="noEventCurrent">
@@ -80,8 +79,8 @@ const DetailTable = () => {
             <div>
               <NoEventPhraseStyled>
                 <span>
-                  다양한 주제와 관심사를 함께 나누고 싶으신 분은 지금 바로
-                  발표를 신청해보세요
+                  다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를
+                  신청해보세요
                 </span>
                 <img src="/src/assets/images/happyCcabi.svg" />
               </NoEventPhraseStyled>
@@ -89,12 +88,11 @@ const DetailTable = () => {
             </div>
           </td>
         </TableBodyStyled>
-        <TableBodyStyled
+        {/* <TableBodyStyled
           onClick={() => {
-            if (isAdmin) openAdminModal("statusModal");
+            isAdmin && openAdminModal("statusModal");
           }}
         >
-          {/* noEventPast */}
           <td className="leftEnd" id="noEventPast">
             <span>1월 20일</span>
           </td>
@@ -108,7 +106,7 @@ const DetailTable = () => {
               </NoEventPhraseStyled>
             </div>
           </td>
-        </TableBodyStyled>
+        </TableBodyStyled> */}
       </TableStyled>
       {adminModal.statusModal && (
         <EditStatusModal closeModal={() => closeAdminModal("statusModal")} />
@@ -126,47 +124,58 @@ const TableStyled = styled.table`
 `;
 
 const TableHeadStyled = styled.tr`
-  height: 60px;
-  line-height: 60px;
+  height: 40px;
+  line-height: 40px;
+  background-color: #3f69fd;
+  color: var(--white);
 
   & > th {
-    font-size: 20px;
+    font-size: 1rem;
   }
 
   & > #date {
-    width: 170px;
-  }
-
-  & > #intraId {
-    width: 180px;
+    width: 13%;
+    border-radius: 10px 0 0 10px;
   }
 
   & > #title {
-    width: 740px;
+    width: 56%;
   }
 
-  & > #time {
-    width: 100px;
+  & > #intraId {
+    width: 14%;
   }
 
   & > #category {
-    width: 120px;
+    width: 9%;
+  }
+
+  & > #time {
+    width: 8%;
+    border-radius: 0 10px 10px 0;
   }
 `;
 
+// white-space: nowrap;
+//   text-overflow: ellipsis;
 const TableBodyStyled = styled.tr`
-  height: 100px;
+  height: 70px;
   width: 100%;
-  line-height: 100px;
+  line-height: 70px;
   text-align: center;
-  font-size: 20px;
+  font-size: 18px;
 
   & > td {
-    background-color: #f5f7ff;
+    background-color: #dce7fd;
+    padding: 0 10px;
   }
 
   & #noEventCurrent {
     background-color: white;
+  }
+
+  & #noEventCurrent > div {
+    /* background-color: blue; */
   }
 
   & #noEventPast {
@@ -175,16 +184,15 @@ const TableBodyStyled = styled.tr`
 
   & > td > div {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
-    width: 100%;
   }
 
   & button {
     width: 120px;
-    height: 40px;
-    margin-left: 100px;
-    margin-right: 60px;
+    height: 36px;
+    background-color: #3f69fd;
+    font-weight: bold;
   }
 
   & .leftEnd {
@@ -199,13 +207,12 @@ const TableBodyStyled = styled.tr`
 const NoEventPhraseStyled = styled.div`
   display: flex;
   align-items: center;
-  justify-content: end;
-  width: 850px;
+  width: 600px;
 
   & > img {
     width: 30px;
     height: 30px;
-    margin-left: 20px;
+    margin-left: 10px;
   }
 
   & > span {
@@ -216,7 +223,6 @@ const NoEventPhraseStyled = styled.div`
 const SadCcabiStyled = styled.div`
   width: 30px;
   height: 30px;
-  background-color: yellow;
   display: flex;
 
   & svg {
