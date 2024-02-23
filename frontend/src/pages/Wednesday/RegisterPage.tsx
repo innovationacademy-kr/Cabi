@@ -31,7 +31,7 @@ const RegisterPage = () => {
       <RegisterTitleStyled>수요지식회 신청</RegisterTitleStyled>
       <RegisterBackgroundStyled>
         <SubtitleSection>
-          <RegisterSubTitleStyled>카테고리</RegisterSubTitleStyled>
+          <RegisterSubContentStyled>카테고리</RegisterSubContentStyled>
           <MultiToggleSwitchSeparated
             initialState={toggleType}
             setState={setToggleType}
@@ -40,17 +40,24 @@ const RegisterPage = () => {
           />
         </SubtitleSection>
         <SubtitleSection>
-          <RegisterSubTitleStyled>제목</RegisterSubTitleStyled>
-          <RegisterSubTitleInputStyled />
+          <RegisterSubContentStyled>제목</RegisterSubContentStyled>
+          <RegisterSubTitleInputStyled placeholder="제목을 입력해주세요" />
         </SubtitleSection>
         <SubtitleSection>
-          <RegisterSubTitleStyled>한줄 요약</RegisterSubTitleStyled>
-          <RegisterSubTitleInputStyled />
+          <DateTimeSection>
+            <RegisterSubContentStyled>날짜</RegisterSubContentStyled>
+          </DateTimeSection>
         </SubtitleSection>
         <SubtitleSection>
-          <RegisterSubTitleStyled>내용</RegisterSubTitleStyled>
-          <RegisterDetailInputStyled />
+          <RegisterSubContentStyled>한줄 요약</RegisterSubContentStyled>
+          <RegisterSubTitleInputStyled placeholder="한줄 요약을 입력해주세요" />
         </SubtitleSection>
+
+        <SubtitleSection>
+          <RegisterSubContentStyled>내용</RegisterSubContentStyled>
+          <RegisterDetailInputStyled placeholder="내용을 입력해주세요" />
+        </SubtitleSection>
+        <RegisterButtonStyled>신청하기</RegisterButtonStyled>
       </RegisterBackgroundStyled>
     </RegisterPageStyled>
   );
@@ -77,16 +84,18 @@ const RegisterBackgroundStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 840px;
+  width: 880px;
   height: 1000px;
   border-radius: 10px;
   background-color: var(--lightgray-color);
   margin-top: 20px;
 `;
 
-const RegisterSubTitleStyled = styled.div`
+const RegisterSubContentStyled = styled.div`
+  margin-left: 5cqminpx;
   margin-top: 20px;
-  font-size: 1.2rem;
+  font-weight: 700;
+  font-size: 1.1rem;
   line-height: 2.25rem;
 `;
 
@@ -94,6 +103,9 @@ const RegisterSubTitleInputStyled = styled.textarea`
   border-radius: 10px;
   border: none;
   resize: none;
+  word-spacing: -4px;
+  padding: 10px;
+  font-size: 1rem;
   background-color: var(--white);
   width: 800px;
   height: 50px;
@@ -102,6 +114,7 @@ const RegisterSubTitleInputStyled = styled.textarea`
 
 const SubtitleSection = styled.div`
   display: flex;
+  width: 820px;
   flex-direction: column;
   justify-content: space-between;
 `;
@@ -109,9 +122,28 @@ const SubtitleSection = styled.div`
 const RegisterDetailInputStyled = styled.textarea`
   width: 800px;
   height: 100px;
+  padding: 10px;
   border-radius: 10px;
+  font-size: 1rem;
   border: none;
   resize: none;
   outline: none;
 `;
+
+const RegisterButtonStyled = styled.button`
+  width: 200px;
+  height: 55px;
+  font-weight: 500;
+  margin-top: 20px;
+  background-color: var(--main-color);
+`;
+
+const DateTimeSection = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 800px;
+  font-size: 1rem;
+`;
+
 export default RegisterPage;
