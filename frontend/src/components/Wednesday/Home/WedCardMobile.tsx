@@ -1,14 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { IDummyList } from "./WedCard";
 
 const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
   const [select, setSelect] = useState(0);
   const [slideIndex, setSlideIndex] = useState(1);
+  const touchStartPosX = useRef(0);
+  const touchStartPosY = useRef(0);
 
   // 눌렀을때 해당 페이지로 이동
   // 페이지가 이동하면 그에 맞는 페이지네이션 제공
-  const onPageClick = (i: number) => {};
+  const onPageClick = (i: number) => {
+    if (i !== slideIndex) {
+      setSlideIndex(i);
+      // console.log(i - slideIndex);
+      setSelect(select + (slideIndex - i) * 300);
+    }
+  };
 
   const components = [];
   for (let i = 0; i < 3; i++) {
@@ -33,10 +41,36 @@ const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
     }
   };
 
-  useEffect(() => {
-    console.log("selecty : " + select);
-    console.log("slideIndex : " + slideIndex);
-  }, [select]);
+  const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
+    const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
+    const touchOffsetY = Math.round(touchEndPosY - touchStartPosY.current);
+
+    // console.log("end : " + touchEndPosX);
+    // console.log("start : " + touchStartPosX.current);
+    // console.log("end - start : " + touchOffsetX);
+    if (
+      Math.abs(touchOffsetX) < 50 ||
+      Math.abs(touchOffsetX) < Math.abs(touchOffsetY) // y축으로 더 움직임이 있으면 슬라이드 x
+    ) {
+      return;
+    }
+
+    if (touchOffsetX > 0) {
+      moveSectionTo("left");
+    } else {
+      moveSectionTo("right");
+    }
+  };
+
+  const moveSectionTo = (direction: string) => {
+    if (direction === "left" && slideIndex !== 0) {
+      setSlideIndex(slideIndex - 1);
+      setSelect(select + 300);
+    } else if (direction === "right" && slideIndex !== 2) {
+      setSlideIndex(slideIndex + 1);
+      setSelect(select - 300);
+    }
+  };
 
   return (
     <WedCardContainer>
@@ -45,6 +79,16 @@ const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
           <Card
             onClick={() => onClick(index)}
             className={index == select ? "check" : "not-check"}
+            onTouchStart={(e: React.TouchEvent) => {
+              touchStartPosX.current = e.changedTouches[0].screenX;
+              touchStartPosY.current = e.changedTouches[0].screenY;
+            }}
+            onTouchEnd={(e: React.TouchEvent) => {
+              swipeSection(
+                e.changedTouches[0].screenX,
+                e.changedTouches[0].screenY
+              );
+            }}
           >
             <CardImage>{p.image}</CardImage>
             <CardUsername>{p.username}</CardUsername>
