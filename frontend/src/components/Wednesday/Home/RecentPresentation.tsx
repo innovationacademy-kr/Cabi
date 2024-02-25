@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import WedCard from "./WedCard";
+import WedCardMobile from "./WedCardMobile";
 
 const dummy = [
   {
@@ -28,11 +29,23 @@ const RecentPresentation = ({
   presentButtonHandler: () => void;
 }) => {
   const [select, setSelect] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
 
   const onClick = (index: number) => {
     if (select) setSelect(index);
     else setSelect(index);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 700); // 화면 너비가 768px 미만인 경우 작은 화면으로 간주
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // 컴포넌트 마운트 시 초기화
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <ConTainer>
@@ -41,16 +54,20 @@ const RecentPresentation = ({
           <p>42 수요지식회</p>
           <span>수요지식회 메인페이지입니다. 설명문구 필요합니다.</span>
         </WedTitle>
-        <button onClick={""} style={{ backgroundColor: "#3F69FD" }}>
-          발표하기
-        </button>
+        <RegistButton onClick={""}>발표하기</RegistButton>
       </WedHeader>
 
-      <WedCard dummy={dummy} />
+      {isMobile ? <WedCardMobile dummy={dummy} /> : <WedCard dummy={dummy} />}
+
       <WedDescStyle>
         <WedDescTitle>
           24일 오후 1시 <span>지하 1층</span>
-          <WedDescTime>45분</WedDescTime>
+          <TimerStyled>
+            <ImageStyled>
+              <img src="/src/assets/images/timer.svg" alt=""></img>
+            </ImageStyled>
+            <WedDescTime>45분</WedDescTime>
+          </TimerStyled>
         </WedDescTitle>
         <WedDesc>
           "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데? "장비 탓인가 싶어서
@@ -69,16 +86,34 @@ const RecentPresentation = ({
 
 export default RecentPresentation;
 
-const ImageStyled = styled.div``;
+const TimerStyled = styled.div`
+  display: flex;
+  align-items: flex-end;
+  // width: 30px;
+  height: 18px;
+`;
+
+const ImageStyled = styled.div`
+  // width: 30px;
+  height: 15px;
+`;
+
+const RegistButton = styled.button`
+  background-color: #3f69fd;
+`;
 
 const WedDesc = styled.div`
   color: #fff;
   text-shadow: 0px 3px 5px black;
+  // ??????
+  height: 200px;
 `;
 
 const WedDescTime = styled.div`
-  font-size: 1.5rem;
+  font-size: 1rem;
+  font-weight: 400;
   color: #fff;
+  margin-left: 15px;
 `;
 
 const WedDescTitle = styled.div`
@@ -88,14 +123,14 @@ const WedDescTitle = styled.div`
   color: #fff;
   font-size: 2.5rem;
   font-weight: 700;
-  text-shadow: -3px -4px 5px black;
+  // text-shadow: -3px -4px 5px black;
 
   margin-bottom: 20px;
 
   & > span {
     font-size: 2rem;
-    margin-right: 10px;
-    margin-left: 10px;
+    margin-right: 50px;
+    margin-left: 20px;
   }
 `;
 
@@ -110,12 +145,12 @@ const WedHeader = styled.div`
 const WedDescStyle = styled.div`
   background-color: #2c49b1;
   width: 80%;
-  height: 400px;
-  border-radius: 30px 30px 0 0;
+  height: 300px;
+  border-radius: 30px;
   margin-top: 50px;
 
-  padding-top: 30px;
-  padding-left: 30px;
+  padding-top: 50px;
+  padding-left: 50px;
 `;
 
 const ConTainer = styled.div`

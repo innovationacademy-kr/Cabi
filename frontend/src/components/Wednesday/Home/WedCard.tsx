@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 
-interface IDummyList {
+export interface IDummyList {
   image: string;
   title: string;
   username: string;
@@ -9,6 +9,7 @@ interface IDummyList {
   cal: string;
 }
 
+// width 1000기준으로 모바일뷰로 전환
 const WedCard = ({ dummy }: { dummy: IDummyList[] }) => {
   const [select, setSelect] = useState(1);
 
@@ -16,7 +17,7 @@ const WedCard = ({ dummy }: { dummy: IDummyList[] }) => {
     if (select) setSelect(index);
     else setSelect(index);
   };
-  //   console.log(dummy);
+
   return (
     <CardContainer>
       {dummy.map((p, index) => (
@@ -26,9 +27,15 @@ const WedCard = ({ dummy }: { dummy: IDummyList[] }) => {
         >
           <CardImage>{p.image}</CardImage>
           <CardUsername>{p.username}</CardUsername>
-          {/* <CardTitle>{p.title}</CardTitle>
+          <CardTitle>{p.title}</CardTitle>
           <CardSubTitle>{p.subtitle}</CardSubTitle>
-          <CardCal>{p.cal}</CardCal> */}
+
+          <CalStyled>
+            <ImageStyled>
+              <img src="/src/assets/images/calendar.svg" alt="" />
+            </ImageStyled>
+            <CardCal>{p.cal}</CardCal>
+          </CalStyled>
         </Card>
       ))}
     </CardContainer>
@@ -38,26 +45,38 @@ const WedCard = ({ dummy }: { dummy: IDummyList[] }) => {
 export default WedCard;
 
 const restore = keyframes`{
-	0% {
-	  width: 370px;
+  0% {
+    width: 370px;
 	  height: 370px;
 	}
 	100% {
-	  width: 280px;
+    width: 280px;
 	  height: 280px;
 	}
-  }`;
+}`;
 
 const transform = keyframes`{
-	0% {
+  0% {
 	  width: 280px;
 	  height: 280px;
 	}
 	100% {
-	  width: 370px;
+    width: 370px;
 	  height: 370px;
 	}
-  }`;
+}`;
+
+const CalStyled = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+  padding-right: 10px;
+`;
+
+const ImageStyled = styled.div`
+  height: 15px;
+`;
 
 const CardContainer = styled.div`
   display: flex;
@@ -66,6 +85,7 @@ const CardContainer = styled.div`
 
   height: 380px;
   width: 90%;
+  min-height: 370px;
   // overflow-y: auto;
 
   // height: 90%;
@@ -102,18 +122,46 @@ const Card = styled.div`
 
 const CardImage = styled.div`
   background-color: gray;
-  width: 40px;
-  height: 40px;
+  width: 100px;
+  height: 90px;
   border-radius: 300px;
 
   display: flex;
   justify-content: center;
   align-items: center;
+
+  ${Card}.check & {
+    width: 150px;
+    height: 140px;
+    border-radius: 300px;
+  }
 `;
-const CardUsername = styled.div``;
+
+const CardUsername = styled.div`
+  color: #9d9d9d;
+  font-size: 1.2rem;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  ${Card}.check & {
+    font-size: 1.5rem;
+  }
+`;
 
 const CardTitle = styled.div`
-  font-size: 2rem;
+  font-size: 1.5rem;
+
+  ${Card}.check & {
+    font-size: 2rem;
+  }
 `;
-const CardSubTitle = styled.div``;
-const CardCal = styled.div``;
+
+const CardSubTitle = styled.div`
+  font-size: 1rem;
+  margin-top: 30px;
+  // padding-bottom: 20px;
+`;
+
+const CardCal = styled.div`
+  color: gray;
+`;
