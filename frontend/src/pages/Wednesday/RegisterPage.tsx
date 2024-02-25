@@ -27,45 +27,72 @@ const RegisterPage = () => {
     PresentationCategory.FORTYTWO
   );
 
+  const [focusedSection, setFocusedSection] = useState<string | null>(null);
+
+  const handleFocus = (sectionName: string) => {
+    setFocusedSection(sectionName);
+  };
+
+  const handleBlur = () => {
+    setFocusedSection(null);
+  };
+
   return (
     <RegisterPageStyled>
       <RegisterTitleStyled>수요지식회 신청</RegisterTitleStyled>
       <RegisterBackgroundStyled>
-        <SubtitleSection>
-          <RegisterSubContentStyled>카테고리</RegisterSubContentStyled>
+        <SubSection>
+          <RegisterSubContentFirstStyled>
+            카테고리
+          </RegisterSubContentFirstStyled>
           <MultiToggleSwitchSeparated
             initialState={toggleType}
             setState={setToggleType}
             toggleList={toggleList}
             fontSize={"1rem"}
           />
-        </SubtitleSection>
-        <SubtitleSection>
-          <DateTimeContainer>
-            <SubtitleSection>
-              <RegisterSubContentStyled>날짜</RegisterSubContentStyled>
-              <RegisterTimeInputStyled>
-                <DropdownMenu></DropdownMenu>
-              </RegisterTimeInputStyled>
-            </SubtitleSection>
-            <SubtitleSection>
-              <RegisterSubContentStyled>시간</RegisterSubContentStyled>
-              <RegisterTimeInputStyled>
-                <DropdownMenu></DropdownMenu>
-              </RegisterTimeInputStyled>
-            </SubtitleSection>
-          </DateTimeContainer>
+        </SubSection>
+        <DateTimeContainer>
+          <SubSection>
+            <RegisterSubContentStyled>날짜</RegisterSubContentStyled>
+            <RegisterTimeInputStyled>
+              <DropdownMenu></DropdownMenu>
+            </RegisterTimeInputStyled>
+          </SubSection>
+          <SubSection>
+            <RegisterSubContentStyled>시간</RegisterSubContentStyled>
+            <RegisterTimeInputStyled>
+              <DropdownMenu></DropdownMenu>
+            </RegisterTimeInputStyled>
+          </SubSection>
+        </DateTimeContainer>
+        <SubSection>
           <RegisterSubContentStyled>제목</RegisterSubContentStyled>
-          <RegisterSubTitleInputStyled placeholder="제목을 입력해주세요" />
-        </SubtitleSection>
-        <SubtitleSection>
+          <RegisterSubTitleInputStyled
+            placeholder="제목을 입력해주세요"
+            onFocus={() => handleFocus("title")}
+            onBlur={handleBlur}
+            isFocused={focusedSection === "title"}
+          />
+        </SubSection>
+        <SubSection>
           <RegisterSubContentStyled>한줄 요약</RegisterSubContentStyled>
-          <RegisterSubTitleInputStyled placeholder="한줄 요약을 입력해주세요" />
-        </SubtitleSection>
-        <SubtitleSection>
+          <RegisterSubTitleInputStyled
+            placeholder="한줄 요약을 입력해주세요"
+            onFocus={() => handleFocus("summary")}
+            onBlur={handleBlur}
+            isFocused={focusedSection === "summary"}
+          />
+        </SubSection>
+        <SubSection>
           <RegisterSubContentStyled>내용</RegisterSubContentStyled>
-          <RegisterDetailInputStyled placeholder="내용을 입력해주세요" />
-        </SubtitleSection>
+          <RegisterDetailInputStyled
+            onFocus={() => handleFocus("content")}
+            onBlur={handleBlur}
+            isFocused={focusedSection === "content"}
+            placeholder="내용을 입력해주세요"
+          />
+        </SubSection>
         <RegisterButtonStyled>신청하기</RegisterButtonStyled>
       </RegisterBackgroundStyled>
     </RegisterPageStyled>
@@ -75,10 +102,9 @@ const RegisterPage = () => {
 const RegisterPageStyled = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
   overflow-y: auto;
 `;
 
@@ -93,22 +119,33 @@ const RegisterBackgroundStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 880px;
-  height: 1000px;
+  width: 720px;
+  max-height: 800px;
   border-radius: 10px;
   background-color: var(--lightgray-color);
   margin-top: 20px;
+  margin-bottom: 30px;
+  padding: 20px;
+`;
+
+const RegisterSubContentFirstStyled = styled.div`
+  margin-left: 5px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 2.25rem;
+  width: fit-content;
 `;
 
 const RegisterSubContentStyled = styled.div`
   margin-left: 5px;
-  margin-top: 20px;
+  margin-top: 24px;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 2.25rem;
+  width: fit-content;
 `;
 
-const RegisterSubTitleInputStyled = styled.textarea`
+const RegisterSubTitleInputStyled = styled.textarea<{ isFocused: boolean }>`
   border-radius: 10px;
   border: none;
   resize: none;
@@ -116,20 +153,26 @@ const RegisterSubTitleInputStyled = styled.textarea`
   padding: 10px;
   font-size: 1rem;
   background-color: var(--white);
-  width: 800px;
+  width: 660px;
+  max-width: 800px;
   height: 56px;
   outline: none;
+  border: 2px solid
+    ${(props) =>
+      props.isFocused ? "var(--main-color)" : "var(--lightgray-color)"};
 `;
 
-const SubtitleSection = styled.div`
+const SubSection = styled.div`
   display: flex;
-  width: 820px;
+  align-items: flex-start;
+  width: 100%;
   flex-direction: column;
   justify-content: space-between;
 `;
 
-const RegisterDetailInputStyled = styled.textarea`
-  width: 800px;
+const RegisterDetailInputStyled = styled.textarea<{ isFocused: boolean }>`
+  width: 660px;
+  max-width: 800px;
   height: 100px;
   padding: 10px;
   border-radius: 10px;
@@ -138,11 +181,14 @@ const RegisterDetailInputStyled = styled.textarea`
   border: none;
   resize: none;
   outline: none;
+  border: 2px solid
+    ${(props) =>
+      props.isFocused ? "var(--main-color)" : "var(--lightgray-color)"};
 `;
 
 const RegisterTimeInputStyled = styled.div`
-  width: 350px;
-  height: 50px;
+  max-width: 350px;
+  height: 46px;
   border-radius: 10px;
   background-color: var(--white);
   border: none;
@@ -152,28 +198,19 @@ const RegisterTimeInputStyled = styled.div`
 `;
 
 const RegisterButtonStyled = styled.button`
-  width: 200px;
-  height: 55px;
-  font-weight: 500;
+  width: 130px;
+  height: 40px;
+  font-size: 1rem;
+  font-weight: 480;
   margin-top: 20px;
   background-color: var(--main-color);
-`;
-
-const DateDropdownStyled = styled.div`
-  width: 200px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border-radius: 10px;
-  background-color: var(--white);
 `;
 
 const DateTimeContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 export default RegisterPage;
