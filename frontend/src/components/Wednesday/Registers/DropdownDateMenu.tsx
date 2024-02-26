@@ -6,6 +6,7 @@ const DropdownDateMenu = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const hasSelectedOption = selectedOption !== "";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -45,8 +46,11 @@ const DropdownDateMenu = () => {
   };
   return (
     <DropdownContainer ref={dropdownRef}>
-      <RegisterTimeInputStyled onClick={toggleVisibility} isFocused={isFocused}>
-        {/* <RegisterTimeInputStyled onClick={() => setIsVisible(!isVisible)}> */}
+      <RegisterTimeInputStyled
+        onClick={toggleVisibility}
+        isFocused={isFocused}
+        hasSelectedOption={hasSelectedOption}
+      >
         {selectedOption || "날짜를 선택해주세요"}
       </RegisterTimeInputStyled>
       {isVisible && (
@@ -97,16 +101,20 @@ const DropdownOption = styled.li`
   }
 `;
 
-const RegisterTimeInputStyled = styled.div<{ isFocused: boolean }>`
+const RegisterTimeInputStyled = styled.div<{
+  isFocused: boolean;
+  hasSelectedOption: boolean;
+}>`
   height: 46px;
   width: 310px;
   border-radius: 10px;
   background-color: var(--white);
   border: 2px solid
-    ${(props) => (props.isFocused ? "var(--main-color)" : "var(--white)")}; // 이 부분이 수정되었습니다.
+    ${(props) => (props.isFocused ? "var(--main-color)" : "var(--white)")};
+  color: ${(props) =>
+    props.hasSelectedOption ? "var(--black)" : "var(--gray-color)"};
   resize: none;
   outline: none;
-  color: var(--gray-color);
   cursor: pointer;
   display: flex;
   align-items: center;
