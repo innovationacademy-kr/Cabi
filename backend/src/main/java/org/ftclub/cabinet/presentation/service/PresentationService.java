@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.dto.InvalidDateResponseDto;
 import org.ftclub.cabinet.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.dto.PresentationFormResponseDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -44,6 +45,17 @@ public class PresentationService {
 		presentation.setUser(user);
 
 		presentationRepository.save(presentation);
+	}
+
+	public InvalidDateResponseDto getInvalidDate() {
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime end = now.plusMonths(3);
+
+		List<Presentation> presentationList = presentationRepository.findByDateTime(now, end);
+		List<LocalDateTime> invalidDates = presentationList.stream()
+			.map(Presentation::getDateTime)
+			.collect(Collectors.toList());
+		return new InvalidDateResponseDto(invalidDates);
 	}
 
 	public Presentation getLatestPastPresentation() {

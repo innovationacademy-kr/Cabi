@@ -22,28 +22,38 @@ import org.ftclub.cabinet.user.domain.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Presentation {
 
+	@Enumerated(value = EnumType.STRING)
 	private final PresentationStatus DEFAULT_STATUS = PresentationStatus.EXPECTED;
+
+	@Enumerated(value = EnumType.STRING)
 	private final PresentationLocation DEFAULT_LOCATION = PresentationLocation.THIRD;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	private Long id;
+
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "PRESENTATION_STATUS")
 	private PresentationStatus presentationStatus;
+
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "PRESENTATION_TIME")
 	private PresentationTime presentationTime;
+
 	@Column(name = "SUBJECT")
 	private String subject;
+
 	@Column(name = "SUMMARY")
 	private String summary;
+
 	@Column(name = "DETAIL")
 	private String detail;
+
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "CATEGORY")
 	private Category category;
+
 	@Column(name = "DATE_TIME")
 	private LocalDateTime dateTime;
 

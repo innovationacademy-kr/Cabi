@@ -12,6 +12,13 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface PresentationRepository extends JpaRepository<Presentation, Long> {
 
+	@Query("SELECT p "
+		+ "FROM Presentation p "
+		+ "WHERE p.dateTime > :now "
+		+ "AND p.dateTime < :end")
+	List<Presentation> findByDateTime(@Param("now") LocalDateTime now,
+		@Param("end") LocalDateTime end);
+
 	@Query("SELECT p FROM Presentation p WHERE date(p.dateTime) = :date")
 	Optional<Presentation> findByDate(@Param("date") LocalDate date);
 
