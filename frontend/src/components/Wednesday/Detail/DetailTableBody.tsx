@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -20,18 +21,24 @@ const DetailTableBody = ({
   itemStatus: itemType;
   id: number;
 }) => {
+  const [clickedItem, setClickedItem] = useState<null | IItem>(null);
   const navigator = useNavigate();
+
+  const handleItemClick = (item: IItem) => {
+    if (clickedItem?.date === item.date) setClickedItem(null);
+    else setClickedItem(item);
+  };
 
   return (
     <>
       <TableBodyStyled
         onClick={() => {
           isAdmin && openAdminModal("statusModal");
-          // !itemStatus && console.log("hey");
+          !itemStatus && handleItemClick(item);
         }}
         itemStatus={itemStatus}
       >
-        <tr className={itemStatus}>
+        <tr id={clickedItem?.date === item.date ? "selected" : ""}>
           <td className="leftEnd" id={itemStatus}>
             <span>{item.date}</span>
           </td>
@@ -141,6 +148,10 @@ const TableBodyStyled = styled.tbody<{
   & > tr:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
+  }
+
+  & > #selected {
+    background-color: #91b5fa;
   }
 `;
 
