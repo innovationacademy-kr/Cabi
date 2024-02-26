@@ -2,66 +2,76 @@ package org.ftclub.cabinet.presentation.domain;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.Getter;
-import org.ftclub.cabinet.cabinet.domain.Location;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.ftclub.cabinet.user.domain.User;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Presentation {
+
+	private final PresentationStatus DEFAULT_STATUS = PresentationStatus.EXPECTED;
+	private final PresentationLocation DEFAULT_LOCATION = PresentationLocation.THIRD;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
-	Long id;
-
-	@Enumerated(value = EnumType.STRING)
-	@Column(name = "CATEGORY")
-	Category category;
-
-	@Column(name = "DATE_TIME")
-	LocalDateTime dateTime;
-
-	@Enumerated(value = EnumType.STRING)
-	@Column(name = "PRESENTATION_TIME")
-	PresentationTime presentationTime;
-
-	@Column(name = "SUBJECT")
-	String subject;
-
-	@Column(name = "SUMMARY")
-	String summary;
-
-	@Column(name = "DETAIL")
-	String detail;
-
+	private Long id;
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "PRESENTATION_STATUS")
-	PresentationStatus presentationStatus;
+	private PresentationStatus presentationStatus;
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "PRESENTATION_TIME")
+	private PresentationTime presentationTime;
+	@Column(name = "SUBJECT")
+	private String subject;
+	@Column(name = "SUMMARY")
+	private String summary;
+	@Column(name = "DETAIL")
+	private String detail;
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "CATEGORY")
+	private Category category;
+	@Column(name = "DATE_TIME")
+	private LocalDateTime dateTime;
 
-	@Embedded
-	Location location;
+	@Enumerated(value = EnumType.STRING)
+	private PresentationLocation presentationLocation;
+
+	@Setter
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "USER_ID")
+	private User user;
 
 	protected Presentation(Category category, LocalDateTime dateTime,
-			PresentationTime presentationTime, String subject, String summary, String detail) {
+		PresentationTime presentationTime, String subject, String summary, String detail) {
 		this.category = category;
 		this.dateTime = dateTime;
 		this.presentationTime = presentationTime;
 		this.subject = subject;
 		this.detail = detail;
+		this.summary = summary;
+		this.presentationStatus = DEFAULT_STATUS;
+		this.presentationLocation = DEFAULT_LOCATION;
 	}
 
 	public static Presentation of(Category category, LocalDateTime dateTime,
-			PresentationTime presentationTime, String subject, String summary, String detail) {
-		Presentation presentation = new Presentation(category, dateTime, presentationTime, subject,
-				summary, detail);
-		return (presentation);
+		PresentationTime presentationTime, String subject, String summary, String detail) {
+
+		return new Presentation(category, dateTime, presentationTime, subject,
+			summary, detail);
 	}
 
 }
