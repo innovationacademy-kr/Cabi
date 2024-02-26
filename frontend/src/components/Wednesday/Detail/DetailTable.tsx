@@ -49,22 +49,22 @@ const DetailTable = () => {
 
   const res = [
     {
-      date: "12월 17일",
+      date: "12월 10일",
     },
     {
-      date: "12월 31일",
+      date: "12월 17일",
       title: "우하하하",
       intraId: "jeekim",
       category: "취미",
       time: 30,
     },
-    // {
-    //   date: "12월 31일",
-    //   title: "사진을 위한 넓고 얕은 지식눌렀을때는 제목이 모두 보이게",
-    //   intraId: "eeeeeeeeee",
-    //   category: "취미",
-    //   time: 90,
-    // },
+    {
+      date: "12월 31일",
+      title: "사진을 위한 넓고 얕은 지식눌렀을때는 제목이 모두 보이게",
+      intraId: "eeeeeeeeee",
+      category: "취미",
+      time: 90,
+    },
   ];
 
   const [list, setList] = useState<IItem[]>([
@@ -117,6 +117,7 @@ const DetailTable = () => {
               openAdminModal={openAdminModal}
               item={item}
               itemStatus={itemStatus}
+              id={idx}
             />
           );
         })}
@@ -141,6 +142,7 @@ const TableHeadStyled = styled.tr`
   line-height: 40px;
   background-color: #3f69fd;
   color: var(--white);
+  /* table-layout: fixed; */
 
   & > th {
     font-size: 1rem;

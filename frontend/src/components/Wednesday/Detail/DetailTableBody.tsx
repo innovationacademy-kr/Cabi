@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -12,72 +13,84 @@ const DetailTableBody = ({
   openAdminModal,
   item,
   itemStatus,
+  id,
 }: {
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
   item: IItem;
   itemStatus: itemType;
+  id: number;
 }) => {
+  const [clickedItem, setClickedItem] = useState<null | IItem>(null);
   const navigator = useNavigate();
+
+  const handleItemClick = (item: IItem) => {
+    if (clickedItem?.date === item.date) setClickedItem(null);
+    else setClickedItem(item);
+  };
 
   return (
     <>
       <TableBodyStyled
         onClick={() => {
           isAdmin && openAdminModal("statusModal");
+          !itemStatus && handleItemClick(item);
         }}
+        itemStatus={itemStatus}
       >
-        <td className="leftEnd" id={itemStatus}>
-          <span>{item.date}</span>
-        </td>
-        {itemStatus ? (
-          <>
-            <td id={itemStatus} className="rightEnd" colSpan={4}>
-              <div>
-                {itemStatus === itemType.NO_EVENT_PAST ? (
-                  <>
-                    <span>발표가 없었습니다</span>
-                    <SadCcabiStyled>
-                      <SadCcabiImg />
-                    </SadCcabiStyled>
-                  </>
-                ) : (
-                  <>
-                    <NoEventPhraseStyled>
-                      <span>
-                        다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를
-                        신청해보세요
-                      </span>
-                      <img src="/src/assets/images/happyCcabi.svg" />
-                    </NoEventPhraseStyled>
-                    <button
-                      onClick={() => {
-                        navigator("/wed/register");
-                      }}
-                    >
-                      신청하기
-                    </button>
-                  </>
-                )}
-              </div>
-            </td>
-          </>
-        ) : (
-          <>
-            <td>
-              <span>{item.title}</span>
-            </td>
-            <td>
-              <span>{item.intraId}</span>
-            </td>
-            <td>
-              <span>{item.category}</span>
-            </td>
-            <td className="rightEnd">
-              <span>{item.time}분</span>
-            </td>
-          </>
-        )}
+        <tr id={clickedItem?.date === item.date ? "selected" : ""}>
+          <td className="leftEnd" id={itemStatus}>
+            <span>{item.date}</span>
+          </td>
+          {itemStatus ? (
+            <>
+              <td id={itemStatus} className="rightEnd" colSpan={4}>
+                <div>
+                  {itemStatus === itemType.NO_EVENT_PAST ? (
+                    <>
+                      <span>발표가 없었습니다</span>
+                      <SadCcabiStyled>
+                        <SadCcabiImg />
+                      </SadCcabiStyled>
+                    </>
+                  ) : (
+                    <>
+                      <NoEventPhraseStyled>
+                        <span>
+                          다양한 관심사를 함께 나누고 싶으신 분은 지금 바로
+                          발표를 신청해보세요
+                        </span>
+                        <img src="/src/assets/images/happyCcabi.svg" />
+                      </NoEventPhraseStyled>
+                      <button
+                        onClick={() => {
+                          navigator("/wed/register");
+                        }}
+                      >
+                        신청하기
+                      </button>
+                    </>
+                  )}
+                </div>
+              </td>
+            </>
+          ) : (
+            <>
+              <td>
+                <span>{item.title}</span>
+              </td>
+              <td>
+                <span>{item.intraId}</span>
+              </td>
+              <td>
+                <span>{item.category}</span>
+              </td>
+              <td className="rightEnd">
+                <span>{item.time}분</span>
+              </td>
+            </>
+          )}
+        </tr>
       </TableBodyStyled>
     </>
   );
@@ -85,18 +98,21 @@ const DetailTableBody = ({
 
 export default DetailTableBody;
 
-// white-space: nowrap;
-//   text-overflow: ellipsis;
-const TableBodyStyled = styled.tr`
+const TableBodyStyled = styled.tbody<{
+  itemStatus: itemType;
+}>`
   height: 70px;
   width: 100%;
   line-height: 70px;
   text-align: center;
   font-size: 18px;
+  background-color: #dce7fd;
 
-  & > td {
-    background-color: #dce7fd;
+  & > tr > td {
     padding: 0 10px;
+    /* white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden; */
   }
 
   & #noEventCurrent {
@@ -107,7 +123,7 @@ const TableBodyStyled = styled.tr`
     background-color: #eeeeee;
   }
 
-  & > td > div {
+  & > tr > td > div {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -127,6 +143,15 @@ const TableBodyStyled = styled.tr`
 
   & .rightEnd {
     border-radius: 0 10px 10px 0;
+  }
+
+  & > tr:hover {
+    cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
+    background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
+  }
+
+  & > #selected {
+    background-color: #91b5fa;
   }
 `;
 
