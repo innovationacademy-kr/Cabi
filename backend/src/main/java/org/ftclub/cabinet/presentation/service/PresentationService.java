@@ -1,8 +1,15 @@
 package org.ftclub.cabinet.presentation.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.PresentationFormRequestDto;
+import org.ftclub.cabinet.dto.PresentationFormResponseDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
@@ -13,8 +20,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PresentationService {
 
+	private static final Integer MAX_MONTH = 3;
+
 	private final PresentationRepository presentationRepository;
 	private final PresentationPolicyService presentationPolicyService;
+	private final PresentationMapper presentationMapper;
 	private final UserQueryService userQueryService;
 
 	/**
@@ -34,5 +44,35 @@ public class PresentationService {
 		presentation.setUser(user);
 
 		presentationRepository.save(presentation);
+	}
+
+	public Presentation getLatestPastPresentation() {
+		LocalDateTime now = LocalDateTime.now();
+		return presentationRepository
+			.findFirstByDateTimeBeforeOrderByDateTimeDesc(now)
+			.orElseThrow(ExceptionStatus.NOT_FOUND_FORM::asServiceException);
+	}
+
+	public List<Presentation> getLatestTwoUpcomingPresentations() {
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime afterThreeMonth = now.plusMonths(MAX_MONTH);
+		return presentationRepository
+			.findFirst2ByDateTimeAfterAndDateTimeBeforeOrderByDateTimeAsc(now, afterThreeMonth);
+	}
+
+	public PresentationFormResponseDto getThreePresentationForms() {
+		Presentation pastPresentation = getLatestPastPresentation();
+		List<Presentation> upcomingPresentations = getLatestTwoUpcomingPresentations();
+
+		List<Presentation> presentations = new ArrayList<>();
+		presentations.add(pastPresentation);
+		presentations.addAll(upcomingPresentations);
+
+		return new PresentationFormResponseDto(presentations.stream()
+			.map(form -> {
+				String userName = form.getUser().getName();
+				return presentationMapper.toPresentationFormDataDto(form, userName);
+			}).collect(Collectors.toList())
+		);
 	}
 }
