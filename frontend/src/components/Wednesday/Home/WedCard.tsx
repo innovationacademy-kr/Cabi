@@ -44,25 +44,25 @@ const WedCard = ({ dummy }: { dummy: IDummyList[] }) => {
 
 export default WedCard;
 
-const restore = keyframes`{
+const restore = (min_width, min_height, max_width, max_height) => keyframes`{
   0% {
-    width: 370px;
-	  height: 370px;
+    width: ${max_width}px;
+	  height: ${max_height}px;
 	}
 	100% {
-    width: 280px;
-	  height: 280px;
+    width:${min_width}px;
+	  height: ${min_height}px;
 	}
 }`;
 
-const transform = keyframes`{
+const transform = (min_width, min_height, max_width, max_height) => keyframes`{
   0% {
-	  width: 280px;
-	  height: 280px;
+	  width: ${min_width}px;
+	  height: ${min_height}px;
 	}
 	100% {
-    width: 370px;
-	  height: 370px;
+    width: ${max_width}px;
+	  height: ${max_height}px;
 	}
 }`;
 
@@ -85,10 +85,8 @@ const CardContainer = styled.div`
 
   height: 380px;
   width: 90%;
-  min-height: 370px;
-  // overflow-y: auto;
+  min-height: 380px;
 
-  // height: 90%;
   max-width: 1300px;
   min-width: 1000px;
   justify-content: space-around;
@@ -110,13 +108,13 @@ const Card = styled.div`
   box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
 
   &.check {
-    animation: ${transform} 0.5s ease-in-out;
+    animation: ${transform(280, 280, 370, 370)} 0.5s ease-in-out;
     width: 370px;
     height: 370px;
   }
 
   &.not-check {
-    animation: ${restore} 0.5s ease-in-out;
+    animation: ${restore(280, 280, 370, 370)} 0.5s ease-in-out;
   }
 `;
 
@@ -124,6 +122,7 @@ const CardImage = styled.div`
   background-color: gray;
   width: 100px;
   height: 90px;
+
   border-radius: 300px;
 
   display: flex;
@@ -131,9 +130,15 @@ const CardImage = styled.div`
   align-items: center;
 
   ${Card}.check & {
+    animation: ${transform(100, 90, 150, 140)} 0.5s ease-in-out;
     width: 150px;
     height: 140px;
-    border-radius: 300px;
+  }
+
+  ${Card}.not-check & {
+    animation: ${restore(100, 90, 150, 140)} 0.5s ease-in-out;
+    width: 100px;
+    height: 90px;
   }
 `;
 

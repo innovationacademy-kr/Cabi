@@ -100,6 +100,7 @@ const ImageStyled = styled.div`
 
 const RegistButton = styled.button`
   background-color: #3f69fd;
+  margin-top: 20px;
 `;
 
 const WedDesc = styled.div`
@@ -126,6 +127,7 @@ const WedDescTitle = styled.div`
   // text-shadow: -3px -4px 5px black;
 
   margin-bottom: 20px;
+  flex-wrap: wrap;
 
   & > span {
     font-size: 2rem;
@@ -138,6 +140,7 @@ const WedHeader = styled.div`
   display: flex;
   width: 80%;
   justify-content: space-between;
+  flex-wrap: wrap;
   align-items: flex-end;
   margin-bottom: 40px;
 `;
@@ -172,8 +175,7 @@ const WedTitle = styled.div`
     margin-bottom: 20px;
   }
 
-  $ > span {
-  }
+  margin-right: 20px;
 `;
 
 const CardContainer = styled.div`

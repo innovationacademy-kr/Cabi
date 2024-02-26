@@ -13,7 +13,6 @@ const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
   const onPageClick = (i: number) => {
     if (i !== slideIndex) {
       setSlideIndex(i);
-      // console.log(i - slideIndex);
       setSelect(select + (slideIndex - i) * 300);
     }
   };
@@ -45,12 +44,9 @@ const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
     const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
     const touchOffsetY = Math.round(touchEndPosY - touchStartPosY.current);
 
-    // console.log("end : " + touchEndPosX);
-    // console.log("start : " + touchStartPosX.current);
-    // console.log("end - start : " + touchOffsetX);
     if (
       Math.abs(touchOffsetX) < 50 ||
-      Math.abs(touchOffsetX) < Math.abs(touchOffsetY) // y축으로 더 움직임이 있으면 슬라이드 x
+      Math.abs(touchOffsetX) < Math.abs(touchOffsetY)
     ) {
       return;
     }
@@ -120,6 +116,8 @@ const WedCardContainer = styled.div`
   overflow-x: hidden;
 
   width: 100%;
+  height: 380px;
+  min-height: 380px;
 `;
 
 const PaginationContainer = styled.div`
