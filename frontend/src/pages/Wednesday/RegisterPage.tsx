@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { toggleItem } from "@/components/Common/MultiToggleSwitch";
 import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
 import DropdownMenu from "./DropdownMenu";
+import DropdownDateMenu from "./DropdownDateMenu";
 
 enum PresentationCategory {
   FORTYTWO = "FORTYTWO",
@@ -56,7 +57,7 @@ const RegisterPage = () => {
           <SubSection>
             <RegisterSubContentStyled>날짜</RegisterSubContentStyled>
             <RegisterTimeInputStyled>
-              <DropdownMenu></DropdownMenu>
+              <DropdownDateMenu/>
             </RegisterTimeInputStyled>
           </SubSection>
           <SubSection>
@@ -106,13 +107,17 @@ const RegisterPageStyled = styled.div`
   align-items: center;
   width: 100%;
   overflow-y: auto;
+    @media (max-width: 700px) {
+    background-color: var(--lightgray-color)
+  }
 `;
 
 const RegisterTitleStyled = styled.h1`
-  margin-top: 20px;
+  margin-top: 70px;
   font-size: 1.8rem;
   font-weight: 700;
   line-height: 3rem;
+
 `;
 
 const RegisterBackgroundStyled = styled.div`
@@ -134,6 +139,10 @@ const RegisterSubContentFirstStyled = styled.div`
   font-size: 1.1rem;
   line-height: 2.25rem;
   width: fit-content;
+  @media (max-width: 700px) {
+    width: 100%;
+    height: 1500px;
+  }
 `;
 
 const RegisterSubContentStyled = styled.div`
@@ -143,6 +152,10 @@ const RegisterSubContentStyled = styled.div`
   font-size: 1rem;
   line-height: 2.25rem;
   width: fit-content;
+  @media (max-width: 700px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
 `;
 
 const RegisterSubTitleInputStyled = styled.textarea<{ isFocused: boolean }>`

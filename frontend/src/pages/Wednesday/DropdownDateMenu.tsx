@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-const DropdownMenu = () => {
+const DropdownDateMenu = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -14,24 +14,26 @@ const DropdownMenu = () => {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsVisible(false);
-        setIsFocused(false); // 이 부분이 수정되었습니다.
+        setIsFocused(false);
       }
     };
-    
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
 
-  enum PresentationTime {
-    HALF = "30분",
-    HOUR = "1시간",
-    HOUR_HALF = "1시간 30분",
-    TWO_HOUR = "2시간",
+  enum PresentationDate {
+    THIS_MONTH_FIRST = "2/7",
+    THIS_MONTH_SECOND = "2/14",
+    THIS_MONTH_THIRD = "2/21",
+    THIS_MONTH_FOURTH = "2/28",
+    NEXT_MONTH_FIRST = "3/6",
+    NEXT_MONTH_SECOND = "3/13",
+    NEXT_MONTH_THIRD = "3/20",
+    NEXT_MONTH_FOURTH = "3/21",
   }
-
-  const handleOptionSelect = (option: PresentationTime) => {
+  const handleOptionSelect = (option: PresentationDate) => {
     setSelectedOption(option);
     setIsVisible(false);
     setIsFocused(false);
@@ -44,12 +46,12 @@ const DropdownMenu = () => {
   return (
     <DropdownContainer ref={dropdownRef}>
       <RegisterTimeInputStyled onClick={toggleVisibility} isFocused={isFocused}>
-      {/* <RegisterTimeInputStyled onClick={() => setIsVisible(!isVisible)}> */}
-        {selectedOption || "시간을 선택해주세요"}
+        {/* <RegisterTimeInputStyled onClick={() => setIsVisible(!isVisible)}> */}
+        {selectedOption || "날짜를 선택해주세요"}
       </RegisterTimeInputStyled>
       {isVisible && (
         <DropdownOptions>
-          {Object.values(PresentationTime).map((time) => (
+          {Object.values(PresentationDate).map((time) => (
             <DropdownOption key={time} onClick={() => handleOptionSelect(time)}>
               {time}
             </DropdownOption>
@@ -70,6 +72,7 @@ const DropdownOptions = styled.ul`
   top: 52px;
   left: 0;
   width: 310px;
+  height: 160px;
   border: 1px solid var(--white);
   border-radius: 10px;
   text-align: left;
@@ -77,7 +80,7 @@ const DropdownOptions = styled.ul`
   color: var(--black);
   background-color: var(--white);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-  overflow: hidden;
+  overflow-y: scroll;
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -111,4 +114,4 @@ const RegisterTimeInputStyled = styled.div<{ isFocused: boolean }>`
   padding-left: 10px;
 `;
 
-export default DropdownMenu;
+export default DropdownDateMenu;
