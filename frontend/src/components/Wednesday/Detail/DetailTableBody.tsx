@@ -122,6 +122,24 @@ const DetailTableBody = ({
           <WhiteSpaceTrStyled />
         </>
       ) : null}
+      <TableMobileStyled
+        // itemStatus={itemStatus}
+        id={clickedItem?.date === item.date ? "selected" : ""}
+        onClick={() => {
+          isAdmin && openAdminModal("statusModal");
+          !itemStatus && handleItemClick(item);
+        }}
+      >
+        {itemStatus ? (
+          <>
+            {/* <td id={itemStatus} className="rightEnd" colSpan={4}> */}
+            <div>없음</div>
+            {/* </td> */}
+          </>
+        ) : (
+          <>먼가 신청됨</>
+        )}
+      </TableMobileStyled>
     </>
   );
 };
@@ -138,6 +156,9 @@ const TableTrStyled = styled.tr<{
   text-align: center;
   font-size: 18px;
   background-color: #dce7fd;
+  /* white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; */
 
   & > td {
     padding: 0 10px;
@@ -177,6 +198,9 @@ const TableTrStyled = styled.tr<{
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
   }
+  /* @media screen and (max-width: 768px) {
+    display: none;
+  } */
 `;
 
 const NoEventDivStyled = styled.div`
@@ -235,5 +259,11 @@ const TableDetailTrStyled = styled.tr`
     line-height: 24px;
     padding: 20px 50px;
     font-size: 18px;
+  }
+`;
+
+const TableMobileStyled = styled.div`
+  @media screen and (min-width: 768px) {
+    display: none;
   }
 `;

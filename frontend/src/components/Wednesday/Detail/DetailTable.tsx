@@ -129,6 +129,30 @@ const DetailTable = () => {
           })}
         </TableBodyStyled>
       </TableStyled>
+      <TableMobileStyled>
+        <TableBodyMobileStyled>
+          {list.map((item, idx) => {
+            let itemStatus = itemType.EVENT_AVAILABLE;
+
+            if (!item.title) {
+              // if (현재 날짜보다 과거)
+              itemStatus = itemType.NO_EVENT_PAST;
+              // else
+              itemStatus = itemType.NO_EVENT_CURRENT;
+            }
+            return (
+              <>
+                <DetailTableBody
+                  isAdmin={isAdmin}
+                  openAdminModal={openAdminModal}
+                  item={item}
+                  itemStatus={itemStatus}
+                />
+              </>
+            );
+          })}
+        </TableBodyMobileStyled>
+      </TableMobileStyled>
       {adminModal.statusModal && (
         <EditStatusModal closeModal={() => closeAdminModal("statusModal")} />
       )}
@@ -141,7 +165,16 @@ export default DetailTable;
 const TableStyled = styled.table`
   width: 100%;
   table-layout: fixed;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
+const TableMobileStyled = styled.div`
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+`;
+const TableBodyMobileStyled = styled.div``;
 
 const TableHeadStyled = styled.tr`
   height: 40px;
@@ -151,6 +184,10 @@ const TableHeadStyled = styled.tr`
 
   & > th {
     font-size: 1rem;
+    /* @media screen and (max-width:768px) {
+    display: none;
+    background-color: red;
+  } */
   }
 
   & > #date {
@@ -174,6 +211,9 @@ const TableHeadStyled = styled.tr`
     width: 8%;
     border-radius: 0 10px 10px 0;
   }
+  /* @media screen and (max-width: 768px) {
+    display: none;
+  } */
 `;
 
 const TableBodyStyled = styled.tbody`
@@ -182,6 +222,7 @@ const TableBodyStyled = styled.tbody`
   & #selected {
     background-color: #91b5fa;
   }
+
 `;
 
 export const WhiteSpaceTrStyled = styled.tr`

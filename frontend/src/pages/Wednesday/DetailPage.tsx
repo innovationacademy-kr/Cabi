@@ -85,6 +85,9 @@ const ContainerStyled = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
+  @media screen and (max-width: 768px) {
+    background-color: var(--lightgray-color);
+  }
 `;
 
 const WrapperStyled = styled.div`
@@ -99,6 +102,7 @@ const HeaderStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  
 
   & > div {
     width: 200px;
@@ -121,4 +125,10 @@ const BodyStyled = styled.div`
   padding: 24px 20px 10px 20px;
   background-color: var(--lightgray-color);
   border-radius: 10px;
+  /* @media screen and (max-width: 700px) {
+    width: 100%;
+    background-color: red;
+    display: flex;
+    flex-direction: column;
+    display:block;} */
 `;
