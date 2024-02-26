@@ -30,7 +30,7 @@ public class PresentationPolicyService {
 			throw ExceptionStatus.INVALID_DATE.asServiceException();
 		}
 
-		presentationRepository.findByDateTime(reservationDate).ifPresent(presentation -> {
+		presentationRepository.findByDate(reservationDate).ifPresent(presentation -> {
 			throw ExceptionStatus.PRESENTATION_ALREADY_EXISTED.asServiceException();
 		});
 	}
