@@ -102,25 +102,27 @@ const DetailTable = () => {
             return <th id={entries[0][0]}>{entries[0][1]}</th>;
           })}
         </TableHeadStyled>
-        {list.map((item, idx) => {
-          let itemStatus = itemType.EVENT_AVAILABLE;
+        <TableBodyStyled>
+          {list.map((item, idx) => {
+            let itemStatus = itemType.EVENT_AVAILABLE;
 
-          if (!item.title) {
-            // if (현재 날짜보다 과거)
-            itemStatus = itemType.NO_EVENT_PAST;
-            // else
-            itemStatus = itemType.NO_EVENT_CURRENT;
-          }
-          return (
-            <DetailTableBody
-              isAdmin={isAdmin}
-              openAdminModal={openAdminModal}
-              item={item}
-              itemStatus={itemStatus}
-              id={idx}
-            />
-          );
-        })}
+            if (!item.title) {
+              // if (현재 날짜보다 과거)
+              itemStatus = itemType.NO_EVENT_PAST;
+              // else
+              itemStatus = itemType.NO_EVENT_CURRENT;
+            }
+            return (
+              <DetailTableBody
+                isAdmin={isAdmin}
+                openAdminModal={openAdminModal}
+                item={item}
+                itemStatus={itemStatus}
+                id={idx}
+              />
+            );
+          })}
+        </TableBodyStyled>
       </TableStyled>
       {adminModal.statusModal && (
         <EditStatusModal closeModal={() => closeAdminModal("statusModal")} />
@@ -168,5 +170,13 @@ const TableHeadStyled = styled.tr`
   & > #time {
     width: 8%;
     border-radius: 0 10px 10px 0;
+  }
+`;
+
+const TableBodyStyled = styled.tbody`
+  width: 100%;
+
+  & #selected {
+    background-color: #91b5fa;
   }
 `;
