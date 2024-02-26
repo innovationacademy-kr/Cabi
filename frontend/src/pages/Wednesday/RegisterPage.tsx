@@ -2,9 +2,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import { toggleItem } from "@/components/Common/MultiToggleSwitch";
 import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
-import DropdownMenu from "../../components/Wednesday/Registers/DropdownTimeMenu";
-import DropdownDateMenu from "../../components/Wednesday/Registers/DropdownDateMenu";
-import DropdownTimeMenu from "../../components/Wednesday/Registers/DropdownTimeMenu";
+import DropdownDateMenu from "@/components/Wednesday/Registers/DropdownDateMenu";
+import DropdownTimeMenu from "@/components/Wednesday/Registers/DropdownTimeMenu";
 
 enum PresentationCategory {
   FORTYTWO = "FORTYTWO",
@@ -51,20 +50,20 @@ const RegisterPage = () => {
             initialState={toggleType}
             setState={setToggleType}
             toggleList={toggleList}
-            fontSize={"1rem"}
+            fontSize={"0.94rem"}
           />
         </SubSection>
         <DateTimeContainer>
           <SubSection>
             <RegisterSubContentStyled>날짜</RegisterSubContentStyled>
             <RegisterTimeInputStyled>
-              <DropdownDateMenu/>
+              <DropdownDateMenu />
             </RegisterTimeInputStyled>
           </SubSection>
           <SubSection>
             <RegisterSubContentStyled>시간</RegisterSubContentStyled>
             <RegisterTimeInputStyled>
-              <DropdownTimeMenu/>
+              <DropdownTimeMenu />
             </RegisterTimeInputStyled>
           </SubSection>
         </DateTimeContainer>
@@ -75,6 +74,7 @@ const RegisterPage = () => {
             onFocus={() => handleFocus("title")}
             onBlur={handleBlur}
             isFocused={focusedSection === "title"}
+            spellCheck={false}
           />
         </SubSection>
         <SubSection>
@@ -84,6 +84,7 @@ const RegisterPage = () => {
             onFocus={() => handleFocus("summary")}
             onBlur={handleBlur}
             isFocused={focusedSection === "summary"}
+            spellCheck={false}
           />
         </SubSection>
         <SubSection>
@@ -93,6 +94,7 @@ const RegisterPage = () => {
             onBlur={handleBlur}
             isFocused={focusedSection === "content"}
             placeholder="내용을 입력해주세요"
+            spellCheck={false}
           />
         </SubSection>
         <RegisterButtonStyled>신청하기</RegisterButtonStyled>
@@ -108,8 +110,8 @@ const RegisterPageStyled = styled.div`
   align-items: center;
   width: 100%;
   overflow-y: auto;
-    @media (max-width: 700px) {
-    background-color: var(--lightgray-color)
+  @media (max-width: 700px) {
+    background-color: var(--lightgray-color);
   }
 `;
 
@@ -118,7 +120,6 @@ const RegisterTitleStyled = styled.h1`
   font-size: 1.8rem;
   font-weight: 700;
   line-height: 3rem;
-
 `;
 
 const RegisterBackgroundStyled = styled.div`
@@ -150,7 +151,7 @@ const RegisterSubContentStyled = styled.div`
   margin-left: 5px;
   margin-top: 24px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 2.25rem;
   width: fit-content;
   @media (max-width: 700px) {
@@ -165,7 +166,7 @@ const RegisterSubTitleInputStyled = styled.textarea<{ isFocused: boolean }>`
   resize: none;
   word-spacing: -4px;
   padding: 10px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   background-color: var(--white);
   width: 660px;
   max-width: 800px;
@@ -190,7 +191,7 @@ const RegisterDetailInputStyled = styled.textarea<{ isFocused: boolean }>`
   height: 100px;
   padding: 10px;
   border-radius: 10px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   word-spacing: -4px;
   border: none;
   resize: none;
