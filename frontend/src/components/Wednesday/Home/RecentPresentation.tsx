@@ -60,15 +60,18 @@ const RecentPresentation = ({
       {isMobile ? <WedCardMobile dummy={dummy} /> : <WedCard dummy={dummy} />}
 
       <WedDescStyle>
-        <WedDescTitle>
-          24일 오후 1시 <span>지하 1층</span>
+        <WedDescHeader>
+          {/* width 465px 에서 깨짐 */}
+          <WedDescTitle>24일 오후 1시</WedDescTitle>
+          <WedDescPlace>지하 1층</WedDescPlace>
           <TimerStyled>
             <ImageStyled>
-              <img src="/src/assets/images/timer.svg" alt=""></img>
+              <img src="/src/assets/images/timer.svg" alt="" />
             </ImageStyled>
-            <WedDescTime>45분</WedDescTime>
+            <span>45분</span>
           </TimerStyled>
-        </WedDescTitle>
+        </WedDescHeader>
+
         <WedDesc>
           "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데? "장비 탓인가 싶어서
           <br />
@@ -89,12 +92,15 @@ export default RecentPresentation;
 const TimerStyled = styled.div`
   display: flex;
   align-items: flex-end;
-  // width: 30px;
   height: 18px;
+
+  font-size: 1rem;
+  font-weight: 400;
+  color: #fff;
 `;
 
 const ImageStyled = styled.div`
-  // width: 30px;
+  margin-right: 15px;
   height: 15px;
 `;
 
@@ -106,18 +112,18 @@ const RegistButton = styled.button`
 const WedDesc = styled.div`
   color: #fff;
   text-shadow: 0px 3px 5px black;
-  // ??????
-  height: 200px;
+  height: 120px;
+  overflow-y: auto;
 `;
 
 const WedDescTime = styled.div`
-  font-size: 1rem;
-  font-weight: 400;
-  color: #fff;
-  margin-left: 15px;
+  // font-size: 1rem;
+  // font-weight: 400;
+  // color: #fff;
+  // margin-left: 15px;
 `;
 
-const WedDescTitle = styled.div`
+const WedDescHeader = styled.div`
   display: flex;
   align-items: flex-end;
 
@@ -128,12 +134,17 @@ const WedDescTitle = styled.div`
 
   margin-bottom: 20px;
   flex-wrap: wrap;
+`;
 
-  & > span {
-    font-size: 2rem;
-    margin-right: 50px;
-    margin-left: 20px;
-  }
+const WedDescPlace = styled.div`
+  font-size: 2rem;
+  margin-right: 30px;
+  // margin-left: 20px;
+  display: inline-block;
+`;
+
+const WedDescTitle = styled.div`
+  margin-right: 30px;
 `;
 
 const WedHeader = styled.div`
@@ -143,6 +154,7 @@ const WedHeader = styled.div`
   flex-wrap: wrap;
   align-items: flex-end;
   margin-bottom: 40px;
+  max-width: 1100px;
 `;
 
 const WedDescStyle = styled.div`
@@ -151,9 +163,11 @@ const WedDescStyle = styled.div`
   height: 300px;
   border-radius: 30px;
   margin-top: 50px;
+  max-width: 1100px;
 
   padding-top: 50px;
   padding-left: 50px;
+  padding-right: 50px;
 `;
 
 const ConTainer = styled.div`
