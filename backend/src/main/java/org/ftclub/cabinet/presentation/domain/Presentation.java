@@ -9,9 +9,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.Getter;
 import org.ftclub.cabinet.cabinet.domain.Location;
 
 @Entity
+@Getter
 public class Presentation {
 
 	@Id
