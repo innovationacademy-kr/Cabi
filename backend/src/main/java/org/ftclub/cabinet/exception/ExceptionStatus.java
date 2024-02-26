@@ -73,6 +73,7 @@ public enum ExceptionStatus {
 	INVALID_PRESENTATION_CATEGORY(HttpStatus.BAD_REQUEST, "발표회에 정의된 카테고리가 아닙니다."),
 	INVALID_DATE(HttpStatus.BAD_REQUEST, "잘못된 날짜입니다."),
 	PRESENTATION_ALREADY_EXISTED(HttpStatus.CONFLICT, "이미 예약된 발표 날짜입니다"),
+	NOT_FOUND_FORM(HttpStatus.NOT_FOUND, "신청서가 존재하지 않습니다."),
 	;
 
 	final private int statusCode;
