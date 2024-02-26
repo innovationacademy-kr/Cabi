@@ -2,8 +2,9 @@ import { useState } from "react";
 import styled from "styled-components";
 import { toggleItem } from "@/components/Common/MultiToggleSwitch";
 import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
-import DropdownMenu from "./DropdownMenu";
-import DropdownDateMenu from "./DropdownDateMenu";
+import DropdownMenu from "../../components/Wednesday/Registers/DropdownTimeMenu";
+import DropdownDateMenu from "../../components/Wednesday/Registers/DropdownDateMenu";
+import DropdownTimeMenu from "../../components/Wednesday/Registers/DropdownTimeMenu";
 
 enum PresentationCategory {
   FORTYTWO = "FORTYTWO",
@@ -63,7 +64,7 @@ const RegisterPage = () => {
           <SubSection>
             <RegisterSubContentStyled>시간</RegisterSubContentStyled>
             <RegisterTimeInputStyled>
-              <DropdownMenu></DropdownMenu>
+              <DropdownTimeMenu/>
             </RegisterTimeInputStyled>
           </SubSection>
         </DateTimeContainer>
