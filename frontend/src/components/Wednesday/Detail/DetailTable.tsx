@@ -4,6 +4,8 @@ import styled from "styled-components";
 import DetailTableBody from "@/components/Wednesday/Detail/DetailTableBody";
 import EditStatusModal from "@/components/Wednesday/Modals/EditStatusModal/EditStatusModal";
 
+// TODO : 1000
+
 export interface IItem {
   date: string;
   title?: string;
@@ -60,7 +62,8 @@ const DetailTable = () => {
     },
     {
       date: "12월 31일",
-      title: "사진을 위한 넓고 얕은 지식눌렀을때는 제목이 모두 보이게",
+      title:
+        "사진을 위한 넓고 얕은 지식눌렀을때는 제목이 모두 보이게 사진을 위한 넓고 얕은 지식눌렀을때는 제목",
       intraId: "eeeeeeeeee",
       category: "취미",
       time: 90,
@@ -120,7 +123,6 @@ const DetailTable = () => {
                   openAdminModal={openAdminModal}
                   item={item}
                   itemStatus={itemStatus}
-                  id={idx}
                 />
               </>
             );
@@ -138,6 +140,7 @@ export default DetailTable;
 
 const TableStyled = styled.table`
   width: 100%;
+  table-layout: fixed;
 `;
 
 const TableHeadStyled = styled.tr`
@@ -145,7 +148,6 @@ const TableHeadStyled = styled.tr`
   line-height: 40px;
   background-color: #3f69fd;
   color: var(--white);
-  /* table-layout: fixed; */
 
   & > th {
     font-size: 1rem;

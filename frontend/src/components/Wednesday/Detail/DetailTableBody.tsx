@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -14,13 +14,11 @@ const DetailTableBody = ({
   openAdminModal,
   item,
   itemStatus,
-  id,
 }: {
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
   item: IItem;
   itemStatus: itemType;
-  id: number;
 }) => {
   const [clickedItem, setClickedItem] = useState<null | IItem>(null);
   const navigator = useNavigate();
@@ -30,9 +28,6 @@ const DetailTableBody = ({
     else setClickedItem(item);
   };
 
-  useEffect(() => {
-    console.log(clickedItem?.date === item.date);
-  }, [clickedItem?.date, item.date]);
   return (
     <>
       <TableTrStyled
@@ -45,15 +40,15 @@ const DetailTableBody = ({
         testt={clickedItem?.date === item.date}
       >
         <td className="leftEnd" id={itemStatus}>
-          <span>{item.date}</span>
+          <div>{item.date}</div>
         </td>
         {itemStatus ? (
           <>
             <td id={itemStatus} className="rightEnd" colSpan={4}>
-              <div>
+              <NoEventDivStyled>
                 {itemStatus === itemType.NO_EVENT_PAST ? (
                   <>
-                    <span>발표가 없었습니다</span>
+                    <div>발표가 없었습니다</div>
                     <SadCcabiStyled>
                       <SadCcabiImg />
                     </SadCcabiStyled>
@@ -61,10 +56,10 @@ const DetailTableBody = ({
                 ) : (
                   <>
                     <NoEventPhraseStyled>
-                      <span>
+                      <div>
                         다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를
                         신청해보세요
-                      </span>
+                      </div>
                       <img src="/src/assets/images/happyCcabi.svg" />
                     </NoEventPhraseStyled>
                     <button
@@ -76,22 +71,22 @@ const DetailTableBody = ({
                     </button>
                   </>
                 )}
-              </div>
+              </NoEventDivStyled>
             </td>
           </>
         ) : (
           <>
             <td>
-              <span>{item.title}</span>
+              <div>{item.title}</div>
             </td>
             <td>
-              <span>{item.intraId}</span>
+              <div>{item.intraId}</div>
             </td>
             <td>
-              <span>{item.category}</span>
+              <div>{item.category}</div>
             </td>
             <td className="rightEnd">
-              <span>{item.time}분</span>
+              <div>{item.time}분</div>
             </td>
           </>
         )}
@@ -146,9 +141,6 @@ const TableTrStyled = styled.tr<{
 
   & > td {
     padding: 0 10px;
-    /* white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden; */
   }
 
   & #noEventCurrent {
@@ -160,9 +152,9 @@ const TableTrStyled = styled.tr<{
   }
 
   & > td > div {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   & button {
@@ -187,10 +179,18 @@ const TableTrStyled = styled.tr<{
   }
 `;
 
+const NoEventDivStyled = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  /* justify-content: center; */
+  align-items: center;
+`;
+
 const NoEventPhraseStyled = styled.div`
   display: flex;
   align-items: center;
-  width: 600px;
+  width: 50%;
+  /* background-color: yellow; */
 
   & > img {
     width: 30px;
@@ -198,8 +198,11 @@ const NoEventPhraseStyled = styled.div`
     margin-left: 10px;
   }
 
-  & > span {
+  & > div {
     font-weight: bold;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 `;
 
@@ -226,14 +229,11 @@ const TableDetailTrStyled = styled.tr`
   }
   & > td > div {
     background-color: white;
-    height: 200px;
     border-radius: 10px;
     margin: 24px;
     margin-top: 0;
     line-height: 24px;
     padding: 20px 50px;
     font-size: 18px;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 `;
