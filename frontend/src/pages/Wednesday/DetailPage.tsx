@@ -116,8 +116,9 @@ const HeaderStyled = styled.div`
 
 const BodyStyled = styled.div`
   margin-top: 50px;
+  margin-bottom: 70px;
   width: 100%;
-  padding: 0 20px 10px 20px;
+  padding: 24px 20px 10px 20px;
   background-color: var(--lightgray-color);
   border-radius: 10px;
 `;

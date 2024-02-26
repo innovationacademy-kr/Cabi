@@ -102,6 +102,7 @@ const DetailTable = () => {
             return <th id={entries[0][0]}>{entries[0][1]}</th>;
           })}
         </TableHeadStyled>
+        <WhiteSpaceTrStyled />
         <TableBodyStyled>
           {list.map((item, idx) => {
             let itemStatus = itemType.EVENT_AVAILABLE;
@@ -113,13 +114,15 @@ const DetailTable = () => {
               itemStatus = itemType.NO_EVENT_CURRENT;
             }
             return (
-              <DetailTableBody
-                isAdmin={isAdmin}
-                openAdminModal={openAdminModal}
-                item={item}
-                itemStatus={itemStatus}
-                id={idx}
-              />
+              <>
+                <DetailTableBody
+                  isAdmin={isAdmin}
+                  openAdminModal={openAdminModal}
+                  item={item}
+                  itemStatus={itemStatus}
+                  id={idx}
+                />
+              </>
             );
           })}
         </TableBodyStyled>
@@ -135,8 +138,6 @@ export default DetailTable;
 
 const TableStyled = styled.table`
   width: 100%;
-  border-spacing: 0 24px;
-  border-collapse: separate;
 `;
 
 const TableHeadStyled = styled.tr`
@@ -179,4 +180,9 @@ const TableBodyStyled = styled.tbody`
   & #selected {
     background-color: #91b5fa;
   }
+`;
+
+export const WhiteSpaceTrStyled = styled.tr`
+  height: 24px;
+  width: 100%;
 `;
