@@ -6,18 +6,18 @@ import WedCardMobile from "./WedCardMobile";
 import WedMainDesc from "./WedMainDesc";
 
 // "subject": "제목";
-// "summary": "한줄요약";
+// "test": "한줄요약";
 // "detail": "상세설명";
 // "dateTime": "2024-01-01-13:42:43T"; // new Date().toISOString()
 // "category": "DEVELOP"; // [DEVELOP, HOBBY, JOB, ETC]
 // "period": "HALF"; // [HALF, HOUR, HOUR_HALF, TWO_HOUR]
 // "userName": "jusohn";
 
-const presentation = [
+const presentation: IPresentation[] = [
   {
     image: "img1",
     subject: "h1",
-    summary: "한줄요약 1",
+    test: "한줄요약 1",
     detail: "상세설명 1",
     dateTime: "cal1",
     category: "DEVELOP",
@@ -27,7 +27,7 @@ const presentation = [
   {
     image: "img2",
     subject: "h2",
-    summary: "한줄요약 2",
+    test: "한줄요약 2",
     detail: "상세설명 2",
     dateTime: "cal2",
     category: "DEVELOP",
@@ -37,7 +37,7 @@ const presentation = [
   {
     image: "img3",
     subject: "h3",
-    summary: "한줄요약 3",
+    test: "한줄요약 3",
     detail: "상세설명 3",
     dateTime: "cal3",
     category: "DEVELOP",
@@ -49,7 +49,7 @@ const presentation = [
 export interface IPresentation {
   image: string; // 나중에 뺴기
   subject: string;
-  summary: string;
+  test: string;
   detail: string;
   dateTime: string;
   category: string;
@@ -72,8 +72,9 @@ const RecentPresentation = ({
   presentButtonHandler: () => void;
 }) => {
   const [isMobile, setIsMobile] = useState(false);
-  const navigator = useNavigate();
   const [select, setSelect] = useState(1);
+  const [test, setTest] = useState<IPresentation>(presentation[1]);
+  const navigator = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -83,6 +84,17 @@ const RecentPresentation = ({
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // useEffect(() => {
+  //   setTest(presentation[select]);
+  // }, [select]);
+
+  // useEffect(() => {
+  //   console.log("parent : ", test);
+  //   // console.log(test.category);
+  // }, [test]);
+
+  // useEffect(() => console.log(select), [select]);
 
   return (
     <ConTainerStyled>
@@ -101,11 +113,19 @@ const RecentPresentation = ({
       </WedHeaderStyled>
 
       {isMobile ? (
-        <WedCardMobile presentation={presentation} />
+        <WedCardMobile
+          presentation={presentation}
+          select={select}
+          setSelect={setSelect}
+        />
       ) : (
-        <WedCard presentation={presentation} />
+        <WedCard
+          select={select}
+          setSelect={setSelect}
+          presentation={presentation}
+        />
       )}
-      <WedMainDesc />
+      <WedMainDesc test={test} />
     </ConTainerStyled>
   );
 };

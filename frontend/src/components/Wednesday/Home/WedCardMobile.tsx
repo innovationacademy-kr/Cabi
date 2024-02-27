@@ -2,18 +2,25 @@ import { useEffect, useRef, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { IPresentation } from "./RecentPresentation";
 
-const WedCardMobile = ({ presentation }: { presentation: IPresentation[] }) => {
-  const [select, setSelect] = useState(0);
-  const [slideIndex, setSlideIndex] = useState(1);
+const WedCardMobile = ({
+  presentation,
+  select,
+  setSelect,
+}: {
+  presentation: IPresentation[];
+  select: number;
+  setSelect: (value: number) => void;
+}) => {
+  const [move, setMove] = useState(0);
   const touchStartPosX = useRef(0);
   const touchStartPosY = useRef(0);
 
   // 눌렀을때 해당 페이지로 이동
   // 페이지가 이동하면 그에 맞는 페이지네이션 제공
   const onPageClick = (i: number) => {
-    if (i !== slideIndex) {
-      setSlideIndex(i);
-      setSelect(select + (slideIndex - i) * 300);
+    if (i !== select) {
+      setSelect(i);
+      setMove(move + (select - i) * 300);
     }
   };
 
@@ -23,19 +30,19 @@ const WedCardMobile = ({ presentation }: { presentation: IPresentation[] }) => {
       <Paginations
         key={i}
         onClick={() => onPageClick(i)}
-        current={i == slideIndex}
+        current={i == select}
       ></Paginations>
     );
   }
 
   const onClick = (index: number) => {
-    if (slideIndex != index) {
-      if (index < slideIndex) {
-        setSlideIndex(slideIndex - 1);
-        setSelect(select + 300);
+    if (select != index) {
+      if (index < select) {
+        setSelect(select - 1);
+        setMove(move + 300);
       } else {
-        setSlideIndex(slideIndex + 1);
-        setSelect(select - 300);
+        setSelect(select + 1);
+        setMove(move - 300);
       }
     }
   };
@@ -58,25 +65,24 @@ const WedCardMobile = ({ presentation }: { presentation: IPresentation[] }) => {
   };
 
   const moveSectionTo = (direction: string) => {
-    if (direction === "left" && slideIndex !== 0) {
-      setSlideIndex(slideIndex - 1);
-      setSelect(select + 300);
-    } else if (direction === "right" && slideIndex !== 2) {
-      setSlideIndex(slideIndex + 1);
-      setSelect(select - 300);
+    if (direction === "left" && select !== 0) {
+      setSelect(select - 1);
+      setMove(move + 300);
+    } else if (direction === "right" && select !== 2) {
+      setSelect(select + 1);
+      setMove(move - 300);
     }
   };
 
   return (
     <ContainerStyled>
-      <CardWrapperStyled slideIndex={select}>
+      <CardWrapperStyled select={move}>
         {presentation.map((p, index) => (
           <WedCardStyled
             key={index}
             onClick={() => onClick(index)}
-            className={index == select ? "check" : "not-check"}
+            className={index == move ? "check" : "not-check"}
             onTouchStart={(e: React.TouchEvent) => {
-              console.log("Test");
               touchStartPosX.current = e.changedTouches[0].screenX;
               touchStartPosY.current = e.changedTouches[0].screenY;
             }}
@@ -150,7 +156,7 @@ const IconStyled = styled.div`
   margin-right: 8px;
 `;
 
-const CardWrapperStyled = styled.div<{ slideIndex: number }>`
+const CardWrapperStyled = styled.div<{ select: number }>`
   overflow-x: hidden;
   display: flex;
   justify-content: center;
@@ -164,7 +170,7 @@ const CardWrapperStyled = styled.div<{ slideIndex: number }>`
 
   overflow-x: hidden;
 
-  transform: translateX(${(props) => props.slideIndex}px);
+  transform: translateX(${(props) => props.select}px);
   transition: all 500ms ease-in-out;
 `;
 

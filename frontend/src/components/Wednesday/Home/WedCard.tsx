@@ -3,9 +3,15 @@ import styled, { css, keyframes } from "styled-components";
 import { IAnimation, IPresentation } from "./RecentPresentation";
 
 // width 1000기준으로 모바일뷰로 전환
-const WedCard = ({ presentation }: { presentation: IPresentation[] }) => {
-  const [select, setSelect] = useState(1);
-
+const WedCard = ({
+  presentation,
+  select,
+  setSelect,
+}: {
+  presentation: IPresentation[];
+  select: number;
+  setSelect: (value: number) => void;
+}) => {
   const onClick = (index: number) => {
     if (select) setSelect(index);
     else setSelect(index);

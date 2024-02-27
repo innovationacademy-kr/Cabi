@@ -1,6 +1,7 @@
 import styled, { css, keyframes } from "styled-components";
+import { IPresentation } from "./RecentPresentation";
 
-const WedMainDesc = () => {
+const WedMainDesc = ({ test }: { test: IPresentation }) => {
   return (
     <WedDescStyled>
       <WedDescHeaderStyled>
@@ -10,21 +11,11 @@ const WedMainDesc = () => {
           <ImageStyled>
             <img src="/src/assets/images/timer.svg" alt="" />
           </ImageStyled>
-          <span>45분</span>
+          <span>{test.period}</span>
         </TimerStyled>
       </WedDescHeaderStyled>
 
-      <WedDescContainerStyled>
-        "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데? "장비 탓인가 싶어서
-        akakakkakakakakakkakkakakakakakakakakakakakaka마맘마아아아아아아
-        <br />
-        최신 스마트폰으로 바꿔 봤지만 크게 달라지지 않은 결과물😒취미로
-        <br />
-        시작하고 싶은데 도대체 뭐가 뭔지 모르겠는 사진!2년 간 사진 강의만
-        <br />
-        빡시게 해온 jisokang이 엑기스만 쫙쫙 뽑아서 알기 쉽게 알려드립니다! 😉
-        <br />
-      </WedDescContainerStyled>
+      <WedDescContainerStyled>{test.detail}</WedDescContainerStyled>
     </WedDescStyled>
   );
 };
