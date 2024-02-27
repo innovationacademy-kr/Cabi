@@ -2,7 +2,11 @@ import React from "react";
 import { useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/assets/data/ManualContent";
+import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
+import { ReactComponent as ExtensionIcon } from "@/assets/images/extension.svg";
 import { ReactComponent as MoveBtnImg } from "@/assets/images/moveButton.svg";
+import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
+import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import ContentStatus from "@/types/enum/content.status.enum";
 
 interface ModalProps {
@@ -51,12 +55,25 @@ const ManualModal: React.FC<ModalProps> = ({
       >
         <ModalContent contentStatus={contentStatus}>
           <CloseButton contentStatus={contentStatus} onClick={closeModal}>
-            <MoveBtnImg stroke="white" />
+            <MoveBtnImg className="moveButton" />
           </CloseButton>
           {hasImage && (
             <BasicInfo>
               <img className="contentImg" src={contentData.imagePath} alt="" />
-
+              {/* <ContentImgStyled>
+                {contentStatus === ContentStatus.PRIVATE && (
+                  <PrivateIcon className="contentImg" />
+                )}
+                {contentStatus === ContentStatus.SHARE && (
+                  <ShareIcon className="contentImg" />
+                )}
+                {contentStatus === ContentStatus.CLUB && (
+                  <ClubIcon className="contentImg" />
+                )}
+                {contentStatus === ContentStatus.EXTENSION && (
+                  <ExtensionIcon className="contentImg" />
+                )}
+              </ContentImgStyled> */}
               {isCabinetType && (
                 <BoxInfoWrap>
                   <BoxInfo1>
@@ -171,19 +188,27 @@ const ModalContent = styled.div<{
   font-size: 2.5rem;
   font-weight: bold;
   align-items: flex-start;
-  .svg {
+  /* svg {
     width: 80px;
     height: 80px;
-  }
+  } */
   .contentImg {
     width: 80px;
     height: 80px;
-    filter: ${(props) =>
+    /* filter: ${(props) =>
       props.contentStatus === ContentStatus.EXTENSION
         ? "brightness(0)"
         : props.contentStatus === ContentStatus.PENDING
         ? "brightness(0)"
-        : "brightness(100)"};
+        : "brightness(100)"}; */
+    /* light */
+    filter: ${(props) =>
+      props.contentStatus === ContentStatus.EXTENSION
+        ? "brightness(100)"
+        : props.contentStatus === ContentStatus.PENDING
+        ? "brightness(100)"
+        : "brightness(0)"};
+    /* dark */
   }
   @media screen and (max-width: 400px) {
     font-size: 1.5rem;
@@ -196,6 +221,19 @@ const ModalContent = styled.div<{
       width: 60px;
       height: 60px;
     }
+  }
+  .moveButton {
+    stroke: ${(props) =>
+      props.contentStatus === ContentStatus.IN_SESSION
+        ? "var(--main-color)"
+        : // : props.contentStatus === ContentStatus.EXTENSION
+        // ? "var(--black)"
+        // : "white"};
+        // light
+        props.contentStatus === ContentStatus.EXTENSION
+        ? "var(--color-text-normal)"
+        : "var(--color-background)"};
+    /* dark */
   }
 `;
 
@@ -239,7 +277,7 @@ const BoxInfoWrap = styled.div`
 const BoxInfo1 = styled.div`
   width: 100px;
   height: 80px;
-  border: 1px solid white;
+  border: 1px solid var(--color-background);
   border-radius: 15px;
   font-size: 0.875rem;
   font-weight: 400;
@@ -257,7 +295,7 @@ const BoxInfo1 = styled.div`
 const BoxInfo2 = styled.div`
   width: 80px;
   height: 80px;
-  border: 1px solid white;
+  border: 1px solid var(--color-background);
   border-radius: 15px;
   font-size: 0.875rem;
   font-weight: 400;
@@ -312,5 +350,18 @@ const ManualContentStyeld = styled.div<{
     }
   }
 `;
+
+// const ContentImgStyled = styled.div`
+//   background-color: yellow;
+//   width: 80px;
+//   height: 80px;
+//   display: flex;
+
+//   & > .contentImg {
+//     width: 80px;
+//     height: 80px;
+//     background-color: pink;
+//   }
+// `;
 
 export default ManualModal;

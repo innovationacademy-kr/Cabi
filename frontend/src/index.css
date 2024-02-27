@@ -97,7 +97,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--black);
-    --color-line: var(--gray-400);
+    --color-line: var(--gray-500);
     --color-text-normal: var(--gray-100);
   }
 }
