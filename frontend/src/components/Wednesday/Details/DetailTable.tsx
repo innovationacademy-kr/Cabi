@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { IDate } from "@/pages/Wednesday/DetailPage";
 import DetailTableBody from "@/components/Wednesday/Details/DetailTableBody";
 import EditStatusModal from "@/components/Wednesday/Modals/EditStatusModal/EditStatusModal";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
@@ -23,12 +24,29 @@ export enum itemType {
   NO_EVENT_PAST = "noEventPast",
 }
 
-const DetailTable = () => {
+const DetailTable = ({
+  presentationDetailInfo,
+  makeIDateObj,
+}: {
+  presentationDetailInfo: IPresentationScheduleDetailInfo[] | null;
+  makeIDateObj: (date: Date) => IDate;
+}) => {
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     statusModal: false,
   });
   const { pathname } = useLocation();
   const isAdmin = pathname.includes("admin/presentation");
+  const tableHeadArray = [
+    { date: "날짜" },
+    { subject: "제목" },
+    { userName: "ID" },
+    { category: "카테고리" },
+    { period: "시간" },
+  ];
+  const [list, setList] = useState<IPresentationScheduleDetailInfo[] | null>(
+    null
+  );
+  const [itemDate, setItemDate] = useState<IDate | null>(null);
 
   const openAdminModal = (modal: TAdminModalState) => {
     setAdminModal({ ...adminModal, [modal]: true });
@@ -38,27 +56,22 @@ const DetailTable = () => {
     setAdminModal({ ...adminModal, [modal]: false });
   };
 
-  const tableHeadArray = [
-    { date: "날짜" },
-    { subject: "제목" },
-    { userName: "ID" },
-    { category: "카테고리" },
-    { period: "시간" },
-  ];
-
-  const res: IPresentationScheduleDetailInfo[] = [
+  const mockRes: IPresentationScheduleDetailInfo[] = [
     {
-      dateTime: "12월 10일",
+      dateTime: "2024-02-28T07:22:01.233Z",
     },
     {
-      dateTime: "12월 17일",
-      subject: "우하하하",
-      userName: "jeekim",
-      category: PresentationCategoryType.HOBBY,
-      period: PresentationPeriodType.HALF,
+      dateTime: "2024-02-01T07:22:01.233Z",
     },
+    // {
+    //   dateTime: "12월 17일",
+    //   subject: "우하하하",
+    //   userName: "jeekim",
+    //   category: PresentationCategoryType.HOBBY,
+    //   period: PresentationPeriodType.HALF,
+    // },
     {
-      dateTime: "12월 31일",
+      dateTime: "2024-02-17T07:22:01.233Z",
       subject:
         "사진을 위한 넓고 얕은 지식눌렀을때는 제목이 모두 보이게 사진을 위한 넓고 얕은 지식눌렀을때는 제목",
       userName: "eeeeeeeeee",
@@ -67,22 +80,8 @@ const DetailTable = () => {
     },
   ];
 
-  const [list, setList] = useState<IPresentationScheduleDetailInfo[]>([
-    {
-      dateTime: "",
-      subject: "",
-      userName: "",
-    },
-  ]);
-
-  const [item, setItem] = useState<IPresentationScheduleDetailInfo>({
-    dateTime: "",
-    subject: "",
-    userName: "",
-  });
-
   useEffect(() => {
-    setList(res);
+    setList(mockRes); //TODO : presentationDetailInfo로 대체
   }, []);
 
   return (
@@ -93,21 +92,29 @@ const DetailTable = () => {
             isAdmin && openAdminModal("statusModal");
           }}
         >
-          {tableHeadArray.map((head) => {
+          {tableHeadArray.map((head, idx) => {
             let entries = Object.entries(head);
-            return <th id={entries[0][0]}>{entries[0][1]}</th>;
+            return (
+              <th key={idx} id={entries[0][0]}>
+                {entries[0][1]}
+              </th>
+            );
           })}
         </TableHeadStyled>
         <WhiteSpaceTrStyled />
         <TableBodyStyled>
-          {list.map((item, idx) => {
+          {list?.map((item) => {
             let itemStatus = itemType.EVENT_AVAILABLE;
 
             if (!item.subject) {
               // if (현재 날짜보다 과거)
-              itemStatus = itemType.NO_EVENT_PAST;
-              // else
-              itemStatus = itemType.NO_EVENT_CURRENT;
+              const date = new Date();
+              let dateISO = date.toISOString();
+              const dateObj = new Date(dateISO);
+
+              const itemDateObj = new Date(item.dateTime);
+              if (dateObj > itemDateObj) itemStatus = itemType.NO_EVENT_PAST;
+              else itemStatus = itemType.NO_EVENT_CURRENT;
             }
             return (
               <>
@@ -116,6 +123,7 @@ const DetailTable = () => {
                   openAdminModal={openAdminModal}
                   item={item}
                   itemStatus={itemStatus}
+                  itemDate={makeIDateObj(new Date(item.dateTime))}
                 />
               </>
             );
@@ -124,14 +132,17 @@ const DetailTable = () => {
       </TableStyled>
       <TableMobileStyled>
         <TableBodyMobileStyled>
-          {list.map((item, idx) => {
+          {list?.map((item, idx) => {
             let itemStatus = itemType.EVENT_AVAILABLE;
 
             if (!item.subject) {
-              // if (현재 날짜보다 과거)
-              itemStatus = itemType.NO_EVENT_PAST;
-              // else
-              itemStatus = itemType.NO_EVENT_CURRENT;
+              const date = new Date();
+              let dateISO = date.toISOString();
+              const dateObj = new Date(dateISO);
+
+              const itemDateObj = new Date(item.dateTime);
+              if (dateObj > itemDateObj) itemStatus = itemType.NO_EVENT_PAST;
+              else itemStatus = itemType.NO_EVENT_CURRENT;
             }
             return (
               <>
@@ -140,6 +151,7 @@ const DetailTable = () => {
                   openAdminModal={openAdminModal}
                   item={item}
                   itemStatus={itemStatus}
+                  itemDate={itemDate}
                 />
               </>
             );
@@ -169,7 +181,7 @@ const TableMobileStyled = styled.div`
 `;
 const TableBodyMobileStyled = styled.div``;
 
-const TableHeadStyled = styled.tr`
+const TableHeadStyled = styled.thead`
   height: 40px;
   line-height: 40px;
   background-color: #3f69fd;
