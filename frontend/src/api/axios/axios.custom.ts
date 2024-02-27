@@ -703,3 +703,18 @@ export const axiosGetAvailableCabinets = async (): Promise<any> => {
     throw error;
   }
 };
+
+// 수지회
+const axiosGetPresentationScheduleURL = "/v5/presentation/schedule/";
+export const axiosGetPresentationSchedule = async (
+  yearMonth: string
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      axiosGetPresentationScheduleURL + yearMonth
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

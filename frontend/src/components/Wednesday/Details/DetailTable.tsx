@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import DetailTableBody from "@/components/Wednesday/Detail/DetailTableBody";
+import DetailTableBody from "@/components/Wednesday/Details/DetailTableBody";
 import EditStatusModal from "@/components/Wednesday/Modals/EditStatusModal/EditStatusModal";
 
 // TODO : 1000
@@ -222,7 +222,6 @@ const TableBodyStyled = styled.tbody`
   & #selected {
     background-color: #91b5fa;
   }
-
 `;
 
 export const WhiteSpaceTrStyled = styled.tr`

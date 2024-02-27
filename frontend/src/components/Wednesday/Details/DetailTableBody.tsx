@@ -6,7 +6,7 @@ import {
   TAdminModalState,
   WhiteSpaceTrStyled,
   itemType,
-} from "@/components/Wednesday/Detail/DetailTable";
+} from "@/components/Wednesday/Details/DetailTable";
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 
 const DetailTableBody = ({

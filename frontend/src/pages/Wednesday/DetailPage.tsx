@@ -1,53 +1,95 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { MoveSectionButtonStyled } from "@/components/SectionPagination/SectionPagination";
-import DetailTable from "@/components/Wednesday/Detail/DetailTable";
+import DetailTable from "@/components/Wednesday/Details/DetailTable";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
+import { axiosGetPresentationSchedule } from "@/api/axios/axios.custom";
 
 interface IDate {
-  year: number;
-  month: number;
-  day: number;
+  year: string;
+  month: string;
+  day: string;
 }
 
 const DetailPage = () => {
   const [currentDate, setCurrentDate] = useState({
-    year: 0,
-    month: 0,
-    day: 0,
+    year: "",
+    month: "",
+    day: "",
   });
-  // 오늘날짜 useState?
+  const [todayDate, setTodayDate] = useState({
+    year: "",
+    month: "",
+    day: "",
+  });
 
-  let date = { year: 2023, month: 12, day: 31 };
-  // TODO : axios로 현재 페이지의 날짜를 받는다
-
+  // TODO : 오늘 날짜 recoil로 있으면 좋을듯
   useEffect(() => {
-    setCurrentDate(date);
-    // axios로 받은 현재 페이지의 날짜로 띄워줄거 세팅
+    const date = new Date();
+    let dateISO = date.toISOString();
+    // 1. T 앞에서 끊고
+    let dateBeforeT = dateISO.substring(0, 10);
+
+    // 2. -로 분리
+    let dateSplited = dateBeforeT.split("-");
+
+    const todayDateObj = {
+      year: dateSplited[0],
+      month: dateSplited[1],
+      day: dateSplited[2],
+    };
+
+    // year, month, day 다 같으면 갈아끼우지말기
+    setCurrentDate(todayDateObj);
+    if (
+      !(
+        todayDate.year === todayDateObj.year ||
+        todayDate.month === todayDateObj.month ||
+        todayDate.day === todayDateObj.day
+      )
+    ) {
+      setTodayDate(todayDateObj);
+    }
   }, []);
 
-  const Move = (direction: string) => {
+  useEffect(() => {
+    getPresentationSchedule(todayDate);
+  }, [currentDate]);
+
+  const getPresentationSchedule = async (requestDate: IDate) => {
+    try {
+      const response = await axiosGetPresentationSchedule(
+        requestDate.year + requestDate.month
+      );
+      // setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
+      // setIsCurrentSectionRender(true);
+    } catch (error: any) {
+    } finally {
+    }
+  };
+
+  const moveMonth = (direction: string) => {
     let requestDate: IDate = { ...currentDate };
+    let currentDateMonth = parseInt(currentDate.month);
+    let currentDateYear = parseInt(currentDate.year);
 
     if (direction === "left") {
       // 현재 페이지 날짜의 월-1 axios 요청
-      if (currentDate.month === 1) {
-        requestDate.year = currentDate.year - 1;
-        requestDate.month = 12;
+      if (currentDateMonth === 1) {
+        requestDate.year = (currentDateYear - 1).toString();
+        requestDate.month = (12).toString();
       } else {
-        requestDate.month = currentDate.month - 1;
+        requestDate.month = (currentDateMonth - 1).toString().padStart(2, "0");
       }
     } else {
-      if (currentDate.month === 12) {
-        requestDate.year = currentDate.year + 1;
-        requestDate.month = 1;
+      if (currentDateMonth === 12) {
+        requestDate.year = (currentDateYear + 1).toString();
+        requestDate.month = (1).toString();
       } else {
-        requestDate.month = currentDate.month + 1;
+        requestDate.month = (currentDateMonth + 1).toString().padStart(2, "0");
       }
     }
-    // TODO : axios requestDate
-    // 성공시
-    // 실패시
+
     setCurrentDate(requestDate);
   };
 
@@ -57,7 +99,7 @@ const DetailPage = () => {
         <HeaderStyled>
           <MoveSectionButtonStyled
             src={LeftSectionButton}
-            onClick={() => Move("left")}
+            onClick={() => moveMonth("left")}
             className="cabiButton"
           />
           <div>
@@ -65,7 +107,7 @@ const DetailPage = () => {
           </div>
           <MoveSectionButtonStyled
             src={LeftSectionButton}
-            onClick={() => Move("right")}
+            onClick={() => moveMonth("right")}
             arrowReversed={true}
             className="cabiButton"
           />
@@ -102,7 +144,6 @@ const HeaderStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  
 
   & > div {
     width: 200px;
