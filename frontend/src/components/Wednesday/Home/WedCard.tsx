@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled, { css, keyframes } from "styled-components";
-import { IAnimation, IDummyList } from "./RecentPresentation";
+import { IAnimation, IPresentation } from "./RecentPresentation";
 
 // width 1000기준으로 모바일뷰로 전환
-const WedCard = ({ dummy }: { dummy: IDummyList[] }) => {
+const WedCard = ({ presentation }: { presentation: IPresentation[] }) => {
   const [select, setSelect] = useState(1);
 
   const onClick = (index: number) => {
@@ -13,21 +13,22 @@ const WedCard = ({ dummy }: { dummy: IDummyList[] }) => {
 
   return (
     <ContainerStyled>
-      {dummy.map((p, index) => (
+      {presentation.map((p, index) => (
         <WedCardStyled
+          key={index}
           onClick={() => onClick(index)}
           className={index == select ? "check" : "not-check"}
         >
           <ImageStyled>{p.image}</ImageStyled>
-          <NameStyled>{p.username}</NameStyled>
-          <TitleStyled>{p.title}</TitleStyled>
-          <SubTitleStyled>{p.subtitle}</SubTitleStyled>
+          <NameStyled>{p.userName}</NameStyled>
+          <TitleStyled>{p.subject}</TitleStyled>
+          <SubTitleStyled>{p.summary}</SubTitleStyled>
 
           <CalendarStyled>
             <IconStyled>
               <img src="/src/assets/images/calendar.svg" alt="" />
             </IconStyled>
-            <span>{p.cal}</span>
+            <span>{p.dateTime}</span>
           </CalendarStyled>
         </WedCardStyled>
       ))}
@@ -196,9 +197,4 @@ const TitleStyled = styled.div`
 const SubTitleStyled = styled.div`
   font-size: 1rem;
   margin-top: 30px;
-  // padding-bottom: 20px;
-`;
-
-const CardCal = styled.div`
-  color: gray;
 `;

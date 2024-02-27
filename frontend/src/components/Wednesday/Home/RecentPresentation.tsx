@@ -5,31 +5,58 @@ import WedCard from "./WedCard";
 import WedCardMobile from "./WedCardMobile";
 import WedMainDesc from "./WedMainDesc";
 
-const dummy = [
+// "subject": "제목";
+// "summary": "한줄요약";
+// "detail": "상세설명";
+// "dateTime": "2024-01-01-13:42:43T"; // new Date().toISOString()
+// "category": "DEVELOP"; // [DEVELOP, HOBBY, JOB, ETC]
+// "period": "HALF"; // [HALF, HOUR, HOUR_HALF, TWO_HOUR]
+// "userName": "jusohn";
+
+const presentation = [
   {
     image: "img1",
-    title: "h1",
-    username: "jusohn",
-    subtitle: "H1",
-    cal: "cal1",
+    subject: "h1",
+    summary: "한줄요약 1",
+    detail: "상세설명 1",
+    dateTime: "cal1",
+    category: "DEVELOP",
+    period: "HALF",
+    userName: "jusohn",
   },
-  { image: "img2", title: "h2", username: "miyu", subtitle: "H2", cal: "cal2" },
+  {
+    image: "img2",
+    subject: "h2",
+    summary: "한줄요약 2",
+    detail: "상세설명 2",
+    dateTime: "cal2",
+    category: "DEVELOP",
+    period: "HALF",
+    userName: "miyu",
+  },
   {
     image: "img3",
-    title: "h3",
-    username: "jeekim",
-    subtitle: "H3",
-    cal: "cal3",
+    subject: "h3",
+    summary: "한줄요약 3",
+    detail: "상세설명 3",
+    dateTime: "cal3",
+    category: "DEVELOP",
+    period: "HALF",
+    userName: "jeekim",
   },
 ];
 
-export interface IDummyList {
-  image: string;
-  title: string;
-  username: string;
-  subtitle: string;
-  cal: string;
+export interface IPresentation {
+  image: string; // 나중에 뺴기
+  subject: string;
+  summary: string;
+  detail: string;
+  dateTime: string;
+  category: string;
+  period: string;
+  userName: string;
 }
+
 export interface IAnimation {
   min_width: number;
   min_height: number;
@@ -46,15 +73,14 @@ const RecentPresentation = ({
 }) => {
   const [isMobile, setIsMobile] = useState(false);
   const navigator = useNavigate();
+  const [select, setSelect] = useState(1);
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 700); // 화면 너비가 768px 미만인 경우 작은 화면으로 간주
     };
-
     window.addEventListener("resize", handleResize);
     handleResize();
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -73,7 +99,12 @@ const RecentPresentation = ({
           발표하기
         </RegistButtonStyled>
       </WedHeaderStyled>
-      {isMobile ? <WedCardMobile dummy={dummy} /> : <WedCard dummy={dummy} />}
+
+      {isMobile ? (
+        <WedCardMobile presentation={presentation} />
+      ) : (
+        <WedCard presentation={presentation} />
+      )}
       <WedMainDesc />
     </ConTainerStyled>
   );

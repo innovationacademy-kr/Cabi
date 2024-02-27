@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
-import { IDummyList } from "./RecentPresentation";
+import { IPresentation } from "./RecentPresentation";
 
-const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
+const WedCardMobile = ({ presentation }: { presentation: IPresentation[] }) => {
   const [select, setSelect] = useState(0);
   const [slideIndex, setSlideIndex] = useState(1);
   const touchStartPosX = useRef(0);
@@ -43,7 +43,6 @@ const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
   const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
     const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
     const touchOffsetY = Math.round(touchEndPosY - touchStartPosY.current);
-
     if (
       Math.abs(touchOffsetX) < 50 ||
       Math.abs(touchOffsetX) < Math.abs(touchOffsetY)
@@ -71,11 +70,13 @@ const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
   return (
     <ContainerStyled>
       <CardWrapperStyled slideIndex={select}>
-        {dummy.map((p, index) => (
+        {presentation.map((p, index) => (
           <WedCardStyled
+            key={index}
             onClick={() => onClick(index)}
             className={index == select ? "check" : "not-check"}
             onTouchStart={(e: React.TouchEvent) => {
+              console.log("Test");
               touchStartPosX.current = e.changedTouches[0].screenX;
               touchStartPosY.current = e.changedTouches[0].screenY;
             }}
@@ -87,15 +88,15 @@ const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
             }}
           >
             <ImageStyled>{p.image}</ImageStyled>
-            <NameStyled>{p.username}</NameStyled>
-            <TitleStyled>{p.title}</TitleStyled>
-            <SubTitleStyled>{p.subtitle}</SubTitleStyled>
+            <NameStyled>{p.userName}</NameStyled>
+            <TitleStyled>{p.subject}</TitleStyled>
+            <SubTitleStyled>{p.summary}</SubTitleStyled>
 
             <CalendarStyled>
               <IconStyled>
                 <img src="/src/assets/images/calendar.svg" alt="" />
               </IconStyled>
-              <span>{p.cal}</span>
+              <span>{p.dateTime}</span>
             </CalendarStyled>
           </WedCardStyled>
         ))}
@@ -124,7 +125,7 @@ const PaginationStyled = styled.div`
   display: flex;
 `;
 
-const Paginations = styled.div`
+const Paginations = styled.div<{ current: boolean }>`
   width: 30px;
   height: 10px;
   background-color: ${(props) => (props.current ? "#5378fd" : "gray")};
@@ -149,7 +150,7 @@ const IconStyled = styled.div`
   margin-right: 8px;
 `;
 
-const CardWrapperStyled = styled.div`
+const CardWrapperStyled = styled.div<{ slideIndex: number }>`
   overflow-x: hidden;
   display: flex;
   justify-content: center;
@@ -210,5 +211,3 @@ const SubTitleStyled = styled.div`
   font-size: 1rem;
   margin-top: 30px;
 `;
-
-const CardCal = styled.div``;
