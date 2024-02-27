@@ -3,16 +3,13 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import DetailTableBody from "@/components/Wednesday/Details/DetailTableBody";
 import EditStatusModal from "@/components/Wednesday/Modals/EditStatusModal/EditStatusModal";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import {
+  PresentationCategoryType,
+  PresentationPeriodType,
+} from "@/types/enum/Presentation/presentation.type.enum";
 
 // TODO : 1000
-
-export interface IItem {
-  date: string;
-  title?: string;
-  intraId?: string;
-  category?: string;
-  time?: number;
-}
 
 export interface IAdminCurrentModalStateInfo {
   statusModal: boolean;
@@ -43,49 +40,45 @@ const DetailTable = () => {
 
   const tableHeadArray = [
     { date: "날짜" },
-    { title: "제목" },
-    { intraId: "ID" },
+    { subject: "제목" },
+    { userName: "ID" },
     { category: "카테고리" },
-    { time: "시간" },
+    { period: "시간" },
   ];
 
-  const res = [
+  const res: IPresentationScheduleDetailInfo[] = [
     {
-      date: "12월 10일",
+      dateTime: "12월 10일",
     },
     {
-      date: "12월 17일",
-      title: "우하하하",
-      intraId: "jeekim",
-      category: "취미",
-      time: 30,
+      dateTime: "12월 17일",
+      subject: "우하하하",
+      userName: "jeekim",
+      category: PresentationCategoryType.HOBBY,
+      period: PresentationPeriodType.HALF,
     },
     {
-      date: "12월 31일",
-      title:
+      dateTime: "12월 31일",
+      subject:
         "사진을 위한 넓고 얕은 지식눌렀을때는 제목이 모두 보이게 사진을 위한 넓고 얕은 지식눌렀을때는 제목",
-      intraId: "eeeeeeeeee",
-      category: "취미",
-      time: 90,
+      userName: "eeeeeeeeee",
+      category: PresentationCategoryType.HOBBY,
+      period: PresentationPeriodType.HOUR_HALF,
     },
   ];
 
-  const [list, setList] = useState<IItem[]>([
+  const [list, setList] = useState<IPresentationScheduleDetailInfo[]>([
     {
-      date: "",
-      title: "",
-      intraId: "",
-      category: "",
-      time: 0,
+      dateTime: "",
+      subject: "",
+      userName: "",
     },
   ]);
 
-  const [item, setItem] = useState<IItem>({
-    date: "",
-    title: "",
-    intraId: "",
-    category: "",
-    time: 0,
+  const [item, setItem] = useState<IPresentationScheduleDetailInfo>({
+    dateTime: "",
+    subject: "",
+    userName: "",
   });
 
   useEffect(() => {
@@ -110,7 +103,7 @@ const DetailTable = () => {
           {list.map((item, idx) => {
             let itemStatus = itemType.EVENT_AVAILABLE;
 
-            if (!item.title) {
+            if (!item.subject) {
               // if (현재 날짜보다 과거)
               itemStatus = itemType.NO_EVENT_PAST;
               // else
@@ -134,7 +127,7 @@ const DetailTable = () => {
           {list.map((item, idx) => {
             let itemStatus = itemType.EVENT_AVAILABLE;
 
-            if (!item.title) {
+            if (!item.subject) {
               // if (현재 날짜보다 과거)
               itemStatus = itemType.NO_EVENT_PAST;
               // else
@@ -195,11 +188,11 @@ const TableHeadStyled = styled.tr`
     border-radius: 10px 0 0 10px;
   }
 
-  & > #title {
+  & > #subject {
     width: 56%;
   }
 
-  & > #intraId {
+  & > #userName {
     width: 14%;
   }
 
@@ -207,7 +200,7 @@ const TableHeadStyled = styled.tr`
     width: 9%;
   }
 
-  & > #time {
+  & > #period {
     width: 8%;
     border-radius: 0 10px 10px 0;
   }

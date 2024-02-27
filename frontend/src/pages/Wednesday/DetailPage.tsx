@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { MoveSectionButtonStyled } from "@/components/SectionPagination/SectionPagination";
 import DetailTable from "@/components/Wednesday/Details/DetailTable";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 import { axiosGetPresentationSchedule } from "@/api/axios/axios.custom";
 
 interface IDate {
@@ -22,6 +23,9 @@ const DetailPage = () => {
     month: "",
     day: "",
   });
+  const [presentationDetailInfo, setPresentationDetailInfo] = useState<
+    IPresentationScheduleDetailInfo[] | null
+  >(null);
 
   // TODO : 오늘 날짜 recoil로 있으면 좋을듯
   useEffect(() => {
@@ -58,13 +62,16 @@ const DetailPage = () => {
 
   const getPresentationSchedule = async (requestDate: IDate) => {
     try {
-      const response = await axiosGetPresentationSchedule(
-        requestDate.year + requestDate.month
-      );
-      // setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
-      // setIsCurrentSectionRender(true);
+      const response: IPresentationScheduleDetailInfo[] =
+        await axiosGetPresentationSchedule(
+          requestDate.year + requestDate.month
+        );
+      setPresentationDetailInfo(response);
+      // TODO setIsCurrentSectionRender(true);
     } catch (error: any) {
+      // TODO
     } finally {
+      // TODO
     }
   };
 

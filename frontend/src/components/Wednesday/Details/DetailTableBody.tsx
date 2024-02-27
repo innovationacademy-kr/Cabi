@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
-  IItem,
   TAdminModalState,
   WhiteSpaceTrStyled,
   itemType,
 } from "@/components/Wednesday/Details/DetailTable";
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
 const DetailTableBody = ({
   isAdmin,
@@ -17,14 +17,15 @@ const DetailTableBody = ({
 }: {
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
-  item: IItem;
+  item: IPresentationScheduleDetailInfo;
   itemStatus: itemType;
 }) => {
-  const [clickedItem, setClickedItem] = useState<null | IItem>(null);
+  const [clickedItem, setClickedItem] =
+    useState<null | IPresentationScheduleDetailInfo>(null);
   const navigator = useNavigate();
 
-  const handleItemClick = (item: IItem) => {
-    if (clickedItem?.date === item.date) setClickedItem(null);
+  const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
+    if (clickedItem?.dateTime === item.dateTime) setClickedItem(null);
     else setClickedItem(item);
   };
 
@@ -32,15 +33,15 @@ const DetailTableBody = ({
     <>
       <TableTrStyled
         itemStatus={itemStatus}
-        id={clickedItem?.date === item.date ? "selected" : ""}
+        id={clickedItem?.dateTime === item.dateTime ? "selected" : ""}
         onClick={() => {
           isAdmin && openAdminModal("statusModal");
           !itemStatus && handleItemClick(item);
         }}
-        testt={clickedItem?.date === item.date}
+        testt={clickedItem?.dateTime === item.dateTime}
       >
         <td className="leftEnd" id={itemStatus}>
-          <div>{item.date}</div>
+          <div>{item.dateTime}</div>
         </td>
         {itemStatus ? (
           <>
@@ -77,22 +78,21 @@ const DetailTableBody = ({
         ) : (
           <>
             <td>
-              <div>{item.title}</div>
+              <div>{item.subject}</div>
             </td>
             <td>
-              <div>{item.intraId}</div>
+              <div>{item.userName}</div>
             </td>
             <td>
               <div>{item.category}</div>
             </td>
             <td className="rightEnd">
-              <div>{item.time}분</div>
+              <div>{item.period}분</div>
             </td>
           </>
         )}
       </TableTrStyled>
-      {clickedItem?.date === item.date ? null : <WhiteSpaceTrStyled />}
-      {clickedItem?.date === item.date ? (
+      {clickedItem?.dateTime === item.dateTime ? (
         <>
           <TableDetailTrStyled id="test">
             <td colSpan={5}>
@@ -119,12 +119,12 @@ const DetailTableBody = ({
               </div>
             </td>
           </TableDetailTrStyled>
-          <WhiteSpaceTrStyled />
         </>
       ) : null}
+      <WhiteSpaceTrStyled />
       <TableMobileStyled
         // itemStatus={itemStatus}
-        id={clickedItem?.date === item.date ? "selected" : ""}
+        id={clickedItem?.dateTime === item.dateTime ? "selected" : ""}
         onClick={() => {
           isAdmin && openAdminModal("statusModal");
           !itemStatus && handleItemClick(item);
