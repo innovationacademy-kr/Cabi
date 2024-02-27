@@ -2,6 +2,7 @@ package org.ftclub.cabinet.presentation.service;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,6 +26,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PresentationService {
 
+	private static final Integer START_DAY = 1;
+	// 쿼리로 받?
 	private static final Integer MAX_MONTH = 3;
 
 	private final PresentationRepository presentationRepository;
@@ -93,8 +96,8 @@ public class PresentationService {
 	/**
 	 * 과거, 예정 신청서의 데이터들을 Dto 형식으로 반환
 	 *
-	 * @param pastFormCount
-	 * @param upcomingFormCount
+	 * @param pastFormCount     가장 가까운 과거 신청서의 개수
+	 * @param upcomingFormCount 가장 가까운 미래 신청서의 개수
 	 * @return
 	 */
 	public PresentationFormResponseDto getPastAndUpcomingPresentations(int pastFormCount,
@@ -108,6 +111,25 @@ public class PresentationService {
 			.map(form ->
 				presentationMapper.toPresentationFormDataDto(form, form.getUser().getName()))
 			.collect(Collectors.toList());
+
+		return new PresentationFormResponseDto(result);
+	}
+
+	/**
+	 * 입력받은 기한 내의 신청서들을 반환합니다.
+	 *
+	 * @param yearMonth yyyy-MM 타입
+	 * @return
+	 */
+	public PresentationFormResponseDto getPresentationSchedule(YearMonth yearMonth) {
+		LocalDateTime startDate = yearMonth.atDay(START_DAY).atStartOfDay();
+		LocalDateTime endDayDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
+
+		List<PresentationFormData> result =
+			presentationRepository.findByDateTimeBetween(startDate, endDayDate).stream()
+				.map(form ->
+					presentationMapper.toPresentationFormDataDto(form, form.getUser().getName()))
+				.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
 	}

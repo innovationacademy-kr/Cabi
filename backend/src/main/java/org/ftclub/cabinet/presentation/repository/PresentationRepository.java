@@ -43,4 +43,7 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 		@Param("start") Date start,
 		@Param("end") Date end,
 		Pageable pageable);
+
+	@EntityGraph(attributePaths = "user")
+	List<Presentation> findByDateTimeBetween(LocalDateTime start, LocalDateTime end);
 }

@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.presentation.controller;
 
 
+import java.time.YearMonth;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
@@ -11,6 +12,7 @@ import org.ftclub.cabinet.dto.PresentationFormResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.presentation.service.PresentationService;
 import org.ftclub.cabinet.user.domain.UserSession;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +45,15 @@ public class PresentationController {
 	public PresentationFormResponseDto getMainData(
 		@RequestParam(value = "pastFormCount") Integer pastFormCount,
 		@RequestParam(value = "upcomingFormCount") Integer upcomingFormCount) {
-		return presentationService.getPastAndUpcomingPresentations(pastFormCount, upcomingFormCount);
+		return presentationService.getPastAndUpcomingPresentations(pastFormCount,
+			upcomingFormCount);
+	}
+
+	@GetMapping("/schedule")
+	public PresentationFormResponseDto getPresentationSchedule(
+		@RequestParam(value = "yearMonth")
+		@DateTimeFormat(pattern = "yyyy-MM")
+		YearMonth yearMonth) {
+		return presentationService.getPresentationSchedule(yearMonth);
 	}
 }
