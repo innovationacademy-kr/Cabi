@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import WedCard from "./WedCard";
 import WedCardMobile from "./WedCardMobile";
-import WedMainSummary from "./WedMainDesc";
+import WedMainDesc from "./WedMainDesc";
 
 const presentation: IPresentation[] = [
   {
@@ -20,10 +20,11 @@ const presentation: IPresentation[] = [
     image: "img2",
     subject: "h2",
     summary: "한줄요약 2",
-    detail: "상세설명 2",
+    detail:
+      "상세설명 2asdfasdfawflahwgjkahwlg;adfioawhlsg;khaw awoifhaejkrwls qawfgoiahjwga awrg;iah war;goihaw awrf;oiahwfog awgrp o;iahg agaoiwrgh     awrg;oihaw;ogrhoa a;gorihae;org alrghewlagwlrguhwe ;oawiejfhioio qoiw;ehfroiu qw pq34209u93uw h paoiwherfsjkdfbv q qpoihfej qp340qu034i q 2490qu2309[rqhio4",
     dateTime: "cal2",
     category: "DEVELOP",
-    period: "HALF",
+    period: "HOUR",
     userName: "miyu",
   },
   {
@@ -33,7 +34,7 @@ const presentation: IPresentation[] = [
     detail: "상세설명 3",
     dateTime: "cal3",
     category: "DEVELOP",
-    period: "HALF",
+    period: "TWO_HOUR",
     userName: "jeekim",
   },
 ];
@@ -68,12 +69,16 @@ const RecentPresentation = ({
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 700); // 화면 너비가 768px 미만인 경우 작은 화면으로 간주
+      setIsMobile(window.innerWidth < 700);
     };
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    setTest(presentation[select]);
+  }, [select]);
 
   return (
     <ConTainerStyled>
@@ -104,7 +109,7 @@ const RecentPresentation = ({
           presentation={presentation}
         />
       )}
-      <WedMainSummary test={test} />
+      <WedMainDesc test={test} />
     </ConTainerStyled>
   );
 };

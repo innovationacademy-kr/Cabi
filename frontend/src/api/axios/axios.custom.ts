@@ -719,6 +719,16 @@ export const axiosGetPresentationSchedule = async (
   }
 };
 
+const axiosGetPresentationURL = "/v5/presentation/";
+export const axiosGetPresentation = async () => {
+  try {
+    const response = await instance.get(axiosGetPresentationURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosPostPresentationFormURL = "/v5/presentation/form";
 export const axiosPostPresentationForm = async (
   subject: string,

@@ -4,6 +4,7 @@ import { toggleItem } from "@/components/Common/MultiToggleSwitch";
 import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
 import DropdownDateMenu from "@/components/Wednesday/Registers/DropdownDateMenu";
 import DropdownTimeMenu from "@/components/Wednesday/Registers/DropdownTimeMenu";
+import { axiosPostPresentationForm } from "@/api/axios/axios.custom";
 
 enum PresentationCategory {
   FORTYTWO = "FORTYTWO",
@@ -38,6 +39,16 @@ const RegisterPage = () => {
     setFocusedSection(null);
   };
 
+  const tryRegister = async () => {
+    // 동기 과정 이해
+    try {
+      // await axiosPostPresentationForm(); // 값 저장
+      // 값 저장 이후 수지회 mainPage 이동 => useNavigator
+    } catch (error) {
+      throw error;
+    }
+  }; // 클릭 이벤트에 연결
+
   return (
     <RegisterPageStyled>
       <RegisterTitleStyled>수요지식회 신청</RegisterTitleStyled>
@@ -53,6 +64,7 @@ const RegisterPage = () => {
             fontSize={"0.94rem"}
           />
         </SubSection>
+
         <DateTimeContainer>
           <SubSection>
             <RegisterSubContentStyled>날짜</RegisterSubContentStyled>
@@ -67,6 +79,7 @@ const RegisterPage = () => {
             </RegisterTimeInputStyled>
           </SubSection>
         </DateTimeContainer>
+
         <SubSection>
           <RegisterSubContentStyled>제목</RegisterSubContentStyled>
           <RegisterSubTitleInputStyled
@@ -77,6 +90,7 @@ const RegisterPage = () => {
             spellCheck={false}
           />
         </SubSection>
+
         <SubSection>
           <RegisterSubContentStyled>한줄 요약</RegisterSubContentStyled>
           <RegisterSubTitleInputStyled
@@ -87,6 +101,7 @@ const RegisterPage = () => {
             spellCheck={false}
           />
         </SubSection>
+
         <SubSection>
           <RegisterSubContentStyled>내용</RegisterSubContentStyled>
           <RegisterDetailInputStyled
@@ -97,6 +112,7 @@ const RegisterPage = () => {
             spellCheck={false}
           />
         </SubSection>
+
         <RegisterButtonStyled>신청하기</RegisterButtonStyled>
       </RegisterBackgroundStyled>
     </RegisterPageStyled>

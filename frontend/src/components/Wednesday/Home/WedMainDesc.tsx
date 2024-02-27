@@ -70,6 +70,7 @@ const TimerStyled = styled.div`
   height: 18px;
   font-size: 1rem;
   font-weight: 400;
+  margin-top: 10px;
   color: #fff;
 `;
 
