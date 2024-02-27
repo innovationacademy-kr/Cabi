@@ -13,13 +13,15 @@
   --black: #181818;
 
   /* red color variable */
-  --red-color: #ff4e4e;
+  --red-100: #ff4e4e;
+  --red-200: #e54646;
 
   /* orange color variable */
   --orange-color: #ef8172;
 
   /* green color variable */
-  --green-color: #47ffa7;
+  --green-100: #47ffa7;
+  --green-200: #3fe596;
 
   /* blue color variable */
   --blue-100: #f5f7ff;
@@ -38,23 +40,9 @@
   --pink-100: #f473b1;
   --pink-200: #d72766;
 
-  /* main color variable */
-  --main-color: var(--purple-500);
-  --sub-color: var(--purple-300);
-
   /* cabinet color variable */
-  --mine: var(--green-color);
-  --expired: var(--red-color);
-  --available: var(--main-color);
-  --full: var(--gray-200);
   --broken: var(--gray-600);
-  --banned: var(--gray-600);
   --session: var(--gray-200);
-  --pending: var(--main-color);
-
-  --default-main-color: var(--purple-500);
-  --default-sub-color: var(--purple-300);
-  --default-mine-color: var(--green-color);
 
   /* custom color variable */
   --custom-blue-100: #74b9ff;
@@ -92,6 +80,22 @@
   --color-background: var(--white);
   --color-line: var(--gray-400);
   --color-text-normal: var(--black);
+
+  /* main color variable */
+  --main-color: var(--purple-500);
+  --sub-color: var(--purple-300);
+
+  /* cabinet color variable */
+  --mine: var(--green-100);
+  --available: var(--main-color);
+  --pending: var(--main-color);
+  --full: var(--gray-200);
+  --expired: var(--red-100);
+  --banned: var(--gray-600);
+
+  --default-main-color: var(--purple-500);
+  --default-sub-color: var(--purple-300);
+  --default-mine-color: var(--green-100);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -99,6 +103,22 @@
     --color-background: var(--black);
     --color-line: var(--gray-500);
     --color-text-normal: var(--gray-100);
+
+    /* main color variable */
+    --main-color: var(--purple-600);
+    --sub-color: var(--purple-300);
+
+    /* cabinet color variable */
+    --mine: var(--green-200);
+    --available: var(--main-color);
+    --pending: var(--main-color);
+    --full: var(--gray-200);
+    --expired: var(--red-200);
+    --banned: var(--gray-600);
+
+    --default-main-color: var(--purple-500);
+    --default-sub-color: var(--purple-300);
+    --default-mine-color: var(--green-200);
   }
 }
 
@@ -227,7 +247,7 @@ input {
 
 .leftNavButtonActive {
   background: var(--main-color);
-  color: var(--white) !important;
+  color: var(--color-background) !important;
 }
 
 .cabiButton {

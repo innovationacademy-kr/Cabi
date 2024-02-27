@@ -25,13 +25,13 @@ export const cabinetIconSrcMap = {
 
 export const cabinetLabelColorMap = {
   [CabinetStatus.AVAILABLE]: "var(--color-background)",
-  [CabinetStatus.FULL]: "var(--black)",
+  [CabinetStatus.FULL]: "var(--color-text-normal)",
   [CabinetStatus.OVERDUE]: "var(--color-background)",
   [CabinetStatus.BROKEN]: "var(--color-background)",
   [CabinetStatus.BANNED]: "var(--color-background)",
   [CabinetStatus.IN_SESSION]: "var(--main-color)",
   [CabinetStatus.PENDING]: "var(--color-background)",
-  MINE: "var(--black)",
+  MINE: "var(--color-text-normal)",
 };
 
 export const cabinetStatusColorMap = {
