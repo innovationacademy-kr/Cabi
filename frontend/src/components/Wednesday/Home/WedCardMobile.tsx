@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import styled, { css, keyframes } from "styled-components";
+import { useRef, useState } from "react";
+import styled from "styled-components";
 import { IPresentation } from "./RecentPresentation";
 
 const WedCardMobile = ({
@@ -15,8 +15,6 @@ const WedCardMobile = ({
   const touchStartPosX = useRef(0);
   const touchStartPosY = useRef(0);
 
-  // 눌렀을때 해당 페이지로 이동
-  // 페이지가 이동하면 그에 맞는 페이지네이션 제공
   const onPageClick = (i: number) => {
     if (i !== select) {
       setSelect(i);
@@ -121,10 +119,37 @@ const ContainerStyled = styled.div`
   justify-content: center;
   align-items: center;
   overflow-x: hidden;
-
   width: 100%;
   height: 380px;
   min-height: 380px;
+`;
+
+const CardWrapperStyled = styled.div<{ select: number }>`
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 380px;
+  min-height: 370px;
+  max-width: 1300px;
+  min-width: 1000px;
+  overflow-x: hidden;
+  transform: translateX(${(props) => props.select}px);
+  transition: all 500ms ease-in-out;
+`;
+
+const WedCardStyled = styled.div`
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 30px;
+  margin: 0 10px;
+  box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
 `;
 
 const PaginationStyled = styled.div`
@@ -154,41 +179,6 @@ const CalendarStyled = styled.div`
 const IconStyled = styled.div`
   height: 15px;
   margin-right: 8px;
-`;
-
-const CardWrapperStyled = styled.div<{ select: number }>`
-  overflow-x: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 380px;
-  // width: 90%;
-  min-height: 370px;
-
-  max-width: 1300px;
-  min-width: 1000px;
-
-  overflow-x: hidden;
-
-  transform: translateX(${(props) => props.select}px);
-  transition: all 500ms ease-in-out;
-`;
-
-const WedCardStyled = styled.div`
-  width: 280px;
-  height: 280px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-
-  background-color: #fff;
-  border-radius: 30px;
-
-  margin: 0 10px;
-  box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
-  flex-shrink: 0;
 `;
 
 const ImageStyled = styled.div`

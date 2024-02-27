@@ -1,10 +1,10 @@
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 import { IPresentation } from "./RecentPresentation";
 
-const WedMainDesc = ({ test }: { test: IPresentation }) => {
+const WedMainSummary = ({ test }: { test: IPresentation }) => {
   return (
-    <WedDescStyled>
-      <WedDescHeaderStyled>
+    <WedSummaryStyled>
+      <SummaryHeaderStyled>
         <TitleStyled>24일 오후 1시</TitleStyled>
         <PlaceStyled>지하 1층</PlaceStyled>
         <TimerStyled>
@@ -13,16 +13,16 @@ const WedMainDesc = ({ test }: { test: IPresentation }) => {
           </ImageStyled>
           <span>{test.period}</span>
         </TimerStyled>
-      </WedDescHeaderStyled>
+      </SummaryHeaderStyled>
 
-      <WedDescContainerStyled>{test.detail}</WedDescContainerStyled>
-    </WedDescStyled>
+      <SummaryDetailStyled>{test.detail}</SummaryDetailStyled>
+    </WedSummaryStyled>
   );
 };
 
-export default WedMainDesc;
+export default WedMainSummary;
 
-const WedDescStyled = styled.div`
+const WedSummaryStyled = styled.div`
   @media (max-width: 465px) {
     padding: 30px 30px 30px 30px;
   }
@@ -36,7 +36,7 @@ const WedDescStyled = styled.div`
   padding: 50px 50px 50px 50px;
 `;
 
-const WedDescHeaderStyled = styled.div`
+const SummaryHeaderStyled = styled.div`
   display: flex;
   align-items: flex-end;
   color: #fff;
@@ -78,7 +78,7 @@ const ImageStyled = styled.div`
   height: 15px;
 `;
 
-const WedDescContainerStyled = styled.div`
+const SummaryDetailStyled = styled.div`
   color: #fff;
   text-shadow: 0px 3px 5px black;
   word-break: break-all;

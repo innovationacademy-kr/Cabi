@@ -1,8 +1,6 @@
-import { useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { IAnimation, IPresentation } from "./RecentPresentation";
 
-// width 1000기준으로 모바일뷰로 전환
 const WedCard = ({
   presentation,
   select,

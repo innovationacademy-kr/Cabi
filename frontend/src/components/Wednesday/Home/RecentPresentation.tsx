@@ -1,23 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 import WedCard from "./WedCard";
 import WedCardMobile from "./WedCardMobile";
-import WedMainDesc from "./WedMainDesc";
-
-// "subject": "제목";
-// "test": "한줄요약";
-// "detail": "상세설명";
-// "dateTime": "2024-01-01-13:42:43T"; // new Date().toISOString()
-// "category": "DEVELOP"; // [DEVELOP, HOBBY, JOB, ETC]
-// "period": "HALF"; // [HALF, HOUR, HOUR_HALF, TWO_HOUR]
-// "userName": "jusohn";
+import WedMainSummary from "./WedMainDesc";
 
 const presentation: IPresentation[] = [
   {
     image: "img1",
     subject: "h1",
-    test: "한줄요약 1",
+    summary: "한줄요약 1",
     detail: "상세설명 1",
     dateTime: "cal1",
     category: "DEVELOP",
@@ -27,7 +19,7 @@ const presentation: IPresentation[] = [
   {
     image: "img2",
     subject: "h2",
-    test: "한줄요약 2",
+    summary: "한줄요약 2",
     detail: "상세설명 2",
     dateTime: "cal2",
     category: "DEVELOP",
@@ -37,7 +29,7 @@ const presentation: IPresentation[] = [
   {
     image: "img3",
     subject: "h3",
-    test: "한줄요약 3",
+    summary: "한줄요약 3",
     detail: "상세설명 3",
     dateTime: "cal3",
     category: "DEVELOP",
@@ -49,7 +41,7 @@ const presentation: IPresentation[] = [
 export interface IPresentation {
   image: string; // 나중에 뺴기
   subject: string;
-  test: string;
+  summary: string;
   detail: string;
   dateTime: string;
   category: string;
@@ -63,8 +55,6 @@ export interface IAnimation {
   max_width: number;
   max_height: number;
 }
-
-// 전체 데이터 받음
 
 const RecentPresentation = ({
   presentButtonHandler,
@@ -84,17 +74,6 @@ const RecentPresentation = ({
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  // useEffect(() => {
-  //   setTest(presentation[select]);
-  // }, [select]);
-
-  // useEffect(() => {
-  //   console.log("parent : ", test);
-  //   // console.log(test.category);
-  // }, [test]);
-
-  // useEffect(() => console.log(select), [select]);
 
   return (
     <ConTainerStyled>
@@ -125,7 +104,7 @@ const RecentPresentation = ({
           presentation={presentation}
         />
       )}
-      <WedMainDesc test={test} />
+      <WedMainSummary test={test} />
     </ConTainerStyled>
   );
 };

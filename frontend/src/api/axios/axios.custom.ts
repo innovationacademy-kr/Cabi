@@ -718,3 +718,13 @@ export const axiosGetPresentationSchedule = async (
     throw error;
   }
 };
+
+const axiosGetPresentationURL = "/v5/presentation/";
+export const axiosGetPresentation = async () => {
+  try {
+    const response = await instance.get(axiosGetPresentationURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
