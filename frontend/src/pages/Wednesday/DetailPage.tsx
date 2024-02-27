@@ -6,58 +6,54 @@ import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 import { axiosGetPresentationSchedule } from "@/api/axios/axios.custom";
 
-interface IDate {
+export interface IDate {
   year: string;
   month: string;
   day: string;
 }
 
 const DetailPage = () => {
-  const [currentDate, setCurrentDate] = useState({
-    year: "",
-    month: "",
-    day: "",
-  });
-  const [todayDate, setTodayDate] = useState({
-    year: "",
-    month: "",
-    day: "",
-  });
+  const [currentDate, setCurrentDate] = useState<IDate | null>(null);
+  const [todayDate, setTodayDate] = useState<IDate | null>(null);
   const [presentationDetailInfo, setPresentationDetailInfo] = useState<
     IPresentationScheduleDetailInfo[] | null
   >(null);
 
-  // TODO : 오늘 날짜 recoil로 있으면 좋을듯
-  useEffect(() => {
-    const date = new Date();
+  const makeIDateObj = (date: Date) => {
     let dateISO = date.toISOString();
     // 1. T 앞에서 끊고
     let dateBeforeT = dateISO.substring(0, 10);
-
     // 2. -로 분리
     let dateSplited = dateBeforeT.split("-");
 
-    const todayDateObj = {
+    const todayDateObj: IDate = {
       year: dateSplited[0],
       month: dateSplited[1],
       day: dateSplited[2],
     };
 
+    return todayDateObj;
+  };
+
+  // TODO : 오늘 날짜 recoil로 있으면 좋을듯
+  useEffect(() => {
+    const todayDateObj = makeIDateObj(new Date());
+
     // year, month, day 다 같으면 갈아끼우지말기
-    setCurrentDate(todayDateObj);
     if (
       !(
-        todayDate.year === todayDateObj.year ||
-        todayDate.month === todayDateObj.month ||
-        todayDate.day === todayDateObj.day
+        todayDate?.year === todayDateObj.year ||
+        todayDate?.month === todayDateObj.month ||
+        todayDate?.day === todayDateObj.day
       )
-    ) {
+    )
       setTodayDate(todayDateObj);
-    }
+
+    setCurrentDate(todayDateObj);
   }, []);
 
   useEffect(() => {
-    getPresentationSchedule(todayDate);
+    if (todayDate) getPresentationSchedule(todayDate);
   }, [currentDate]);
 
   const getPresentationSchedule = async (requestDate: IDate) => {
@@ -76,9 +72,9 @@ const DetailPage = () => {
   };
 
   const moveMonth = (direction: string) => {
-    let requestDate: IDate = { ...currentDate };
-    let currentDateMonth = parseInt(currentDate.month);
-    let currentDateYear = parseInt(currentDate.year);
+    let requestDate: IDate = { ...currentDate! };
+    let currentDateMonth = parseInt(currentDate!.month);
+    let currentDateYear = parseInt(currentDate!.year);
 
     if (direction === "left") {
       // 현재 페이지 날짜의 월-1 axios 요청
@@ -110,7 +106,7 @@ const DetailPage = () => {
             className="cabiButton"
           />
           <div>
-            {currentDate.year}년 {currentDate.month}월
+            {currentDate?.year}년 {currentDate?.month}월
           </div>
           <MoveSectionButtonStyled
             src={LeftSectionButton}
@@ -120,7 +116,10 @@ const DetailPage = () => {
           />
         </HeaderStyled>
         <BodyStyled>
-          <DetailTable />
+          <DetailTable
+            presentationDetailInfo={presentationDetailInfo}
+            makeIDateObj={makeIDateObj}
+          />
         </BodyStyled>
       </WrapperStyled>
     </ContainerStyled>

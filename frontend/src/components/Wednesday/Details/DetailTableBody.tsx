@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { IDate } from "@/pages/Wednesday/DetailPage";
 import {
   TAdminModalState,
   WhiteSpaceTrStyled,
@@ -14,11 +15,13 @@ const DetailTableBody = ({
   openAdminModal,
   item,
   itemStatus,
+  itemDate,
 }: {
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
   item: IPresentationScheduleDetailInfo;
   itemStatus: itemType;
+  itemDate: IDate | null;
 }) => {
   const [clickedItem, setClickedItem] =
     useState<null | IPresentationScheduleDetailInfo>(null);
@@ -38,10 +41,12 @@ const DetailTableBody = ({
           isAdmin && openAdminModal("statusModal");
           !itemStatus && handleItemClick(item);
         }}
-        testt={clickedItem?.dateTime === item.dateTime}
+        open={clickedItem?.dateTime === item.dateTime}
       >
         <td className="leftEnd" id={itemStatus}>
-          <div>{item.dateTime}</div>
+          <div>
+            {itemDate?.month}월 {itemDate?.day}일
+          </div>
         </td>
         {itemStatus ? (
           <>
@@ -94,7 +99,7 @@ const DetailTableBody = ({
       </TableTrStyled>
       {clickedItem?.dateTime === item.dateTime ? (
         <>
-          <TableDetailTrStyled id="test">
+          <TableDetailTrStyled>
             <td colSpan={5}>
               <div>
                 "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데?" 장비 탓인가
@@ -148,7 +153,7 @@ export default DetailTableBody;
 
 const TableTrStyled = styled.tr<{
   itemStatus: itemType;
-  testt?: boolean;
+  open?: boolean;
 }>`
   height: 70px;
   width: 100%;
@@ -187,11 +192,11 @@ const TableTrStyled = styled.tr<{
   }
 
   & .leftEnd {
-    border-radius: ${(props) => (props.testt ? "10px 0 0 0" : "10px 0 0 10px")};
+    border-radius: ${(props) => (props.open ? "10px 0 0 0" : "10px 0 0 10px")};
   }
 
   & .rightEnd {
-    border-radius: ${(props) => (props.testt ? "0 10px 0 0" : "0 10px 10px 0")};
+    border-radius: ${(props) => (props.open ? "0 10px 0 0" : "0 10px 10px 0")};
   }
 
   &:hover {
