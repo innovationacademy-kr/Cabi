@@ -1,10 +1,17 @@
 package org.ftclub.cabinet.presentation.controller;
 
 
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.auth.domain.AuthGuard;
+import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.dto.InvalidDateResponseDto;
 import org.ftclub.cabinet.dto.PresentationFormRequestDto;
+import org.ftclub.cabinet.dto.PresentationFormResponseDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.presentation.service.PresentationService;
-import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
+import org.ftclub.cabinet.user.domain.UserSession;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +25,21 @@ public class PresentationController {
 	private final PresentationService presentationService;
 
 	@PostMapping("/form")
-	public void createPresentationForm(@RequestBody PresentationFormRequestDto dto) {
-		presentationService.createPresentationFromByInformation(dto);
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public void createPresentationForm(
+		@UserSession UserSessionDto user,
+		@Valid @RequestBody PresentationFormRequestDto dto) {
+		presentationService.createPresentationFrom(user.getUserId(), dto);
+	}
+
+	@GetMapping("/form/invalid-date")
+	public InvalidDateResponseDto getInvalidDate() {
+		return presentationService.getInvalidDate();
+	}
+
+	@GetMapping("")
+//	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public PresentationFormResponseDto getMainData() {
+		return presentationService.getThreePresentationForms();
 	}
 }
