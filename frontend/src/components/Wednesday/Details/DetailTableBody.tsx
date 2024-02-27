@@ -32,6 +32,22 @@ const DetailTableBody = ({
     else setClickedItem(item);
   };
 
+  const presentationPeriodNumber = {
+    HALF: 30,
+    HOUR: 60,
+    HOUR_HALF: 90,
+    TWO_HOUR: 120,
+  };
+
+  const presentationCategoryKorean = {
+    DEVELOP: "개발",
+    HOBBY: "취미",
+    JOB: "취업",
+    ETC: "기타",
+    TASK: "42",
+    STUDY: "학술",
+  };
+
   return (
     <>
       <TableTrStyled
@@ -89,10 +105,10 @@ const DetailTableBody = ({
               <div>{item.userName}</div>
             </td>
             <td>
-              <div>{item.category}</div>
+              <div>{presentationCategoryKorean[item.category!]}</div>
             </td>
             <td className="rightEnd">
-              <div>{item.period}분</div>
+              <div>{presentationPeriodNumber[item.period!]}분</div>
             </td>
           </>
         )}
