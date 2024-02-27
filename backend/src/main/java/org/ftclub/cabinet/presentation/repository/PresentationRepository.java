@@ -1,32 +1,46 @@
 package org.ftclub.cabinet.presentation.repository;
 
-import io.lettuce.core.dynamic.annotation.Param;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.presentation.domain.Presentation;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface PresentationRepository extends JpaRepository<Presentation, Long> {
 
 	@Query("SELECT p "
 		+ "FROM Presentation p "
-		+ "WHERE p.dateTime > :now "
+		+ "WHERE p.dateTime >= :now "
 		+ "AND p.dateTime < :end")
 	List<Presentation> findByDateTime(@Param("now") LocalDateTime now,
 		@Param("end") LocalDateTime end);
 
-	@Query("SELECT p FROM Presentation p WHERE date(p.dateTime) = :date")
+	@Query("SELECT p "
+		+ "FROM Presentation p "
+		+ "WHERE DATE(p.dateTime) = :date")
 	Optional<Presentation> findByDate(@Param("date") LocalDate date);
 
 	@EntityGraph(attributePaths = "user")
-	Optional<Presentation> findFirstByDateTimeBeforeOrderByDateTimeDesc(
-		LocalDateTime localDateTime);
+	@Query("SELECT p "
+		+ "FROM Presentation p "
+		+ "WHERE DATE(p.dateTime) < :date "
+		+ "ORDER BY p.dateTime DESC, p.id DESC")
+	List<Presentation> findLatestPastPresentation(@Param("date") Date now, Pageable pageable);
 
 	@EntityGraph(attributePaths = "user")
-	List<Presentation> findFirst2ByDateTimeAfterAndDateTimeBeforeOrderByDateTimeAsc(
-		LocalDateTime after, LocalDateTime before);
+	@Query("SELECT p "
+		+ "FROM Presentation p "
+		+ "WHERE DATE(p.dateTime) >= :start "
+		+ "AND DATE(p.dateTime) < :end "
+		+ "ORDER BY p.dateTime ASC")
+	List<Presentation> findUpcomingPresentations(
+		@Param("start") Date start,
+		@Param("end") Date end,
+		Pageable pageable);
 }

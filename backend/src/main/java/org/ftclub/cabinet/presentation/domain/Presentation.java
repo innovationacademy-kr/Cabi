@@ -22,12 +22,6 @@ import org.ftclub.cabinet.user.domain.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Presentation {
 
-	@Enumerated(value = EnumType.STRING)
-	private final PresentationStatus DEFAULT_STATUS = PresentationStatus.EXPECTED;
-
-	@Enumerated(value = EnumType.STRING)
-	private final PresentationLocation DEFAULT_LOCATION = PresentationLocation.THIRD;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
@@ -73,8 +67,8 @@ public class Presentation {
 		this.subject = subject;
 		this.detail = detail;
 		this.summary = summary;
-		this.presentationStatus = DEFAULT_STATUS;
-		this.presentationLocation = DEFAULT_LOCATION;
+		this.presentationStatus = PresentationStatus.EXPECTED;
+		this.presentationLocation = PresentationLocation.THIRD;
 	}
 
 	public static Presentation of(Category category, LocalDateTime dateTime,

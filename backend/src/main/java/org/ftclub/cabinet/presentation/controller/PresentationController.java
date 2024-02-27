@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,7 +40,9 @@ public class PresentationController {
 
 	@GetMapping("")
 //	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public PresentationFormResponseDto getMainData() {
-		return presentationService.getThreePresentationForms();
+	public PresentationFormResponseDto getMainData(
+		@RequestParam(value = "pastFormCount") Integer pastFormCount,
+		@RequestParam(value = "upcomingFormCount") Integer upcomingFormCount) {
+		return presentationService.getThreePresentationForms(pastFormCount, upcomingFormCount);
 	}
 }
