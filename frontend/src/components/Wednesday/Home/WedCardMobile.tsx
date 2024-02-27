@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
-import { IDummyList } from "./WedCard";
+import { IDummyList } from "./RecentPresentation";
 
 const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
   const [select, setSelect] = useState(0);
@@ -69,10 +69,10 @@ const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
   };
 
   return (
-    <WedCardContainer>
-      <CardContainer slideIndex={select}>
+    <ContainerStyled>
+      <CardWrapperStyled slideIndex={select}>
         {dummy.map((p, index) => (
-          <Card
+          <WedCardStyled
             onClick={() => onClick(index)}
             className={index == select ? "check" : "not-check"}
             onTouchStart={(e: React.TouchEvent) => {
@@ -86,29 +86,29 @@ const WedCardMobile = ({ dummy }: { dummy: IDummyList[] }) => {
               );
             }}
           >
-            <CardImage>{p.image}</CardImage>
-            <CardUsername>{p.username}</CardUsername>
-            <CardTitle>{p.title}</CardTitle>
-            <CardSubTitle>{p.subtitle}</CardSubTitle>
+            <ImageStyled>{p.image}</ImageStyled>
+            <NameStyled>{p.username}</NameStyled>
+            <TitleStyled>{p.title}</TitleStyled>
+            <SubTitleStyled>{p.subtitle}</SubTitleStyled>
 
-            <CalStyled>
-              <ImageStyled>
+            <CalendarStyled>
+              <IconStyled>
                 <img src="/src/assets/images/calendar.svg" alt="" />
-              </ImageStyled>
-              <CardCal>{p.cal}</CardCal>
-            </CalStyled>
-          </Card>
+              </IconStyled>
+              <span>{p.cal}</span>
+            </CalendarStyled>
+          </WedCardStyled>
         ))}
-      </CardContainer>
+      </CardWrapperStyled>
 
-      <PaginationContainer>{components}</PaginationContainer>
-    </WedCardContainer>
+      <PaginationStyled>{components}</PaginationStyled>
+    </ContainerStyled>
   );
 };
 
 export default WedCardMobile;
 
-const WedCardContainer = styled.div`
+const ContainerStyled = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -120,7 +120,7 @@ const WedCardContainer = styled.div`
   min-height: 380px;
 `;
 
-const PaginationContainer = styled.div`
+const PaginationStyled = styled.div`
   display: flex;
 `;
 
@@ -132,19 +132,24 @@ const Paginations = styled.div`
   margin: 0 5px;
 `;
 
-const CalStyled = styled.div`
+const CalendarStyled = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
   width: 100%;
   padding-right: 10px;
+
+  & > {
+    color: gray;
+  }
 `;
 
-const ImageStyled = styled.div`
+const IconStyled = styled.div`
   height: 15px;
+  margin-right: 8px;
 `;
 
-const CardContainer = styled.div`
+const CardWrapperStyled = styled.div`
   overflow-x: hidden;
   display: flex;
   justify-content: center;
@@ -162,7 +167,7 @@ const CardContainer = styled.div`
   transition: all 500ms ease-in-out;
 `;
 
-const Card = styled.div`
+const WedCardStyled = styled.div`
   width: 280px;
   height: 280px;
 
@@ -179,7 +184,7 @@ const Card = styled.div`
   flex-shrink: 0;
 `;
 
-const CardImage = styled.div`
+const ImageStyled = styled.div`
   background-color: gray;
   width: 100px;
   height: 90px;
@@ -190,22 +195,20 @@ const CardImage = styled.div`
   align-items: center;
 `;
 
-const CardUsername = styled.div`
+const NameStyled = styled.div`
   color: #9d9d9d;
   font-size: 1.2rem;
   padding-top: 10px;
   padding-bottom: 10px;
 `;
 
-const CardTitle = styled.div`
+const TitleStyled = styled.div`
   font-size: 1.5rem;
 `;
 
-const CardSubTitle = styled.div`
+const SubTitleStyled = styled.div`
   font-size: 1rem;
   margin-top: 30px;
 `;
 
-const CardCal = styled.div`
-  color: gray;
-`;
+const CardCal = styled.div``;
