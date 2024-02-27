@@ -2,13 +2,14 @@ package org.ftclub.cabinet.presentation.service;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.InvalidDateResponseDto;
+import org.ftclub.cabinet.dto.PresentationFormData;
 import org.ftclub.cabinet.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.dto.PresentationFormResponseDto;
 import org.ftclub.cabinet.mapper.PresentationMapper;
@@ -61,6 +62,12 @@ public class PresentationService {
 		return new InvalidDateResponseDto(invalidDates);
 	}
 
+	/**
+	 * 요청 날짜 기준 과거의 신청서 중 가장 최신 Date의 정보를 개수만큼 반환
+	 *
+	 * @param count
+	 * @return
+	 */
 	public List<Presentation> getLatestPastPresentation(int count) {
 		LocalDateTime now = LocalDateTime.now();
 		Date date = Date.valueOf(now.toLocalDate());
@@ -68,6 +75,12 @@ public class PresentationService {
 			.findLatestPastPresentation(date, PageRequest.of(0, count));
 	}
 
+	/**
+	 * 요청 날짜 기준 발표 예정의 신청서들을 개수만큼 반환(당일 포함)
+	 *
+	 * @param count
+	 * @return
+	 */
 	public List<Presentation> getLatestTwoUpcomingPresentations(int count) {
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime end = now.plusMonths(MAX_MONTH);
@@ -77,21 +90,25 @@ public class PresentationService {
 			.findUpcomingPresentations(nowDate, endDate, PageRequest.of(0, count));
 	}
 
-	public PresentationFormResponseDto getThreePresentationForms(int pastFormCount,
+	/**
+	 * 과거, 예정 신청서의 데이터들을 Dto 형식으로 반환
+	 *
+	 * @param pastFormCount
+	 * @param upcomingFormCount
+	 * @return
+	 */
+	public PresentationFormResponseDto getPastAndUpcomingPresentations(int pastFormCount,
 		int upcomingFormCount) {
 		List<Presentation> pastPresentations = getLatestPastPresentation(pastFormCount);
 		List<Presentation> upcomingPresentations = getLatestTwoUpcomingPresentations(
 			upcomingFormCount);
 
-		List<Presentation> presentations = new ArrayList<>();
-		presentations.addAll(pastPresentations);
-		presentations.addAll(upcomingPresentations);
+		List<PresentationFormData> result = Stream.concat(
+				pastPresentations.stream(), upcomingPresentations.stream())
+			.map(form ->
+				presentationMapper.toPresentationFormDataDto(form, form.getUser().getName()))
+			.collect(Collectors.toList());
 
-		return new PresentationFormResponseDto(presentations.stream()
-			.map(form -> {
-				String userName = form.getUser().getName();
-				return presentationMapper.toPresentationFormDataDto(form, userName);
-			}).collect(Collectors.toList())
-		);
+		return new PresentationFormResponseDto(result);
 	}
 }

@@ -43,6 +43,6 @@ public class PresentationController {
 	public PresentationFormResponseDto getMainData(
 		@RequestParam(value = "pastFormCount") Integer pastFormCount,
 		@RequestParam(value = "upcomingFormCount") Integer upcomingFormCount) {
-		return presentationService.getThreePresentationForms(pastFormCount, upcomingFormCount);
+		return presentationService.getPastAndUpcomingPresentations(pastFormCount, upcomingFormCount);
 	}
 }
