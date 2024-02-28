@@ -10,7 +10,7 @@ import {
   PresentationPeriodType,
 } from "@/types/enum/Presentation/presentation.type.enum";
 
-// TODO : 1090
+// TODO : 1150
 
 export interface IAdminCurrentModalStateInfo {
   statusModal: boolean;
@@ -58,7 +58,7 @@ const DetailTable = ({
 
   const mockRes: IPresentationScheduleDetailInfo[] = [
     {
-      dateTime: "2024-02-28T07:22:01.233Z",
+      dateTime: "2024-02-29T07:22:01.233Z",
     },
     {
       dateTime: "2024-02-01T07:22:01.233Z",
@@ -173,7 +173,6 @@ const TableStyled = styled.table`
   width: 100%;
   table-layout: fixed;
 `;
-
 
 const TableHeadStyled = styled.thead`
   height: 40px;

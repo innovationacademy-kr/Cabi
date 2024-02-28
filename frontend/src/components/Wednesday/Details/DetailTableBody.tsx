@@ -7,6 +7,7 @@ import {
   WhiteSpaceTrStyled,
   itemType,
 } from "@/components/Wednesday/Details/DetailTable";
+import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
@@ -48,6 +49,12 @@ const DetailTableBody = ({
     STUDY: "학술",
   };
 
+  const noEventPhrase = {
+    noEventPast: "수요지식회가 열리지 않았습니다",
+    noEventCurrent:
+      "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를신청해보세요",
+  };
+
   return (
     <>
       <TableTrStyled
@@ -67,32 +74,27 @@ const DetailTableBody = ({
         {itemStatus ? (
           <>
             <td id={itemStatus} className="rightEnd" colSpan={4}>
-              <NoEventDivStyled>
-                {itemStatus === itemType.NO_EVENT_PAST ? (
-                  <>
-                    <div>발표가 없었습니다</div>
-                    <SadCcabiStyled>
+              <NoEventDivStyled itemStatus={itemStatus}>
+                <NoEventPhraseStyled>
+                  <div>{noEventPhrase[itemStatus]}</div>
+                  {/* TODO : div > p로 */}
+                  <CcabiStyled itemStatus={itemStatus}>
+                    {itemStatus === itemType.NO_EVENT_CURRENT ? (
+                      <HappyCcabiImg />
+                    ) : (
                       <SadCcabiImg />
-                    </SadCcabiStyled>
-                  </>
-                ) : (
-                  <>
-                    <NoEventPhraseStyled>
-                      <div>
-                        다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를
-                        신청해보세요
-                      </div>
-                      <img src="/src/assets/images/happyCcabi.svg" />
-                    </NoEventPhraseStyled>
-                    <button
-                      onClick={() => {
-                        navigator("/wed/register");
-                      }}
-                    >
-                      신청하기
-                    </button>
-                  </>
-                )}
+                    )}
+                  </CcabiStyled>
+                </NoEventPhraseStyled>
+                {itemStatus === itemType.NO_EVENT_CURRENT ? (
+                  <button
+                    onClick={() => {
+                      navigator("/wed/register");
+                    }}
+                  >
+                    신청하기
+                  </button>
+                ) : null}
               </NoEventDivStyled>
             </td>
           </>
@@ -220,23 +222,17 @@ const TableTrStyled = styled.tr<{
   }
 `;
 
-const NoEventDivStyled = styled.div`
+const NoEventDivStyled = styled.div<{ itemStatus: itemType }>`
   display: flex;
-  justify-content: space-evenly;
-  /* justify-content: center; */
+  justify-content: ${(props) =>
+    props.itemStatus === itemType.NO_EVENT_CURRENT ? "space-evenly" : "center"};
   align-items: center;
 `;
 
 const NoEventPhraseStyled = styled.div`
   display: flex;
   align-items: center;
-  width: 50%;
-
-  & > img {
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
-  }
+  padding: 0 10px;
 
   & > div {
     font-weight: bold;
@@ -250,17 +246,24 @@ const NoEventPhraseStyled = styled.div`
   }
 `;
 
-const SadCcabiStyled = styled.div`
+const CcabiStyled = styled.div<{ itemStatus: itemType }>`
   width: 30px;
   height: 30px;
   display: flex;
+  margin-left: 10px;
 
-  & svg {
-    background-color: pink;
+  & > svg {
+    width: 30px;
+    height: 30px;
   }
 
   & svg > path {
     fill: var(--black);
+  }
+
+  @media screen and (max-width: 1220px) {
+    display: ${(props) =>
+      props.itemStatus === itemType.NO_EVENT_CURRENT ? "none" : ""};
   }
 `;
 
