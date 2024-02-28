@@ -44,6 +44,17 @@
   --broken: var(--gray-600);
   --session: var(--gray-200);
 
+  /* shadow variable */
+  --bg-black-shadow-100: rgba(0, 0, 0, 0.1);
+  --bg-black-shadow-200: rgba(0, 0, 0, 0.25);
+  --bg-black-shadow-300: rgba(0, 0, 0, 0.4);
+  --bg-black-shadow-400: rgba(0, 0, 0, 0.8);
+
+  --bg-white-shadow-100: rgba(245, 245, 245, 0.1);
+  --bg-white-shadow-200: rgba(245, 245, 245, 0.25);
+  --bg-white-shadow-300: rgba(245, 245, 245, 0.4);
+  --bg-white-shadow-400: rgba(245, 245, 245, 0.8);
+
   /* custom color variable */
   --custom-blue-100: #74b9ff;
   --custom-blue-200: #0984e3;
@@ -88,11 +99,10 @@
   --default-sub-color: var(--purple-300);
   --default-mine-color: var(--green-100);
 
-  /* shadow variable */
-  --bg-shadow-100: rgba(0, 0, 0, 0.1);
-  --bg-shadow-200: rgba(0, 0, 0, 0.25);
-  --bg-shadow-300: rgba(0, 0, 0, 0.4);
-  --bg-shadow-400: rgba(0, 0, 0, 0.8);
+  --bg-shadow-100: var(--bg-black-shadow-100);
+  --bg-shadow-200: var(--bg-black-shadow-200);
+  --bg-shadow-300: var(--bg-black-shadow-300);
+  --bg-shadow-400: var(--bg-black-shadow-400);
 
   color: var(--color-text-normal);
   background-color: var(--color-background);
@@ -120,10 +130,10 @@
     --default-sub-color: var(--purple-300);
     --default-mine-color: var(--green-200);
 
-    --bg-shadow-100: rgba(245, 245, 245, 0.1);
-    --bg-shadow-200: rgba(245, 245, 245, 0.25);
-    --bg-shadow-300: rgba(245, 245, 245, 0.4);
-    --bg-shadow-400: rgba(245, 245, 245, 0.8);
+    --bg-shadow-100: var(--bg-white-shadow-100);
+    --bg-shadow-200: var(--bg-white-shadow-200);
+    --bg-shadow-300: var(--bg-white-shadow-300);
+    --bg-shadow-400: var(--bg-white-shadow-400);
 
     color: var(--color-text-normal);
     background-color: var(--color-background);
