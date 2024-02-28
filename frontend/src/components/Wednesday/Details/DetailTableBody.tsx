@@ -99,15 +99,15 @@ const DetailTableBody = ({
         ) : (
           <>
             <td>
-              <div>{item.subject}</div>
+              <div id="MobileSubject">{item.subject}</div>
             </td>
             <td>
               <div>{item.userName}</div>
             </td>
             <td>
-              <div>{presentationCategoryKorean[item.category!]}</div>
+              <div id="MobileCategory">{presentationCategoryKorean[item.category!]}</div>
             </td>
-            <td className="rightEnd">
+            <td className="rightEnd" id="MobilePeriod">
               <div>{presentationPeriodNumber[item.period!]}분</div>
             </td>
           </>
@@ -143,24 +143,6 @@ const DetailTableBody = ({
         </>
       ) : null}
       <WhiteSpaceTrStyled />
-      <TableMobileStyled
-        // itemStatus={itemStatus}
-        id={clickedItem?.dateTime === item.dateTime ? "selected" : ""}
-        onClick={() => {
-          isAdmin && openAdminModal("statusModal");
-          !itemStatus && handleItemClick(item);
-        }}
-      >
-        {itemStatus ? (
-          <>
-            {/* <td id={itemStatus} className="rightEnd" colSpan={4}> */}
-            <div>없음</div>
-            {/* </td> */}
-          </>
-        ) : (
-          <>먼가 신청됨</>
-        )}
-      </TableMobileStyled>
     </>
   );
 };
@@ -219,8 +201,23 @@ const TableTrStyled = styled.tr<{
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
   }
+  /* @media screen and (max-width: 768px) {
+    display: none;
+  } */
+  & #MobileSubject{
   @media screen and (max-width: 768px) {
     display: none;
+  }
+  }
+  & #MobileCategory{
+    @media screen and (max-width: 768px) {
+    display: none;
+  }
+  }
+  & #MobilePeriod {
+    @media screen and (max-width: 768px) {
+    display: none;
+  }
   }
 `;
 
@@ -235,7 +232,6 @@ const NoEventPhraseStyled = styled.div`
   display: flex;
   align-items: center;
   width: 50%;
-  /* background-color: yellow; */
 
   & > img {
     width: 30px;
@@ -248,6 +244,10 @@ const NoEventPhraseStyled = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+  }
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
   }
 `;
 
@@ -280,11 +280,5 @@ const TableDetailTrStyled = styled.tr`
     line-height: 24px;
     padding: 20px 50px;
     font-size: 18px;
-  }
-`;
-
-const TableMobileStyled = styled.div`
-  @media screen and (min-width: 768px) {
-    display: none;
   }
 `;

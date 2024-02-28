@@ -141,6 +141,9 @@ const ContainerStyled = styled.div`
 const WrapperStyled = styled.div`
   width: 80%;
   margin-top: 70px;
+  @media screen and (max-width: 768px) {
+    width: 100%
+  }
 `;
 
 const HeaderStyled = styled.div`
@@ -172,10 +175,9 @@ const BodyStyled = styled.div`
   padding: 24px 20px 10px 20px;
   background-color: var(--lightgray-color);
   border-radius: 10px;
-  /* @media screen and (max-width: 700px) {
-    width: 100%;
-    background-color: red;
+  @media screen and (max-width: 768px) {
+    margin-top: 0px;
     display: flex;
-    flex-direction: column;
-    display:block;} */
+    justify-content: center;
+  }
 `;

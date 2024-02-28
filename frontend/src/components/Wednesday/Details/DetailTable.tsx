@@ -130,7 +130,7 @@ const DetailTable = ({
           })}
         </TableBodyStyled>
       </TableStyled>
-      <TableMobileStyled>
+      {/* <TableMobileStyled>
         <TableBodyMobileStyled>
           {list?.map((item, idx) => {
             let itemStatus = itemType.EVENT_AVAILABLE;
@@ -157,7 +157,7 @@ const DetailTable = ({
             );
           })}
         </TableBodyMobileStyled>
-      </TableMobileStyled>
+      </TableMobileStyled> */}
       {adminModal.statusModal && (
         <EditStatusModal closeModal={() => closeAdminModal("statusModal")} />
       )}
@@ -170,16 +170,8 @@ export default DetailTable;
 const TableStyled = styled.table`
   width: 100%;
   table-layout: fixed;
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
 `;
-const TableMobileStyled = styled.div`
-  @media screen and (min-width: 768px) {
-    display: none;
-  }
-`;
-const TableBodyMobileStyled = styled.div``;
+
 
 const TableHeadStyled = styled.thead`
   height: 40px;
@@ -189,10 +181,6 @@ const TableHeadStyled = styled.thead`
 
   & > th {
     font-size: 1rem;
-    /* @media screen and (max-width:768px) {
-    display: none;
-    background-color: red;
-  } */
   }
 
   & > #date {
@@ -216,9 +204,9 @@ const TableHeadStyled = styled.thead`
     width: 8%;
     border-radius: 0 10px 10px 0;
   }
-  /* @media screen and (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: none;
-  } */
+  }
 `;
 
 const TableBodyStyled = styled.tbody`
