@@ -158,11 +158,6 @@ export default DetailTable;
 const TableStyled = styled.table`
   width: 100%;
   table-layout: fixed;
-  /* @media screen and (max-width: 1150px) {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  } */
 `;
 
 const TableHeadStyled = styled.thead`

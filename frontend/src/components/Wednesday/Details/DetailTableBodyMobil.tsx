@@ -7,8 +7,6 @@ import {
   WhiteSpaceTrStyled,
   itemType,
 } from "@/components/Wednesday/Details/DetailTable";
-import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
-import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
 const DetailTableBodyMobile = ({
@@ -83,7 +81,6 @@ const DetailTableBodyMobile = ({
         onClick={() => {
           isAdmin && openAdminModal("statusModal");
           !itemStatus && handleItemClick(item);
-          // setHandleColSpan(5);
         }}
         open={clickedItem?.dateTime === item.dateTime}
       >
@@ -157,18 +154,24 @@ const DetailTableBodyMobile = ({
 export default DetailTableBodyMobile;
 
 const MobileTableStyled = styled.tr<{
-  //   itemStauts: itemType;
   open?: boolean;
 }>`
   height: 70px;
   width: 100%;
-  line-height: 70px;
+  /* line-height: 70px; */
+  line-height: 30px;
   text-align: center;
   font-size: 18px;
   background-color: #dce7fd;
 
   & > td {
     padding: 0 10px;
+  }
+
+  & #MobileSubject {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   & #noEventCurrent {
@@ -180,9 +183,9 @@ const MobileTableStyled = styled.tr<{
   }
 
   & > td > div {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    /* text-overflow: ellipsis;
+    overflow: hidden; */
+    /* white-space: nowrap; */
   }
 
   & button {
@@ -209,6 +212,7 @@ const MobileTableStyled = styled.tr<{
 const TableDetailTrStyled = styled.tr`
   background-color: #91b5fa;
   width: 100%;
+  line-height: 30px;
   & > td {
     border-radius: 0 0 10px 10px;
     padding: 0;
@@ -221,6 +225,9 @@ const TableDetailTrStyled = styled.tr`
     line-height: 24px;
     padding: 20px 50px;
     font-size: 18px;
+  }
+  @media screen and (min-width: 1150px) {
+    display: none;
   }
 `;
 const TopTableDetailTrStyled = styled.tr`
@@ -243,6 +250,9 @@ const TopTableDetailTrStyled = styled.tr`
   & .rightEnd {
     border-radius: 0px 10px 0px 0px;
   }
+  @media screen and (min-width: 1150px) {
+    display: none;
+  }
 `;
 
 const NoEventDivStyled = styled.div`
@@ -258,20 +268,15 @@ const NoEventPhraseStyled = styled.div`
 
   width: 50%;
 
-  & > img {
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
-  }
-
   & > div {
     font-weight: bold;
-    text-overflow: ellipsis;
+    line-height: 30px;
+    /* text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: nowrap; */
   }
 
-  @media screen and (max-width: 1150px) {
+  /* @media screen and (max-width: 1150px) {
     width: 100%;
-  }
+  } */
 `;
