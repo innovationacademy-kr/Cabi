@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.presentation.service;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -18,6 +17,7 @@ import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -54,11 +54,17 @@ public class PresentationService {
 		presentationRepository.save(presentation);
 	}
 
+	/**
+	 * 예약 불가능한 날짜들을 반환합니다.
+	 *
+	 * @return
+	 */
 	public InvalidDateResponseDto getInvalidDate() {
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime end = now.plusMonths(MAX_MONTH);
 
-		List<Presentation> presentationList = presentationRepository.findByDateTime(now, end);
+		List<Presentation> presentationList =
+			presentationRepository.findByDateTime(DateUtil.toDate(now), DateUtil.toDate(end));
 		List<LocalDateTime> invalidDates = presentationList.stream()
 			.map(Presentation::getDateTime)
 			.collect(Collectors.toList());
@@ -71,11 +77,11 @@ public class PresentationService {
 	 * @param count
 	 * @return
 	 */
-	public List<Presentation> getLatestPastPresentation(int count) {
+	public List<Presentation> getLatestPastPresentations(int count) {
 		LocalDateTime now = LocalDateTime.now();
-		Date date = Date.valueOf(now.toLocalDate());
+
 		return presentationRepository
-			.findLatestPastPresentation(date, PageRequest.of(0, count));
+			.findLatestPastPresentations(DateUtil.toDate(now), PageRequest.of(0, count));
 	}
 
 	/**
@@ -84,13 +90,12 @@ public class PresentationService {
 	 * @param count
 	 * @return
 	 */
-	public List<Presentation> getLatestTwoUpcomingPresentations(int count) {
+	public List<Presentation> getLatestUpcomingPresentations(int count) {
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime end = now.plusMonths(MAX_MONTH);
-		Date nowDate = Date.valueOf(now.toLocalDate());
-		Date endDate = Date.valueOf(end.toLocalDate());
 		return presentationRepository
-			.findUpcomingPresentations(nowDate, endDate, PageRequest.of(0, count));
+			.findUpcomingPresentations(DateUtil.toDate(now), DateUtil.toDate(end),
+				PageRequest.of(0, count));
 	}
 
 	/**
@@ -102,8 +107,8 @@ public class PresentationService {
 	 */
 	public PresentationFormResponseDto getPastAndUpcomingPresentations(int pastFormCount,
 		int upcomingFormCount) {
-		List<Presentation> pastPresentations = getLatestPastPresentation(pastFormCount);
-		List<Presentation> upcomingPresentations = getLatestTwoUpcomingPresentations(
+		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount);
+		List<Presentation> upcomingPresentations = getLatestUpcomingPresentations(
 			upcomingFormCount);
 
 		List<PresentationFormData> result = Stream.concat(
