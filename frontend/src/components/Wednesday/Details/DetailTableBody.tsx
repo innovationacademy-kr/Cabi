@@ -105,7 +105,9 @@ const DetailTableBody = ({
               <div>{item.userName}</div>
             </td>
             <td>
-              <div id="MobileCategory">{presentationCategoryKorean[item.category!]}</div>
+              <div id="MobileCategory">
+                {presentationCategoryKorean[item.category!]}
+              </div>
             </td>
             <td className="rightEnd" id="MobilePeriod">
               <div>{presentationPeriodNumber[item.period!]}분</div>
@@ -159,9 +161,6 @@ const TableTrStyled = styled.tr<{
   text-align: center;
   font-size: 18px;
   background-color: #dce7fd;
-  /* white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; */
 
   & > td {
     padding: 0 10px;
@@ -204,20 +203,20 @@ const TableTrStyled = styled.tr<{
   /* @media screen and (max-width: 768px) {
     display: none;
   } */
-  & #MobileSubject{
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
-  }
-  & #MobileCategory{
+  & #MobileSubject {
     @media screen and (max-width: 768px) {
-    display: none;
+      display: none;
+    }
   }
+  & #MobileCategory {
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
   }
   & #MobilePeriod {
     @media screen and (max-width: 768px) {
-    display: none;
-  }
+      display: none;
+    }
   }
 `;
 

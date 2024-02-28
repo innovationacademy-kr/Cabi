@@ -98,30 +98,28 @@ const DetailPage = () => {
 
   return (
     <ContainerStyled>
-      <WrapperStyled>
-        <HeaderStyled>
-          <MoveSectionButtonStyled
-            src={LeftSectionButton}
-            onClick={() => moveMonth("left")}
-            className="cabiButton"
-          />
-          <div>
-            {currentDate?.year}년 {currentDate?.month}월
-          </div>
-          <MoveSectionButtonStyled
-            src={LeftSectionButton}
-            onClick={() => moveMonth("right")}
-            arrowReversed={true}
-            className="cabiButton"
-          />
-        </HeaderStyled>
-        <BodyStyled>
-          <DetailTable
-            presentationDetailInfo={presentationDetailInfo}
-            makeIDateObj={makeIDateObj}
-          />
-        </BodyStyled>
-      </WrapperStyled>
+      <HeaderStyled>
+        <MoveSectionButtonStyled
+          src={LeftSectionButton}
+          onClick={() => moveMonth("left")}
+          className="cabiButton"
+        />
+        <div>
+          {currentDate?.year}년 {currentDate?.month}월
+        </div>
+        <MoveSectionButtonStyled
+          src={LeftSectionButton}
+          onClick={() => moveMonth("right")}
+          arrowReversed={true}
+          className="cabiButton"
+        />
+      </HeaderStyled>
+      <BodyStyled>
+        <DetailTable
+          presentationDetailInfo={presentationDetailInfo}
+          makeIDateObj={makeIDateObj}
+        />
+      </BodyStyled>
     </ContainerStyled>
   );
 };
@@ -132,23 +130,18 @@ const ContainerStyled = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: scroll;
   @media screen and (max-width: 768px) {
-    background-color: var(--lightgray-color);
-  }
-`;
-
-const WrapperStyled = styled.div`
-  width: 80%;
-  margin-top: 70px;
-  @media screen and (max-width: 768px) {
-    width: 100%
+    width: 100%;
   }
 `;
 
 const HeaderStyled = styled.div`
+  margin-top: 70px;
   text-align: center;
-  width: 100%;
+  width: 80%;
   height: 50px;
   display: flex;
   justify-content: center;
@@ -171,10 +164,12 @@ const HeaderStyled = styled.div`
 const BodyStyled = styled.div`
   margin-top: 50px;
   margin-bottom: 70px;
-  width: 100%;
+  width: 80%;
   padding: 24px 20px 10px 20px;
   background-color: var(--lightgray-color);
   border-radius: 10px;
+  display: flex;
+
   @media screen and (max-width: 768px) {
     margin-top: 0px;
     display: flex;
