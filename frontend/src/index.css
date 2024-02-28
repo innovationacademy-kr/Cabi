@@ -173,9 +173,6 @@ button {
   cursor: pointer;
   border: none;
   background-color: var(--main-color);
-  /* light */
-  background-color: var(--purple-600);
-  /* dark */
   color: var(--white);
   width: 200px;
   height: 60px;

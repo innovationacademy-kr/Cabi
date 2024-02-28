@@ -59,8 +59,8 @@ const ManualModal: React.FC<ModalProps> = ({
           </CloseButton>
           {hasImage && (
             <BasicInfo>
-              <img className="contentImg" src={contentData.imagePath} alt="" />
-              {/* <ContentImgStyled>
+              {/* <img className="contentImg" src={contentData.imagePath} alt="" /> */}
+              <ContentImgStyled contentStatus={contentStatus}>
                 {contentStatus === ContentStatus.PRIVATE && (
                   <PrivateIcon className="contentImg" />
                 )}
@@ -73,7 +73,7 @@ const ManualModal: React.FC<ModalProps> = ({
                 {contentStatus === ContentStatus.EXTENSION && (
                   <ExtensionIcon className="contentImg" />
                 )}
-              </ContentImgStyled> */}
+              </ContentImgStyled>
               {isCabinetType && (
                 <BoxInfoWrap>
                   <BoxInfo1>
@@ -188,28 +188,6 @@ const ModalContent = styled.div<{
   font-size: 2.5rem;
   font-weight: bold;
   align-items: flex-start;
-  /* svg {
-    width: 80px;
-    height: 80px;
-  } */
-  .contentImg {
-    width: 80px;
-    height: 80px;
-    /* filter: ${(props) =>
-      props.contentStatus === ContentStatus.EXTENSION
-        ? "brightness(0)"
-        : props.contentStatus === ContentStatus.PENDING
-        ? "brightness(0)"
-        : "brightness(100)"}; */
-    /* light */
-    filter: ${(props) =>
-      props.contentStatus === ContentStatus.EXTENSION
-        ? "brightness(100)"
-        : props.contentStatus === ContentStatus.PENDING
-        ? "brightness(100)"
-        : "brightness(0)"};
-    /* dark */
-  }
   @media screen and (max-width: 400px) {
     font-size: 1.5rem;
     .contentImg {
@@ -351,17 +329,24 @@ const ManualContentStyeld = styled.div<{
   }
 `;
 
-// const ContentImgStyled = styled.div`
-//   background-color: yellow;
-//   width: 80px;
-//   height: 80px;
-//   display: flex;
+const ContentImgStyled = styled.div<{
+  contentStatus: ContentStatus;
+}>`
+  width: 80px;
+  height: 80px;
+  display: flex;
 
-//   & > .contentImg {
-//     width: 80px;
-//     height: 80px;
-//     background-color: pink;
-//   }
-// `;
+  svg {
+    width: 80px;
+    height: 80px;
+
+    & > path {
+      stroke: ${(props) =>
+        props.contentStatus === ContentStatus.EXTENSION
+          ? "var(--color-text-normal)"
+          : "var(--color-background)"};
+    }
+  }
+`;
 
 export default ManualModal;

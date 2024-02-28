@@ -1,8 +1,12 @@
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/assets/data/ManualContent";
 import { ReactComponent as ClockImg } from "@/assets/images/clock.svg";
+import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
+import { ReactComponent as ExtensionIcon } from "@/assets/images/extension.svg";
 import { ReactComponent as ManualPeopleImg } from "@/assets/images/manualPeople.svg";
 import { ReactComponent as MoveBtnImg } from "@/assets/images/moveButton.svg";
+import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
+import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import ContentStatus from "@/types/enum/content.status.enum";
 
 interface MaunalContentBoxProps {
@@ -18,18 +22,24 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
       contentStatus={contentStatus}
     >
       {contentStatus === ContentStatus.EXTENSION && (
-        <ManualPeopleImg
-          className="peopleImg"
-          //  fill="var(--main-color)"
-          // light
-          fill="var(--purple-600)"
-          //  dark
-        />
+        <ManualPeopleImg className="peopleImg" fill="var(--main-color)" />
       )}
-      {contentStatus !== ContentStatus.PENDING &&
+      {/* {contentStatus !== ContentStatus.PENDING &&
         contentStatus !== ContentStatus.IN_SESSION && (
           <img className="contentImg" src={contentData.imagePath} alt="" />
-        )}
+        )} */}
+      {contentStatus === ContentStatus.PRIVATE && (
+        <PrivateIcon className="contentImg" />
+      )}
+      {contentStatus === ContentStatus.SHARE && (
+        <ShareIcon className="contentImg" />
+      )}
+      {contentStatus === ContentStatus.CLUB && (
+        <ClubIcon className="contentImg" />
+      )}
+      {contentStatus === ContentStatus.EXTENSION && (
+        <ExtensionIcon className="contentImg" />
+      )}
       <ContentTextStyled>
         {contentStatus === ContentStatus.IN_SESSION && (
           <ClockImg stroke="var(--main-color)" className="clockImg" />
@@ -64,6 +74,7 @@ const MaunalContentBoxStyled = styled.div<{
   padding: 25px;
   font-weight: bold;
   cursor: pointer;
+
   .clockImg {
     width: 35px;
     margin-right: 10px;
@@ -74,17 +85,15 @@ const MaunalContentBoxStyled = styled.div<{
   .contentImg {
     width: 80px;
     height: 80px;
-    filter: brightness(
-      ${(props) => (props.contentStatus === ContentStatus.EXTENSION ? 10 : 0)}
-    );
+
+    & > path {
+      stroke: ${(props) =>
+        props.contentStatus === ContentStatus.EXTENSION
+          ? "var(--color-text-normal)"
+          : "var(--color-background)"};
+    }
   }
-  /* filter: brightness(
-      ${(props) => (props.contentStatus === ContentStatus.EXTENSION ? 0 : 100)}
-        light
-        ${(props) =>
-    props.contentStatus === ContentStatus.EXTENSION ? 100 : 0}
-        dark
-    ); */
+
   .peopleImg {
     width: 220px;
     height: 500px;
