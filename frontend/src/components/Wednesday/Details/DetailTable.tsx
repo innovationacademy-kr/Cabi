@@ -9,6 +9,7 @@ import {
   PresentationCategoryType,
   PresentationPeriodType,
 } from "@/types/enum/Presentation/presentation.type.enum";
+import DetailTableBodyMobile from "./DetailTableBodyMobil";
 
 // TODO : 1150
 
@@ -121,46 +122,30 @@ const DetailTable = ({
             }
 
             return (
-              <DetailTableBody
-                isAdmin={isAdmin}
-                openAdminModal={openAdminModal}
-                item={item}
-                itemStatus={itemStatus}
-                itemDate={makeIDateObj(new Date(item.dateTime))}
-                key={idx}
-                hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
-              />
+              <>
+                <DetailTableBody
+                  isAdmin={isAdmin}
+                  openAdminModal={openAdminModal}
+                  item={item}
+                  itemStatus={itemStatus}
+                  itemDate={makeIDateObj(new Date(item.dateTime))}
+                  key={idx}
+                  hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
+                />
+                <DetailTableBodyMobile
+                  isAdmin={isAdmin}
+                  openAdminModal={openAdminModal}
+                  item={item}
+                  itemStatus={itemStatus}
+                  itemDate={makeIDateObj(new Date(item.dateTime))}
+                  key={idx}
+                  hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
+                />
+              </>
             );
           })}
         </TableBodyStyled>
       </TableStyled>
-      {/* <TableMobileStyled>
-        <TableBodyMobileStyled>
-          {list?.map((item, idx) => {
-            let itemStatus = itemType.EVENT_AVAILABLE;
-
-            if (!item.subject) {
-              const date = new Date();
-              let dateISO = date.toISOString();
-              const dateObj = new Date(dateISO);
-
-              const itemDateObj = new Date(item.dateTime);
-              if (dateObj > itemDateObj) itemStatus = itemType.NO_EVENT_PAST;
-              else itemStatus = itemType.NO_EVENT_CURRENT;
-            }
-            return (
-              <DetailTableBody
-                isAdmin={isAdmin}
-                openAdminModal={openAdminModal}
-                item={item}
-                itemStatus={itemStatus}
-                itemDate={itemDate}
-                key={idx}
-              />
-            );
-          })}
-        </TableBodyMobileStyled>
-      </TableMobileStyled> */}
       {adminModal.statusModal && (
         <EditStatusModal closeModal={() => closeAdminModal("statusModal")} />
       )}
@@ -173,6 +158,11 @@ export default DetailTable;
 const TableStyled = styled.table`
   width: 100%;
   table-layout: fixed;
+  /* @media screen and (max-width: 1150px) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  } */
 `;
 
 const TableHeadStyled = styled.thead`
@@ -208,8 +198,7 @@ const TableHeadStyled = styled.thead`
     width: 8%;
     border-radius: 0 10px 10px 0;
   }
-
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1150px) {
     display: none;
   }
 `;
@@ -220,6 +209,7 @@ const TableBodyStyled = styled.tbody`
   & #selected {
     background-color: #91b5fa;
   }
+
 `;
 
 export const WhiteSpaceTrStyled = styled.tr`

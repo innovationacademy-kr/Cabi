@@ -134,9 +134,9 @@ const ContainerStyled = styled.div`
   align-items: center;
   overflow-y: scroll;
 
-  @media screen and (max-width: 768px) {
-    width: 100%;
-  }
+@media screen and (max-width: 1150px) {
+  background-color: var(--lightgray-color);
+}
 `;
 
 const HeaderStyled = styled.div`
@@ -160,6 +160,7 @@ const HeaderStyled = styled.div`
     width: 2.5rem;
     height: 2.5rem;
   }
+
 `;
 
 const BodyStyled = styled.div`
@@ -171,9 +172,10 @@ const BodyStyled = styled.div`
   border-radius: 10px;
   display: flex;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1150px) {
     margin-top: 0px;
-    display: flex;
-    justify-content: center;
+    width: 100%;
   }
+
 `;
+//1150px

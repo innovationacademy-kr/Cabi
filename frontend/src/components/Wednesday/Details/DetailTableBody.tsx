@@ -190,24 +190,10 @@ const TableTrStyled = styled.tr<{
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
   }
-  /* @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1150px) {
     display: none;
-  } */
-  & #MobileSubject {
-    @media screen and (max-width: 768px) {
-      display: none;
-    }
   }
-  & #MobileCategory {
-    @media screen and (max-width: 768px) {
-      display: none;
-    }
-  }
-  & #MobilePeriod {
-    @media screen and (max-width: 768px) {
-      display: none;
-    }
-  }
+
 `;
 
 const NoEventDivStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
@@ -229,7 +215,7 @@ const NoEventPhraseStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
     white-space: nowrap;
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1150px) {
     width: 100%;
   }
 `;
@@ -277,5 +263,8 @@ const TableDetailTrStyled = styled.tr<{
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
+  }
+  @media screen and (max-width: 1150px) {
+    display: none;
   }
 `;
