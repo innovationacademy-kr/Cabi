@@ -35,13 +35,13 @@ public class Presentation {
 	@Column(name = "PRESENTATION_TIME")
 	private PresentationTime presentationTime;
 
-	@Column(name = "SUBJECT")
+	@Column(name = "SUBJECT", length = 25)
 	private String subject;
 
-	@Column(name = "SUMMARY")
+	@Column(name = "SUMMARY", length = 40)
 	private String summary;
 
-	@Column(name = "DETAIL")
+	@Column(name = "DETAIL", length = 500)
 	private String detail;
 
 	@Enumerated(value = EnumType.STRING)
