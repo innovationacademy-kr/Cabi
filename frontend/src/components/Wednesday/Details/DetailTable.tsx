@@ -92,22 +92,25 @@ const DetailTable = ({
             isAdmin && openAdminModal("statusModal");
           }}
         >
-          {tableHeadArray.map((head, idx) => {
-            let entries = Object.entries(head);
-            return (
-              <th key={idx} id={entries[0][0]}>
-                {entries[0][1]}
-              </th>
-            );
-          })}
+          <tr>
+            {tableHeadArray.map((head, idx) => {
+              let entries = Object.entries(head);
+              return (
+                <th key={idx} id={entries[0][0]}>
+                  {entries[0][1]}
+                </th>
+              );
+            })}
+          </tr>
         </TableHeadStyled>
-        <WhiteSpaceTrStyled />
+        <tbody>
+          <WhiteSpaceTrStyled />
+        </tbody>
         <TableBodyStyled>
-          {list?.map((item) => {
+          {list?.map((item, idx) => {
             let itemStatus = itemType.EVENT_AVAILABLE;
 
             if (!item.subject) {
-              // if (현재 날짜보다 과거)
               const date = new Date();
               let dateISO = date.toISOString();
               const dateObj = new Date(dateISO);
@@ -116,16 +119,16 @@ const DetailTable = ({
               if (dateObj > itemDateObj) itemStatus = itemType.NO_EVENT_PAST;
               else itemStatus = itemType.NO_EVENT_CURRENT;
             }
+
             return (
-              <>
-                <DetailTableBody
-                  isAdmin={isAdmin}
-                  openAdminModal={openAdminModal}
-                  item={item}
-                  itemStatus={itemStatus}
-                  itemDate={makeIDateObj(new Date(item.dateTime))}
-                />
-              </>
+              <DetailTableBody
+                isAdmin={isAdmin}
+                openAdminModal={openAdminModal}
+                item={item}
+                itemStatus={itemStatus}
+                itemDate={makeIDateObj(new Date(item.dateTime))}
+                key={idx}
+              />
             );
           })}
         </TableBodyStyled>
@@ -145,15 +148,14 @@ const DetailTable = ({
               else itemStatus = itemType.NO_EVENT_CURRENT;
             }
             return (
-              <>
-                <DetailTableBody
-                  isAdmin={isAdmin}
-                  openAdminModal={openAdminModal}
-                  item={item}
-                  itemStatus={itemStatus}
-                  itemDate={itemDate}
-                />
-              </>
+              <DetailTableBody
+                isAdmin={isAdmin}
+                openAdminModal={openAdminModal}
+                item={item}
+                itemStatus={itemStatus}
+                itemDate={itemDate}
+                key={idx}
+              />
             );
           })}
         </TableBodyMobileStyled>
@@ -178,29 +180,31 @@ const TableHeadStyled = styled.thead`
   line-height: 40px;
   background-color: #3f69fd;
   color: var(--white);
+  width: 100%;
 
-  & > th {
+  & > td {
     font-size: 1rem;
+    text-align: center;
   }
 
-  & > #date {
+  & #date {
     width: 13%;
     border-radius: 10px 0 0 10px;
   }
 
-  & > #subject {
+  & #subject {
     width: 56%;
   }
 
-  & > #userName {
+  & #userName {
     width: 14%;
   }
 
-  & > #category {
+  & #category {
     width: 9%;
   }
 
-  & > #period {
+  & #period {
     width: 8%;
     border-radius: 0 10px 10px 0;
   }
