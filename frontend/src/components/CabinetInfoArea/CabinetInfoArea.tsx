@@ -18,13 +18,15 @@ import SwapModal from "@/components/Modals/SwapModal/SwapModal";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import {
   additionalModalType,
-  cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
 import alertImg from "@/assets/images/cautionSign.svg";
+import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
 import { ReactComponent as ExtensionImg } from "@/assets/images/extensionTicket.svg";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
+import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
+import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 
@@ -86,12 +88,14 @@ const CabinetInfoArea: React.FC<{
           ? selectedCabinetInfo!.visibleNum
           : "-"}
       </CabinetRectangleStyled>
-      <CabinetTypeIconStyled
-        title={selectedCabinetInfo!.lentType}
-        cabinetType={selectedCabinetInfo!.lentType}
-      />
-      {/* <TextStyled fontSize="1rem" fontColor="black"> */}
-      <TextStyled fontSize="1rem" fontColor="var(--black)">
+      <CabinetTypeIconStyled title={selectedCabinetInfo!.lentType}>
+        {selectedCabinetInfo!.lentType === CabinetType.CLUB && <ClubIcon />}
+        {selectedCabinetInfo!.lentType === CabinetType.PRIVATE && (
+          <PrivateIcon />
+        )}
+        {selectedCabinetInfo!.lentType === CabinetType.SHARE && <ShareIcon />}
+      </CabinetTypeIconStyled>
+      <TextStyled fontSize="1rem" fontColor="var(--color-text-normal)">
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
@@ -177,7 +181,7 @@ const CabinetInfoArea: React.FC<{
       >
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
-      <CabinetLentDateInfoStyled textColor="var(--black)">
+      <CabinetLentDateInfoStyled textColor="var(--color-text-normal)">
         {selectedCabinetInfo!.cabinetId === 0 ? "" : expireDate}
       </CabinetLentDateInfoStyled>
       <ButtonHoverWrapper>
@@ -323,15 +327,16 @@ const CabiLogoStyled = styled.div`
   }
 `;
 
-const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
+const CabinetTypeIconStyled = styled.div`
   width: 24px;
   height: 24px;
   min-width: 24px;
   min-height: 24px;
   margin-bottom: 10px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
-  background-size: contain;
-  background-repeat: no-repeat;
+
+  & path {
+    stroke: var(--color-text-normal);
+  }
 `;
 
 const TextStyled = styled.p<{ fontSize: string; fontColor: string }>`
@@ -358,9 +363,7 @@ const CabinetRectangleStyled = styled.div<{
 
   font-size: 2rem;
   color: ${(props) =>
-    props.isMine
-      ? cabinetLabelColorMap["MINE"]
-      : cabinetLabelColorMap[props.cabinetStatus]};
+    props.isMine ? "var(--black)" : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
 
   ${({ cabinetStatus }) =>
@@ -455,6 +458,7 @@ const AvailableMessageStyled = styled.p`
   text-align: center;
   font-weight: 700;
   line-height: 26px;
+  color: var(--color-text-normal);
 `;
 
 const ButtonContainerStyled = styled.button`
@@ -467,8 +471,12 @@ const ButtonContainerStyled = styled.button`
   align-items: center;
   border-radius: 10px;
   margin-bottom: 15px;
+
   &:disabled {
+    /* opacity: 0.3; */
+    /* light */
     opacity: 0.3;
+    /* dark */
     cursor: not-allowed;
   }
   ${(props) =>

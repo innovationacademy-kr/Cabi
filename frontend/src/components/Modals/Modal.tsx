@@ -139,6 +139,7 @@ const ModalStyled = styled.div`
   align-items: center;
   text-align: center;
   padding: 40px 20px;
+  color: var(--color-text-normal);
 `;
 
 const ModalIconImgStyled = styled.div<{ iconScaleEffect: boolean | undefined }>`
@@ -184,7 +185,10 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--black);
+  background: var(--color-text-normal);
+  /* light */
+  background: var(--gray-600);
+  /* dark */
   opacity: 0.4;
   animation: fadeInBg 0.5s;
   @keyframes fadeInBg {

@@ -266,7 +266,7 @@ const CabinetLabelStyled = styled.p<{
   ${(props) =>
     props.isMine &&
     css`
-      color: var(--color-text-normal);
+      color: var(--black);
     `}
 `;
 
@@ -279,7 +279,7 @@ const CabinetNumberStyled = styled.p<{
   ${(props) =>
     props.isMine &&
     css`
-      color: var(--color-text-normal);
+      color: var(--black);
     `}
   ${({ status }) =>
     status === "IN_SESSION" &&
@@ -297,11 +297,11 @@ const CabinetIconContainerStyled = styled.div<{
   height: 16px;
   background-image: url(${(props) => cabinetIconSrcMap[props.lentType]});
   background-size: contain;
-  filter: ${(props) => cabinetFilterMap[props.status]};
+  color: ${(props) => cabinetFilterMap[props.status]};
   ${(props) =>
     props.isMine &&
     css`
-      filter: none;
+      color: var(--black);
     `};
 `;
 

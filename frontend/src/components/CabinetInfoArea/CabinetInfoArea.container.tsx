@@ -151,9 +151,9 @@ export const getDetailMessageColor = (
   )
     return calExpiredTime(new Date(lents[0].expiredAt)) < 0
       ? "var(--expired)"
-      : "var(--black)";
+      : "var(--color-text-normal)";
   // 빈 사물함
-  else return "var(--black)";
+  else return "var(--color-text-normal)";
 };
 
 const CabinetInfoAreaContainer = (): JSX.Element => {

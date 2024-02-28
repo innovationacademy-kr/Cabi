@@ -184,13 +184,13 @@ export const modalPropsMap = {
 };
 
 export const cabinetFilterMap = {
-  [CabinetStatus.AVAILABLE]: "brightness(100)",
-  [CabinetStatus.FULL]: "none",
-  [CabinetStatus.OVERDUE]: "brightness(100)",
-  [CabinetStatus.BROKEN]: "brightness(100)",
-  [CabinetStatus.BANNED]: "brightness(100)",
-  [CabinetStatus.IN_SESSION]: "none",
-  [CabinetStatus.PENDING]: "brightness(100)",
+  [CabinetStatus.AVAILABLE]: "var(--color-background)",
+  [CabinetStatus.FULL]: "var(--color-text-normal)",
+  [CabinetStatus.OVERDUE]: "var(--color-background)",
+  [CabinetStatus.BROKEN]: "var(--color-background)",
+  [CabinetStatus.BANNED]: "var(--color-background)",
+  [CabinetStatus.IN_SESSION]: "var(--color-text-normal)",
+  [CabinetStatus.PENDING]: "var(--color-background)",
 };
 
 export const cabinetStatusLabelMap = {
