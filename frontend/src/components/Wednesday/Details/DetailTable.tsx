@@ -63,13 +63,13 @@ const DetailTable = ({
     {
       dateTime: "2024-02-01T07:22:01.233Z",
     },
-    // {
-    //   dateTime: "12월 17일",
-    //   subject: "우하하하",
-    //   userName: "jeekim",
-    //   category: PresentationCategoryType.HOBBY,
-    //   period: PresentationPeriodType.HALF,
-    // },
+    {
+      dateTime: "2024-02-17T07:22:01.233Z",
+      subject: "우하하하",
+      userName: "jeekim",
+      category: PresentationCategoryType.HOBBY,
+      period: PresentationPeriodType.HALF,
+    },
     {
       dateTime: "2024-02-17T07:22:01.233Z",
       subject:
@@ -128,6 +128,7 @@ const DetailTable = ({
                 itemStatus={itemStatus}
                 itemDate={makeIDateObj(new Date(item.dateTime))}
                 key={idx}
+                hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
               />
             );
           })}
@@ -207,6 +208,7 @@ const TableHeadStyled = styled.thead`
     width: 8%;
     border-radius: 0 10px 10px 0;
   }
+
   @media screen and (max-width: 768px) {
     display: none;
   }
