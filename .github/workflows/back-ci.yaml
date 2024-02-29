@@ -27,6 +27,15 @@ jobs:
           echo "CODEDEPLOY_GROUP=cabi-dev-group" >> $GITHUB_ENV
           echo "DOCKER_IMAGE=ccabi/cabi-dev" >> $GITHUB_ENV
 
+      - name: Setup Public Environment
+        if: ${{ 'refs/heads/public' == github.ref }}
+        run: |
+          echo "ENVIRONMENT=public" >> $GITHUB_ENV
+          echo "S3_BUCKET=dev.cabi-server-deploy" >> $GITHUB_ENV
+          echo "CODEDEPLOY_APP=cabi-public" >> $GITHUB_ENV
+          echo "CODEDEPLOY_GROUP=cabi-public-group" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=ccabi/cabi-public" >> $GITHUB_ENV
+
       - name: Setup Main Environment
         if: ${{ 'refs/heads/main' == github.ref }}
         run: |
