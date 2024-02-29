@@ -15,35 +15,37 @@ import org.springframework.data.repository.query.Param;
 public interface PresentationRepository extends JpaRepository<Presentation, Long> {
 
 	@Query("SELECT p "
-		+ "FROM Presentation p "
-		+ "WHERE p.dateTime >= :now "
-		+ "AND p.dateTime < :end")
+			+ "FROM Presentation p "
+			+ "WHERE p.dateTime >= :now "
+			+ "AND p.dateTime < :end")
 	List<Presentation> findByDateTime(@Param("now") LocalDateTime now,
-		@Param("end") LocalDateTime end);
+			@Param("end") LocalDateTime end);
 
 	@Query("SELECT p "
-		+ "FROM Presentation p "
-		+ "WHERE DATE(p.dateTime) = :date")
+			+ "FROM Presentation p "
+			+ "WHERE DATE(p.dateTime) = :date")
 	Optional<Presentation> findByDate(@Param("date") LocalDate date);
 
 	@EntityGraph(attributePaths = "user")
 	@Query("SELECT p "
-		+ "FROM Presentation p "
-		+ "WHERE DATE(p.dateTime) < :date "
-		+ "ORDER BY p.dateTime DESC, p.id DESC")
+			+ "FROM Presentation p "
+			+ "WHERE DATE(p.dateTime) < :date "
+			+ "ORDER BY p.dateTime DESC, p.id DESC")
 	List<Presentation> findLatestPastPresentation(@Param("date") Date now, Pageable pageable);
 
 	@EntityGraph(attributePaths = "user")
 	@Query("SELECT p "
-		+ "FROM Presentation p "
-		+ "WHERE DATE(p.dateTime) >= :start "
-		+ "AND DATE(p.dateTime) < :end "
-		+ "ORDER BY p.dateTime ASC")
+			+ "FROM Presentation p "
+			+ "WHERE DATE(p.dateTime) >= :start "
+			+ "AND DATE(p.dateTime) < :end "
+			+ "ORDER BY p.dateTime ASC")
 	List<Presentation> findUpcomingPresentations(
-		@Param("start") Date start,
-		@Param("end") Date end,
-		Pageable pageable);
+			@Param("start") Date start,
+			@Param("end") Date end,
+			Pageable pageable);
 
 	@EntityGraph(attributePaths = "user")
 	List<Presentation> findByDateTimeBetween(LocalDateTime start, LocalDateTime end);
+
+	Optional<Presentation> findById(Long formId);
 }

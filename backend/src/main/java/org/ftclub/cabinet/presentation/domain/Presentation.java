@@ -27,6 +27,7 @@ public class Presentation {
 	@Column(name = "ID")
 	private Long id;
 
+	@Setter
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "PRESENTATION_STATUS")
 	private PresentationStatus presentationStatus;
@@ -48,9 +49,11 @@ public class Presentation {
 	@Column(name = "CATEGORY")
 	private Category category;
 
+	@Setter
 	@Column(name = "DATE_TIME")
 	private LocalDateTime dateTime;
 
+	@Setter
 	@Enumerated(value = EnumType.STRING)
 	private PresentationLocation presentationLocation;
 
@@ -60,7 +63,7 @@ public class Presentation {
 	private User user;
 
 	protected Presentation(Category category, LocalDateTime dateTime,
-		PresentationTime presentationTime, String subject, String summary, String detail) {
+			PresentationTime presentationTime, String subject, String summary, String detail) {
 		this.category = category;
 		this.dateTime = dateTime;
 		this.presentationTime = presentationTime;
@@ -72,10 +75,10 @@ public class Presentation {
 	}
 
 	public static Presentation of(Category category, LocalDateTime dateTime,
-		PresentationTime presentationTime, String subject, String summary, String detail) {
+			PresentationTime presentationTime, String subject, String summary, String detail) {
 
 		return new Presentation(category, dateTime, presentationTime, subject,
-			summary, detail);
+				summary, detail);
 	}
 
 }

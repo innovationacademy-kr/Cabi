@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +27,26 @@ public class PresentationPolicyService {
 		LocalDate reservationDate = localDateTime.toLocalDate();
 
 		if (reservationDate.isBefore(now) ||
-			reservationDate.isAfter(now.plusMonths(MAXIMUM_MONTH))) {
+				reservationDate.isAfter(now.plusMonths(MAXIMUM_MONTH))) {
 			throw ExceptionStatus.INVALID_DATE.asServiceException();
 		}
 
 		presentationRepository.findByDate(reservationDate).ifPresent(presentation -> {
 			throw ExceptionStatus.PRESENTATION_ALREADY_EXISTED.asServiceException();
 		});
+	}
+
+	public PresentationStatus verityPresentationStatus(String status) {
+
+		if (status.equals("CANCEL")) {
+			return PresentationStatus.CANCEL;
+		}
+		if (status.equals("DONE")) {
+			return PresentationStatus.DONE;
+		}
+		if (status.equals("EXPECTED")) {
+			return PresentationStatus.EXPECTED;
+		}
+		throw ExceptionStatus.INVALID_STATUS.asServiceException();
 	}
 }
