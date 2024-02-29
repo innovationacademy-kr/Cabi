@@ -25,11 +25,12 @@ const ClubMemberListItem = ({
       onClick={() => selectClubMemberOnClick(member)}
       isSelected={member.userId === targetClubUser.userId}
     >
-      <MemberListItemStyled>
+      <MemberListItemStyled isMaster={isMaster}>
         {isMaster ? (
-          <CrownImg stroke="var(--gray-100)" width={18} height={18} />
+          <CrownImg />
         ) : (
-          <UserImg width={16} height={16} viewBox="0 0 24 24" />
+          // <UserImg width={16} height={16} viewBox="0 0 24 24" />
+          <UserImg />
         )}
         <MemberNameStyled isMaster={isMaster}>
           {member.userName}
@@ -73,12 +74,22 @@ const MemberListItemContainerStyled = styled.div<{
   }
 `;
 
-const MemberListItemStyled = styled.div`
+const MemberListItemStyled = styled.div<{ isMaster: boolean }>`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  & > svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--gray-100);
+  }
+
+  & > svg > path {
+    transform: ${(props) => (props.isMaster ? "" : "scale(0.7)")};
+  }
 `;
 
 const MemberNameStyled = styled.p<{
