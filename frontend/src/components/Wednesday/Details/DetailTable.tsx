@@ -106,6 +106,7 @@ const DetailTable = ({
         </TableHeadStyled>
         <tbody>
           <WhiteSpaceTrStyled />
+          <WhiteSpaceTrStyled />
         </tbody>
         <TableBodyStyled>
           {list?.map((item, idx) => {
@@ -161,6 +162,7 @@ const TableStyled = styled.table`
 `;
 
 const TableHeadStyled = styled.thead`
+  margin-bottom: 10px;
   height: 40px;
   line-height: 40px;
   background-color: #3f69fd;
@@ -208,6 +210,6 @@ const TableBodyStyled = styled.tbody`
 `;
 
 export const WhiteSpaceTrStyled = styled.tr`
-  height: 24px;
+  height: 14px;
   width: 100%;
 `;

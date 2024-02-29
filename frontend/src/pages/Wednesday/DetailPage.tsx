@@ -165,7 +165,7 @@ const HeaderStyled = styled.div`
 
 const BodyStyled = styled.div`
   margin-top: 50px;
-  margin-bottom: 70px;
+  margin-bottom: 50px;
   width: 80%;
   padding: 24px 20px 10px 20px;
   background-color: var(--lightgray-color);

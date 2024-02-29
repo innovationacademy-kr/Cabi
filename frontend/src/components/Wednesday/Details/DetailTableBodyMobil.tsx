@@ -57,22 +57,20 @@ const DetailTableBodyMobile = ({
   return (
     <>
       {clickedItem?.dateTime === item.dateTime ? (
-        <TopTableDetailTrStyled onClick={() => {
-          !itemStatus && handleItemClick(item);
-        }}>
-          <td className="leftEnd" colSpan={2} id={itemStatus}>
-            <div>
-              {itemDate?.month}월 {itemDate?.day}일
+        <TopTableDetailTrStyled
+          onClick={() => {
+            !itemStatus && handleItemClick(item);
+          }}
+        >
+          <td className="leftEnd" colSpan={5} id={itemStatus}>
+            <div className="TopSubInfo">
+              <div>
+                {itemDate?.month}월 {itemDate?.day}일
+              </div>
+              <div>{item.userName}</div>
+              <div>{presentationCategoryKorean[item.category!]}</div>
+              <div>{presentationPeriodNumber[item.period!]}분</div>
             </div>
-          </td>
-          <td >
-            <div>{item.userName}</div>
-          </td>
-          <td>
-            <div>{presentationCategoryKorean[item.category!]}</div>
-          </td>
-          <td className="rightEnd">
-            <div>{presentationPeriodNumber[item.period!]}분</div>
           </td>
         </TopTableDetailTrStyled>
       ) : null}
@@ -131,9 +129,11 @@ const DetailTableBodyMobile = ({
       </MobileTableStyled>
       {clickedItem?.dateTime === item.dateTime ? (
         <>
-          <TableDetailTrStyled onClick={() => {
-          !itemStatus && handleItemClick(item);
-        }}>
+          <TableDetailTrStyled
+            onClick={() => {
+              !itemStatus && handleItemClick(item);
+            }}
+          >
             <td colSpan={5}>
               <div>
                 "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데?" 장비 탓인가
@@ -159,6 +159,7 @@ const MobileTableStyled = styled.tr<{
   height: 70px;
   width: 100%;
   /* line-height: 70px; */
+
   line-height: 30px;
   text-align: center;
   font-size: 18px;
@@ -169,13 +170,15 @@ const MobileTableStyled = styled.tr<{
   }
 
   & #MobileSubject {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   & #noEventCurrent {
     background-color: white;
+    
   }
 
   & #noEventPast {
@@ -183,13 +186,13 @@ const MobileTableStyled = styled.tr<{
   }
 
   & > td > div {
-    /* text-overflow: ellipsis;
-    overflow: hidden; */
+    text-overflow: ellipsis;
+    overflow: hidden;
     /* white-space: nowrap; */
   }
 
   & button {
-    width: 120px;
+    width: 100px;
     height: 36px;
     background-color: #3f69fd;
     font-weight: bold;
@@ -234,17 +237,24 @@ const TopTableDetailTrStyled = styled.tr`
   background-color: #91b5fa;
   width: 100%;
 
+  & .TopSubInfo {
+    padding: 20px 30px 0 20px;
+    display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  }
   & > td {
     padding: 0;
   }
   & > td > div {
     margin-top: 0;
     line-height: 24px;
-    padding: 20px 50px;
+    /* padding: 20px 50px; */
     font-size: 18px;
   }
   & .leftEnd {
-    border-radius: 10px 0px 0px 0px;
+    border-radius: 10px 10px 0px 0px;
   }
 
   & .rightEnd {
@@ -256,6 +266,7 @@ const TopTableDetailTrStyled = styled.tr`
 `;
 
 const NoEventDivStyled = styled.div`
+  height: 70px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -263,9 +274,7 @@ const NoEventDivStyled = styled.div`
 
 const NoEventPhraseStyled = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-
+  justify-content: end;
   width: 50%;
 
   & > div {
@@ -276,7 +285,5 @@ const NoEventPhraseStyled = styled.div`
     white-space: nowrap; */
   }
 
-  /* @media screen and (max-width: 1150px) {
-    width: 100%;
-  } */
+
 `;

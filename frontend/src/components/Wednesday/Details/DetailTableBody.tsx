@@ -100,7 +100,7 @@ const DetailTableBody = ({
         ) : (
           <>
             <td>
-              <div id="MobileSubject">{item.subject}</div>
+              <div>{item.subject}</div>
             </td>
             <td>
               <div>{item.userName}</div>
