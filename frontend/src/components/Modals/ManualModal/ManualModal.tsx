@@ -336,7 +336,7 @@ const ContentImgStyled = styled.div<{
   height: 80px;
   display: flex;
 
-  svg {
+  & > svg {
     width: 80px;
     height: 80px;
 
@@ -345,6 +345,10 @@ const ContentImgStyled = styled.div<{
         props.contentStatus === ContentStatus.EXTENSION
           ? "var(--color-text-normal)"
           : "var(--color-background)"};
+      transform: ${(props) =>
+        props.contentStatus === ContentStatus.EXTENSION
+          ? "scale(1.4)"
+          : "scale(3.3)"};
     }
   }
 `;

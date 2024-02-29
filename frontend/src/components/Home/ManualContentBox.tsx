@@ -91,6 +91,10 @@ const MaunalContentBoxStyled = styled.div<{
         props.contentStatus === ContentStatus.EXTENSION
           ? "var(--color-text-normal)"
           : "var(--color-background)"};
+      transform: ${(props) =>
+        props.contentStatus === ContentStatus.EXTENSION
+          ? "scale(1.4)"
+          : "scale(3.3)"};
     }
   }
 
