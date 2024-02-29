@@ -133,6 +133,9 @@ const WrapperStyled = styled.div<{ isSelected: boolean }>`
   border-radius: 10px;
   padding: 25px;
   background-color: var(--gray-100);
+  /* light */
+  background-color: var(--gray-700);
+  /* dark */
   display: flex;
   align-items: center;
   transition: transform 0.2s, opacity 0.2s;

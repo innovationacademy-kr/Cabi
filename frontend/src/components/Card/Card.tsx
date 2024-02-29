@@ -65,6 +65,9 @@ export const CardStyled = styled.div<{
   width: ${(props) => props.width};
   border-radius: 10px;
   background-color: var(--gray-100);
+  /* light */
+  background-color: var(--gray-700);
+  /* dark */
   display: flex;
   flex-direction: column;
   align-items: center;

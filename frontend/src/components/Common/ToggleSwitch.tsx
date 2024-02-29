@@ -56,8 +56,12 @@ const ToggleSwitchStyled = styled.label<{
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   display: inline-block;
   position: relative;
+  /* background: ${(props) =>
+    props.checked ? "var(--main-color)" : "var(--gray-100)"}; */
+  /* light */
   background: ${(props) =>
-    props.checked ? "var(--main-color)" : "var(--gray-100)"};
+    props.checked ? "var(--main-color)" : "var(--gray-700)"};
+  /* dark */
   width: 56px;
   height: 28px;
   border-radius: 50px;

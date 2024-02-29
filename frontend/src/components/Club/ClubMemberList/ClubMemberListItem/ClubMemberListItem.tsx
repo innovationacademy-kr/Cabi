@@ -26,12 +26,7 @@ const ClubMemberListItem = ({
       isSelected={member.userId === targetClubUser.userId}
     >
       <MemberListItemStyled isMaster={isMaster}>
-        {isMaster ? (
-          <CrownImg />
-        ) : (
-          // <UserImg width={16} height={16} viewBox="0 0 24 24" />
-          <UserImg />
-        )}
+        {isMaster ? <CrownImg /> : <UserImg />}
         <MemberNameStyled isMaster={isMaster}>
           {member.userName}
         </MemberNameStyled>
@@ -46,8 +41,12 @@ const MemberListItemContainerStyled = styled.div<{
 }>`
   width: 80px;
   height: 80px;
+  /* background-color: ${(props) =>
+    props.bgColor ? props.bgColor : "var(--gray-100)"}; */
+  /* light */
   background-color: ${(props) =>
-    props.bgColor ? props.bgColor : "var(--gray-100)"};
+    props.bgColor ? props.bgColor : "var(--gray-700)"};
+  /* dark*/
   border-radius: 1rem;
   margin: 7px;
   padding: 10px;
@@ -84,10 +83,11 @@ const MemberListItemStyled = styled.div<{ isMaster: boolean }>`
   & > svg {
     width: 18px;
     height: 18px;
-    stroke: var(--gray-100);
   }
 
   & > svg > path {
+    stroke: ${(props) =>
+      props.isMaster ? "var(--color-background)" : "var(--color-text-normal)"};
     transform: ${(props) => (props.isMaster ? "" : "scale(0.7)")};
   }
 `;
