@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.presentation.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -21,10 +22,8 @@ import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 
 @Slf4j
 @Service
@@ -50,7 +49,8 @@ public class PresentationService {
 	public void createPresentationFrom(Long userId, PresentationFormRequestDto dto) {
 		presentationPolicyService.verifyReservationDate(dto.getDateTime());
 
-		Presentation presentation = Presentation.of(dto.getCategory(), dto.getDateTime(),
+		Presentation presentation =
+			Presentation.of(dto.getCategory(), dto.getDateTime(),
 				dto.getPresentationTime(), dto.getSubject(), dto.getSummary(), dto.getDetail());
 		User user = userQueryService.getUser(userId);
 
@@ -65,14 +65,15 @@ public class PresentationService {
 	 * @return
 	 */
 	public InvalidDateResponseDto getInvalidDate() {
-		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime end = now.plusMonths(MAX_MONTH);
+		LocalDate now = LocalDate.now();
+		LocalDateTime start = now.atStartOfDay();
+		LocalDateTime end = start.plusMonths(MAX_MONTH);
 
 		List<Presentation> presentationList =
-				presentationRepository.findByDateTime(DateUtil.toDate(now), DateUtil.toDate(end));
+			presentationRepository.findByDateTime(start, end);
 		List<LocalDateTime> invalidDates = presentationList.stream()
-				.map(Presentation::getDateTime)
-				.collect(Collectors.toList());
+			.map(Presentation::getDateTime)
+			.collect(Collectors.toList());
 		return new InvalidDateResponseDto(invalidDates);
 	}
 
@@ -83,10 +84,11 @@ public class PresentationService {
 	 * @return
 	 */
 	public List<Presentation> getLatestPastPresentations(int count) {
-		LocalDateTime now = LocalDateTime.now();
+		LocalDate now = LocalDate.now();
+		LocalDateTime start = now.atStartOfDay();
 
 		return presentationRepository
-				.findLatestPastPresentations(DateUtil.toDate(now), PageRequest.of(0, count));
+			.findLatestPastPresentations(start, PageRequest.of(0, count));
 	}
 
 	/**
@@ -96,11 +98,12 @@ public class PresentationService {
 	 * @return
 	 */
 	public List<Presentation> getLatestUpcomingPresentations(int count) {
-		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime end = now.plusMonths(MAX_MONTH);
+		LocalDate now = LocalDate.now();
+
+		LocalDateTime start = now.atStartOfDay();
+		LocalDateTime end = start.plusMonths(MAX_MONTH);
 		return presentationRepository
-				.findUpcomingPresentations(DateUtil.toDate(now), DateUtil.toDate(end),
-						PageRequest.of(0, count));
+			.findUpcomingPresentations(start, end, PageRequest.of(0, count));
 	}
 
 	/**
@@ -111,17 +114,16 @@ public class PresentationService {
 	 * @return
 	 */
 	public PresentationFormResponseDto getPastAndUpcomingPresentations(int pastFormCount,
-			int upcomingFormCount) {
+		int upcomingFormCount) {
 		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount);
 		List<Presentation> upcomingPresentations = getLatestUpcomingPresentations(
-				upcomingFormCount);
+			upcomingFormCount);
 
 		List<PresentationFormData> result = Stream.concat(
-						pastPresentations.stream(), upcomingPresentations.stream())
-				.map(form ->
-						presentationMapper.toPresentationFormDataDto(form,
-								form.getUser().getName()))
-				.collect(Collectors.toList());
+				pastPresentations.stream(), upcomingPresentations.stream())
+			.map(form ->
+				presentationMapper.toPresentationFormDataDto(form, form.getUser().getName()))
+			.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
 	}
@@ -137,11 +139,10 @@ public class PresentationService {
 		LocalDateTime endDayDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
 
 		List<PresentationFormData> result =
-				presentationRepository.findByDateTimeBetween(startDate, endDayDate).stream()
-						.map(form ->
-								presentationMapper.toPresentationFormDataDto(form,
-										form.getUser().getName()))
-						.collect(Collectors.toList());
+			presentationRepository.findByDateTimeBetween(startDate, endDayDate).stream()
+				.map(form ->
+					presentationMapper.toPresentationFormDataDto(form, form.getUser().getName()))
+				.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
 	}
