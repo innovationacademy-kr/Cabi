@@ -16,6 +16,7 @@ import org.ftclub.cabinet.dto.PresentationUpdateDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
+import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
@@ -23,6 +24,7 @@ import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
 
 @Slf4j
 @Service
@@ -49,7 +51,7 @@ public class PresentationService {
 		presentationPolicyService.verifyReservationDate(dto.getDateTime());
 
 		Presentation presentation = Presentation.of(dto.getCategory(), dto.getDateTime(),
-			dto.getPresentationTime(), dto.getSubject(), dto.getSummary(), dto.getDetail());
+				dto.getPresentationTime(), dto.getSubject(), dto.getSummary(), dto.getDetail());
 		User user = userQueryService.getUser(userId);
 
 		presentation.setUser(user);
@@ -67,10 +69,10 @@ public class PresentationService {
 		LocalDateTime end = now.plusMonths(MAX_MONTH);
 
 		List<Presentation> presentationList =
-			presentationRepository.findByDateTime(DateUtil.toDate(now), DateUtil.toDate(end));
+				presentationRepository.findByDateTime(DateUtil.toDate(now), DateUtil.toDate(end));
 		List<LocalDateTime> invalidDates = presentationList.stream()
-			.map(Presentation::getDateTime)
-			.collect(Collectors.toList());
+				.map(Presentation::getDateTime)
+				.collect(Collectors.toList());
 		return new InvalidDateResponseDto(invalidDates);
 	}
 
@@ -84,7 +86,7 @@ public class PresentationService {
 		LocalDateTime now = LocalDateTime.now();
 
 		return presentationRepository
-			.findLatestPastPresentations(DateUtil.toDate(now), PageRequest.of(0, count));
+				.findLatestPastPresentations(DateUtil.toDate(now), PageRequest.of(0, count));
 	}
 
 	/**
@@ -97,8 +99,8 @@ public class PresentationService {
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime end = now.plusMonths(MAX_MONTH);
 		return presentationRepository
-			.findUpcomingPresentations(DateUtil.toDate(now), DateUtil.toDate(end),
-				PageRequest.of(0, count));
+				.findUpcomingPresentations(DateUtil.toDate(now), DateUtil.toDate(end),
+						PageRequest.of(0, count));
 	}
 
 	/**
@@ -109,16 +111,17 @@ public class PresentationService {
 	 * @return
 	 */
 	public PresentationFormResponseDto getPastAndUpcomingPresentations(int pastFormCount,
-		int upcomingFormCount) {
+			int upcomingFormCount) {
 		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount);
 		List<Presentation> upcomingPresentations = getLatestUpcomingPresentations(
-			upcomingFormCount);
+				upcomingFormCount);
 
 		List<PresentationFormData> result = Stream.concat(
-				pastPresentations.stream(), upcomingPresentations.stream())
-			.map(form ->
-				presentationMapper.toPresentationFormDataDto(form, form.getUser().getName()))
-			.collect(Collectors.toList());
+						pastPresentations.stream(), upcomingPresentations.stream())
+				.map(form ->
+						presentationMapper.toPresentationFormDataDto(form,
+								form.getUser().getName()))
+				.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
 	}
@@ -134,10 +137,11 @@ public class PresentationService {
 		LocalDateTime endDayDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
 
 		List<PresentationFormData> result =
-			presentationRepository.findByDateTimeBetween(startDate, endDayDate).stream()
-				.map(form ->
-					presentationMapper.toPresentationFormDataDto(form, form.getUser().getName()))
-				.collect(Collectors.toList());
+				presentationRepository.findByDateTimeBetween(startDate, endDayDate).stream()
+						.map(form ->
+								presentationMapper.toPresentationFormDataDto(form,
+										form.getUser().getName()))
+						.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
 	}
@@ -160,13 +164,15 @@ public class PresentationService {
 		presentationPolicyService.verifyReservationDate(dto.getDateTime());
 		PresentationStatus newStatus = presentationPolicyService.verityPresentationStatus(
 				dto.getStatus());
+		PresentationLocation newLocation = presentationPolicyService.verityPresentationLocation(
+				dto.getLocation());
 		Presentation presentationToUpdate =
 				presentationRepository.findById(formId)
 						.orElseThrow(() -> ExceptionStatus.INVALID_FORM_ID.asServiceException());
 
 		presentationToUpdate.setPresentationStatus(newStatus);
 		presentationToUpdate.setDateTime(dto.getDateTime());
-//		presentationToUpdate.setPresentationLocation(dto.getLocation);
+		presentationToUpdate.setPresentationLocation(newLocation);
 
 		presentationRepository.save(presentationToUpdate);
 	}

@@ -15,11 +15,13 @@ import org.ftclub.cabinet.presentation.service.PresentationService;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequestMapping("/v5/presentation")
@@ -60,7 +62,7 @@ public class PresentationController {
 
 	@PostMapping("/{formId}/update")
 	public void updatePresentationByFormId(
-			@RequestParam(value = "formId") Long formId,
+			@PathVariable Long formId,
 			@RequestBody PresentationUpdateDto dto) {
 		presentationService.updatePresentationByFormId(formId, dto);
 	}

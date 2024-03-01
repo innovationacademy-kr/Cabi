@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.springframework.stereotype.Service;
@@ -35,9 +36,9 @@ public class PresentationPolicyService {
 		}
 
 		presentationRepository.findByDate(startOfDay, endOfDay)
-			.ifPresent(presentation -> {
-				throw ExceptionStatus.PRESENTATION_ALREADY_EXISTED.asServiceException();
-			});
+				.ifPresent(presentation -> {
+					throw ExceptionStatus.PRESENTATION_ALREADY_EXISTED.asServiceException();
+				});
 	}
 
 	public PresentationStatus verityPresentationStatus(String status) {
@@ -52,5 +53,19 @@ public class PresentationPolicyService {
 			return PresentationStatus.EXPECTED;
 		}
 		throw ExceptionStatus.INVALID_STATUS.asServiceException();
+	}
+
+	public PresentationLocation verityPresentationLocation(String status) {
+
+		if (status.equals("BASEMENT")) {
+			return PresentationLocation.BASEMENT;
+		}
+		if (status.equals("FIRST")) {
+			return PresentationLocation.FIRST;
+		}
+		if (status.equals("THIRD")) {
+			return PresentationLocation.THIRD;
+		}
+		throw ExceptionStatus.INVALID_LOCATION.asServiceException();
 	}
 }
