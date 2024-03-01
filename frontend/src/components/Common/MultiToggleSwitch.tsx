@@ -73,7 +73,7 @@ const WrapperStyled = styled.div`
     width: fit-content;
     min-width: 50px;
     border-radius: 10px;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     height: 30px;
     font-weight: 500;
     background-color: transparent;
