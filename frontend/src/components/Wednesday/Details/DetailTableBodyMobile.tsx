@@ -68,7 +68,7 @@ const DetailTableBodyMobile = ({
               </div>
               <div>{item.userName}</div>
               <div>{presentationCategoryKorean[item.category!]}</div>
-              <div>{presentationPeriodNumber[item.period!]}분</div>
+              <div>{presentationPeriodNumber[item.presentationTime!]}분</div>
             </div>
           </td>
         </TopTableDetailTrStyled>

@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import chevronIcon from "@/assets/images/dropdownChevron.svg";
 
-const DropdownDateMenu = () => {
+const DropdownDateMenu = ({
+  onClick,
+}: {
+  onClick: (selectedDate: string) => void;
+}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
-  const hasSelectedOption = selectedOption !== "";
+  const [isIconRotated, setIsIconRotated] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -16,6 +21,7 @@ const DropdownDateMenu = () => {
       ) {
         setIsVisible(false);
         setIsFocused(false);
+        setIsIconRotated(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -34,24 +40,34 @@ const DropdownDateMenu = () => {
     NEXT_MONTH_THIRD = "3/20",
     NEXT_MONTH_FOURTH = "3/21",
   }
+
   const handleOptionSelect = (option: PresentationDate) => {
     setSelectedOption(option);
     setIsVisible(false);
     setIsFocused(false);
+    setIsIconRotated(false);
+    onClick(option);
   };
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
     setIsFocused(!isVisible);
+    setIsIconRotated(!isIconRotated);
   };
+
   return (
     <DropdownContainer ref={dropdownRef}>
       <RegisterTimeInputStyled
         onClick={toggleVisibility}
         isFocused={isFocused}
-        hasSelectedOption={hasSelectedOption}
+        hasSelectedOption={selectedOption !== ""}
       >
-        {selectedOption || "날짜를 선택해주세요"}
+        {selectedOption ? selectedOption : "날짜를 선택해주세요"}
+        <DropdownIcon
+          src={chevronIcon}
+          alt="Dropdown Icon"
+          rotated={isIconRotated}
+        />
       </RegisterTimeInputStyled>
       {isVisible && (
         <DropdownOptions>
@@ -77,6 +93,7 @@ const DropdownOptions = styled.ul`
   left: 0;
   width: 310px;
   height: 160px;
+  z-index: 1;
   border: 1px solid var(--white);
   border-radius: 10px;
   text-align: left;
@@ -91,13 +108,13 @@ const DropdownOptions = styled.ul`
 `;
 
 const DropdownOption = styled.li`
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: var(--gray-color);
   padding: 10px;
   cursor: pointer;
   &:hover {
     background-color: #f0f0f0;
-    color: var(--main-color);
+    color: #3f69fd;
   }
 `;
 
@@ -106,11 +123,12 @@ const RegisterTimeInputStyled = styled.div<{
   hasSelectedOption: boolean;
 }>`
   height: 46px;
-  width: 310px;
+  justify-content: space-between;
+  padding-right: 10px;
+  width: 100%;
   border-radius: 10px;
   background-color: var(--white);
-  border: 2px solid
-    ${(props) => (props.isFocused ? "var(--main-color)" : "var(--white)")};
+  border: 2px solid ${(props) => (props.isFocused ? "#91B5FA" : "var(--white)")};
   color: ${(props) =>
     props.hasSelectedOption ? "var(--black)" : "var(--gray-color)"};
   resize: none;
@@ -118,8 +136,18 @@ const RegisterTimeInputStyled = styled.div<{
   cursor: pointer;
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   padding-left: 10px;
+  color: ${(props) =>
+    props.isFocused || !props.hasSelectedOption
+      ? "var(--gray-color)"
+      : "var(--black)"};
+`;
+
+const DropdownIcon = styled.img<{ rotated: boolean }>`
+  width: 14px;
+  height: 8px;
+  transform: ${(props) => (props.rotated ? "rotate(180deg)" : "rotate(0deg)")};
 `;
 
 export default DropdownDateMenu;

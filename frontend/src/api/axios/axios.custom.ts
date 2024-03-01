@@ -736,7 +736,7 @@ export const axiosPostPresentationForm = async (
   subject: string,
   summary: string,
   detail: string,
-  dateTime: string,
+  dateTime: Date,
   category: string,
   presentationTime: string
 ): Promise<any> => {
@@ -745,7 +745,7 @@ export const axiosPostPresentationForm = async (
       subject,
       summary,
       detail,
-      dateTime,
+      dateTime: dateTime.toISOString(),
       category,
       presentationTime,
     });

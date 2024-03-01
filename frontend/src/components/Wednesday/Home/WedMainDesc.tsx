@@ -11,7 +11,7 @@ const WedMainSummary = ({ test }: { test: IPresentation }) => {
           <ImageStyled>
             <img src="/src/assets/images/timer.svg" alt="" />
           </ImageStyled>
-          <span>{test.period}</span>
+          <span>{test.presentationTime}</span>
         </TimerStyled>
       </SummaryHeaderStyled>
 
