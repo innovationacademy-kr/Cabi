@@ -25,13 +25,17 @@ public class PresentationPolicyService {
 		LocalDate now = LocalDate.now();
 		LocalDate reservationDate = localDateTime.toLocalDate();
 
+		LocalDateTime startOfDay = reservationDate.atStartOfDay();
+		LocalDateTime endOfDay = startOfDay.plusDays(1);
+
 		if (reservationDate.isBefore(now) ||
 			reservationDate.isAfter(now.plusMonths(MAXIMUM_MONTH))) {
 			throw ExceptionStatus.INVALID_DATE.asServiceException();
 		}
 
-		presentationRepository.findByDate(reservationDate).ifPresent(presentation -> {
-			throw ExceptionStatus.PRESENTATION_ALREADY_EXISTED.asServiceException();
-		});
+		presentationRepository.findByDate(startOfDay, endOfDay)
+			.ifPresent(presentation -> {
+				throw ExceptionStatus.PRESENTATION_ALREADY_EXISTED.asServiceException();
+			});
 	}
 }
