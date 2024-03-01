@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.presentation.repository;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.presentation.domain.Presentation;
@@ -15,10 +14,10 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 
 	@Query("SELECT p "
 		+ "FROM Presentation p "
-		+ "WHERE DATE(p.dateTime) >= :now "
-		+ "AND DATE(p.dateTime) < :end")
-	List<Presentation> findByDateTime(@Param("now") Date now,
-		@Param("end") Date end);
+		+ "WHERE p.dateTime >= :now "
+		+ "AND p.dateTime < :end")
+	List<Presentation> findByDateTime(@Param("now") LocalDateTime now,
+		@Param("end") LocalDateTime end);
 
 	@Query("SELECT p "
 		+ "FROM Presentation p "
@@ -29,19 +28,20 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 	@EntityGraph(attributePaths = "user")
 	@Query("SELECT p "
 		+ "FROM Presentation p "
-		+ "WHERE DATE(p.dateTime) < :date "
+		+ "WHERE p.dateTime < :date "
 		+ "ORDER BY p.dateTime DESC, p.id DESC")
-	List<Presentation> findLatestPastPresentations(@Param("date") Date now, Pageable pageable);
+	List<Presentation> findLatestPastPresentations(@Param("date") LocalDateTime startOfDate,
+		Pageable pageable);
 
 	@EntityGraph(attributePaths = "user")
 	@Query("SELECT p "
 		+ "FROM Presentation p "
-		+ "WHERE DATE(p.dateTime) >= :start "
-		+ "AND DATE(p.dateTime) < :end "
+		+ "WHERE p.dateTime >= :start "
+		+ "AND p.dateTime < :end "
 		+ "ORDER BY p.dateTime ASC")
 	List<Presentation> findUpcomingPresentations(
-		@Param("start") Date start,
-		@Param("end") Date end,
+		@Param("start") LocalDateTime start,
+		@Param("end") LocalDateTime end,
 		Pageable pageable);
 
 	@EntityGraph(attributePaths = "user")

@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.presentation.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -17,7 +18,6 @@ import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -45,8 +45,9 @@ public class PresentationService {
 	public void createPresentationFrom(Long userId, PresentationFormRequestDto dto) {
 		presentationPolicyService.verifyReservationDate(dto.getDateTime());
 
-		Presentation presentation = Presentation.of(dto.getCategory(), dto.getDateTime(),
-			dto.getPresentationTime(), dto.getSubject(), dto.getSummary(), dto.getDetail());
+		Presentation presentation =
+			Presentation.of(dto.getCategory(), dto.getDateTime(),
+				dto.getPresentationTime(), dto.getSubject(), dto.getSummary(), dto.getDetail());
 		User user = userQueryService.getUser(userId);
 
 		presentation.setUser(user);
@@ -60,11 +61,12 @@ public class PresentationService {
 	 * @return
 	 */
 	public InvalidDateResponseDto getInvalidDate() {
-		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime end = now.plusMonths(MAX_MONTH);
+		LocalDate now = LocalDate.now();
+		LocalDateTime start = now.atStartOfDay();
+		LocalDateTime end = start.plusMonths(MAX_MONTH);
 
 		List<Presentation> presentationList =
-			presentationRepository.findByDateTime(DateUtil.toDate(now), DateUtil.toDate(end));
+			presentationRepository.findByDateTime(start, end);
 		List<LocalDateTime> invalidDates = presentationList.stream()
 			.map(Presentation::getDateTime)
 			.collect(Collectors.toList());
@@ -78,10 +80,11 @@ public class PresentationService {
 	 * @return
 	 */
 	public List<Presentation> getLatestPastPresentations(int count) {
-		LocalDateTime now = LocalDateTime.now();
+		LocalDate now = LocalDate.now();
+		LocalDateTime start = now.atStartOfDay();
 
 		return presentationRepository
-			.findLatestPastPresentations(DateUtil.toDate(now), PageRequest.of(0, count));
+			.findLatestPastPresentations(start, PageRequest.of(0, count));
 	}
 
 	/**
@@ -91,11 +94,12 @@ public class PresentationService {
 	 * @return
 	 */
 	public List<Presentation> getLatestUpcomingPresentations(int count) {
-		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime end = now.plusMonths(MAX_MONTH);
+		LocalDate now = LocalDate.now();
+
+		LocalDateTime start = now.atStartOfDay();
+		LocalDateTime end = start.plusMonths(MAX_MONTH);
 		return presentationRepository
-			.findUpcomingPresentations(DateUtil.toDate(now), DateUtil.toDate(end),
-				PageRequest.of(0, count));
+			.findUpcomingPresentations(start, end, PageRequest.of(0, count));
 	}
 
 	/**
