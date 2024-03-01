@@ -7,4 +7,6 @@ import lombok.Data;
 public class PresentationFormResponseDto {
 
 	private final List<PresentationFormData> forms;
+//	private final List<PresentationFormData> pastForms;
+//	private final List<PresentationFormData> upcomingForms;
 }

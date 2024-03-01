@@ -9,8 +9,7 @@ import {
   PresentationCategoryType,
   PresentationPeriodType,
 } from "@/types/enum/Presentation/presentation.type.enum";
-
-// TODO : 1000
+import DetailTableBodyMobile from "./DetailTableBodyMobile";
 
 export interface IAdminCurrentModalStateInfo {
   statusModal: boolean;
@@ -58,22 +57,21 @@ const DetailTable = ({
 
   const mockRes: IPresentationScheduleDetailInfo[] = [
     {
-      dateTime: "2024-02-28T07:22:01.233Z",
+      dateTime: "2024-04-01T07:22:01.233Z",
     },
     {
       dateTime: "2024-02-01T07:22:01.233Z",
     },
-    // {
-    //   dateTime: "12월 17일",
-    //   subject: "우하하하",
-    //   userName: "jeekim",
-    //   category: PresentationCategoryType.HOBBY,
-    //   period: PresentationPeriodType.HALF,
-    // },
     {
       dateTime: "2024-02-17T07:22:01.233Z",
-      subject:
-        "사진을 위한 넓고 얕은 지식눌렀을때는 제목이 모두 보이게 사진을 위한 넓고 얕은 지식눌렀을때는 제목",
+      subject: "우하하하",
+      userName: "jeekim",
+      category: PresentationCategoryType.HOBBY,
+      period: PresentationPeriodType.HALF,
+    },
+    {
+      dateTime: "2024-02-17T07:22:01.233Z",
+      subject: "사진을 위한 넓고 얕은 지식눌렀을때는 제목이",
       userName: "eeeeeeeeee",
       category: PresentationCategoryType.HOBBY,
       period: PresentationPeriodType.HOUR_HALF,
@@ -92,46 +90,21 @@ const DetailTable = ({
             isAdmin && openAdminModal("statusModal");
           }}
         >
-          {tableHeadArray.map((head, idx) => {
-            let entries = Object.entries(head);
-            return (
-              <th key={idx} id={entries[0][0]}>
-                {entries[0][1]}
-              </th>
-            );
-          })}
+          <tr>
+            {tableHeadArray.map((head, idx) => {
+              let entries = Object.entries(head);
+              return (
+                <th key={idx} id={entries[0][0]}>
+                  {entries[0][1]}
+                </th>
+              );
+            })}
+          </tr>
         </TableHeadStyled>
-        <WhiteSpaceTrStyled />
+        <tbody>
+          <WhiteSpaceTrStyled />
+        </tbody>
         <TableBodyStyled>
-          {list?.map((item) => {
-            let itemStatus = itemType.EVENT_AVAILABLE;
-
-            if (!item.subject) {
-              // if (현재 날짜보다 과거)
-              const date = new Date();
-              let dateISO = date.toISOString();
-              const dateObj = new Date(dateISO);
-
-              const itemDateObj = new Date(item.dateTime);
-              if (dateObj > itemDateObj) itemStatus = itemType.NO_EVENT_PAST;
-              else itemStatus = itemType.NO_EVENT_CURRENT;
-            }
-            return (
-              <>
-                <DetailTableBody
-                  isAdmin={isAdmin}
-                  openAdminModal={openAdminModal}
-                  item={item}
-                  itemStatus={itemStatus}
-                  itemDate={makeIDateObj(new Date(item.dateTime))}
-                />
-              </>
-            );
-          })}
-        </TableBodyStyled>
-      </TableStyled>
-      <TableMobileStyled>
-        <TableBodyMobileStyled>
           {list?.map((item, idx) => {
             let itemStatus = itemType.EVENT_AVAILABLE;
 
@@ -144,6 +117,7 @@ const DetailTable = ({
               if (dateObj > itemDateObj) itemStatus = itemType.NO_EVENT_PAST;
               else itemStatus = itemType.NO_EVENT_CURRENT;
             }
+
             return (
               <>
                 <DetailTableBody
@@ -151,13 +125,25 @@ const DetailTable = ({
                   openAdminModal={openAdminModal}
                   item={item}
                   itemStatus={itemStatus}
-                  itemDate={itemDate}
+                  itemDate={makeIDateObj(new Date(item.dateTime))}
+                  key={idx}
+                  hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
                 />
+                <DetailTableBodyMobile
+                  isAdmin={isAdmin}
+                  openAdminModal={openAdminModal}
+                  item={item}
+                  itemStatus={itemStatus}
+                  itemDate={makeIDateObj(new Date(item.dateTime))}
+                  key={idx + "mobile"}
+                  hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
+                />
+                <WhiteSpaceTrStyled key={idx + "whiteSpaceTr"} />
               </>
             );
           })}
-        </TableBodyMobileStyled>
-      </TableMobileStyled>
+        </TableBodyStyled>
+      </TableStyled>
       {adminModal.statusModal && (
         <EditStatusModal closeModal={() => closeAdminModal("statusModal")} />
       )}
@@ -170,55 +156,46 @@ export default DetailTable;
 const TableStyled = styled.table`
   width: 100%;
   table-layout: fixed;
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
 `;
-const TableMobileStyled = styled.div`
-  @media screen and (min-width: 768px) {
-    display: none;
-  }
-`;
-const TableBodyMobileStyled = styled.div``;
 
 const TableHeadStyled = styled.thead`
+  margin-bottom: 10px;
   height: 40px;
   line-height: 40px;
   background-color: #3f69fd;
   color: var(--white);
+  width: 100%;
 
-  & > th {
+  & > td {
     font-size: 1rem;
-    /* @media screen and (max-width:768px) {
-    display: none;
-    background-color: red;
-  } */
+    text-align: center;
   }
 
-  & > #date {
+  & #date {
     width: 13%;
     border-radius: 10px 0 0 10px;
   }
 
-  & > #subject {
+  & #subject {
     width: 56%;
   }
 
-  & > #userName {
+  & #userName {
     width: 14%;
   }
 
-  & > #category {
+  & #category {
     width: 9%;
   }
 
-  & > #period {
+  & #period {
     width: 8%;
     border-radius: 0 10px 10px 0;
   }
-  /* @media screen and (max-width: 768px) {
+
+  @media screen and (max-width: 1150px) {
     display: none;
-  } */
+  }
 `;
 
 const TableBodyStyled = styled.tbody`

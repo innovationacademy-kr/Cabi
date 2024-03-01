@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IDate } from "@/pages/Wednesday/DetailPage";
 import {
   TAdminModalState,
-  WhiteSpaceTrStyled,
   itemType,
 } from "@/components/Wednesday/Details/DetailTable";
+import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
@@ -16,16 +16,24 @@ const DetailTableBody = ({
   item,
   itemStatus,
   itemDate,
+  hasNoCurrentEvent,
 }: {
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
   item: IPresentationScheduleDetailInfo;
   itemStatus: itemType;
   itemDate: IDate | null;
+  hasNoCurrentEvent: boolean;
 }) => {
   const [clickedItem, setClickedItem] =
     useState<null | IPresentationScheduleDetailInfo>(null);
   const navigator = useNavigate();
+  const noEventPhrase = {
+    noEventPast: "수요지식회가 열리지 않았습니다",
+    noEventCurrent:
+      "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를 신청해보세요",
+  };
+  const [isItemOpen, setIsItemOpen] = useState<boolean>(false);
 
   const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
     if (clickedItem?.dateTime === item.dateTime) setClickedItem(null);
@@ -48,16 +56,20 @@ const DetailTableBody = ({
     STUDY: "학술",
   };
 
+  useEffect(() => {
+    setIsItemOpen(clickedItem?.dateTime === item.dateTime);
+  }, [clickedItem]);
+
   return (
     <>
       <TableTrStyled
         itemStatus={itemStatus}
-        id={clickedItem?.dateTime === item.dateTime ? "selected" : ""}
+        id={isItemOpen ? "selected" : ""}
         onClick={() => {
           isAdmin && openAdminModal("statusModal");
           !itemStatus && handleItemClick(item);
         }}
-        open={clickedItem?.dateTime === item.dateTime}
+        open={isItemOpen}
       >
         <td className="leftEnd" id={itemStatus}>
           <div>
@@ -65,37 +77,25 @@ const DetailTableBody = ({
           </div>
         </td>
         {itemStatus ? (
-          <>
-            <td id={itemStatus} className="rightEnd" colSpan={4}>
-              <NoEventDivStyled>
-                {itemStatus === itemType.NO_EVENT_PAST ? (
-                  <>
-                    <div>발표가 없었습니다</div>
-                    <SadCcabiStyled>
-                      <SadCcabiImg />
-                    </SadCcabiStyled>
-                  </>
-                ) : (
-                  <>
-                    <NoEventPhraseStyled>
-                      <div>
-                        다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를
-                        신청해보세요
-                      </div>
-                      <img src="/src/assets/images/happyCcabi.svg" />
-                    </NoEventPhraseStyled>
-                    <button
-                      onClick={() => {
-                        navigator("/wed/register");
-                      }}
-                    >
-                      신청하기
-                    </button>
-                  </>
-                )}
-              </NoEventDivStyled>
-            </td>
-          </>
+          <td id={itemStatus} className="rightEnd" colSpan={4}>
+            <NoEventDivStyled hasNoCurrentEvent={hasNoCurrentEvent}>
+              <NoEventPhraseStyled hasNoCurrentEvent={hasNoCurrentEvent}>
+                <div>{noEventPhrase[itemStatus]}</div>
+                <CcabiStyled hasNoCurrentEvent={hasNoCurrentEvent}>
+                  {hasNoCurrentEvent ? <HappyCcabiImg /> : <SadCcabiImg />}
+                </CcabiStyled>
+              </NoEventPhraseStyled>
+              {hasNoCurrentEvent ? (
+                <button
+                  onClick={() => {
+                    navigator("/wed/register");
+                  }}
+                >
+                  신청하기
+                </button>
+              ) : null}
+            </NoEventDivStyled>
+          </td>
         ) : (
           <>
             <td>
@@ -105,62 +105,34 @@ const DetailTableBody = ({
               <div>{item.userName}</div>
             </td>
             <td>
-              <div>{presentationCategoryKorean[item.category!]}</div>
+              <div id="MobileCategory">
+                {presentationCategoryKorean[item.category!]}
+              </div>
             </td>
-            <td className="rightEnd">
+            <td className="rightEnd" id="MobilePeriod">
               <div>{presentationPeriodNumber[item.period!]}분</div>
             </td>
           </>
         )}
       </TableTrStyled>
-      {clickedItem?.dateTime === item.dateTime ? (
-        <>
-          <TableDetailTrStyled>
-            <td colSpan={5}>
-              <div>
-                "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데?" 장비 탓인가
-                싶어서 최신 스마트폰으로 바꿔 봤지만 크게 달라지지 않은 결과물😒
-                취미로 시작하고 싶은데 도대체 뭐가 뭔지 모르겠는 사진! 2년 간
-                사진 강의만 빡시게 해온 jisokang이 엑기스만 쫙쫙 뽑아서 알기
-                쉽게 알려드립니다! 😉 "아니 내가 찍는 사진들 항상 왜 이렇게
-                나오는 건데?" 장비 탓인가 싶어서 최신 스마트폰으로 바꿔 봤지만
-                크게 달라지지 않은 결과물😒 취미로 시작하고 싶은데 도대체 뭐가
-                뭔지 모르겠는 사진! 2년 간 사진 강의만 빡시게 해온 jisokang이
-                엑기스만 쫙쫙 뽑아서 알기 쉽게 알려드립니다! 😉 "아니 내가 찍는
-                사진들 항상 왜 이렇게 나오는 건데?" 장비 탓인가 싶어서 최신
-                스마트폰으로 바꿔 봤지만 크게 달라지지 않은 결과물😒 취미로
-                시작하고 싶은데 도대체 뭐가 뭔지 모르겠는 사진! 2년 간 사진
-                강의만 빡시게 해온 jisokang이 엑기스만 쫙쫙 뽑아서 알기 쉽게
-                알려드립니다! 😉 왜 이렇게 나오는 건데?" 장비 탓인가 싶어서 최신
-                스마트폰으로 바꿔 봤지만 크게 달라지지 않은 결과물😒 취미로
-                시작하고 싶은데 도대체 뭐가 뭔지 모르겠는 사진! 2년 간 사진
-                강의만 빡시게 해온 jisokang이 엑기스만 쫙쫙 뽑아서 알기 쉽게
-                알려드립니다! 😉 건데?" 장비 탓인가 싶어서 최신 스마트폰으로
-                바꿔 봤지만 크게 달라지지
-              </div>
-            </td>
-          </TableDetailTrStyled>
-        </>
+      {isItemOpen ? (
+        <TableDetailTrStyled
+          onClick={() => {
+            !itemStatus && handleItemClick(item);
+          }}
+          itemStatus={itemStatus}
+        >
+          <td colSpan={5}>
+            <div>
+              "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데?" 장비 탓인가
+              싶어서 최신 스마트폰으로 바꿔 봤지만 크게 달라지지 않은 결과물😒
+              취미로 시작하고 싶은데 도대체 뭐가 뭔지 모르겠는 사진! 2년 간 사진
+              강의만 빡시게 해온 jisokang이 엑기스만 쫙쫙 뽑아서 알기 쉽게
+              알려드립니다! 😉
+            </div>
+          </td>
+        </TableDetailTrStyled>
       ) : null}
-      <WhiteSpaceTrStyled />
-      <TableMobileStyled
-        // itemStatus={itemStatus}
-        id={clickedItem?.dateTime === item.dateTime ? "selected" : ""}
-        onClick={() => {
-          isAdmin && openAdminModal("statusModal");
-          !itemStatus && handleItemClick(item);
-        }}
-      >
-        {itemStatus ? (
-          <>
-            {/* <td id={itemStatus} className="rightEnd" colSpan={4}> */}
-            <div>없음</div>
-            {/* </td> */}
-          </>
-        ) : (
-          <>먼가 신청됨</>
-        )}
-      </TableMobileStyled>
     </>
   );
 };
@@ -177,20 +149,17 @@ const TableTrStyled = styled.tr<{
   text-align: center;
   font-size: 18px;
   background-color: #dce7fd;
-  /* white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; */
 
   & > td {
     padding: 0 10px;
   }
 
   & #noEventCurrent {
-    background-color: white;
+    background-color: var(--white);
   }
 
   & #noEventPast {
-    background-color: #eeeeee;
+    background-color: var(--full);
   }
 
   & > td > div {
@@ -219,72 +188,82 @@ const TableTrStyled = styled.tr<{
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
   }
-  @media screen and (max-width: 768px) {
+
+  @media screen and (max-width: 1150px) {
     display: none;
   }
 `;
 
-const NoEventDivStyled = styled.div`
+const NoEventDivStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
   display: flex;
-  justify-content: space-evenly;
-  /* justify-content: center; */
+  justify-content: ${(props) =>
+    props.hasNoCurrentEvent ? "space-evenly" : "center"};
   align-items: center;
 `;
 
-const NoEventPhraseStyled = styled.div`
+const NoEventPhraseStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
   display: flex;
   align-items: center;
-  width: 50%;
-  /* background-color: yellow; */
-
-  & > img {
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
-  }
+  padding: 0 10px;
 
   & > div {
-    font-weight: bold;
+    font-weight: ${(props) => (props.hasNoCurrentEvent ? "bold" : "")};
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
   }
+
+  @media screen and (max-width: 1150px) {
+    width: 100%;
+  }
 `;
 
-const SadCcabiStyled = styled.div`
+const CcabiStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
   width: 30px;
   height: 30px;
   display: flex;
+  margin-left: 10px;
 
-  & svg {
-    background-color: pink;
+  & > svg {
+    width: 30px;
+    height: 30px;
   }
 
   & svg > path {
     fill: var(--black);
   }
+
+  @media screen and (max-width: 1220px) {
+    display: ${(props) => (props.hasNoCurrentEvent ? "none" : "")};
+  }
 `;
 
-const TableDetailTrStyled = styled.tr`
+const TableDetailTrStyled = styled.tr<{
+  itemStatus: itemType;
+}>`
   background-color: #91b5fa;
   width: 100%;
+
   & > td {
     border-radius: 0 0 10px 10px;
     padding: 0;
   }
   & > td > div {
-    background-color: white;
+    background-color: var(--white);
     border-radius: 10px;
     margin: 24px;
     margin-top: 0;
     line-height: 24px;
-    padding: 20px 50px;
+    padding: 30px 50px;
     font-size: 18px;
   }
-`;
 
-const TableMobileStyled = styled.div`
-  @media screen and (min-width: 768px) {
+  &:hover {
+    cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
+    background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
+  }
+
+  @media screen and (max-width: 1150px) {
     display: none;
   }
 `;
