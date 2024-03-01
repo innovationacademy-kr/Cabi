@@ -80,7 +80,8 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         )}
         {iconType === "NOTIFICATION" && (
           <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
-            <NotificationIcon stroke="var(--main-color)" />
+            {/* <NotificationIcon stroke="var(--main-color)" /> */}
+            <NotificationIcon stroke="#3F69FD" />
           </ModalIconImgStyled>
         )}
         <H2Styled>{title}</H2Styled>
