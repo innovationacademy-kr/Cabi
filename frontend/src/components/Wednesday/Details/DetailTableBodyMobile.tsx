@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { IDate } from "@/pages/Wednesday/DetailPage";
 import {
   TAdminModalState,
-  WhiteSpaceTrStyled,
   itemType,
 } from "@/components/Wednesday/Details/DetailTable";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
@@ -146,7 +145,6 @@ const DetailTableBodyMobile = ({
           </TableDetailTrStyled>
         </>
       ) : null}
-      <WhiteSpaceTrStyled />
     </>
   );
 };
@@ -178,7 +176,6 @@ const MobileTableStyled = styled.tr<{
 
   & #noEventCurrent {
     background-color: white;
-    
   }
 
   & #noEventPast {
@@ -240,9 +237,9 @@ const TopTableDetailTrStyled = styled.tr`
   & .TopSubInfo {
     padding: 20px 30px 0 20px;
     display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
   }
   & > td {
     padding: 0;
@@ -284,6 +281,4 @@ const NoEventPhraseStyled = styled.div`
     overflow: hidden;
     white-space: nowrap; */
   }
-
-
 `;

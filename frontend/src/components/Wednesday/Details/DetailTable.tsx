@@ -9,9 +9,7 @@ import {
   PresentationCategoryType,
   PresentationPeriodType,
 } from "@/types/enum/Presentation/presentation.type.enum";
-import DetailTableBodyMobile from "./DetailTableBodyMobil";
-
-// TODO : 1150
+import DetailTableBodyMobile from "./DetailTableBodyMobile";
 
 export interface IAdminCurrentModalStateInfo {
   statusModal: boolean;
@@ -73,8 +71,7 @@ const DetailTable = ({
     },
     {
       dateTime: "2024-02-17T07:22:01.233Z",
-      subject:
-        "사진을 위한 넓고 얕은 지식눌렀을때는 제목이 모두 보이게 사진을 위한 넓고 얕은 지식눌렀을때는 제목",
+      subject: "사진을 위한 넓고 얕은 지식눌렀을때는 제목이",
       userName: "eeeeeeeeee",
       category: PresentationCategoryType.HOBBY,
       period: PresentationPeriodType.HOUR_HALF,
@@ -105,7 +102,6 @@ const DetailTable = ({
           </tr>
         </TableHeadStyled>
         <tbody>
-          <WhiteSpaceTrStyled />
           <WhiteSpaceTrStyled />
         </tbody>
         <TableBodyStyled>
@@ -142,6 +138,7 @@ const DetailTable = ({
                   key={idx}
                   hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
                 />
+                <WhiteSpaceTrStyled />
               </>
             );
           })}
@@ -195,6 +192,7 @@ const TableHeadStyled = styled.thead`
     width: 8%;
     border-radius: 0 10px 10px 0;
   }
+
   @media screen and (max-width: 1150px) {
     display: none;
   }
@@ -206,10 +204,9 @@ const TableBodyStyled = styled.tbody`
   & #selected {
     background-color: #91b5fa;
   }
-
 `;
 
 export const WhiteSpaceTrStyled = styled.tr`
-  height: 14px;
+  height: 24px;
   width: 100%;
 `;

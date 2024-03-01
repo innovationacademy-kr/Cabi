@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { IDate } from "@/pages/Wednesday/DetailPage";
 import {
   TAdminModalState,
-  WhiteSpaceTrStyled,
   itemType,
 } from "@/components/Wednesday/Details/DetailTable";
 import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
@@ -134,7 +133,6 @@ const DetailTableBody = ({
           </td>
         </TableDetailTrStyled>
       ) : null}
-      <WhiteSpaceTrStyled />
     </>
   );
 };
@@ -190,10 +188,10 @@ const TableTrStyled = styled.tr<{
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
   }
+
   @media screen and (max-width: 1150px) {
     display: none;
   }
-
 `;
 
 const NoEventDivStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
@@ -264,6 +262,7 @@ const TableDetailTrStyled = styled.tr<{
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
   }
+
   @media screen and (max-width: 1150px) {
     display: none;
   }
