@@ -92,7 +92,6 @@ const RecentPresentation = ({
   const getCurrentPresentation = async () => {
     try {
       const response = await axiosGetPresentation();
-      console.log(response);
       // setPresentationDetailInfo(response);
       // TODO setIsCurrentSectionRender(true);
     } catch (error: any) {
