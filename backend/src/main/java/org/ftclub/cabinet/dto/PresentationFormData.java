@@ -15,7 +15,7 @@ public class PresentationFormData {
 	private final PresentationTime presentationTime;
 	private final PresentationLocation presentationLocation;
 	private final String subject;
-	private final String summery;
+	private final String summary;
 	private final String detail;
 	private final Category category;
 	private final LocalDateTime dateTime;
