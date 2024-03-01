@@ -110,7 +110,7 @@ const DetailTableBody = ({
               </div>
             </td>
             <td className="rightEnd" id="MobilePeriod">
-              <div>{presentationPeriodNumber[item.period!]}분</div>
+              <div>{presentationPeriodNumber[item.presentationTime!]}분</div>
             </td>
           </>
         )}
