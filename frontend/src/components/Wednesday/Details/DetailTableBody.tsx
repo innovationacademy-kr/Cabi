@@ -31,7 +31,7 @@ const DetailTableBody = ({
   const noEventPhrase = {
     noEventPast: "수요지식회가 열리지 않았습니다",
     noEventCurrent:
-      "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를신청해보세요",
+      "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를 신청해보세요",
   };
   const [isItemOpen, setIsItemOpen] = useState<boolean>(false);
 

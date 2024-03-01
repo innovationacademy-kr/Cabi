@@ -57,7 +57,7 @@ const DetailTable = ({
 
   const mockRes: IPresentationScheduleDetailInfo[] = [
     {
-      dateTime: "2024-02-29T07:22:01.233Z",
+      dateTime: "2024-04-01T07:22:01.233Z",
     },
     {
       dateTime: "2024-02-01T07:22:01.233Z",
@@ -135,10 +135,10 @@ const DetailTable = ({
                   item={item}
                   itemStatus={itemStatus}
                   itemDate={makeIDateObj(new Date(item.dateTime))}
-                  key={idx}
+                  key={idx + "mobile"}
                   hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
                 />
-                <WhiteSpaceTrStyled />
+                <WhiteSpaceTrStyled key={idx + "whiteSpaceTr"} />
               </>
             );
           })}

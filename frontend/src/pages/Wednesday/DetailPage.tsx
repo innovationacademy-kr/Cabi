@@ -60,7 +60,7 @@ const DetailPage = () => {
     try {
       const response: IPresentationScheduleDetailInfo[] =
         await axiosGetPresentationSchedule(
-          requestDate.year + requestDate.month
+          requestDate.year + "-" + requestDate.month
         );
       setPresentationDetailInfo(response);
       // TODO setIsCurrentSectionRender(true);
@@ -134,9 +134,9 @@ const ContainerStyled = styled.div`
   align-items: center;
   overflow-y: scroll;
 
-@media screen and (max-width: 1150px) {
-  background-color: var(--lightgray-color);
-}
+  @media screen and (max-width: 1150px) {
+    background-color: var(--lightgray-color);
+  }
 `;
 
 const HeaderStyled = styled.div`
@@ -160,7 +160,6 @@ const HeaderStyled = styled.div`
     width: 2.5rem;
     height: 2.5rem;
   }
-
 `;
 
 const BodyStyled = styled.div`
@@ -176,6 +175,4 @@ const BodyStyled = styled.div`
     margin-top: 0px;
     width: 100%;
   }
-
 `;
-//1150px
