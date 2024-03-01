@@ -83,7 +83,7 @@ const DropdownOptions = styled.ul`
 `;
 
 const DropdownOption = styled.li`
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: var(--gray-color);
   padding: 10px;
   cursor: pointer;
@@ -106,7 +106,7 @@ const RegisterTimeInputStyled = styled.div<{ isFocused: boolean }>`
   cursor: pointer;
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   padding-left: 10px;
 `;
 

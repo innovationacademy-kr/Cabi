@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.presentation.repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -22,9 +21,10 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 		@Param("end") Date end);
 
 	@Query("SELECT p "
-			+ "FROM Presentation p "
-			+ "WHERE DATE(p.dateTime) = :date")
-	Optional<Presentation> findByDate(@Param("date") LocalDate date);
+		+ "FROM Presentation p "
+		+ "WHERE p.dateTime BETWEEN :start AND :end")
+	Optional<Presentation> findByDate(@Param("start") LocalDateTime start,
+		@Param("end") LocalDateTime end);
 
 	@EntityGraph(attributePaths = "user")
 	@Query("SELECT p "

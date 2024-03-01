@@ -110,7 +110,7 @@ const DetailTableBody = ({
               </div>
             </td>
             <td className="rightEnd" id="MobilePeriod">
-              <div>{presentationPeriodNumber[item.period!]}분</div>
+              <div>{presentationPeriodNumber[item.presentationTime!]}분</div>
             </td>
           </>
         )}
@@ -186,7 +186,7 @@ const TableTrStyled = styled.tr<{
 
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
-    background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
+    background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
   }
 
   @media screen and (max-width: 1150px) {

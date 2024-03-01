@@ -168,6 +168,9 @@ const ModalIconImgStyled = styled.div<{ iconScaleEffect: boolean | undefined }>`
 `;
 
 export const DetailStyled = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 20px;
   letter-spacing: -0.02rem;
   line-height: 1.5rem;

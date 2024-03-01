@@ -17,7 +17,7 @@ const MultiToggleSwitchSeparated = <T,>({
   initialState,
   setState,
   toggleList,
-  fontSize = "0.9rem",
+  fontSize = "0.875rem",
 }: MultiToggleSwitchProps<T>) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -25,39 +25,31 @@ const MultiToggleSwitchSeparated = <T,>({
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
-      if (button.className === `${initialState}`) {
-        button.style.color = "white";
-        button.style.backgroundColor = "var(--main-color)";
+      if (button.classList.contains(`${initialState}`)) {
+        button.classList.add("selected");
       } else {
-        button.style.color = "black";
-        button.style.backgroundColor = "var(--white)";
+        button.classList.add("categoryButton");
       }
     });
   }, [initialState]);
 
   function switchToggle(e: any) {
     const target = e.target as HTMLButtonElement;
-
     if (target === e.currentTarget) return;
-
     // setPage(0);
+    const selectedKey = target.className.split(" ")[0];
     const buttons = wrapperRef.current?.querySelectorAll("button");
-
     buttons?.forEach((button) => {
-      button.style.color = "black";
-      button.style.backgroundColor = "var(--white)";
+      button.classList.remove("selected");
     });
-
-    target.style.color = "white";
-    target.style.backgroundColor = "var(--main-color)";
-
-    setState(target.className as React.SetStateAction<T>);
+    target.classList.add("selected");
+    setState(selectedKey as React.SetStateAction<T>);
   }
 
   return (
     <WrapperStyled ref={wrapperRef} onClick={switchToggle} fontSize={fontSize}>
       {toggleList.map((item) => (
-        <button key={item.key} className={`${item.key}`}>
+        <button key={item.key} className={`${item.key} categoryButton`}>
           {item.name}
         </button>
       ))}
@@ -70,23 +62,33 @@ const WrapperStyled = styled.div<{
 }>`
   width: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  border-radius: 10px;
+  gap: 10px;
 
   button {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    min-width: 50px;
+    height: 36px;
+    min-width: 40px;
     border-radius: 10px;
     font-size: ${(props) => props.fontSize};
-    height: 40px;
     font-weight: 500;
     background-color: var(--lightgray-color);
-    color: black;
+    color: gray;
     padding: 4px 12px;
-    margin: 0px 4px;
+  }
+
+  button.categoryButton {
+    color: black;
+    background-color: var(--white);
+  }
+
+  button.selected {
+    color: white;
+    background-color: #3f69fd;
   }
 `;
 
