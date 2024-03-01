@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { IDate } from "@/pages/Wednesday/DetailPage";
 import {
   TAdminModalState,
-  WhiteSpaceTrStyled,
   itemType,
 } from "@/components/Wednesday/Details/DetailTable";
 import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
@@ -32,7 +31,7 @@ const DetailTableBody = ({
   const noEventPhrase = {
     noEventPast: "수요지식회가 열리지 않았습니다",
     noEventCurrent:
-      "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를신청해보세요",
+      "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를 신청해보세요",
   };
   const [isItemOpen, setIsItemOpen] = useState<boolean>(false);
 
@@ -111,7 +110,7 @@ const DetailTableBody = ({
               </div>
             </td>
             <td className="rightEnd" id="MobilePeriod">
-              <div>{presentationPeriodNumber[item.period!]}분</div>
+              <div>{presentationPeriodNumber[item.presentationTime!]}분</div>
             </td>
           </>
         )}
@@ -134,7 +133,6 @@ const DetailTableBody = ({
           </td>
         </TableDetailTrStyled>
       ) : null}
-      <WhiteSpaceTrStyled />
     </>
   );
 };
@@ -190,10 +188,10 @@ const TableTrStyled = styled.tr<{
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
   }
+
   @media screen and (max-width: 1150px) {
     display: none;
   }
-
 `;
 
 const NoEventDivStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
@@ -264,6 +262,7 @@ const TableDetailTrStyled = styled.tr<{
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
   }
+
   @media screen and (max-width: 1150px) {
     display: none;
   }
