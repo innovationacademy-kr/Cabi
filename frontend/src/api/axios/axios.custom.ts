@@ -710,9 +710,9 @@ export const axiosGetPresentationSchedule = async (
   yearMonth: string
 ): Promise<any> => {
   try {
-    const response = await instance.get(
-      axiosGetPresentationScheduleURL + yearMonth
-    );
+    const response = await instance.get(axiosGetPresentationScheduleURL, {
+      params: { yearMonth },
+    });
     return response;
   } catch (error) {
     throw error;
@@ -722,7 +722,9 @@ export const axiosGetPresentationSchedule = async (
 const axiosGetPresentationURL = "/v5/presentation/";
 export const axiosGetPresentation = async () => {
   try {
-    const response = await instance.get(axiosGetPresentationURL);
+    const response = await instance.get(axiosGetPresentationURL, {
+      params: { pastFormCount: 1, upcomingFormCount: 2 },
+    });
     return response;
   } catch (error) {
     throw error;

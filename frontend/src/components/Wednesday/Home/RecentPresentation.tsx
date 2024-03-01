@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
+import { axiosGetPresentation } from "@/api/axios/axios.custom";
 import WedCard from "./WedCard";
 import WedCardMobile from "./WedCardMobile";
 import WedMainDesc from "./WedMainDesc";
@@ -78,7 +79,22 @@ const RecentPresentation = ({
 
   useEffect(() => {
     setTest(presentation[select]);
+    getCurrentPresentation();
   }, [select]);
+
+  // axiosGetPresentation
+  const getCurrentPresentation = async () => {
+    try {
+      const response = await axiosGetPresentation();
+      console.log(response);
+      // setPresentationDetailInfo(response);
+      // TODO setIsCurrentSectionRender(true);
+    } catch (error: any) {
+      // TODO
+    } finally {
+      // TODO
+    }
+  };
 
   return (
     <ConTainerStyled>
