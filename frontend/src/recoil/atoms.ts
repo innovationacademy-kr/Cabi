@@ -206,3 +206,12 @@ export const targetClubUserInfoState = atom<ClubUserResponseDto>({
     userName: "",
   },
 });
+
+/**
+ * 수지회 (구 까비지식회)
+ */
+
+export const currentPresentationIdState = atom<number | null>({
+  key: "currentPresentationId",
+  default: undefined,
+});
