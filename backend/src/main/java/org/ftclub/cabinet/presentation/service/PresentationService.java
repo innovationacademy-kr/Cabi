@@ -86,14 +86,14 @@ public class PresentationService {
 	 */
 	public List<Presentation> getLatestPastPresentations(int count) {
 		LocalDate now = LocalDate.now();
-		LocalDateTime start = now.atStartOfDay();
+		LocalDateTime limit = now.atStartOfDay();
 
 		return presentationRepository
-			.findLatestPastPresentations(start, PageRequest.of(0, count));
+			.findByDateTimeBeforeOrderByDateTimeDesc(limit, PageRequest.of(0, count));
 	}
 
 	/**
-	 * 요청 날짜 기준 발표 예정의 신청서들을 개수만큼 반환(당일 포함)
+	 * 요청 날짜 기준 발표 예정의 신청서들을 개수만큼 반환
 	 *
 	 * @param count
 	 * @return
@@ -104,7 +104,7 @@ public class PresentationService {
 		LocalDateTime start = now.atStartOfDay();
 		LocalDateTime end = start.plusMonths(MAX_MONTH);
 		return presentationRepository
-			.findUpcomingPresentations(start, end, PageRequest.of(0, count));
+			.findByDateTimeBetweenOrderByDateTimeAsc(start, end, PageRequest.of(0, count));
 	}
 
 	/**
@@ -120,11 +120,10 @@ public class PresentationService {
 		List<Presentation> upcomingPresentations = getLatestUpcomingPresentations(
 			upcomingFormCount);
 
-		List<PresentationFormData> result = Stream.concat(
-				pastPresentations.stream(), upcomingPresentations.stream())
-			.map(form ->
-				presentationMapper.toPresentationFormDataDto(form, form.getUser().getName()))
-			.collect(Collectors.toList());
+		List<PresentationFormData> result =
+			Stream.concat(pastPresentations.stream(), upcomingPresentations.stream())
+				.map(presentationMapper::toPresentationFormDataDto)
+				.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
 	}
@@ -142,8 +141,7 @@ public class PresentationService {
 		List<PresentationFormData> result =
 			presentationRepository.findByDateTimeBetweenOrderByDateTime(startDate, endDayDate)
 				.stream()
-				.map(form ->
-					presentationMapper.toPresentationFormDataDto(form, form.getUser().getName()))
+				.map(presentationMapper::toPresentationFormDataDto)
 				.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
@@ -171,7 +169,7 @@ public class PresentationService {
 			dto.getLocation());
 		Presentation presentationToUpdate =
 			presentationRepository.findById(formId)
-				.orElseThrow(() -> ExceptionStatus.INVALID_FORM_ID.asServiceException());
+				.orElseThrow(ExceptionStatus.INVALID_FORM_ID::asServiceException);
 
 		presentationToUpdate.setPresentationStatus(newStatus);
 		presentationToUpdate.setDateTime(dto.getDateTime());

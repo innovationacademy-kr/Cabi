@@ -8,9 +8,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface PresentationMapper {
 
-	@Mapping(target = "userName", source = "userName")
-	PresentationFormData toPresentationFormDataDto(Presentation presentation,
-		String userName);
+	@Mapping(target = "userName", source = "user.name")
+	PresentationFormData toPresentationFormDataDto(Presentation presentation);
 
 //	PresentationFormResponseDto toPresentationFormResponseDto(List<PresentationFormData> pastForms,
 //		List<PresentationFormData> futureForms);
