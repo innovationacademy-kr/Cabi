@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
-import { IDate } from "@/pages/Wednesday/DetailPage";
+import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
 import { IAnimation, IPresentation } from "./RecentPresentation";
 
 const WedCards = ({

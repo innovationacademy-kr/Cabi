@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { IDate } from "@/pages/Wednesday/DetailPage";
+import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
 import {
   TAdminModalState,
   itemType,
-} from "@/components/Wednesday/Details/DetailTable";
+} from "@/components/Wednesday/Details/DetailTable.container";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
 const DetailTableBodyRowMobile = ({

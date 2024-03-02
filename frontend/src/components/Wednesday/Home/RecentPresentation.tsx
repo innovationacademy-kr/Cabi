@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
-import { IDate } from "@/pages/Wednesday/DetailPage";
+import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
 import WedCards from "@/components/Wednesday/Home/WedCards";
 import WedCardsMobile from "@/components/Wednesday/Home/WedCardsMobile";
 import WedMainDesc from "@/components/Wednesday/Home/WedMainDesc";

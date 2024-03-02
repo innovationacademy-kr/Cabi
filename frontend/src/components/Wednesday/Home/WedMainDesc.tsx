@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { IDate } from "@/pages/Wednesday/DetailPage";
-import { presentationPeriodNumber } from "../Details/DetailTableBodyRow";
+import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
+import { presentationPeriodNumber } from "@/components/Wednesday/Details/DetailTableBodyRow.container";
 import { IPresentation } from "./RecentPresentation";
 
 const WedMainDesc = ({

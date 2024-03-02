@@ -1,30 +1,18 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
-import { IDate } from "@/pages/Wednesday/DetailPage";
+import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
 import {
   TAdminModalState,
   itemType,
-} from "@/components/Wednesday/Details/DetailTable";
+} from "@/components/Wednesday/Details/DetailTable.container";
 import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
-
-export const presentationPeriodNumber = {
-  HALF: 30,
-  HOUR: 60,
-  HOUR_HALF: 90,
-  TWO_HOUR: 120,
-};
-
-export const presentationCategoryKorean = {
-  DEVELOP: "개발",
-  HOBBY: "취미",
-  JOB: "취업",
-  ETC: "기타",
-  TASK: "42",
-  STUDY: "학술",
-};
+import {
+  noEventPhrase,
+  presentationCategoryKorean,
+  presentationPeriodNumber,
+} from "./DetailTableBodyRow.container";
 
 const DetailTableBodyRow = ({
   isAdmin,
@@ -33,6 +21,9 @@ const DetailTableBodyRow = ({
   itemStatus,
   itemDate,
   hasNoCurrentEvent,
+  isItemOpen,
+  handleItemClick,
+  navigator,
 }: {
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
@@ -40,26 +31,10 @@ const DetailTableBodyRow = ({
   itemStatus: itemType;
   itemDate: IDate | null;
   hasNoCurrentEvent: boolean;
+  isItemOpen: boolean;
+  handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
+  navigator: NavigateFunction;
 }) => {
-  const [clickedItem, setClickedItem] =
-    useState<null | IPresentationScheduleDetailInfo>(null);
-  const navigator = useNavigate();
-  const noEventPhrase = {
-    noEventPast: "수요지식회가 열리지 않았습니다",
-    noEventCurrent:
-      "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를 신청해보세요",
-  };
-  const [isItemOpen, setIsItemOpen] = useState<boolean>(false);
-
-  const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
-    if (clickedItem?.dateTime === item.dateTime) setClickedItem(null);
-    else setClickedItem(item);
-  };
-
-  useEffect(() => {
-    setIsItemOpen(clickedItem?.dateTime === item.dateTime);
-  }, [clickedItem]);
-
   return (
     <>
       <TableTrStyled
