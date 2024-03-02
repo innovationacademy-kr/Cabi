@@ -6,7 +6,6 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.InvalidDateResponseDto;
@@ -24,10 +23,12 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PresentationService {
 
 	private static final Integer START_DAY = 1;
@@ -139,7 +140,8 @@ public class PresentationService {
 		LocalDateTime endDayDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
 
 		List<PresentationFormData> result =
-			presentationRepository.findByDateTimeBetween(startDate, endDayDate).stream()
+			presentationRepository.findByDateTimeBetweenOrderByDateTime(startDate, endDayDate)
+				.stream()
 				.map(form ->
 					presentationMapper.toPresentationFormDataDto(form, form.getUser().getName()))
 				.collect(Collectors.toList());
@@ -164,12 +166,12 @@ public class PresentationService {
 	public void updatePresentationByFormId(Long formId, PresentationUpdateDto dto) {
 		presentationPolicyService.verifyReservationDate(dto.getDateTime());
 		PresentationStatus newStatus = presentationPolicyService.verityPresentationStatus(
-				dto.getStatus());
+			dto.getStatus());
 		PresentationLocation newLocation = presentationPolicyService.verityPresentationLocation(
-				dto.getLocation());
+			dto.getLocation());
 		Presentation presentationToUpdate =
-				presentationRepository.findById(formId)
-						.orElseThrow(() -> ExceptionStatus.INVALID_FORM_ID.asServiceException());
+			presentationRepository.findById(formId)
+				.orElseThrow(() -> ExceptionStatus.INVALID_FORM_ID.asServiceException());
 
 		presentationToUpdate.setPresentationStatus(newStatus);
 		presentationToUpdate.setDateTime(dto.getDateTime());
