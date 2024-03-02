@@ -53,7 +53,7 @@ const DetailPage = () => {
   }, []);
 
   useEffect(() => {
-    if (todayDate) getPresentationSchedule(todayDate);
+    if (currentDate) getPresentationSchedule(currentDate);
   }, [currentDate]);
 
   const getPresentationSchedule = async (requestDate: IDate) => {
