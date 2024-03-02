@@ -11,6 +11,12 @@ export enum PresentationPeriodType {
   TWO_HOUR = "TWO_HOUR",
 }
 
+export enum PresentationLocation {
+  BASEMENT = "BASEMENT",
+  FIRST = "FIRST",
+  THIRD = "THIRD",
+}
+
 export enum PresentationCategoryType {
   DEVELOP = "DEVELOP",
   HOBBY = "HOBBY",

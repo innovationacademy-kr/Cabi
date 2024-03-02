@@ -18,6 +18,7 @@ import {
 } from "@/types/dto/club.dto";
 import { ClubUserDto } from "@/types/dto/lent.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
+import { IPresentationInfo } from "@/types/dto/wednesday.dto";
 
 const { persistAtom } = recoilPersist();
 
@@ -211,7 +212,7 @@ export const targetClubUserInfoState = atom<ClubUserResponseDto>({
  * 수지회 (구 까비지식회)
  */
 
-export const currentPresentationIdState = atom<number | null>({
+export const currentPresentationState = atom<IPresentationInfo | null>({
   key: "currentPresentationId",
   default: undefined,
 });

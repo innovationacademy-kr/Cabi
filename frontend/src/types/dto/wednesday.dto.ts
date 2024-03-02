@@ -3,6 +3,14 @@ import {
   PresentationPeriodType,
 } from "@/types/enum/Presentation/presentation.type.enum";
 
+export interface IPresentationInfo {
+  id: number;
+  dateTime: string;
+  presentationStatus?: string | null;
+  presentationTime: PresentationPeriodType | null;
+  presentationLocation?: string | null;
+}
+
 export interface IPresentationScheduleDetailInfo {
   id: number;
   subject: string | null;
