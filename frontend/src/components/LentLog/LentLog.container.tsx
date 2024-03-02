@@ -3,9 +3,8 @@ import LentLog from "@/components/LentLog/LentLog";
 import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { axiosMyLentLog } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
-import { getTotalPage } from "@/utils/dateUtils";
+import { getTotalPage } from "@/utils/paginationUtils";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
-
 
 const LentLogContainer = () => {
   const { closeLent } = useMenu();
