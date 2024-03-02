@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.presentation.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -12,12 +13,15 @@ import org.ftclub.cabinet.dto.InvalidDateResponseDto;
 import org.ftclub.cabinet.dto.PresentationFormData;
 import org.ftclub.cabinet.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.dto.PresentationFormResponseDto;
+import org.ftclub.cabinet.dto.PresentationUpdateDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
+import org.ftclub.cabinet.presentation.domain.PresentationLocation;
+import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -45,8 +49,9 @@ public class PresentationService {
 	public void createPresentationFrom(Long userId, PresentationFormRequestDto dto) {
 		presentationPolicyService.verifyReservationDate(dto.getDateTime());
 
-		Presentation presentation = Presentation.of(dto.getCategory(), dto.getDateTime(),
-			dto.getPresentationTime(), dto.getSubject(), dto.getSummary(), dto.getDetail());
+		Presentation presentation =
+			Presentation.of(dto.getCategory(), dto.getDateTime(),
+				dto.getPresentationTime(), dto.getSubject(), dto.getSummary(), dto.getDetail());
 		User user = userQueryService.getUser(userId);
 
 		presentation.setUser(user);
@@ -60,11 +65,12 @@ public class PresentationService {
 	 * @return
 	 */
 	public InvalidDateResponseDto getInvalidDate() {
-		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime end = now.plusMonths(MAX_MONTH);
+		LocalDate now = LocalDate.now();
+		LocalDateTime start = now.atStartOfDay();
+		LocalDateTime end = start.plusMonths(MAX_MONTH);
 
 		List<Presentation> presentationList =
-			presentationRepository.findByDateTime(DateUtil.toDate(now), DateUtil.toDate(end));
+			presentationRepository.findByDateTime(start, end);
 		List<LocalDateTime> invalidDates = presentationList.stream()
 			.map(Presentation::getDateTime)
 			.collect(Collectors.toList());
@@ -78,10 +84,11 @@ public class PresentationService {
 	 * @return
 	 */
 	public List<Presentation> getLatestPastPresentations(int count) {
-		LocalDateTime now = LocalDateTime.now();
+		LocalDate now = LocalDate.now();
+		LocalDateTime start = now.atStartOfDay();
 
 		return presentationRepository
-			.findLatestPastPresentations(DateUtil.toDate(now), PageRequest.of(0, count));
+			.findLatestPastPresentations(start, PageRequest.of(0, count));
 	}
 
 	/**
@@ -91,11 +98,12 @@ public class PresentationService {
 	 * @return
 	 */
 	public List<Presentation> getLatestUpcomingPresentations(int count) {
-		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime end = now.plusMonths(MAX_MONTH);
+		LocalDate now = LocalDate.now();
+
+		LocalDateTime start = now.atStartOfDay();
+		LocalDateTime end = start.plusMonths(MAX_MONTH);
 		return presentationRepository
-			.findUpcomingPresentations(DateUtil.toDate(now), DateUtil.toDate(end),
-				PageRequest.of(0, count));
+			.findUpcomingPresentations(start, end, PageRequest.of(0, count));
 	}
 
 	/**
@@ -137,5 +145,36 @@ public class PresentationService {
 				.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
+	}
+
+
+	/**
+	 * 해당 id 를 가진 발표의 상태를 변경합니다.
+	 * <p>
+	 * **** 추가 고려사항 -> 발표 3일전엔 확정 되어 update 불가인 정책이 있는지..?? -> 확인후 추가 해야할듯 **** 변경할 사항이
+	 * <p>
+	 * entity에 location 컬럼 X 존재하지 않는 pk를 받은 경우 400 에러
+	 * <p>
+	 * status에 없는 상태를 받은 경우 400에러
+	 *
+	 * @Pathvariable Long formId;
+	 * @RequestBody { LocalDateTime dateTime; // new Date().toISOString() String status; // [예정, 완료,
+	 * 취소] String location; // [3층 회의실, 지하 1층 오픈스튜디오] }
+	 */
+	public void updatePresentationByFormId(Long formId, PresentationUpdateDto dto) {
+		presentationPolicyService.verifyReservationDate(dto.getDateTime());
+		PresentationStatus newStatus = presentationPolicyService.verityPresentationStatus(
+				dto.getStatus());
+		PresentationLocation newLocation = presentationPolicyService.verityPresentationLocation(
+				dto.getLocation());
+		Presentation presentationToUpdate =
+				presentationRepository.findById(formId)
+						.orElseThrow(() -> ExceptionStatus.INVALID_FORM_ID.asServiceException());
+
+		presentationToUpdate.setPresentationStatus(newStatus);
+		presentationToUpdate.setDateTime(dto.getDateTime());
+		presentationToUpdate.setPresentationLocation(newLocation);
+
+		presentationRepository.save(presentationToUpdate);
 	}
 }

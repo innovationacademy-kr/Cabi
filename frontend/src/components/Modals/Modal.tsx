@@ -80,8 +80,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         )}
         {iconType === "NOTIFICATION" && (
           <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
-            {/* <NotificationIcon stroke="var(--main-color)" /> */}
-            <NotificationIcon stroke="#3F69FD" />
+            <NotificationIcon stroke="var(--main-color)" />
           </ModalIconImgStyled>
         )}
         <H2Styled>{title}</H2Styled>
@@ -169,6 +168,9 @@ const ModalIconImgStyled = styled.div<{ iconScaleEffect: boolean | undefined }>`
 `;
 
 export const DetailStyled = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 20px;
   letter-spacing: -0.02rem;
   line-height: 1.5rem;

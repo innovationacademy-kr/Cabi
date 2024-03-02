@@ -186,7 +186,7 @@ const TableTrStyled = styled.tr<{
 
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
-    background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
+    background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
   }
 
   @media screen and (max-width: 1150px) {
