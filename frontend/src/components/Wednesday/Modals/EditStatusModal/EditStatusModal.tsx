@@ -8,8 +8,7 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
-import PresentationStatusType from "@/types/enum/Presentation/presentation.type.enum";
-import IconType from "@/types/enum/icon.type.enum";
+import { PresentationStatusType } from "@/types/enum/Presentation/presentation.type.enum";
 
 interface EditStatusModalProps {
   //   onClickProceed: (e: React.MouseEvent) => Promise<void>;
