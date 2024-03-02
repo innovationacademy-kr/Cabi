@@ -58,11 +58,10 @@ const DetailPage = () => {
 
   const getPresentationSchedule = async (requestDate: IDate) => {
     try {
-      const response: IPresentationScheduleDetailInfo[] =
-        await axiosGetPresentationSchedule(
-          requestDate.year + "-" + requestDate.month
-        );
-      setPresentationDetailInfo(response);
+      const response = await axiosGetPresentationSchedule(
+        requestDate.year + "-" + requestDate.month
+      );
+      setPresentationDetailInfo(response.data.forms);
       // TODO setIsCurrentSectionRender(true);
     } catch (error: any) {
       // TODO

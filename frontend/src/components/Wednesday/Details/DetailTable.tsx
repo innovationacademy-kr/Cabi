@@ -6,10 +6,6 @@ import DetailTableBodyRow from "@/components/Wednesday/Details/DetailTableBodyRo
 import DetailTableBodyRowMobile from "@/components/Wednesday/Details/DetailTableBodyRowMobile";
 import EditStatusModal from "@/components/Wednesday/Modals/EditStatusModal/EditStatusModal";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
-import {
-  PresentationCategoryType,
-  PresentationPeriodType,
-} from "@/types/enum/Presentation/presentation.type.enum";
 
 export interface IAdminCurrentModalStateInfo {
   statusModal: boolean;
@@ -45,7 +41,6 @@ const DetailTable = ({
   const [list, setList] = useState<IPresentationScheduleDetailInfo[] | null>(
     null
   );
-  const [itemDate, setItemDate] = useState<IDate | null>(null);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const openAdminModal = (modal: TAdminModalState) => {
@@ -56,54 +51,7 @@ const DetailTable = ({
     setAdminModal({ ...adminModal, [modal]: false });
   };
 
-  const mockRes: IPresentationScheduleDetailInfo[] = [
-    {
-      id: 0,
-      subject: null,
-      summary: null,
-      detail: null,
-      userName: null,
-      presentationTime: null,
-      category: null,
-      dateTime: "2024-04-01T07:22:01.233Z",
-    },
-    {
-      id: 0,
-      subject: null,
-      summary: null,
-      detail: null,
-      userName: null,
-      presentationTime: null,
-      category: null,
-      dateTime: "2024-02-01T07:22:01.233Z",
-    },
-    {
-      id: 1,
-      dateTime: "2024-02-17T07:22:01.233Z",
-      summary: "",
-      subject: "우하하하",
-      userName: "jeekim",
-      detail:
-        "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데? 장비 탓인가 싶어서 최신 스마트폰으로 바꿔 봤지만 크게 달라지지 않은 결과물😒 취미로 시작하고 싶은데 도대체 뭐가 뭔지 모르겠는 사진! 2년 간 사진 강의만 빡시게 해온 jisokang이 엑기스만 쫙쫙 뽑아서 알기 쉽게 알려드립니다! 😉",
-      category: PresentationCategoryType.HOBBY,
-      presentationTime: PresentationPeriodType.HALF,
-    },
-    {
-      id: 2,
-      dateTime: "2024-02-17T07:22:01.233Z",
-      summary: "",
-      subject: "사진을 위한 넓고 얕은 지식눌렀을때는 제목이",
-      userName: "eeeeeeeeee",
-      detail:
-        "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데? 장비 탓인가 싶어서 최신 스마트폰으로 바꿔 봤지만 크게 달라지지 않은 결과물😒 취미로 시작하고 싶은데 도대체 뭐가 뭔지 모르겠는 사진! 2년 간 사진 강의만 빡시게 해온 jisokang이 엑기스만 쫙쫙 뽑아서 알기 쉽게 알려드립니다! 😉",
-      category: PresentationCategoryType.HOBBY,
-      presentationTime: PresentationPeriodType.HOUR_HALF,
-    },
-  ];
-
   useEffect(() => {
-    setList(mockRes); //TODO : presentationDetailInfo로 대체
-
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1150);
     };
@@ -112,6 +60,10 @@ const DetailTable = ({
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    if (presentationDetailInfo) setList(presentationDetailInfo);
+  }, [presentationDetailInfo]);
 
   return (
     <>
