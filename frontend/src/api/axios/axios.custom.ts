@@ -704,14 +704,14 @@ export const axiosGetAvailableCabinets = async (): Promise<any> => {
   }
 };
 
-// 수지회
-const axiosGetPresentationScheduleURL = "/v5/presentation/schedule/";
-export const axiosGetPresentationSchedule = async (
-  yearMonth: string
-): Promise<any> => {
+/**
+ * 수요지식회 (구 까비지식회) API
+ */
+const axiosGetPresentationURL = "/v5/presentation/";
+export const axiosGetPresentation = async () => {
   try {
-    const response = await instance.get(axiosGetPresentationScheduleURL, {
-      params: { yearMonth },
+    const response = await instance.get(axiosGetPresentationURL, {
+      params: { pastFormCount: 1, upcomingFormCount: 2 },
     });
     return response;
   } catch (error) {
@@ -719,11 +719,13 @@ export const axiosGetPresentationSchedule = async (
   }
 };
 
-const axiosGetPresentationURL = "/v5/presentation/";
-export const axiosGetPresentation = async () => {
+const axiosGetPresentationScheduleURL = "/v5/presentation/schedule/";
+export const axiosGetPresentationSchedule = async (
+  yearMonth: string
+): Promise<any> => {
   try {
-    const response = await instance.get(axiosGetPresentationURL, {
-      params: { pastFormCount: 1, upcomingFormCount: 2 },
+    const response = await instance.get(axiosGetPresentationScheduleURL, {
+      params: { yearMonth },
     });
     return response;
   } catch (error) {
@@ -749,6 +751,42 @@ export const axiosPostPresentationForm = async (
       category,
       presentationTime,
     });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetInvalidDatesURL = "/v5/presentation/form/invalid-date";
+export const axiosGetInvalidDates = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosGetInvalidDatesURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * 수요지식회 (구 까비지식회) Admin API
+ */
+const axiosUpdatePresentationStatusURL =
+  "/v5/admin/presentation/{formId}/update";
+export const axiosUpdatePresentationStatus = async (
+  formId: number,
+  dateTime: string,
+  status: string,
+  location: string
+): Promise<any> => {
+  try {
+    const response = await instance.patch(
+      axiosUpdatePresentationStatusURL.replace("{formId}", formId.toString()),
+      {
+        dateTime,
+        status,
+        location,
+      }
+    );
     return response;
   } catch (error) {
     throw error;
