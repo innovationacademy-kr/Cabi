@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { currentPresentationIdState } from "@/recoil/atoms";
+import { currentPresentationState } from "@/recoil/atoms";
 import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
 import {
   TAdminModalState,
@@ -50,14 +50,18 @@ const DetailTableBodyRowContainer = ({
   const [clickedItem, setClickedItem] =
     useState<null | IPresentationScheduleDetailInfo>(null);
   const navigator = useNavigate();
-  const setCurrentPresentationId = useSetRecoilState(
-    currentPresentationIdState
-  );
+  const setCurrentPresentation = useSetRecoilState(currentPresentationState);
   const [isItemOpen, setIsItemOpen] = useState<boolean>(false);
 
   const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
     if (isAdmin && !itemStatus) {
-      setCurrentPresentationId(item.id);
+      setCurrentPresentation({
+        id: item.id,
+        dateTime: item.dateTime,
+        presentationTime: item.presentationTime,
+        presentationStatus: item.presentationStatus,
+        presentationLocation: item.presentationLocation,
+      });
       openAdminModal("statusModal");
     } else {
       if (clickedItem?.dateTime === item.dateTime) setClickedItem(null);
