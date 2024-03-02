@@ -47,7 +47,9 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (currentFloor === undefined) {
+    if (currentBuilding === "수지회") {
+      return;
+    } else if (currentFloor === undefined) {
       setCurrentMapFloor(floors[0]);
       return;
     }
