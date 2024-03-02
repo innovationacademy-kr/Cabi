@@ -66,7 +66,7 @@ const DetailTableBody = ({
         itemStatus={itemStatus}
         id={isItemOpen ? "selected" : ""}
         onClick={() => {
-          isAdmin && openAdminModal("statusModal");
+          isAdmin && !itemStatus && openAdminModal("statusModal");
           !itemStatus && handleItemClick(item);
         }}
         open={isItemOpen}
