@@ -1,14 +1,17 @@
 import styled, { css, keyframes } from "styled-components";
+import { IDate } from "@/pages/Wednesday/DetailPage";
 import { IAnimation, IPresentation } from "./RecentPresentation";
 
-const WedCard = ({
+const WedCards = ({
   presentation,
   select,
   setSelect,
+  makeIDateObj,
 }: {
   presentation: IPresentation[] | null;
   select: number;
   setSelect: (value: number) => void;
+  makeIDateObj: (date: Date) => IDate;
 }) => {
   const onClick = (index: number) => {
     if (select) setSelect(index);
@@ -17,30 +20,36 @@ const WedCard = ({
 
   return (
     <ContainerStyled>
-      {presentation?.map((p, index) => (
-        <WedCardStyled
-          key={index}
-          onClick={() => onClick(index)}
-          className={index == select ? "check" : "not-check"}
-        >
-          <ImageStyled>{p.image}</ImageStyled>
-          <NameStyled>{p.userName}</NameStyled>
-          <TitleStyled>{p.subject}</TitleStyled>
-          <SubTitleStyled>{p.summary}</SubTitleStyled>
+      {presentation?.map((p, index) => {
+        const tmpDate = makeIDateObj(new Date(p.dateTime));
 
-          <CalendarStyled>
-            <IconStyled>
-              <img src="/src/assets/images/calendar.svg" alt="" />
-            </IconStyled>
-            <span>{p.dateTime}</span>
-          </CalendarStyled>
-        </WedCardStyled>
-      ))}
+        return (
+          <WedCardStyled
+            key={index}
+            onClick={() => onClick(index)}
+            className={index == select ? "check" : "not-check"}
+          >
+            <ImageStyled>{p.image}</ImageStyled>
+            <NameStyled>{p.userName}</NameStyled>
+            <TitleStyled>{p.subject}</TitleStyled>
+            <SubTitleStyled>{p.summary}</SubTitleStyled>
+
+            <CalendarStyled>
+              <IconStyled>
+                <img src="/src/assets/images/calendar.svg" alt="" />
+              </IconStyled>
+              <span>
+                {tmpDate?.month}/{tmpDate?.day}
+              </span>
+            </CalendarStyled>
+          </WedCardStyled>
+        );
+      })}
     </ContainerStyled>
   );
 };
 
-export default WedCard;
+export default WedCards;
 
 const restore = ({
   min_width,
@@ -65,7 +74,7 @@ const transform = ({
   max_height,
 }: IAnimation) => keyframes`{
   0% {
-	  width: ${min_width}px;
+    width: ${min_width}px;
 	  height: ${min_height}px;
 	}
 	100% {

@@ -10,6 +10,22 @@ import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg"
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
+export const presentationPeriodNumber = {
+  HALF: 30,
+  HOUR: 60,
+  HOUR_HALF: 90,
+  TWO_HOUR: 120,
+};
+
+export const presentationCategoryKorean = {
+  DEVELOP: "개발",
+  HOBBY: "취미",
+  JOB: "취업",
+  ETC: "기타",
+  TASK: "42",
+  STUDY: "학술",
+};
+
 const DetailTableBodyRow = ({
   isAdmin,
   openAdminModal,
@@ -38,22 +54,6 @@ const DetailTableBodyRow = ({
   const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
     if (clickedItem?.dateTime === item.dateTime) setClickedItem(null);
     else setClickedItem(item);
-  };
-
-  const presentationPeriodNumber = {
-    HALF: 30,
-    HOUR: 60,
-    HOUR_HALF: 90,
-    TWO_HOUR: 120,
-  };
-
-  const presentationCategoryKorean = {
-    DEVELOP: "개발",
-    HOBBY: "취미",
-    JOB: "취업",
-    ETC: "기타",
-    TASK: "42",
-    STUDY: "학술",
   };
 
   useEffect(() => {

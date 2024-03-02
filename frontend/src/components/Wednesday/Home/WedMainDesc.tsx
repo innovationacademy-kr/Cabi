@@ -1,26 +1,38 @@
 import styled from "styled-components";
+import { IDate } from "@/pages/Wednesday/DetailPage";
+import { presentationPeriodNumber } from "../Details/DetailTableBodyRow";
 import { IPresentation } from "./RecentPresentation";
 
-const WedMainSummary = ({ test }: { test: IPresentation | null }) => {
+const WedMainDesc = ({
+  selectedPresentation,
+  selectedDate,
+}: {
+  selectedPresentation: IPresentation | null;
+  selectedDate: IDate | null;
+}) => {
   return (
     <WedSummaryStyled>
       <SummaryHeaderStyled>
-        <TitleStyled>24일 오후 1시</TitleStyled>
+        <TitleStyled>
+          {selectedDate?.month}월 {selectedDate?.day}일 오후 1시
+        </TitleStyled>
         <PlaceStyled>지하 1층</PlaceStyled>
         <TimerStyled>
           <ImageStyled>
             <img src="/src/assets/images/timer.svg" alt="" />
           </ImageStyled>
-          <span>{test?.presentationTime}</span>
+          <span>
+            {presentationPeriodNumber[selectedPresentation?.presentationTime!]}
+          </span>
         </TimerStyled>
       </SummaryHeaderStyled>
 
-      <SummaryDetailStyled>{test?.detail}</SummaryDetailStyled>
+      <SummaryDetailStyled>{selectedPresentation?.detail}</SummaryDetailStyled>
     </WedSummaryStyled>
   );
 };
 
-export default WedMainSummary;
+export default WedMainDesc;
 
 const WedSummaryStyled = styled.div`
   @media (max-width: 465px) {

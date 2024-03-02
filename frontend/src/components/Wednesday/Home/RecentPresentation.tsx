@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
+import { IDate } from "@/pages/Wednesday/DetailPage";
+import WedCards from "@/components/Wednesday/Home/WedCards";
+import WedCardsMobile from "@/components/Wednesday/Home/WedCardsMobile";
+import WedMainDesc from "@/components/Wednesday/Home/WedMainDesc";
+import {
+  PresentationCategoryType,
+  PresentationPeriodType,
+} from "@/types/enum/Presentation/presentation.type.enum";
 import { axiosGetPresentation } from "@/api/axios/axios.custom";
-import WedCard from "./WedCard";
-import WedCardMobile from "./WedCardMobile";
-import WedMainDesc from "./WedMainDesc";
 
 // const presentation: IPresentation[] = [
 //   {
@@ -49,11 +54,11 @@ export interface IPresentation {
   summary: string | null;
   detail: string | null;
   dateTime: string;
-  category: string;
+  category: PresentationCategoryType | null;
   userName: string | null;
   id: number;
   presentationStatus?: string | null;
-  presentationTime: string | null;
+  presentationTime: PresentationPeriodType | null;
   presentationLocation?: string | null;
 }
 
@@ -71,10 +76,12 @@ const RecentPresentation = ({
 }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [select, setSelect] = useState(1);
-  const [test, setTest] = useState<IPresentation | null>(null);
+  const [selectedPresentation, setSelectedPresentation] =
+    useState<IPresentation | null>(null);
   const [currentPresentations, setCurrentPresentations] = useState<
     IPresentation[] | null
   >(null);
+  const [selectedDate, setSelectedDate] = useState<IDate | null>(null);
   const navigator = useNavigate();
 
   useEffect(() => {
@@ -89,8 +96,17 @@ const RecentPresentation = ({
   }, []);
 
   useEffect(() => {
-    if (currentPresentations) setTest(currentPresentations[select]);
-  }, [select]);
+    if (currentPresentations) {
+      setSelectedPresentation(currentPresentations[select]);
+    }
+  }, [currentPresentations, select]);
+
+  useEffect(() => {
+    if (selectedPresentation) {
+      const tmpDate = makeIDateObj(new Date(selectedPresentation.dateTime));
+      setSelectedDate(tmpDate);
+    }
+  }, [selectedPresentation]);
 
   const getCurrentPresentation = async () => {
     try {
@@ -101,6 +117,22 @@ const RecentPresentation = ({
     } finally {
       // TODO
     }
+  };
+
+  const makeIDateObj = (date: Date) => {
+    let dateISO = date.toISOString();
+    // 1. T 앞에서 끊고
+    let dateBeforeT = dateISO.substring(0, 10);
+    // 2. -로 분리
+    let dateSplited = dateBeforeT.split("-");
+
+    const iDateObj: IDate = {
+      year: dateSplited[0],
+      month: dateSplited[1],
+      day: dateSplited[2],
+    };
+
+    return iDateObj;
   };
 
   return (
@@ -120,19 +152,24 @@ const RecentPresentation = ({
       </WedHeaderStyled>
 
       {isMobile ? (
-        <WedCardMobile
+        <WedCardsMobile
           presentation={currentPresentations}
           select={select}
           setSelect={setSelect}
+          makeIDateObj={makeIDateObj}
         />
       ) : (
-        <WedCard
+        <WedCards
           select={select}
           setSelect={setSelect}
           presentation={currentPresentations}
+          makeIDateObj={makeIDateObj}
         />
       )}
-      <WedMainDesc test={test} />
+      <WedMainDesc
+        selectedPresentation={selectedPresentation}
+        selectedDate={selectedDate!}
+      />
     </ConTainerStyled>
   );
 };

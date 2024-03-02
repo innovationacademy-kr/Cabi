@@ -1,15 +1,18 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
+import { IDate } from "@/pages/Wednesday/DetailPage";
 import { IPresentation } from "./RecentPresentation";
 
-const WedCardMobile = ({
+const WedCardsMobile = ({
   presentation,
   select,
   setSelect,
+  makeIDateObj,
 }: {
   presentation: IPresentation[] | null;
   select: number;
   setSelect: (value: number) => void;
+  makeIDateObj: (date: Date) => IDate;
 }) => {
   const [move, setMove] = useState(0);
   const touchStartPosX = useRef(0);
@@ -75,35 +78,41 @@ const WedCardMobile = ({
   return (
     <ContainerStyled>
       <CardWrapperStyled select={move}>
-        {presentation?.map((p, index) => (
-          <WedCardStyled
-            key={index}
-            onClick={() => onClick(index)}
-            className={index == move ? "check" : "not-check"}
-            onTouchStart={(e: React.TouchEvent) => {
-              touchStartPosX.current = e.changedTouches[0].screenX;
-              touchStartPosY.current = e.changedTouches[0].screenY;
-            }}
-            onTouchEnd={(e: React.TouchEvent) => {
-              swipeSection(
-                e.changedTouches[0].screenX,
-                e.changedTouches[0].screenY
-              );
-            }}
-          >
-            <ImageStyled>{p.image}</ImageStyled>
-            <NameStyled>{p.userName}</NameStyled>
-            <TitleStyled>{p.subject}</TitleStyled>
-            <SubTitleStyled>{p.summary}</SubTitleStyled>
+        {presentation?.map((p, index) => {
+          const tmpDate = makeIDateObj(new Date(p.dateTime));
 
-            <CalendarStyled>
-              <IconStyled>
-                <img src="/src/assets/images/calendar.svg" alt="" />
-              </IconStyled>
-              <span>{p.dateTime}</span>
-            </CalendarStyled>
-          </WedCardStyled>
-        ))}
+          return (
+            <WedCardStyled
+              key={index}
+              onClick={() => onClick(index)}
+              className={index == move ? "check" : "not-check"}
+              onTouchStart={(e: React.TouchEvent) => {
+                touchStartPosX.current = e.changedTouches[0].screenX;
+                touchStartPosY.current = e.changedTouches[0].screenY;
+              }}
+              onTouchEnd={(e: React.TouchEvent) => {
+                swipeSection(
+                  e.changedTouches[0].screenX,
+                  e.changedTouches[0].screenY
+                );
+              }}
+            >
+              <ImageStyled>{p.image}</ImageStyled>
+              <NameStyled>{p.userName}</NameStyled>
+              <TitleStyled>{p.subject}</TitleStyled>
+              <SubTitleStyled>{p.summary}</SubTitleStyled>
+
+              <CalendarStyled>
+                <IconStyled>
+                  <img src="/src/assets/images/calendar.svg" alt="" />
+                </IconStyled>
+                <span>
+                  {tmpDate?.month}/{tmpDate?.day}
+                </span>
+              </CalendarStyled>
+            </WedCardStyled>
+          );
+        })}
       </CardWrapperStyled>
 
       <PaginationStyled>{components}</PaginationStyled>
@@ -111,7 +120,7 @@ const WedCardMobile = ({
   );
 };
 
-export default WedCardMobile;
+export default WedCardsMobile;
 
 const ContainerStyled = styled.div`
   display: flex;
