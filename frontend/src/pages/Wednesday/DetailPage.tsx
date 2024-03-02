@@ -62,7 +62,6 @@ const DetailPage = () => {
         requestDate.year + "-" + requestDate.month
       );
       setPresentationDetailInfo(response.data.forms);
-      // TODO setIsCurrentSectionRender(true);
     } catch (error: any) {
       // TODO
     } finally {

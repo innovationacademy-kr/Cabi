@@ -6,7 +6,7 @@ const WedCard = ({
   select,
   setSelect,
 }: {
-  presentation: IPresentation[];
+  presentation: IPresentation[] | null;
   select: number;
   setSelect: (value: number) => void;
 }) => {
@@ -17,7 +17,7 @@ const WedCard = ({
 
   return (
     <ContainerStyled>
-      {presentation.map((p, index) => (
+      {presentation?.map((p, index) => (
         <WedCardStyled
           key={index}
           onClick={() => onClick(index)}
