@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { IDate } from "@/pages/Wednesday/DetailPage";
-import DetailTableBody from "@/components/Wednesday/Details/DetailTableBody";
+import DetailTableBodyRow from "@/components/Wednesday/Details/DetailTableBodyRow";
+import DetailTableBodyRowMobile from "@/components/Wednesday/Details/DetailTableBodyRowMobile";
 import EditStatusModal from "@/components/Wednesday/Modals/EditStatusModal/EditStatusModal";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 import {
   PresentationCategoryType,
   PresentationPeriodType,
 } from "@/types/enum/Presentation/presentation.type.enum";
-import DetailTableBodyMobile from "./DetailTableBodyMobile";
 
 export interface IAdminCurrentModalStateInfo {
   statusModal: boolean;
@@ -46,6 +46,7 @@ const DetailTable = ({
     null
   );
   const [itemDate, setItemDate] = useState<IDate | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const openAdminModal = (modal: TAdminModalState) => {
     setAdminModal({ ...adminModal, [modal]: true });
@@ -102,23 +103,33 @@ const DetailTable = ({
 
   useEffect(() => {
     setList(mockRes); //TODO : presentationDetailInfo로 대체
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1150);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
     <>
       <TableStyled>
-        <TableHeadStyled>
-          <tr>
-            {tableHeadArray.map((head, idx) => {
-              let entries = Object.entries(head);
-              return (
-                <th key={idx} id={entries[0][0]}>
-                  {entries[0][1]}
-                </th>
-              );
-            })}
-          </tr>
-        </TableHeadStyled>
+        {!isMobile ? (
+          <TableHeadStyled>
+            <tr>
+              {tableHeadArray.map((head, idx) => {
+                let entries = Object.entries(head);
+                return (
+                  <th key={idx} id={entries[0][0]}>
+                    {entries[0][1]}
+                  </th>
+                );
+              })}
+            </tr>
+          </TableHeadStyled>
+        ) : null}
         <tbody>
           <WhiteSpaceTrStyled />
         </tbody>
@@ -138,24 +149,27 @@ const DetailTable = ({
 
             return (
               <>
-                <DetailTableBody
-                  isAdmin={isAdmin}
-                  openAdminModal={openAdminModal}
-                  item={item}
-                  itemStatus={itemStatus}
-                  itemDate={makeIDateObj(new Date(item.dateTime))}
-                  key={idx}
-                  hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
-                />
-                <DetailTableBodyMobile
-                  isAdmin={isAdmin}
-                  openAdminModal={openAdminModal}
-                  item={item}
-                  itemStatus={itemStatus}
-                  itemDate={makeIDateObj(new Date(item.dateTime))}
-                  key={idx + "mobile"}
-                  hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
-                />
+                {!isMobile ? (
+                  <DetailTableBodyRow
+                    isAdmin={isAdmin}
+                    openAdminModal={openAdminModal}
+                    item={item}
+                    itemStatus={itemStatus}
+                    itemDate={makeIDateObj(new Date(item.dateTime))}
+                    key={idx}
+                    hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
+                  />
+                ) : (
+                  <DetailTableBodyRowMobile
+                    isAdmin={isAdmin}
+                    openAdminModal={openAdminModal}
+                    item={item}
+                    itemStatus={itemStatus}
+                    itemDate={makeIDateObj(new Date(item.dateTime))}
+                    key={idx + "mobile"}
+                    hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
+                  />
+                )}
                 <WhiteSpaceTrStyled key={idx + "whiteSpaceTr"} />
               </>
             );
@@ -209,10 +223,6 @@ const TableHeadStyled = styled.thead`
   & #presentationTime {
     width: 8%;
     border-radius: 0 10px 10px 0;
-  }
-
-  @media screen and (max-width: 1150px) {
-    display: none;
   }
 `;
 

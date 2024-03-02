@@ -10,7 +10,7 @@ import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg"
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
-const DetailTableBody = ({
+const DetailTableBodyRow = ({
   isAdmin,
   openAdminModal,
   item,
@@ -137,7 +137,7 @@ const DetailTableBody = ({
   );
 };
 
-export default DetailTableBody;
+export default DetailTableBodyRow;
 
 const TableTrStyled = styled.tr<{
   itemStatus: itemType;
@@ -188,10 +188,6 @@ const TableTrStyled = styled.tr<{
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
   }
-
-  @media screen and (max-width: 1150px) {
-    display: none;
-  }
 `;
 
 const NoEventDivStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
@@ -211,10 +207,6 @@ const NoEventPhraseStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-  }
-
-  @media screen and (max-width: 1150px) {
-    width: 100%;
   }
 `;
 
@@ -261,9 +253,5 @@ const TableDetailTrStyled = styled.tr<{
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
-  }
-
-  @media screen and (max-width: 1150px) {
-    display: none;
   }
 `;
