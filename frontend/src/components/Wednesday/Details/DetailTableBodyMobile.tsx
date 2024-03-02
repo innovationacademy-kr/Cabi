@@ -76,7 +76,7 @@ const DetailTableBodyMobile = ({
       <MobileTableStyled
         id={clickedItem?.dateTime === item.dateTime ? "selected" : ""}
         onClick={() => {
-          isAdmin && openAdminModal("statusModal");
+          isAdmin && !itemStatus && openAdminModal("statusModal");
           !itemStatus && handleItemClick(item);
         }}
         open={clickedItem?.dateTime === item.dateTime}

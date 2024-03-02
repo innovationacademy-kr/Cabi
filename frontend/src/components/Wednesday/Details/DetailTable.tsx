@@ -107,11 +107,7 @@ const DetailTable = ({
   return (
     <>
       <TableStyled>
-        <TableHeadStyled
-          onClick={() => {
-            isAdmin && openAdminModal("statusModal");
-          }}
-        >
+        <TableHeadStyled>
           <tr>
             {tableHeadArray.map((head, idx) => {
               let entries = Object.entries(head);
