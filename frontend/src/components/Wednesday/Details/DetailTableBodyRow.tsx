@@ -10,7 +10,7 @@ import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg"
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
-const DetailTableBody = ({
+const DetailTableBodyRow = ({
   isAdmin,
   openAdminModal,
   item,
@@ -66,7 +66,7 @@ const DetailTableBody = ({
         itemStatus={itemStatus}
         id={isItemOpen ? "selected" : ""}
         onClick={() => {
-          isAdmin && openAdminModal("statusModal");
+          isAdmin && !itemStatus && openAdminModal("statusModal");
           !itemStatus && handleItemClick(item);
         }}
         open={isItemOpen}
@@ -123,13 +123,7 @@ const DetailTableBody = ({
           itemStatus={itemStatus}
         >
           <td colSpan={5}>
-            <div>
-              "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데?" 장비 탓인가
-              싶어서 최신 스마트폰으로 바꿔 봤지만 크게 달라지지 않은 결과물😒
-              취미로 시작하고 싶은데 도대체 뭐가 뭔지 모르겠는 사진! 2년 간 사진
-              강의만 빡시게 해온 jisokang이 엑기스만 쫙쫙 뽑아서 알기 쉽게
-              알려드립니다! 😉
-            </div>
+            <div>{item.detail}</div>
           </td>
         </TableDetailTrStyled>
       ) : null}
@@ -137,7 +131,7 @@ const DetailTableBody = ({
   );
 };
 
-export default DetailTableBody;
+export default DetailTableBodyRow;
 
 const TableTrStyled = styled.tr<{
   itemStatus: itemType;
@@ -188,10 +182,6 @@ const TableTrStyled = styled.tr<{
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
   }
-
-  @media screen and (max-width: 1150px) {
-    display: none;
-  }
 `;
 
 const NoEventDivStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
@@ -211,10 +201,6 @@ const NoEventPhraseStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-  }
-
-  @media screen and (max-width: 1150px) {
-    width: 100%;
   }
 `;
 
@@ -261,9 +247,5 @@ const TableDetailTrStyled = styled.tr<{
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
-  }
-
-  @media screen and (max-width: 1150px) {
-    display: none;
   }
 `;

@@ -53,17 +53,15 @@ const DetailPage = () => {
   }, []);
 
   useEffect(() => {
-    if (todayDate) getPresentationSchedule(todayDate);
+    if (currentDate) getPresentationSchedule(currentDate);
   }, [currentDate]);
 
   const getPresentationSchedule = async (requestDate: IDate) => {
     try {
-      const response: IPresentationScheduleDetailInfo[] =
-        await axiosGetPresentationSchedule(
-          requestDate.year + "-" + requestDate.month
-        );
-      setPresentationDetailInfo(response);
-      // TODO setIsCurrentSectionRender(true);
+      const response = await axiosGetPresentationSchedule(
+        requestDate.year + "-" + requestDate.month
+      );
+      setPresentationDetailInfo(response.data.forms);
     } catch (error: any) {
       // TODO
     } finally {

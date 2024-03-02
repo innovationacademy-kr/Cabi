@@ -8,7 +8,7 @@ import {
 } from "@/components/Wednesday/Details/DetailTable";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
-const DetailTableBodyMobile = ({
+const DetailTableBodyRowMobile = ({
   isAdmin,
   openAdminModal,
   item,
@@ -76,7 +76,7 @@ const DetailTableBodyMobile = ({
       <MobileTableStyled
         id={clickedItem?.dateTime === item.dateTime ? "selected" : ""}
         onClick={() => {
-          isAdmin && openAdminModal("statusModal");
+          isAdmin && !itemStatus && openAdminModal("statusModal");
           !itemStatus && handleItemClick(item);
         }}
         open={clickedItem?.dateTime === item.dateTime}
@@ -149,14 +149,13 @@ const DetailTableBodyMobile = ({
   );
 };
 
-export default DetailTableBodyMobile;
+export default DetailTableBodyRowMobile;
 
 const MobileTableStyled = styled.tr<{
   open?: boolean;
 }>`
   height: 70px;
   width: 100%;
-  /* line-height: 70px; */
 
   line-height: 30px;
   text-align: center;

@@ -6,42 +6,42 @@ import WedCard from "./WedCard";
 import WedCardMobile from "./WedCardMobile";
 import WedMainDesc from "./WedMainDesc";
 
-const presentation: IPresentation[] = [
-  {
-    id: 1,
-    image: "img1",
-    subject: "h1",
-    summary: "한줄요약 1",
-    detail: "상세설명 1",
-    dateTime: "cal1",
-    category: "DEVELOP",
-    presentationTime: "HALF",
-    userName: "jusohn",
-  },
-  {
-    id: 2,
-    image: "img2",
-    subject: "h2",
-    summary: "한줄요약 2",
-    detail:
-      "상세설명 2asdfasdfawflahwgjkahwlg;adfioawhlsg;khaw awoifhaejkrwls qawfgoiahjwga awrg;iah war;goihaw awrf;oiahwfog awgrp o;iahg agaoiwrgh     awrg;oihaw;ogrhoa a;gorihae;org alrghewlagwlrguhwe ;oawiejfhioio qoiw;ehfroiu qw pq34209u93uw h paoiwherfsjkdfbv q qpoihfej qp340qu034i q 2490qu2309[rqhio4",
-    dateTime: "cal2",
-    category: "DEVELOP",
-    presentationTime: "HOUR",
-    userName: "miyu",
-  },
-  {
-    id: 3,
-    image: "img3",
-    subject: "h3",
-    summary: "한줄요약 3",
-    detail: "상세설명 3",
-    dateTime: "cal3",
-    category: "DEVELOP",
-    presentationTime: "TWO_HOUR",
-    userName: "jeekim",
-  },
-];
+// const presentation: IPresentation[] = [
+//   {
+//     id: 1,
+//     image: "img1",
+//     subject: "h1",
+//     summary: "한줄요약 1",
+//     detail: "상세설명 1",
+//     dateTime: "cal1",
+//     category: "DEVELOP",
+//     presentationTime: "HALF",
+//     userName: "jusohn",
+//   },
+//   {
+//     id: 2,
+//     image: "img2",
+//     subject: "h2",
+//     summary: "한줄요약 2",
+//     detail:
+//       "상세설명 2asdfasdfawflahwgjkahwlg;adfioawhlsg;khaw awoifhaejkrwls qawfgoiahjwga awrg;iah war;goihaw awrf;oiahwfog awgrp o;iahg agaoiwrgh     awrg;oihaw;ogrhoa a;gorihae;org alrghewlagwlrguhwe ;oawiejfhioio qoiw;ehfroiu qw pq34209u93uw h paoiwherfsjkdfbv q qpoihfej qp340qu034i q 2490qu2309[rqhio4",
+//     dateTime: "cal2",
+//     category: "DEVELOP",
+//     presentationTime: "HOUR",
+//     userName: "miyu",
+//   },
+//   {
+//     id: 3,
+//     image: "img3",
+//     subject: "h3",
+//     summary: "한줄요약 3",
+//     detail: "상세설명 3",
+//     dateTime: "cal3",
+//     category: "DEVELOP",
+//     presentationTime: "TWO_HOUR",
+//     userName: "jeekim",
+//   },
+// ];
 
 export interface IPresentation {
   image: string; // 나중에 뺴기
@@ -71,10 +71,15 @@ const RecentPresentation = ({
 }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [select, setSelect] = useState(1);
-  const [test, setTest] = useState<IPresentation>(presentation[1]);
+  const [test, setTest] = useState<IPresentation | null>(null);
+  const [currentPresentations, setCurrentPresentations] = useState<
+    IPresentation[] | null
+  >(null);
   const navigator = useNavigate();
 
   useEffect(() => {
+    getCurrentPresentation();
+
     const handleResize = () => {
       setIsMobile(window.innerWidth < 700);
     };
@@ -84,16 +89,13 @@ const RecentPresentation = ({
   }, []);
 
   useEffect(() => {
-    setTest(presentation[select]);
-    getCurrentPresentation();
+    if (currentPresentations) setTest(currentPresentations[select]);
   }, [select]);
 
-  // axiosGetPresentation
   const getCurrentPresentation = async () => {
     try {
       const response = await axiosGetPresentation();
-      // setPresentationDetailInfo(response);
-      // TODO setIsCurrentSectionRender(true);
+      setCurrentPresentations(response.data.forms);
     } catch (error: any) {
       // TODO
     } finally {
@@ -119,7 +121,7 @@ const RecentPresentation = ({
 
       {isMobile ? (
         <WedCardMobile
-          presentation={presentation}
+          presentation={currentPresentations}
           select={select}
           setSelect={setSelect}
         />
@@ -127,7 +129,7 @@ const RecentPresentation = ({
         <WedCard
           select={select}
           setSelect={setSelect}
-          presentation={presentation}
+          presentation={currentPresentations}
         />
       )}
       <WedMainDesc test={test} />

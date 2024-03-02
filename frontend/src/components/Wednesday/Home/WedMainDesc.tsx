@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { IPresentation } from "./RecentPresentation";
 
-const WedMainSummary = ({ test }: { test: IPresentation }) => {
+const WedMainSummary = ({ test }: { test: IPresentation | null }) => {
   return (
     <WedSummaryStyled>
       <SummaryHeaderStyled>
@@ -11,11 +11,11 @@ const WedMainSummary = ({ test }: { test: IPresentation }) => {
           <ImageStyled>
             <img src="/src/assets/images/timer.svg" alt="" />
           </ImageStyled>
-          <span>{test.presentationTime}</span>
+          <span>{test?.presentationTime}</span>
         </TimerStyled>
       </SummaryHeaderStyled>
 
-      <SummaryDetailStyled>{test.detail}</SummaryDetailStyled>
+      <SummaryDetailStyled>{test?.detail}</SummaryDetailStyled>
     </WedSummaryStyled>
   );
 };

@@ -7,7 +7,7 @@ const WedCardMobile = ({
   select,
   setSelect,
 }: {
-  presentation: IPresentation[];
+  presentation: IPresentation[] | null;
   select: number;
   setSelect: (value: number) => void;
 }) => {
@@ -75,7 +75,7 @@ const WedCardMobile = ({
   return (
     <ContainerStyled>
       <CardWrapperStyled select={move}>
-        {presentation.map((p, index) => (
+        {presentation?.map((p, index) => (
           <WedCardStyled
             key={index}
             onClick={() => onClick(index)}
