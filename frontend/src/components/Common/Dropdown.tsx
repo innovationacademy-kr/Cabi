@@ -1,8 +1,14 @@
 import { useState } from "react";
 import styled, { css } from "styled-components";
 
-interface IDropdown {
-  options: { name: string; value: any; imageSrc?: string }[];
+export interface IDropdownOptions {
+  name: string;
+  value: any;
+  imageSrc?: string;
+}
+
+export interface IDropdown {
+  options: IDropdownOptions[];
   defaultValue: string;
   defaultImageSrc?: string;
   onChangeValue?: (param: any) => any;
@@ -20,7 +26,7 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
         }}
         isOpen={isOpen}
       >
-        {options[selectedIdx].imageSrc && (
+        {options[selectedIdx]?.imageSrc?.length && (
           <div style={{ width: "18px", height: "18px" }}>
             <img src={options[selectedIdx].imageSrc} />
           </div>
