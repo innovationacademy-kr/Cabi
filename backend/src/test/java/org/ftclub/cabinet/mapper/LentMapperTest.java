@@ -5,7 +5,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -99,7 +98,7 @@ class LentMapperTest {
 		assertEquals(activeLentHistoryDto.getEmail(), user.getEmail());
 		assertEquals(activeLentHistoryDto.getCabinetId(), cabinet.getId());
 		assertEquals(activeLentHistoryDto.getIsExpired(), lentHistory.isExpired(now));
-		assertEquals(activeLentHistoryDto.getDaysLeftFromExpireDate(),
+		assertEquals(activeLentHistoryDto.getDaysFromExpireDate(),
 				lentHistory.getDaysUntilExpiration(now));
 	}
 }

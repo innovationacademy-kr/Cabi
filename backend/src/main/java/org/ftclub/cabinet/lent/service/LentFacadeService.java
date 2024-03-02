@@ -315,7 +315,7 @@ public class LentFacadeService {
 	@Transactional
 	public void cancelShareCabinetLent(Long userId, Long cabinetId) {
 		lentRedisService.deleteUserInCabinet(cabinetId, userId);
-		if (lentRedisService.isInCabinetSession(cabinetId)) {
+		if (!lentRedisService.isInCabinetSession(cabinetId)) {
 			Cabinet cabinet = cabinetQueryService.getCabinetForUpdate(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 		}

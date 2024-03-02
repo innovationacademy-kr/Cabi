@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.mapper;
 
+import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
+
+import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.LentDto;
@@ -10,10 +13,6 @@ import org.ftclub.cabinet.user.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-
-import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
 //@NullableMapper
 @Mapper(componentModel = "spring",
@@ -42,14 +41,13 @@ public interface LentMapper {
 
 	@Mapping(target = "totalLength", source = "totalLength")
 	LentHistoryPaginationDto toLentHistoryPaginationDto(List<LentHistoryDto> result,
-	                                                    Long totalLength);
+			Long totalLength);
 
 	@Mapping(target = "userId", source = "lentHistory.userId")
 	@Mapping(target = "cabinetId", source = "cabinet.id")
 	ActiveLentHistoryDto toActiveLentHistoryDto(LentHistory lentHistory,
-	                                            User user,
-	                                            Cabinet cabinet,
-	                                            Boolean isExpired,
-	                                            Long daysLeftFromExpireDate
-	);
+			User user,
+			Cabinet cabinet,
+			Boolean isExpired,
+			Long daysFromExpireDate);
 }

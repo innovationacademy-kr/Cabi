@@ -72,6 +72,7 @@ public class SlackAlarmSender {
 		return new SlackDto(body);
 	}
 
+
 	private SlackDto generateLentExpirationImminentAlarm(LentExpirationImminentAlarm alarm) {
 		Long daysAfterFromExpireDate = alarm.getDaysAfterFromExpireDate();
 		String body;
@@ -83,6 +84,7 @@ public class SlackAlarmSender {
 				Math.abs(daysAfterFromExpireDate));
 		return new SlackDto(body);
 	}
+
 
 	private SlackDto generateLentExpirationAlarm(LentExpirationAlarm alarm) {
 		Long daysLeftFromExpireDate = alarm.getDaysLeftFromExpireDate();

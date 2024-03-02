@@ -14,15 +14,15 @@ import lombok.ToString;
 @AllArgsConstructor
 public class LentExpirationImminentAlarm implements Alarm {
 
-	private final Long daysAfterFromExpireDate;
+	private final Long daysFromExpireDate;
 
 	public String getExpirationDateAsString() {
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime expireDate = now.plusDays(daysAfterFromExpireDate * -1);
-		return expireDate.format(DateTimeFormatter.ofPattern("YYYY년 MM월 DD일"));
+		LocalDateTime expireDate = now.plusDays(Math.abs(daysFromExpireDate));
+		return expireDate.format(DateTimeFormatter.ofPattern("YYYY년 MM월 dd일"));
 	}
 
 	public boolean isExpirationToday() {
-		return daysAfterFromExpireDate == 0L;
+		return daysFromExpireDate == 0L;
 	}
 }
