@@ -15,7 +15,11 @@ export const SuccessResponseModal: React.FC<{
     iconType: IconType.CHECKICON,
   };
 
-  return <Modal modalContents={modalContents} />;
+  return (
+    <ModalPortal>
+      <Modal modalContents={modalContents} />
+    </ModalPortal>
+  );
 };
 
 export const FailResponseModal: React.FC<{
