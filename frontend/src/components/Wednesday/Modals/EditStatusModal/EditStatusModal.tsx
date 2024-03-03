@@ -1,39 +1,112 @@
-import { useState } from "react";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { currentPresentationState } from "@/recoil/atoms";
 import Button from "@/components/Common/Button";
-import Dropdown from "@/components/Common/Dropdown";
-import Modal, { IModalContents } from "@/components/Modals/Modal";
+import Dropdown, {
+  IDropdown,
+  IDropdownOptions,
+} from "@/components/Common/Dropdown";
 import ModalPortal from "@/components/Modals/ModalPortal";
 import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
-import { PresentationStatusType } from "@/types/enum/Presentation/presentation.type.enum";
+import {
+  PresentationLocation,
+  PresentationStatusType,
+} from "@/types/enum/Presentation/presentation.type.enum";
+import {
+  axiosGetInvalidDates,
+  axiosUpdatePresentationStatus,
+} from "@/api/axios/axios.custom";
+import {
+  calculateAvailableDaysInWeeks,
+  filterInvalidDates,
+} from "@/utils/Presentation/dateUtils";
+import { WEDNESDAY } from "@/constants/dayOfTheWeek";
 
 interface EditStatusModalProps {
-  //   onClickProceed: (e: React.MouseEvent) => Promise<void>;
   closeModal: React.MouseEventHandler;
 }
 
-const STATUS_OPTIONS = [
-  { name: "발표 예정", value: PresentationStatusType.SCHEDULED, imageSrc: "" },
-  { name: "발표 완료", value: PresentationStatusType.FINISHED, imageSrc: "" },
-  { name: "발표 취소", value: PresentationStatusType.CANCLED, imageSrc: "" },
+const statusOptions: IDropdownOptions[] = [
+  { name: "발표 예정", value: PresentationStatusType.SCHEDULED },
+  { name: "발표 완료", value: PresentationStatusType.FINISHED },
+  { name: "발표 취소", value: PresentationStatusType.CANCLED },
 ];
 
-const EditStatusModal = ({
-  //   onClickProceed,
-  closeModal,
-}: EditStatusModalProps) => {
+const floorOptions: IDropdownOptions[] = [
+  { name: "지하 1층", value: PresentationLocation.BASEMENT },
+  { name: "1층", value: PresentationLocation.FIRST },
+  { name: "3층", value: PresentationLocation.THIRD },
+];
+
+// NOTE: 보여줄 개월 수
+const FUTURE_MONTHS_TO_DISPLAY = 3;
+
+// NOTE: 발표 가능한 주차
+const availableWeeks = (import.meta.env.VITE_AVAILABLE_WEEKS ?? "1,2,3,4")
+  .split(",")
+  .map(Number);
+
+const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
+  const currentPresentation = useRecoilValue(currentPresentationState);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [newPresentationStatusType, setNewPresentationStatusType] =
+  const [presentationDate, setPresentationDate] = useState<string>("");
+  const [presentationStatus, setPresentationStatus] =
     useState<PresentationStatusType>(PresentationStatusType.SCHEDULED);
+  const [location, setLocation] = useState<PresentationLocation>(
+    PresentationLocation.THIRD
+  );
+  const [invalidDates, setInvalidDates] = useState<string[]>([]);
+  const [statusDropdownProps, setStatusDropdownProps] = useState<IDropdown>({
+    options: statusOptions,
+    defaultValue:
+      statusOptions.find(
+        (option) => option.value === currentPresentation?.presentationStatus
+      )?.name ?? "발표 예정",
+    defaultImageSrc: "",
+    onChangeValue: (val: PresentationStatusType) => {
+      setPresentationStatus(val);
+    },
+  });
+  const [datesDropdownProps, setDatesDropdownProps] = useState<IDropdown>({
+    options: [],
+    defaultValue: currentPresentation?.dateTime
+      ? format(currentPresentation?.dateTime.split("T")[0], "M월 d일")
+      : "",
+    defaultImageSrc: "",
+    onChangeValue: (val: string) => {
+      setPresentationDate(val);
+    },
+  });
+  const [locationDropdownProps, setLocationDropdownProps] = useState<IDropdown>(
+    {
+      options: floorOptions,
+      defaultValue:
+        floorOptions.find(
+          (option) => option.value === currentPresentation?.presentationLocation
+        )?.name ?? "3층",
+      defaultImageSrc: "",
+      onChangeValue: (val: PresentationLocation) => {
+        setLocation(val);
+      },
+    }
+  );
 
   const tryEditPresentationStatus = async (e: React.MouseEvent) => {
+    if (!currentPresentation) return;
     try {
-      // await onClickProceed(e);
+      await axiosUpdatePresentationStatus(
+        currentPresentation.id,
+        presentationDate,
+        presentationStatus,
+        location
+      );
       setModalTitle("수정이 완료되었습니다");
     } catch (error: any) {
       setModalTitle(error.response.data.message);
@@ -43,16 +116,49 @@ const EditStatusModal = ({
     }
   };
 
-  const handleDropdownChange = (val: PresentationStatusType) => {
-    setNewPresentationStatusType(val);
+  const getInvalidDates = async () => {
+    try {
+      const response = await axiosGetInvalidDates();
+      setInvalidDates(response.data.invalidDateList);
+    } catch (error: any) {
+      setModalTitle(error.response.data.message);
+      setHasErrorOnResponse(true);
+    }
   };
 
-  const STATUS_DROPDOWN_PROPS = {
-    options: STATUS_OPTIONS,
-    defaultValue: STATUS_OPTIONS[0].name,
-    defaultImageSrc: STATUS_OPTIONS[0].imageSrc,
-    onChangeValue: handleDropdownChange,
-  };
+  useEffect(() => {
+    getInvalidDates();
+  }, []);
+
+  useEffect(() => {
+    if (!currentPresentation) return;
+    // NOTE: 발표 가능한 날짜들을 계산
+    const availableDates: Date[] = calculateAvailableDaysInWeeks(
+      new Date(),
+      availableWeeks,
+      WEDNESDAY,
+      FUTURE_MONTHS_TO_DISPLAY
+    );
+    // NOTE: 발표 가능한 날짜 중 유효하지 않은 날짜를 필터링
+    const availableDatesFiltered: Date[] = filterInvalidDates(
+      availableDates,
+      invalidDates
+    );
+    // NOTE: 발표 가능 날짜들을 Dropdown options으로 변환
+    const dropdownOptions: IDropdownOptions[] = availableDatesFiltered.map(
+      (date) => ({
+        name: format(date, "M월 d일"),
+        value: date,
+      })
+    );
+    setDatesDropdownProps({
+      options: dropdownOptions,
+      defaultValue: dropdownOptions[0].name,
+      onChangeValue: (val: string) => {
+        setPresentationDate(val);
+      },
+    });
+  }, [invalidDates]);
 
   return (
     <ModalPortal>
@@ -65,13 +171,15 @@ const EditStatusModal = ({
               <ContentItemSectionStyled>
                 <ContentItemWrapperStyled isVisible={true}>
                   <ContentItemTitleStyled>발표 상태</ContentItemTitleStyled>
-
-                  <Dropdown {...STATUS_DROPDOWN_PROPS} />
+                  <Dropdown {...statusDropdownProps} />
                 </ContentItemWrapperStyled>
                 <ContentItemWrapperStyled isVisible={true}>
                   <ContentItemTitleStyled>날짜</ContentItemTitleStyled>
-
-                  <Dropdown {...STATUS_DROPDOWN_PROPS} />
+                  <Dropdown {...datesDropdownProps} />
+                </ContentItemWrapperStyled>
+                <ContentItemWrapperStyled isVisible={true}>
+                  <ContentItemTitleStyled>장소</ContentItemTitleStyled>
+                  <Dropdown {...locationDropdownProps} />
                 </ContentItemWrapperStyled>
               </ContentItemSectionStyled>
             </ContentSectionStyled>
