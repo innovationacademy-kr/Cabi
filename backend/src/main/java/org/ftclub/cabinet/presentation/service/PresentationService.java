@@ -51,8 +51,9 @@ public class PresentationService {
 		presentationPolicyService.verifyReservationDate(dto.getDateTime());
 
 		Presentation presentation =
-			Presentation.of(dto.getCategory(), dto.getDateTime(),
-				dto.getPresentationTime(), dto.getSubject(), dto.getSummary(), dto.getDetail());
+				Presentation.of(dto.getCategory(), dto.getDateTime(),
+						dto.getPresentationTime(), dto.getSubject(), dto.getSummary(),
+						dto.getDetail());
 		User user = userQueryService.getUser(userId);
 
 		presentation.setUser(user);
@@ -71,10 +72,10 @@ public class PresentationService {
 		LocalDateTime end = start.plusMonths(MAX_MONTH);
 
 		List<Presentation> presentationList =
-			presentationRepository.findByDateTime(start, end);
+				presentationRepository.findByDateTime(start, end);
 		List<LocalDateTime> invalidDates = presentationList.stream()
-			.map(Presentation::getDateTime)
-			.collect(Collectors.toList());
+				.map(Presentation::getDateTime)
+				.collect(Collectors.toList());
 		return new InvalidDateResponseDto(invalidDates);
 	}
 
@@ -89,7 +90,7 @@ public class PresentationService {
 		LocalDateTime limit = now.atStartOfDay();
 
 		return presentationRepository
-			.findByDateTimeBeforeOrderByDateTimeDesc(limit, PageRequest.of(0, count));
+				.findByDateTimeBeforeOrderByDateTimeDesc(limit, PageRequest.of(0, count));
 	}
 
 	/**
@@ -104,7 +105,7 @@ public class PresentationService {
 		LocalDateTime start = now.atStartOfDay();
 		LocalDateTime end = start.plusMonths(MAX_MONTH);
 		return presentationRepository
-			.findByDateTimeBetweenOrderByDateTimeAsc(start, end, PageRequest.of(0, count));
+				.findByDateTimeBetweenOrderByDateTimeAsc(start, end, PageRequest.of(0, count));
 	}
 
 	/**
@@ -115,15 +116,15 @@ public class PresentationService {
 	 * @return
 	 */
 	public PresentationFormResponseDto getPastAndUpcomingPresentations(int pastFormCount,
-		int upcomingFormCount) {
+			int upcomingFormCount) {
 		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount);
 		List<Presentation> upcomingPresentations = getLatestUpcomingPresentations(
-			upcomingFormCount);
+				upcomingFormCount);
 
 		List<PresentationFormData> result =
-			Stream.concat(pastPresentations.stream(), upcomingPresentations.stream())
-				.map(presentationMapper::toPresentationFormDataDto)
-				.collect(Collectors.toList());
+				Stream.concat(pastPresentations.stream(), upcomingPresentations.stream())
+						.map(presentationMapper::toPresentationFormDataDto)
+						.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
 	}
@@ -139,10 +140,10 @@ public class PresentationService {
 		LocalDateTime endDayDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
 
 		List<PresentationFormData> result =
-			presentationRepository.findByDateTimeBetweenOrderByDateTime(startDate, endDayDate)
-				.stream()
-				.map(presentationMapper::toPresentationFormDataDto)
-				.collect(Collectors.toList());
+				presentationRepository.findByDateTimeBetweenOrderByDateTime(startDate, endDayDate)
+						.stream()
+						.map(presentationMapper::toPresentationFormDataDto)
+						.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
 	}
@@ -151,9 +152,9 @@ public class PresentationService {
 	/**
 	 * 해당 id 를 가진 발표의 상태를 변경합니다.
 	 * <p>
-	 * **** 추가 고려사항 -> 발표 3일전엔 확정 되어 update 불가인 정책이 있는지..?? -> 확인후 추가 해야할듯 **** 변경할 사항이
+	 * **** 추가 고려사항 -> 발표 3일전엔 확정 되어 update 불가인 정책이 있는지..?? -> 확인후 추가 해야할듯
 	 * <p>
-	 * entity에 location 컬럼 X 존재하지 않는 pk를 받은 경우 400 에러
+	 * **** 변경할 사항이 entity에 location 컬럼 X 존재하지 않는 pk를 받은 경우 400 에러
 	 * <p>
 	 * status에 없는 상태를 받은 경우 400에러
 	 *
@@ -164,17 +165,15 @@ public class PresentationService {
 	public void updatePresentationByFormId(Long formId, PresentationUpdateDto dto) {
 		presentationPolicyService.verifyReservationDate(dto.getDateTime());
 		PresentationStatus newStatus = presentationPolicyService.verityPresentationStatus(
-			dto.getStatus());
+				dto.getStatus());
 		PresentationLocation newLocation = presentationPolicyService.verityPresentationLocation(
-			dto.getLocation());
+				dto.getLocation());
 		Presentation presentationToUpdate =
-			presentationRepository.findById(formId)
-				.orElseThrow(ExceptionStatus.INVALID_FORM_ID::asServiceException);
+				presentationRepository.findById(formId)
+						.orElseThrow(ExceptionStatus.INVALID_FORM_ID::asServiceException);
 
-		presentationToUpdate.setPresentationStatus(newStatus);
-		presentationToUpdate.setDateTime(dto.getDateTime());
-		presentationToUpdate.setPresentationLocation(newLocation);
-
+		presentationToUpdate.adminUpdate(newStatus, dto.getDateTime(), newLocation);
 		presentationRepository.save(presentationToUpdate);
+		presentationRepository.flush();
 	}
 }

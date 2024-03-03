@@ -27,7 +27,7 @@ public class Presentation {
 	@Column(name = "ID")
 	private Long id;
 
-	@Setter
+	//	@Setter
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "PRESENTATION_STATUS")
 	private PresentationStatus presentationStatus;
@@ -49,11 +49,11 @@ public class Presentation {
 	@Column(name = "CATEGORY")
 	private Category category;
 
-	@Setter
+	//	@Setter
 	@Column(name = "DATE_TIME")
 	private LocalDateTime dateTime;
 
-	@Setter
+	//	@Setter
 	@Enumerated(value = EnumType.STRING)
 	private PresentationLocation presentationLocation;
 
@@ -81,4 +81,10 @@ public class Presentation {
 				summary, detail);
 	}
 
+	public void adminUpdate(PresentationStatus newStatus, LocalDateTime newDateTime,
+			PresentationLocation newLocation) {
+		this.presentationStatus = newStatus;
+		this.dateTime = newDateTime;
+		this.presentationLocation = newLocation;
+	}
 }
