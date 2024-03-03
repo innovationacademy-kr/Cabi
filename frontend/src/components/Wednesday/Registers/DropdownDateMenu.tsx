@@ -3,15 +3,17 @@ import styled from "styled-components";
 import chevronIcon from "@/assets/images/dropdownChevron.svg";
 
 const DropdownDateMenu = ({
+  data,
   onClick,
 }: {
+  data: string[];
   onClick: (selectedDate: string) => void;
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<string>("");
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isFocused, setIsFocused] = useState(false);
-  const [isIconRotated, setIsIconRotated] = useState(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [isIconRotated, setIsIconRotated] = useState<boolean>(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -30,18 +32,7 @@ const DropdownDateMenu = ({
     };
   }, [dropdownRef]);
 
-  enum PresentationDate {
-    THIS_MONTH_FIRST = "2/7",
-    THIS_MONTH_SECOND = "2/14",
-    THIS_MONTH_THIRD = "2/21",
-    THIS_MONTH_FOURTH = "2/28",
-    NEXT_MONTH_FIRST = "3/6",
-    NEXT_MONTH_SECOND = "3/13",
-    NEXT_MONTH_THIRD = "3/20",
-    NEXT_MONTH_FOURTH = "3/21",
-  }
-
-  const handleOptionSelect = (option: PresentationDate) => {
+  const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
     setIsVisible(false);
     setIsFocused(false);
@@ -71,7 +62,7 @@ const DropdownDateMenu = ({
       </RegisterTimeInputStyled>
       {isVisible && (
         <DropdownOptions>
-          {Object.values(PresentationDate).map((time) => (
+          {data.map((time) => (
             <DropdownOption key={time} onClick={() => handleOptionSelect(time)}>
               {time}
             </DropdownOption>

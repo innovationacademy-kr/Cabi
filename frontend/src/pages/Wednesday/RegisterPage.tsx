@@ -1,44 +1,49 @@
-import React, { useState } from "react";
-// react-toastify 사용 가능한지 확인
-// import { toast } from "react-toastify";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-// import { NotificationModal } from "@/components/Modals/NotificationModal/NotificationModal";
-// import TooltipBox from "@/components/CabinetList/RealViewNotification/RealViewNotification";
 import { toggleItem } from "@/components/Common/MultiToggleSwitch";
 import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/components/Modals/ResponseModal/ResponseModal";
 import DropdownDateMenu from "@/components/Wednesday/Registers/DropdownDateMenu";
 import DropdownTimeMenu from "@/components/Wednesday/Registers/DropdownTimeMenu";
 import NotificationIcon from "@/assets/images/notificationSign_grey.svg";
-import { axiosPostPresentationForm } from "@/api/axios/axios.custom";
-
-enum PresentationCategory {
-  TASK = "TASK",
-  DEVELOP = "DEVELOP",
-  STUDY = "STUDY",
-  HOBBY = "HOBBY",
-  JOB = "JOB",
-  ETC = "ETC",
-}
-
-enum PresentationPeriod {
-  HALF = "HALF",
-  HOUR = "HOUR",
-  HOUR_HALF = "HOUR_HALF",
-  TWO_HOUR = "TWO_HOUR",
-}
+import {
+  PresentationCategoryType,
+  PresentationPeriodType,
+} from "@/types/enum/Presentation/presentation.type.enum";
+import {
+  axiosGetInvalidDates,
+  axiosPostPresentationForm,
+} from "@/api/axios/axios.custom";
+import {
+  calculateAvailableDaysInWeeks,
+  filterInvalidDates,
+} from "@/utils/Presentation/dateUtils";
+import { WEDNESDAY } from "@/constants/Presentation/dayOfTheWeek";
+import {
+  AVAILABLE_WEEKS,
+  FUTURE_MONTHS_TO_DISPLAY,
+} from "@/constants/Presentation/policy";
 
 const toggleList: toggleItem[] = [
-  { name: "42", key: PresentationCategory.TASK },
-  { name: "개발", key: PresentationCategory.DEVELOP },
-  { name: "학술", key: PresentationCategory.STUDY },
-  { name: "취미", key: PresentationCategory.HOBBY },
-  { name: "취업", key: PresentationCategory.JOB },
-  { name: "기타", key: PresentationCategory.ETC },
+  { name: "42", key: PresentationCategoryType.TASK },
+  { name: "개발", key: PresentationCategoryType.DEVELOP },
+  { name: "학술", key: PresentationCategoryType.STUDY },
+  { name: "취미", key: PresentationCategoryType.HOBBY },
+  { name: "취업", key: PresentationCategoryType.JOB },
+  { name: "기타", key: PresentationCategoryType.ETC },
 ];
 
+const NotificationDetail = `시작 시간은 수요일 오후 2시로 고정되며</br>시간은 각각 30분, 1시간, 1시간 30분,</br>2시간 중에서 선택하실 수 있습니다.
+`;
+
 const RegisterPage = () => {
-  const [toggleType, setToggleType] = useState<PresentationCategory>(
-    PresentationCategory.TASK
+  const [toggleType, setToggleType] = useState<PresentationCategoryType>(
+    PresentationCategoryType.TASK
   );
   const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<string>("");
@@ -51,6 +56,24 @@ const RegisterPage = () => {
   const [titleLength, setTitleLength] = useState<number>(0);
   const [summaryLength, setSummaryLength] = useState<number>(0);
   const [contentLength, setContentLength] = useState<number>(0);
+  const [invalidDates, setInvalidDates] = useState<string[]>([]);
+  const [availableDates, setAvailableDates] = useState<string[]>([]);
+  const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
+  const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>("");
+
+  const navigate = useNavigate();
+
+  const getInvalidDates = async () => {
+    try {
+      const response = await axiosGetInvalidDates();
+      setInvalidDates(response.data.invalidDateList);
+    } catch (error: any) {
+      setModalTitle(error.response.data.message);
+      setHasErrorOnResponse(true);
+      setShowResponseModal(true);
+    }
+  };
 
   const handleDateChange = (selectedDate: string) => {
     setDate(selectedDate);
@@ -60,28 +83,27 @@ const RegisterPage = () => {
     let convertedTime: string;
     switch (selectedTime) {
       case "30분":
-        convertedTime = PresentationPeriod.HALF;
+        convertedTime = PresentationPeriodType.HALF;
         break;
       case "1시간":
-        convertedTime = PresentationPeriod.HOUR;
+        convertedTime = PresentationPeriodType.HOUR;
         break;
       case "1시간 30분":
-        convertedTime = PresentationPeriod.HOUR_HALF;
+        convertedTime = PresentationPeriodType.HOUR_HALF;
         break;
       case "2시간":
-        convertedTime = PresentationPeriod.TWO_HOUR;
+        convertedTime = PresentationPeriodType.TWO_HOUR;
         break;
       default:
         convertedTime = selectedTime;
-        break;
     }
-    setTime(selectedTime);
-    setTimeForBackend(convertedTime);
+    // setTime(selectedTime);
+    setTime(convertedTime);
   };
 
-  const setTimeForBackend = (time: string) => {
-    setTime(time);
-  };
+  // const setTimeForBackend = (time: string) => {
+  //   setTime(time);
+  // };
 
   const handleFocus = (sectionName: string) => {
     setFocusedSection(sectionName);
@@ -99,35 +121,69 @@ const RegisterPage = () => {
     setShowNotificationBox(false);
   };
 
-  const NotificationDetail = `시작 시간은 수요일 오후 2시로 고정되며</br>시간은 각각 30분, 1시간, 1시간 30분,</br>2시간 중에서 선택하실 수 있습니다.
-  `;
-
   const tryRegister = async () => {
+    // 항목을 전부 입력하지 않았을 경우 toast message 띄워주도록 예외처리?
+    if (
+      date === "" ||
+      time === "" ||
+      title === "" ||
+      summary === "" ||
+      content === ""
+    ) {
+      alert("모든 항목을 입력해주세요");
+      return;
+    }
     try {
-      // 항목을 전부 입력하지 않았을 경우 toast message 띄워주도록 예외처리?
-      //   if (!title || !summary || !content || !date || !time) {
-      //     toast.error("모든 항목을 입력해주세요");
-      //     return;
-      //   }
       const [month, day] = date.split("/");
-      const data = new Date(2024, parseInt(month) - 1, parseInt(day));
-
-      const convertedCategory = toggleType;
-
+      const data = new Date(
+        Number(new Date().getFullYear()),
+        Number(month) - 1,
+        Number(day)
+      );
+      // NOTE: Date 객체의 시간은 UTC 기준이므로 한국 시간 (GMT + 9) 으로 변환, 이후 발표 시작 시간인 14시를 더해줌
+      data.setHours(9 + 14);
       await axiosPostPresentationForm(
         title,
         summary,
         content,
         data,
-        convertedCategory,
+        toggleType,
         `${time}`
       );
-      // useNavigate로 변경
-      // window.location.href = "/wed/home";
-    } catch (error) {
-      throw error;
+      setModalTitle("신청이 완료되었습니다");
+      setTimeout(() => {
+        navigate("/wed/home");
+      }, 1500);
+    } catch (error: any) {
+      setModalTitle(error.response.data.message);
+      setHasErrorOnResponse(true);
+    } finally {
+      setShowResponseModal(true);
     }
   };
+
+  useEffect(() => {
+    getInvalidDates();
+  }, []);
+
+  useEffect(() => {
+    // NOTE: 발표 가능한 날짜들을 계산
+    const availableDates: Date[] = calculateAvailableDaysInWeeks(
+      new Date(),
+      AVAILABLE_WEEKS,
+      WEDNESDAY,
+      FUTURE_MONTHS_TO_DISPLAY
+    );
+    // NOTE: 발표 가능한 날짜 중 유효하지 않은 날짜를 필터링
+    const availableDatesFiltered: Date[] = filterInvalidDates(
+      availableDates,
+      invalidDates
+    );
+    // NOTE: 발표 가능 날짜들을 string 배열로 변환
+    setAvailableDates(
+      availableDatesFiltered.map((date) => format(date, "M/d"))
+    );
+  }, [invalidDates]);
 
   return (
     <>
@@ -147,7 +203,10 @@ const RegisterPage = () => {
             <SubSection>
               <SubNameStyled>날짜</SubNameStyled>
               <DropdownStyled>
-                <DropdownDateMenu onClick={handleDateChange} />
+                <DropdownDateMenu
+                  onClick={handleDateChange}
+                  data={availableDates}
+                />
               </DropdownStyled>
             </SubSection>
             <SubSection>
@@ -222,6 +281,22 @@ const RegisterPage = () => {
         </BackgroundStyled>
       </RegisterPageStyled>
       {showNotificationBox && <TooltipBox>{NotificationDetail}</TooltipBox>}
+      {showResponseModal &&
+        (hasErrorOnResponse ? (
+          <FailResponseModal
+            modalTitle={modalTitle}
+            closeModal={() => {
+              setShowResponseModal(false);
+            }}
+          />
+        ) : (
+          <SuccessResponseModal
+            modalTitle={modalTitle}
+            closeModal={() => {
+              setShowResponseModal(false);
+            }}
+          />
+        ))}
     </>
   );
 };
