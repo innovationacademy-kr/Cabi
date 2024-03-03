@@ -25,7 +25,11 @@ import {
   calculateAvailableDaysInWeeks,
   filterInvalidDates,
 } from "@/utils/Presentation/dateUtils";
-import { WEDNESDAY } from "@/constants/dayOfTheWeek";
+import { WEDNESDAY } from "@/constants/Presentation/dayOfTheWeek";
+import {
+  AVAILABLE_WEEKS,
+  FUTURE_MONTHS_TO_DISPLAY,
+} from "@/constants/Presentation/policy";
 
 interface EditStatusModalProps {
   closeModal: React.MouseEventHandler;
@@ -42,14 +46,6 @@ const floorOptions: IDropdownOptions[] = [
   { name: "1층", value: PresentationLocation.FIRST },
   { name: "3층", value: PresentationLocation.THIRD },
 ];
-
-// NOTE: 보여줄 개월 수
-const FUTURE_MONTHS_TO_DISPLAY = 3;
-
-// NOTE: 발표 가능한 주차
-const availableWeeks = (import.meta.env.VITE_AVAILABLE_WEEKS ?? "1,2,3,4")
-  .split(",")
-  .map(Number);
 
 const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   const currentPresentation = useRecoilValue(currentPresentationState);
@@ -123,6 +119,7 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
     } catch (error: any) {
       setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
+      setShowResponseModal(true);
     }
   };
 
@@ -135,7 +132,7 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
     // NOTE: 발표 가능한 날짜들을 계산
     const availableDates: Date[] = calculateAvailableDaysInWeeks(
       new Date(),
-      availableWeeks,
+      AVAILABLE_WEEKS,
       WEDNESDAY,
       FUTURE_MONTHS_TO_DISPLAY
     );
@@ -161,39 +158,41 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   }, [invalidDates]);
 
   return (
-    <ModalPortal>
-      {!showResponseModal && (
-        <>
-          <BackgroundStyled onClick={closeModal} />
-          <ModalContainerStyled type={"confirm"}>
-            <H2Styled>일정 관리</H2Styled>
-            <ContentSectionStyled>
-              <ContentItemSectionStyled>
-                <ContentItemWrapperStyled isVisible={true}>
-                  <ContentItemTitleStyled>발표 상태</ContentItemTitleStyled>
-                  <Dropdown {...statusDropdownProps} />
-                </ContentItemWrapperStyled>
-                <ContentItemWrapperStyled isVisible={true}>
-                  <ContentItemTitleStyled>날짜</ContentItemTitleStyled>
-                  <Dropdown {...datesDropdownProps} />
-                </ContentItemWrapperStyled>
-                <ContentItemWrapperStyled isVisible={true}>
-                  <ContentItemTitleStyled>장소</ContentItemTitleStyled>
-                  <Dropdown {...locationDropdownProps} />
-                </ContentItemWrapperStyled>
-              </ContentItemSectionStyled>
-            </ContentSectionStyled>
-            <ButtonWrapperStyled>
-              <Button
-                onClick={tryEditPresentationStatus}
-                text="저장"
-                theme="fill"
-              />
-              <Button onClick={closeModal} text={"취소"} theme={"line"} />
-            </ButtonWrapperStyled>
-          </ModalContainerStyled>
-        </>
-      )}
+    <>
+      <ModalPortal>
+        {!showResponseModal && (
+          <>
+            <BackgroundStyled onClick={closeModal} />
+            <ModalContainerStyled type={"confirm"}>
+              <H2Styled>일정 관리</H2Styled>
+              <ContentSectionStyled>
+                <ContentItemSectionStyled>
+                  <ContentItemWrapperStyled isVisible={true}>
+                    <ContentItemTitleStyled>발표 상태</ContentItemTitleStyled>
+                    <Dropdown {...statusDropdownProps} />
+                  </ContentItemWrapperStyled>
+                  <ContentItemWrapperStyled isVisible={true}>
+                    <ContentItemTitleStyled>날짜</ContentItemTitleStyled>
+                    <Dropdown {...datesDropdownProps} />
+                  </ContentItemWrapperStyled>
+                  <ContentItemWrapperStyled isVisible={true}>
+                    <ContentItemTitleStyled>장소</ContentItemTitleStyled>
+                    <Dropdown {...locationDropdownProps} />
+                  </ContentItemWrapperStyled>
+                </ContentItemSectionStyled>
+              </ContentSectionStyled>
+              <ButtonWrapperStyled>
+                <Button
+                  onClick={tryEditPresentationStatus}
+                  text="저장"
+                  theme="fill"
+                />
+                <Button onClick={closeModal} text={"취소"} theme={"line"} />
+              </ButtonWrapperStyled>
+            </ModalContainerStyled>
+          </>
+        )}
+      </ModalPortal>
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal modalTitle={modalTitle} closeModal={closeModal} />
@@ -203,7 +202,7 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
             closeModal={closeModal}
           />
         ))}
-    </ModalPortal>
+    </>
   );
 };
 
