@@ -56,7 +56,7 @@ export const filterInvalidDates = (
  * @param dayOfTheWeek 보여줄 요일 (0-6)
  * @param maxMonthOffset 계산할 최대 개월 수
  *
- * @returns 최대 maxMonthOffset 개월 내의 주어진 주차 중 주어진 요일 에 해당하는 날짜들
+ * @returns maxMonthOffset 개월 내의 주어진 주차 중 주어진 요일 에 해당하는 날짜들
  *
  * @example
  * // 2024년 3월 4일부터 2개월 내에서, 매 달의 1, 3 주차 중 수요일 (3) 에 해당하는 날짜들을 구함
