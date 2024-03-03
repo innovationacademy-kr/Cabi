@@ -44,7 +44,17 @@ export const filterInvalidDates = (
   const invalidDatesFormatted = (invalidDates as string[]).map(
     (date) => new Date(date)
   );
-  return availableDates.filter((date) => !invalidDatesFormatted.includes(date));
+  // NOTE: Date 객채의 시간이 다른 경우를 고려하여 날짜만 비교
+  // TODO: 추후 하루에 여러 개의 발표가 가능한 경우, 시간까지 비교해야 함
+  return availableDates.filter(
+    (date) =>
+      !invalidDatesFormatted.some(
+        (invalidDate) =>
+          date.getDate() === invalidDate.getDate() &&
+          date.getMonth() === invalidDate.getMonth() &&
+          date.getFullYear() === invalidDate.getFullYear()
+      )
+  );
 };
 
 /**
