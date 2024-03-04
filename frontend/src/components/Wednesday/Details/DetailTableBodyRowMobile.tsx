@@ -29,7 +29,7 @@ const DetailTableBodyRowMobile = ({
     useState<null | IPresentationScheduleDetailInfo>(null);
   const navigator = useNavigate();
   const setCurrentPresentation = useSetRecoilState(currentPresentationState);
-  const [handleColSpan, setHandleColSpan] = useState(4);
+  const [handleColSpan, setHandleColSpan] = useState(3);
   const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
     if (isAdmin && !itemStatus) {
       setCurrentPresentation({
@@ -38,6 +38,7 @@ const DetailTableBodyRowMobile = ({
         presentationTime: item.presentationTime,
         presentationStatus: item.presentationStatus,
         presentationLocation: item.presentationLocation,
+        detail: item.detail,
       });
       openAdminModal("statusModal");
     } else {
@@ -75,19 +76,11 @@ const DetailTableBodyRowMobile = ({
             !itemStatus && handleItemClick(item);
           }}
         >
-          {/* <td className="leftEnd" colSpan={5} id={itemStatus}>
-            <div className="TopSubInfo">
+          <td>
+            <div className="leftEnd">
               <div>
                 {itemDate?.month}월 {itemDate?.day}일
               </div>
-              <div>{item.userName}</div>
-              <div>{presentationCategoryKorean[item.category!]}</div>
-              <div>{presentationPeriodNumber[item.presentationTime!]}분</div>
-            </div>
-          </td> */}
-          <td>
-            <div className="leftEnd">
-              {itemDate?.month}월 {itemDate?.day}일
             </div>{" "}
           </td>
           <td>
@@ -97,7 +90,9 @@ const DetailTableBodyRowMobile = ({
             <div>{presentationCategoryKorean[item.category!]}</div>
           </td>
           <td>
-            <div className="rightEnd">{presentationPeriodNumber[item.presentationTime!]}분</div>
+            <div className="rightEnd">
+              {presentationPeriodNumber[item.presentationTime!]}분
+            </div>
           </td>
         </TopTableDetailTrStyled>
       ) : null}
@@ -161,9 +156,7 @@ const DetailTableBodyRowMobile = ({
             }}
           >
             <td colSpan={4}>
-              <div>
-              {item.detail}
-              </div>
+              <div>{item.detail}</div>
             </td>
           </TableDetailTrStyled>
         </>
@@ -180,22 +173,10 @@ const MobileTableStyled = styled.tr<{
   height: 70px;
   width: 100%;
 
-
   line-height: 30px;
   text-align: center;
   font-size: 18px;
   background-color: #dce7fd;
-
-  & > td {
-    padding: 0 10px;
-  }
-
-  & #MobileSubject {
-    height: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 
   & #noEventCurrent {
     background-color: var(--white);
@@ -203,12 +184,6 @@ const MobileTableStyled = styled.tr<{
 
   & #noEventPast {
     background-color: var(--full);
-  }
-
-  & > td > div {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    /* white-space: nowrap; */
   }
 
   & button {
@@ -221,10 +196,24 @@ const MobileTableStyled = styled.tr<{
 
   & .leftEnd {
     border-radius: ${(props) => (props.open ? "10px 0 0 0" : "10px 0 0 10px")};
+    padding-left: 5px;
+    > div {
+      height: 100%;
+      /* word-break: keep-all;  */
+    }
   }
 
   & .rightEnd {
     border-radius: ${(props) => (props.open ? "0 0 0 0" : "0 10px 10px 0")};
+    > div {
+      height: 70px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap; */
+    }
   }
 
   @media screen and (min-width: 1150px) {
@@ -234,8 +223,7 @@ const MobileTableStyled = styled.tr<{
 
 const TableDetailTrStyled = styled.tr`
   background-color: #91b5fa;
-  
-  /* width: 100%; */
+
   line-height: 30px;
   & > td {
     border-radius: 0 0 10px 10px;
@@ -256,32 +244,22 @@ const TableDetailTrStyled = styled.tr`
 `;
 const TopTableDetailTrStyled = styled.tr`
   background-color: #91b5fa;
-  /* width: 100%; */
-  & .TopSubInfo {
-    padding: 20px 30px 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: row;
-  }
+  width: 100%;
   & > td {
     border-radius: 10px 10px 0 0;
     padding: 0;
   }
   & > td > div {
-    border-radius: 0px;
-    margin-top: 0;
     line-height: 24px;
-    padding: 20px 50px;
     font-size: 18px;
-  background-color: #91b5fa;
-
-
+    text-align: center;
+    padding: 15px 0 0 5px;
+    background-color: #91b5fa;
   }
   & .leftEnd {
     border-radius: 10px 0 0px 0px;
   }
-  
+
   & .rightEnd {
     border-radius: 0px 10px 0px 0px;
   }

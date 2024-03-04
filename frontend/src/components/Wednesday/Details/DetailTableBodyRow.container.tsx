@@ -70,6 +70,7 @@ const DetailTableBodyRowContainer = ({
         presentationTime: item.presentationTime,
         presentationStatus: item.presentationStatus,
         presentationLocation: item.presentationLocation,
+        detail: item.detail,
       });
       openAdminModal("statusModal");
     } else {
