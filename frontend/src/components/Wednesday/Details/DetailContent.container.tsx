@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DetailContent from "@/components/Wednesday/Details/DetailContent";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 import { axiosGetPresentationSchedule } from "@/api/axios/axios.custom";
+import { calculateAvailableDaysInWeeks } from "@/utils/Presentation/dateUtils";
 
 export interface IDate {
   year: string;
@@ -36,7 +37,10 @@ const DetailContentContainer = () => {
   }, [currentDate]);
 
   const makeIDateObj = (date: Date) => {
-    let dateISO = date.toISOString();
+    let offset = date.getTimezoneOffset() * 60000;
+    let dateOffset = new Date(date.getTime() - offset);
+
+    let dateISO = dateOffset.toISOString();
     // 1. T 앞에서 끊고
     let dateBeforeT = dateISO.substring(0, 10);
     // 2. -로 분리
@@ -56,7 +60,45 @@ const DetailContentContainer = () => {
       const response = await axiosGetPresentationSchedule(
         requestDate.year + "-" + requestDate.month
       );
-      setPresentationDetailInfo(response.data.forms);
+      let objAry = response.data.forms;
+      const availableDays = calculateAvailableDaysInWeeks(
+        new Date(
+          parseInt(todayDate!.year),
+          parseInt(todayDate!.month),
+          parseInt(todayDate!.day)
+        ),
+        [1, 3],
+        3,
+        2
+      );
+      if (objAry.length < 2) {
+        // availableDays 중 requestDate랑 달이 같은 것들 추출
+        const sameMonth = availableDays.filter((date) => {
+          return date.getMonth() + 1 === parseInt(requestDate.month);
+        });
+        if (objAry.length === 0) {
+          // 해당 월의 날짜 2개의 IPresentationScheduleDetailInfo 배열을 만든다
+          objAry = sameMonth.map((day) => {
+            return {
+              id: null,
+              subject: null,
+              summary: null,
+              detail: null,
+              dateTime: day.toISOString(),
+              category: null,
+              userName: null,
+              presentationTime: null,
+            };
+          });
+        }
+        // 만약 1개면
+        // 해당 월의 날짜 2개 중 받은 날짜 제외 날짜의 IPresentationScheduleDetailInfo를 만든다
+        // 받은 날짜가 먼저면 push
+        // else 맨 앞에 넣기
+      }
+
+      // toisostring으로 변환
+      setPresentationDetailInfo(objAry);
     } catch (error: any) {
       // TODO
     } finally {

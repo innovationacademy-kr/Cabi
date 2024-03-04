@@ -64,7 +64,7 @@ const DetailTableBodyRow = ({
                     {head[0] === "category" &&
                       presentationCategoryKorean[item.category!]}
                     {head[0] === "presentationTime" &&
-                      presentationPeriodNumber[item.presentationTime!]}
+                      presentationPeriodNumber[item.presentationTime!] + "분"}
                   </div>
                 </td>
               );

@@ -4,7 +4,7 @@ import {
 } from "@/types/enum/Presentation/presentation.type.enum";
 
 export interface IPresentationInfo {
-  id: number;
+  id: number | null;
   dateTime: string;
   presentationStatus?: string | null;
   presentationTime: PresentationPeriodType | null;
@@ -13,7 +13,7 @@ export interface IPresentationInfo {
 }
 
 export interface IPresentationScheduleDetailInfo {
-  id: number;
+  id: number | null;
   subject: string | null;
   summary: string | null;
   detail: string | null;
