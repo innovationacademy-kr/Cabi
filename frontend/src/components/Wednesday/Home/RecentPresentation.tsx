@@ -9,25 +9,8 @@ import {
   IPresentationInfo,
   IPresentationScheduleDetailInfo,
 } from "@/types/dto/wednesday.dto";
-import {
-  PresentationCategoryType,
-  PresentationPeriodType,
-} from "@/types/enum/Presentation/presentation.type.enum";
+import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 import { axiosGetPresentation } from "@/api/axios/axios.custom";
-
-// export interface IPresentation {
-//   image: string; // 나중에 뺴기
-//   subject: string | null;
-//   summary: string | null;
-//   detail: string | null;
-//   dateTime: string;
-//   category: PresentationCategoryType | null;
-//   userName: string | null;
-//   id: number;
-//   presentationStatus?: string | null;
-//   presentationTime: PresentationPeriodType | null;
-//   presentationLocation?: string | null;
-// }
 
 const RecentPresentation = ({
   presentButtonHandler,
@@ -99,6 +82,41 @@ const RecentPresentation = ({
     return iDateObj;
   };
 
+  const presentationCategoryIcon = [
+    {
+      name: "/src/assets/images/PresentationFortyTwo.svg",
+      key: PresentationCategoryType.TASK,
+    },
+    {
+      name: "/src/assets/images/PresentationDevelop.svg",
+      key: PresentationCategoryType.DEVELOP,
+    },
+    {
+      name: "/src/assets/images/PresentationAcademic.svg",
+      key: PresentationCategoryType.STUDY,
+    },
+    {
+      name: "/src/assets/images/PresentationHobby.svg",
+      key: PresentationCategoryType.HOBBY,
+    },
+    {
+      name: "/src/assets/images/PresentationJob.svg",
+      key: PresentationCategoryType.JOB,
+    },
+    {
+      name: "/src/assets/images/PresentationEtc.svg",
+      key: PresentationCategoryType.ETC,
+    },
+    { name: "/src/assets/images/PresentationEmpty.svg", key: "" },
+  ];
+
+  const searchCategory = (categoryName: string): string | undefined => {
+    const foundCategory = presentationCategoryIcon.find(
+      (category) => category.key === categoryName
+    );
+    return foundCategory ? foundCategory.name : undefined;
+  };
+
   return (
     <ConTainerStyled>
       <WedHeaderStyled>
@@ -121,6 +139,9 @@ const RecentPresentation = ({
           select={select}
           setSelect={setSelect}
           makeIDateObj={makeIDateObj}
+          // isNull={presentationLists}
+          searchCategory={searchCategory}
+          // presentationCategoryIcon={presentationCategoryIcon}
         />
       ) : (
         <WedCards
@@ -129,6 +150,8 @@ const RecentPresentation = ({
           presentation={currentPresentations}
           makeIDateObj={makeIDateObj}
           isNull={presentationLists}
+          searchCategory={searchCategory}
+          // presentationCategoryIcon={presentationCategoryIcon}
         />
       )}
       <WedMainDesc

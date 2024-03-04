@@ -2,30 +2,31 @@ import styled, { css, keyframes } from "styled-components";
 import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
 import {
   IAnimation,
+  IPresentationCategoryIcon,
   IPresentationScheduleDetailInfo,
 } from "@/types/dto/wednesday.dto";
+import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 
 const WedCards = ({
   presentation,
   select,
   setSelect,
   makeIDateObj,
-  isNull,
+  searchCategory,
 }: {
   presentation: IPresentationScheduleDetailInfo[] | null;
   select: number;
   setSelect: (value: number) => void;
   makeIDateObj: (date: Date) => IDate;
   isNull: boolean;
+  searchCategory: (categoryName: string) => string | undefined;
 }) => {
   const onClick = (index: number) => {
     if (select) setSelect(index);
     else setSelect(index);
-    console.log(isNull);
     (presentation || []).concat(
       Array.from({ length: 3 - (presentation || []).length })
     );
-    console.log(presentation);
   };
 
   // datatime 다음주 날짜 가져오고 싶다..
@@ -33,34 +34,36 @@ const WedCards = ({
     new Array(Math.max(3 - (presentation.length || 0), 0)).fill({
       id: -1,
       subject: "예정된 일정이 없습니다. 당신의 이야기를 들려주세요",
-      // datatime: "",
+      category: "",
     })
   );
-  console.log(currentPresentations);
 
   return (
     <ContainerStyled>
       {currentPresentations?.map((p, index) => {
         const tmpDate = p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
-
         return (
           <WedCardStyled
             key={index}
             onClick={() => onClick(index)}
             className={index == select ? "check" : "not-check"}
           >
-            {/* 이미지 잡기 */}
             {p.id !== -1 ? (
               <>
-                <ImageStyled>{p.image}</ImageStyled>
+                <CategoryStyled>
+                  {p.category && <img src={searchCategory(p.category)} />}
+                </CategoryStyled>
                 <NameStyled>{p.userName}</NameStyled>
                 <TitleStyled>{p.subject}</TitleStyled>
                 <SubTitleStyled>{p.summary}</SubTitleStyled>
               </>
             ) : (
               <>
-                <ImageStyled>{p.image}</ImageStyled>
-                <TitleStyled>{p.subject}</TitleStyled>
+                <CategoryStyled>
+                  <img src={searchCategory("")} />
+                </CategoryStyled>
+                <TitleStyled>예정된 일정이 없습니다.</TitleStyled>
+                <TitleStyled>당신의 이야기를 들려주세요</TitleStyled>
               </>
             )}
 
@@ -164,11 +167,10 @@ const WedCardStyled = styled.div`
   }
 `;
 
-const ImageStyled = styled.div`
+const CategoryStyled = styled.div`
   // width : 130px;
   width: 90px;
   height: 90px;
-  background-color: gray;
 
   border-radius: 1000px;
 
@@ -230,7 +232,8 @@ const TitleStyled = styled.div`
   text-align: center;
   font-size: 1.2rem;
   font-weight: 700;
-  word-break: break-all;
+  // word-break: break-all;
+  white-space: pre-line;
   ${WedCardStyled}.check & {
     font-size: 1.6rem;
   }

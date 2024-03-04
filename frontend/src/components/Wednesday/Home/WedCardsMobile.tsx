@@ -8,16 +8,26 @@ const WedCardsMobile = ({
   select,
   setSelect,
   makeIDateObj,
+  searchCategory,
 }: {
   presentation: IPresentationScheduleDetailInfo[] | null;
   select: number;
   setSelect: (value: number) => void;
   makeIDateObj: (date: Date) => IDate;
+  searchCategory: (categoryName: string) => string | undefined;
 }) => {
   const [move, setMove] = useState(0);
   const touchStartPosX = useRef(0);
   const touchStartPosY = useRef(0);
   const components = [];
+
+  const currentPresentations = presentation?.concat(
+    new Array(Math.max(3 - (presentation.length || 0), 0)).fill({
+      id: -1,
+      subject: "예정된 일정이 없습니다. 당신의 이야기를 들려주세요",
+      category: "",
+    })
+  );
 
   const onPageClick = (i: number) => {
     if (i !== select) {
@@ -78,8 +88,9 @@ const WedCardsMobile = ({
   return (
     <ContainerStyled>
       <CardWrapperStyled select={move}>
-        {presentation?.map((p, index) => {
-          const tmpDate = makeIDateObj(new Date(p.dateTime));
+        {currentPresentations?.map((p, index) => {
+          const tmpDate =
+            p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
 
           return (
             <WedCardStyled
@@ -97,19 +108,34 @@ const WedCardsMobile = ({
                 );
               }}
             >
-              <ImageStyled>{p.image}</ImageStyled>
-              <NameStyled>{p.userName}</NameStyled>
-              <TitleStyled>{p.subject}</TitleStyled>
-              <SubTitleStyled>{p.summary}</SubTitleStyled>
-
-              <CalendarStyled>
-                <IconStyled>
-                  <img src="/src/assets/images/calendar.svg" alt="" />
-                </IconStyled>
-                <span>
-                  {tmpDate?.month}/{tmpDate?.day}
-                </span>
-              </CalendarStyled>
+              {p.id !== -1 ? (
+                <>
+                  <CategoryStyled>
+                    {p.category && <img src={searchCategory(p.category)} />}
+                  </CategoryStyled>
+                  <NameStyled>{p.userName}</NameStyled>
+                  <TitleStyled>{p.subject}</TitleStyled>
+                  <SubTitleStyled>{p.summary}</SubTitleStyled>
+                </>
+              ) : (
+                <>
+                  <CategoryStyled>
+                    <img src={searchCategory("")} />
+                  </CategoryStyled>
+                  <TitleStyled>예정된 일정이 없습니다.</TitleStyled>
+                  <TitleStyled>당신의 이야기를 들려주세요</TitleStyled>
+                </>
+              )}
+              {p.id !== -1 && (
+                <CalendarStyled>
+                  <IconStyled>
+                    <img src="/src/assets/images/calendar.svg" alt="" />
+                  </IconStyled>
+                  <span>
+                    {tmpDate?.month}/{tmpDate?.day}
+                  </span>
+                </CalendarStyled>
+              )}
             </WedCardStyled>
           );
         })}
@@ -191,8 +217,8 @@ const IconStyled = styled.div`
   margin-right: 8px;
 `;
 
-const ImageStyled = styled.div`
-  background-color: gray;
+const CategoryStyled = styled.div`
+  // background-color: gray;
   width: 100px;
   height: 90px;
   border-radius: 300px;
