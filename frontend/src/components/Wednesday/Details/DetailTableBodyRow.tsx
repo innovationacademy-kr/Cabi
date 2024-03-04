@@ -8,7 +8,6 @@ import {
 } from "@/components/Wednesday/Details/DetailTableBodyRow.container";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 import NoEventTableRow from "./NoEventTableRow";
-import { tableHeadArray } from "./TableHead";
 
 const DetailTableBodyRow = ({
   item,
@@ -18,6 +17,7 @@ const DetailTableBodyRow = ({
   isItemOpen,
   handleItemClick,
   navigator,
+  tableHeadEntriesWithoutDate,
 }: {
   item: IPresentationScheduleDetailInfo;
   itemStatus: itemType;
@@ -26,6 +26,7 @@ const DetailTableBodyRow = ({
   isItemOpen: boolean;
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
   navigator: NavigateFunction;
+  tableHeadEntriesWithoutDate: [string, string][];
 }) => {
   return (
     <>
@@ -47,23 +48,22 @@ const DetailTableBodyRow = ({
             itemStatus={itemStatus}
             hasNoCurrentEvent={hasNoCurrentEvent}
             navigator={navigator}
-          ></NoEventTableRow>
+            colNum={tableHeadEntriesWithoutDate.length}
+          />
         ) : (
           <>
-            {tableHeadArray.map((head, idx) => {
-              let entries = Object.entries(head);
+            {tableHeadEntriesWithoutDate?.map((head, idx) => {
               return (
                 <td
-                  className={
-                    entries[0][0] === "presentationTime" ? "rightEnd" : ""
-                  }
+                  className={head[0] === "presentationTime" ? "rightEnd" : ""}
+                  key={idx}
                 >
                   <div>
-                    {entries[0][0] === "subject" && item.subject}
-                    {entries[0][0] === "userName" && item.userName}
-                    {entries[0][0] === "category" &&
+                    {head[0] === "subject" && item.subject}
+                    {head[0] === "userName" && item.userName}
+                    {head[0] === "category" &&
                       presentationCategoryKorean[item.category!]}
-                    {entries[0][0] === "presentationTime" &&
+                    {head[0] === "presentationTime" &&
                       presentationPeriodNumber[item.presentationTime!]}
                   </div>
                 </td>
@@ -79,7 +79,7 @@ const DetailTableBodyRow = ({
           }}
           itemStatus={itemStatus}
         >
-          <td colSpan={tableHeadArray.length}>
+          <td colSpan={tableHeadEntriesWithoutDate.length + 1}>
             <div>{item.detail}</div>
           </td>
         </TableDetailTrStyled>

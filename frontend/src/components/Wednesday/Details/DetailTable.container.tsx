@@ -17,6 +17,14 @@ export enum itemType {
   NO_EVENT_PAST = "noEventPast",
 }
 
+export const tableHeadArray = {
+  date: "날짜",
+  subject: "제목",
+  userName: "ID",
+  category: "카테고리",
+  presentationTime: "시간",
+};
+
 const DetailTableContainer = ({
   presentationDetailInfo,
   makeIDateObj,
@@ -33,6 +41,7 @@ const DetailTableContainer = ({
     null
   );
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const tableHeadEntries = Object.entries(tableHeadArray);
 
   useEffect(() => {
     const handleResize = () => {
@@ -82,6 +91,7 @@ const DetailTableContainer = ({
         openAdminModal={openAdminModal}
         makeIDateObj={makeIDateObj}
         groupEvent={groupEvent}
+        tableHeadEntries={tableHeadEntries}
       />
       {adminModal.statusModal && (
         <EditStatusModal closeModal={() => closeAdminModal("statusModal")} />

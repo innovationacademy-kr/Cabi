@@ -16,6 +16,7 @@ const DetailTable = ({
   openAdminModal,
   makeIDateObj,
   groupEvent,
+  tableHeadEntries,
 }: {
   isMobile: boolean;
   list: IPresentationScheduleDetailInfo[] | null;
@@ -23,10 +24,11 @@ const DetailTable = ({
   openAdminModal: (modal: TAdminModalState) => void;
   makeIDateObj: (date: Date) => IDate;
   groupEvent: (item: IPresentationScheduleDetailInfo) => itemType;
+  tableHeadEntries: [string, string][];
 }) => {
   return (
     <TableStyled>
-      <TableHead isMobile={isMobile} />
+      <TableHead isMobile={isMobile} tableHeadEntries={tableHeadEntries} />
       <TableBodyStyled>
         <WhiteSpaceTrStyled />
         {list?.map((item, idx) => {
@@ -43,6 +45,7 @@ const DetailTable = ({
                   itemDate={makeIDateObj(new Date(item.dateTime))}
                   key={idx}
                   hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
+                  tableHeadEntries={tableHeadEntries}
                 />
               ) : (
                 <DetailTableBodyRowMobile
