@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const tableHeadArray = [
+export const tableHeadArray = [
   { date: "날짜" },
   { subject: "제목" },
   { userName: "ID" },
