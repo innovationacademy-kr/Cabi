@@ -36,9 +36,9 @@ interface EditStatusModalProps {
 }
 
 const statusOptions: IDropdownOptions[] = [
-  { name: "발표 예정", value: PresentationStatusType.SCHEDULED },
-  { name: "발표 완료", value: PresentationStatusType.FINISHED },
-  { name: "발표 취소", value: PresentationStatusType.CANCLED },
+  { name: "발표 예정", value: PresentationStatusType.EXPECTED },
+  { name: "발표 완료", value: PresentationStatusType.DONE },
+  { name: "발표 취소", value: PresentationStatusType.CANCLE },
 ];
 
 const floorOptions: IDropdownOptions[] = [
@@ -52,9 +52,13 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [presentationDate, setPresentationDate] = useState<string>("");
+  const [presentationDate, setPresentationDate] = useState<string>(
+    currentPresentation?.dateTime
+      ? new Date(currentPresentation?.dateTime).toISOString()
+      : ""
+  );
   const [presentationStatus, setPresentationStatus] =
-    useState<PresentationStatusType>(PresentationStatusType.SCHEDULED);
+    useState<PresentationStatusType>(PresentationStatusType.EXPECTED);
   const [location, setLocation] = useState<PresentationLocation>(
     PresentationLocation.THIRD
   );
@@ -95,11 +99,15 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   );
 
   const tryEditPresentationStatus = async (e: React.MouseEvent) => {
-    if (!currentPresentation) return;
+    if (!currentPresentation || !currentPresentation.id) return;
+    const data = new Date(presentationDate);
+    // NOTE: Date 객체의 시간은 UTC 기준이므로 한국 시간 (GMT + 9) 으로 변환, 이후 발표 시작 시간인 14시를 더해줌
+    data.setHours(9 + 14);
+
     try {
       await axiosUpdatePresentationStatus(
         currentPresentation.id,
-        presentationDate,
+        data.toISOString(),
         presentationStatus,
         location
       );
