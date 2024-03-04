@@ -1,22 +1,18 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
 import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
-import {
-  TAdminModalState,
-  itemType,
-} from "@/components/Wednesday/Details/DetailTable.container";
-import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
-import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import { itemType } from "@/components/Wednesday/Details/DetailTable.container";
 import {
   noEventPhrase,
   presentationCategoryKorean,
   presentationPeriodNumber,
-} from "./DetailTableBodyRow.container";
+} from "@/components/Wednesday/Details/DetailTableBodyRow.container";
+import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
+import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
+// TODO : 상수 변수로 대체
 const DetailTableBodyRow = ({
-  isAdmin,
-  openAdminModal,
   item,
   itemStatus,
   itemDate,
@@ -25,8 +21,6 @@ const DetailTableBodyRow = ({
   handleItemClick,
   navigator,
 }: {
-  isAdmin: boolean;
-  openAdminModal: (modal: TAdminModalState) => void;
   item: IPresentationScheduleDetailInfo;
   itemStatus: itemType;
   itemDate: IDate | null;
@@ -71,6 +65,7 @@ const DetailTableBodyRow = ({
             </NoEventDivStyled>
           </td>
         ) : (
+          // TODO : 이벤트 없을때 컴포넌트로 빼기
           <>
             <td>
               <div>{item.subject}</div>
@@ -86,6 +81,7 @@ const DetailTableBodyRow = ({
             <td className="rightEnd" id="MobilePeriod">
               <div>{presentationPeriodNumber[item.presentationTime!]}분</div>
             </td>
+            {/* map 사용 */}
           </>
         )}
       </TableTrStyled>

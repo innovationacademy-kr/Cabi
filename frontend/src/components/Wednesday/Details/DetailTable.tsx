@@ -3,11 +3,11 @@ import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
 import {
   TAdminModalState,
   itemType,
-  tableHeadArray,
 } from "@/components/Wednesday/Details/DetailTable.container";
 import DetailTableBodyRowContainer from "@/components/Wednesday/Details/DetailTableBodyRow.container";
 import DetailTableBodyRowMobile from "@/components/Wednesday/Details/DetailTableBodyRowMobile";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import TableHead from "./TableHead";
 
 const DetailTable = ({
   isMobile,
@@ -15,45 +15,22 @@ const DetailTable = ({
   isAdmin,
   openAdminModal,
   makeIDateObj,
+  groupEvent,
 }: {
   isMobile: boolean;
   list: IPresentationScheduleDetailInfo[] | null;
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
   makeIDateObj: (date: Date) => IDate;
+  groupEvent: (item: IPresentationScheduleDetailInfo) => itemType;
 }) => {
   return (
     <TableStyled>
-      {!isMobile ? (
-        <TableHeadStyled>
-          <tr>
-            {tableHeadArray.map((head, idx) => {
-              let entries = Object.entries(head);
-              return (
-                <th key={idx} id={entries[0][0]}>
-                  {entries[0][1]}
-                </th>
-              );
-            })}
-          </tr>
-        </TableHeadStyled>
-      ) : null}
-      <tbody>
-        <WhiteSpaceTrStyled />
-      </tbody>
+      <TableHead isMobile={isMobile} />
       <TableBodyStyled>
+        <WhiteSpaceTrStyled />
         {list?.map((item, idx) => {
-          let itemStatus = itemType.EVENT_AVAILABLE;
-
-          if (!item.subject) {
-            const date = new Date();
-            let dateISO = date.toISOString();
-            const dateObj = new Date(dateISO);
-
-            const itemDateObj = new Date(item.dateTime);
-            if (dateObj > itemDateObj) itemStatus = itemType.NO_EVENT_PAST;
-            else itemStatus = itemType.NO_EVENT_CURRENT;
-          }
+          let itemStatus = groupEvent(item);
 
           return (
             <>
@@ -92,42 +69,6 @@ export default DetailTable;
 const TableStyled = styled.table`
   width: 100%;
   table-layout: fixed;
-`;
-
-const TableHeadStyled = styled.thead`
-  margin-bottom: 10px;
-  height: 40px;
-  line-height: 40px;
-  background-color: #3f69fd;
-  color: var(--white);
-  width: 100%;
-
-  & > td {
-    font-size: 1rem;
-    text-align: center;
-  }
-
-  & #date {
-    width: 13%;
-    border-radius: 10px 0 0 10px;
-  }
-
-  & #subject {
-    width: 56%;
-  }
-
-  & #userName {
-    width: 14%;
-  }
-
-  & #category {
-    width: 9%;
-  }
-
-  & #presentationTime {
-    width: 8%;
-    border-radius: 0 10px 10px 0;
-  }
 `;
 
 const TableBodyStyled = styled.tbody`

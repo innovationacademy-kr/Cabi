@@ -53,6 +53,10 @@ const DetailTableBodyRowContainer = ({
   const setCurrentPresentation = useSetRecoilState(currentPresentationState);
   const [isItemOpen, setIsItemOpen] = useState<boolean>(false);
 
+  useEffect(() => {
+    setIsItemOpen(clickedItem?.dateTime === item.dateTime);
+  }, [clickedItem]);
+
   const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
     if (isAdmin && !itemStatus) {
       setCurrentPresentation({
@@ -69,14 +73,8 @@ const DetailTableBodyRowContainer = ({
     }
   };
 
-  useEffect(() => {
-    setIsItemOpen(clickedItem?.dateTime === item.dateTime);
-  }, [clickedItem]);
-
   return (
     <DetailTableBodyRow
-      isAdmin={isAdmin}
-      openAdminModal={openAdminModal}
       item={item}
       itemStatus={itemStatus}
       itemDate={itemDate}

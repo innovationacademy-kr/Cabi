@@ -1,7 +1,7 @@
-import DetailContent from "@/components/Wednesday/Details/DetailContent.container";
+import DetailContentContainer from "@/components/Wednesday/Details/DetailContent.container";
 
 const DetailPage = () => {
-  return <DetailContent />;
+  return <DetailContentContainer />;
 };
 
 export default DetailPage;

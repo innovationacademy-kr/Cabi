@@ -62,7 +62,7 @@ const ContainerStyled = styled.div`
 const HeaderStyled = styled.div`
   margin-top: 70px;
   text-align: center;
-  width: 80%;
+  width: 340px;
   height: 50px;
   display: flex;
   justify-content: center;
