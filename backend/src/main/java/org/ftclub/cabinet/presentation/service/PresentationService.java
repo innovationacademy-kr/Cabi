@@ -154,9 +154,6 @@ public class PresentationService {
 	 * <p>
 	 * **** 추가 고려사항 -> 발표 3일전엔 확정 되어 update 불가인 정책이 있는지..?? -> 확인후 추가 해야할듯
 	 * <p>
-	 * **** 변경할 사항이 entity에 location 컬럼 X 존재하지 않는 pk를 받은 경우 400 에러
-	 * <p>
-	 * status에 없는 상태를 받은 경우 400에러
 	 *
 	 * @Pathvariable Long formId;
 	 * @RequestBody { LocalDateTime dateTime; // new Date().toISOString() String status; // [예정, 완료,
