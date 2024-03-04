@@ -41,26 +41,35 @@ const toggleList: toggleItem[] = [
 const NotificationDetail = `시작 시간은 수요일 오후 2시로 고정되며</br>시간은 각각 30분, 1시간, 1시간 30분,</br>2시간 중에서 선택하실 수 있습니다.
 `;
 
+interface IInputData {
+  value: string;
+  length: number;
+}
+
 const RegisterPage = () => {
   const [toggleType, setToggleType] = useState<PresentationCategoryType>(
     PresentationCategoryType.TASK
   );
   const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<string>("");
-  const [showNotificationBox, setShowNotificationBox] =
-    useState<boolean>(false); // notificationBox 추가
+  const [showNotificationModal, setShowNotificationModal] =
+    useState<boolean>(false);
+
   const [title, setTitle] = useState<string>("");
+
   const [summary, setSummary] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [focusedSection, setFocusedSection] = useState<string | null>(null);
   const [titleLength, setTitleLength] = useState<number>(0);
   const [summaryLength, setSummaryLength] = useState<number>(0);
   const [contentLength, setContentLength] = useState<number>(0);
+
   const [invalidDates, setInvalidDates] = useState<string[]>([]);
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
+  const [showNotificationBox, setShowNotificationBox] = useState<boolean>(true);
 
   const navigate = useNavigate();
 
@@ -74,6 +83,8 @@ const RegisterPage = () => {
       setShowResponseModal(true);
     }
   };
+
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleDateChange = (selectedDate: string) => {
     setDate(selectedDate);
@@ -97,13 +108,8 @@ const RegisterPage = () => {
       default:
         convertedTime = selectedTime;
     }
-    // setTime(selectedTime);
     setTime(convertedTime);
   };
-
-  // const setTimeForBackend = (time: string) => {
-  //   setTime(time);
-  // };
 
   const handleFocus = (sectionName: string) => {
     setFocusedSection(sectionName);
@@ -113,13 +119,33 @@ const RegisterPage = () => {
     setFocusedSection(null);
   };
 
-  const handleNotificationIcon = () => {
-    setShowNotificationBox(true);
+  const handleNotificationIconClick = () => {
+    setShowNotificationModal(true);
   };
 
   const removeNotificationIcon = () => {
     setShowNotificationBox(false);
   };
+
+  const NotificationModalDetail = `시작 시간은 수요일 오후 2시로 고정되며 시간은 각각 30분, 1시간, 1시간 30분, 2시간 중에서 선택하실 수 있습니다.
+  `;
+
+  const handleTooltipToggle = (show: boolean) => {
+    setShowTooltip(show);
+  };
+
+  const handleMouseEnter = () => {
+    handleTooltipToggle(true);
+  };
+
+  const handleMouseLeave = () => {
+    handleTooltipToggle(false);
+  };
+
+  // const getByteLength = (str: BlobPart | null): number => {
+  //   if (str == null) return 0;
+  //   return new Blob([str], { type: "text/plain;charset=UTF-8" }).size;
+  // };
 
   const tryRegister = async () => {
     // 항목을 전부 입력하지 않았을 경우 toast message 띄워주도록 예외처리?
@@ -150,6 +176,7 @@ const RegisterPage = () => {
         toggleType,
         `${time}`
       );
+
       setModalTitle("신청이 완료되었습니다");
       setTimeout(() => {
         navigate("/wed/home");
@@ -215,9 +242,17 @@ const RegisterPage = () => {
                 <NotificationIconStyled
                   src={NotificationIcon}
                   alt="Notification Icon"
-                  onMouseEnter={handleNotificationIcon}
-                  onMouseLeave={removeNotificationIcon}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
                 />
+                {showTooltip && (
+                  <TooltipBoxStyled
+                    onMouseEnter={() => handleMouseEnter()}
+                    onMouseLeave={() => handleMouseLeave()}
+                  >
+                    {NotificationModalDetail}
+                  </TooltipBoxStyled>
+                )}
               </SubNameStyled>
               <DropdownStyled>
                 <DropdownTimeMenu onClick={handleTimeChange} />
@@ -280,7 +315,9 @@ const RegisterPage = () => {
           </RegisterButtonStyled>
         </BackgroundStyled>
       </RegisterPageStyled>
-      {showNotificationBox && <TooltipBox>{NotificationDetail}</TooltipBox>}
+      {showNotificationBox && (
+        <TooltipBoxStyled>{NotificationDetail}</TooltipBoxStyled>
+      )}
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
@@ -362,6 +399,7 @@ const SubNameStyled = styled.div`
   width: fit-content;
   display: flex;
   align-items: center;
+  position: relative;
   @media (max-width: 700px) {
     display: flex;
     flex-wrap: wrap;
@@ -457,28 +495,45 @@ const NotificationIconStyled = styled.img`
 
 const CharacterCount = styled.div`
   margin-left: auto;
-  margin-right: 6px;
   margin-top: 5px;
   font-size: 0.75rem;
   color: #a9a9a9;
 `;
 
-const TooltipBox = styled.div`
-  position: relative;
-  margin: 10px auto;
-  color: transparent;
-  background-color: transparent;
-  width: 330px;
+const TooltipBoxStyled = styled.div`
+  position: absolute;
+  top: -80px;
+  left: 84%;
+  transform: translateX(-50%);
+  font-weight: 400;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 270px;
   padding: 10px;
   border-radius: 4px;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   text-align: center;
   line-height: 1.25rem;
   letter-spacing: -0.02rem;
   white-space: pre-line;
   z-index: 100;
-  transition: visibility 0.5s, color 0.5s, background-color 0.5s, width 0.5s,
-    padding 0.5s ease-in-out;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+  }
+
+  ${SubNameStyled}:hover & {
+    opacity: 1;
+  }
 `;
 
 export default RegisterPage;
