@@ -99,11 +99,15 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   );
 
   const tryEditPresentationStatus = async (e: React.MouseEvent) => {
-    if (!currentPresentation) return;
+    if (!currentPresentation || !currentPresentation.id) return;
+    const data = new Date(presentationDate);
+    // NOTE: Date 객체의 시간은 UTC 기준이므로 한국 시간 (GMT + 9) 으로 변환, 이후 발표 시작 시간인 14시를 더해줌
+    data.setHours(9 + 14);
+
     try {
       await axiosUpdatePresentationStatus(
         currentPresentation.id,
-        presentationDate,
+        data.toISOString(),
         presentationStatus,
         location
       );
