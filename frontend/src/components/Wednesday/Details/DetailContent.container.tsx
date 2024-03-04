@@ -64,12 +64,12 @@ const DetailContentContainer = () => {
       const availableDays = calculateAvailableDaysInWeeks(
         new Date(
           parseInt(todayDate!.year),
-          parseInt(todayDate!.month),
+          parseInt(todayDate!.month) - 1,
           parseInt(todayDate!.day)
         ),
         [1, 3],
         3,
-        2
+        3
       );
       if (objAry.length < 2) {
         // availableDays 중 requestDate랑 달이 같은 것들 추출
