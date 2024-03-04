@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
-import { IPresentationInfo } from "@/types/dto/wednesday.dto";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
 const WedCardsMobile = ({
   presentation,
@@ -9,7 +9,7 @@ const WedCardsMobile = ({
   setSelect,
   makeIDateObj,
 }: {
-  presentation: IPresentationInfo[] | null;
+  presentation: IPresentationScheduleDetailInfo[] | null;
   select: number;
   setSelect: (value: number) => void;
   makeIDateObj: (date: Date) => IDate;

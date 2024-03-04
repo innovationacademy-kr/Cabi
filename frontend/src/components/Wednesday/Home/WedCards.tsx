@@ -1,27 +1,47 @@
 import styled, { css, keyframes } from "styled-components";
 import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
-import { IAnimation, IPresentationInfo } from "@/types/dto/wednesday.dto";
+import {
+  IAnimation,
+  IPresentationScheduleDetailInfo,
+} from "@/types/dto/wednesday.dto";
 
 const WedCards = ({
   presentation,
   select,
   setSelect,
   makeIDateObj,
+  isNull,
 }: {
-  presentation: IPresentationInfo[] | null;
+  presentation: IPresentationScheduleDetailInfo[] | null;
   select: number;
   setSelect: (value: number) => void;
   makeIDateObj: (date: Date) => IDate;
+  isNull: boolean;
 }) => {
   const onClick = (index: number) => {
     if (select) setSelect(index);
     else setSelect(index);
+    console.log(isNull);
+    (presentation || []).concat(
+      Array.from({ length: 3 - (presentation || []).length })
+    );
+    console.log(presentation);
   };
+
+  // datatime 다음주 날짜 가져오고 싶다..
+  const currentPresentations = presentation?.concat(
+    new Array(Math.max(3 - (presentation.length || 0), 0)).fill({
+      id: -1,
+      subject: "예정된 일정이 없습니다. 당신의 이야기를 들려주세요",
+      // datatime: "",
+    })
+  );
+  console.log(currentPresentations);
 
   return (
     <ContainerStyled>
-      {presentation?.map((p, index) => {
-        const tmpDate = makeIDateObj(new Date(p.dateTime));
+      {currentPresentations?.map((p, index) => {
+        const tmpDate = p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
 
         return (
           <WedCardStyled
@@ -29,19 +49,31 @@ const WedCards = ({
             onClick={() => onClick(index)}
             className={index == select ? "check" : "not-check"}
           >
-            <ImageStyled>{p.image}</ImageStyled>
-            <NameStyled>{p.userName}</NameStyled>
-            <TitleStyled>{p.subject}</TitleStyled>
-            <SubTitleStyled>{p.summary}</SubTitleStyled>
+            {/* 이미지 잡기 */}
+            {p.id !== -1 ? (
+              <>
+                <ImageStyled>{p.image}</ImageStyled>
+                <NameStyled>{p.userName}</NameStyled>
+                <TitleStyled>{p.subject}</TitleStyled>
+                <SubTitleStyled>{p.summary}</SubTitleStyled>
+              </>
+            ) : (
+              <>
+                <ImageStyled>{p.image}</ImageStyled>
+                <TitleStyled>{p.subject}</TitleStyled>
+              </>
+            )}
 
-            <CalendarStyled>
-              <IconStyled>
-                <img src="/src/assets/images/calendar.svg" alt="" />
-              </IconStyled>
-              <span>
-                {tmpDate?.month}/{tmpDate?.day}
-              </span>
-            </CalendarStyled>
+            {p.id !== -1 && (
+              <CalendarStyled>
+                <IconStyled>
+                  <img src="/src/assets/images/calendar.svg" alt="" />
+                </IconStyled>
+                <span>
+                  {tmpDate?.month}/{tmpDate?.day}
+                </span>
+              </CalendarStyled>
+            )}
           </WedCardStyled>
         );
       })}
@@ -136,6 +168,7 @@ const ImageStyled = styled.div`
   // width : 130px;
   width: 90px;
   height: 90px;
+  background-color: gray;
 
   border-radius: 1000px;
 

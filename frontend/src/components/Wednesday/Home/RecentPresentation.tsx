@@ -5,7 +5,10 @@ import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
 import WedCards from "@/components/Wednesday/Home/WedCards";
 import WedCardsMobile from "@/components/Wednesday/Home/WedCardsMobile";
 import WedMainDesc from "@/components/Wednesday/Home/WedMainDesc";
-import { IPresentationInfo } from "@/types/dto/wednesday.dto";
+import {
+  IPresentationInfo,
+  IPresentationScheduleDetailInfo,
+} from "@/types/dto/wednesday.dto";
 import {
   PresentationCategoryType,
   PresentationPeriodType,
@@ -36,8 +39,9 @@ const RecentPresentation = ({
   const [selectedPresentation, setSelectedPresentation] =
     useState<IPresentationInfo | null>(null);
   const [currentPresentations, setCurrentPresentations] = useState<
-    IPresentation[] | null
+    IPresentationScheduleDetailInfo[] | null
   >(null);
+  const [presentationLists, setPresentationLists] = useState(false);
   const [selectedDate, setSelectedDate] = useState<IDate | null>(null);
   const navigator = useNavigate();
 
@@ -69,7 +73,9 @@ const RecentPresentation = ({
     try {
       const response = await axiosGetPresentation();
       setCurrentPresentations(response.data.forms);
-      console.log(response.data.forms);
+      if (response.data.forms) {
+        setPresentationLists(true);
+      } else setPresentationLists(false);
     } catch (error: any) {
       // TODO
     } finally {
@@ -122,6 +128,7 @@ const RecentPresentation = ({
           setSelect={setSelect}
           presentation={currentPresentations}
           makeIDateObj={makeIDateObj}
+          isNull={presentationLists}
         />
       )}
       <WedMainDesc
