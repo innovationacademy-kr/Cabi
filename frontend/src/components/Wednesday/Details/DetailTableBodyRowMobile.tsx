@@ -42,10 +42,10 @@ const DetailTableBodyRowMobile = ({
       openAdminModal("statusModal");
     } else {
       if (clickedItem?.dateTime === item.dateTime) {
-        setHandleColSpan(4);
+        setHandleColSpan(3);
         setClickedItem(null);
       } else {
-        setHandleColSpan(5);
+        setHandleColSpan(4);
         setClickedItem(item);
       }
     }
@@ -75,7 +75,7 @@ const DetailTableBodyRowMobile = ({
             !itemStatus && handleItemClick(item);
           }}
         >
-          <td className="leftEnd" colSpan={5} id={itemStatus}>
+          {/* <td className="leftEnd" colSpan={5} id={itemStatus}>
             <div className="TopSubInfo">
               <div>
                 {itemDate?.month}월 {itemDate?.day}일
@@ -84,6 +84,20 @@ const DetailTableBodyRowMobile = ({
               <div>{presentationCategoryKorean[item.category!]}</div>
               <div>{presentationPeriodNumber[item.presentationTime!]}분</div>
             </div>
+          </td> */}
+          <td>
+            <div className="leftEnd">
+              {itemDate?.month}월 {itemDate?.day}일
+            </div>{" "}
+          </td>
+          <td>
+            <div>{item.userName}</div>
+          </td>
+          <td>
+            <div>{presentationCategoryKorean[item.category!]}</div>
+          </td>
+          <td>
+            <div className="rightEnd">{presentationPeriodNumber[item.presentationTime!]}분</div>
           </td>
         </TopTableDetailTrStyled>
       ) : null}
@@ -101,7 +115,7 @@ const DetailTableBodyRowMobile = ({
                 {itemDate?.month}월 {itemDate?.day}일
               </div>
             </td>
-            <td id={itemStatus} className="rightEnd" colSpan={4}>
+            <td id={itemStatus} className="rightEnd" colSpan={3}>
               <NoEventDivStyled>
                 {itemStatus === itemType.NO_EVENT_PAST ? (
                   <>
@@ -146,13 +160,9 @@ const DetailTableBodyRowMobile = ({
               !itemStatus && handleItemClick(item);
             }}
           >
-            <td colSpan={5}>
+            <td colSpan={4}>
               <div>
-                "아니 내가 찍는 사진들 항상 왜 이렇게 나오는 건데?" 장비 탓인가
-                싶어서 최신 스마트폰으로 바꿔 봤지만 크게 달라지지 않은 결과물😒
-                취미로 시작하고 싶은데 도대체 뭐가 뭔지 모르겠는 사진! 2년 간
-                사진 강의만 빡시게 해온 jisokang이 엑기스만 쫙쫙 뽑아서 알기
-                쉽게 알려드립니다!
+              {item.detail}
               </div>
             </td>
           </TableDetailTrStyled>
@@ -169,6 +179,7 @@ const MobileTableStyled = styled.tr<{
 }>`
   height: 70px;
   width: 100%;
+
 
   line-height: 30px;
   text-align: center;
@@ -187,11 +198,11 @@ const MobileTableStyled = styled.tr<{
   }
 
   & #noEventCurrent {
-    background-color: white;
+    background-color: var(--white);
   }
 
   & #noEventPast {
-    background-color: #eeeeee;
+    background-color: var(--full);
   }
 
   & > td > div {
@@ -223,7 +234,8 @@ const MobileTableStyled = styled.tr<{
 
 const TableDetailTrStyled = styled.tr`
   background-color: #91b5fa;
-  width: 100%;
+  
+  /* width: 100%; */
   line-height: 30px;
   & > td {
     border-radius: 0 0 10px 10px;
@@ -244,8 +256,7 @@ const TableDetailTrStyled = styled.tr`
 `;
 const TopTableDetailTrStyled = styled.tr`
   background-color: #91b5fa;
-  width: 100%;
-
+  /* width: 100%; */
   & .TopSubInfo {
     padding: 20px 30px 0 20px;
     display: flex;
@@ -254,18 +265,23 @@ const TopTableDetailTrStyled = styled.tr`
     flex-direction: row;
   }
   & > td {
+    border-radius: 10px 10px 0 0;
     padding: 0;
   }
   & > td > div {
+    border-radius: 0px;
     margin-top: 0;
     line-height: 24px;
-    /* padding: 20px 50px; */
+    padding: 20px 50px;
     font-size: 18px;
+  background-color: #91b5fa;
+
+
   }
   & .leftEnd {
-    border-radius: 10px 10px 0px 0px;
+    border-radius: 10px 0 0px 0px;
   }
-
+  
   & .rightEnd {
     border-radius: 0px 10px 0px 0px;
   }
@@ -289,8 +305,5 @@ const NoEventPhraseStyled = styled.div`
   & > div {
     font-weight: bold;
     line-height: 30px;
-    /* text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap; */
   }
 `;
