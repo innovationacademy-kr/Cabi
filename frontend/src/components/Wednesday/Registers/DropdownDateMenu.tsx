@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import chevronIcon from "@/assets/images/dropdownChevron.svg";
 
 const DropdownDateMenu = ({
@@ -60,30 +60,39 @@ const DropdownDateMenu = ({
           rotated={isIconRotated}
         />
       </RegisterTimeInputStyled>
-      {isVisible && (
-        <DropdownOptions>
-          {data.map((time) => (
-            <DropdownOption key={time} onClick={() => handleOptionSelect(time)}>
-              {time}
-            </DropdownOption>
-          ))}
-        </DropdownOptions>
-      )}
+      <AnimatedDropdownOptions isVisible={isVisible}>
+        {data.map((time) => (
+          <DropdownOption key={time} onClick={() => handleOptionSelect(time)}>
+            {time}
+          </DropdownOption>
+        ))}
+      </AnimatedDropdownOptions>
     </DropdownContainer>
   );
 };
+
+const slideDown = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 const DropdownContainer = styled.div`
   position: relative;
 `;
 
-const DropdownOptions = styled.ul`
-  margin-top: 10px;
+const AnimatedDropdownOptions = styled.ul<{ isVisible: boolean }>`
+  height: 160px;
+  margin-top: 4px;
   position: absolute;
   top: 52px;
   left: 0;
-  width: 310px;
-  height: 160px;
+  width: 100%;
   z-index: 1;
   border: 1px solid var(--white);
   border-radius: 10px;
@@ -92,7 +101,11 @@ const DropdownOptions = styled.ul`
   color: var(--black);
   background-color: var(--white);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-  overflow-y: scroll;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #aaa #fff;
+  animation: ${slideDown} 0.3s ease-in-out forwards;
+  display: ${(props) => (props.isVisible ? "block" : "none")};
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -139,6 +152,7 @@ const DropdownIcon = styled.img<{ rotated: boolean }>`
   width: 14px;
   height: 8px;
   transform: ${(props) => (props.rotated ? "rotate(180deg)" : "rotate(0deg)")};
+  transition: transform 0.3s ease-in-out;
 `;
 
 export default DropdownDateMenu;
