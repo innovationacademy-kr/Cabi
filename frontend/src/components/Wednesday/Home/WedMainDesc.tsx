@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
 import { presentationPeriodNumber } from "@/components/Wednesday/Details/DetailTableBodyRow.container";
-import { IPresentation } from "./RecentPresentation";
+import { IPresentationInfo } from "@/types/dto/wednesday.dto";
 
 const WedMainDesc = ({
   selectedPresentation,
   selectedDate,
 }: {
-  selectedPresentation: IPresentation | null;
+  selectedPresentation: IPresentationInfo | null;
   selectedDate: IDate | null;
 }) => {
   return (
