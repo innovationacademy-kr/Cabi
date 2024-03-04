@@ -36,9 +36,9 @@ interface EditStatusModalProps {
 }
 
 const statusOptions: IDropdownOptions[] = [
-  { name: "발표 예정", value: PresentationStatusType.SCHEDULED },
-  { name: "발표 완료", value: PresentationStatusType.FINISHED },
-  { name: "발표 취소", value: PresentationStatusType.CANCLED },
+  { name: "발표 예정", value: PresentationStatusType.EXPECTED },
+  { name: "발표 완료", value: PresentationStatusType.DONE },
+  { name: "발표 취소", value: PresentationStatusType.CANCLE },
 ];
 
 const floorOptions: IDropdownOptions[] = [
@@ -52,9 +52,13 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [presentationDate, setPresentationDate] = useState<string>("");
+  const [presentationDate, setPresentationDate] = useState<string>(
+    currentPresentation?.dateTime
+      ? new Date(currentPresentation?.dateTime).toISOString()
+      : ""
+  );
   const [presentationStatus, setPresentationStatus] =
-    useState<PresentationStatusType>(PresentationStatusType.SCHEDULED);
+    useState<PresentationStatusType>(PresentationStatusType.EXPECTED);
   const [location, setLocation] = useState<PresentationLocation>(
     PresentationLocation.THIRD
   );
