@@ -41,6 +41,8 @@ export const filterInvalidDates = (
   availableDates: Date[],
   invalidDates: string[] | Date[]
 ) => {
+  if (!availableDates) return [];
+  else if (!invalidDates) return availableDates;
   const invalidDatesFormatted = (invalidDates as string[]).map(
     (date) => new Date(date)
   );
