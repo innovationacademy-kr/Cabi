@@ -9,6 +9,7 @@ export interface IPresentationInfo {
   presentationStatus?: string | null;
   presentationTime: PresentationPeriodType | null;
   presentationLocation?: string | null;
+  detail: string | null;
 }
 
 export interface IPresentationScheduleDetailInfo {
@@ -30,4 +31,9 @@ export interface IAnimation {
   min_height: number;
   max_width: number;
   max_height: number;
+}
+
+export interface IPresentationCategoryIcon {
+  name: string;
+  key: string;
 }

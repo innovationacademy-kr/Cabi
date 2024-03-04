@@ -1,24 +1,21 @@
 import styled from "styled-components";
 
-export const tableHeadArray = [
-  { date: "날짜" },
-  { subject: "제목" },
-  { userName: "ID" },
-  { category: "카테고리" },
-  { presentationTime: "시간" },
-];
-
-const TableHead = ({ isMobile }: { isMobile: boolean }) => {
+const TableHead = ({
+  isMobile,
+  tableHeadEntries,
+}: {
+  isMobile: boolean;
+  tableHeadEntries: [string, string][];
+}) => {
   return (
     <>
       {!isMobile ? (
         <TableHeadStyled>
           <tr>
-            {tableHeadArray.map((head, idx) => {
-              let entries = Object.entries(head);
+            {tableHeadEntries.map((head, idx) => {
               return (
-                <th key={idx} id={entries[0][0]}>
-                  {entries[0][1]}
+                <th key={idx} id={head[0]}>
+                  {head[1]}
                 </th>
               );
             })}
