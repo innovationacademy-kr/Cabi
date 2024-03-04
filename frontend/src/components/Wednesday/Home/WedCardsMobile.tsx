@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
-import { IPresentation } from "./RecentPresentation";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
 const WedCardsMobile = ({
   presentation,
@@ -9,7 +9,7 @@ const WedCardsMobile = ({
   setSelect,
   makeIDateObj,
 }: {
-  presentation: IPresentation[] | null;
+  presentation: IPresentationScheduleDetailInfo[] | null;
   select: number;
   setSelect: (value: number) => void;
   makeIDateObj: (date: Date) => IDate;
@@ -17,6 +17,7 @@ const WedCardsMobile = ({
   const [move, setMove] = useState(0);
   const touchStartPosX = useRef(0);
   const touchStartPosY = useRef(0);
+  const components = [];
 
   const onPageClick = (i: number) => {
     if (i !== select) {
@@ -25,7 +26,6 @@ const WedCardsMobile = ({
     }
   };
 
-  const components = [];
   for (let i = 0; i < 3; i++) {
     components.push(
       <Paginations
@@ -159,6 +159,7 @@ const WedCardStyled = styled.div`
   margin: 0 10px;
   box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
   flex-shrink: 0;
+  padding: 0 30px;
 `;
 
 const PaginationStyled = styled.div`
@@ -209,10 +210,13 @@ const NameStyled = styled.div`
 `;
 
 const TitleStyled = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  word-break: break-all;
 `;
 
 const SubTitleStyled = styled.div`
-  font-size: 1rem;
+  font-size: 0.8rem;
   margin-top: 30px;
+  word-break: break-all;
 `;

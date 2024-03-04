@@ -3,15 +3,13 @@ import styled from "styled-components";
 import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
 import { itemType } from "@/components/Wednesday/Details/DetailTable.container";
 import {
-  noEventPhrase,
   presentationCategoryKorean,
   presentationPeriodNumber,
 } from "@/components/Wednesday/Details/DetailTableBodyRow.container";
-import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
-import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import NoEventTableRow from "./NoEventTableRow";
+import { tableHeadArray } from "./TableHead";
 
-// TODO : 상수 변수로 대체
 const DetailTableBodyRow = ({
   item,
   itemStatus,
@@ -45,43 +43,32 @@ const DetailTableBodyRow = ({
           </div>
         </td>
         {itemStatus ? (
-          <td id={itemStatus} className="rightEnd" colSpan={4}>
-            <NoEventDivStyled hasNoCurrentEvent={hasNoCurrentEvent}>
-              <NoEventPhraseStyled hasNoCurrentEvent={hasNoCurrentEvent}>
-                <div>{noEventPhrase[itemStatus]}</div>
-                <CcabiStyled hasNoCurrentEvent={hasNoCurrentEvent}>
-                  {hasNoCurrentEvent ? <HappyCcabiImg /> : <SadCcabiImg />}
-                </CcabiStyled>
-              </NoEventPhraseStyled>
-              {hasNoCurrentEvent ? (
-                <button
-                  onClick={() => {
-                    navigator("/wed/register");
-                  }}
-                >
-                  신청하기
-                </button>
-              ) : null}
-            </NoEventDivStyled>
-          </td>
+          <NoEventTableRow
+            itemStatus={itemStatus}
+            hasNoCurrentEvent={hasNoCurrentEvent}
+            navigator={navigator}
+          ></NoEventTableRow>
         ) : (
-          // TODO : 이벤트 없을때 컴포넌트로 빼기
           <>
-            <td>
-              <div>{item.subject}</div>
-            </td>
-            <td>
-              <div>{item.userName}</div>
-            </td>
-            <td>
-              <div id="MobileCategory">
-                {presentationCategoryKorean[item.category!]}
-              </div>
-            </td>
-            <td className="rightEnd" id="MobilePeriod">
-              <div>{presentationPeriodNumber[item.presentationTime!]}분</div>
-            </td>
-            {/* map 사용 */}
+            {tableHeadArray.map((head, idx) => {
+              let entries = Object.entries(head);
+              return (
+                <td
+                  className={
+                    entries[0][0] === "presentationTime" ? "rightEnd" : ""
+                  }
+                >
+                  <div>
+                    {entries[0][0] === "subject" && item.subject}
+                    {entries[0][0] === "userName" && item.userName}
+                    {entries[0][0] === "category" &&
+                      presentationCategoryKorean[item.category!]}
+                    {entries[0][0] === "presentationTime" &&
+                      presentationPeriodNumber[item.presentationTime!]}
+                  </div>
+                </td>
+              );
+            })}
           </>
         )}
       </TableTrStyled>
@@ -92,7 +79,7 @@ const DetailTableBodyRow = ({
           }}
           itemStatus={itemStatus}
         >
-          <td colSpan={5}>
+          <td colSpan={tableHeadArray.length}>
             <div>{item.detail}</div>
           </td>
         </TableDetailTrStyled>
@@ -151,46 +138,6 @@ const TableTrStyled = styled.tr<{
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
-  }
-`;
-
-const NoEventDivStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
-  display: flex;
-  justify-content: ${(props) =>
-    props.hasNoCurrentEvent ? "space-evenly" : "center"};
-  align-items: center;
-`;
-
-const NoEventPhraseStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-
-  & > div {
-    font-weight: ${(props) => (props.hasNoCurrentEvent ? "bold" : "")};
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-`;
-
-const CcabiStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
-  width: 30px;
-  height: 30px;
-  display: flex;
-  margin-left: 10px;
-
-  & > svg {
-    width: 30px;
-    height: 30px;
-  }
-
-  & svg > path {
-    fill: var(--black);
-  }
-
-  @media screen and (max-width: 1220px) {
-    display: ${(props) => (props.hasNoCurrentEvent ? "none" : "")};
   }
 `;
 
