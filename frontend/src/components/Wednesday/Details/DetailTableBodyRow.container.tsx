@@ -39,6 +39,7 @@ const DetailTableBodyRowContainer = ({
   itemStatus,
   itemDate,
   hasNoCurrentEvent,
+  tableHeadEntries,
 }: {
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
@@ -46,12 +47,20 @@ const DetailTableBodyRowContainer = ({
   itemStatus: itemType;
   itemDate: IDate | null;
   hasNoCurrentEvent: boolean;
+  tableHeadEntries: [string, string][];
 }) => {
   const [clickedItem, setClickedItem] =
     useState<null | IPresentationScheduleDetailInfo>(null);
   const navigator = useNavigate();
   const setCurrentPresentation = useSetRecoilState(currentPresentationState);
   const [isItemOpen, setIsItemOpen] = useState<boolean>(false);
+  const tmpTableHeadEntries = [...tableHeadEntries];
+  tmpTableHeadEntries.shift();
+  const tableHeadEntriesWithoutDate = tmpTableHeadEntries;
+
+  useEffect(() => {
+    setIsItemOpen(clickedItem?.dateTime === item.dateTime);
+  }, [clickedItem]);
 
   const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
     if (isAdmin && !itemStatus) {
@@ -69,14 +78,8 @@ const DetailTableBodyRowContainer = ({
     }
   };
 
-  useEffect(() => {
-    setIsItemOpen(clickedItem?.dateTime === item.dateTime);
-  }, [clickedItem]);
-
   return (
     <DetailTableBodyRow
-      isAdmin={isAdmin}
-      openAdminModal={openAdminModal}
       item={item}
       itemStatus={itemStatus}
       itemDate={itemDate}
@@ -84,6 +87,7 @@ const DetailTableBodyRowContainer = ({
       isItemOpen={isItemOpen}
       handleItemClick={handleItemClick}
       navigator={navigator}
+      tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
     />
   );
 };

@@ -1,22 +1,15 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
 import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
+import { itemType } from "@/components/Wednesday/Details/DetailTable.container";
 import {
-  TAdminModalState,
-  itemType,
-} from "@/components/Wednesday/Details/DetailTable.container";
-import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
-import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
-import {
-  noEventPhrase,
   presentationCategoryKorean,
   presentationPeriodNumber,
-} from "./DetailTableBodyRow.container";
+} from "@/components/Wednesday/Details/DetailTableBodyRow.container";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import NoEventTableRow from "./NoEventTableRow";
 
 const DetailTableBodyRow = ({
-  isAdmin,
-  openAdminModal,
   item,
   itemStatus,
   itemDate,
@@ -24,9 +17,8 @@ const DetailTableBodyRow = ({
   isItemOpen,
   handleItemClick,
   navigator,
+  tableHeadEntriesWithoutDate,
 }: {
-  isAdmin: boolean;
-  openAdminModal: (modal: TAdminModalState) => void;
   item: IPresentationScheduleDetailInfo;
   itemStatus: itemType;
   itemDate: IDate | null;
@@ -34,6 +26,7 @@ const DetailTableBodyRow = ({
   isItemOpen: boolean;
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
   navigator: NavigateFunction;
+  tableHeadEntriesWithoutDate: [string, string][];
 }) => {
   return (
     <>
@@ -51,41 +44,31 @@ const DetailTableBodyRow = ({
           </div>
         </td>
         {itemStatus ? (
-          <td id={itemStatus} className="rightEnd" colSpan={4}>
-            <NoEventDivStyled hasNoCurrentEvent={hasNoCurrentEvent}>
-              <NoEventPhraseStyled hasNoCurrentEvent={hasNoCurrentEvent}>
-                <div>{noEventPhrase[itemStatus]}</div>
-                <CcabiStyled hasNoCurrentEvent={hasNoCurrentEvent}>
-                  {hasNoCurrentEvent ? <HappyCcabiImg /> : <SadCcabiImg />}
-                </CcabiStyled>
-              </NoEventPhraseStyled>
-              {hasNoCurrentEvent ? (
-                <button
-                  onClick={() => {
-                    navigator("/wed/register");
-                  }}
-                >
-                  신청하기
-                </button>
-              ) : null}
-            </NoEventDivStyled>
-          </td>
+          <NoEventTableRow
+            itemStatus={itemStatus}
+            hasNoCurrentEvent={hasNoCurrentEvent}
+            navigator={navigator}
+            colNum={tableHeadEntriesWithoutDate.length}
+          />
         ) : (
           <>
-            <td>
-              <div>{item.subject}</div>
-            </td>
-            <td>
-              <div>{item.userName}</div>
-            </td>
-            <td>
-              <div id="MobileCategory">
-                {presentationCategoryKorean[item.category!]}
-              </div>
-            </td>
-            <td className="rightEnd" id="MobilePeriod">
-              <div>{presentationPeriodNumber[item.presentationTime!]}분</div>
-            </td>
+            {tableHeadEntriesWithoutDate?.map((head, idx) => {
+              return (
+                <td
+                  className={head[0] === "presentationTime" ? "rightEnd" : ""}
+                  key={idx}
+                >
+                  <div>
+                    {head[0] === "subject" && item.subject}
+                    {head[0] === "userName" && item.userName}
+                    {head[0] === "category" &&
+                      presentationCategoryKorean[item.category!]}
+                    {head[0] === "presentationTime" &&
+                      presentationPeriodNumber[item.presentationTime!]}
+                  </div>
+                </td>
+              );
+            })}
           </>
         )}
       </TableTrStyled>
@@ -96,7 +79,7 @@ const DetailTableBodyRow = ({
           }}
           itemStatus={itemStatus}
         >
-          <td colSpan={5}>
+          <td colSpan={tableHeadEntriesWithoutDate.length + 1}>
             <div>{item.detail}</div>
           </td>
         </TableDetailTrStyled>
@@ -155,46 +138,6 @@ const TableTrStyled = styled.tr<{
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
-  }
-`;
-
-const NoEventDivStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
-  display: flex;
-  justify-content: ${(props) =>
-    props.hasNoCurrentEvent ? "space-evenly" : "center"};
-  align-items: center;
-`;
-
-const NoEventPhraseStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-
-  & > div {
-    font-weight: ${(props) => (props.hasNoCurrentEvent ? "bold" : "")};
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-`;
-
-const CcabiStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
-  width: 30px;
-  height: 30px;
-  display: flex;
-  margin-left: 10px;
-
-  & > svg {
-    width: 30px;
-    height: 30px;
-  }
-
-  & svg > path {
-    fill: var(--black);
-  }
-
-  @media screen and (max-width: 1220px) {
-    display: ${(props) => (props.hasNoCurrentEvent ? "none" : "")};
   }
 `;
 

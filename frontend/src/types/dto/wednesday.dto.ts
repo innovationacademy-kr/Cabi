@@ -9,6 +9,7 @@ export interface IPresentationInfo {
   presentationStatus?: string | null;
   presentationTime: PresentationPeriodType | null;
   presentationLocation?: string | null;
+  detail: string | null;
 }
 
 export interface IPresentationScheduleDetailInfo {
@@ -25,3 +26,14 @@ export interface IPresentationScheduleDetailInfo {
 }
 
 // 백엔드에 데이터 보낼때, 받을때의 형식을 interface로 정의하는 파일
+export interface IAnimation {
+  min_width: number;
+  min_height: number;
+  max_width: number;
+  max_height: number;
+}
+
+export interface IPresentationCategoryIcon {
+  name: string;
+  key: string;
+}

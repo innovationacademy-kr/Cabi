@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
 import { presentationPeriodNumber } from "@/components/Wednesday/Details/DetailTableBodyRow.container";
-import { IPresentation } from "./RecentPresentation";
+import { IPresentationInfo } from "@/types/dto/wednesday.dto";
 
 const WedMainDesc = ({
   selectedPresentation,
   selectedDate,
 }: {
-  selectedPresentation: IPresentation | null;
+  selectedPresentation: IPresentationInfo | null;
   selectedDate: IDate | null;
 }) => {
   return (
@@ -42,7 +42,6 @@ const WedSummaryStyled = styled.div`
   background-color: #2c49b1;
   width: 80%;
   max-width: 1100px;
-  // min-height: 300px;
   border-radius: 30px;
   margin-top: 50px;
   padding: 50px 50px 50px 50px;

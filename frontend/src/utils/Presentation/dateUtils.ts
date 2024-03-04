@@ -1,5 +1,4 @@
 import { addDays, addMonths, getDay, startOfMonth } from "date-fns";
-
 /**
  * @description 주어진 날짜부터 주어진 요일 이 되는 첫번째 날짜를 구함
  * (Sunday: 0, Monday: 1, ..., Saturday: 6)
@@ -41,6 +40,8 @@ export const filterInvalidDates = (
   availableDates: Date[],
   invalidDates: string[] | Date[]
 ) => {
+  if (!availableDates) return [];
+  else if (!invalidDates) return availableDates;
   const invalidDatesFormatted = (invalidDates as string[]).map(
     (date) => new Date(date)
   );

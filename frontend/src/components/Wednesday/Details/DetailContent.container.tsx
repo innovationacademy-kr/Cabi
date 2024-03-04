@@ -16,22 +16,6 @@ const DetailContentContainer = () => {
     IPresentationScheduleDetailInfo[] | null
   >(null);
 
-  const makeIDateObj = (date: Date) => {
-    let dateISO = date.toISOString();
-    // 1. T 앞에서 끊고
-    let dateBeforeT = dateISO.substring(0, 10);
-    // 2. -로 분리
-    let dateSplited = dateBeforeT.split("-");
-
-    const iDateObj: IDate = {
-      year: dateSplited[0],
-      month: dateSplited[1],
-      day: dateSplited[2],
-    };
-
-    return iDateObj;
-  };
-
   useEffect(() => {
     const tmpTodayDate = makeIDateObj(new Date());
 
@@ -50,6 +34,22 @@ const DetailContentContainer = () => {
   useEffect(() => {
     if (currentDate) getPresentationSchedule(currentDate);
   }, [currentDate]);
+
+  const makeIDateObj = (date: Date) => {
+    let dateISO = date.toISOString();
+    // 1. T 앞에서 끊고
+    let dateBeforeT = dateISO.substring(0, 10);
+    // 2. -로 분리
+    let dateSplited = dateBeforeT.split("-");
+
+    const iDateObj: IDate = {
+      year: dateSplited[0],
+      month: dateSplited[1],
+      day: dateSplited[2],
+    };
+
+    return iDateObj;
+  };
 
   const getPresentationSchedule = async (requestDate: IDate) => {
     try {

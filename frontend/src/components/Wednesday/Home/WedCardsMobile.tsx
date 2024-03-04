@@ -1,22 +1,33 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
-import { IPresentation } from "./RecentPresentation";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
 const WedCardsMobile = ({
   presentation,
   select,
   setSelect,
   makeIDateObj,
+  searchCategory,
 }: {
-  presentation: IPresentation[] | null;
+  presentation: IPresentationScheduleDetailInfo[] | null;
   select: number;
   setSelect: (value: number) => void;
   makeIDateObj: (date: Date) => IDate;
+  searchCategory: (categoryName: string) => string | undefined;
 }) => {
   const [move, setMove] = useState(0);
   const touchStartPosX = useRef(0);
   const touchStartPosY = useRef(0);
+  const components = [];
+
+  const currentPresentations = presentation?.concat(
+    new Array(Math.max(3 - (presentation.length || 0), 0)).fill({
+      id: -1,
+      subject: "예정된 일정이 없습니다. 당신의 이야기를 들려주세요",
+      category: "",
+    })
+  );
 
   const onPageClick = (i: number) => {
     if (i !== select) {
@@ -25,7 +36,6 @@ const WedCardsMobile = ({
     }
   };
 
-  const components = [];
   for (let i = 0; i < 3; i++) {
     components.push(
       <Paginations
@@ -78,8 +88,9 @@ const WedCardsMobile = ({
   return (
     <ContainerStyled>
       <CardWrapperStyled select={move}>
-        {presentation?.map((p, index) => {
-          const tmpDate = makeIDateObj(new Date(p.dateTime));
+        {currentPresentations?.map((p, index) => {
+          const tmpDate =
+            p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
 
           return (
             <WedCardStyled
@@ -97,19 +108,34 @@ const WedCardsMobile = ({
                 );
               }}
             >
-              <ImageStyled>{p.image}</ImageStyled>
-              <NameStyled>{p.userName}</NameStyled>
-              <TitleStyled>{p.subject}</TitleStyled>
-              <SubTitleStyled>{p.summary}</SubTitleStyled>
-
-              <CalendarStyled>
-                <IconStyled>
-                  <img src="/src/assets/images/calendar.svg" alt="" />
-                </IconStyled>
-                <span>
-                  {tmpDate?.month}/{tmpDate?.day}
-                </span>
-              </CalendarStyled>
+              {p.id !== -1 ? (
+                <>
+                  <CategoryStyled>
+                    {p.category && <img src={searchCategory(p.category)} />}
+                  </CategoryStyled>
+                  <NameStyled>{p.userName}</NameStyled>
+                  <TitleStyled>{p.subject}</TitleStyled>
+                  <SubTitleStyled>{p.summary}</SubTitleStyled>
+                </>
+              ) : (
+                <>
+                  <CategoryStyled>
+                    <img src={searchCategory("")} />
+                  </CategoryStyled>
+                  <TitleStyled>예정된 일정이 없습니다.</TitleStyled>
+                  <TitleStyled>당신의 이야기를 들려주세요</TitleStyled>
+                </>
+              )}
+              {p.id !== -1 && (
+                <CalendarStyled>
+                  <IconStyled>
+                    <img src="/src/assets/images/calendar.svg" alt="" />
+                  </IconStyled>
+                  <span>
+                    {tmpDate?.month}/{tmpDate?.day}
+                  </span>
+                </CalendarStyled>
+              )}
             </WedCardStyled>
           );
         })}
@@ -159,6 +185,7 @@ const WedCardStyled = styled.div`
   margin: 0 10px;
   box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
   flex-shrink: 0;
+  padding: 0 30px;
 `;
 
 const PaginationStyled = styled.div`
@@ -190,8 +217,8 @@ const IconStyled = styled.div`
   margin-right: 8px;
 `;
 
-const ImageStyled = styled.div`
-  background-color: gray;
+const CategoryStyled = styled.div`
+  // background-color: gray;
   width: 100px;
   height: 90px;
   border-radius: 300px;
@@ -209,10 +236,13 @@ const NameStyled = styled.div`
 `;
 
 const TitleStyled = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  word-break: break-all;
 `;
 
 const SubTitleStyled = styled.div`
-  font-size: 1rem;
+  font-size: 0.8rem;
   margin-top: 30px;
+  word-break: break-all;
 `;

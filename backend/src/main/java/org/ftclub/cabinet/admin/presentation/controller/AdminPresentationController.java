@@ -23,7 +23,7 @@ public class AdminPresentationController {
 	@PatchMapping("/{formId}/update")
 	@AuthGuard(level = ADMIN_ONLY)
 	public void updatePresentationByFormId(
-			@PathVariable Long formId,
+			@PathVariable("formId") Long formId,
 			@RequestBody PresentationUpdateDto dto) {
 		presentationService.updatePresentationByFormId(formId, dto);
 	}
