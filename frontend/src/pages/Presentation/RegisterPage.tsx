@@ -10,7 +10,7 @@ import {
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import DropdownDateMenu from "@/components/Presentation/Registers/DropdownDateMenu";
 import DropdownTimeMenu from "@/components/Presentation/Registers/DropdownTimeMenu";
-import NotificationIcon from "@/assets/images/notificationSign_grey.svg";
+import NotificationIcon from "@/assets/images/cautionSign.svg";
 import {
   PresentationCategoryType,
   PresentationPeriodType,
@@ -403,7 +403,7 @@ const SubNameStyled = styled.div`
 
 const SummaryTextareaStyled = styled.input<{ isFocused: boolean }>`
   width: 100%;
-  height: 100%;
+  height: 50px;
   text-align: left;
   padding: 12px 12px 12px 12px;
   border-radius: 10px;
@@ -444,7 +444,7 @@ const SubSection = styled.div`
 
 const DropdownStyled = styled.div`
   width: 100%;
-  height: 46px;
+  height: 100%;
   border-radius: 10px;
   background-color: var(--white);
   border: none;
@@ -470,7 +470,7 @@ const DateTimeContainer = styled.div`
   justify-content: space-between;
   gap: 20px;
   width: 100%;
-  @media (max-width: 580px) {
+  @media (max-width: 700px) {
     flex-direction: column;
     align-items: center;
     gap: 0;
@@ -498,13 +498,13 @@ const CharacterCount = styled.div`
 
 const TooltipBoxStyled = styled.div`
   position: absolute;
-  top: -80px;
-  left: 84%;
+  top: -50px;
+  left: 360%;
   transform: translateX(-50%);
   font-weight: 400;
   color: white;
   background-color: rgba(0, 0, 0, 0.8);
-  width: 270px;
+  width: 260px;
   padding: 10px;
   border-radius: 4px;
   font-size: 0.75rem;
@@ -519,12 +519,12 @@ const TooltipBoxStyled = styled.div`
   &::after {
     content: "";
     position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
+    top: 82%;
+    right: 100%;
+    margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+    border-color: transparent rgba(0, 0, 0, 0.8) transparent transparent;
   }
 
   ${SubNameStyled}:hover & {
