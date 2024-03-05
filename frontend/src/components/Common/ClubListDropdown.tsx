@@ -113,7 +113,10 @@ const ClubListDropdItemStyled = styled.div<{ isSelected: boolean }>`
   display: flex;
   align-items: center;
   background-color: ${({ isSelected }) =>
-    isSelected ? "var(--gray-200)" : "white"};
+    // isSelected ? "var(--gray-200)" : "white"};
+    // light
+    isSelected ? "var(--gray-700)" : "white"};
+  /* dark */
   border: 1px solid var(--gray-400);
   border-width: 0px 1px 1px 1px;
   width: 100%;
@@ -132,7 +135,10 @@ const ClubListDropdItemStyled = styled.div<{ isSelected: boolean }>`
     border-radius: 0px 0px 10px 10px;
   }
   &:hover {
-    background-color: var(--gray-200);
+    /* background-color: var(--gray-200); */
+    /* light */
+    background-color: var(--gray-700);
+    /* dark */
   }
 `;
 

@@ -166,7 +166,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--color-background);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -241,7 +241,10 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  /* background: var(--bg-black-shadow-300); */
+  /* light */
+  background: var(--bg-white-shadow-100);
+  /* dark */
   z-index: 1000;
 `;
 

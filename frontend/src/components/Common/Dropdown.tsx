@@ -1,5 +1,8 @@
 import { useState } from "react";
 import styled, { css } from "styled-components";
+import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
+import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
+import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 
 interface IDropdown {
   options: { name: string; value: any; imageSrc?: string }[];
@@ -21,9 +24,11 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
         isOpen={isOpen}
       >
         {options[selectedIdx].imageSrc && (
-          <div style={{ width: "18px", height: "18px" }}>
-            <img src={options[selectedIdx].imageSrc} />
-          </div>
+          <OptionsImgStyled>
+            {options[selectedIdx].value === "PRIVATE" && <PrivateIcon />}
+            {options[selectedIdx].value === "CLUB" && <ClubIcon />}
+            {options[selectedIdx].value === "SHARE" && <ShareIcon />}
+          </OptionsImgStyled>
         )}
         <p style={{ paddingLeft: "10px" }}>{currentName}</p>
         <img src="/src/assets/images/dropdownChevron.svg" />
@@ -43,9 +48,11 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
               isSelected={option.name === currentName}
             >
               {option.imageSrc && (
-                <div style={{ width: "18px", height: "18px" }}>
-                  <img src={option.imageSrc} />
-                </div>
+                <OptionsImgStyled isSelected={option.name === currentName}>
+                  {options[selectedIdx].value === "PRIVATE" && <PrivateIcon />}
+                  {options[selectedIdx].value === "CLUB" && <ClubIcon />}
+                  {options[selectedIdx].value === "SHARE" && <ShareIcon />}
+                </OptionsImgStyled>
               )}
               <p style={{ paddingLeft: "10px" }}>{option.name}</p>
             </DropdownItemStyled>
@@ -108,7 +115,11 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
-  background-color: ${({ isSelected }) => (isSelected ? "var(--gray-200)" : "white")};
+  background-color: ${({ isSelected }) =>
+    // isSelected ? "var(--gray-200)" : "var(--color-background)"};
+    // light
+    isSelected ? "var(--gray-700)" : "var(--color-background)"};
+  /* dark */
   border: 1px solid var(--gray-400);
   border-width: 0px 1px 1px 1px;
   width: 100%;
@@ -117,7 +128,7 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
   padding-left: 20px;
   font-size: 1.125rem;
   color: ${({ isSelected }) =>
-    isSelected ? "var(--main-color)" : "var(--black)"};
+    isSelected ? "var(--main-color)" : "var(--color-text-normal)"};
   cursor: pointer;
   &:first-child {
     border-radius: 10px 10px 0px 0px;
@@ -128,7 +139,23 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
   }
   &:hover {
     background-color: var(--gray-200);
+    /* light */
+    background-color: var(--gray-700);
+    /* dark */
   }
 `;
 
+const OptionsImgStyled = styled.div<{ isSelected?: boolean }>`
+  width: 18px;
+  height: 18px;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+  & > svg > path {
+    stroke: var(--color-text-normal);
+    transform: scale(0.8);
+  }
+`;
 export default Dropdown;
