@@ -122,30 +122,42 @@ const transform = ({
 const font_restore = ({
   min_size,
   max_size,
+  margin_max,
+  margin_min,
 }: {
   min_size: number;
   max_size: number;
+  margin_max: number;
+  margin_min: number;
 }) => keyframes`{
   0% {
     font-size: ${max_size}rem;
+    margin-bottom : ${margin_max}px;
 	}
 	100% {
     font-size:${min_size}rem;
+    margin-bottom : ${margin_min}px;
 	}
 }`;
 
 const font_transform = ({
   min_size,
   max_size,
+  margin_max,
+  margin_min,
 }: {
   min_size: number;
   max_size: number;
+  margin_max: number;
+  margin_min: number;
 }) => keyframes`{
   0% {
     font-size: ${min_size}rem;	  
+    margin-bottom : ${margin_min}px;
 	}
 	100% {
     font-size: ${max_size}rem;
+    margin-bottom : ${margin_max}px;
 	}
 }`;
 
@@ -241,7 +253,6 @@ const CalendarStyled = styled.div`
   justify-content: flex-end;
   width: 100%;
   font-size: 1rem;
-  margin-top: 10px;
 
   & > {
     color: gray;
@@ -255,7 +266,7 @@ const CalendarStyled = styled.div`
 const NameStyled = styled.div`
   color: #9d9d9d;
   font-size: 1.2rem;
-  margin-bottom: 12px;
+  // margin-bottom: 12px;
 
   ${WedCardStyled}.check & {
     font-size: 1.5rem;
@@ -268,48 +279,60 @@ const TitleStyled = styled.div`
   font-weight: 700;
   word-break: break-all;
   white-space: pre-line;
-  height: 38px;
+  height: 50px;
+  margin-top: 12px;
+  margin-bottom: 30px;
+
   ${WedCardStyled}.check & {
     animation: ${font_transform({
         min_size: 1.1,
         max_size: 1.6,
+        margin_max: 30,
+        margin_min: 20,
       })}
       0.5s ease-in-out;
     font-size: 1.6rem;
+    margin-bottom: 30px;
   }
   ${WedCardStyled}.not-check & {
     animation: ${font_restore({
         min_size: 1.1,
         max_size: 1.6,
+        margin_max: 30,
+        margin_min: 20,
       })}
       0.5s ease-in-out;
     height: 35px;
+    margin-bottom: 20px;
   }
 `;
 
 const SubTitleStyled = styled.div`
   text-align: center;
   font-size: 1rem;
-  margin-top: 30px;
   word-break: break-all;
   height: 32px;
-
+  margin-bottom: 10px;
   ${WedCardStyled}.check & {
     animation: ${font_transform({
         min_size: 0.8,
         max_size: 1,
+        margin_max: 10,
+        margin_min: 8,
       })}
       0.5s ease-in-out;
-    height: 38px;
+    height: 30px;
   }
   ${WedCardStyled}.not-check & {
     animation: ${font_restore({
         min_size: 0.8,
         max_size: 1,
+        margin_max: 10,
+        margin_min: 8,
       })}
       0.5s ease-in-out;
-    margin-top: 20px;
     font-size: 0.8rem;
+    margin-bottom: 8px;
   }
 `;
 

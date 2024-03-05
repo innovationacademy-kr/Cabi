@@ -122,7 +122,7 @@ const RecentPresentation = ({
       <WedHeaderStyled>
         <TitleStyled>
           <p>수요지식회</p>
-          <span>수요지식회 메인페이지입니다. 설명문구 필요합니다.</span>
+          <span>매주 수요일 오후 2시, 지식이 일상이 되다.</span>
         </TitleStyled>
         <RegistButtonStyled
           onClick={() => {
