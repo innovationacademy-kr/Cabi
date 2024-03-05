@@ -71,7 +71,7 @@ const ClubListDropdSelectionBoxStyled = styled.div<{ isOpen: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid var(--gray-400);
+  border: 1px solid var(--gray-tmp-4);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -114,7 +114,7 @@ const ClubListDropdItemStyled = styled.div<{ isSelected: boolean }>`
   align-items: center;
   background-color: ${({ isSelected }) =>
     isSelected ? "var(--gray-tmp-2)" : "var(--color-background)"};
-  border: 1px solid var(--gray-400);
+  border: 1px solid var(--gray-tmp-4);
   border-width: 0px 1px 1px 1px;
   width: 100%;
   height: 60px;

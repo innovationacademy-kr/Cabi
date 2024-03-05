@@ -222,7 +222,7 @@ const ContentItemContainerStyled = styled.div<{ mode: string }>`
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid var(--gray-400);
+  border: 1px solid var(--gray-tmp-4);
   width: 100%;
   height: 60px;
   border-radius: 10px;

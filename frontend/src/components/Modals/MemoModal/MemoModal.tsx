@@ -183,7 +183,7 @@ const ContentItemInputStyled = styled.input<{
     mode === "read" ? "var(--main-color)" : "var(--color-text-normal)"};
   &::placeholder {
     color: ${({ mode }) =>
-      mode === "read" ? "var(--main-color)" : "var(--gray-400)"};
+      mode === "read" ? "var(--main-color)" : "var(--gray-tmp-4)"};
   }
 `;
 

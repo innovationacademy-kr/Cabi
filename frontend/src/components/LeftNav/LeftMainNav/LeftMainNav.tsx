@@ -208,7 +208,7 @@ const BottomSectionStyled = styled.section`
     margin: 0 auto;
     width: 56px;
     height: 1px;
-    background-color: var(--gray-400);
+    background-color: var(--gray-tmp-4);
   }
 `;
 const BottomBtnsStyled = styled.ul`

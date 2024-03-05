@@ -107,8 +107,8 @@ const DetailInfoContainerStyled = styled.div<{ isFloat: boolean }>`
   min-width: 330px;
   padding: 45px 40px 20px;
   position: relative;
-  border-left: 1px solid var(--gray-400);
-  background-color: var(--white);
+  border-left: 1px solid var(--color-line);
+  background-color: var(--color-background);
   overflow-x: hidden;
   height: 100%;
   ${(props) =>

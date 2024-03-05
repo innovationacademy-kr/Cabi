@@ -282,7 +282,7 @@ const ContentItemInputStyled = styled.input`
   color: var(--color-text-normal);
 
   &::placeholder {
-    color: var(--gray-400);
+    color: var(--gray-tmp-4);
   }
 `;
 

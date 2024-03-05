@@ -42,14 +42,10 @@ const ItemStyled = styled.div<{
   padding: 3px;
   font-size: ${({ info }) => (info.type === "floorInfo" ? "1.8rem" : "0.8rem")};
   cursor: ${({ info }) => (info.type === "floorInfo" ? "default" : "pointer")};
-  /* color: ${({ info }) =>
-    info.type === "floorInfo"
-      ? "var(--gray-400)"
-      : "var(--color-background)"}; */
-  /* light */
   color: ${({ info }) =>
-    info.type === "floorInfo" ? "var(--gray-500)" : "var(--color-background)"};
-  /* dark */
+    info.type === "floorInfo"
+      ? "var(--gray-tmp-4)"
+      : "var(--color-background)"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,7 +60,7 @@ const ItemStyled = styled.div<{
       ? "var(--main-color)"
       : info.type === "floorInfo"
       ? "transparent"
-      : "var(--gray-400)"};
+      : "var(--gray-tmp-4)"};
   &:hover {
     opacity: ${({ info }) => (info.type === "cabinet" ? 0.9 : 1)};
   }

@@ -80,7 +80,7 @@
 
 :root {
   --color-background: var(--white);
-  --color-line: var(--gray-400);
+  --color-line: var(--gray-tmp-4);
   --color-text-normal: var(--black);
 
   /* main color variable */
@@ -109,6 +109,7 @@
 
   --gray-tmp-1: var(--gray-100);
   --gray-tmp-2: var(--gray-200);
+  --gray-tmp-4: var(--gray-400);
 }
 
 /* main color variable */
@@ -116,7 +117,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--black);
-    --color-line: var(--gray-500);
+    --color-line: var(--gray-tmp-4);
     --color-text-normal: var(--gray-100);
 
     --main-color: var(--purple-600);
@@ -143,6 +144,7 @@
 
     --gray-tmp-1: var(--gray-700);
     --gray-tmp-2: var(--gray-700);
+    --gray-tmp-4: var(--gray-500);
   }
 }
 
