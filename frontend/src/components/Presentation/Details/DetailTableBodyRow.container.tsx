@@ -54,9 +54,6 @@ const DetailTableBodyRowContainer = ({
   const navigator = useNavigate();
   const setCurrentPresentation = useSetRecoilState(currentPresentationState);
   const [isItemOpen, setIsItemOpen] = useState<boolean>(false);
-  const tmpTableHeadEntries = [...tableHeadEntries];
-  tmpTableHeadEntries.shift();
-  const tableHeadEntriesWithoutDate = tmpTableHeadEntries;
 
   useEffect(() => {
     setIsItemOpen(clickedItem?.dateTime === item.dateTime);
@@ -88,7 +85,10 @@ const DetailTableBodyRowContainer = ({
       isItemOpen={isItemOpen}
       handleItemClick={handleItemClick}
       navigator={navigator}
-      tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
+      // NOTE: table head 중 date를 제외한 table head 입니다.
+      tableHeadEntriesWithoutDate={tableHeadEntries.filter(
+        (head) => head[0] !== "date"
+      )}
     />
   );
 };
