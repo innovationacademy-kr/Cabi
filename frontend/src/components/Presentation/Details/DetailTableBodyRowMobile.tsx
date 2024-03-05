@@ -8,7 +8,7 @@ import {
   TAdminModalState,
   itemType,
 } from "@/components/Presentation/Details/DetailTable.container";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/Presentation.dto";
 
 const DetailTableBodyRowMobile = ({
   isAdmin,
@@ -123,7 +123,7 @@ const DetailTableBodyRowMobile = ({
                     </NoEventPhraseStyled>
                     <button
                       onClick={() => {
-                        navigator("/wed/register");
+                        navigator("/Presentation/register");
                       }}
                     >
                       신청하기
