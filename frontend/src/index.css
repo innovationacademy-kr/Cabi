@@ -106,6 +106,9 @@
 
   color: var(--color-text-normal);
   background-color: var(--color-background);
+
+  --gray-tmp-1: var(--gray-100);
+  --gray-tmp-2: var(--gray-200);
 }
 
 /* main color variable */
@@ -137,6 +140,9 @@
 
     color: var(--color-text-normal);
     background-color: var(--color-background);
+
+    --gray-tmp-1: var(--gray-700);
+    --gray-tmp-2: var(--gray-700);
   }
 }
 

@@ -63,10 +63,7 @@ const WrapperStyled = styled.div`
   width: fit-content;
   display: flex;
   align-items: center;
-  background-color: var(--gray-100);
-  /* light */
-  background-color: var(--gray-700);
-  /* dark */
+  background-color: var(--gray-tmp-1);
   border-radius: 10px;
   button {
     display: flex;

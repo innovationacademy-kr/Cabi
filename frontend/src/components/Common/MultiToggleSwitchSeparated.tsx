@@ -40,10 +40,7 @@ const MultiToggleSwitchSeparated = <T,>({
 
     buttons?.forEach((button) => {
       button.style.color = "var(--color-text-normal)";
-      button.style.backgroundColor = "var(--gray-100)";
-      // light
-      button.style.backgroundColor = "var(--gray-700)";
-      // dark
+      button.style.backgroundColor = "var(--gray-tmp-1)";
     });
 
     target.style.color = "white";
@@ -79,10 +76,7 @@ const WrapperStyled = styled.div`
     font-size: 0.9rem;
     height: 30px;
     font-weight: 500;
-    background-color: var(--gray-100);
-    /* light */
-    background-color: var(--gray-700);
-    /* dark */
+    background-color: var(--gray-tmp-1);
     color: var(--color-text-normal);
     padding: 4px 12px;
     margin: 0px 4px;

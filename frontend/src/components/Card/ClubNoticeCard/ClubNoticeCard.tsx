@@ -37,8 +37,7 @@ const ClubNoticeCard = ({
             : [
                 // NOTE: 이 부분은 레이아웃을 유지하기 위한 placeholder 버튼입니다.
                 {
-                  backgroundColor: "var(--gray-100)",
-                  // light
+                  backgroundColor: "var(--gray-tmp-1)",
                   onClick: () => {},
                   icon: "",
                   isClickable: false,

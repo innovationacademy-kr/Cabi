@@ -99,9 +99,8 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
                 {
                   label: "-",
                   isClickable: false,
-                  color: "var(--gray-100)",
-                  backgroundColor: "var(--gray-100)",
-                  // light
+                  color: "var(--gray-tmp-1)",
+                  backgroundColor: "var(--gray-tmp-1)",
                 },
               ]
         }

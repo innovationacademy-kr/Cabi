@@ -41,12 +41,8 @@ const MemberListItemContainerStyled = styled.div<{
 }>`
   width: 80px;
   height: 80px;
-  /* background-color: ${(props) =>
-    props.bgColor ? props.bgColor : "var(--gray-100)"}; */
-  /* light */
   background-color: ${(props) =>
-    props.bgColor ? props.bgColor : "var(--gray-700)"};
-  /* dark*/
+    props.bgColor ? props.bgColor : "var(--gray-tmp-1)"};
   border-radius: 1rem;
   margin: 7px;
   padding: 10px;
