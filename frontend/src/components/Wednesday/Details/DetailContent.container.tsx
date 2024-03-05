@@ -91,10 +91,24 @@ const DetailContentContainer = () => {
             };
           });
         }
-        // 만약 1개면
-        // 해당 월의 날짜 2개 중 받은 날짜 제외 날짜의 IPresentationScheduleDetailInfo를 만든다
-        // 받은 날짜가 먼저면 push
-        // else 맨 앞에 넣기
+        if (objAry.length === 1) {
+          const date = new Date(objAry[0].dateTime);
+          console.log(date.getDate());
+          objAry = sameMonth.map((day) => {
+            if (day.getDate() === date.getDate()) return objAry[0];
+            else
+              return {
+                id: null,
+                subject: null,
+                summary: null,
+                detail: null,
+                dateTime: day.toISOString(),
+                category: null,
+                userName: null,
+                presentationTime: null,
+              };
+          });
+        }
       }
 
       // toisostring으로 변환
