@@ -62,6 +62,7 @@ const WrapperStyled = styled.div<{
 }>`
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
@@ -70,7 +71,7 @@ const WrapperStyled = styled.div<{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: calc(16.66% - 10px);
     height: 36px;
     min-width: 40px;
     border-radius: 10px;
@@ -79,6 +80,13 @@ const WrapperStyled = styled.div<{
     background-color: var(--lightgray-color);
     color: gray;
     padding: 4px 12px;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 560px) {
+    button {
+      width: calc(33.333% - 10px);
+    }
   }
 
   button.categoryButton {
