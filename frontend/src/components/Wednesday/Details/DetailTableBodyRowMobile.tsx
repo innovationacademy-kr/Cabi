@@ -8,6 +8,10 @@ import {
   TAdminModalState,
   itemType,
 } from "@/components/Wednesday/Details/DetailTable.container";
+import {
+  presentationCategoryKorean,
+  presentationPeriodNumber,
+} from "@/components/Wednesday/Details/DetailTableBodyRow.container";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
 const DetailTableBodyRowMobile = ({
@@ -50,22 +54,6 @@ const DetailTableBodyRowMobile = ({
         setClickedItem(item);
       }
     }
-  };
-
-  const presentationPeriodNumber = {
-    HALF: 30,
-    HOUR: 60,
-    HOUR_HALF: 90,
-    TWO_HOUR: 120,
-  };
-
-  const presentationCategoryKorean = {
-    DEVELOP: "개발",
-    HOBBY: "취미",
-    JOB: "취업",
-    ETC: "기타",
-    TASK: "42",
-    STUDY: "학술",
   };
 
   return (

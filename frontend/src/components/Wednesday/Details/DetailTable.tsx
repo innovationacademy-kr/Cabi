@@ -67,8 +67,6 @@ const DetailTable = ({
   );
 };
 
-export default DetailTable;
-
 const TableStyled = styled.table`
   width: 100%;
   min-width: 480px;
@@ -87,3 +85,5 @@ export const WhiteSpaceTrStyled = styled.tr`
   height: 24px;
   width: 100%;
 `;
+
+export default DetailTable;
