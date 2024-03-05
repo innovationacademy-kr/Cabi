@@ -93,7 +93,6 @@ const DetailContentContainer = () => {
         }
         if (objAry.length === 1) {
           const date = new Date(objAry[0].dateTime);
-          console.log(date.getDate());
           objAry = sameMonth.map((day) => {
             if (day.getDate() === date.getDate()) return objAry[0];
             else
@@ -111,7 +110,6 @@ const DetailContentContainer = () => {
         }
       }
 
-      // toisostring으로 변환
       setPresentationDetailInfo(objAry);
     } catch (error: any) {
       // TODO
