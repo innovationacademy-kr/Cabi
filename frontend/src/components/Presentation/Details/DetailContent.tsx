@@ -1,7 +1,7 @@
 import styled from "styled-components";
+import { IDate } from "@/components/Presentation/Details/DetailContent.container";
+import DetailTableContainer from "@/components/Presentation/Details/DetailTable.container";
 import { MoveSectionButtonStyled } from "@/components/SectionPagination/SectionPagination";
-import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
-import DetailTableContainer from "@/components/Wednesday/Details/DetailTable.container";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 

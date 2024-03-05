@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import DetailTable from "@/components/Wednesday/Details//DetailTable";
-import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
-import EditStatusModal from "@/components/Wednesday/Modals/EditStatusModal/EditStatusModal";
+import { IDate } from "@/components/Presentation/Details/DetailContent.container";
+import DetailTable from "@/components/Presentation/Details/DetailTable";
+import EditStatusModal from "@/components/Presentation/Modals/EditStatusModal/EditStatusModal";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
 export interface IAdminCurrentModalStateInfo {

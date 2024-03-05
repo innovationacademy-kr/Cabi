@@ -1,4 +1,4 @@
-import DetailContentContainer from "@/components/Wednesday/Details/DetailContent.container";
+import DetailContentContainer from "@/components/Presentation/Details/DetailContent.container";
 
 const DetailPage = () => {
   return <DetailContentContainer />;

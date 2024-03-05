@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
-import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
+import { IDate } from "@/components/Presentation/Details/DetailContent.container";
 import {
   IAnimation,
   IPresentationCategoryIcon,

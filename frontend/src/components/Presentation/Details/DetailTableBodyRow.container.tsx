@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { currentPresentationState } from "@/recoil/atoms";
-import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
+import { IDate } from "@/components/Presentation/Details/DetailContent.container";
 import {
   TAdminModalState,
   itemType,
-} from "@/components/Wednesday/Details/DetailTable.container";
-import DetailTableBodyRow from "@/components/Wednesday/Details/DetailTableBodyRow";
+} from "@/components/Presentation/Details/DetailTable.container";
+import DetailTableBodyRow from "@/components/Presentation/Details/DetailTableBodyRow";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 
 export const presentationPeriodNumber = {

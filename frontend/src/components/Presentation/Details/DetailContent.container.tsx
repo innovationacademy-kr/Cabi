@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import DetailContent from "@/components/Wednesday/Details/DetailContent";
+import DetailContent from "@/components/Presentation/Details/DetailContent";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 import { axiosGetPresentationSchedule } from "@/api/axios/axios.custom";
 import { calculateAvailableDaysInWeeks } from "@/utils/Presentation/dateUtils";

@@ -1,7 +1,7 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
-import { itemType } from "@/components/Wednesday/Details/DetailTable.container";
-import { noEventPhrase } from "@/components/Wednesday/Details/DetailTableBodyRow.container";
+import { itemType } from "@/components/Presentation/Details/DetailTable.container";
+import { noEventPhrase } from "@/components/Presentation/Details/DetailTableBodyRow.container";
 import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 

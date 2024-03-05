@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
+import { IDate } from "@/components/Presentation/Details/DetailContent.container";
 import {
   TAdminModalState,
   itemType,
-} from "@/components/Wednesday/Details/DetailTable.container";
-import DetailTableBodyRowContainer from "@/components/Wednesday/Details/DetailTableBodyRow.container";
-import DetailTableBodyRowMobile from "@/components/Wednesday/Details/DetailTableBodyRowMobile";
+} from "@/components/Presentation/Details/DetailTable.container";
+import DetailTableBodyRowContainer from "@/components/Presentation/Details/DetailTableBodyRow.container";
+import DetailTableBodyRowMobile from "@/components/Presentation/Details/DetailTableBodyRowMobile";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
 import TableHead from "./TableHead";
 

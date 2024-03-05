@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import RecentPresentation from "@/components/Wednesday/Home/RecentPresentation";
+import RecentPresentation from "@/components/Presentation/Home/RecentPresentation";
 
 const HomePage = () => {
   const navigator = useNavigate();
