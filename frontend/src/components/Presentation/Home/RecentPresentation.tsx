@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
-import WedCards from "@/components/Presentation/Home/WedCards";
-import WedCardsMobile from "@/components/Presentation/Home/WedCardsMobile";
-import WedMainDesc from "@/components/Presentation/Home/WedMainDesc";
+import WedCards from "@/components/Presentation/Home/PresentationCards";
+import WedCardsMobile from "@/components/Presentation/Home/PresentationCardsMobile";
+import WedMainDesc from "@/components/Presentation/Home/PresentationMainDesc";
 import {
   IPresentationInfo,
   IPresentationScheduleDetailInfo,
@@ -121,7 +121,7 @@ const RecentPresentation = ({
     <ConTainerStyled>
       <WedHeaderStyled>
         <WedTitleStyled>
-          <p>42 수요지식회</p>
+          <p>수요지식회</p>
           <span>수요지식회 메인페이지입니다. 설명문구 필요합니다.</span>
         </WedTitleStyled>
         <RegistButtonStyled
