@@ -6,7 +6,7 @@ import {
   presentationCategoryKorean,
   presentationPeriodNumber,
 } from "@/components/Presentation/Details/DetailTableBodyRow.container";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import NoEventTableRow from "./NoEventTableRow";
 
 const DetailTableBodyRow = ({

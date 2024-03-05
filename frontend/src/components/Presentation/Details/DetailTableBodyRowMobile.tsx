@@ -8,7 +8,11 @@ import {
   TAdminModalState,
   itemType,
 } from "@/components/Presentation/Details/DetailTable.container";
+<<<<<<< Updated upstream
 import { IPresentationScheduleDetailInfo } from "@/types/dto/Presentation.dto";
+=======
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
+>>>>>>> Stashed changes
 
 const DetailTableBodyRowMobile = ({
   isAdmin,

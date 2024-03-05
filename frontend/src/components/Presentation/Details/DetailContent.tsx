@@ -3,7 +3,7 @@ import { IDate } from "@/components/Presentation/Details/DetailContent.container
 import DetailTableContainer from "@/components/Presentation/Details/DetailTable.container";
 import { MoveSectionButtonStyled } from "@/components/SectionPagination/SectionPagination";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 const DetailContent = ({
   moveMonth,

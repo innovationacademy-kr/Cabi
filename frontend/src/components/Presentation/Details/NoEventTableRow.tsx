@@ -28,7 +28,7 @@ const NoEventTableRow = ({
         {hasNoCurrentEvent ? (
           <button
             onClick={() => {
-              navigator("/wed/register");
+              navigator("/presentation/register");
             }}
           >
             신청하기

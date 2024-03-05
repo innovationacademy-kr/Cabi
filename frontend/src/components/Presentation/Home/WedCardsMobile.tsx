@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 const WedCardsMobile = ({
   presentation,

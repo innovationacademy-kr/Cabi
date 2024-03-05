@@ -8,7 +8,7 @@ import WedMainDesc from "@/components/Presentation/Home/WedMainDesc";
 import {
   IPresentationInfo,
   IPresentationScheduleDetailInfo,
-} from "@/types/dto/wednesday.dto";
+} from "@/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 import { axiosGetPresentation } from "@/api/axios/axios.custom";
 

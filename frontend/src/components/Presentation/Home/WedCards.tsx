@@ -4,7 +4,7 @@ import {
   IAnimation,
   IPresentationCategoryIcon,
   IPresentationScheduleDetailInfo,
-} from "@/types/dto/wednesday.dto";
+} from "@/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 
 const WedCards = ({

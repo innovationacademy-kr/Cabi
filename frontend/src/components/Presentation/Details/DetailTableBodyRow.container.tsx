@@ -8,7 +8,7 @@ import {
   itemType,
 } from "@/components/Presentation/Details/DetailTable.container";
 import DetailTableBodyRow from "@/components/Presentation/Details/DetailTableBodyRow";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 export const presentationPeriodNumber = {
   HALF: 30,

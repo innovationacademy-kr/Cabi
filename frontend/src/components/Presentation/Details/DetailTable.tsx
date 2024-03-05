@@ -6,7 +6,7 @@ import {
 } from "@/components/Presentation/Details/DetailTable.container";
 import DetailTableBodyRowContainer from "@/components/Presentation/Details/DetailTableBodyRow.container";
 import DetailTableBodyRowMobile from "@/components/Presentation/Details/DetailTableBodyRowMobile";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import TableHead from "./TableHead";
 
 const DetailTable = ({
