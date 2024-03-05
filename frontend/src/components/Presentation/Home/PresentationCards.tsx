@@ -8,7 +8,7 @@ import {
 } from "@/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 
-const WedCards = ({
+const PresentationCards = ({
   presentation,
   select,
   setSelect,
@@ -85,7 +85,7 @@ const WedCards = ({
   );
 };
 
-export default WedCards;
+export default PresentationCards;
 
 const restore = ({
   min_width,

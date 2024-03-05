@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
-const WedCardsMobile = ({
+const PresentationCardsMobile = ({
   presentation,
   select,
   setSelect,
@@ -149,7 +149,7 @@ const WedCardsMobile = ({
   );
 };
 
-export default WedCardsMobile;
+export default PresentationCardsMobile;
 
 const ContainerStyled = styled.div`
   display: flex;
