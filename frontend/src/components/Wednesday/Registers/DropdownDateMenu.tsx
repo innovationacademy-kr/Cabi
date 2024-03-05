@@ -9,11 +9,12 @@ const DropdownDateMenu = ({
   data: string[];
   onClick: (selectedDate: string) => void;
 }) => {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false); // boolean으로 변경
   const [selectedOption, setSelectedOption] = useState<string>("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [isIconRotated, setIsIconRotated] = useState<boolean>(false);
+  const [clickCount, setClickCount] = useState<number>(0);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -41,9 +42,10 @@ const DropdownDateMenu = ({
   };
 
   const toggleVisibility = () => {
+    setClickCount(clickCount + 1);
     setIsVisible(!isVisible);
     setIsFocused(!isVisible);
-    setIsIconRotated(!isIconRotated);
+    setIsIconRotated(!isVisible);
   };
 
   return (
@@ -60,7 +62,7 @@ const DropdownDateMenu = ({
           rotated={isIconRotated}
         />
       </RegisterTimeInputStyled>
-      <AnimatedDropdownOptions isVisible={isVisible}>
+      <AnimatedDropdownOptions isVisible={isVisible} clickCount={clickCount}>
         {data.map((time) => (
           <DropdownOption key={time} onClick={() => handleOptionSelect(time)}>
             {time}
@@ -75,10 +77,25 @@ const slideDown = keyframes`
   from {
     opacity: 0;
     transform: translateY(-10px);
+    visibility: hidden;
   }
   to {
     opacity: 1;
     transform: translateY(0);
+    visibility: visible;
+  }
+`;
+
+const slideUp = keyframes`
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
   }
 `;
 
@@ -86,7 +103,10 @@ const DropdownContainer = styled.div`
   position: relative;
 `;
 
-const AnimatedDropdownOptions = styled.ul<{ isVisible: boolean }>`
+const AnimatedDropdownOptions = styled.ul<{
+  isVisible: boolean;
+  clickCount: number;
+}>`
   height: 160px;
   margin-top: 4px;
   position: absolute;
@@ -104,8 +124,15 @@ const AnimatedDropdownOptions = styled.ul<{ isVisible: boolean }>`
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #aaa #fff;
-  animation: ${slideDown} 0.3s ease-in-out forwards;
-  display: ${(props) => (props.isVisible ? "block" : "none")};
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  animation: ${(props) =>
+      props.clickCount > 0 && props.isVisible
+        ? slideDown
+        : props.clickCount > 0 && !props.isVisible
+        ? slideUp
+        : "none"}
+    0.2s ease-in-out forwards;
   @media (max-width: 768px) {
     width: 100%;
   }

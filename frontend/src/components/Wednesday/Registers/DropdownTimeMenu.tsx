@@ -12,6 +12,7 @@ const DropdownTimeMenu = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [isIconRotated, setIsIconRotated] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -47,6 +48,7 @@ const DropdownTimeMenu = ({
   };
 
   const toggleVisibility = () => {
+    setClickCount(clickCount + 1);
     setIsVisible(!isVisible);
     setIsFocused(!isVisible);
     setIsIconRotated(!isIconRotated);
@@ -66,7 +68,7 @@ const DropdownTimeMenu = ({
           rotated={isIconRotated}
         />{" "}
       </RegisterTimeInputStyled>
-      <AnimatedDropdownOptions isVisible={isVisible}>
+      <AnimatedDropdownOptions isVisible={isVisible} clickCount={clickCount}>
         {Object.values(PresentationTime).map((time) => (
           <DropdownOption key={time} onClick={() => handleOptionSelect(time)}>
             {time}
@@ -81,10 +83,25 @@ const slideDown = keyframes`
   from {
     opacity: 0;
     transform: translateY(-10px);
+    visibility: hidden;
   }
   to {
     opacity: 1;
     transform: translateY(0);
+    visibility: visible;
+  }
+`;
+
+const slideUp = keyframes`
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
   }
 `;
 
@@ -92,7 +109,10 @@ const DropdownContainer = styled.div`
   position: relative;
 `;
 
-const AnimatedDropdownOptions = styled.ul<{ isVisible: boolean }>`
+const AnimatedDropdownOptions = styled.ul<{
+  isVisible: boolean;
+  clickCount: number;
+}>`
   margin-top: 4px;
   position: absolute;
   top: 52px;
@@ -109,8 +129,15 @@ const AnimatedDropdownOptions = styled.ul<{ isVisible: boolean }>`
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #aaa #fff;
-  animation: ${slideDown} 0.3s ease-in-out forwards;
-  display: ${(props) => (props.isVisible ? "block" : "none")};
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  animation: ${(props) =>
+      props.clickCount > 0 && props.isVisible
+        ? slideDown
+        : props.clickCount > 0 && !props.isVisible
+        ? slideUp
+        : "none"}
+    0.2s ease-in-out forwards;
   @media (max-width: 768px) {
     width: 100%;
   }
