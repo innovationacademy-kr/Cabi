@@ -1,8 +1,8 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
-import { IDate } from "@/components/Presentation/Details/DetailContent.container";
 import { itemType } from "@/components/Presentation/Details/DetailTable.container";
 import {
+  IItem,
   presentationCategoryKorean,
   presentationPeriodNumber,
 } from "@/components/Presentation/Details/DetailTableBodyRow.container";
@@ -29,18 +29,14 @@ const renderCellDetail = (
 };
 
 const DetailTableBodyRow = ({
-  item,
-  itemStatus,
-  itemDate,
+  itemInfo,
   hasNoCurrentEvent,
   isItemOpen,
   handleItemClick,
   navigator,
   tableHeadEntriesWithoutDate,
 }: {
-  item: IPresentationScheduleDetailInfo;
-  itemStatus: itemType;
-  itemDate: IDate | null;
+  itemInfo: IItem;
   hasNoCurrentEvent: boolean;
   isItemOpen: boolean;
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
@@ -50,21 +46,22 @@ const DetailTableBodyRow = ({
   return (
     <>
       <TableTrStyled
-        itemStatus={itemStatus}
+        itemStatus={itemInfo.itemStatus}
         id={isItemOpen ? "selected" : ""}
         onClick={() => {
-          !itemStatus && handleItemClick(item);
+          !itemInfo.itemStatus && handleItemClick(itemInfo.item);
         }}
         open={isItemOpen}
       >
-        <td className="leftEnd" id={itemStatus}>
+        <td className="leftEnd" id={itemInfo.itemStatus}>
           <div>
-            {itemDate?.month}월 {itemDate?.day}일
+            {itemInfo.itemDateInIDate?.month}월 {itemInfo.itemDateInIDate?.day}
+            일
           </div>
         </td>
-        {itemStatus ? (
+        {itemInfo.itemStatus ? (
           <NoEventTableRow
-            itemStatus={itemStatus}
+            itemStatus={itemInfo.itemStatus}
             hasNoCurrentEvent={hasNoCurrentEvent}
             navigator={navigator}
             colNum={tableHeadEntriesWithoutDate.length}
@@ -77,7 +74,7 @@ const DetailTableBodyRow = ({
                   className={head[0] === "presentationTime" ? "rightEnd" : ""}
                   key={idx}
                 >
-                  <div>{renderCellDetail(head[0], item)}</div>
+                  <div>{renderCellDetail(head[0], itemInfo.item)}</div>
                 </td>
               );
             })}
@@ -86,10 +83,9 @@ const DetailTableBodyRow = ({
       </TableTrStyled>
       {isItemOpen ? (
         <TableDetailTr
-          itemStatus={itemStatus}
           handleItemClick={handleItemClick}
-          item={item}
           tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
+          itemInfo={itemInfo}
         />
       ) : null}
     </>

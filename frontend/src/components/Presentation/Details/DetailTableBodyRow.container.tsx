@@ -32,20 +32,22 @@ export const noEventPhrase = {
     "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를 신청해보세요",
 };
 
+export interface IItem {
+  item: IPresentationScheduleDetailInfo;
+  itemStatus: itemType;
+  itemDateInIDate: IDate;
+}
+
 const DetailTableBodyRowContainer = ({
   isAdmin,
   openAdminModal,
-  item,
-  itemStatus,
-  itemDate,
+  itemInfo,
   hasNoCurrentEvent,
   tableHeadEntries,
 }: {
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
-  item: IPresentationScheduleDetailInfo;
-  itemStatus: itemType;
-  itemDate: IDate | null;
+  itemInfo: IItem;
   hasNoCurrentEvent: boolean;
   tableHeadEntries: [string, string][];
 }) => {
@@ -56,11 +58,11 @@ const DetailTableBodyRowContainer = ({
   const [isItemOpen, setIsItemOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsItemOpen(clickedItem?.dateTime === item.dateTime);
+    setIsItemOpen(clickedItem?.dateTime === itemInfo.item.dateTime);
   }, [clickedItem]);
 
   const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
-    if (isAdmin && !itemStatus) {
+    if (isAdmin && !itemInfo.itemStatus) {
       setCurrentPresentation({
         id: item.id,
         dateTime: item.dateTime,
@@ -78,9 +80,7 @@ const DetailTableBodyRowContainer = ({
 
   return (
     <DetailTableBodyRow
-      item={item}
-      itemStatus={itemStatus}
-      itemDate={itemDate}
+      itemInfo={itemInfo}
       hasNoCurrentEvent={hasNoCurrentEvent}
       isItemOpen={isItemOpen}
       handleItemClick={handleItemClick}

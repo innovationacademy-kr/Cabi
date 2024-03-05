@@ -33,16 +33,18 @@ const DetailTable = ({
         <WhiteSpaceTrStyled />
         {list?.map((item, idx) => {
           let itemStatus = groupEvent(item);
-
+          const itemInfo = {
+            item: item,
+            itemStatus: itemStatus,
+            itemDateInIDate: makeIDateObj(new Date(item.dateTime)),
+          };
           return (
             <>
               {!isMobile ? (
                 <DetailTableBodyRowContainer
                   isAdmin={isAdmin}
                   openAdminModal={openAdminModal}
-                  item={item}
-                  itemStatus={itemStatus}
-                  itemDate={makeIDateObj(new Date(item.dateTime))}
+                  itemInfo={itemInfo}
                   key={idx}
                   hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
                   tableHeadEntries={tableHeadEntries}

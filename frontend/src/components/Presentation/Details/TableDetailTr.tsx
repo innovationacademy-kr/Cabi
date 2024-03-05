@@ -1,27 +1,26 @@
 import styled from "styled-components";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import { itemType } from "./DetailTable.container";
+import { IItem } from "./DetailTableBodyRow.container";
 
 const TableDetailTr = ({
-  itemStatus,
   handleItemClick,
-  item,
   tableHeadEntriesWithoutDate,
+  itemInfo,
 }: {
-  itemStatus: itemType;
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
-  item: IPresentationScheduleDetailInfo;
   tableHeadEntriesWithoutDate: [string, string][];
+  itemInfo: IItem;
 }) => {
   return (
     <TableDetailTrStyled
       onClick={() => {
-        !itemStatus && handleItemClick(item);
+        !itemInfo.itemStatus && handleItemClick(itemInfo.item);
       }}
-      itemStatus={itemStatus}
+      itemStatus={itemInfo.itemStatus}
     >
       <td colSpan={tableHeadEntriesWithoutDate.length + 1}>
-        <div>{item.detail}</div>
+        <div>{itemInfo.item.detail}</div>
       </td>
     </TableDetailTrStyled>
   );
