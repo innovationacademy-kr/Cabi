@@ -6,9 +6,27 @@ import {
   presentationCategoryKorean,
   presentationPeriodNumber,
 } from "@/components/Presentation/Details/DetailTableBodyRow.container";
+import NoEventTableRow from "@/components/Presentation/Details/NoEventTableRow";
+import TableDetailTr from "@/components/Presentation/Details/TableDetailTr";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
-import NoEventTableRow from "./NoEventTableRow";
-import TableDetailTr from "./TableDetailTr";
+
+const renderCellDetail = (
+  head: string,
+  item: IPresentationScheduleDetailInfo
+) => {
+  switch (head) {
+    case "subject":
+      return item.subject;
+    case "userName":
+      return item.userName;
+    case "category":
+      return presentationCategoryKorean[item.category!];
+    case "presentationTime":
+      return presentationPeriodNumber[item.presentationTime!] + "분";
+    default:
+      return null;
+  }
+};
 
 const DetailTableBodyRow = ({
   item,
@@ -59,14 +77,7 @@ const DetailTableBodyRow = ({
                   className={head[0] === "presentationTime" ? "rightEnd" : ""}
                   key={idx}
                 >
-                  <div>
-                    {head[0] === "subject" && item.subject}
-                    {head[0] === "userName" && item.userName}
-                    {head[0] === "category" &&
-                      presentationCategoryKorean[item.category!]}
-                    {head[0] === "presentationTime" &&
-                      presentationPeriodNumber[item.presentationTime!] + "분"}
-                  </div>
+                  <div>{renderCellDetail(head[0], item)}</div>
                 </td>
               );
             })}
