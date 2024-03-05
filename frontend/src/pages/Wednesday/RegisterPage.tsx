@@ -142,11 +142,6 @@ const RegisterPage = () => {
     handleTooltipToggle(false);
   };
 
-  // const getByteLength = (str: BlobPart | null): number => {
-  //   if (str == null) return 0;
-  //   return new Blob([str], { type: "text/plain;charset=UTF-8" }).size;
-  // };
-
   const tryRegister = async () => {
     // 항목을 전부 입력하지 않았을 경우 toast message 띄워주도록 예외처리?
     if (
@@ -406,9 +401,10 @@ const SubNameStyled = styled.div`
   }
 `;
 
-const SummaryTextareaStyled = styled.textarea<{ isFocused: boolean }>`
+const SummaryTextareaStyled = styled.input<{ isFocused: boolean }>`
   width: 100%;
   height: 100%;
+  text-align: left;
   padding: 12px 12px 12px 12px;
   border-radius: 10px;
   border: none;
