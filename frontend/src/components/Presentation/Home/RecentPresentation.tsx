@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
-import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
-import WedCards from "@/components/Wednesday/Home/WedCards";
-import WedCardsMobile from "@/components/Wednesday/Home/WedCardsMobile";
-import WedMainDesc from "@/components/Wednesday/Home/WedMainDesc";
+import { IDate } from "@/components/Presentation/Details/DetailContent.container";
+import PresentationCardsMobile from "@/components/Presentation/Home/PresentationCardsMobile";
+import WedMainDesc from "@/components/Presentation/Home/PresentationMainDesc";
 import {
   IPresentationInfo,
   IPresentationScheduleDetailInfo,
-} from "@/types/dto/wednesday.dto";
+} from "@/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 import { axiosGetPresentation } from "@/api/axios/axios.custom";
+import PresentationCards from "./PresentationCards";
 
 const RecentPresentation = ({
   presentButtonHandler,
@@ -120,10 +120,10 @@ const RecentPresentation = ({
   return (
     <ConTainerStyled>
       <WedHeaderStyled>
-        <WedTitleStyled>
-          <p>42 수요지식회</p>
+        <TitleStyled>
+          <p>수요지식회</p>
           <span>수요지식회 메인페이지입니다. 설명문구 필요합니다.</span>
-        </WedTitleStyled>
+        </TitleStyled>
         <RegistButtonStyled
           onClick={() => {
             navigator("/wed/register");
@@ -134,24 +134,21 @@ const RecentPresentation = ({
       </WedHeaderStyled>
 
       {isMobile ? (
-        <WedCardsMobile
+        <PresentationCardsMobile
           presentation={currentPresentations}
           select={select}
           setSelect={setSelect}
           makeIDateObj={makeIDateObj}
-          // isNull={presentationLists}
           searchCategory={searchCategory}
-          // presentationCategoryIcon={presentationCategoryIcon}
         />
       ) : (
-        <WedCards
+        <PresentationCards
           select={select}
           setSelect={setSelect}
           presentation={currentPresentations}
           makeIDateObj={makeIDateObj}
           isNull={presentationLists}
           searchCategory={searchCategory}
-          // presentationCategoryIcon={presentationCategoryIcon}
         />
       )}
       <WedMainDesc
@@ -184,7 +181,7 @@ const WedHeaderStyled = styled.div`
   max-width: 1100px;
 `;
 
-const WedTitleStyled = styled.div`
+const TitleStyled = styled.div`
   & > p {
     font-size: 2.5rem;
     font-weight: bold;

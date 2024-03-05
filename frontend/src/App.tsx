@@ -9,9 +9,9 @@ import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
 import PostLogin from "@/pages/PostLogin";
 import ProfilePage from "@/pages/ProfilePage";
-import DetailPage from "@/pages/Wednesday/DetailPage";
-import WednesdayHomePage from "@/pages/Wednesday/HomePage";
-import RegisterPage from "@/pages/Wednesday/RegisterPage";
+import DetailPage from "@/pages/Presentation/DetailPage";
+import WednesdayHomePage from "@/pages/Presentation/HomePage";
+import RegisterPage from "@/pages/Presentation/RegisterPage";
 import AdminMainPage from "@/pages/admin/AdminMainPage";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 

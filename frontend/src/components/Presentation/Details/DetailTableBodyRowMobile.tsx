@@ -3,16 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { currentPresentationState } from "@/recoil/atoms";
-import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
+import { IDate } from "@/components/Presentation/Details/DetailContent.container";
 import {
   TAdminModalState,
   itemType,
-} from "@/components/Wednesday/Details/DetailTable.container";
+} from "@/components/Presentation/Details/DetailTable.container";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import {
   presentationCategoryKorean,
   presentationPeriodNumber,
-} from "@/components/Wednesday/Details/DetailTableBodyRow.container";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+} from "./DetailTableBodyRow.container";
 
 const DetailTableBodyRowMobile = ({
   isAdmin,
@@ -111,7 +111,7 @@ const DetailTableBodyRowMobile = ({
                     </NoEventPhraseStyled>
                     <button
                       onClick={() => {
-                        navigator("/wed/register");
+                        navigator("/Presentation/register");
                       }}
                     >
                       신청하기

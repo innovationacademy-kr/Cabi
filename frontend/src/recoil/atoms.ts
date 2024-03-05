@@ -17,8 +17,8 @@ import {
   ClubUserResponseDto,
 } from "@/types/dto/club.dto";
 import { ClubUserDto } from "@/types/dto/lent.dto";
+import { IPresentationInfo } from "@/types/dto/presentation.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
-import { IPresentationInfo } from "@/types/dto/wednesday.dto";
 
 const { persistAtom } = recoilPersist();
 

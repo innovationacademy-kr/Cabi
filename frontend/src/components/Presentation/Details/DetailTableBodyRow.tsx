@@ -1,13 +1,14 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
-import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
-import { itemType } from "@/components/Wednesday/Details/DetailTable.container";
+import { IDate } from "@/components/Presentation/Details/DetailContent.container";
+import { itemType } from "@/components/Presentation/Details/DetailTable.container";
 import {
   presentationCategoryKorean,
   presentationPeriodNumber,
-} from "@/components/Wednesday/Details/DetailTableBodyRow.container";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+} from "@/components/Presentation/Details/DetailTableBodyRow.container";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import NoEventTableRow from "./NoEventTableRow";
+import TableDetailTr from "./TableDetailTr";
 
 const DetailTableBodyRow = ({
   item,
@@ -73,16 +74,12 @@ const DetailTableBodyRow = ({
         )}
       </TableTrStyled>
       {isItemOpen ? (
-        <TableDetailTrStyled
-          onClick={() => {
-            !itemStatus && handleItemClick(item);
-          }}
+        <TableDetailTr
           itemStatus={itemStatus}
-        >
-          <td colSpan={tableHeadEntriesWithoutDate.length + 1}>
-            <div>{item.detail}</div>
-          </td>
-        </TableDetailTrStyled>
+          handleItemClick={handleItemClick}
+          item={item}
+          tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
+        />
       ) : null}
     </>
   );
@@ -138,31 +135,5 @@ const TableTrStyled = styled.tr<{
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
-  }
-`;
-
-const TableDetailTrStyled = styled.tr<{
-  itemStatus: itemType;
-}>`
-  background-color: #91b5fa;
-  width: 100%;
-
-  & > td {
-    border-radius: 0 0 10px 10px;
-    padding: 0;
-  }
-  & > td > div {
-    background-color: var(--white);
-    border-radius: 10px;
-    margin: 24px;
-    margin-top: 0;
-    line-height: 24px;
-    padding: 30px 50px;
-    font-size: 18px;
-  }
-
-  &:hover {
-    cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
-    background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
   }
 `;

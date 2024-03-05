@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
-import { presentationPeriodNumber } from "@/components/Wednesday/Details/DetailTableBodyRow.container";
-import { IPresentationInfo } from "@/types/dto/wednesday.dto";
+import { IDate } from "@/components/Presentation/Details/DetailContent.container";
+import { presentationPeriodNumber } from "@/components/Presentation/Details/DetailTableBodyRow.container";
+import { IPresentationInfo } from "@/types/dto/presentation.dto";
 
 const WedMainDesc = ({
   selectedPresentation,
@@ -39,7 +39,10 @@ const WedSummaryStyled = styled.div`
     padding: 30px 30px 30px 30px;
   }
   margin-bottom: 30px;
-  background-color: #2c49b1;
+  // background-color: #2c49b1;
+  // background-color: #3f69fd;
+  background-color: #90b5f9;
+  // background-color: #f5f5f5;
   width: 80%;
   max-width: 1100px;
   border-radius: 30px;
@@ -50,7 +53,9 @@ const WedSummaryStyled = styled.div`
 const SummaryHeaderStyled = styled.div`
   display: flex;
   align-items: flex-end;
-  color: #fff;
+  color: #000;
+  // background-color: #fff;
+  // border-radius: 10px;
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 20px;
@@ -59,6 +64,7 @@ const SummaryHeaderStyled = styled.div`
 
 const TitleStyled = styled.div`
   margin-right: 30px;
+  // color: #000;
 
   @media (max-width: 465px) {
     font-size: 2rem;
@@ -66,6 +72,7 @@ const TitleStyled = styled.div`
 `;
 
 const PlaceStyled = styled.div`
+  // color: #000;
   font-size: 2rem;
   margin-top: 10px;
   @media (max-width: 465px) {
@@ -83,15 +90,21 @@ const TimerStyled = styled.div`
   font-weight: 400;
   margin-top: 10px;
   color: #fff;
+
+  & > span {
+    color: #000;
+  }
 `;
 
 const ImageStyled = styled.div`
   margin-right: 15px;
   height: 15px;
+  color: #000;
 `;
 
 const SummaryDetailStyled = styled.div`
-  color: #fff;
-  text-shadow: 0px 3px 5px black;
+  background-color: #fff;
+  padding: 30px 50px;
+  border-radius: 10px;
   word-break: break-all;
 `;

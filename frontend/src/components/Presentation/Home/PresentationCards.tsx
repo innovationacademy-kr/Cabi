@@ -1,13 +1,14 @@
+import { useEffect } from "react";
 import styled, { css, keyframes } from "styled-components";
-import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
+import { IDate } from "@/components/Presentation/Details/DetailContent.container";
 import {
   IAnimation,
   IPresentationCategoryIcon,
   IPresentationScheduleDetailInfo,
-} from "@/types/dto/wednesday.dto";
+} from "@/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 
-const WedCards = ({
+const PresentationCards = ({
   presentation,
   select,
   setSelect,
@@ -84,7 +85,7 @@ const WedCards = ({
   );
 };
 
-export default WedCards;
+export default PresentationCards;
 
 const restore = ({
   min_width,
@@ -118,6 +119,36 @@ const transform = ({
 	}
 }`;
 
+const font_restore = ({
+  min_size,
+  max_size,
+}: {
+  min_size: number;
+  max_size: number;
+}) => keyframes`{
+  0% {
+    font-size: ${max_size}rem;
+	}
+	100% {
+    font-size:${min_size}rem;
+	}
+}`;
+
+const font_transform = ({
+  min_size,
+  max_size,
+}: {
+  min_size: number;
+  max_size: number;
+}) => keyframes`{
+  0% {
+    font-size: ${min_size}rem;	  
+	}
+	100% {
+    font-size: ${max_size}rem;
+	}
+}`;
+
 const ContainerStyled = styled.div`
   display: flex;
   justify-content: center;
@@ -137,7 +168,6 @@ const WedCardStyled = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-color: #fff;
   border-radius: 30px;
   margin-left: 20px;
   box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
@@ -153,6 +183,7 @@ const WedCardStyled = styled.div`
     width: 370px;
     height: 370px;
     padding: 30px 30px;
+    background-color: #dce7fd;
   }
 
   &.not-check {
@@ -164,19 +195,18 @@ const WedCardStyled = styled.div`
       })}
       0.5s ease-in-out;
     padding: 30px 30px;
+    :hover {
+      transition: all 0.3s ease-in-out;
+      transform: translateY(-6px);
+    }
   }
 `;
 
 const CategoryStyled = styled.div`
-  // width : 130px;
   width: 90px;
   height: 90px;
 
   border-radius: 1000px;
-
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
 
   margin-bottom: 10px;
 
@@ -210,18 +240,22 @@ const CalendarStyled = styled.div`
   align-items: flex-end;
   justify-content: flex-end;
   width: 100%;
-  padding-right: 10px;
+  font-size: 1rem;
+  margin-top: 10px;
 
   & > {
     color: gray;
+  }
+  ${WedCardStyled}.not-check & {
+    font-size: 0.7rem;
+    margin-top: 2px;
   }
 `;
 
 const NameStyled = styled.div`
   color: #9d9d9d;
   font-size: 1.2rem;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  margin-bottom: 12px;
 
   ${WedCardStyled}.check & {
     font-size: 1.5rem;
@@ -230,12 +264,26 @@ const NameStyled = styled.div`
 
 const TitleStyled = styled.div`
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  // word-break: break-all;
+  word-break: break-all;
   white-space: pre-line;
+  height: 38px;
   ${WedCardStyled}.check & {
+    animation: ${font_transform({
+        min_size: 1.1,
+        max_size: 1.6,
+      })}
+      0.5s ease-in-out;
     font-size: 1.6rem;
+  }
+  ${WedCardStyled}.not-check & {
+    animation: ${font_restore({
+        min_size: 1.1,
+        max_size: 1.6,
+      })}
+      0.5s ease-in-out;
+    height: 35px;
   }
 `;
 
@@ -244,7 +292,23 @@ const SubTitleStyled = styled.div`
   font-size: 1rem;
   margin-top: 30px;
   word-break: break-all;
+  height: 32px;
+
+  ${WedCardStyled}.check & {
+    animation: ${font_transform({
+        min_size: 0.8,
+        max_size: 1,
+      })}
+      0.5s ease-in-out;
+    height: 38px;
+  }
   ${WedCardStyled}.not-check & {
+    animation: ${font_restore({
+        min_size: 0.8,
+        max_size: 1,
+      })}
+      0.5s ease-in-out;
+    margin-top: 20px;
     font-size: 0.8rem;
   }
 `;

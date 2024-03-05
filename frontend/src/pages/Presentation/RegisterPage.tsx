@@ -8,8 +8,8 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
-import DropdownDateMenu from "@/components/Wednesday/Registers/DropdownDateMenu";
-import DropdownTimeMenu from "@/components/Wednesday/Registers/DropdownTimeMenu";
+import DropdownDateMenu from "@/components/Presentation/Registers/DropdownDateMenu";
+import DropdownTimeMenu from "@/components/Presentation/Registers/DropdownTimeMenu";
 import NotificationIcon from "@/assets/images/notificationSign_grey.svg";
 import {
   PresentationCategoryType,

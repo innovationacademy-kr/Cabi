@@ -1,9 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { IDate } from "@/components/Wednesday/Details/DetailContent.container";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/wednesday.dto";
+import { IDate } from "@/components/Presentation/Details/DetailContent.container";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
-const WedCardsMobile = ({
+const PresentationCardsMobile = ({
   presentation,
   select,
   setSelect,
@@ -21,6 +21,9 @@ const WedCardsMobile = ({
   const touchStartPosY = useRef(0);
   const components = [];
 
+  useEffect(() => {
+    setSelect(1);
+  }, []);
   const currentPresentations = presentation?.concat(
     new Array(Math.max(3 - (presentation.length || 0), 0)).fill({
       id: -1,
@@ -146,7 +149,7 @@ const WedCardsMobile = ({
   );
 };
 
-export default WedCardsMobile;
+export default PresentationCardsMobile;
 
 const ContainerStyled = styled.div`
   display: flex;
