@@ -3,27 +3,32 @@ import styled from "styled-components";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
-const PresentationCardsMobile = ({
+const PresentationCardMobile = ({
   presentation,
-  select,
-  setSelect,
+  selectIndex,
   makeIDateObj,
   searchCategory,
+  slide,
+  onClick,
+  swipeSection,
 }: {
   presentation: IPresentationScheduleDetailInfo[] | null;
-  select: number;
-  setSelect: (value: number) => void;
+  selectIndex: number;
   makeIDateObj: (date: Date) => IDate;
   searchCategory: (categoryName: string) => string | undefined;
+  slide: number;
+  onClick: (index: number, type: string) => void;
+  swipeSection: (
+    touchEndPosX: number,
+    touchEndPosY: number,
+    touchStartPosX: number,
+    touchStartPosY: number
+  ) => void;
 }) => {
-  const [move, setMove] = useState(0);
   const touchStartPosX = useRef(0);
   const touchStartPosY = useRef(0);
   const components = [];
 
-  useEffect(() => {
-    setSelect(1);
-  }, []);
   const currentPresentations = presentation?.concat(
     new Array(Math.max(3 - (presentation.length || 0), 0)).fill({
       id: -1,
@@ -32,65 +37,19 @@ const PresentationCardsMobile = ({
     })
   );
 
-  const onPageClick = (i: number) => {
-    if (i !== select) {
-      setSelect(i);
-      setMove(move + (select - i) * 300);
-    }
-  };
-
   for (let i = 0; i < 3; i++) {
     components.push(
       <Paginations
         key={i}
-        onClick={() => onPageClick(i)}
-        current={i == select}
+        onClick={() => onClick(i, "mobile")}
+        current={i == selectIndex}
       ></Paginations>
     );
   }
 
-  const onClick = (index: number) => {
-    if (select != index) {
-      if (index < select) {
-        setSelect(select - 1);
-        setMove(move + 300);
-      } else {
-        setSelect(select + 1);
-        setMove(move - 300);
-      }
-    }
-  };
-
-  const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
-    const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
-    const touchOffsetY = Math.round(touchEndPosY - touchStartPosY.current);
-    if (
-      Math.abs(touchOffsetX) < 50 ||
-      Math.abs(touchOffsetX) < Math.abs(touchOffsetY)
-    ) {
-      return;
-    }
-
-    if (touchOffsetX > 0) {
-      moveSectionTo("left");
-    } else {
-      moveSectionTo("right");
-    }
-  };
-
-  const moveSectionTo = (direction: string) => {
-    if (direction === "left" && select !== 0) {
-      setSelect(select - 1);
-      setMove(move + 300);
-    } else if (direction === "right" && select !== 2) {
-      setSelect(select + 1);
-      setMove(move - 300);
-    }
-  };
-
   return (
     <ContainerStyled>
-      <CardWrapperStyled select={move}>
+      <PresentationCardStyled select={slide}>
         {currentPresentations?.map((p, index) => {
           const tmpDate =
             p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
@@ -98,8 +57,8 @@ const PresentationCardsMobile = ({
           return (
             <WedCardStyled
               key={index}
-              onClick={() => onClick(index)}
-              className={index == move ? "check" : "not-check"}
+              onClick={() => onClick(index, "mobile")}
+              className={index == slide ? "check" : "not-check"}
               onTouchStart={(e: React.TouchEvent) => {
                 touchStartPosX.current = e.changedTouches[0].screenX;
                 touchStartPosY.current = e.changedTouches[0].screenY;
@@ -107,7 +66,9 @@ const PresentationCardsMobile = ({
               onTouchEnd={(e: React.TouchEvent) => {
                 swipeSection(
                   e.changedTouches[0].screenX,
-                  e.changedTouches[0].screenY
+                  e.changedTouches[0].screenY,
+                  touchStartPosX.current,
+                  touchStartPosY.current
                 );
               }}
             >
@@ -142,14 +103,13 @@ const PresentationCardsMobile = ({
             </WedCardStyled>
           );
         })}
-      </CardWrapperStyled>
-
+      </PresentationCardStyled>
       <PaginationStyled>{components}</PaginationStyled>
     </ContainerStyled>
   );
 };
 
-export default PresentationCardsMobile;
+export default PresentationCardMobile;
 
 const ContainerStyled = styled.div`
   display: flex;
@@ -162,7 +122,7 @@ const ContainerStyled = styled.div`
   min-height: 380px;
 `;
 
-const CardWrapperStyled = styled.div<{ select: number }>`
+const PresentationCardStyled = styled.div<{ select: number }>`
   overflow-x: hidden;
   display: flex;
   justify-content: center;

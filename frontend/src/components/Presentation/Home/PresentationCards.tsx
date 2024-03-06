@@ -1,35 +1,23 @@
-import { useEffect } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
 import {
   IAnimation,
-  IPresentationCategoryIcon,
   IPresentationScheduleDetailInfo,
 } from "@/types/dto/presentation.dto";
-import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 
-const PresentationCards = ({
+const PresentationCard = ({
   presentation,
-  select,
-  setSelect,
+  selectIndex,
   makeIDateObj,
   searchCategory,
+  onClick,
 }: {
   presentation: IPresentationScheduleDetailInfo[] | null;
-  select: number;
-  setSelect: (value: number) => void;
+  selectIndex: number;
   makeIDateObj: (date: Date) => IDate;
-  isNull: boolean;
   searchCategory: (categoryName: string) => string | undefined;
+  onClick: (index: number, type: string) => void;
 }) => {
-  const onClick = (index: number) => {
-    if (select) setSelect(index);
-    else setSelect(index);
-    (presentation || []).concat(
-      Array.from({ length: 3 - (presentation || []).length })
-    );
-  };
-
   // datatime 다음주 날짜 가져오고 싶다..
   const currentPresentations = presentation?.concat(
     new Array(Math.max(3 - (presentation.length || 0), 0)).fill({
@@ -44,10 +32,10 @@ const PresentationCards = ({
       {currentPresentations?.map((p, index) => {
         const tmpDate = p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
         return (
-          <WedCardStyled
+          <PresentationCardStyled
             key={index}
-            onClick={() => onClick(index)}
-            className={index == select ? "check" : "not-check"}
+            onClick={() => onClick(index, "web")}
+            className={index == selectIndex ? "check" : "not-check"}
           >
             {p.id !== -1 ? (
               <>
@@ -78,14 +66,14 @@ const PresentationCards = ({
                 </span>
               </CalendarStyled>
             )}
-          </WedCardStyled>
+          </PresentationCardStyled>
         );
       })}
     </ContainerStyled>
   );
 };
 
-export default PresentationCards;
+export default PresentationCard;
 
 const restore = ({
   min_width,
@@ -173,7 +161,7 @@ const ContainerStyled = styled.div`
   justify-content: space-around;
 `;
 
-const WedCardStyled = styled.div`
+const PresentationCardStyled = styled.div`
   width: 280px;
   height: 280px;
   display: flex;
@@ -222,7 +210,7 @@ const CategoryStyled = styled.div`
 
   margin-bottom: 10px;
 
-  ${WedCardStyled}.check & {
+  ${PresentationCardStyled}.check & {
     animation: ${transform({
         min_width: 100,
         min_height: 90,
@@ -234,7 +222,7 @@ const CategoryStyled = styled.div`
     height: 140px;
   }
 
-  ${WedCardStyled}.not-check & {
+  ${PresentationCardStyled}.not-check & {
     animation: ${restore({
         min_width: 100,
         min_height: 90,
@@ -257,7 +245,7 @@ const CalendarStyled = styled.div`
   & > {
     color: gray;
   }
-  ${WedCardStyled}.not-check & {
+  ${PresentationCardStyled}.not-check & {
     font-size: 0.7rem;
     margin-top: 2px;
   }
@@ -268,7 +256,7 @@ const NameStyled = styled.div`
   font-size: 1.2rem;
   // margin-bottom: 12px;
 
-  ${WedCardStyled}.check & {
+  ${PresentationCardStyled}.check & {
     font-size: 1.5rem;
   }
 `;
@@ -283,7 +271,7 @@ const TitleStyled = styled.div`
   margin-top: 12px;
   margin-bottom: 30px;
 
-  ${WedCardStyled}.check & {
+  ${PresentationCardStyled}.check & {
     animation: ${font_transform({
         min_size: 1.1,
         max_size: 1.6,
@@ -294,7 +282,7 @@ const TitleStyled = styled.div`
     font-size: 1.6rem;
     margin-bottom: 30px;
   }
-  ${WedCardStyled}.not-check & {
+  ${PresentationCardStyled}.not-check & {
     animation: ${font_restore({
         min_size: 1.1,
         max_size: 1.6,
@@ -313,7 +301,7 @@ const SubTitleStyled = styled.div`
   word-break: break-all;
   height: 32px;
   margin-bottom: 10px;
-  ${WedCardStyled}.check & {
+  ${PresentationCardStyled}.check & {
     animation: ${font_transform({
         min_size: 0.8,
         max_size: 1,
@@ -323,7 +311,7 @@ const SubTitleStyled = styled.div`
       0.5s ease-in-out;
     height: 30px;
   }
-  ${WedCardStyled}.not-check & {
+  ${PresentationCardStyled}.not-check & {
     animation: ${font_restore({
         min_size: 0.8,
         max_size: 1,

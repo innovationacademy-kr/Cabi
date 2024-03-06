@@ -10,6 +10,7 @@ import {
 } from "@/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 import { axiosGetPresentation } from "@/api/axios/axios.custom";
+import PresentationCardContainer from "./PresentationCard.container";
 import PresentationCards from "./PresentationCards";
 
 const RecentPresentation = ({
@@ -18,47 +19,21 @@ const RecentPresentation = ({
   presentButtonHandler: () => void;
 }) => {
   const [isMobile, setIsMobile] = useState(false);
-  const [select, setSelect] = useState(1);
-  const [selectedPresentation, setSelectedPresentation] =
-    useState<IPresentationInfo | null>(null);
   const [currentPresentations, setCurrentPresentations] = useState<
     IPresentationScheduleDetailInfo[] | null
   >(null);
-  const [presentationLists, setPresentationLists] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<IDate | null>(null);
+  // 뭐하는 변수일까
+  // const [presentationLists, setPresentationLists] = useState(false);
   const navigator = useNavigate();
-
-  useEffect(() => {
-    getCurrentPresentation();
-
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 700);
-    };
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    if (currentPresentations) {
-      setSelectedPresentation(currentPresentations[select]);
-    }
-  }, [currentPresentations, select]);
-
-  useEffect(() => {
-    if (selectedPresentation) {
-      const tmpDate = makeIDateObj(new Date(selectedPresentation.dateTime));
-      setSelectedDate(tmpDate);
-    }
-  }, [selectedPresentation]);
 
   const getCurrentPresentation = async () => {
     try {
       const response = await axiosGetPresentation();
       setCurrentPresentations(response.data.forms);
       if (response.data.forms) {
-        setPresentationLists(true);
-      } else setPresentationLists(false);
+        // setPresentationLists(true); // 아마 받아오는 데이터가 없을떄 .. 이건 나중에 고려
+      }
+      // else setPresentationLists(false);
     } catch (error: any) {
       // TODO
     } finally {
@@ -66,56 +41,15 @@ const RecentPresentation = ({
     }
   };
 
-  const makeIDateObj = (date: Date) => {
-    let dateISO = date.toISOString();
-    // 1. T 앞에서 끊고
-    let dateBeforeT = dateISO.substring(0, 10);
-    // 2. -로 분리
-    let dateSplited = dateBeforeT.split("-");
-
-    const iDateObj: IDate = {
-      year: dateSplited[0],
-      month: dateSplited[1],
-      day: dateSplited[2],
+  useEffect(() => {
+    getCurrentPresentation();
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 700);
     };
-
-    return iDateObj;
-  };
-
-  const presentationCategoryIcon = [
-    {
-      name: "/src/assets/images/PresentationFortyTwo.svg",
-      key: PresentationCategoryType.TASK,
-    },
-    {
-      name: "/src/assets/images/PresentationDevelop.svg",
-      key: PresentationCategoryType.DEVELOP,
-    },
-    {
-      name: "/src/assets/images/PresentationAcademic.svg",
-      key: PresentationCategoryType.STUDY,
-    },
-    {
-      name: "/src/assets/images/PresentationHobby.svg",
-      key: PresentationCategoryType.HOBBY,
-    },
-    {
-      name: "/src/assets/images/PresentationJob.svg",
-      key: PresentationCategoryType.JOB,
-    },
-    {
-      name: "/src/assets/images/PresentationEtc.svg",
-      key: PresentationCategoryType.ETC,
-    },
-    { name: "/src/assets/images/PresentationEmpty.svg", key: "" },
-  ];
-
-  const searchCategory = (categoryName: string): string | undefined => {
-    const foundCategory = presentationCategoryIcon.find(
-      (category) => category.key === categoryName
-    );
-    return foundCategory ? foundCategory.name : undefined;
-  };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <ConTainerStyled>
@@ -133,27 +67,9 @@ const RecentPresentation = ({
         </RegistButtonStyled>
       </WedHeaderStyled>
 
-      {isMobile ? (
-        <PresentationCardsMobile
-          presentation={currentPresentations}
-          select={select}
-          setSelect={setSelect}
-          makeIDateObj={makeIDateObj}
-          searchCategory={searchCategory}
-        />
-      ) : (
-        <PresentationCards
-          select={select}
-          setSelect={setSelect}
-          presentation={currentPresentations}
-          makeIDateObj={makeIDateObj}
-          isNull={presentationLists}
-          searchCategory={searchCategory}
-        />
-      )}
-      <WedMainDesc
-        selectedPresentation={selectedPresentation}
-        selectedDate={selectedDate!}
+      <PresentationCardContainer
+        isMobile={isMobile}
+        currentPresentations={currentPresentations}
       />
     </ConTainerStyled>
   );

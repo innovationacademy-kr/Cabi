@@ -3,7 +3,7 @@ import { IDate } from "@/components/Presentation/Details/DetailContent.container
 import { presentationPeriodNumber } from "@/components/Presentation/Details/DetailTableBodyRow.container";
 import { IPresentationInfo } from "@/types/dto/presentation.dto";
 
-const WedMainDesc = ({
+const PresentationCardDetail = ({
   selectedPresentation,
   selectedDate,
 }: {
@@ -11,8 +11,8 @@ const WedMainDesc = ({
   selectedDate: IDate | null;
 }) => {
   return (
-    <WedSummaryStyled>
-      <SummaryHeaderStyled>
+    <ContainerStyled>
+      <HeaderStyled>
         <TitleStyled>
           {selectedDate?.month}월 {selectedDate?.day}일 오후 1시
         </TitleStyled>
@@ -25,16 +25,16 @@ const WedMainDesc = ({
             {presentationPeriodNumber[selectedPresentation?.presentationTime!]}
           </span>
         </TimerStyled>
-      </SummaryHeaderStyled>
+      </HeaderStyled>
 
-      <SummaryDetailStyled>{selectedPresentation?.detail}</SummaryDetailStyled>
-    </WedSummaryStyled>
+      <DetailStyled>{selectedPresentation?.detail}</DetailStyled>
+    </ContainerStyled>
   );
 };
 
-export default WedMainDesc;
+export default PresentationCardDetail;
 
-const WedSummaryStyled = styled.div`
+const ContainerStyled = styled.div`
   @media (max-width: 465px) {
     padding: 30px 30px 30px 30px;
   }
@@ -50,12 +50,10 @@ const WedSummaryStyled = styled.div`
   padding: 50px 50px 50px 50px;
 `;
 
-const SummaryHeaderStyled = styled.div`
+const HeaderStyled = styled.div`
   display: flex;
   align-items: flex-end;
   color: #000;
-  // background-color: #fff;
-  // border-radius: 10px;
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 20px;
@@ -64,15 +62,12 @@ const SummaryHeaderStyled = styled.div`
 
 const TitleStyled = styled.div`
   margin-right: 30px;
-  // color: #000;
-
   @media (max-width: 465px) {
     font-size: 2rem;
   }
 `;
 
 const PlaceStyled = styled.div`
-  // color: #000;
   font-size: 2rem;
   margin-top: 10px;
   @media (max-width: 465px) {
@@ -102,7 +97,7 @@ const ImageStyled = styled.div`
   color: #000;
 `;
 
-const SummaryDetailStyled = styled.div`
+const DetailStyled = styled.div`
   background-color: #fff;
   padding: 30px 50px;
   border-radius: 10px;
