@@ -104,7 +104,6 @@ const TableTrStyled = styled.tr<{
   text-align: center;
   font-size: 18px;
   background-color: #dce7fd;
-
   & > td {
     padding: 0 10px;
   }

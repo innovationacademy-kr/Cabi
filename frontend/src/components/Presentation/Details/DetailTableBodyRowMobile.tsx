@@ -65,7 +65,7 @@ const DetailTableBodyRowMobile = ({
         >
           <td>
             <div className="leftEnd">
-                {itemDate?.month}월 {itemDate?.day}일
+              {itemDate?.month}월 {itemDate?.day}일
             </div>
           </td>
           <td>
@@ -83,13 +83,12 @@ const DetailTableBodyRowMobile = ({
       ) : (
         <>
           <MobileTableDateStyled
-            
             onClick={() => {
               !itemStatus && handleItemClick(item);
             }}
           >
-            <td colSpan={colSize} >
-              <div className ={itemStatus}>
+            <td colSpan={colSize}>
+              <div className={itemStatus}>
                 {itemDate?.month}월 {itemDate?.day}일
               </div>
             </td>
@@ -114,9 +113,7 @@ const DetailTableBodyRowMobile = ({
                     </>
                   ) : (
                     <>
-                      <div>
-                        지금 바로 발표를 신청해보세요
-                      </div>
+                      <div>지금 바로 발표를 신청해보세요</div>
                       <button
                         onClick={() => {
                           navigator("/wed/register");
@@ -169,21 +166,22 @@ const MobileTableStyled = styled.tr<{
   background-color: #dce7fd;
   font-weight: bold;
   border-radius: 10px;
-  
+
   & .end {
     padding-top: 10px;
     border-radius: ${(props) => (props.open ? "0 0 0 0" : "0 0 10px 10px")};
+    cursor: pointer;
   }
   & #noEventCurrent {
     background-color: var(--full);
     border-radius: 0 0 10px 10px;
   }
-  
+
   & #noEventPast {
     background-color: var(--full);
     border-radius: 0 0 10px 10px;
   }
-  
+
   & button {
     max-width: 120px;
     width: 20%;
@@ -192,11 +190,10 @@ const MobileTableStyled = styled.tr<{
     font-size: 1rem;
     font-weight: bold;
   }
-  
 `;
 
 const MobileTableDateStyled = styled.tr`
-width: 100%;
+  width: 100%;
   height: 30px;
   line-height: 35px;
   font-size: 18px;
@@ -215,14 +212,13 @@ width: 100%;
       /* background-color: #dce7fd; */
       background-color: #3f69fd;
       color: var(--white);
+    }
   }
-}
 `;
-
-
 
 const MobileTableDetailTrStyled = styled.tr`
   background-color: #91b5fa;
+  cursor: pointer;
 
   line-height: 30px;
   & > td {
@@ -237,12 +233,13 @@ const MobileTableDetailTrStyled = styled.tr`
     line-height: 24px;
     padding: 20px 50px;
     font-size: 18px;
+    word-break: break-all;
   }
-
 `;
 const TopMobileTableStyled = styled.tr`
   background-color: #91b5fa;
   width: 100%;
+  cursor: pointer;
   & > td {
     border-radius: 10px 10px 0 0;
     padding: 0;
@@ -269,4 +266,3 @@ const NoEventDivStyled = styled.div`
   justify-content: space-evenly;
   align-items: center;
 `;
-
