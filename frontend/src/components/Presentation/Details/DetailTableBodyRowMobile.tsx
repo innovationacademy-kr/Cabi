@@ -33,7 +33,6 @@ const DetailTableBodyRowMobile = ({
     useState<null | IPresentationScheduleDetailInfo>(null);
   const navigator = useNavigate();
   const setCurrentPresentation = useSetRecoilState(currentPresentationState);
-  const [handleColSpan, setHandleColSpan] = useState(3);
   const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
     if (isAdmin && !itemStatus) {
       setCurrentPresentation({
@@ -47,14 +46,14 @@ const DetailTableBodyRowMobile = ({
       openAdminModal("statusModal");
     } else {
       if (clickedItem?.dateTime === item.dateTime) {
-        setHandleColSpan(3);
         setClickedItem(null);
       } else {
-        setHandleColSpan(4);
         setClickedItem(item);
       }
     }
   };
+
+  const colSize = 4;
 
   return (
     <>
@@ -69,7 +68,7 @@ const DetailTableBodyRowMobile = ({
               <div>
                 {itemDate?.month}월 {itemDate?.day}일
               </div>
-            </div>{" "}
+            </div>
           </td>
           <td>
             <div>{item.userName}</div>
@@ -83,59 +82,65 @@ const DetailTableBodyRowMobile = ({
             </div>
           </td>
         </TopTableDetailTrStyled>
-      ) : null}
-      <MobileTableStyled
-        id={clickedItem?.dateTime === item.dateTime ? "selected" : ""}
-        onClick={() => {
-          !itemStatus && handleItemClick(item);
-        }}
-        open={clickedItem?.dateTime === item.dateTime}
-      >
-        {itemStatus ? (
-          <>
-            <td className="leftEnd" id={itemStatus}>
-              <div>
+      ) : (
+        <>
+          <MobileTableDateStyled
+            
+            onClick={() => {
+              !itemStatus && handleItemClick(item);
+            }}
+          >
+            <td colSpan={colSize} >
+              <div className ={itemStatus}>
                 {itemDate?.month}월 {itemDate?.day}일
               </div>
             </td>
-            <td id={itemStatus} className="rightEnd" colSpan={3}>
-              <NoEventDivStyled>
-                {itemStatus === itemType.NO_EVENT_PAST ? (
-                  <>
-                    <div>발표가 없었습니다</div>
-                  </>
-                ) : (
-                  <>
-                    <NoEventPhraseStyled>
-                      <div>지금 바로 발표를 신청해보세요</div>
-                    </NoEventPhraseStyled>
-                    <button
-                      onClick={() => {
-                        navigator("/Presentation/register");
-                      }}
-                    >
-                      신청하기
-                    </button>
-                  </>
-                )}
-              </NoEventDivStyled>
-            </td>
-          </>
-        ) : (
-          <>
-            {clickedItem?.dateTime === item.dateTime ? null : (
-              <td className="leftEnd" id={itemStatus}>
-                <div>
-                  {itemDate?.month}월 {itemDate?.day}일
-                </div>
+          </MobileTableDateStyled>
+        </>
+      )}
+      <>
+        <MobileTableStyled
+          id={clickedItem?.dateTime === item.dateTime ? "selected" : ""}
+          onClick={() => {
+            !itemStatus && handleItemClick(item);
+          }}
+          open={clickedItem?.dateTime === item.dateTime}
+        >
+          {itemStatus ? (
+            <>
+              <td id={itemStatus} colSpan={colSize}>
+                <NoEventDivStyled>
+                  {!hasNoCurrentEvent ? (
+                    <>
+                      <div>발표가 없었습니다</div>
+                    </>
+                  ) : (
+                    <>
+                      <NoEventPhraseStyled>
+                        <div>지금 바로 발표를 신청해보세요</div>
+                      </NoEventPhraseStyled>
+                      <button
+                        onClick={() => {
+                          navigator("/wed/register");
+                        }}
+                      >
+                        신청하기
+                      </button>
+                    </>
+                  )}
+                </NoEventDivStyled>
               </td>
-            )}
-            <td colSpan={handleColSpan} className="rightEnd">
-              <div id="MobileSubject">{item.subject}</div>
-            </td>
-          </>
-        )}
-      </MobileTableStyled>
+            </>
+          ) : (
+            <>
+              <td id={itemStatus} className="end" colSpan={colSize}>
+                <div>{item.subject}</div>
+              </td>
+            </>
+          )}
+        </MobileTableStyled>
+      </>
+
       {clickedItem?.dateTime === item.dateTime ? (
         <>
           <TableDetailTrStyled
@@ -143,7 +148,7 @@ const DetailTableBodyRowMobile = ({
               !itemStatus && handleItemClick(item);
             }}
           >
-            <td colSpan={4}>
+            <td colSpan={colSize}>
               <div>{item.detail}</div>
             </td>
           </TableDetailTrStyled>
@@ -158,56 +163,64 @@ export default DetailTableBodyRowMobile;
 const MobileTableStyled = styled.tr<{
   open?: boolean;
 }>`
-  height: 70px;
   width: 100%;
-
+  height: 55px;
   line-height: 30px;
   text-align: center;
   font-size: 18px;
   background-color: #dce7fd;
-
-  & #noEventCurrent {
-    background-color: var(--white);
+  font-weight: bold;
+  border-radius: 10px;
+  
+  & .end {
+    padding-top: 10px;
+    border-radius: ${(props) => (props.open ? "0 0 0 0" : "0 0 10px 10px")};
   }
-
+  & #noEventCurrent {
+    background-color: var(--full);
+    border-radius: 0 0 10px 10px;
+  }
+  
   & #noEventPast {
     background-color: var(--full);
+    border-radius: 0 0 10px 10px;
   }
-
+  
   & button {
-    width: 100px;
-    height: 36px;
+    max-width: 120px;
+    width: 20%;
+    height: 32px;
     background-color: #3f69fd;
-    font-weight: bold;
     font-size: 1rem;
+    font-weight: bold;
   }
-
-  & .leftEnd {
-    border-radius: ${(props) => (props.open ? "10px 0 0 0" : "10px 0 0 10px")};
-    padding-left: 5px;
-    > div {
-      height: 100%;
-      /* word-break: keep-all;  */
-    }
-  }
-
-  & .rightEnd {
-    border-radius: ${(props) => (props.open ? "0 0 0 0" : "0 10px 10px 0")};
-    > div {
-      height: 70px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      /* text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap; */
-    }
-  }
-
-  @media screen and (min-width: 1150px) {
-    display: none;
-  }
+  
 `;
+
+const MobileTableDateStyled = styled.tr`
+width: 100%;
+  height: 30px;
+  line-height: 35px;
+  font-size: 18px;
+
+  & td {
+    
+    .noEventCurrent {
+      background-color: var(--full);
+    }
+    
+    .noEventPast {
+      background-color: var(--full);
+    }
+    div {
+      padding-left: 10px;
+      border-radius: 10px 10px 0 0;
+      background-color: #dce7fd;
+  }
+}
+`;
+
+
 
 const TableDetailTrStyled = styled.tr`
   background-color: #91b5fa;
@@ -226,9 +239,7 @@ const TableDetailTrStyled = styled.tr`
     padding: 20px 50px;
     font-size: 18px;
   }
-  @media screen and (min-width: 1150px) {
-    display: none;
-  }
+
 `;
 const TopTableDetailTrStyled = styled.tr`
   background-color: #91b5fa;
@@ -251,13 +262,11 @@ const TopTableDetailTrStyled = styled.tr`
   & .rightEnd {
     border-radius: 0px 10px 0px 0px;
   }
-  @media screen and (min-width: 1150px) {
-    display: none;
-  }
+
 `;
 
 const NoEventDivStyled = styled.div`
-  height: 70px;
+  height: 50px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -266,7 +275,6 @@ const NoEventDivStyled = styled.div`
 const NoEventPhraseStyled = styled.div`
   display: flex;
   justify-content: end;
-  width: 50%;
 
   & > div {
     font-weight: bold;

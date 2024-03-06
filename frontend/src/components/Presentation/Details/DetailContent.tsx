@@ -54,9 +54,6 @@ const ContainerStyled = styled.div`
   align-items: center;
   overflow-y: scroll;
 
-  @media screen and (max-width: 1150px) {
-    background-color: var(--lightgray-color);
-  }
 `;
 
 const HeaderStyled = styled.div`
@@ -94,5 +91,7 @@ const BodyStyled = styled.div`
   @media screen and (max-width: 1150px) {
     margin-top: 0px;
     width: 100%;
+    background-color: var(--white);
+    padding: 24px 10px 10px 10px;
   }
 `;

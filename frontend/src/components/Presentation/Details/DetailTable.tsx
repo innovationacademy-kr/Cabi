@@ -71,7 +71,7 @@ const DetailTable = ({
 
 const TableStyled = styled.table`
   width: 100%;
-  min-width: 480px;
+  min-width: 355px;
   table-layout: fixed;
 `;
 
