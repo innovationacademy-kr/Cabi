@@ -24,7 +24,7 @@ const SectionPagination: React.FC<{
       filledColor={
         sectionName === currentSectionName
           ? "var(--main-color)"
-          : "var(--gray-600)"
+          : "var(--gray-tmp-3)"
       }
       onClick={() => changeSectionOnClickIndexButton(index)}
       className="cabiButton"
