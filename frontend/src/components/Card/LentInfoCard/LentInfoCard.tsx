@@ -68,8 +68,7 @@ const LentInfoCard = ({
               />
               <CabinetInfoTextStyled
                 fontSize={calculateFontSize(cabinetInfo.userCount)}
-                // fontColor="black"
-                fontColor="var(--black)"
+                fontColor="var(--color-text-normal)"
               >
                 {cabinetInfo.userNameList}
               </CabinetInfoTextStyled>
@@ -143,7 +142,7 @@ const CabinetRectangleStyled = styled.div<{
       ? "var(--expired)"
       : props.isLented
       ? "var(--mine)"
-      : "var(--full)"};
+      : "var(--gray-tmp-2)"};
   color: ${(props) =>
     props.banned
       ? "var(--color-background)"
