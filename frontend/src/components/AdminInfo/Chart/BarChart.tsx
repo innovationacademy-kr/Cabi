@@ -54,7 +54,13 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
       padding={0.3}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
-      colors={["var(--gray-600)", "var(--expired)", "var(--gray-300)", "var(--main-color)"]}
+      colors={[
+        "var(--gray-600)",
+        "var(--expired)",
+        "var(--gray-300)",
+        "var(--main-color)",
+      ]}
+      // 사용불가와 사용 중은 헷갈릴 수 있으니 색 그대로
       borderColor={{
         from: "color",
         modifiers: [["darker", 1.6]],

@@ -67,6 +67,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
           "var(--main-color)",
           "var(--gray-600)",
         ]}
+        // 사용불가와 사용 중은 헷갈릴 수 있으니 색 그대로
         innerRadius={0.5}
         padAngle={0.7}
         cornerRadius={3}

@@ -52,7 +52,7 @@ const ClubLeftNavOptionStyled = styled.div`
   & hr {
     width: 80%;
     height: 1px;
-    background-color: var(--gray-300);
+    background-color: var(--gray-tmp-3);
     border: 0;
     margin-top: 20px;
     margin-bottom: 20px;
