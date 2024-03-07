@@ -98,7 +98,7 @@ const TopNavContainerStyled = styled.nav`
   background-color: var(--color-background);
   border-bottom: 1px solid var(--color-line);
   padding: 0 28px;
-  color: var(--gray-500);
+  color: var(--gray-tmp-5);
   z-index: 10;
 `;
 

@@ -54,7 +54,7 @@ const LentInfoCard = ({
           <CabinetInfoDetailStyled>
             <CabinetInfoTextStyled
               fontSize={cabinetInfo.floor !== 0 ? "1rem" : "0.9rem"}
-              fontColor="var(--gray-500)"
+              fontColor="var(--gray-tmp-5)"
             >
               {cabinetInfo.floor !== 0
                 ? cabinetInfo.floor + "층 - " + cabinetInfo.section
@@ -149,8 +149,7 @@ const CabinetRectangleStyled = styled.div<{
       ? "var(--color-background)"
       : props.status === "IN_SESSION"
       ? "var(--main-color)"
-      : "var(--color-text-normal)"
-      };
+      : "var(--color-text-normal)"};
   font-size: 2rem;
   text-align: center;
 `;

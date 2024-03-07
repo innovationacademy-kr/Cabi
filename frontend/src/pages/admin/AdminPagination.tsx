@@ -26,13 +26,13 @@ const PointStyled = styled.div<{ active: boolean }>`
   width: 23px;
   height: 23px;
   border-radius: 100%;
-  border: 3px solid var(--gray-500);
+  border: 3px solid var(--gray-tmp-5);
   cursor: pointer;
   transition: 0.5s;
   &:hover {
-    background: var(--gray-500);
+    background: var(--gray-tmp-5);
   }
-  background: ${(props) => (props.active ? "var(--gray-500)" : "none")};
+  background: ${(props) => (props.active ? "var(--gray-tmp-5)" : "none")};
 `;
 
 const AdminPaginationStyled = styled.div<{ page: number }>`

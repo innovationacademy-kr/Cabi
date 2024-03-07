@@ -88,7 +88,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickSearchButton}
               >
-                <SearchImg stroke="var(--gray-500)" />
+                <SearchImg stroke="var(--gray-tmp-5)" />
                 Search
               </BottomBtnStyled>
               <BottomBtnStyled className="cabiButton">
@@ -97,7 +97,7 @@ const LeftMainNav = ({
                   target="_blank"
                   title="슬랙 캐비닛 채널 새창으로 열기"
                 >
-                  <SlackImg stroke="var(--gray-500)" />
+                  <SlackImg stroke="var(--gray-tmp-5)" />
                   Contact
                 </a>
               </BottomBtnStyled>
@@ -109,14 +109,14 @@ const LeftMainNav = ({
                 }
                 onClick={onClickAdminClubButton}
               >
-                <CulbImg stroke="var(--gray-500)" />
+                <CulbImg stroke="var(--gray-tmp-5)" />
                 Club
               </BottomBtnStyled>
               <BottomBtnStyled
                 className="cabiButton"
                 onClick={onClickLogoutButton}
               >
-                <LogoutImg stroke="var(--gray-500)" />
+                <LogoutImg stroke="var(--gray-tmp-5)" />
                 Logout
               </BottomBtnStyled>
             </>
@@ -131,7 +131,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickMainClubButton}
               >
-                <CulbImg stroke="var(--gray-500)" />
+                <CulbImg stroke="var(--gray-tmp-5)" />
                 Clubs
               </BottomBtnStyled>
               <BottomBtnStyled
@@ -142,7 +142,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickProfileButton}
               >
-                <ProfileImg stroke="var(--gray-500)" width={32} height={32} />
+                <ProfileImg stroke="var(--gray-tmp-5)" width={32} height={32} />
                 Profile
               </BottomBtnStyled>
             </>
@@ -182,7 +182,7 @@ const TopBtnStyled = styled.li`
   font-weight: 300;
   margin-bottom: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-500);
+  color: var(--gray-tmp-5);
   cursor: pointer;
   &:last-child {
     margin-bottom: 0;
@@ -223,7 +223,7 @@ const BottomBtnStyled = styled.li`
   font-weight: 300;
   margin-top: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-500);
+  color: var(--gray-tmp-5);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -232,7 +232,7 @@ const BottomBtnStyled = styled.li`
     margin-top: 0;
   }
   & a {
-    color: var(--gray-500);
+    color: var(--gray-tmp-5);
   }
   & div {
     width: 24px;

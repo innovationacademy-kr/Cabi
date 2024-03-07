@@ -187,7 +187,7 @@ const TextWrapper = styled.div`
 const LocationStyled = styled.p`
   font-size: 0.875rem;
   line-height: 28px;
-  color: var(--gray-500);
+  color: var(--gray-tmp-5);
 `;
 
 const NameWrapperStyled = styled.div`

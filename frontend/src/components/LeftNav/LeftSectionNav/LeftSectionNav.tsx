@@ -76,14 +76,14 @@ const LeftSectionNav = ({
           title="슬랙 캐비닛 채널 새창으로 열기"
         >
           문의하기
-          <LinkImg id="linknImg" stroke="var(--gray-500)" />
+          <LinkImg id="linknImg" stroke="var(--gray-tmp-5)" />
         </SectionLinkStyled>
         <SectionLinkStyled
           onClick={() => onClickClubForm()}
           title="동아리 사물함 사용 신청서 새창으로 열기"
         >
           동아리 신청서
-          <LinkImg id="linknImg" stroke="var(--gray-500)" />
+          <LinkImg id="linknImg" stroke="var(--gray-tmp-5)" />
         </SectionLinkStyled>
       </ProfileLeftNavOptionStyled>
       {isClub && <LeftSectionNavClubs />}
@@ -129,7 +129,7 @@ export const FloorSectionStyled = styled.div`
   line-height: 40px;
   border-radius: 10px;
   text-indent: 20px;
-  color: var(--gray-500);
+  color: var(--gray-tmp-5);
   margin: 2px 0;
   cursor: pointer;
   @media (hover: hover) and (pointer: fine) {
@@ -150,7 +150,7 @@ const SectionLinkStyled = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--gray-500);
+  color: var(--gray-tmp-5);
 
   #linknImg {
     width: 15px;

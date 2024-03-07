@@ -91,7 +91,7 @@ const NoAvailableCabinetMessageStyled = styled.div<{ isToggled: boolean }>`
   margin-top: 20px;
   margin-left: 5px;
   p {
-    color: var(--gray-500);
+    color: var(--gray-tmp-5);
     line-height: 1.5;
     word-break: keep-all;
   }

@@ -28,7 +28,7 @@ const NoSearchStyled = styled.div`
   & > p {
     margin-top: 10px;
     font-size: 1.125rem;
-    color: var(--gray-500);
+    color: var(--gray-tmp-5);
   }
 `;
 

@@ -59,7 +59,7 @@ const ClubCabinetInfoCard = ({
               <ClubNameTextStyled>{clubInfo.clubName}</ClubNameTextStyled>
               <CabinetInfoTextStyled
                 fontSize={"1rem"}
-                fontColor="var(--gray-500)"
+                fontColor="var(--gray-tmp-5)"
               >
                 {clubInfo.floor + "층 - " + clubInfo.section}
               </CabinetInfoTextStyled>

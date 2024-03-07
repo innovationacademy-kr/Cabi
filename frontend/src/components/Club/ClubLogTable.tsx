@@ -77,7 +77,7 @@ const TheadStyled = styled.thead`
 `;
 
 const TbodyStyled = styled.tbody`
-  color: var(--gray-500);
+  color: var(--gray-tmp-5);
   & > tr {
     text-align: center;
     height: 50px;

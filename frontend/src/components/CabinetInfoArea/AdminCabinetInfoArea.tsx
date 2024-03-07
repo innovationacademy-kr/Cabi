@@ -67,7 +67,7 @@ const AdminCabinetInfoArea: React.FC<{
         <CabiLogoStyled>
           <LogoImg />
         </CabiLogoStyled>
-        <TextStyled fontSize="1.125rem" fontColor="var(--gray-500)">
+        <TextStyled fontSize="1.125rem" fontColor="var(--gray-tmp-5)">
           사물함/유저를 <br />
           선택해주세요
         </TextStyled>
@@ -77,7 +77,7 @@ const AdminCabinetInfoArea: React.FC<{
   if (multiSelectTargetInfo) {
     return (
       <CabinetDetailAreaStyled>
-        <TextStyled fontSize="1rem" fontColor="var(--gray-500)">
+        <TextStyled fontSize="1rem" fontColor="var(--gray-tmp-5)">
           {currentFloor + "F - " + currentSection}
         </TextStyled>
         <MultiCabinetIconWrapperStyled>
@@ -129,7 +129,7 @@ const AdminCabinetInfoArea: React.FC<{
   return (
     <CabinetDetailAreaStyled>
       <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--gray-500)">
+      <TextStyled fontSize="1rem" fontColor="var(--gray-tmp-5)">
         {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
       </TextStyled>
       <CabinetRectangleStyled
@@ -218,6 +218,18 @@ const CabiLogoStyled = styled.div`
   svg {
     .logo_svg__currentPath {
       fill: var(--main-color);
+    }
+    .logo_svg__top {
+      fill: var(--color-background);
+    }
+    .logo_svg__left {
+      fill: var(--color-background);
+    }
+    .logo_svg__line {
+      stroke: var(--color-background);
+    }
+    .logo_svg__border {
+      stroke: var(--color-text-normal);
     }
   }
 `;

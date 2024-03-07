@@ -94,7 +94,7 @@ const SectionNameTextStyled = styled.div`
   min-width: 220px;
   font-size: 1rem;
   text-align: center;
-  color: var(--gray-500);
+  color: var(--gray-tmp-5);
 `;
 
 const SectionIndexStyled = styled.div`

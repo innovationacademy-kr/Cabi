@@ -75,7 +75,7 @@ const ProfileDetail = styled.div`
 
 const EmailDetail = styled(ProfileDetail)`
   font-size: 0.9rem;
-  color: var(--gray-500);
+  color: var(--gray-tmp-5);
 `;
 
 export default ProfileCard;
