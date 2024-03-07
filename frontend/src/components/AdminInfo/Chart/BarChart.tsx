@@ -55,9 +55,9 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
       colors={[
-        "var(--gray-600)",
+        "var(--banned)",
         "var(--expired)",
-        "var(--gray-300)",
+        "var(--full)",
         "var(--main-color)",
       ]}
       // 사용불가와 사용 중은 헷갈릴 수 있으니 색 그대로

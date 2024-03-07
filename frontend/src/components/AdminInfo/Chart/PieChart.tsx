@@ -62,10 +62,10 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
         }}
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
         colors={[
-          "var(--gray-300)",
+          "var(--full)",
           "var(--expired)",
           "var(--main-color)",
-          "var(--gray-600)",
+          "var(--banned)",
         ]}
         // 사용불가와 사용 중은 헷갈릴 수 있으니 색 그대로
         innerRadius={0.5}
@@ -78,7 +78,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
           modifiers: [["darker", 0.2]],
         }}
         arcLinkLabelsSkipAngle={10}
-        arcLinkLabelsTextColor="var(--gray-600)"
+        arcLinkLabelsTextColor="var(--gray-tmp-6)"
         arcLinkLabelsThickness={2}
         arcLinkLabelsColor={{ from: "color" }}
         arcLabelsSkipAngle={10}

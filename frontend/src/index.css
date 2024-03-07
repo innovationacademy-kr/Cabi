@@ -113,6 +113,7 @@
   --gray-tmp-3: var(--gray-300);
   --gray-tmp-4: var(--gray-400);
   --gray-tmp-5: var(--gray-500);
+  --gray-tmp-6: var(--gray-600);
 }
 
 /* main color variable */
@@ -150,6 +151,7 @@
     --gray-tmp-3: var(--gray-600);
     --gray-tmp-4: var(--gray-500);
     --gray-tmp-5: var(--gray-500);
+    --gray-tmp-6: var(--gray-300);
   }
 }
 
