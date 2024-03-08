@@ -7,7 +7,7 @@ import {
 import DetailTableBodyRowContainer from "@/components/Presentation/Details/DetailTableBodyRow.container";
 import DetailTableBodyRowMobile from "@/components/Presentation/Details/DetailTableBodyRowMobile";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
-import TableHead from "./TableHead";
+import DetailTableHead from "./DetailTableHead";
 
 const DetailTable = ({
   isMobile,
@@ -28,7 +28,10 @@ const DetailTable = ({
 }) => {
   return (
     <TableStyled>
-      <TableHead isMobile={isMobile} tableHeadEntries={tableHeadEntries} />
+      <DetailTableHead
+        isMobile={isMobile}
+        tableHeadEntries={tableHeadEntries}
+      />
       <TableBodyStyled>
         <WhiteSpaceTrStyled />
         {list?.map((item, idx) => {

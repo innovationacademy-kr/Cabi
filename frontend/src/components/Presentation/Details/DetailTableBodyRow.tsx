@@ -6,8 +6,8 @@ import {
   presentationCategoryKorean,
   presentationPeriodNumber,
 } from "@/components/Presentation/Details/DetailTableBodyRow.container";
+import DetailTableDetailTr from "@/components/Presentation/Details/DetailTableDetailTr";
 import NoEventTableRow from "@/components/Presentation/Details/NoEventTableRow";
-import TableDetailTr from "@/components/Presentation/Details/TableDetailTr";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 const renderCellDetail = (
@@ -82,7 +82,7 @@ const DetailTableBodyRow = ({
         )}
       </TableTrStyled>
       {isItemOpen ? (
-        <TableDetailTr
+        <DetailTableDetailTr
           handleItemClick={handleItemClick}
           tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
           itemInfo={itemInfo}

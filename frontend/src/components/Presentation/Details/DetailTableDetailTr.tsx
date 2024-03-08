@@ -3,7 +3,7 @@ import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import { itemType } from "./DetailTable.container";
 import { IItem } from "./DetailTableBodyRow.container";
 
-const TableDetailTr = ({
+const DetailTableDetailTr = ({
   handleItemClick,
   tableHeadEntriesWithoutDate,
   itemInfo,
@@ -26,7 +26,7 @@ const TableDetailTr = ({
   );
 };
 
-export default TableDetailTr;
+export default DetailTableDetailTr;
 
 const TableDetailTrStyled = styled.tr<{
   itemStatus: itemType;

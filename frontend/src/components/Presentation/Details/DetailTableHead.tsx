@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const TableHead = ({
+const DetailTableHead = ({
   isMobile,
   tableHeadEntries,
 }: {
@@ -26,7 +26,7 @@ const TableHead = ({
   );
 };
 
-export default TableHead;
+export default DetailTableHead;
 const TableHeadStyled = styled.thead`
   margin-bottom: 10px;
   height: 40px;
