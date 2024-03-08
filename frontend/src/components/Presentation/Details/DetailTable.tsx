@@ -6,8 +6,8 @@ import {
 } from "@/components/Presentation/Details/DetailTable.container";
 import DetailTableBodyRowContainer from "@/components/Presentation/Details/DetailTableBodyRow.container";
 import DetailTableBodyRowMobile from "@/components/Presentation/Details/DetailTableBodyRowMobile";
+import DetailTableHead from "@/components/Presentation/Details/DetailTableHead";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
-import DetailTableHead from "./DetailTableHead";
 
 const DetailTable = ({
   isMobile,

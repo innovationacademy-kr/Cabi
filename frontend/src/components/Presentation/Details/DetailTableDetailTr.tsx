@@ -1,7 +1,7 @@
 import styled from "styled-components";
+import { itemType } from "@/components/Presentation/Details/DetailTable.container";
+import { IItem } from "@/components/Presentation/Details/DetailTableBodyRow.container";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
-import { itemType } from "./DetailTable.container";
-import { IItem } from "./DetailTableBodyRow.container";
 
 const DetailTableDetailTr = ({
   handleItemClick,
