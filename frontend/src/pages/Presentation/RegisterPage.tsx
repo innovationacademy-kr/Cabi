@@ -4,13 +4,14 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { toggleItem } from "@/components/Common/MultiToggleSwitch";
 import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
+import RegisterModal from "@/components/Modals/Presentation/RegisterModal";
 import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import DropdownDateMenu from "@/components/Presentation/Registers/DropdownDateMenu";
 import DropdownTimeMenu from "@/components/Presentation/Registers/DropdownTimeMenu";
-import NotificationIcon from "@/assets/images/cautionSign.svg";
+import CautionIcon from "@/assets/images/cautionSign.svg";
 import {
   PresentationCategoryType,
   PresentationPeriodType,
@@ -119,11 +120,11 @@ const RegisterPage = () => {
     setFocusedSection(null);
   };
 
-  const handleNotificationIconClick = () => {
+  const handleCautionIconClick = () => {
     setShowNotificationModal(true);
   };
 
-  const removeNotificationIcon = () => {
+  const removeCautionIcon = () => {
     setShowNotificationBox(false);
   };
 
@@ -154,34 +155,7 @@ const RegisterPage = () => {
       alert("모든 항목을 입력해주세요");
       return;
     }
-    try {
-      const [month, day] = date.split("/");
-      const data = new Date(
-        Number(new Date().getFullYear()),
-        Number(month) - 1,
-        Number(day)
-      );
-      // NOTE: Date 객체의 시간은 UTC 기준이므로 한국 시간 (GMT + 9) 으로 변환, 이후 발표 시작 시간인 14시를 더해줌
-      data.setHours(9 + 14);
-      await axiosPostPresentationForm(
-        title,
-        summary,
-        content,
-        data,
-        toggleType,
-        `${time}`
-      );
-
-      setModalTitle("신청이 완료되었습니다");
-      setTimeout(() => {
-        navigate("/wed/home");
-      }, 1500);
-    } catch (error: any) {
-      setModalTitle(error.response.data.message);
-      setHasErrorOnResponse(true);
-    } finally {
-      setShowResponseModal(true);
-    }
+    setShowResponseModal(true);
   };
 
   useEffect(() => {
@@ -234,8 +208,8 @@ const RegisterPage = () => {
             <SubSection>
               <SubNameStyled>
                 시간{" "}
-                <NotificationIconStyled
-                  src={NotificationIcon}
+                <CautionIconStyled
+                  src={CautionIcon}
                   alt="Notification Icon"
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
@@ -313,22 +287,19 @@ const RegisterPage = () => {
       {showNotificationBox && (
         <TooltipBoxStyled>{NotificationDetail}</TooltipBoxStyled>
       )}
-      {showResponseModal &&
-        (hasErrorOnResponse ? (
-          <FailResponseModal
-            modalTitle={modalTitle}
-            closeModal={() => {
-              setShowResponseModal(false);
-            }}
-          />
-        ) : (
-          <SuccessResponseModal
-            modalTitle={modalTitle}
-            closeModal={() => {
-              setShowResponseModal(false);
-            }}
-          />
-        ))}
+      {showResponseModal && (
+        <RegisterModal
+          title={title}
+          summary={summary}
+          content={content}
+          date={date}
+          time={time}
+          toggleType={toggleType}
+          closeModal={() => {
+            setShowResponseModal(false);
+          }}
+        />
+      )}
     </>
   );
 };
@@ -477,7 +448,7 @@ const DateTimeContainer = styled.div`
   }
 `;
 
-const NotificationIconStyled = styled.img`
+const CautionIconStyled = styled.img`
   margin-top: 2px;
   margin-left: 5px;
   width: 16px;
