@@ -21,6 +21,7 @@ interface ILeftMainNav {
   onClickPresentationHomeButton: React.MouseEventHandler;
   onClickPresentationRegisterButton: React.MouseEventHandler;
   onClickPresentationDetailButton: React.MouseEventHandler;
+  onClickPresentationLogButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
@@ -40,6 +41,7 @@ const LeftMainNav = ({
   onClickPresentationHomeButton,
   onClickPresentationRegisterButton,
   onClickPresentationDetailButton,
+  onClickPresentationLogButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
@@ -107,6 +109,16 @@ const LeftMainNav = ({
                 onClick={onClickPresentationRegisterButton}
               >
                 신청하기
+              </TopBtnStyled>
+              <TopBtnStyled
+                className={
+                  pathname.includes("wed/log")
+                    ? "leftNavButtonActive cabiButton"
+                    : "cabiButton"
+                }
+                onClick={onClickPresentationLogButton}
+              >
+                발표기록
               </TopBtnStyled>
               <TopBtnStyled
                 className={

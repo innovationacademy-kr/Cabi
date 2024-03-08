@@ -1,7 +1,23 @@
 import {
   PresentationCategoryType,
+  PresentationLocation,
   PresentationPeriodType,
+  PresentationStatusType,
 } from "@/types/enum/Presentation/presentation.type.enum";
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
+
+export interface PresentationHistoryDto {
+  id: number;
+  dateTime: string;
+  subject: string;
+  presentationLocation: PresentationLocation;
+  presentationStatus: PresentationStatusType;
+}
+
+export type PresentationHistoryResponseType =
+  | PresentationHistoryDto[]
+  | typeof STATUS_400_BAD_REQUEST
+  | undefined;
 
 export interface IPresentationInfo {
   id: number | null;

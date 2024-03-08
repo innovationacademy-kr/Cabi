@@ -150,6 +150,11 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
+  const onClickPresentationLogButton = () => {
+    navigator("log");
+    closeAll();
+  };
+
   const onClickLogoutButton = (): void => {
     const adminToken = isAdmin ? "admin_" : "";
     if (import.meta.env.VITE_IS_LOCAL === "true") {
@@ -185,6 +190,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickPresentationHomeButton={onClickPresentationHomeButton}
       onClickPresentationRegisterButton={onClickPresentationRegisterButton}
       onClickPresentationDetailButton={onClickPresentationDetailButton}
+      onClickPresentationLogButton={onClickPresentationLogButton}
       isAdmin={isAdmin}
     />
   );

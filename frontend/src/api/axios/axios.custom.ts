@@ -767,6 +767,18 @@ export const axiosGetInvalidDates = async (): Promise<any> => {
   }
 };
 
+const axiosMyPresentationLogURL = "/v5/presentation/me/histories";
+export const axiosMyPresentationLog = async (page: number): Promise<any> => {
+  try {
+    const response = await instance.get(axiosMyPresentationLogURL, {
+      params: { page: page, size: 10 },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 /**
  * 수요지식회 (구 까비지식회) Admin API
  */
