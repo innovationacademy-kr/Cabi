@@ -118,7 +118,7 @@ public class AdminLentFacadeService {
 				lentQueryService.findCabinetsActiveLentHistories(cabinetIds);
 		Map<Long, List<LentHistory>> lentHistoriesByCabinetId = lentHistories.stream()
 				.collect(Collectors.groupingBy(LentHistory::getCabinetId));
-		
+
 		// is club cabinet
 		if (lentHistories.isEmpty()) {
 			endClubCabinetLent(cabinetIds, cabinets);
