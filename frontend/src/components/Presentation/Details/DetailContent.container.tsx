@@ -3,6 +3,10 @@ import DetailContent from "@/components/Presentation/Details/DetailContent";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import { axiosGetPresentationSchedule } from "@/api/axios/axios.custom";
 import { calculateAvailableDaysInWeeks } from "@/utils/Presentation/dateUtils";
+import {
+  AVAILABLE_WEEKS,
+  FUTURE_MONTHS_TO_DISPLAY,
+} from "@/constants/Presentation/policy";
 
 export interface IDate {
   year: string;
@@ -16,6 +20,7 @@ const DetailContentContainer = () => {
   const [presentationDetailInfo, setPresentationDetailInfo] = useState<
     IPresentationScheduleDetailInfo[] | null
   >(null);
+  const firstPresentationDate: IDate = { year: "2024", month: "3", day: "1" };
 
   useEffect(() => {
     const tmpTodayDate = makeIDateObj(new Date());
@@ -67,9 +72,9 @@ const DetailContentContainer = () => {
           parseInt(todayDate!.month) - 1,
           parseInt(todayDate!.day)
         ),
-        [1, 3],
+        AVAILABLE_WEEKS,
         3,
-        3
+        FUTURE_MONTHS_TO_DISPLAY
       );
       if (objAry.length < 2) {
         // availableDays 중 requestDate랑 달이 같은 것들 추출
@@ -149,6 +154,17 @@ const DetailContentContainer = () => {
       currentDate={currentDate}
       presentationDetailInfo={presentationDetailInfo}
       makeIDateObj={makeIDateObj}
+      canMoveLeft={
+        currentDate
+          ? parseInt(currentDate.month) > parseInt(firstPresentationDate.month)
+          : false
+      }
+      canMoveRight={
+        currentDate && todayDate
+          ? parseInt(currentDate.month) <
+            parseInt(todayDate.month) + FUTURE_MONTHS_TO_DISPLAY - 1
+          : false
+      }
     />
   );
 };

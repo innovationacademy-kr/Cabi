@@ -10,29 +10,41 @@ const DetailContent = ({
   currentDate,
   presentationDetailInfo,
   makeIDateObj,
+  canMoveLeft,
+  canMoveRight,
 }: {
   moveMonth: (direction: string) => void;
   currentDate: IDate | null;
   presentationDetailInfo: IPresentationScheduleDetailInfo[] | null;
   makeIDateObj: (date: Date) => IDate;
+  canMoveLeft: boolean;
+  canMoveRight: boolean;
 }) => {
   return (
     <ContainerStyled>
       <HeaderStyled>
-        <MoveSectionButtonStyled
-          src={LeftSectionButton}
-          onClick={() => moveMonth("left")}
-          className="cabiButton"
-        />
-        <div>
+        {canMoveLeft ? (
+          <MoveSectionButtonStyled
+            src={LeftSectionButton}
+            onClick={() => moveMonth("left")}
+            className="cabiButton"
+          />
+        ) : (
+          <div id="replaceOfMoveButton"></div>
+        )}
+        <div id="headerDate">
           {currentDate?.year}년 {currentDate?.month}월
         </div>
-        <MoveSectionButtonStyled
-          src={LeftSectionButton}
-          onClick={() => moveMonth("right")}
-          arrowReversed={true}
-          className="cabiButton"
-        />
+        {canMoveRight ? (
+          <MoveSectionButtonStyled
+            src={LeftSectionButton}
+            onClick={() => moveMonth("right")}
+            arrowReversed={true}
+            className="cabiButton"
+          />
+        ) : (
+          <div id="replaceOfMoveButton"></div>
+        )}
       </HeaderStyled>
       <BodyStyled>
         <DetailTableContainer
@@ -53,7 +65,6 @@ const ContainerStyled = styled.div`
   flex-direction: column;
   align-items: center;
   overflow-y: scroll;
-
 `;
 
 const HeaderStyled = styled.div`
@@ -65,7 +76,7 @@ const HeaderStyled = styled.div`
   justify-content: center;
   align-items: center;
 
-  & > div {
+  & > #headerDate {
     width: 200px;
     height: 50px;
     font-size: 2rem;
@@ -76,6 +87,12 @@ const HeaderStyled = styled.div`
   & > img {
     width: 2.5rem;
     height: 2.5rem;
+  }
+
+  & > #replaceOfMoveButton {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0px 15px;
   }
 `;
 

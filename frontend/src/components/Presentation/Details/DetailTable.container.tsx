@@ -69,7 +69,7 @@ const DetailTableContainer = ({
     let itemStatus = itemType.EVENT_AVAILABLE;
 
     // 발표가 없다면
-    if (!item.subject) {
+    if (!item.id) {
       const date = new Date();
       let dateISO = date.toISOString();
       const dateObj = new Date(dateISO);
