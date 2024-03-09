@@ -1,13 +1,13 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
 import { itemType } from "@/components/Presentation/Details/DetailTable.container";
-import {
-  IItem,
-  presentationCategoryKorean,
-  presentationPeriodNumber,
-} from "@/components/Presentation/Details/DetailTableBodyRow.container";
+import { IItem } from "@/components/Presentation/Details/DetailTableBodyRow.container";
 import DetailTableDetailTr from "@/components/Presentation/Details/DetailTableDetailTr";
 import NoEventTableRow from "@/components/Presentation/Details/NoEventTableRow";
+import {
+  PresentationCategoryTypeLabelMap,
+  PresentationPeriodTypeLabelMap,
+} from "@/assets/data/Presentation/maps";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 const renderCellDetail = (
@@ -20,9 +20,9 @@ const renderCellDetail = (
     case "userName":
       return item.userName;
     case "category":
-      return presentationCategoryKorean[item.category!];
+      return PresentationCategoryTypeLabelMap[item.category!];
     case "presentationTime":
-      return presentationPeriodNumber[item.presentationTime!] + "분";
+      return PresentationPeriodTypeLabelMap[item.presentationTime!] + "분";
     default:
       return null;
   }

@@ -9,9 +9,9 @@ import {
   itemType,
 } from "@/components/Presentation/Details/DetailTable.container";
 import {
-  presentationCategoryKorean,
-  presentationPeriodNumber,
-} from "@/components/Presentation/Details/DetailTableBodyRow.container";
+  PresentationCategoryTypeLabelMap,
+  PresentationPeriodTypeLabelMap,
+} from "@/assets/data/Presentation/maps";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 const DetailTableBodyRowMobile = ({
@@ -72,11 +72,11 @@ const DetailTableBodyRowMobile = ({
             <div>{item.userName}</div>
           </td>
           <td>
-            <div>{presentationCategoryKorean[item.category!]}</div>
+            <div>{PresentationCategoryTypeLabelMap[item.category!]}</div>
           </td>
           <td>
             <div className="rightEnd">
-              {presentationPeriodNumber[item.presentationTime!]}분
+              {PresentationPeriodTypeLabelMap[item.presentationTime!]}분
             </div>
           </td>
         </TopMobileTableStyled>

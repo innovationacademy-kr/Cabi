@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
-import { presentationPeriodNumber } from "@/components/Presentation/Details/DetailTableBodyRow.container";
+import { PresentationPeriodTypeLabelMap } from "@/assets/data/Presentation/maps";
 import { IPresentationInfo } from "@/types/dto/presentation.dto";
 
 const PresentationCardDetail = ({
@@ -22,7 +22,11 @@ const PresentationCardDetail = ({
             <img src="/src/assets/images/timer.svg" alt="" />
           </ImageStyled>
           <span>
-            {presentationPeriodNumber[selectedPresentation?.presentationTime!]}
+            {
+              PresentationPeriodTypeLabelMap[
+                selectedPresentation?.presentationTime!
+              ]
+            }
           </span>
         </TimerStyled>
       </HeaderStyled>

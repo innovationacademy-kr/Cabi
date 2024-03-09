@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import {
+  PresentationLocationLabelMap,
+  PresentationStatusTypeLabelMap,
+} from "@/assets/data/Presentation/maps";
 import { PresentationHistoryResponseType } from "@/types/dto/presentation.dto";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
@@ -39,8 +43,12 @@ const LogTable = ({
                     {new Date(dateTime).toLocaleString("ko-KR", dateOptions)}
                   </td>
                   <td title={subject}>{subject}</td>
-                  <td title={presentationLocation}>{presentationLocation}</td>
-                  <td title={presentationStatus}>{presentationStatus}</td>
+                  <td title={presentationLocation}>
+                    {PresentationLocationLabelMap[presentationLocation]}
+                  </td>
+                  <td title={presentationStatus}>
+                    {PresentationStatusTypeLabelMap[presentationStatus]}
+                  </td>
                 </tr>
               )
             )}

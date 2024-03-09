@@ -10,22 +10,6 @@ import {
 import DetailTableBodyRow from "@/components/Presentation/Details/DetailTableBodyRow";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
-export const presentationPeriodNumber = {
-  HALF: 30,
-  HOUR: 60,
-  HOUR_HALF: 90,
-  TWO_HOUR: 120,
-};
-
-export const presentationCategoryKorean = {
-  DEVELOP: "개발",
-  HOBBY: "취미",
-  JOB: "취업",
-  ETC: "기타",
-  TASK: "42",
-  STUDY: "학술",
-};
-
 export const noEventPhrase = {
   noEventPast: "수요지식회가 열리지 않았습니다",
   noEventCurrent:
