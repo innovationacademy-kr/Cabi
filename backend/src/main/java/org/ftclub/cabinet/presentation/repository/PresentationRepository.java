@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.presentation.domain.Presentation;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,4 +37,9 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 	@EntityGraph(attributePaths = "user")
 	List<Presentation> findByDateTimeBetweenOrderByDateTimeAsc(LocalDateTime start,
 		LocalDateTime end, Pageable pageable);
+
+	@Query("SELECT p "
+		+ "FROM Presentation p "
+		+ "WHERE p.user.id = :userId")
+	Page<Presentation> findPaginationById(@Param("userId") Long userId, Pageable pageable);
 }

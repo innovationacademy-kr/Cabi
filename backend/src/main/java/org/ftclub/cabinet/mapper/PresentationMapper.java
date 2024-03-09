@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.mapper;
 
 import org.ftclub.cabinet.dto.PresentationFormData;
+import org.ftclub.cabinet.dto.PresentationMyPageDto;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,6 +12,8 @@ public interface PresentationMapper {
 	@Mapping(target = "userName", source = "user.name")
 	PresentationFormData toPresentationFormDataDto(Presentation presentation);
 
+
+	PresentationMyPageDto toPresentationMyPageDto(Presentation presentation);
 //	PresentationFormResponseDto toPresentationFormResponseDto(List<PresentationFormData> pastForms,
 //		List<PresentationFormData> futureForms);
 
