@@ -86,7 +86,19 @@ const LeftMainNav = ({
               </TopBtnStyled>
             </>
           )}
-          {currentBuildingName === "수지회" && (
+          {currentBuildingName === "수지회" && isAdmin ? (
+            <TopBtnStyled
+              className={
+                pathname.includes("wed/detail") ||
+                pathname.includes("presentation/detail")
+                  ? "leftNavButtonActive cabiButton"
+                  : "cabiButton"
+              }
+              onClick={onClickPresentationDetailButton}
+            >
+              {"일정관리"}
+            </TopBtnStyled>
+          ) : (
             <>
               <TopBtnStyled
                 className={
