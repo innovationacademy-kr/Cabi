@@ -2,24 +2,19 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { toggleItem } from "@/components/Common/MultiToggleSwitch";
 import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
 import RegisterModal from "@/components/Modals/Presentation/RegisterModal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
 import DropdownDateMenu from "@/components/Presentation/Registers/DropdownDateMenu";
 import DropdownTimeMenu from "@/components/Presentation/Registers/DropdownTimeMenu";
+import { PresentationCategoryTypeLabelMap } from "@/assets/data/Presentation/maps";
 import CautionIcon from "@/assets/images/cautionSign.svg";
 import {
   PresentationCategoryType,
   PresentationPeriodType,
 } from "@/types/enum/Presentation/presentation.type.enum";
-import {
-  axiosGetInvalidDates,
-  axiosPostPresentationForm,
-} from "@/api/axios/axios.custom";
+import { axiosGetInvalidDates } from "@/api/axios/axios.custom";
 import {
   calculateAvailableDaysInWeeks,
   filterInvalidDates,
@@ -31,12 +26,30 @@ import {
 } from "@/constants/Presentation/policy";
 
 const toggleList: toggleItem[] = [
-  { name: "42", key: PresentationCategoryType.TASK },
-  { name: "개발", key: PresentationCategoryType.DEVELOP },
-  { name: "학술", key: PresentationCategoryType.STUDY },
-  { name: "취미", key: PresentationCategoryType.HOBBY },
-  { name: "취업", key: PresentationCategoryType.JOB },
-  { name: "기타", key: PresentationCategoryType.ETC },
+  {
+    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.TASK],
+    key: PresentationCategoryType.TASK,
+  },
+  {
+    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.DEVELOP],
+    key: PresentationCategoryType.DEVELOP,
+  },
+  {
+    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.STUDY],
+    key: PresentationCategoryType.STUDY,
+  },
+  {
+    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.HOBBY],
+    key: PresentationCategoryType.HOBBY,
+  },
+  {
+    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.JOB],
+    key: PresentationCategoryType.JOB,
+  },
+  {
+    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.JOB],
+    key: PresentationCategoryType.ETC,
+  },
 ];
 
 const NotificationDetail = `시작 시간은 수요일 오후 2시로 고정되며</br>시간은 각각 30분, 1시간, 1시간 30분,</br>2시간 중에서 선택하실 수 있습니다.
@@ -53,26 +66,20 @@ const RegisterPage = () => {
   );
   const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<string>("");
-  const [showNotificationModal, setShowNotificationModal] =
-    useState<boolean>(false);
-
   const [title, setTitle] = useState<string>("");
-
   const [summary, setSummary] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [focusedSection, setFocusedSection] = useState<string | null>(null);
   const [titleLength, setTitleLength] = useState<number>(0);
   const [summaryLength, setSummaryLength] = useState<number>(0);
   const [contentLength, setContentLength] = useState<number>(0);
-
+  const [focusedSection, setFocusedSection] = useState<string | null>(null);
+  const [isClicked, setIsClicked] = useState<boolean>(false);
   const [invalidDates, setInvalidDates] = useState<string[]>([]);
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [showNotificationBox, setShowNotificationBox] = useState<boolean>(true);
-
-  const navigate = useNavigate();
 
   const getInvalidDates = async () => {
     try {
@@ -120,14 +127,6 @@ const RegisterPage = () => {
     setFocusedSection(null);
   };
 
-  const handleCautionIconClick = () => {
-    setShowNotificationModal(true);
-  };
-
-  const removeCautionIcon = () => {
-    setShowNotificationBox(false);
-  };
-
   const NotificationModalDetail = `시작 시간은 수요일 오후 2시로 고정되며 시간은 각각 30분, 1시간, 1시간 30분, 2시간 중에서 선택하실 수 있습니다.
   `;
 
@@ -155,6 +154,7 @@ const RegisterPage = () => {
       alert("모든 항목을 입력해주세요");
       return;
     }
+    setIsClicked(true);
     setShowResponseModal(true);
   };
 
@@ -279,8 +279,8 @@ const RegisterPage = () => {
             />
             <CharacterCount>{contentLength} / 500</CharacterCount>
           </SubSection>
-          <RegisterButtonStyled onClick={tryRegister}>
-            신청하기
+          <RegisterButtonStyled onClick={tryRegister} disabled={isClicked}>
+            {isClicked ? <LoadingAnimation /> : "신청하기"}
           </RegisterButtonStyled>
         </BackgroundStyled>
       </RegisterPageStyled>
@@ -297,7 +297,9 @@ const RegisterPage = () => {
           toggleType={toggleType}
           closeModal={() => {
             setShowResponseModal(false);
+            setIsClicked(false);
           }}
+          setIsClicked={setIsClicked}
         />
       )}
     </>

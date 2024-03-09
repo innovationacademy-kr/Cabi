@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import ModalPortal from "@/components/Modals/ModalPortal";
@@ -18,6 +18,7 @@ const RegisterModal = ({
   time,
   toggleType,
   closeModal,
+  setIsClicked,
 }: {
   title: string;
   summary: string;
@@ -26,6 +27,7 @@ const RegisterModal = ({
   time: string;
   toggleType: string;
   closeModal: React.MouseEventHandler;
+  setIsClicked: React.Dispatch<SetStateAction<boolean>>;
 }) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
