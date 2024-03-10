@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Logging
 @RequiredArgsConstructor
-@RequestMapping("/public")
+@RequestMapping("/demo")
 @RestController
 public class LoginController {
 
 	private final AuthFacadeService authFacadeService;
 	private final AlarmProperties alarmProperties;
 
-	@GetMapping("/login")
+	@GetMapping("")
 	public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		final String username = "anonymous";
 		if (!alarmProperties.getIsProduction()) {
