@@ -1,0 +1,11 @@
+version: "3.6"
+
+services:
+  cabi-cron:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "cabi-cron"
+    image: "cabi/cron"
+    volumes:
+      - ./log:/var/log/

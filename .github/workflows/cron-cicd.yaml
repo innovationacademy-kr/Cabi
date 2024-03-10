@@ -1,0 +1,66 @@
+name: backend CI
+
+on:
+  push:
+    paths:
+      - "cron/**"
+  pull_request:
+    paths:
+      - "cron/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Make ssh file
+        run: |
+          mkdir -p ~/.ssh
+          echo '${{ secrets.SSH_CONFIG }}' | base64 -d > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodule: true
+      - name: Update submodule
+        run: |
+          git submodule update --init config/
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "corretto"
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Build with Gradle
+        run: |
+          cd cron
+          chmod +x gradlew
+          ./gradlew jar
+        shell: bash
+      - name: Main S3에 업로드
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          cp cron/build/libs/cron-*.jar deploy-cron/build
+          mkdir -p deploy && cp deploy-cron/* deploy/
+          zip -r deploy.zip deploy
+
+          aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_MAIN_BUCKET_NAME }}/deploy.zip
+
+          aws deploy create-deployment \
+          --application-name ${{ secrets.AWS_CODEDEPLOY_MAIN_APP_NAME }} \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_MAIN_GROUP_NAME }} \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=${{ secrets.AWS_S3_MAIN_BUCKET_NAME }},bundleType=zip,key=deploy.zip

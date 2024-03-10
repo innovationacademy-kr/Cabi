@@ -1,0 +1,2 @@
+* * 1 * * /usr/bin/java -jar /app/cron.jar get-ft-token &>> /var/log/cron.log 
+
