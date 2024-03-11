@@ -1,17 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
-import { IDate } from "@/components/Presentation/Details/DetailContent.container";
-import PresentationCardsMobile from "@/components/Presentation/Home/PresentationCardsMobile";
-import WedMainDesc from "@/components/Presentation/Home/PresentationMainDesc";
-import {
-  IPresentationInfo,
-  IPresentationScheduleDetailInfo,
-} from "@/types/dto/presentation.dto";
-import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import { axiosGetPresentation } from "@/api/axios/axios.custom";
 import PresentationCardContainer from "./PresentationCard.container";
-import PresentationCards from "./PresentationCards";
 
 const RecentPresentation = ({
   presentButtonHandler,
@@ -53,19 +45,19 @@ const RecentPresentation = ({
 
   return (
     <ConTainerStyled>
-      <WedHeaderStyled>
-        <TitleStyled>
+      <HeaderStyled>
+        <TitleContainerStyled>
           <p>수요지식회</p>
-          <span>매주 수요일 오후 2시, 지식이 일상이 되다.</span>
-        </TitleStyled>
-        <RegistButtonStyled
-          onClick={() => {
-            navigator("/wed/register");
-          }}
-        >
-          발표하기
-        </RegistButtonStyled>
-      </WedHeaderStyled>
+          <RegistButtonStyled
+            onClick={() => {
+              navigator("/wed/register");
+            }}
+          >
+            발표하기
+          </RegistButtonStyled>
+        </TitleContainerStyled>
+        <span>매주 수요일 오후 2시, 지식이 일상이 되다.</span>
+      </HeaderStyled>
 
       <PresentationCardContainer
         isMobile={isMobile}
@@ -87,27 +79,39 @@ const ConTainerStyled = styled.div`
   overflow-y: scroll;
 `;
 
-const WedHeaderStyled = styled.div`
+const HeaderStyled = styled.div`
   display: flex;
-  width: 80%;
+  width: 1060px;
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: flex-end;
   margin-bottom: 40px;
   max-width: 1100px;
+
+  & > span {
+    display: block;
+    font-size: 2rem;
+    font-weight: 600;
+  }
 `;
 
-const TitleStyled = styled.div`
+const TitleContainerStyled = styled.div`
   & > p {
     font-size: 2.5rem;
-    font-weight: bold;
+    font-weight: 700;
     margin-bottom: 20px;
   }
 
-  margin-right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  border-bottom: 2px solid #d9d9d9;
+  margin-bottom: 70px;
+  width: 100%;
 `;
 
 const RegistButtonStyled = styled.button`
   background-color: #3f69fd;
-  margin-top: 20px;
+  margin-bottom: 20px;
 `;

@@ -7,6 +7,8 @@ import {
   IPresentationScheduleDetailInfo,
 } from "@/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
+import CardTestTwo from "./CardTestTwo";
+import PresentationCardTest from "./PresentationCardTest";
 import PresentationCard from "./PresentationCards";
 import PresentationCardMobile from "./PresentationCardsMobile";
 
@@ -98,9 +100,13 @@ const PresentationCardContainer = ({
         setSelectIndex(index);
         setSlide(slide + (selectIndex - index) * 300);
       }
-    } else {
+    } else if (type === "web") {
       if (selectIndex) setSelectIndex(index);
       else setSelectIndex(index);
+    } else if (type === "Test2_left") {
+      if (selectIndex > 0) setSelectIndex(index - 1);
+    } else if (type === "Test2_right") {
+      if (selectIndex < 2) setSelectIndex(index + 1);
     }
   };
 
@@ -150,18 +156,42 @@ const PresentationCardContainer = ({
           swipeSection={swipeSection}
         />
       ) : (
-        <PresentationCard
+        // origin
+        // <PresentationCard
+        //   selectIndex={selectIndex}
+        //   presentation={currentPresentations}
+        //   makeIDateObj={makeIDateObj}
+        //   searchCategory={searchCategory}
+        //   onClick={onClick}
+        // />
+
+        // test 1
+        <PresentationCardTest
           selectIndex={selectIndex}
           presentation={currentPresentations}
           makeIDateObj={makeIDateObj}
           searchCategory={searchCategory}
           onClick={onClick}
+          selectedPresentation={selectedPresentation}
+          selectedDate={selectedDate!}
         />
+
+        // test 2
+        // <CardTestTwo
+        //   selectIndex={selectIndex}
+        //   presentation={currentPresentations}
+        //   makeIDateObj={makeIDateObj}
+        //   searchCategory={searchCategory}
+        //   onClick={onClick}
+        //   selectedPresentation={selectedPresentation}
+        //   selectedDate={selectedDate!}
+        //   // setSelectIndex={setSelectIndex}
+        // />
       )}
-      <PresentationCardDetail
+      {/* <PresentationCardDetail
         selectedPresentation={selectedPresentation}
         selectedDate={selectedDate!}
-      />
+      /> */}
     </ConTainerStyled>
   );
 };
