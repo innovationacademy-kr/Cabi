@@ -75,6 +75,9 @@ const DetailTableBodyRowContainer = ({
         tableHeadEntriesWithoutDate={tableHeadEntries.filter(
           (head) => head[0] !== "date"
         )}
+        tableHeadEntriesWithoutDateAndSubject={tableHeadEntries.filter(
+          (head) => head[0] !== "subject" && head[0] !== "date"
+        )}
         mobileColSpanSize={4}
       />
       {/* <DetailTableBodyRowMobile

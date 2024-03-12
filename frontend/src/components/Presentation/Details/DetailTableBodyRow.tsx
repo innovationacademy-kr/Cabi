@@ -1,8 +1,8 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
+import DetailPartTr from "@/components/Presentation/Details/DetailPartTr";
 import { itemType } from "@/components/Presentation/Details/DetailTable.container";
 import { IItem } from "@/components/Presentation/Details/DetailTableBodyRow.container";
-import DetailTableDetailTr from "@/components/Presentation/Details/DetailTableDetailTr";
 import NoEventTableRow from "@/components/Presentation/Details/NoEventTableRow";
 import {
   PresentationCategoryTypeLabelMap,
@@ -36,6 +36,7 @@ const DetailTableBodyRow = ({
   navigator,
   tableHeadEntriesWithoutDate,
   mobileColSpanSize,
+  tableHeadEntriesWithoutDateAndSubject,
 }: {
   itemInfo: IItem;
   hasNoCurrentEvent: boolean;
@@ -44,6 +45,7 @@ const DetailTableBodyRow = ({
   navigator: NavigateFunction;
   tableHeadEntriesWithoutDate: [string, string][];
   mobileColSpanSize: number;
+  tableHeadEntriesWithoutDateAndSubject: [string, string][];
 }) => {
   return (
     <>
@@ -61,13 +63,27 @@ const DetailTableBodyRow = ({
             일
           </div>
         </td>
-        <td colSpan={mobileColSpanSize} id="mobileBeforeClick">
-          <div className={itemInfo.itemStatus} id="mobileDateBeforeClick">
+        <td
+          className={isItemOpen ? "leftEnd" : ""}
+          id="mobileTopTd"
+          colSpan={isItemOpen ? 0 : mobileColSpanSize}
+        >
+          <div className={itemInfo.itemStatus} id="mobileTopDate">
             {itemInfo.itemDateInIDate?.month}월 {itemInfo.itemDateInIDate?.day}
             일
           </div>
-          <div id="mobileTitleBeforeClick">{itemInfo.item.subject}</div>
         </td>
+        {tableHeadEntriesWithoutDateAndSubject?.map((head, idx) => {
+          return (
+            <td
+              className={head[0] === "presentationTime" ? "rightEnd" : ""}
+              key={idx}
+              id="mobileTopWithoutDateTd"
+            >
+              <div>{renderCellDetail(head[0], itemInfo.item)}</div>
+            </td>
+          );
+        })}
         {itemInfo.itemStatus ? (
           <NoEventTableRow
             itemStatus={itemInfo.itemStatus}
@@ -91,8 +107,20 @@ const DetailTableBodyRow = ({
           </>
         )}
       </TableTrStyled>
+      <MobileSubjectTrStysled
+        itemStatus={itemInfo.itemStatus}
+        id={isItemOpen ? "selected" : ""}
+        onClick={() => {
+          !itemInfo.itemStatus && handleItemClick(itemInfo.item);
+        }}
+        open={isItemOpen}
+      >
+        <td colSpan={mobileColSpanSize}>
+          <div>{itemInfo.item.subject}</div>
+        </td>
+      </MobileSubjectTrStysled>
       {isItemOpen ? (
-        <DetailTableDetailTr
+        <DetailPartTr
           handleItemClick={handleItemClick}
           tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
           itemInfo={itemInfo}
@@ -109,14 +137,15 @@ export const TableTrStyled = styled.tr<{
   itemStatus: itemType;
   open?: boolean;
 }>`
-  background-color: #dce7fd;
-  height: 70px;
   width: 100%;
   font-size: 18px;
-  line-height: 70px;
   text-align: center;
 
   @media (min-width: 1150px) {
+    background-color: #dce7fd;
+    height: 70px;
+    line-height: 70px;
+
     & > td {
       padding: 0 10px;
     }
@@ -143,56 +172,81 @@ export const TableTrStyled = styled.tr<{
       font-size: 1rem;
     }
 
-    & .leftEnd {
-      border-radius: ${(props) =>
-        props.open ? "10px 0 0 0" : "10px 0 0 10px"};
-    }
-
-    & .rightEnd {
-      border-radius: ${(props) =>
-        props.open ? "0 10px 0 0" : "0 10px 10px 0"};
-    }
-
-    & #mobileBeforeClick {
+    & #mobileTopTd {
       display: none;
+    }
+    & #mobileTopWithoutDateTd {
+      display: none;
+    }
+
+    &:hover {
+      cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
+      background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
     }
   }
 
-  &:hover {
-    cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
-    background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
+  & .leftEnd {
+    border-radius: ${(props) => (props.open ? "10px 0 0 0" : "10px 0 0 10px")};
+  }
+
+  & .rightEnd {
+    border-radius: ${(props) => (props.open ? "0 10px 0 0" : "0 10px 10px 0")};
   }
 
   @media (max-width: 1150px) {
-    height: 90px;
+    height: 40px;
+    line-height: 40px;
     width: 100%;
+    background-color: ${(props) => (props.open ? "#91B5FB" : "#3f69fd")};
 
     & > td {
-      border-radius: 10px;
+      border-radius: ${(props) => (props.open ? "" : "10px 10px 0 0")};
     }
 
-    & #mobileDateBeforeClick {
-      background-color: #3f69fd;
-      height: 35px;
-      line-height: 35px;
-      border-radius: 10px 10px 0 0;
-      color: var(--white);
-      text-align: start;
+    & > td > #mobileTopDate {
+      color: ${(props) => (props.open ? "var(--black)" : "var(--white)")};
+      text-align: ${(props) => (props.open ? "center" : "start")};
       padding-left: 10px;
-    }
-
-    & #mobileTitleBeforeClick {
-      height: 55px;
-      line-height: 55px;
-      border-radius: 0 0 10px 10px;
-      padding: 0 50px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
     }
 
     & #webBeforeClick {
       display: none;
     }
+
+    & #mobileTopWithoutDateTd {
+      display: ${(props) => (props.open ? "" : "none")};
+    }
+
+    &:hover {
+      cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
+    }
+  }
+`;
+
+const MobileSubjectTrStysled = styled.tr<{
+  itemStatus: itemType;
+  open?: boolean;
+}>`
+  background-color: #dce7fd;
+  height: 55px;
+  width: 100%;
+  font-size: 18px;
+  line-height: 55px;
+  text-align: center;
+  padding: 0 50px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  & > td {
+    border-radius: ${(props) => (props.open ? "" : "0 0 10px 10px")};
+  }
+
+  &:hover {
+    cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
+  }
+
+  @media (min-width: 1150px) {
+    display: none;
   }
 `;

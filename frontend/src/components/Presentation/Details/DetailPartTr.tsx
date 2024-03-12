@@ -3,7 +3,7 @@ import { itemType } from "@/components/Presentation/Details/DetailTable.containe
 import { IItem } from "@/components/Presentation/Details/DetailTableBodyRow.container";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
-const DetailTableDetailTr = ({
+const DetailPartTr = ({
   handleItemClick,
   tableHeadEntriesWithoutDate,
   itemInfo,
@@ -27,14 +27,14 @@ const DetailTableDetailTr = ({
       >
         <div>{itemInfo.item.detail}</div>
       </td>
-      <td colSpan={mobileColSpanSize} id="mobileDetailBeforeClick">
+      <td colSpan={mobileColSpanSize} id="mobileDetail">
         <div>{itemInfo.item.detail}</div>
       </td>
     </TableDetailTrStyled>
   );
 };
 
-export default DetailTableDetailTr;
+export default DetailPartTr;
 
 const TableDetailTrStyled = styled.tr<{
   itemStatus: itemType;
@@ -62,7 +62,7 @@ const TableDetailTrStyled = styled.tr<{
   }
 
   @media (min-width: 1150px) {
-    & > #mobileDetailBeforeClick {
+    & > #mobileDetail {
       display: none;
     }
   }
