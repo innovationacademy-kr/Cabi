@@ -89,15 +89,15 @@ const PresentationCardContainer = ({
   };
 
   useEffect(() => {
-    if (selectIndex === 0) setSlide(slide + 300);
-    if (selectIndex === 2) setSlide(slide - 300);
+    if (selectIndex === 0) setSlide(slide + 370);
+    if (selectIndex === 2) setSlide(slide - 370);
   }, []);
 
   const onClick = (index: number, type: string) => {
     if (type === "mobile") {
       if (selectIndex !== index) {
         setSelectIndex(index);
-        setSlide(slide + (selectIndex - index) * 300);
+        setSlide(slide + (selectIndex - index) * 370);
       }
     } else if (type === "web") {
       if (selectIndex) setSelectIndex(index);
@@ -135,10 +135,10 @@ const PresentationCardContainer = ({
   const SlideSectionTo = (direction: string) => {
     if (direction === "left" && selectIndex !== 0) {
       setSelectIndex(selectIndex - 1);
-      setSlide(slide + 300);
+      setSlide(slide + 370);
     } else if (direction === "right" && selectIndex !== 2) {
       setSelectIndex(selectIndex + 1);
-      setSlide(slide - 300);
+      setSlide(slide - 370);
     }
   };
 

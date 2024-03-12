@@ -41,17 +41,29 @@ const PresentationCard = ({
         return (
           <PresentationCardStyled
             key={index}
-            onClick={() => onClick(index, "web")}
+            // onClick={() => onClick(index, "web")}
             className={index == selectIndex ? "check" : "not-check"}
           >
             {p.id !== -1 ? (
               <>
-                <CategoryStyled>
-                  {p.category && <img src={searchCategory(p.category)} />}
-                </CategoryStyled>
-                <NameStyled>{p.userName}</NameStyled>
-                <TitleStyled>{p.subject}</TitleStyled>
-                <SubTitleStyled>{p.summary}</SubTitleStyled>
+                <DetailStyled>
+                  <CategoryStyled>
+                    {p.category && <img src={searchCategory(p.category)} />}
+                  </CategoryStyled>
+                  <TitleStyled>{p.subject}</TitleStyled>
+                  <SubTitleStyled>{p.summary}</SubTitleStyled>
+                  <DetailFooterStyled>
+                    <NameStyled>{p.userName} |</NameStyled>
+                    <CalendarStyled>
+                      <IconStyled>
+                        <img src="/src/assets/images/calendar.svg" alt="" />
+                      </IconStyled>
+                      <span>
+                        {tmpDate?.month}/{tmpDate?.day}
+                      </span>
+                    </CalendarStyled>
+                  </DetailFooterStyled>
+                </DetailStyled>
               </>
             ) : (
               <>
@@ -61,16 +73,6 @@ const PresentationCard = ({
                 <TitleStyled>예정된 일정이 없습니다.</TitleStyled>
                 <TitleStyled>당신의 이야기를 들려주세요</TitleStyled>
               </>
-            )}
-            {p.id !== -1 && (
-              <CalendarStyled>
-                <IconStyled>
-                  <img src="/src/assets/images/calendar.svg" alt="" />
-                </IconStyled>
-                <span>
-                  {tmpDate?.month}/{tmpDate?.day}
-                </span>
-              </CalendarStyled>
             )}
           </PresentationCardStyled>
         );
@@ -86,6 +88,8 @@ const ContainerStyled = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  // margin-right: 50px;
+  // max-width: 1060px;
 `;
 
 const PresentationCardStyled = styled.div`

@@ -48,14 +48,14 @@ const PresentationCardMobile = ({
   }
 
   return (
-    <ContainerStyled>
-      <PresentationCardStyled select={slide}>
+    <>
+      <ContainerStyled select={slide}>
         {currentPresentations?.map((p, index) => {
           const tmpDate =
             p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
 
           return (
-            <WedCardStyled
+            <PresentationCardStyled
               key={index}
               onClick={() => onClick(index, "mobile")}
               className={index == slide ? "check" : "not-check"}
@@ -77,9 +77,21 @@ const PresentationCardMobile = ({
                   <CategoryStyled>
                     {p.category && <img src={searchCategory(p.category)} />}
                   </CategoryStyled>
-                  <NameStyled>{p.userName}</NameStyled>
-                  <TitleStyled>{p.subject}</TitleStyled>
-                  <SubTitleStyled>{p.summary}</SubTitleStyled>
+                  <DetailStyled>
+                    <TitleStyled>{p.subject}</TitleStyled>
+                    <SubTitleStyled>{p.summary}</SubTitleStyled>
+                    <DetailFooterStyled>
+                      <NameStyled>{p.userName} | </NameStyled>
+                      <CalendarStyled>
+                        <IconStyled>
+                          <img src="/src/assets/images/calendar.svg" alt="" />
+                        </IconStyled>
+                        <span>
+                          {tmpDate?.month}/{tmpDate?.day}
+                        </span>
+                      </CalendarStyled>
+                    </DetailFooterStyled>
+                  </DetailStyled>
                 </>
               ) : (
                 <>
@@ -90,71 +102,43 @@ const PresentationCardMobile = ({
                   <TitleStyled>당신의 이야기를 들려주세요</TitleStyled>
                 </>
               )}
-              {p.id !== -1 && (
-                <CalendarStyled>
-                  <IconStyled>
-                    <img src="/src/assets/images/calendar.svg" alt="" />
-                  </IconStyled>
-                  <span>
-                    {tmpDate?.month}/{tmpDate?.day}
-                  </span>
-                </CalendarStyled>
-              )}
-            </WedCardStyled>
+            </PresentationCardStyled>
           );
         })}
-      </PresentationCardStyled>
+      </ContainerStyled>
       <PaginationStyled>{components}</PaginationStyled>
-    </ContainerStyled>
+    </>
   );
 };
 
 export default PresentationCardMobile;
 
-const ContainerStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+const ContainerStyled = styled.div<{ select: number }>`
   overflow-x: hidden;
-  width: 100%;
-  height: 380px;
-  min-height: 380px;
-`;
+  display: flex;
+  align-items: flex-start;
 
-const PresentationCardStyled = styled.div<{ select: number }>`
-  overflow-x: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 370px;
-  max-width: 1300px;
-  min-width: 1000px;
-  overflow-x: hidden;
+  width: 100%;
+  min-height: 500px;
+  margin-bottom: 20px;
   transform: translateX(${(props) => props.select}px);
   transition: all 500ms ease-in-out;
 `;
 
-const WedCardStyled = styled.div`
-  // width: 280px;
-  // height: 280px;
-
+const PresentationCardStyled = styled.div`
   width: 320px;
-  height: 320px;
+
+  margin-right: 50px;
+  // margin-bottom: 20px;
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-  background-color: #fff;
-  border-radius: 30px;
-  margin: 0 10px;
-  box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
-  flex-shrink: 0;
-  padding: 0 30px;
+  justify-content: flex-start;
+  align-items: center;
 `;
 
 const PaginationStyled = styled.div`
   display: flex;
+  padding-bottom: 30px;
 `;
 
 const Paginations = styled.div<{ current: boolean }>`
@@ -169,11 +153,10 @@ const CalendarStyled = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  width: 100%;
-  padding-right: 10px;
+  font-size: 1rem;
 
-  & > {
-    color: gray;
+  & > span {
+    color: #797979;
   }
 `;
 
@@ -183,34 +166,19 @@ const IconStyled = styled.div`
 `;
 
 const CategoryStyled = styled.div`
-  // background-color: gray;
-  width: 100px;
-  height: 90px;
-  border-radius: 300px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 320px;
+  height: 320px;
+  margin-bottom: 16px;
+  border-radius: 30px;
+  background-color: #3f69fd;
 `;
 
 const NameStyled = styled.div`
+  white-space: nowrap;
+  margin-right: 5px;
   color: #9d9d9d;
-  font-size: 1.2rem;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  font-weight: 500;
 `;
-
-// const TitleStyled = styled.div`
-//   font-size: 1.2rem;
-//   font-weight: 700;
-//   word-break: break-all;
-// `;
-
-// const SubTitleStyled = styled.div`
-//   font-size: 0.8rem;
-//   margin-top: 30px;
-//   word-break: break-all;
-// `;
 
 const TitleStyled = styled.div`
   width: 320px;
@@ -234,4 +202,13 @@ const SubTitleStyled = styled.div`
   line-height: 1.5;
   margin-bottom: 12px;
   color: #797979;
+`;
+
+const DetailStyled = styled.div`
+  width: 320px;
+`;
+
+const DetailFooterStyled = styled.div`
+  display: flex;
+  align-items: center;
 `;
