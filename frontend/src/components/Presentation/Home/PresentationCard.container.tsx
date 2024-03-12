@@ -166,10 +166,6 @@ const PresentationCardContainer = ({
           selectedDate={selectedDate!}
         />
       )}
-      {/* <PresentationCardDetail
-        selectedPresentation={selectedPresentation}
-        selectedDate={selectedDate!}
-      /> */}
     </ConTainerStyled>
   );
 };
@@ -177,10 +173,9 @@ const PresentationCardContainer = ({
 export default PresentationCardContainer;
 
 const ConTainerStyled = styled.div`
-  // padding-top: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 1060px;
   height: 100%;
 `;

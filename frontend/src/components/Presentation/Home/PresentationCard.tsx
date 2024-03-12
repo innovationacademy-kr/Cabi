@@ -49,32 +49,28 @@ const PresentationCard = ({
                 <CategoryStyled>
                   {p.category && <img src={searchCategory(p.category)} />}
                 </CategoryStyled>
-                <DetailStyled>
-                  <TitleStyled>{p.subject}</TitleStyled>
-                  <SubTitleStyled>{p.summary}</SubTitleStyled>
-                  <DetailFooterStyled>
-                    <NameStyled>{p.userName}</NameStyled>
-                    <CalendarStyled>
-                      <IconStyled>
-                        <img src="/src/assets/images/calendar.svg" alt="" />
-                      </IconStyled>
-                      <span>
-                        {tmpDate?.month}/{tmpDate?.day}
-                      </span>
-                    </CalendarStyled>
-                  </DetailFooterStyled>
-                </DetailStyled>
+                <NameStyled>{p.userName}</NameStyled>
+                <TitleStyled>{p.subject}</TitleStyled>
+                <SubTitleStyled>{p.summary}</SubTitleStyled>
               </>
             ) : (
               <>
                 <CategoryStyled>
                   <img src={searchCategory("")} />
                 </CategoryStyled>
-                <TitleStyled>여러분의 발표를 기다립니다.</TitleStyled>
-                <TitleStyled>
-                  예정된 일정이 없습니다. 당신의 이야기를 들려주세요
-                </TitleStyled>
+                <TitleStyled>예정된 일정이 없습니다.</TitleStyled>
+                <TitleStyled>당신의 이야기를 들려주세요</TitleStyled>
               </>
+            )}
+            {p.id !== -1 && (
+              <CalendarStyled>
+                <IconStyled>
+                  <img src="/src/assets/images/calendar.svg" alt="" />
+                </IconStyled>
+                <span>
+                  {tmpDate?.month}/{tmpDate?.day}
+                </span>
+              </CalendarStyled>
             )}
           </PresentationCardStyled>
         );
@@ -86,21 +82,18 @@ const PresentationCard = ({
 export default PresentationCard;
 
 const ContainerStyled = styled.div`
+  width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 1060px;
+  align-items: flex-start;
   justify-content: space-between;
 `;
 
 const PresentationCardStyled = styled.div`
   width: 320px;
-  height: 320px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   justify-content: flex-start;
+  align-items: center;
 `;
 
 const CategoryStyled = styled.div`
@@ -111,12 +104,12 @@ const CategoryStyled = styled.div`
   background-color: #3f69fd;
 `;
 
-const DetailStyled = styled.div``;
+const DetailStyled = styled.div`
+  width: 320px;
+`;
 
 const DetailFooterStyled = styled.div`
-  width: 320px;
   display: flex;
-  justify-content: center;
   align-items: center;
 `;
 
@@ -145,15 +138,17 @@ const SubTitleStyled = styled.div`
 `;
 
 const NameStyled = styled.div`
+  white-space: nowrap;
+  margin-right: 5px;
   color: #9d9d9d;
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const CalendarStyled = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  width: 100%;
+  // width: 100%;
   font-size: 1rem;
 
   & > span {
