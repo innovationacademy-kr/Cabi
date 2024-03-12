@@ -4,12 +4,14 @@ import chevronIcon from "@/assets/images/dropdownChevron.svg";
 
 const DropdownDateMenu = ({
   data,
+  invalidDates,
   onClick,
 }: {
   data: string[];
+  invalidDates: string[];
   onClick: (selectedDate: string) => void;
 }) => {
-  const [isVisible, setIsVisible] = useState<boolean>(false); // boolean으로 변경
+  const [isVisible, setIsVisible] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -64,7 +66,11 @@ const DropdownDateMenu = ({
       </RegisterTimeInputStyled>
       <AnimatedDropdownOptions isVisible={isVisible} clickCount={clickCount}>
         {data.map((time) => (
-          <DropdownOption key={time} onClick={() => handleOptionSelect(time)}>
+          <DropdownOption
+            key={time}
+            onClick={() => handleOptionSelect(time)}
+            invalid={invalidDates.includes(time)}
+          >
             {time}
           </DropdownOption>
         ))}
@@ -138,15 +144,23 @@ const AnimatedDropdownOptions = styled.ul<{
   }
 `;
 
-const DropdownOption = styled.li`
+const DropdownOption = styled.li<{ invalid: boolean }>`
   font-size: 0.875rem;
-  color: var(--gray-color);
   padding: 10px;
   cursor: pointer;
+  color: ${({ invalid }) => (invalid ? "var(--gray-color)" : "var(--black)")};
+  background-color: ${({ invalid }) => (invalid ? "#f0f0f0" : "transparent")};
   &:hover {
-    background-color: #f0f0f0;
-    color: #3f69fd;
+    background-color: ${({ invalid }) => (invalid ? "#f0f0f0" : "#e8e8e8")};
+    color: ${({ invalid }) => (invalid ? "var(--gray-color)" : "#3f69fd")};
+    cursor: ${({ invalid }) => (invalid ? "not-allowed" : "pointer")};
   }
+
+  ${({ invalid }) =>
+    invalid &&
+    `
+    pointer-events: none;
+  `}
 `;
 
 const RegisterTimeInputStyled = styled.div<{
