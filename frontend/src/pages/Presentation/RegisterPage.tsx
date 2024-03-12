@@ -16,6 +16,7 @@ import {
 } from "@/types/enum/Presentation/presentation.type.enum";
 import { axiosGetInvalidDates } from "@/api/axios/axios.custom";
 import {
+  calculateAvailableDaysExceptPastDays,
   calculateAvailableDaysInWeeks,
   filterInvalidDates,
 } from "@/utils/Presentation/dateUtils";
@@ -47,7 +48,7 @@ const toggleList: toggleItem[] = [
     key: PresentationCategoryType.JOB,
   },
   {
-    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.JOB],
+    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.ETC],
     key: PresentationCategoryType.ETC,
   },
 ];
@@ -143,7 +144,6 @@ const RegisterPage = () => {
   };
 
   const tryRegister = async () => {
-    // 항목을 전부 입력하지 않았을 경우 toast message 띄워주도록 예외처리?
     if (
       date === "" ||
       time === "" ||
@@ -163,22 +163,35 @@ const RegisterPage = () => {
   }, []);
 
   useEffect(() => {
-    // NOTE: 발표 가능한 날짜들을 계산
-    const availableDates: Date[] = calculateAvailableDaysInWeeks(
-      new Date(),
-      AVAILABLE_WEEKS,
-      WEDNESDAY,
-      FUTURE_MONTHS_TO_DISPLAY
-    );
-    // NOTE: 발표 가능한 날짜 중 유효하지 않은 날짜를 필터링
-    const availableDatesFiltered: Date[] = filterInvalidDates(
-      availableDates,
-      invalidDates
-    );
-    // NOTE: 발표 가능 날짜들을 string 배열로 변환
-    setAvailableDates(
-      availableDatesFiltered.map((date) => format(date, "M/d"))
-    );
+    const fetchInvalidDates = async () => {
+      try {
+        const response = await axiosGetInvalidDates();
+        setInvalidDates(
+          response.data.invalidDateList.map((date: any) => format(date, "M/d"))
+        );
+      } catch (error) {
+        console.error("Failed to fetch invalid dates:", error);
+      }
+    };
+    if (invalidDates.length === 0) {
+      fetchInvalidDates();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (invalidDates.length > 0) {
+      const availableDates: Date[] = calculateAvailableDaysExceptPastDays(
+        new Date(),
+        AVAILABLE_WEEKS,
+        WEDNESDAY,
+        FUTURE_MONTHS_TO_DISPLAY
+      );
+
+      const formattedAvailableDates = availableDates.map((date) =>
+        format(date, "M/d")
+      );
+      setAvailableDates(formattedAvailableDates);
+    }
   }, [invalidDates]);
 
   return (
@@ -202,6 +215,7 @@ const RegisterPage = () => {
                 <DropdownDateMenu
                   onClick={handleDateChange}
                   data={availableDates}
+                  invalidDates={invalidDates}
                 />
               </DropdownStyled>
             </SubSection>
