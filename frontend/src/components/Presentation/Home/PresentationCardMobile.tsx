@@ -127,7 +127,6 @@ const PresentationCardStyled = styled.div<{ select: number }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 380px;
   min-height: 370px;
   max-width: 1300px;
   min-width: 1000px;
@@ -137,8 +136,11 @@ const PresentationCardStyled = styled.div<{ select: number }>`
 `;
 
 const WedCardStyled = styled.div`
-  width: 280px;
-  height: 280px;
+  // width: 280px;
+  // height: 280px;
+
+  width: 320px;
+  height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -198,14 +200,38 @@ const NameStyled = styled.div`
   padding-bottom: 10px;
 `;
 
+// const TitleStyled = styled.div`
+//   font-size: 1.2rem;
+//   font-weight: 700;
+//   word-break: break-all;
+// `;
+
+// const SubTitleStyled = styled.div`
+//   font-size: 0.8rem;
+//   margin-top: 30px;
+//   word-break: break-all;
+// `;
+
 const TitleStyled = styled.div`
+  width: 320px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   font-size: 1.2rem;
   font-weight: 700;
   word-break: break-all;
+  line-height: 1.5;
+  margin-bottom: 12px;
 `;
 
 const SubTitleStyled = styled.div`
-  font-size: 0.8rem;
-  margin-top: 30px;
+  width: 320px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 1.1rem;
   word-break: break-all;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  color: #797979;
 `;

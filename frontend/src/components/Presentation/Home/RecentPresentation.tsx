@@ -36,7 +36,7 @@ const RecentPresentation = ({
   useEffect(() => {
     getCurrentPresentation();
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 700);
+      setIsMobile(window.innerWidth < 1000);
     };
     window.addEventListener("resize", handleResize);
     handleResize();
@@ -53,10 +53,10 @@ const RecentPresentation = ({
               navigator("/wed/register");
             }}
           >
-            발표하기
+            신청하기
           </RegistButtonStyled>
         </TitleContainerStyled>
-        <span>매주 수요일 오후 2시, 지식이 일상이 되다.</span>
+        <span>수요일 오후 2시, 지식이 일상이 되다.</span>
       </HeaderStyled>
 
       <PresentationCardContainer
@@ -86,19 +86,14 @@ const HeaderStyled = styled.div`
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: flex-end;
-  margin-bottom: 40px;
 
   & > span {
+    margin-top: 10px;
+    margin-bottom: 40px;
     display: block;
     font-size: 2rem;
     font-weight: 600;
   }
-
-  // @media screen and (max-width: 1100px)
-  // #infoWrap > .titleContainer {
-  //   width: 90%;
-  //   max-width: 800px;
-  // }
 `;
 
 const TitleContainerStyled = styled.div`
@@ -107,16 +102,20 @@ const TitleContainerStyled = styled.div`
     font-weight: 700;
   }
 
-  padding-bottom: 20px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   font-weight: 700;
   border-bottom: 2px solid #d9d9d9;
-  margin-bottom: 70px;
   width: 100%;
 `;
 
 const RegistButtonStyled = styled.button`
   background-color: #3f69fd;
+  width: 180px;
+  height: 50px;
+  font-weight: 600;
 `;
