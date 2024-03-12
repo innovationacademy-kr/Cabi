@@ -96,6 +96,7 @@ const DetailTableBodyRow = ({
           handleItemClick={handleItemClick}
           tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
           itemInfo={itemInfo}
+          mobileColSpanSize={mobileColSpanSize}
         />
       ) : null}
     </>

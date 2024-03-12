@@ -7,10 +7,12 @@ const DetailTableDetailTr = ({
   handleItemClick,
   tableHeadEntriesWithoutDate,
   itemInfo,
+  mobileColSpanSize,
 }: {
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
   tableHeadEntriesWithoutDate: [string, string][];
   itemInfo: IItem;
+  mobileColSpanSize: number;
 }) => {
   return (
     <TableDetailTrStyled
@@ -19,7 +21,13 @@ const DetailTableDetailTr = ({
       }}
       itemStatus={itemInfo.itemStatus}
     >
-      <td colSpan={tableHeadEntriesWithoutDate.length + 1}>
+      <td
+        colSpan={tableHeadEntriesWithoutDate.length + 1}
+        id="webDetailBeforeClick"
+      >
+        <div>{itemInfo.item.detail}</div>
+      </td>
+      <td colSpan={mobileColSpanSize} id="mobileDetailBeforeClick">
         <div>{itemInfo.item.detail}</div>
       </td>
     </TableDetailTrStyled>
@@ -51,5 +59,17 @@ const TableDetailTrStyled = styled.tr<{
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
+  }
+
+  @media (min-width: 1150px) {
+    & > #mobileDetailBeforeClick {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1150px) {
+    & > #webDetailBeforeClick {
+      display: none;
+    }
   }
 `;
