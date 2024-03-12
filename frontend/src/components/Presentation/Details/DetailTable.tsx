@@ -50,6 +50,7 @@ const DetailTable = ({
                 key={idx}
                 hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
                 tableHeadEntries={tableHeadEntries}
+                isMobile={isMobile}
               />
               <WhiteSpaceTrStyled key={idx + "whiteSpaceTr"} />
             </>
@@ -62,7 +63,6 @@ const DetailTable = ({
 
 const TableStyled = styled.table`
   width: 100%;
-  min-width: 355px;
   table-layout: fixed;
 `;
 

@@ -94,6 +94,10 @@ const HeaderStyled = styled.div`
     height: 2.5rem;
     margin: 0px 15px;
   }
+
+  @media (max-width: 1150px) {
+    margin-top: 30px;
+  }
 `;
 
 const BodyStyled = styled.div`
@@ -104,11 +108,11 @@ const BodyStyled = styled.div`
   background-color: var(--lightgray-color);
   border-radius: 10px;
   display: flex;
+  min-width: 375px;
 
-  @media screen and (max-width: 1150px) {
-    margin-top: 0px;
-    width: 100%;
-    background-color: var(--white);
-    padding: 24px 10px 10px 10px;
+  @media (max-width: 1150px) {
+    margin-top: 16px;
+    width: 96%;
+    padding: 0 16px;
   }
 `;

@@ -47,7 +47,7 @@ const RecentPresentation = ({
     <ConTainerStyled>
       <HeaderStyled>
         <TitleContainerStyled>
-          <h1>수요지식회</h1>
+          <h1 className="title">수요지식회</h1>
           <RegistButtonStyled
             onClick={() => {
               navigator("/wed/register");
@@ -56,7 +56,7 @@ const RecentPresentation = ({
             신청하기
           </RegistButtonStyled>
         </TitleContainerStyled>
-        <span>수요일 오후 2시, 지식이 일상이 되다.</span>
+        <span className="subtitle">수요일 오후 2시, 지식이 일상이 되다.</span>
       </HeaderStyled>
 
       <PresentationCardContainer
@@ -95,6 +95,21 @@ const HeaderStyled = styled.div`
     font-size: 2rem;
     font-weight: 600;
   }
+
+
+  @media screen and (max-width: 425px) {
+    .title {
+    font-size: 1.5rem;
+    }
+    .subtitle {
+    font-size: 1.25rem;
+    }
+    & > div {
+      margin-bottom: 0px;
+      padding-bottom: 0px;
+      align-items: center; 
+    }
+  }
 `;
 
 const TitleContainerStyled = styled.div`
@@ -112,11 +127,19 @@ const TitleContainerStyled = styled.div`
   font-weight: 700;
   border-bottom: 2px solid #d9d9d9;
   width: 100%;
+
 `;
 
 const RegistButtonStyled = styled.button`
   background-color: #3f69fd;
-  width: 180px;
+  width: 150px;
   height: 50px;
   font-weight: 600;
+  @media screen and (max-width:425px){
+    /* width: 30%; */
+    height: 30px;
+    width: 100px;
+    font-weight: lighter;
+    font-size: 1rem;
+  }
 `;

@@ -17,6 +17,11 @@ export const noEventPhrase = {
     "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를 신청해보세요",
 };
 
+export const noEventPhraseMobile = {
+  noEventPast: "발표가 없었습니다",
+  noEventCurrent: "지금 바로 발표를 신청해보세요",
+};
+
 export interface IItem {
   item: IPresentationScheduleDetailInfo;
   itemStatus: itemType;
@@ -29,12 +34,14 @@ const DetailTableBodyRowContainer = ({
   itemInfo,
   hasNoCurrentEvent,
   tableHeadEntries,
+  isMobile,
 }: {
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
   itemInfo: IItem;
   hasNoCurrentEvent: boolean;
   tableHeadEntries: [string, string][];
+  isMobile: boolean;
 }) => {
   const [clickedItem, setClickedItem] =
     useState<null | IPresentationScheduleDetailInfo>(null);
@@ -75,14 +82,12 @@ const DetailTableBodyRowContainer = ({
         tableHeadEntriesWithoutDate={tableHeadEntries.filter(
           (head) => head[0] !== "date"
         )}
+        tableHeadEntriesWithoutDateAndSubject={tableHeadEntries.filter(
+          (head) => head[0] !== "subject" && head[0] !== "date"
+        )}
         mobileColSpanSize={4}
+        isMobile={isMobile}
       />
-      {/* <DetailTableBodyRowMobile
-        isAdmin={isAdmin}
-        openAdminModal={openAdminModal}
-        itemInfo={itemInfo}
-        hasNoCurrentEvent={hasNoCurrentEvent}
-      /> */}
     </>
   );
 };
