@@ -1,4 +1,5 @@
 import { addDays, addMonths, getDay, startOfMonth } from "date-fns";
+
 /**
  * @description 주어진 날짜부터 주어진 요일 이 되는 첫번째 날짜를 구함
  * (Sunday: 0, Monday: 1, ..., Saturday: 6)
@@ -97,6 +98,38 @@ export const calculateAvailableDaysInWeeks = (
       // NOTE: nextOccurrence 가 해당 월의 첫번째 날짜 (monthStart) 와 같은 달인지 확인
       if (nextOccurrence.getMonth() === monthStart.getMonth())
         availableDates.push(nextOccurrence);
+    });
+  }
+  return availableDates;
+};
+
+// 위의 코드와 동일하지만, 오늘을 기준으로 과거 날짜는 제외하도록 수정한 코드
+export const calculateAvailableDaysExceptPastDays = (
+  baseDate: Date,
+  availableWeeks: number[],
+  dayOfTheWeek: number,
+  maxMonthOffset: number
+) => {
+  let availableDates: Date[] = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  for (let monthOffset = 0; monthOffset < maxMonthOffset; monthOffset++) {
+    const monthStart = startOfMonth(addMonths(baseDate, monthOffset));
+    const firstOccurrence = calculateFirstDayEncountered(
+      monthStart,
+      dayOfTheWeek
+    );
+
+    availableWeeks.forEach((week) => {
+      const weekOffset = (week - 1) * 7;
+      const nextOccurrence = addDays(firstOccurrence, weekOffset);
+      if (
+        nextOccurrence.getMonth() === monthStart.getMonth() &&
+        nextOccurrence >= today
+      ) {
+        availableDates.push(nextOccurrence);
+      }
     });
   }
   return availableDates;
