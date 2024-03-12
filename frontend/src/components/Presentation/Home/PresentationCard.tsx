@@ -8,7 +8,7 @@ import {
 import PresentationCardDetailTest from "./PresentationCardDetailTest";
 import PresentationCardDetail from "./PresentationMainDesc";
 
-const PresentationCardTest = ({
+const PresentationCard = ({
   presentation,
   selectIndex,
   makeIDateObj,
@@ -83,13 +83,12 @@ const PresentationCardTest = ({
   );
 };
 
-export default PresentationCardTest;
+export default PresentationCard;
 
 const ContainerStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 1060px;
   width: 1060px;
   justify-content: space-between;
 `;
@@ -124,7 +123,7 @@ const DetailFooterStyled = styled.div`
 const TitleStyled = styled.div`
   width: 320px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   font-size: 1.2rem;
   font-weight: 700;
@@ -136,11 +135,11 @@ const TitleStyled = styled.div`
 const SubTitleStyled = styled.div`
   width: 320px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   font-size: 1.1rem;
-  line-height: 1.5;
   word-break: break-all;
+  line-height: 1.5;
   margin-bottom: 12px;
   color: #797979;
 `;

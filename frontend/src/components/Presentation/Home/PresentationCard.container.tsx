@@ -7,10 +7,9 @@ import {
   IPresentationScheduleDetailInfo,
 } from "@/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
-import CardTestTwo from "./CardTestTwo";
-import PresentationCardTest from "./PresentationCardTest";
-import PresentationCard from "./PresentationCards";
-import PresentationCardMobile from "./PresentationCardsMobile";
+import PresentationCardTest from "./PresentationCard";
+import PresentationCard from "./PresentationCard";
+import PresentationCardMobile from "./PresentationCardMobile";
 
 const PresentationCardContainer = ({
   isMobile,
@@ -156,17 +155,8 @@ const PresentationCardContainer = ({
           swipeSection={swipeSection}
         />
       ) : (
-        // origin
-        // <PresentationCard
-        //   selectIndex={selectIndex}
-        //   presentation={currentPresentations}
-        //   makeIDateObj={makeIDateObj}
-        //   searchCategory={searchCategory}
-        //   onClick={onClick}
-        // />
-
         // test 1
-        <PresentationCardTest
+        <PresentationCard
           selectIndex={selectIndex}
           presentation={currentPresentations}
           makeIDateObj={makeIDateObj}
@@ -175,18 +165,6 @@ const PresentationCardContainer = ({
           selectedPresentation={selectedPresentation}
           selectedDate={selectedDate!}
         />
-
-        // test 2
-        // <CardTestTwo
-        //   selectIndex={selectIndex}
-        //   presentation={currentPresentations}
-        //   makeIDateObj={makeIDateObj}
-        //   searchCategory={searchCategory}
-        //   onClick={onClick}
-        //   selectedPresentation={selectedPresentation}
-        //   selectedDate={selectedDate!}
-        //   // setSelectIndex={setSelectIndex}
-        // />
       )}
       {/* <PresentationCardDetail
         selectedPresentation={selectedPresentation}
@@ -199,7 +177,7 @@ const PresentationCardContainer = ({
 export default PresentationCardContainer;
 
 const ConTainerStyled = styled.div`
-  padding-top: 60px;
+  // padding-top: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;

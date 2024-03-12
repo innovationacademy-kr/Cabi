@@ -47,7 +47,7 @@ const RecentPresentation = ({
     <ConTainerStyled>
       <HeaderStyled>
         <TitleContainerStyled>
-          <p>수요지식회</p>
+          <h1>수요지식회</h1>
           <RegistButtonStyled
             onClick={() => {
               navigator("/wed/register");
@@ -81,30 +81,36 @@ const ConTainerStyled = styled.div`
 
 const HeaderStyled = styled.div`
   display: flex;
-  width: 1060px;
+  max-width: 1060px;
+  width: 80%;
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: flex-end;
   margin-bottom: 40px;
-  max-width: 1100px;
 
   & > span {
     display: block;
     font-size: 2rem;
     font-weight: 600;
   }
+
+  // @media screen and (max-width: 1100px)
+  // #infoWrap > .titleContainer {
+  //   width: 90%;
+  //   max-width: 800px;
+  // }
 `;
 
 const TitleContainerStyled = styled.div`
-  & > p {
+  & > h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 20px;
   }
 
+  padding-bottom: 20px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   font-weight: 700;
   border-bottom: 2px solid #d9d9d9;
   margin-bottom: 70px;
@@ -113,5 +119,4 @@ const TitleContainerStyled = styled.div`
 
 const RegistButtonStyled = styled.button`
   background-color: #3f69fd;
-  margin-bottom: 20px;
 `;
