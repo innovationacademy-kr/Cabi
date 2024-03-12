@@ -17,7 +17,8 @@ const NoEventTableRow = ({
   colNum: number;
 }) => {
   return (
-    <td id={itemStatus} className="rightEnd" colSpan={colNum}>
+    // <td id={itemStatus} className="rightEnd" colSpan={colNum}>
+    <td className="rightEnd" colSpan={colNum}>
       <NoEventDivStyled hasNoCurrentEvent={hasNoCurrentEvent}>
         <NoEventPhraseStyled hasNoCurrentEvent={hasNoCurrentEvent}>
           <div>{noEventPhrase[itemStatus]}</div>

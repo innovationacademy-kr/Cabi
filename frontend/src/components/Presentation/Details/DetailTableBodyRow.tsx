@@ -142,20 +142,17 @@ export const TableTrStyled = styled.tr<{
   text-align: center;
 
   @media (min-width: 1150px) {
-    background-color: #dce7fd;
+    background-color: ${(props) =>
+      !props.itemStatus
+        ? "#dce7fd"
+        : props.itemStatus === itemType.NO_EVENT_CURRENT
+        ? "var(--white)"
+        : "var(--full)"};
     height: 70px;
     line-height: 70px;
 
     & > td {
       padding: 0 10px;
-    }
-
-    & #noEventCurrent {
-      background-color: var(--white);
-    }
-
-    & #noEventPast {
-      background-color: var(--full);
     }
 
     & > td > div {
