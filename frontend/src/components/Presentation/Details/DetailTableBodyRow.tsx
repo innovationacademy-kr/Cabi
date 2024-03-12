@@ -2,7 +2,11 @@ import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
 import DetailPartTr from "@/components/Presentation/Details/DetailPartTr";
 import { itemType } from "@/components/Presentation/Details/DetailTable.container";
-import { IItem } from "@/components/Presentation/Details/DetailTableBodyRow.container";
+import {
+  IItem,
+  noEventPhrase,
+  noEventPhraseMobile,
+} from "@/components/Presentation/Details/DetailTableBodyRow.container";
 import NoEventTableRow from "@/components/Presentation/Details/NoEventTableRow";
 import {
   PresentationCategoryTypeLabelMap,
@@ -37,6 +41,7 @@ const DetailTableBodyRow = ({
   tableHeadEntriesWithoutDate,
   mobileColSpanSize,
   tableHeadEntriesWithoutDateAndSubject,
+  isMobile,
 }: {
   itemInfo: IItem;
   hasNoCurrentEvent: boolean;
@@ -46,6 +51,7 @@ const DetailTableBodyRow = ({
   tableHeadEntriesWithoutDate: [string, string][];
   mobileColSpanSize: number;
   tableHeadEntriesWithoutDateAndSubject: [string, string][];
+  isMobile: boolean;
 }) => {
   return (
     <>
@@ -84,12 +90,13 @@ const DetailTableBodyRow = ({
             </td>
           );
         })}
-        {itemInfo.itemStatus ? (
+        {itemInfo.itemStatus && !isMobile ? (
           <NoEventTableRow
             itemStatus={itemInfo.itemStatus}
             hasNoCurrentEvent={hasNoCurrentEvent}
             navigator={navigator}
             colNum={tableHeadEntriesWithoutDate.length}
+            phrase={noEventPhrase}
           />
         ) : (
           <>
@@ -107,7 +114,7 @@ const DetailTableBodyRow = ({
           </>
         )}
       </TableTrStyled>
-      <MobileSubjectTrStysled
+      <MobileMiddleTrStysled
         itemStatus={itemInfo.itemStatus}
         id={isItemOpen ? "selected" : ""}
         onClick={() => {
@@ -115,10 +122,20 @@ const DetailTableBodyRow = ({
         }}
         open={isItemOpen}
       >
-        <td colSpan={mobileColSpanSize}>
-          <div>{itemInfo.item.subject}</div>
-        </td>
-      </MobileSubjectTrStysled>
+        {itemInfo.itemStatus ? (
+          <NoEventTableRow
+            itemStatus={itemInfo.itemStatus}
+            hasNoCurrentEvent={hasNoCurrentEvent}
+            navigator={navigator}
+            colNum={tableHeadEntriesWithoutDate.length}
+            phrase={noEventPhraseMobile}
+          />
+        ) : (
+          <td colSpan={mobileColSpanSize}>
+            <div id="mobileSubjectDiv">{itemInfo.item.subject}</div>
+          </td>
+        )}
+      </MobileMiddleTrStysled>
       {isItemOpen ? (
         <DetailPartTr
           handleItemClick={handleItemClick}
@@ -138,10 +155,10 @@ export const TableTrStyled = styled.tr<{
   open?: boolean;
 }>`
   width: 100%;
-  font-size: 18px;
   text-align: center;
 
   @media (min-width: 1150px) {
+    font-size: 18px;
     background-color: ${(props) =>
       !props.itemStatus
         ? "#dce7fd"
@@ -191,6 +208,7 @@ export const TableTrStyled = styled.tr<{
   }
 
   @media (max-width: 1150px) {
+    font-size: 16px;
     height: 40px;
     line-height: 40px;
     width: 100%;
@@ -220,20 +238,23 @@ export const TableTrStyled = styled.tr<{
   }
 `;
 
-const MobileSubjectTrStysled = styled.tr<{
+const MobileMiddleTrStysled = styled.tr<{
   itemStatus: itemType;
   open?: boolean;
 }>`
-  background-color: #dce7fd;
-  height: 55px;
+  background-color: ${(props) =>
+    !props.itemStatus
+      ? "#dce7fd"
+      : props.itemStatus === itemType.NO_EVENT_CURRENT
+      ? "var(--white)"
+      : "var(--full)"};
+
+  height: 50px;
   width: 100%;
-  font-size: 18px;
-  line-height: 55px;
+  font-size: 14px;
+  line-height: 50px;
   text-align: center;
   padding: 0 50px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
 
   & > td {
     border-radius: ${(props) => (props.open ? "" : "0 0 10px 10px")};
@@ -241,6 +262,21 @@ const MobileSubjectTrStysled = styled.tr<{
 
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
+  }
+
+  & button {
+    width: 100px;
+    height: 36px;
+    background-color: #3f69fd;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  & > td > #mobileSubjectDiv {
+    padding: 0 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   @media (min-width: 1150px) {
