@@ -8,6 +8,7 @@ import {
   itemType,
 } from "@/components/Presentation/Details/DetailTable.container";
 import DetailTableBodyRow from "@/components/Presentation/Details/DetailTableBodyRow";
+import DetailTableBodyRowMobile from "@/components/Presentation/Details/DetailTableBodyRowMobile";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 export const noEventPhrase = {
@@ -63,17 +64,26 @@ const DetailTableBodyRowContainer = ({
   };
 
   return (
-    <DetailTableBodyRow
-      itemInfo={itemInfo}
-      hasNoCurrentEvent={hasNoCurrentEvent}
-      isItemOpen={isItemOpen}
-      handleItemClick={handleItemClick}
-      navigator={navigator}
-      // NOTE: table head 중 date를 제외한 table head 입니다.
-      tableHeadEntriesWithoutDate={tableHeadEntries.filter(
-        (head) => head[0] !== "date"
-      )}
-    />
+    <>
+      <DetailTableBodyRow
+        itemInfo={itemInfo}
+        hasNoCurrentEvent={hasNoCurrentEvent}
+        isItemOpen={isItemOpen}
+        handleItemClick={handleItemClick}
+        navigator={navigator}
+        // NOTE: table head 중 date를 제외한 table head 입니다.
+        tableHeadEntriesWithoutDate={tableHeadEntries.filter(
+          (head) => head[0] !== "date"
+        )}
+        mobileColSpanSize={4}
+      />
+      {/* <DetailTableBodyRowMobile
+        isAdmin={isAdmin}
+        openAdminModal={openAdminModal}
+        itemInfo={itemInfo}
+        hasNoCurrentEvent={hasNoCurrentEvent}
+      /> */}
+    </>
   );
 };
 

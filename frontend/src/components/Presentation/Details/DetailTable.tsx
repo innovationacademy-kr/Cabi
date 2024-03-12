@@ -43,26 +43,14 @@ const DetailTable = ({
           };
           return (
             <>
-              {!isMobile ? (
-                <DetailTableBodyRowContainer
-                  isAdmin={isAdmin}
-                  openAdminModal={openAdminModal}
-                  itemInfo={itemInfo}
-                  key={idx}
-                  hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
-                  tableHeadEntries={tableHeadEntries}
-                />
-              ) : (
-                <DetailTableBodyRowMobile
-                  isAdmin={isAdmin}
-                  openAdminModal={openAdminModal}
-                  item={item}
-                  itemStatus={itemStatus}
-                  itemDate={makeIDateObj(new Date(item.dateTime))}
-                  key={idx + "mobile"}
-                  hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
-                />
-              )}
+              <DetailTableBodyRowContainer
+                isAdmin={isAdmin}
+                openAdminModal={openAdminModal}
+                itemInfo={itemInfo}
+                key={idx}
+                hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
+                tableHeadEntries={tableHeadEntries}
+              />
               <WhiteSpaceTrStyled key={idx + "whiteSpaceTr"} />
             </>
           );

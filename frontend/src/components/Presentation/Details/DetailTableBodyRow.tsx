@@ -35,6 +35,7 @@ const DetailTableBodyRow = ({
   handleItemClick,
   navigator,
   tableHeadEntriesWithoutDate,
+  mobileColSpanSize,
 }: {
   itemInfo: IItem;
   hasNoCurrentEvent: boolean;
@@ -42,6 +43,7 @@ const DetailTableBodyRow = ({
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
   navigator: NavigateFunction;
   tableHeadEntriesWithoutDate: [string, string][];
+  mobileColSpanSize: number;
 }) => {
   return (
     <>
@@ -53,11 +55,18 @@ const DetailTableBodyRow = ({
         }}
         open={isItemOpen}
       >
-        <td className="leftEnd" id={itemInfo.itemStatus}>
+        <td className="leftEnd" id="webBeforeClick">
           <div>
             {itemInfo.itemDateInIDate?.month}월 {itemInfo.itemDateInIDate?.day}
             일
           </div>
+        </td>
+        <td colSpan={mobileColSpanSize} id="mobileBeforeClick">
+          <div className={itemInfo.itemStatus} id="mobileDateBeforeClick">
+            {itemInfo.itemDateInIDate?.month}월 {itemInfo.itemDateInIDate?.day}
+            일
+          </div>
+          <div id="mobileTitleBeforeClick">{itemInfo.item.subject}</div>
         </td>
         {itemInfo.itemStatus ? (
           <NoEventTableRow
@@ -73,6 +82,7 @@ const DetailTableBodyRow = ({
                 <td
                   className={head[0] === "presentationTime" ? "rightEnd" : ""}
                   key={idx}
+                  id="webBeforeClick"
                 >
                   <div>{renderCellDetail(head[0], itemInfo.item)}</div>
                 </td>
@@ -94,52 +104,94 @@ const DetailTableBodyRow = ({
 
 export default DetailTableBodyRow;
 
-const TableTrStyled = styled.tr<{
+export const TableTrStyled = styled.tr<{
   itemStatus: itemType;
   open?: boolean;
 }>`
+  background-color: #dce7fd;
   height: 70px;
   width: 100%;
+  font-size: 18px;
   line-height: 70px;
   text-align: center;
-  font-size: 18px;
-  background-color: #dce7fd;
-  & > td {
-    padding: 0 10px;
-  }
 
-  & #noEventCurrent {
-    background-color: var(--white);
-  }
+  @media (min-width: 1150px) {
+    & > td {
+      padding: 0 10px;
+    }
 
-  & #noEventPast {
-    background-color: var(--full);
-  }
+    & #noEventCurrent {
+      background-color: var(--white);
+    }
 
-  & > td > div {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
+    & #noEventPast {
+      background-color: var(--full);
+    }
 
-  & button {
-    width: 120px;
-    height: 36px;
-    background-color: #3f69fd;
-    font-weight: bold;
-    font-size: 1rem;
-  }
+    & > td > div {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
 
-  & .leftEnd {
-    border-radius: ${(props) => (props.open ? "10px 0 0 0" : "10px 0 0 10px")};
-  }
+    & button {
+      width: 120px;
+      height: 36px;
+      background-color: #3f69fd;
+      font-weight: bold;
+      font-size: 1rem;
+    }
 
-  & .rightEnd {
-    border-radius: ${(props) => (props.open ? "0 10px 0 0" : "0 10px 10px 0")};
+    & .leftEnd {
+      border-radius: ${(props) =>
+        props.open ? "10px 0 0 0" : "10px 0 0 10px"};
+    }
+
+    & .rightEnd {
+      border-radius: ${(props) =>
+        props.open ? "0 10px 0 0" : "0 10px 10px 0"};
+    }
+
+    & #mobileBeforeClick {
+      display: none;
+    }
   }
 
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
+  }
+
+  @media (max-width: 1150px) {
+    height: 90px;
+    width: 100%;
+
+    & > td {
+      border-radius: 10px;
+    }
+
+    & #mobileDateBeforeClick {
+      background-color: #3f69fd;
+      height: 35px;
+      line-height: 35px;
+      border-radius: 10px 10px 0 0;
+      color: var(--white);
+      text-align: start;
+      padding-left: 10px;
+    }
+
+    & #mobileTitleBeforeClick {
+      height: 55px;
+      line-height: 55px;
+      border-radius: 0 0 10px 10px;
+      padding: 0 50px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    & #webBeforeClick {
+      display: none;
+    }
   }
 `;
