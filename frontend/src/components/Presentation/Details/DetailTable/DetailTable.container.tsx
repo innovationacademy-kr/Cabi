@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
-import DetailTable from "@/components/Presentation/Details/DetailTable";
+import DetailTable from "@/components/Presentation/Details/DetailTable/DetailTable";
 import EditStatusModal from "@/components/Presentation/Modals/EditStatusModal/EditStatusModal";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 

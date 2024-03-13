@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { itemType } from "@/components/Presentation/Details/DetailTable.container";
-import { IItem } from "@/components/Presentation/Details/DetailTableBodyItem.container";
+import { itemType } from "@/components/Presentation/Details/DetailTable/DetailTable.container";
+import { IItem } from "@/components/Presentation/Details/DetailTable/DetailTableBodyItem";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 const DetailPartTr = ({

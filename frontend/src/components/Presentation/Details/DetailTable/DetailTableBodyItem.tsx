@@ -3,12 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { currentPresentationState } from "@/recoil/atoms";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
+import DetailPartTr from "@/components/Presentation/Details/DetailTable/DetailPartTr";
 import {
   TAdminModalState,
   itemType,
-} from "@/components/Presentation/Details/DetailTable.container";
-import DetailTableBodyItem from "@/components/Presentation/Details/DetailTableBodyItem";
+} from "@/components/Presentation/Details/DetailTable/DetailTable.container";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
+import { WhiteSpaceTrStyled } from "./DetailTable";
+import DetailTableBodyItemMiddleTr from "./DetailTableBodyItemMiddleTr";
+import DetailTableBodyItemTopTr from "./DetailTableBodyItemTopTr";
 
 export const noEventPhrase = {
   noEventPast: "수요지식회가 열리지 않았습니다",
@@ -29,7 +32,7 @@ export interface IItem {
   itemDateInIDate: IDate;
 }
 
-const DetailTableBodyItemContainer = ({
+const DetailTableBodyItem = ({
   isAdmin,
   openAdminModal,
   itemInfo,
@@ -73,25 +76,53 @@ const DetailTableBodyItemContainer = ({
 
   return (
     <>
-      <DetailTableBodyItem
+      <DetailTableBodyItemTopTr
         itemInfo={itemInfo}
-        hasNoCurrentEvent={hasNoCurrentEvent}
         isItemOpen={isItemOpen}
         handleItemClick={handleItemClick}
+        isMobile={isMobile}
+        mobileColSpanSize={
+          tableHeadEntries.filter(
+            (head) => head[0] !== "subject" && head[0] !== "date"
+          ).length + 1
+        }
+        hasNoCurrentEvent={hasNoCurrentEvent}
         navigator={navigator}
-        // NOTE: table head 중 date를 제외한 table head 입니다.
         tableHeadEntriesWithoutDate={tableHeadEntries.filter(
           (head) => head[0] !== "date"
         )}
-        // tableHeadEntriesWithoutDateAndSubject={tableHeadEntries.filter(
-        //   (head) => head[0] !== "subject" && head[0] !== "date"
-        // )}
         tableHeadEntries={tableHeadEntries}
-        mobileColSpanSize={4}
-        isMobile={isMobile}
+        // TODO : DetailTableBodyItem랑 props 같으면 정의해서 사용
       />
+      <DetailTableBodyItemMiddleTr
+        itemInfo={itemInfo}
+        isItemOpen={isItemOpen}
+        handleItemClick={handleItemClick}
+        mobileColSpanSize={
+          tableHeadEntries.filter(
+            (head) => head[0] !== "subject" && head[0] !== "date"
+          ).length + 1
+        }
+        hasNoCurrentEvent={hasNoCurrentEvent}
+        navigator={navigator}
+        tableHeadEntriesWithoutDate={tableHeadEntries.filter(
+          (head) => head[0] !== "date"
+        )}
+      />
+      {isItemOpen ? (
+        <DetailPartTr
+          handleItemClick={handleItemClick}
+          tableHeadEntriesWithoutDate={tableHeadEntries.filter(
+            (head) => head[0] !== "date"
+          )}
+          itemInfo={itemInfo}
+          mobileColSpanSize={4}
+        />
+      ) : null}
+
+      <WhiteSpaceTrStyled />
     </>
   );
 };
 
-export default DetailTableBodyItemContainer;
+export default DetailTableBodyItem;

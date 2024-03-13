@@ -3,9 +3,9 @@ import { IDate } from "@/components/Presentation/Details/DetailContent.container
 import {
   TAdminModalState,
   itemType,
-} from "@/components/Presentation/Details/DetailTable.container";
-import DetailTableBodyItemContainer from "@/components/Presentation/Details/DetailTableBodyItem.container";
-import DetailTableHead from "@/components/Presentation/Details/DetailTableHead";
+} from "@/components/Presentation/Details/DetailTable/DetailTable.container";
+import DetailTableBodyItem from "@/components/Presentation/Details/DetailTable/DetailTableBodyItem";
+import DetailTableHead from "@/components/Presentation/Details/DetailTable/DetailTableHead";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 const DetailTable = ({
@@ -41,7 +41,7 @@ const DetailTable = ({
             itemDateInIDate: makeIDateObj(new Date(item.dateTime)),
           };
           return (
-            <DetailTableBodyItemContainer
+            <DetailTableBodyItem
               isAdmin={isAdmin}
               openAdminModal={openAdminModal}
               itemInfo={itemInfo}

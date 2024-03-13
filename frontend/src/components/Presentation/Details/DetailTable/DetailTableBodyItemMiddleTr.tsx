@@ -1,11 +1,11 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
-import { itemType } from "@/components/Presentation/Details/DetailTable.container";
+import { itemType } from "@/components/Presentation/Details/DetailTable/DetailTable.container";
 import {
   IItem,
   noEventPhraseMobile,
-} from "@/components/Presentation/Details/DetailTableBodyItem.container";
-import NoEventTableRow from "@/components/Presentation/Details/NoEventTableRow";
+} from "@/components/Presentation/Details/DetailTable/DetailTableBodyItem";
+import NoEventTableRow from "@/components/Presentation/Details/DetailTable/NoEventTableRow";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 const DetailTableBodyItemMiddleTr = ({

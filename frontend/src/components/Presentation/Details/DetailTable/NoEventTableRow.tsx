@@ -1,6 +1,6 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
-import { itemType } from "@/components/Presentation/Details/DetailTable.container";
+import { itemType } from "@/components/Presentation/Details/DetailTable/DetailTable.container";
 import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 
