@@ -7,7 +7,7 @@ import {
   TAdminModalState,
   itemType,
 } from "@/components/Presentation/Details/DetailTable.container";
-import DetailTableBodyRow from "@/components/Presentation/Details/DetailTableBodyRow";
+import DetailTableBodyItem from "@/components/Presentation/Details/DetailTableBodyItem";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 export const noEventPhrase = {
@@ -21,13 +21,15 @@ export const noEventPhraseMobile = {
   noEventCurrent: "지금 바로 발표를 신청해보세요",
 };
 
+// TODO : noEventPhrase 하나로 할지 아님 따로 정의한채로 둘지?
+
 export interface IItem {
   item: IPresentationScheduleDetailInfo;
   itemStatus: itemType;
   itemDateInIDate: IDate;
 }
 
-const DetailTableBodyRowContainer = ({
+const DetailTableBodyItemContainer = ({
   isAdmin,
   openAdminModal,
   itemInfo,
@@ -71,7 +73,7 @@ const DetailTableBodyRowContainer = ({
 
   return (
     <>
-      <DetailTableBodyRow
+      <DetailTableBodyItem
         itemInfo={itemInfo}
         hasNoCurrentEvent={hasNoCurrentEvent}
         isItemOpen={isItemOpen}
@@ -81,9 +83,10 @@ const DetailTableBodyRowContainer = ({
         tableHeadEntriesWithoutDate={tableHeadEntries.filter(
           (head) => head[0] !== "date"
         )}
-        tableHeadEntriesWithoutDateAndSubject={tableHeadEntries.filter(
-          (head) => head[0] !== "subject" && head[0] !== "date"
-        )}
+        // tableHeadEntriesWithoutDateAndSubject={tableHeadEntries.filter(
+        //   (head) => head[0] !== "subject" && head[0] !== "date"
+        // )}
+        tableHeadEntries={tableHeadEntries}
         mobileColSpanSize={4}
         isMobile={isMobile}
       />
@@ -91,4 +94,4 @@ const DetailTableBodyRowContainer = ({
   );
 };
 
-export default DetailTableBodyRowContainer;
+export default DetailTableBodyItemContainer;
