@@ -7,7 +7,6 @@ import {
   IPresentationScheduleDetailInfo,
 } from "@/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
-import PresentationCardTest from "./PresentationCard";
 import PresentationCard from "./PresentationCard";
 import PresentationCardMobile from "./PresentationCardMobile";
 
@@ -19,23 +18,7 @@ const PresentationCardContainer = ({
   currentPresentations: IPresentationScheduleDetailInfo[] | null;
 }) => {
   const [selectIndex, setSelectIndex] = useState(1);
-  const [selectedPresentation, setSelectedPresentation] =
-    useState<IPresentationInfo | null>(null);
-  const [selectedDate, setSelectedDate] = useState<IDate | null>(null);
   const [slide, setSlide] = useState(0);
-
-  useEffect(() => {
-    if (currentPresentations) {
-      setSelectedPresentation(currentPresentations[selectIndex]);
-    }
-  }, [currentPresentations, selectIndex]);
-
-  useEffect(() => {
-    if (selectedPresentation) {
-      const tmpDate = makeIDateObj(new Date(selectedPresentation.dateTime));
-      setSelectedDate(tmpDate);
-    }
-  }, [selectedPresentation]);
 
   const makeIDateObj = (date: Date) => {
     let dateISO = date.toISOString();
@@ -88,24 +71,10 @@ const PresentationCardContainer = ({
     return foundCategory ? foundCategory.name : undefined;
   };
 
-  useEffect(() => {
-    if (selectIndex === 0) setSlide(slide + 370);
-    if (selectIndex === 2) setSlide(slide - 370);
-  }, []);
-
-  const onClick = (index: number, type: string) => {
-    if (type === "mobile") {
-      if (selectIndex !== index) {
-        setSelectIndex(index);
-        setSlide(slide + (selectIndex - index) * 370);
-      }
-    } else if (type === "web") {
-      if (selectIndex) setSelectIndex(index);
-      else setSelectIndex(index);
-    } else if (type === "Test2_left") {
-      if (selectIndex > 0) setSelectIndex(index - 1);
-    } else if (type === "Test2_right") {
-      if (selectIndex < 2) setSelectIndex(index + 1);
+  const onClick = (index: number) => {
+    if (selectIndex !== index) {
+      setSelectIndex(index);
+      setSlide(slide + (selectIndex - index) * 370);
     }
   };
 
@@ -155,15 +124,12 @@ const PresentationCardContainer = ({
           swipeSection={swipeSection}
         />
       ) : (
-        // test 1
         <PresentationCard
-          selectIndex={selectIndex}
           presentation={currentPresentations}
           makeIDateObj={makeIDateObj}
           searchCategory={searchCategory}
-          onClick={onClick}
-          selectedPresentation={selectedPresentation}
-          selectedDate={selectedDate!}
+          // selectedPresentation={selectedPresentation}
+          // selectedDate={selectedDate!}
         />
       )}
     </ConTainerStyled>
@@ -176,6 +142,7 @@ const ConTainerStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 1060px;
+  max-width: 1000px;
+  width: 80%;
   height: 100%;
 `;

@@ -192,6 +192,10 @@ const RegisterPage = () => {
     setAvailableDates(formattedAvailableDates);
   }, [invalidDates]);
 
+  useEffect(() => {
+    console.log(availableDates);
+  }, [availableDates]);
+
   return (
     <>
       <RegisterPageStyled>

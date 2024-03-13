@@ -17,7 +17,7 @@ const PresentationCardMobile = ({
   makeIDateObj: (date: Date) => IDate;
   searchCategory: (categoryName: string) => string | undefined;
   slide: number;
-  onClick: (index: number, type: string) => void;
+  onClick: (index: number) => void;
   swipeSection: (
     touchEndPosX: number,
     touchEndPosY: number,
@@ -41,7 +41,7 @@ const PresentationCardMobile = ({
     components.push(
       <Paginations
         key={i}
-        onClick={() => onClick(i, "mobile")}
+        onClick={() => onClick(i)}
         current={i == selectIndex}
       ></Paginations>
     );
@@ -57,7 +57,7 @@ const PresentationCardMobile = ({
           return (
             <PresentationCardStyled
               key={index}
-              onClick={() => onClick(index, "mobile")}
+              onClick={() => onClick(index)}
               className={index == slide ? "check" : "not-check"}
               onTouchStart={(e: React.TouchEvent) => {
                 touchStartPosX.current = e.changedTouches[0].screenX;
@@ -117,8 +117,10 @@ const ContainerStyled = styled.div<{ select: number }>`
   overflow-x: hidden;
   display: flex;
   align-items: flex-start;
-
   width: 100%;
+
+  // 모바일일때 필요 !! -> 모바일 크기 300 * 300이면 1060
+  min-width: 1000px;
   min-height: 500px;
   margin-bottom: 20px;
   transform: translateX(${(props) => props.select}px);
@@ -126,27 +128,60 @@ const ContainerStyled = styled.div<{ select: number }>`
 `;
 
 const PresentationCardStyled = styled.div`
-  width: 320px;
-
+  width: 300px;
   margin-right: 50px;
-  // margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 `;
 
-const PaginationStyled = styled.div`
-  display: flex;
-  padding-bottom: 30px;
+const CategoryStyled = styled.div`
+  width: 300px;
+  height: 300px;
+  margin-bottom: 16px;
+  border-radius: 30px;
+  background-color: #3f69fd;
 `;
 
-const Paginations = styled.div<{ current: boolean }>`
-  width: 30px;
-  height: 10px;
-  background-color: ${(props) => (props.current ? "#5378fd" : "gray")};
-  border-radius: 12px;
-  margin: 0 5px;
+const DetailStyled = styled.div`
+  width: 300px;
+`;
+
+const TitleStyled = styled.div`
+  width: 300px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  word-break: break-all;
+  line-height: 1.5;
+  margin-bottom: 12px;
+`;
+
+const SubTitleStyled = styled.div`
+  width: 300px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 1.1rem;
+  word-break: break-all;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  color: #797979;
+`;
+
+const DetailFooterStyled = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const NameStyled = styled.div`
+  white-space: nowrap;
+  margin-right: 5px;
+  color: #9d9d9d;
+  font-weight: 500;
 `;
 
 const CalendarStyled = styled.div`
@@ -165,50 +200,15 @@ const IconStyled = styled.div`
   margin-right: 8px;
 `;
 
-const CategoryStyled = styled.div`
-  width: 320px;
-  height: 320px;
-  margin-bottom: 16px;
-  border-radius: 30px;
-  background-color: #3f69fd;
-`;
-
-const NameStyled = styled.div`
-  white-space: nowrap;
-  margin-right: 5px;
-  color: #9d9d9d;
-  font-weight: 500;
-`;
-
-const TitleStyled = styled.div`
-  width: 320px;
+const PaginationStyled = styled.div`
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 1.2rem;
-  font-weight: 700;
-  word-break: break-all;
-  line-height: 1.5;
-  margin-bottom: 12px;
+  padding-bottom: 30px;
 `;
 
-const SubTitleStyled = styled.div`
-  width: 320px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 1.1rem;
-  word-break: break-all;
-  line-height: 1.5;
-  margin-bottom: 12px;
-  color: #797979;
-`;
-
-const DetailStyled = styled.div`
-  width: 320px;
-`;
-
-const DetailFooterStyled = styled.div`
-  display: flex;
-  align-items: center;
+const Paginations = styled.div<{ current: boolean }>`
+  width: 30px;
+  height: 10px;
+  background-color: ${(props) => (props.current ? "#5378fd" : "gray")};
+  border-radius: 12px;
+  margin: 0 5px;
 `;

@@ -1,31 +1,19 @@
 import styled, { css, keyframes } from "styled-components";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
 import {
-  IAnimation,
   IPresentationInfo,
   IPresentationScheduleDetailInfo,
 } from "@/types/dto/presentation.dto";
-import PresentationCardDetailTest from "./PresentationCardDetailTest";
-import PresentationCardDetail from "./PresentationMainDesc";
 
 const PresentationCard = ({
   presentation,
-  selectIndex,
   makeIDateObj,
   searchCategory,
-  onClick,
-  selectedPresentation,
-  selectedDate,
 }: {
   presentation: IPresentationScheduleDetailInfo[] | null;
-  selectIndex: number;
   makeIDateObj: (date: Date) => IDate;
   searchCategory: (categoryName: string) => string | undefined;
-  onClick: (index: number, type: string) => void;
-  selectedPresentation: IPresentationInfo | null;
-  selectedDate: IDate | null;
 }) => {
-  // datatime 다음주 날짜 가져오고 싶다..
   const currentPresentations = presentation?.concat(
     new Array(Math.max(3 - (presentation.length || 0), 0)).fill({
       id: -1,
@@ -39,11 +27,7 @@ const PresentationCard = ({
       {currentPresentations?.map((p, index) => {
         const tmpDate = p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
         return (
-          <PresentationCardStyled
-            key={index}
-            // onClick={() => onClick(index, "web")}
-            className={index == selectIndex ? "check" : "not-check"}
-          >
+          <PresentationCardStyled key={index}>
             {p.id !== -1 ? (
               <>
                 <DetailStyled>
@@ -87,38 +71,31 @@ const ContainerStyled = styled.div`
   width: 100%;
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  // margin-right: 50px;
-  // max-width: 1060px;
 `;
 
 const PresentationCardStyled = styled.div`
-  width: 320px;
+  width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  margin-right: 50px;
+`;
+
+const DetailStyled = styled.div`
+  width: 300px;
 `;
 
 const CategoryStyled = styled.div`
-  width: 320px;
-  height: 320px;
+  width: 300px;
+  height: 300px;
   margin-bottom: 16px;
   border-radius: 30px;
   background-color: #3f69fd;
 `;
 
-const DetailStyled = styled.div`
-  width: 320px;
-`;
-
-const DetailFooterStyled = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
 const TitleStyled = styled.div`
-  width: 320px;
+  width: 300px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -130,7 +107,7 @@ const TitleStyled = styled.div`
 `;
 
 const SubTitleStyled = styled.div`
-  width: 320px;
+  width: 300px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -139,6 +116,11 @@ const SubTitleStyled = styled.div`
   line-height: 1.5;
   margin-bottom: 12px;
   color: #797979;
+`;
+
+const DetailFooterStyled = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const NameStyled = styled.div`
@@ -152,9 +134,7 @@ const CalendarStyled = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  // width: 100%;
   font-size: 1rem;
-
   & > span {
     color: #797979;
   }

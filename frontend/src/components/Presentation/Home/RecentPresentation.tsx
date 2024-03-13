@@ -36,7 +36,7 @@ const RecentPresentation = ({
   useEffect(() => {
     getCurrentPresentation();
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 1000);
+      setIsMobile(window.innerWidth < 1150);
     };
     window.addEventListener("resize", handleResize);
     handleResize();
@@ -56,7 +56,7 @@ const RecentPresentation = ({
             발표신청
           </RegistButtonStyled>
         </TitleContainerStyled>
-        <span className="subtitle">수요일 오후 2시, 지식이 일상이 되다.</span>
+        <span className="subtitle">수요일 오후 2시 지식이 일상이 되다.</span>
       </HeaderStyled>
 
       <PresentationCardContainer
@@ -89,7 +89,7 @@ const ConTainerStyled = styled.div`
 
 const HeaderStyled = styled.div`
   display: flex;
-  max-width: 1060px;
+  max-width: 1000px;
   width: 80%;
   justify-content: space-between;
   flex-wrap: wrap;
