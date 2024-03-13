@@ -53,7 +53,7 @@ const RecentPresentation = ({
               navigator("/wed/register");
             }}
           >
-            신청하기
+            발표신청
           </RegistButtonStyled>
         </TitleContainerStyled>
         <span className="subtitle">수요일 오후 2시, 지식이 일상이 되다.</span>
@@ -63,6 +63,13 @@ const RecentPresentation = ({
         isMobile={isMobile}
         currentPresentations={currentPresentations}
       />
+      <MobileRegistButtonStyled
+        onClick={() => {
+          navigator("/wed/register");
+        }}
+      >
+        발표신청
+      </MobileRegistButtonStyled>
     </ConTainerStyled>
   );
 };
@@ -94,20 +101,20 @@ const HeaderStyled = styled.div`
     display: block;
     font-size: 2rem;
     font-weight: 600;
+    word-break: keep-all;
   }
-
 
   @media screen and (max-width: 425px) {
     .title {
-    font-size: 1.5rem;
+      font-size: 1.5rem;
     }
     .subtitle {
-    font-size: 1.25rem;
+      font-size: 1.25rem;
     }
     & > div {
       margin-bottom: 0px;
       padding-bottom: 0px;
-      align-items: center; 
+      align-items: center;
     }
   }
 `;
@@ -127,19 +134,24 @@ const TitleContainerStyled = styled.div`
   font-weight: 700;
   border-bottom: 2px solid #d9d9d9;
   width: 100%;
-
 `;
 
 const RegistButtonStyled = styled.button`
   background-color: #3f69fd;
   width: 150px;
   height: 50px;
-  font-weight: 600;
-  @media screen and (max-width:425px){
-    /* width: 30%; */
-    height: 30px;
-    width: 100px;
-    font-weight: lighter;
-    font-size: 1rem;
+  @media screen and (max-width: 425px) {
+    display: none;
+  }
+`;
+const MobileRegistButtonStyled = styled.button`
+  background-color: #3f69fd;
+  width: 150px;
+  height: 50px;
+  font-weight: 60;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  @media screen and (min-width: 426px) {
+    display: none;
   }
 `;
