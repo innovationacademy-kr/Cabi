@@ -179,19 +179,17 @@ const RegisterPage = () => {
   }, []);
 
   useEffect(() => {
-    if (invalidDates.length > 0) {
-      const availableDates: Date[] = calculateAvailableDaysExceptPastDays(
-        new Date(),
-        AVAILABLE_WEEKS,
-        WEDNESDAY,
-        FUTURE_MONTHS_TO_DISPLAY
-      );
+    const availableDates: Date[] = calculateAvailableDaysExceptPastDays(
+      new Date(),
+      AVAILABLE_WEEKS,
+      WEDNESDAY,
+      FUTURE_MONTHS_TO_DISPLAY
+    );
 
-      const formattedAvailableDates = availableDates.map((date) =>
-        format(date, "M/d")
-      );
-      setAvailableDates(formattedAvailableDates);
-    }
+    const formattedAvailableDates = availableDates.map((date) =>
+      format(date, "M/d")
+    );
+    setAvailableDates(formattedAvailableDates);
   }, [invalidDates]);
 
   return (
