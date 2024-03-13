@@ -8,7 +8,6 @@ import {
   itemType,
 } from "@/components/Presentation/Details/DetailTable.container";
 import DetailTableBodyRow from "@/components/Presentation/Details/DetailTableBodyRow";
-import DetailTableBodyRowMobile from "@/components/Presentation/Details/DetailTableBodyRowMobile";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 export const noEventPhrase = {

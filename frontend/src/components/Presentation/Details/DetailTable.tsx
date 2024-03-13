@@ -5,7 +5,6 @@ import {
   itemType,
 } from "@/components/Presentation/Details/DetailTable.container";
 import DetailTableBodyRowContainer from "@/components/Presentation/Details/DetailTableBodyRow.container";
-import DetailTableBodyRowMobile from "@/components/Presentation/Details/DetailTableBodyRowMobile";
 import DetailTableHead from "@/components/Presentation/Details/DetailTableHead";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
@@ -42,18 +41,15 @@ const DetailTable = ({
             itemDateInIDate: makeIDateObj(new Date(item.dateTime)),
           };
           return (
-            <>
-              <DetailTableBodyRowContainer
-                isAdmin={isAdmin}
-                openAdminModal={openAdminModal}
-                itemInfo={itemInfo}
-                key={idx}
-                hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
-                tableHeadEntries={tableHeadEntries}
-                isMobile={isMobile}
-              />
-              <WhiteSpaceTrStyled key={idx + "whiteSpaceTr"} />
-            </>
+            <DetailTableBodyRowContainer
+              isAdmin={isAdmin}
+              openAdminModal={openAdminModal}
+              itemInfo={itemInfo}
+              key={idx}
+              hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
+              tableHeadEntries={tableHeadEntries}
+              isMobile={isMobile}
+            />
           );
         })}
       </TableBodyStyled>

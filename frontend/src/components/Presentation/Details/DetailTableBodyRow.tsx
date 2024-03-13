@@ -13,6 +13,7 @@ import {
   PresentationPeriodTypeLabelMap,
 } from "@/assets/data/Presentation/maps";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
+import { WhiteSpaceTrStyled } from "./DetailTable";
 
 const renderCellDetail = (
   head: string,
@@ -144,6 +145,8 @@ const DetailTableBodyRow = ({
           mobileColSpanSize={mobileColSpanSize}
         />
       ) : null}
+
+      <WhiteSpaceTrStyled />
     </>
   );
 };
