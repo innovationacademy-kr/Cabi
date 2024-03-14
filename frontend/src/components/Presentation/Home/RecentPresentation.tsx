@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import PresentationCardContainer from "@/components/Presentation/Home/PresentationCard.container";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import { axiosGetPresentation } from "@/api/axios/axios.custom";
-import PresentationCardContainer from "./PresentationCard.container";
 
 const RecentPresentation = ({
   presentButtonHandler,
@@ -151,7 +151,7 @@ const MobileRegistButtonStyled = styled.button`
   font-weight: 60;
   margin-bottom: 30px;
   margin-top: 30px;
-  @media screen and (min-width: 426px) {
+  @media screen and (min-width: 425px) {
     display: none;
   }
 `;
