@@ -10,7 +10,7 @@ import {
 } from "@/assets/data/Presentation/maps";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
-const noEventPhraseWeb = {
+const noEventPhraseDesktop = {
   noEventPast: "수요지식회가 열리지 않았습니다",
   noEventCurrent:
     "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를 신청해보세요",
@@ -67,26 +67,16 @@ const DetailTableBodyItemTopTr = ({
         }}
         open={isItemOpen}
       >
+        {/* date cell */}
         <td
           className={!isMobile || isItemOpen ? "leftEnd" : ""}
           colSpan={!isMobile || isItemOpen ? 0 : mobileColSpanSize}
         >
-          {/* TODO :  mobileColSpanSize*/}
           <div id={!isMobile ? "" : "mobileTopDate"}>
             {itemInfo.itemDateInIDate?.month}월 {itemInfo.itemDateInIDate?.day}
             일
           </div>
         </td>
-        {/* 
-	- !isMobile && !itemInfo.itemStatus
-	> 제목, id, 카테, 시간
-	- !isMobile && itemInfo.itemStatus
-	> NoEventTableRow
-	- isMobile && !isItemOpen
-	> x
-	- isMobile && isItemOpen
-	> id, 카테, 시간
-	*/}
         {!isMobile ? (
           // 웹 뷰
           <>
@@ -98,7 +88,7 @@ const DetailTableBodyItemTopTr = ({
                   hasNoUpcomingEvent={itemInfo.hasNoUpcomingEvent}
                   navigator={navigator}
                   colSpanSize={tableHeadEntriesWithoutDate.length}
-                  phrase={noEventPhraseWeb}
+                  phrase={noEventPhraseDesktop}
                 />
               </>
             )}
@@ -159,6 +149,14 @@ const TopTrStyled = styled.tr<{
 }>`
   width: 100%;
   text-align: center;
+  
+  & .leftEnd {
+    border-radius: ${(props) => (props.open ? "10px 0 0 0" : "10px 0 0 10px")};
+  }
+  
+  & .rightEnd {
+    border-radius: ${(props) => (props.open ? "0 10px 0 0" : "0 10px 10px 0")};
+  }
 
   @media (min-width: 1150px) {
     font-size: 18px;
@@ -189,22 +187,10 @@ const TopTrStyled = styled.tr<{
       font-size: 1rem;
     }
 
-    & #mobileTopTd {
-      display: none;
-    }
-
     &:hover {
       cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
       background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
     }
-  }
-
-  & .leftEnd {
-    border-radius: ${(props) => (props.open ? "10px 0 0 0" : "10px 0 0 10px")};
-  }
-
-  & .rightEnd {
-    border-radius: ${(props) => (props.open ? "0 10px 0 0" : "0 10px 10px 0")};
   }
 
   @media (max-width: 1150px) {
