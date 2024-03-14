@@ -38,7 +38,7 @@ interface EditStatusModalProps {
 const statusOptions: IDropdownOptions[] = [
   { name: "발표 예정", value: PresentationStatusType.EXPECTED },
   { name: "발표 완료", value: PresentationStatusType.DONE },
-  { name: "발표 취소", value: PresentationStatusType.CANCLE },
+  { name: "발표 취소", value: PresentationStatusType.CANCEL },
 ];
 
 const floorOptions: IDropdownOptions[] = [

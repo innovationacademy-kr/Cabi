@@ -9,7 +9,7 @@ import {
 export const PresentationStatusTypeLabelMap = {
   [PresentationStatusType.EXPECTED]: "발표예정",
   [PresentationStatusType.DONE]: "발표완료",
-  [PresentationStatusType.CANCLE]: "발표취소",
+  [PresentationStatusType.CANCEL]: "발표취소",
 };
 
 export const PresentationPeriodTypeNumberLabelMap = {
