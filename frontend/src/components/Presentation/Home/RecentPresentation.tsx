@@ -146,7 +146,7 @@ const RegistButtonStyled = styled.button`
 `;
 const MobileRegistButtonStyled = styled.button`
   background-color: #3f69fd;
-  width: 150px;
+  width: 80%;
   height: 50px;
   font-weight: 60;
   margin-bottom: 30px;

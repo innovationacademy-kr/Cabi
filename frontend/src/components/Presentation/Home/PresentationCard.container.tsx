@@ -70,7 +70,7 @@ const PresentationCardContainer = ({
   const onClick = (index: number) => {
     if (selectIndex !== index) {
       setSelectIndex(index);
-      setSlide(slide + (selectIndex - index) * 370);
+      setSlide(slide + (selectIndex - index) * 345);
     }
   };
 
@@ -100,10 +100,10 @@ const PresentationCardContainer = ({
   const slideSectionTo = (direction: string) => {
     if (direction === "left" && selectIndex !== 0) {
       setSelectIndex(selectIndex - 1);
-      setSlide(slide + 370);
+      setSlide(slide + 345);
     } else if (direction === "right" && selectIndex !== 2) {
       setSelectIndex(selectIndex + 1);
-      setSlide(slide - 370);
+      setSlide(slide - 345);
     }
   };
 
