@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { set } from "react-ga";
 import { Outlet } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
@@ -23,10 +22,11 @@ import {
   ClubResponseDto,
 } from "@/types/dto/club.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
-import ColorType from "@/types/enum/color.type.enum";
 import { axiosMyClubList, axiosMyInfo } from "@/api/axios/axios.custom";
 import { getCookie } from "@/api/react_cookie/cookies";
 import useMenu from "@/hooks/useMenu";
+
+const token = getCookie("access_token");
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -41,7 +41,6 @@ const Layout = (): JSX.Element => {
     useSetRecoilState<ClubResponseDto>(targetClubInfoState);
   const navigate = useNavigate();
   const location = useLocation();
-  const token = getCookie("access_token");
 
   const isRootPath: boolean = location.pathname === "/";
   const isLoginPage: boolean = location.pathname === "/login";
