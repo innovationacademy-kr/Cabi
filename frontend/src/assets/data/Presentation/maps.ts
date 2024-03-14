@@ -38,9 +38,9 @@ export const PresentationLocationLabelMap = {
 
 export const PresentationCategoryTypeLabelMap = {
   [PresentationCategoryType.DEVELOP]: "개발",
+  [PresentationCategoryType.STUDY]: "학술",
   [PresentationCategoryType.HOBBY]: "취미",
   [PresentationCategoryType.JOB]: "취업",
-  [PresentationCategoryType.ETC]: "기타",
   [PresentationCategoryType.TASK]: "42",
-  [PresentationCategoryType.STUDY]: "학술",
+  [PresentationCategoryType.ETC]: "기타",
 };
