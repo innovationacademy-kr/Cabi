@@ -36,7 +36,7 @@ const RegisterModal = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const registerDetail = `발표를 신청한 후에는 내용 수정이 <strong>불가능</strong>합니다.
 발표 날짜와 시간을 수정하고 싶으시다면
-관리자에게 문의해주세요.
+Cabi 슬랙 채널로 문의해주세요.
 <strong>${date}</strong> 에 수요지식회 발표를 등록하시겠습니까?`;
   const navigate = useNavigate();
 
