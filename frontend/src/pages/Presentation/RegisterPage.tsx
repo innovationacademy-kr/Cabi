@@ -1,5 +1,5 @@
-import { format, set } from "date-fns";
-import { useEffect, useState } from "react";
+import { format } from "date-fns";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { toggleItem } from "@/components/Common/MultiToggleSwitch";
@@ -7,6 +7,7 @@ import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSep
 import RegisterModal from "@/components/Modals/Presentation/RegisterModal";
 import DropdownDateMenu from "@/components/Presentation/Register/DropdownDateMenu";
 import DropdownTimeMenu from "@/components/Presentation/Register/DropdownTimeMenu";
+import InputField from "@/components/Presentation/Register/InputField";
 import {
   PresentationCategoryTypeLabelMap,
   PresentationTimeMap,
@@ -68,15 +69,17 @@ const RegisterPage = () => {
     format(date, "M/d")
   );
 
-  const handleInputChange =
+  const handleInputChange = useCallback(
     (
-      setInput: React.Dispatch<React.SetStateAction<IInputData>>,
-      maxLength: number
-    ) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const data = e.target.value.slice(0, maxLength);
-      setInput({ value: data, length: data.length });
-    };
+        setInput: React.Dispatch<React.SetStateAction<IInputData>>,
+        maxLength: number
+      ) =>
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const data = e.target.value.slice(0, maxLength);
+        setInput({ value: data, length: data.length });
+      },
+    []
+  );
 
   const handleFocus = (sectionName: string) => {
     setFocusedSection(sectionName);
@@ -128,17 +131,17 @@ const RegisterPage = () => {
       <RegisterPageStyled>
         <MainTitleStyled>수요지식회 신청</MainTitleStyled>
         <BackgroundStyled>
-          <SubSection>
+          <SubSectionStyled>
             <SubNameFirstStyled>카테고리</SubNameFirstStyled>
             <MultiToggleSwitchSeparated
               initialState={toggleType}
               setState={setToggleType}
               toggleList={toggleList}
-              fontSize={"0.94rem"}
+              fontSize={"1rem"}
             />
-          </SubSection>
+          </SubSectionStyled>
           <DateTimeContainer>
-            <SubSection>
+            <SubSectionStyled>
               <SubNameStyled>날짜</SubNameStyled>
               <DropdownStyled>
                 <DropdownDateMenu
@@ -147,8 +150,8 @@ const RegisterPage = () => {
                   invalidDates={invalidDates}
                 />
               </DropdownStyled>
-            </SubSection>
-            <SubSection>
+            </SubSectionStyled>
+            <SubSectionStyled>
               <SubNameStyled>
                 시간{" "}
                 <CautionIconStyled
@@ -169,56 +172,47 @@ const RegisterPage = () => {
               <DropdownStyled>
                 <DropdownTimeMenu onClick={setTime} />
               </DropdownStyled>
-            </SubSection>
+            </SubSectionStyled>
           </DateTimeContainer>
-          <SubSection>
-            <SubNameStyled>제목</SubNameStyled>
-            <SummaryTextareaStyled
-              placeholder="제목을 입력해주세요"
+          <SubSectionStyled>
+            <InputField
+              title="제목"
               value={title.value}
               onChange={handleInputChange(setTitle, MAX_TITLE_LENGTH)}
               onFocus={() => handleFocus("title")}
               onBlur={handleBlur}
-              isFocused={focusedSection === "title"}
-              spellCheck={false}
               maxLength={MAX_TITLE_LENGTH}
+              placeholder="제목을 입력해주세요"
+              isFocused={focusedSection === "title"}
+              isTextArea={true}
             />
-            <CharacterCount>
-              {title.length} / {MAX_TITLE_LENGTH}
-            </CharacterCount>
-          </SubSection>
-          <SubSection>
-            <SubNameStyled>한 줄 요약</SubNameStyled>
-            <SummaryTextareaStyled
-              placeholder="한 줄 요약을 입력해주세요"
-              onFocus={() => handleFocus("summary")}
+          </SubSectionStyled>
+          <SubSectionStyled>
+            <InputField
+              title="한 줄 요약"
               value={summary.value}
               onChange={handleInputChange(setSummary, MAX_SUMMARY_LENGTH)}
+              onFocus={() => handleFocus("summary")}
               onBlur={handleBlur}
-              isFocused={focusedSection === "summary"}
-              spellCheck={false}
               maxLength={MAX_SUMMARY_LENGTH}
+              placeholder="한 줄 요약을 입력해주세요"
+              isFocused={focusedSection === "summary"}
+              isTextArea={true}
             />
-            <CharacterCount>
-              {summary.length} / {MAX_SUMMARY_LENGTH}
-            </CharacterCount>
-          </SubSection>
-          <SubSection>
-            <SubNameStyled>내용</SubNameStyled>
-            <DetailTextareaStyled
-              onFocus={() => handleFocus("content")}
-              onBlur={handleBlur}
+          </SubSectionStyled>
+          <SubSectionStyled>
+            <InputField
+              title="내용"
               value={content.value}
               onChange={handleInputChange(setContent, MAX_CONTENT_LENGTH)}
-              isFocused={focusedSection === "content"}
-              placeholder="내용을 입력해주세요"
-              spellCheck={false}
+              onFocus={() => handleFocus("content")}
+              onBlur={handleBlur}
               maxLength={MAX_CONTENT_LENGTH}
+              placeholder="내용을 입력해주세요"
+              isFocused={focusedSection === "content"}
+              isTextArea={true}
             />
-            <CharacterCount>
-              {content.length} / {MAX_CONTENT_LENGTH}
-            </CharacterCount>
-          </SubSection>
+          </SubSectionStyled>
           <RegisterButtonStyled onClick={tryRegister} disabled={isClicked}>
             {isClicked ? <LoadingAnimation /> : "신청하기"}
           </RegisterButtonStyled>
@@ -294,7 +288,7 @@ const SubNameFirstStyled = styled.div`
   }
 `;
 
-const SubNameStyled = styled.div`
+export const SubNameStyled = styled.div`
   margin-left: 5px;
   margin-bottom: 2px;
   margin-top: 24px;
@@ -311,40 +305,7 @@ const SubNameStyled = styled.div`
   }
 `;
 
-const SummaryTextareaStyled = styled.input<{ isFocused: boolean }>`
-  width: 100%;
-  height: 50px;
-  text-align: left;
-  padding: 12px 12px 12px 12px;
-  border-radius: 10px;
-  border: none;
-  resize: none;
-  box-sizing: border-box;
-  font-size: 0.875rem;
-  background-color: var(--white);
-  font-family: "Noto Sans KR", sans-serif;
-  outline: none;
-  border: 2px solid
-    ${(props) => (props.isFocused ? "#91B5FA" : "var(--lightgray-color)")};
-`;
-
-const DetailTextareaStyled = styled.textarea<{ isFocused: boolean }>`
-  width: 100%;
-  height: 180px;
-  padding: 12px 12px 12px 12px;
-  border-radius: 10px;
-  border: none;
-  resize: none;
-  box-sizing: border-box;
-  font-size: 0.875rem;
-  background-color: var(--white);
-  font-family: "Noto Sans KR", sans-serif;
-  outline: none;
-  border: 2px solid
-    ${(props) => (props.isFocused ? "#91B5FA" : "var(--lightgray-color)")};
-`;
-
-const SubSection = styled.div`
+const SubSectionStyled = styled.div`
   display: flex;
   align-items: flex-start;
   width: 100%;
@@ -397,13 +358,6 @@ const CautionIconStyled = styled.img`
     cursor: pointer;
     opacity: 1;
   }
-`;
-
-const CharacterCount = styled.div`
-  margin-left: auto;
-  margin-top: 5px;
-  font-size: 0.75rem;
-  color: #a9a9a9;
 `;
 
 const TooltipBoxStyled = styled.div`
