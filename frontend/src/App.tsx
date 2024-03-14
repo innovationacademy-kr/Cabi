@@ -42,7 +42,7 @@ function App(): React.ReactElement {
             <Route path="profile/log" element={<LogPage />} />
             <Route path="clubs" element={<ClubPage />} />
           </Route>
-          <Route path="/wed/" element={<Layout />}>
+          <Route path="/presentation/" element={<Layout />}>
             <Route path="home" element={<WednesdayHomePage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="detail" element={<DetailPage />} />
