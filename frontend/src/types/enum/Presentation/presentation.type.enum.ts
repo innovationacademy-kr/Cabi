@@ -26,14 +26,3 @@ export enum PresentationCategoryType {
   TASK = "TASK",
   STUDY = "STUDY",
 }
-
-// export enum PresentationCategoryIcon {
-//   DEVELOP = "DEVELOP",
-//   HOBBY = "HOBBY",
-//   JOB = "JOB",
-//   ETC = "ETC",
-//   TASK = "/src/images/PresentationFortyTwo.svg",
-//   STUDY = "STUDY",
-// }
-
-// 2개 이상의 컴포넌트에서 쓰이는 enum 정의하는 파일. 여러개 정의해도 됨

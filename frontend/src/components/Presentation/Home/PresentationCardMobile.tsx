@@ -1,21 +1,21 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import styled from "styled-components";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 const PresentationCardMobile = ({
-  presentation,
-  selectIndex,
+  refinePresentations,
   makeIDateObj,
   searchCategory,
+  selectIndex,
   slide,
   onClick,
   swipeSection,
 }: {
-  presentation: IPresentationScheduleDetailInfo[] | null;
-  selectIndex: number;
+  refinePresentations: IPresentationScheduleDetailInfo[] | undefined;
   makeIDateObj: (date: Date) => IDate;
   searchCategory: (categoryName: string) => string | undefined;
+  selectIndex: number;
   slide: number;
   onClick: (index: number) => void;
   swipeSection: (
@@ -28,14 +28,6 @@ const PresentationCardMobile = ({
   const touchStartPosX = useRef(0);
   const touchStartPosY = useRef(0);
   const components = [];
-
-  const currentPresentations = presentation?.concat(
-    new Array(Math.max(3 - (presentation.length || 0), 0)).fill({
-      id: -1,
-      subject: "예정된 일정이 없습니다. 당신의 이야기를 들려주세요",
-      category: "",
-    })
-  );
 
   for (let i = 0; i < 3; i++) {
     components.push(
@@ -50,7 +42,7 @@ const PresentationCardMobile = ({
   return (
     <>
       <ContainerStyled select={slide}>
-        {currentPresentations?.map((p, index) => {
+        {refinePresentations?.map((p, index) => {
           const tmpDate =
             p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
 
@@ -75,7 +67,9 @@ const PresentationCardMobile = ({
               {p.id !== -1 ? (
                 <>
                   <CategoryStyled>
-                    {p.category && <img src={searchCategory(p.category)} />}
+                    <CategoryIconStyled>
+                      {p.category && <img src={searchCategory(p.category)} />}
+                    </CategoryIconStyled>
                   </CategoryStyled>
                   <DetailStyled>
                     <TitleStyled>{p.subject}</TitleStyled>
@@ -96,7 +90,9 @@ const PresentationCardMobile = ({
               ) : (
                 <>
                   <CategoryStyled>
-                    <img src={searchCategory("")} />
+                    <CategoryIconStyled>
+                      <img src={searchCategory("")} />
+                    </CategoryIconStyled>
                   </CategoryStyled>
                   <TitleStyled>예정된 일정이 없습니다.</TitleStyled>
                   <TitleStyled>당신의 이야기를 들려주세요</TitleStyled>
@@ -118,8 +114,6 @@ const ContainerStyled = styled.div<{ select: number }>`
   display: flex;
   align-items: flex-start;
   width: 100%;
-
-  // 모바일일때 필요 !! -> 모바일 크기 300 * 300이면 1060
   min-width: 1000px;
   min-height: 500px;
   margin-bottom: 20px;
@@ -142,6 +136,14 @@ const CategoryStyled = styled.div`
   margin-bottom: 16px;
   border-radius: 30px;
   background-color: #3f69fd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CategoryIconStyled = styled.div`
+  width: 300px;
+  height: 220px;
 `;
 
 const DetailStyled = styled.div`

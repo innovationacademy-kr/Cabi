@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
-import PresentationCardDetail from "@/components/Presentation/Home/PresentationMainDesc";
-import {
-  IPresentationInfo,
-  IPresentationScheduleDetailInfo,
-} from "@/types/dto/presentation.dto";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 import PresentationCard from "./PresentationCard";
 import PresentationCardMobile from "./PresentationCardMobile";
@@ -95,13 +91,13 @@ const PresentationCardContainer = ({
     }
 
     if (touchOffsetX > 0) {
-      SlideSectionTo("left");
+      slideSectionTo("left");
     } else {
-      SlideSectionTo("right");
+      slideSectionTo("right");
     }
   };
 
-  const SlideSectionTo = (direction: string) => {
+  const slideSectionTo = (direction: string) => {
     if (direction === "left" && selectIndex !== 0) {
       setSelectIndex(selectIndex - 1);
       setSlide(slide + 370);
@@ -111,25 +107,31 @@ const PresentationCardContainer = ({
     }
   };
 
+  const refinePresentations = currentPresentations?.concat(
+    new Array(Math.max(3 - (currentPresentations?.length || 0), 0)).fill({
+      id: -1,
+      subject: "예정된 일정이 없습니다. 당신의 이야기를 들려주세요",
+      category: "",
+    })
+  );
+
   return (
     <ConTainerStyled>
       {isMobile ? (
         <PresentationCardMobile
-          presentation={currentPresentations}
-          selectIndex={selectIndex}
+          refinePresentations={refinePresentations}
           makeIDateObj={makeIDateObj}
           searchCategory={searchCategory}
+          selectIndex={selectIndex}
           slide={slide}
           onClick={onClick}
           swipeSection={swipeSection}
         />
       ) : (
         <PresentationCard
-          presentation={currentPresentations}
+          refinePresentations={refinePresentations}
           makeIDateObj={makeIDateObj}
           searchCategory={searchCategory}
-          // selectedPresentation={selectedPresentation}
-          // selectedDate={selectedDate!}
         />
       )}
     </ConTainerStyled>

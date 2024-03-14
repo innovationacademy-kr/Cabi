@@ -1,30 +1,19 @@
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
-import {
-  IPresentationInfo,
-  IPresentationScheduleDetailInfo,
-} from "@/types/dto/presentation.dto";
+import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 const PresentationCard = ({
-  presentation,
   makeIDateObj,
   searchCategory,
+  refinePresentations,
 }: {
-  presentation: IPresentationScheduleDetailInfo[] | null;
   makeIDateObj: (date: Date) => IDate;
   searchCategory: (categoryName: string) => string | undefined;
+  refinePresentations: IPresentationScheduleDetailInfo[] | undefined;
 }) => {
-  const currentPresentations = presentation?.concat(
-    new Array(Math.max(3 - (presentation.length || 0), 0)).fill({
-      id: -1,
-      subject: "예정된 일정이 없습니다. 당신의 이야기를 들려주세요",
-      category: "",
-    })
-  );
-
   return (
     <ContainerStyled>
-      {currentPresentations?.map((p, index) => {
+      {refinePresentations?.map((p, index) => {
         const tmpDate = p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
         return (
           <PresentationCardStyled key={index}>
@@ -32,7 +21,9 @@ const PresentationCard = ({
               <>
                 <DetailStyled>
                   <CategoryStyled>
-                    {p.category && <img src={searchCategory(p.category)} />}
+                    <CategoryIconStyled>
+                      {p.category && <img src={searchCategory(p.category)} />}
+                    </CategoryIconStyled>
                   </CategoryStyled>
                   <TitleStyled>{p.subject}</TitleStyled>
                   <SubTitleStyled>{p.summary}</SubTitleStyled>
@@ -52,7 +43,9 @@ const PresentationCard = ({
             ) : (
               <>
                 <CategoryStyled>
-                  <img src={searchCategory("")} />
+                  <CategoryIconStyled>
+                    <img src={searchCategory("")} />
+                  </CategoryIconStyled>
                 </CategoryStyled>
                 <TitleStyled>예정된 일정이 없습니다.</TitleStyled>
                 <TitleStyled>당신의 이야기를 들려주세요</TitleStyled>
@@ -92,6 +85,14 @@ const CategoryStyled = styled.div`
   margin-bottom: 16px;
   border-radius: 30px;
   background-color: #3f69fd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CategoryIconStyled = styled.div`
+  width: 300px;
+  height: 220px;
 `;
 
 const TitleStyled = styled.div`

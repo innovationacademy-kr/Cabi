@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import { axiosGetPresentation } from "@/api/axios/axios.custom";
 import PresentationCardContainer from "./PresentationCard.container";
