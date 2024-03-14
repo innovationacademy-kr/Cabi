@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import chevronIcon from "@/assets/images/dropdownChevron.svg";
+import useClickOutside from "@/hooks/Presentation/useClickOutside";
 
 const DropdownDateMenu = ({
   data,
@@ -11,60 +12,63 @@ const DropdownDateMenu = ({
   invalidDates: string[];
   onClick: (selectedDate: string) => void;
 }) => {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [dropdownState, setDropdownState] = useState({
+    isVisible: false,
+    isFocused: false,
+    isIconRotated: false,
+  });
+  const [clickCount, setClickCount] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<string>("");
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [isIconRotated, setIsIconRotated] = useState<boolean>(false);
-  const [clickCount, setClickCount] = useState<number>(0);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsVisible(false);
-        setIsFocused(false);
-        setIsIconRotated(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef]);
+  useClickOutside(dropdownRef, () => {
+    setDropdownState((prev) => ({
+      ...prev,
+      isVisible: false,
+      isFocused: false,
+      isIconRotated: false,
+    }));
+  });
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
-    setIsVisible(false);
-    setIsFocused(false);
-    setIsIconRotated(false);
+    setDropdownState((prev) => ({
+      ...prev,
+      isVisible: false,
+      isFocused: false,
+      isIconRotated: false,
+    }));
     onClick(option);
   };
 
   const toggleVisibility = () => {
     setClickCount(clickCount + 1);
-    setIsVisible(!isVisible);
-    setIsFocused(!isVisible);
-    setIsIconRotated(!isVisible);
+    setDropdownState((prev) => ({
+      ...prev,
+      isVisible: !prev.isVisible,
+      isFocused: !prev.isFocused,
+      isIconRotated: !prev.isIconRotated,
+    }));
   };
 
   return (
     <DropdownContainer ref={dropdownRef}>
       <RegisterTimeInputStyled
         onClick={toggleVisibility}
-        isFocused={isFocused}
+        isFocused={dropdownState.isFocused}
         hasSelectedOption={selectedOption !== ""}
       >
         {selectedOption ? selectedOption : "날짜를 선택해주세요"}
         <DropdownIcon
           src={chevronIcon}
           alt="Dropdown Icon"
-          rotated={isIconRotated}
+          rotated={dropdownState.isFocused}
         />
       </RegisterTimeInputStyled>
-      <AnimatedDropdownOptions isVisible={isVisible} clickCount={clickCount}>
+      <AnimatedDropdownOptions
+        isVisible={dropdownState.isVisible}
+        clickCount={clickCount}
+      >
         {data.map((time) => (
           <DropdownOption
             key={time}

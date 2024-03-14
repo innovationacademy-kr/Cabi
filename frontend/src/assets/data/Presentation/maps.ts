@@ -1,3 +1,4 @@
+import { PresentationTimeKey } from "@/pages/Presentation/RegisterPage";
 import {
   PresentationCategoryType,
   PresentationLocation,
@@ -11,11 +12,21 @@ export const PresentationStatusTypeLabelMap = {
   [PresentationStatusType.CANCLE]: "발표취소",
 };
 
-export const PresentationPeriodTypeLabelMap = {
+export const PresentationPeriodTypeNumberLabelMap = {
   [PresentationPeriodType.HALF]: 30,
   [PresentationPeriodType.HOUR]: 60,
   [PresentationPeriodType.HOUR_HALF]: 90,
   [PresentationPeriodType.TWO_HOUR]: 120,
+};
+
+export const PresentationTimeMap: {
+  [key in PresentationTimeKey]: PresentationPeriodType;
+} = {
+  "": PresentationPeriodType.NONE,
+  "30분": PresentationPeriodType.HALF,
+  "1시간": PresentationPeriodType.HOUR,
+  "1시간 30분": PresentationPeriodType.HOUR_HALF,
+  "2시간": PresentationPeriodType.TWO_HOUR,
 };
 
 export const PresentationLocationLabelMap = {

@@ -5,6 +5,7 @@ export enum PresentationStatusType {
 }
 
 export enum PresentationPeriodType {
+  NONE = "NONE",
   HALF = "HALF",
   HOUR = "HOUR",
   HOUR_HALF = "HOUR_HALF",

@@ -1,78 +1,54 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { toggleItem } from "@/components/Common/MultiToggleSwitch";
 import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
 import RegisterModal from "@/components/Modals/Presentation/RegisterModal";
-import DropdownDateMenu from "@/components/Presentation/Registers/DropdownDateMenu";
-import DropdownTimeMenu from "@/components/Presentation/Registers/DropdownTimeMenu";
+import DropdownDateMenu from "@/components/Presentation/Register/DropdownDateMenu";
+import DropdownTimeMenu from "@/components/Presentation/Register/DropdownTimeMenu";
 import { PresentationCategoryTypeLabelMap } from "@/assets/data/Presentation/maps";
 import CautionIcon from "@/assets/images/cautionSign.svg";
-import {
-  PresentationCategoryType,
-  PresentationPeriodType,
-} from "@/types/enum/Presentation/presentation.type.enum";
+import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 import { axiosGetInvalidDates } from "@/api/axios/axios.custom";
-import {
-  calculateAvailableDaysExceptPastDays,
-  calculateAvailableDaysInWeeks,
-  filterInvalidDates,
-} from "@/utils/Presentation/dateUtils";
+import { calculateAvailableDaysExceptPastDays } from "@/utils/Presentation/dateUtils";
 import { WEDNESDAY } from "@/constants/Presentation/dayOfTheWeek";
 import {
   AVAILABLE_WEEKS,
   FUTURE_MONTHS_TO_DISPLAY,
+  MAX_CONTENT_LENGTH,
+  MAX_SUMMARY_LENGTH,
+  MAX_TITLE_LENGTH,
 } from "@/constants/Presentation/policy";
-
-const toggleList: toggleItem[] = [
-  {
-    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.TASK],
-    key: PresentationCategoryType.TASK,
-  },
-  {
-    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.DEVELOP],
-    key: PresentationCategoryType.DEVELOP,
-  },
-  {
-    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.STUDY],
-    key: PresentationCategoryType.STUDY,
-  },
-  {
-    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.HOBBY],
-    key: PresentationCategoryType.HOBBY,
-  },
-  {
-    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.JOB],
-    key: PresentationCategoryType.JOB,
-  },
-  {
-    name: PresentationCategoryTypeLabelMap[PresentationCategoryType.ETC],
-    key: PresentationCategoryType.ETC,
-  },
-];
-
-const NotificationDetail = `시작 시간은 수요일 오후 2시로 고정되며</br>시간은 각각 30분, 1시간, 1시간 30분,</br>2시간 중에서 선택하실 수 있습니다.
-`;
 
 interface IInputData {
   value: string;
   length: number;
 }
 
+export type PresentationTimeKey =
+  | ""
+  | "30분"
+  | "1시간"
+  | "1시간 30분"
+  | "2시간";
+
+const toggleList: toggleItem[] = Object.entries(
+  PresentationCategoryTypeLabelMap
+).map(([key, name]) => ({ name, key }));
+
+const NotificationDetail = `시작 시간은 수요일 오후 2시로 고정되며, 시간은 각각 30분, 1시간, 1시간 30분, 2시간 중에서 선택하실 수 있습니다.
+`;
+
 const RegisterPage = () => {
   const [toggleType, setToggleType] = useState<PresentationCategoryType>(
     PresentationCategoryType.TASK
   );
   const [date, setDate] = useState<string>("");
-  const [time, setTime] = useState<string>("");
-  const [title, setTitle] = useState<string>("");
-  const [summary, setSummary] = useState<string>("");
-  const [content, setContent] = useState<string>("");
-  const [titleLength, setTitleLength] = useState<number>(0);
-  const [summaryLength, setSummaryLength] = useState<number>(0);
-  const [contentLength, setContentLength] = useState<number>(0);
+  const [time, setTime] = useState<PresentationTimeKey>("30분");
+  const [title, setTitle] = useState<IInputData>({ value: "", length: 0 });
+  const [summary, setSummary] = useState<IInputData>({ value: "", length: 0 });
+  const [content, setContent] = useState<IInputData>({ value: "", length: 0 });
   const [focusedSection, setFocusedSection] = useState<string | null>(null);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [invalidDates, setInvalidDates] = useState<string[]>([]);
@@ -82,42 +58,24 @@ const RegisterPage = () => {
   const [modalTitle, setModalTitle] = useState<string>("");
   const [showNotificationBox, setShowNotificationBox] = useState<boolean>(true);
 
-  const getInvalidDates = async () => {
-    try {
-      const response = await axiosGetInvalidDates();
-      setInvalidDates(response.data.invalidDateList);
-    } catch (error: any) {
-      setModalTitle(error.response.data.message);
-      setHasErrorOnResponse(true);
-      setShowResponseModal(true);
-    }
-  };
-
   const [showTooltip, setShowTooltip] = useState(false);
 
   const handleDateChange = (selectedDate: string) => {
     setDate(selectedDate);
   };
 
-  const handleTimeChange = (selectedTime: string) => {
-    let convertedTime: string;
-    switch (selectedTime) {
-      case "30분":
-        convertedTime = PresentationPeriodType.HALF;
-        break;
-      case "1시간":
-        convertedTime = PresentationPeriodType.HOUR;
-        break;
-      case "1시간 30분":
-        convertedTime = PresentationPeriodType.HOUR_HALF;
-        break;
-      case "2시간":
-        convertedTime = PresentationPeriodType.TWO_HOUR;
-        break;
-      default:
-        convertedTime = selectedTime;
-    }
-    setTime(convertedTime);
+  const handleInputChange =
+    (
+      setInput: React.Dispatch<React.SetStateAction<IInputData>>,
+      maxLength: number
+    ) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const data = e.target.value.slice(0, maxLength);
+      setInput({ value: data, length: data.length });
+    };
+
+  const handleTimeChange = (selectedTime: PresentationTimeKey) => {
+    setTime(selectedTime);
   };
 
   const handleFocus = (sectionName: string) => {
@@ -128,28 +86,21 @@ const RegisterPage = () => {
     setFocusedSection(null);
   };
 
-  const NotificationModalDetail = `시작 시간은 수요일 오후 2시로 고정되며 시간은 각각 30분, 1시간, 1시간 30분, 2시간 중에서 선택하실 수 있습니다.
-  `;
-
-  const handleTooltipToggle = (show: boolean) => {
-    setShowTooltip(show);
-  };
-
   const handleMouseEnter = () => {
-    handleTooltipToggle(true);
+    setShowTooltip(true);
   };
 
   const handleMouseLeave = () => {
-    handleTooltipToggle(false);
+    setShowTooltip(false);
   };
 
   const tryRegister = async () => {
     if (
       date === "" ||
       time === "" ||
-      title === "" ||
-      summary === "" ||
-      content === ""
+      title.value === "" ||
+      summary.value === "" ||
+      content.value === ""
     ) {
       alert("모든 항목을 입력해주세요");
       return;
@@ -157,10 +108,6 @@ const RegisterPage = () => {
     setIsClicked(true);
     setShowResponseModal(true);
   };
-
-  useEffect(() => {
-    getInvalidDates();
-  }, []);
 
   useEffect(() => {
     const fetchInvalidDates = async () => {
@@ -191,10 +138,6 @@ const RegisterPage = () => {
     );
     setAvailableDates(formattedAvailableDates);
   }, [invalidDates]);
-
-  useEffect(() => {
-    console.log(availableDates);
-  }, [availableDates]);
 
   return (
     <>
@@ -235,7 +178,7 @@ const RegisterPage = () => {
                     onMouseEnter={() => handleMouseEnter()}
                     onMouseLeave={() => handleMouseLeave()}
                   >
-                    {NotificationModalDetail}
+                    {NotificationDetail}
                   </TooltipBoxStyled>
                 )}
               </SubNameStyled>
@@ -248,66 +191,60 @@ const RegisterPage = () => {
             <SubNameStyled>제목</SubNameStyled>
             <SummaryTextareaStyled
               placeholder="제목을 입력해주세요"
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                setTitleLength(e.target.value.length);
-              }}
+              value={title.value}
+              onChange={handleInputChange(setTitle, MAX_TITLE_LENGTH)}
               onFocus={() => handleFocus("title")}
               onBlur={handleBlur}
               isFocused={focusedSection === "title"}
               spellCheck={false}
-              maxLength={25}
+              maxLength={MAX_TITLE_LENGTH}
             />
-            <CharacterCount>{titleLength} / 25</CharacterCount>
+            <CharacterCount>
+              {title.length} / {MAX_TITLE_LENGTH}
+            </CharacterCount>
           </SubSection>
           <SubSection>
             <SubNameStyled>한 줄 요약</SubNameStyled>
             <SummaryTextareaStyled
               placeholder="한 줄 요약을 입력해주세요"
               onFocus={() => handleFocus("summary")}
-              value={summary}
-              onChange={(e) => {
-                setSummary(e.target.value);
-                setSummaryLength(e.target.value.length);
-              }}
+              value={summary.value}
+              onChange={handleInputChange(setSummary, MAX_SUMMARY_LENGTH)}
               onBlur={handleBlur}
               isFocused={focusedSection === "summary"}
               spellCheck={false}
-              maxLength={40}
+              maxLength={MAX_SUMMARY_LENGTH}
             />
-            <CharacterCount>{summaryLength} / 40</CharacterCount>
+            <CharacterCount>
+              {summary.length} / {MAX_SUMMARY_LENGTH}
+            </CharacterCount>
           </SubSection>
           <SubSection>
             <SubNameStyled>내용</SubNameStyled>
             <DetailTextareaStyled
               onFocus={() => handleFocus("content")}
               onBlur={handleBlur}
-              value={content}
-              onChange={(e) => {
-                setContent(e.target.value);
-                setContentLength(e.target.value.length);
-              }}
+              value={content.value}
+              onChange={handleInputChange(setContent, MAX_CONTENT_LENGTH)}
               isFocused={focusedSection === "content"}
               placeholder="내용을 입력해주세요"
               spellCheck={false}
-              maxLength={500}
+              maxLength={MAX_CONTENT_LENGTH}
             />
-            <CharacterCount>{contentLength} / 500</CharacterCount>
+            <CharacterCount>
+              {content.length} / {MAX_CONTENT_LENGTH}
+            </CharacterCount>
           </SubSection>
           <RegisterButtonStyled onClick={tryRegister} disabled={isClicked}>
             {isClicked ? <LoadingAnimation /> : "신청하기"}
           </RegisterButtonStyled>
         </BackgroundStyled>
       </RegisterPageStyled>
-      {showNotificationBox && (
-        <TooltipBoxStyled>{NotificationDetail}</TooltipBoxStyled>
-      )}
       {showResponseModal && (
         <RegisterModal
-          title={title}
-          summary={summary}
-          content={content}
+          title={title.value}
+          summary={summary.value}
+          content={content.value}
           date={date}
           time={time}
           toggleType={toggleType}

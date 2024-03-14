@@ -9,7 +9,7 @@ import {
 import NoEventTableRow from "@/components/Presentation/Details/DetailTable/NoEventTableRow";
 import {
   PresentationCategoryTypeLabelMap,
-  PresentationPeriodTypeLabelMap,
+  PresentationPeriodTypeNumberLabelMap,
 } from "@/assets/data/Presentation/maps";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
@@ -25,7 +25,9 @@ const renderCellDetail = (
     case "category":
       return PresentationCategoryTypeLabelMap[item.category!];
     case "presentationTime":
-      return PresentationPeriodTypeLabelMap[item.presentationTime!] + "분";
+      return (
+        PresentationPeriodTypeNumberLabelMap[item.presentationTime!] + "분"
+      );
     default:
       return null;
   }

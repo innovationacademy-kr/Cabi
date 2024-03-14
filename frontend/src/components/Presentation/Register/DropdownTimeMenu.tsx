@@ -1,79 +1,88 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import { PresentationTimeKey } from "@/pages/Presentation/RegisterPage";
+import { PresentationTimeMap } from "@/assets/data/Presentation/maps";
 import chevronIcon from "@/assets/images/dropdownChevron.svg";
+import useClickOutside from "@/hooks/Presentation/useClickOutside";
 
 const DropdownTimeMenu = ({
   onClick,
 }: {
-  onClick: (selectedTime: string) => void;
+  onClick: (selectedTime: PresentationTimeKey) => void;
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isFocused, setIsFocused] = useState(false);
-  const [isIconRotated, setIsIconRotated] = useState(false);
+  const [dropdownState, setDropdownState] = useState({
+    isVisible: false,
+    isFocused: false,
+    isIconRotated: false,
+  });
   const [clickCount, setClickCount] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<PresentationTimeKey>("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsVisible(false);
-        setIsFocused(false);
-        setIsIconRotated(false);
-      }
-    };
+  useClickOutside(dropdownRef, () => {
+    setDropdownState((prev) => ({
+      ...prev,
+      isVisible: false,
+      isFocused: false,
+      isIconRotated: false,
+    }));
+  });
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef]);
+  const handleOptionSelect = useCallback(
+    (option: PresentationTimeKey) => {
+      setSelectedOption(option);
+      setDropdownState((prev) => ({
+        ...prev,
+        isVisible: false,
+        isFocused: false,
+        isIconRotated: false,
+      }));
+      onClick(option);
+    },
+    [onClick]
+  );
 
-  enum PresentationTime {
-    HALF = "30분",
-    HOUR = "1시간",
-    HOUR_HALF = "1시간 30분",
-    TWO_HOUR = "2시간",
-  }
-
-  const handleOptionSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsVisible(false);
-    setIsFocused(false);
-    setIsIconRotated(false);
-    onClick(option);
-  };
-
-  const toggleVisibility = () => {
-    setClickCount(clickCount + 1);
-    setIsVisible(!isVisible);
-    setIsFocused(!isVisible);
-    setIsIconRotated(!isIconRotated);
-  };
+  const toggleVisibility = useCallback(() => {
+    setClickCount((prevCount) => prevCount + 1);
+    setDropdownState((prev) => ({
+      ...prev,
+      isVisible: !prev.isVisible,
+      isFocused: !prev.isFocused,
+      isIconRotated: !prev.isIconRotated,
+    }));
+  }, []);
 
   return (
     <DropdownContainer ref={dropdownRef}>
       <RegisterTimeInputStyled
         onClick={toggleVisibility}
-        isFocused={isFocused}
+        isFocused={dropdownState.isFocused}
         hasSelectedOption={selectedOption !== ""}
       >
-        {selectedOption ? selectedOption : "시간을 선택해주세요"}
+        {selectedOption || "시간을 선택해주세요"}
         <DropdownIcon
           src={chevronIcon}
           alt="Dropdown Icon"
-          rotated={isIconRotated}
+          rotated={dropdownState.isFocused}
         />{" "}
       </RegisterTimeInputStyled>
-      <AnimatedDropdownOptions isVisible={isVisible} clickCount={clickCount}>
-        {Object.values(PresentationTime).map((time) => (
-          <DropdownOption key={time} onClick={() => handleOptionSelect(time)}>
-            {time}
-          </DropdownOption>
-        ))}
+      <AnimatedDropdownOptions
+        isVisible={dropdownState.isVisible}
+        clickCount={clickCount}
+      >
+        {Object.keys(PresentationTimeMap)
+          .filter((key) => key)
+          .map((timeKey) => {
+            const time = timeKey as PresentationTimeKey;
+            return (
+              <DropdownOption
+                key={time}
+                onClick={() => handleOptionSelect(time)}
+              >
+                {time}
+              </DropdownOption>
+            );
+          })}
       </AnimatedDropdownOptions>
     </DropdownContainer>
   );

@@ -7,3 +7,7 @@ export const AVAILABLE_WEEKS = (
 )
   .split(",")
   .map(Number);
+
+export const MAX_TITLE_LENGTH = 25;
+export const MAX_SUMMARY_LENGTH = 40;
+export const MAX_CONTENT_LENGTH = 500;
