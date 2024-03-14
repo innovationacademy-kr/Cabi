@@ -3,15 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { currentPresentationState } from "@/recoil/atoms";
 import { IDate } from "@/components/Presentation/Details/DetailContent.container";
-import DetailPartTr from "@/components/Presentation/Details/DetailTable/DetailPartTr";
+import { WhiteSpaceTrStyled } from "@/components/Presentation/Details/DetailTable/DetailTable";
 import {
   TAdminModalState,
   itemType,
 } from "@/components/Presentation/Details/DetailTable/DetailTable.container";
+import DetailTableBodyItemBottomTr from "@/components/Presentation/Details/DetailTable/DetailTableBodyItemBottomTr";
+import DetailTableBodyItemMiddleTr from "@/components/Presentation/Details/DetailTable/DetailTableBodyItemMiddleTr";
+import DetailTableBodyItemTopTr from "@/components/Presentation/Details/DetailTable/DetailTableBodyItemTopTr";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
-import { WhiteSpaceTrStyled } from "./DetailTable";
-import DetailTableBodyItemMiddleTr from "./DetailTableBodyItemMiddleTr";
-import DetailTableBodyItemTopTr from "./DetailTableBodyItemTopTr";
 
 export const noEventPhrase = {
   noEventPast: "수요지식회가 열리지 않았습니다",
@@ -109,17 +109,19 @@ const DetailTableBodyItem = ({
           (head) => head[0] !== "date"
         )}
       />
-      {isItemOpen ? (
-        <DetailPartTr
-          handleItemClick={handleItemClick}
-          tableHeadEntriesWithoutDate={tableHeadEntries.filter(
-            (head) => head[0] !== "date"
-          )}
-          itemInfo={itemInfo}
-          mobileColSpanSize={4}
-        />
-      ) : null}
-
+      <DetailTableBodyItemBottomTr
+        handleItemClick={handleItemClick}
+        tableHeadEntriesWithoutDate={tableHeadEntries.filter(
+          (head) => head[0] !== "date"
+        )}
+        itemInfo={itemInfo}
+        mobileColSpanSize={
+          tableHeadEntries.filter(
+            (head) => head[0] !== "subject" && head[0] !== "date"
+          ).length + 1
+        }
+        isItemOpen={isItemOpen}
+      />
       <WhiteSpaceTrStyled />
     </>
   );

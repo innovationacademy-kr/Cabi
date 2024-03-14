@@ -3,38 +3,44 @@ import { itemType } from "@/components/Presentation/Details/DetailTable/DetailTa
 import { IItem } from "@/components/Presentation/Details/DetailTable/DetailTableBodyItem";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
-const DetailPartTr = ({
+const DetailTableBodyItemBottomTr = ({
   handleItemClick,
   tableHeadEntriesWithoutDate,
   itemInfo,
   mobileColSpanSize,
+  isItemOpen,
 }: {
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
   tableHeadEntriesWithoutDate: [string, string][];
   itemInfo: IItem;
   mobileColSpanSize: number;
+  isItemOpen: boolean;
 }) => {
   return (
-    <TableDetailTrStyled
-      onClick={() => {
-        !itemInfo.itemStatus && handleItemClick(itemInfo.item);
-      }}
-      itemStatus={itemInfo.itemStatus}
-    >
-      <td
-        colSpan={tableHeadEntriesWithoutDate.length + 1}
-        id="webDetailBeforeClick"
-      >
-        <div>{itemInfo.item.detail}</div>
-      </td>
-      <td colSpan={mobileColSpanSize} id="mobileDetail">
-        <div>{itemInfo.item.detail}</div>
-      </td>
-    </TableDetailTrStyled>
+    <>
+      {isItemOpen ? (
+        <TableDetailTrStyled
+          onClick={() => {
+            !itemInfo.itemStatus && handleItemClick(itemInfo.item);
+          }}
+          itemStatus={itemInfo.itemStatus}
+        >
+          <td
+            colSpan={tableHeadEntriesWithoutDate.length + 1}
+            id="webDetailBeforeClick"
+          >
+            <div>{itemInfo.item.detail}</div>
+          </td>
+          <td colSpan={mobileColSpanSize} id="mobileDetail">
+            <div>{itemInfo.item.detail}</div>
+          </td>
+        </TableDetailTrStyled>
+      ) : null}
+    </>
   );
 };
 
-export default DetailPartTr;
+export default DetailTableBodyItemBottomTr;
 
 const TableDetailTrStyled = styled.tr<{
   itemStatus: itemType;
