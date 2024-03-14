@@ -114,6 +114,9 @@ const DetailTableBodyItemTopTr = ({
                           head[0] === "presentationLocation" ? "rightEnd" : ""
                         }
                         key={idx}
+                        title={
+                          head[0] === "subject" ? itemInfo.item.subject! : ""
+                        }
                       >
                         <div>{renderCellDetail(head[0], itemInfo.item)}</div>
                       </td>
