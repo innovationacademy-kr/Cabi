@@ -14,7 +14,6 @@ import {
 } from "@/assets/data/Presentation/maps";
 import CautionIcon from "@/assets/images/cautionSign.svg";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
-import { axiosGetInvalidDates } from "@/api/axios/axios.custom";
 import useInvalidDates from "@/hooks/Presentation/useInvalidDates";
 import { calculateAvailableDaysExceptPastDays } from "@/utils/Presentation/dateUtils";
 import { WEDNESDAY } from "@/constants/Presentation/dayOfTheWeek";
@@ -119,7 +118,6 @@ const RegisterPage = () => {
       WEDNESDAY,
       FUTURE_MONTHS_TO_DISPLAY
     );
-
     const formattedAvailableDates = availableDates.map((date) =>
       format(date, "M/d")
     );

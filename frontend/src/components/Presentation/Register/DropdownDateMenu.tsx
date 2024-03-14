@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import chevronIcon from "@/assets/images/dropdownChevron.svg";
 import useClickOutside from "@/hooks/Presentation/useClickOutside";
@@ -30,26 +30,29 @@ const DropdownDateMenu = ({
     }));
   });
 
-  const handleOptionSelect = (option: string) => {
-    setSelectedOption(option);
-    setDropdownState((prev) => ({
-      ...prev,
-      isVisible: false,
-      isFocused: false,
-      isIconRotated: false,
-    }));
-    onClick(option);
-  };
+  const handleOptionSelect = useCallback(
+    (option: string) => {
+      setSelectedOption(option);
+      setDropdownState((prev) => ({
+        ...prev,
+        isVisible: false,
+        isFocused: false,
+        isIconRotated: false,
+      }));
+      onClick(option);
+    },
+    [onClick]
+  );
 
-  const toggleVisibility = () => {
-    setClickCount(clickCount + 1);
+  const toggleVisibility = useCallback(() => {
+    setClickCount((prevCount) => prevCount + 1);
     setDropdownState((prev) => ({
       ...prev,
       isVisible: !prev.isVisible,
       isFocused: !prev.isFocused,
       isIconRotated: !prev.isIconRotated,
     }));
-  };
+  }, []);
 
   return (
     <DropdownContainer ref={dropdownRef}>
