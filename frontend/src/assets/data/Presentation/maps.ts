@@ -13,6 +13,7 @@ export const PresentationStatusTypeLabelMap = {
 };
 
 export const PresentationPeriodTypeNumberLabelMap = {
+  [PresentationPeriodType.NONE]: 0,
   [PresentationPeriodType.HALF]: 30,
   [PresentationPeriodType.HOUR]: 60,
   [PresentationPeriodType.HOUR_HALF]: 90,
