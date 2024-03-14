@@ -6,6 +6,8 @@ import {
 } from "@/types/enum/Presentation/presentation.type.enum";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
+// NOTE : dto.ts 파일은 백엔드에 데이터 보낼때, 받을때의 형식을 interface로 정의하는 파일
+
 export interface PresentationHistoryDto {
   id: number;
   dateTime: string;
@@ -41,7 +43,6 @@ export interface IPresentationScheduleDetailInfo {
   presentationLocation?: PresentationLocation | null;
 }
 
-// 백엔드에 데이터 보낼때, 받을때의 형식을 interface로 정의하는 파일
 export interface IAnimation {
   min_width: number;
   min_height: number;

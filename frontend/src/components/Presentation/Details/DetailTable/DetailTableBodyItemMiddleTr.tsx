@@ -1,12 +1,14 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
 import { itemType } from "@/components/Presentation/Details/DetailTable/DetailTable.container";
-import {
-  IItem,
-  noEventPhraseMobile,
-} from "@/components/Presentation/Details/DetailTable/DetailTableBodyItem";
+import { IItem } from "@/components/Presentation/Details/DetailTable/DetailTableBodyItem";
 import NoEventTableRow from "@/components/Presentation/Details/DetailTable/NoEventTableRow";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
+
+const noEventPhraseMobile = {
+  noEventPast: "발표가 없었습니다",
+  noEventCurrent: "지금 바로 발표를 신청해보세요",
+};
 
 const DetailTableBodyItemMiddleTr = ({
   itemInfo,

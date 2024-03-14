@@ -4,17 +4,19 @@ import { IItem } from "@/components/Presentation/Details/DetailTable/DetailTable
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
 const DetailTableBodyItemBottomTr = ({
-  handleItemClick,
-  tableHeadEntriesWithoutDate,
   itemInfo,
-  mobileColSpanSize,
   isItemOpen,
+  handleItemClick,
+  isMobile,
+  tableHeadEntriesWithoutDate,
+  tableHeadEntriesWithoutDateAndSubject,
 }: {
-  handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
-  tableHeadEntriesWithoutDate: [string, string][];
   itemInfo: IItem;
-  mobileColSpanSize: number;
   isItemOpen: boolean;
+  handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
+  isMobile: boolean;
+  tableHeadEntriesWithoutDate: [string, string][];
+  tableHeadEntriesWithoutDateAndSubject: [string, string][];
 }) => {
   return (
     <>
@@ -26,12 +28,12 @@ const DetailTableBodyItemBottomTr = ({
           itemStatus={itemInfo.itemStatus}
         >
           <td
-            colSpan={tableHeadEntriesWithoutDate.length + 1}
-            id="webDetailBeforeClick"
+            colSpan={
+              !isMobile
+                ? tableHeadEntriesWithoutDate.length + 1
+                : tableHeadEntriesWithoutDateAndSubject.length + 1
+            }
           >
-            <div>{itemInfo.item.detail}</div>
-          </td>
-          <td colSpan={mobileColSpanSize} id="mobileDetail">
             <div>{itemInfo.item.detail}</div>
           </td>
         </BottomTrStyled>
@@ -52,6 +54,7 @@ const BottomTrStyled = styled.tr<{
     border-radius: 0 0 10px 10px;
     padding: 0;
   }
+
   & > td > div {
     background-color: var(--white);
     border-radius: 10px;
@@ -65,17 +68,5 @@ const BottomTrStyled = styled.tr<{
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
-  }
-
-  @media (min-width: 1150px) {
-    & > #mobileDetail {
-      display: none;
-    }
-  }
-
-  @media (max-width: 1150px) {
-    & > #webDetailBeforeClick {
-      display: none;
-    }
   }
 `;

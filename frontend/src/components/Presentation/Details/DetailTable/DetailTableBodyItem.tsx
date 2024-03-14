@@ -13,19 +13,6 @@ import DetailTableBodyItemMiddleTr from "@/components/Presentation/Details/Detai
 import DetailTableBodyItemTopTr from "@/components/Presentation/Details/DetailTable/DetailTableBodyItemTopTr";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
-export const noEventPhrase = {
-  noEventPast: "수요지식회가 열리지 않았습니다",
-  noEventCurrent:
-    "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를 신청해보세요",
-};
-
-export const noEventPhraseMobile = {
-  noEventPast: "발표가 없었습니다",
-  noEventCurrent: "지금 바로 발표를 신청해보세요",
-};
-
-// TODO : noEventPhrase 하나로 할지 아님 따로 정의한채로 둘지?
-
 export interface IItem {
   item: IPresentationScheduleDetailInfo;
   itemStatus: itemType;
@@ -36,14 +23,14 @@ export interface IItem {
 const DetailTableBodyItem = ({
   isAdmin,
   openAdminModal,
-  itemInfo,
   tableHeadEntries,
+  itemInfo,
   isMobile,
 }: {
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
-  itemInfo: IItem;
   tableHeadEntries: [string, string][];
+  itemInfo: IItem;
   isMobile: boolean;
 }) => {
   const [clickedItem, setClickedItem] =
@@ -51,6 +38,12 @@ const DetailTableBodyItem = ({
   const navigator = useNavigate();
   const setCurrentPresentation = useSetRecoilState(currentPresentationState);
   const [isItemOpen, setIsItemOpen] = useState<boolean>(false);
+  const tableHeadEntriesWithoutDate = tableHeadEntries.filter(
+    (head) => head[0] !== "date"
+  );
+  const tableHeadEntriesWithoutDateAndSubject = tableHeadEntries.filter(
+    (head) => head[0] !== "date" && head[0] !== "subject"
+  );
 
   useEffect(() => {
     if (isItemOpen) {
@@ -79,14 +72,6 @@ const DetailTableBodyItem = ({
     }
   };
 
-  const tableHeadEntriesWithoutDate = tableHeadEntries.filter(
-    (head) => head[0] !== "date"
-  );
-
-  const tableHeadEntriesWithoutDateAndSubject = tableHeadEntries.filter(
-    (head) => head[0] !== "date" && head[0] !== "subject"
-  );
-
   return (
     <>
       <DetailTableBodyItemTopTr
@@ -100,7 +85,6 @@ const DetailTableBodyItem = ({
         tableHeadEntriesWithoutDateAndSubject={
           tableHeadEntriesWithoutDateAndSubject
         }
-        // TODO : DetailTableBodyItem랑 props 같으면 정의해서 사용
       />
       <DetailTableBodyItemMiddleTr
         itemInfo={itemInfo}
@@ -114,8 +98,11 @@ const DetailTableBodyItem = ({
         itemInfo={itemInfo}
         isItemOpen={isItemOpen}
         handleItemClick={handleItemClick}
+        isMobile={isMobile}
         tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
-        mobileColSpanSize={tableHeadEntriesWithoutDateAndSubject.length + 1}
+        tableHeadEntriesWithoutDateAndSubject={
+          tableHeadEntriesWithoutDateAndSubject
+        }
       />
       <WhiteSpaceTrStyled />
     </>

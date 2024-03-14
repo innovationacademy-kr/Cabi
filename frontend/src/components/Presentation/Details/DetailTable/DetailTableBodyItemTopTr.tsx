@@ -1,10 +1,7 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
 import { itemType } from "@/components/Presentation/Details/DetailTable/DetailTable.container";
-import {
-  IItem,
-  noEventPhrase,
-} from "@/components/Presentation/Details/DetailTable/DetailTableBodyItem";
+import { IItem } from "@/components/Presentation/Details/DetailTable/DetailTableBodyItem";
 import NoEventTableRow from "@/components/Presentation/Details/DetailTable/NoEventTableRow";
 import {
   PresentationCategoryTypeLabelMap,
@@ -12,6 +9,12 @@ import {
   PresentationPeriodTypeNumberLabelMap,
 } from "@/assets/data/Presentation/maps";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
+
+const noEventPhraseWeb = {
+  noEventPast: "수요지식회가 열리지 않았습니다",
+  noEventCurrent:
+    "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를 신청해보세요",
+};
 
 const renderCellDetail = (
   head: string,
@@ -95,7 +98,7 @@ const DetailTableBodyItemTopTr = ({
                   hasNoCurrentEvent={itemInfo.hasNoCurrentEvent}
                   navigator={navigator}
                   colNum={tableHeadEntriesWithoutDate.length}
-                  phrase={noEventPhrase}
+                  phrase={noEventPhraseWeb}
                 />
               </>
             )}
