@@ -65,7 +65,7 @@ const RegisterModal = ({
 
       setModalTitle("신청이 완료되었습니다");
       setTimeout(() => {
-        navigate("/wed/home");
+        navigate("/presentation/home");
       }, 1500);
     } catch (error: any) {
       setModalTitle(error.response.data.message);

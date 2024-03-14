@@ -50,7 +50,7 @@ const RecentPresentation = ({
           <h1 className="title">수요지식회</h1>
           <RegistButtonStyled
             onClick={() => {
-              navigator("/wed/register");
+              navigator("/presentation/register");
             }}
           >
             발표신청
@@ -65,7 +65,7 @@ const RecentPresentation = ({
       />
       <MobileRegistButtonStyled
         onClick={() => {
-          navigator("/wed/register");
+          navigator("/presentation/register");
         }}
       >
         발표신청
@@ -145,7 +145,6 @@ const RegistButtonStyled = styled.button`
   }
 `;
 const MobileRegistButtonStyled = styled.button`
-
   background-color: #3f69fd;
   width: 150px;
   height: 50px;

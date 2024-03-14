@@ -89,7 +89,7 @@ const LeftMainNav = ({
           {currentBuildingName === "수지회" && isAdmin ? (
             <TopBtnStyled
               className={
-                pathname.includes("wed/detail") ||
+                pathname.includes("presentation/detail") ||
                 pathname.includes("presentation/detail")
                   ? "leftNavButtonActive cabiButton"
                   : "cabiButton"
@@ -102,7 +102,7 @@ const LeftMainNav = ({
             <>
               <TopBtnStyled
                 className={
-                  pathname.includes("wed/home") ||
+                  pathname.includes("presentation/home") ||
                   pathname.includes("presentation/home")
                     ? "leftNavButtonActive cabiButton"
                     : "cabiButton"
@@ -113,7 +113,7 @@ const LeftMainNav = ({
               </TopBtnStyled>
               <TopBtnStyled
                 className={
-                  pathname.includes("wed/register") ||
+                  pathname.includes("presentation/register") ||
                   pathname.includes("presentation/register")
                     ? "leftNavButtonActive cabiButton"
                     : "cabiButton"
@@ -124,7 +124,7 @@ const LeftMainNav = ({
               </TopBtnStyled>
               <TopBtnStyled
                 className={
-                  pathname.includes("wed/log")
+                  pathname.includes("presentation/log")
                     ? "leftNavButtonActive cabiButton"
                     : "cabiButton"
                 }
@@ -134,7 +134,7 @@ const LeftMainNav = ({
               </TopBtnStyled>
               <TopBtnStyled
                 className={
-                  pathname.includes("wed/detail") ||
+                  pathname.includes("presentation/detail") ||
                   pathname.includes("presentation/detail")
                     ? "leftNavButtonActive cabiButton"
                     : "cabiButton"

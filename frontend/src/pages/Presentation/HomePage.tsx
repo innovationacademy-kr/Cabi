@@ -5,7 +5,7 @@ const HomePage = () => {
   const navigator = useNavigate();
 
   const presentButtonHandler = () => {
-    navigator("/wed/register");
+    navigator("/presentation/register");
   };
   return <RecentPresentation presentButtonHandler={presentButtonHandler} />;
 };

@@ -74,7 +74,7 @@ const TopNavContainer: React.FC<{
   useEffect(() => {
     if (currentBuildingName === undefined) return;
     else if (currentBuildingName === "수지회") {
-      navigator("/wed/home");
+      navigator("/presentation/home");
     } else if (currentBuildingName === "새롬관") {
       navigator("/home");
     }
