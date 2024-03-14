@@ -100,8 +100,10 @@ const TbodyStyled = styled.tbody`
   }
   & > tr > td {
     height: 50px;
-    line-height: 50px;
+    line-height: 20px;
+    padding-top: 15px;
     width: 25%;
+    padding-bottom: 10px;
   }
   & > tr:nth-child(2n) {
     background-color: hsl(228, 100%, 98%);

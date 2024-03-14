@@ -144,5 +144,5 @@ const ConTainerStyled = styled.div`
   align-items: center;
   max-width: 1000px;
   width: 80%;
-  height: 100%;
+  height: 550px;
 `;

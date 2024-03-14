@@ -60,6 +60,7 @@ const DetailTable = ({
 const TableStyled = styled.table`
   width: 100%;
   table-layout: fixed;
+  word-break: break-all;
 `;
 
 const TableBodyStyled = styled.tbody`
