@@ -92,7 +92,6 @@ const DetailTableBodyItem = ({
         handleItemClick={handleItemClick}
         mobileColSpanSize={tableHeadEntriesWithoutDateAndSubject.length + 1}
         navigator={navigator}
-        tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
       />
       <DetailTableBodyItemBottomTr
         itemInfo={itemInfo}

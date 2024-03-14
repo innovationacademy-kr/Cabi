@@ -8,13 +8,13 @@ const NoEventTableRow = ({
   itemStatus,
   hasNoCurrentEvent,
   navigator,
-  colNum,
+  colSpanSize,
   phrase,
 }: {
   itemStatus: itemType.NO_EVENT_CURRENT | itemType.NO_EVENT_PAST;
   hasNoCurrentEvent: boolean;
   navigator: NavigateFunction;
-  colNum: number;
+  colSpanSize: number;
   phrase: {
     noEventPast: string;
     noEventCurrent: string;
@@ -22,7 +22,7 @@ const NoEventTableRow = ({
 }) => {
   return (
     <>
-      <td className="rightEnd" colSpan={colNum}>
+      <td className="rightEnd" colSpan={colSpanSize}>
         <NoEventDivStyled hasNoCurrentEvent={hasNoCurrentEvent}>
           <NoEventPhraseStyled hasNoCurrentEvent={hasNoCurrentEvent}>
             <div>{phrase[itemStatus]}</div>

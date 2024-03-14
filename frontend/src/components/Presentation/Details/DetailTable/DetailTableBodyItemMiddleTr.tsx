@@ -16,14 +16,12 @@ const DetailTableBodyItemMiddleTr = ({
   handleItemClick,
   mobileColSpanSize,
   navigator,
-  tableHeadEntriesWithoutDate,
 }: {
   itemInfo: IItem;
   isItemOpen: boolean;
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
   mobileColSpanSize: number;
   navigator: NavigateFunction;
-  tableHeadEntriesWithoutDate: [string, string][];
 }) => {
   return (
     <MobileMiddleTrStysled
@@ -32,14 +30,13 @@ const DetailTableBodyItemMiddleTr = ({
       onClick={() => {
         !itemInfo.itemStatus && handleItemClick(itemInfo.item);
       }}
-      open={isItemOpen}
     >
       {itemInfo.itemStatus ? (
         <NoEventTableRow
           itemStatus={itemInfo.itemStatus}
           hasNoCurrentEvent={itemInfo.hasNoCurrentEvent}
           navigator={navigator}
-          colNum={tableHeadEntriesWithoutDate.length}
+          colSpanSize={mobileColSpanSize}
           phrase={noEventPhraseMobile}
         />
       ) : (
@@ -54,7 +51,6 @@ const DetailTableBodyItemMiddleTr = ({
 export default DetailTableBodyItemMiddleTr;
 const MobileMiddleTrStysled = styled.tr<{
   itemStatus: itemType;
-  open?: boolean;
 }>`
   background-color: ${(props) =>
     !props.itemStatus
@@ -62,17 +58,12 @@ const MobileMiddleTrStysled = styled.tr<{
       : props.itemStatus === itemType.NO_EVENT_CURRENT
       ? "var(--white)"
       : "var(--full)"};
-
-  height: 50px;
   width: 100%;
+  height: 50px;
   font-size: 14px;
   line-height: 50px;
   text-align: center;
   padding: 0 50px;
-
-  & > td {
-    border-radius: ${(props) => (props.open ? "" : "0 0 10px 10px")};
-  }
 
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
