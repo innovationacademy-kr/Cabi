@@ -51,7 +51,7 @@ const RegisterPage = () => {
     PresentationCategoryType.DEVELOP
   );
   const [date, setDate] = useState<string>("");
-  const [time, setTime] = useState<PresentationTimeKey>("30분");
+  const [time, setTime] = useState<PresentationTimeKey>("");
   const [title, setTitle] = useState<IInputData>(defaultInputData);
   const [summary, setSummary] = useState<IInputData>(defaultInputData);
   const [content, setContent] = useState<IInputData>(defaultInputData);
