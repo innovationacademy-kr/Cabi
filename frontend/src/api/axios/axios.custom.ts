@@ -770,9 +770,9 @@ export const axiosGetInvalidDates = async (): Promise<any> => {
 const axiosMyPresentationLogURL = "/v5/presentation/me/histories";
 export const axiosMyPresentationLog = async (page: number): Promise<any> => {
   try {
-    const response = await instance.get(axiosMyPresentationLogURL, {
-      params: { page: page, size: 10 },
-    });
+    const response = await instance.get(
+      `${axiosMyPresentationLogURL}?page=${page}&size=10&sort=dateTime,desc`
+    );
     return response;
   } catch (error) {
     throw error;
