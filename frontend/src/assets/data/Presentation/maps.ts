@@ -31,9 +31,9 @@ export const PresentationTimeMap: {
 };
 
 export const PresentationLocationLabelMap = {
-  [PresentationLocation.BASEMENT]: "지하 1층",
-  [PresentationLocation.FIRST]: "1층",
-  [PresentationLocation.THIRD]: "3층",
+  [PresentationLocation.BASEMENT]: "지하 1층 오픈스튜디오",
+  [PresentationLocation.FIRST]: "1층 오픈스튜디오",
+  [PresentationLocation.THIRD]: "3층 세미나실",
 };
 
 export const PresentationCategoryTypeLabelMap = {

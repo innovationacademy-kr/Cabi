@@ -9,6 +9,7 @@ import {
 import NoEventTableRow from "@/components/Presentation/Details/DetailTable/NoEventTableRow";
 import {
   PresentationCategoryTypeLabelMap,
+  PresentationLocationLabelMap,
   PresentationPeriodTypeNumberLabelMap,
 } from "@/assets/data/Presentation/maps";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
@@ -28,6 +29,8 @@ const renderCellDetail = (
       return (
         PresentationPeriodTypeNumberLabelMap[item.presentationTime!] + "분"
       );
+    case "presentationLocation":
+      return PresentationLocationLabelMap[item.presentationLocation!];
     default:
       return null;
   }
@@ -108,7 +111,7 @@ const DetailTableBodyItemTopTr = ({
                     return (
                       <td
                         className={
-                          head[0] === "presentationTime" ? "rightEnd" : ""
+                          head[0] === "presentationLocation" ? "rightEnd" : ""
                         }
                         key={idx}
                       >
@@ -132,7 +135,7 @@ const DetailTableBodyItemTopTr = ({
                     return (
                       <td
                         className={
-                          head[0] === "presentationTime" ? "rightEnd" : ""
+                          head[0] === "presentationLocation" ? "rightEnd" : ""
                         }
                         key={idx}
                       >

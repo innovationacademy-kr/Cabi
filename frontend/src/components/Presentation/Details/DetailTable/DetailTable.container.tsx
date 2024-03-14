@@ -23,6 +23,7 @@ export const tableHeadArray = {
   userName: "ID",
   category: "카테고리",
   presentationTime: "시간",
+  presentationLocation: "장소",
 };
 
 const DetailTableContainer = ({
