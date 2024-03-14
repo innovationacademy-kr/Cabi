@@ -61,7 +61,7 @@ const DropdownDateMenu = ({
         isFocused={dropdownState.isFocused}
         hasSelectedOption={selectedOption !== ""}
       >
-        {selectedOption ? selectedOption : "날짜를 선택해주세요"}
+        {selectedOption || "날짜를 선택해주세요"}
         <DropdownIcon
           src={chevronIcon}
           alt="Dropdown Icon"
@@ -154,11 +154,10 @@ const AnimatedDropdownOptions = styled.ul<{
 const DropdownOption = styled.li<{ invalid: boolean }>`
   font-size: 0.875rem;
   padding: 10px;
-  cursor: pointer;
   color: ${({ invalid }) => (invalid ? "var(--gray-color)" : "var(--black)")};
   background-color: ${({ invalid }) => (invalid ? "#f0f0f0" : "transparent")};
   &:hover {
-    background-color: ${({ invalid }) => (invalid ? "#f0f0f0" : "#e8e8e8")};
+    background-color: ${({ invalid }) => (invalid ? "#f0f0f0" : "#DCE7FD")};
     color: ${({ invalid }) => (invalid ? "var(--gray-color)" : "#3f69fd")};
     cursor: ${({ invalid }) => (invalid ? "not-allowed" : "pointer")};
   }
