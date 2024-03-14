@@ -7,10 +7,14 @@ import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSep
 import RegisterModal from "@/components/Modals/Presentation/RegisterModal";
 import DropdownDateMenu from "@/components/Presentation/Register/DropdownDateMenu";
 import DropdownTimeMenu from "@/components/Presentation/Register/DropdownTimeMenu";
-import { PresentationCategoryTypeLabelMap } from "@/assets/data/Presentation/maps";
+import {
+  PresentationCategoryTypeLabelMap,
+  PresentationTimeMap,
+} from "@/assets/data/Presentation/maps";
 import CautionIcon from "@/assets/images/cautionSign.svg";
 import { PresentationCategoryType } from "@/types/enum/Presentation/presentation.type.enum";
 import { axiosGetInvalidDates } from "@/api/axios/axios.custom";
+import useInvalidDates from "@/hooks/Presentation/useInvalidDates";
 import { calculateAvailableDaysExceptPastDays } from "@/utils/Presentation/dateUtils";
 import { WEDNESDAY } from "@/constants/Presentation/dayOfTheWeek";
 import {
@@ -42,7 +46,7 @@ const NotificationDetail = `시작 시간은 수요일 오후 2시로 고정되�
 
 const RegisterPage = () => {
   const [toggleType, setToggleType] = useState<PresentationCategoryType>(
-    PresentationCategoryType.TASK
+    PresentationCategoryType.DEVELOP
   );
   const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<PresentationTimeKey>("30분");
@@ -51,13 +55,12 @@ const RegisterPage = () => {
   const [content, setContent] = useState<IInputData>({ value: "", length: 0 });
   const [focusedSection, setFocusedSection] = useState<string | null>(null);
   const [isClicked, setIsClicked] = useState<boolean>(false);
-  const [invalidDates, setInvalidDates] = useState<string[]>([]);
+  const invalidDates = useInvalidDates();
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [showNotificationBox, setShowNotificationBox] = useState<boolean>(true);
-
   const [showTooltip, setShowTooltip] = useState(false);
 
   const handleDateChange = (selectedDate: string) => {
@@ -108,22 +111,6 @@ const RegisterPage = () => {
     setIsClicked(true);
     setShowResponseModal(true);
   };
-
-  useEffect(() => {
-    const fetchInvalidDates = async () => {
-      try {
-        const response = await axiosGetInvalidDates();
-        setInvalidDates(
-          response.data.invalidDateList.map((date: any) => format(date, "M/d"))
-        );
-      } catch (error) {
-        console.error("Failed to fetch invalid dates:", error);
-      }
-    };
-    if (invalidDates.length === 0) {
-      fetchInvalidDates();
-    }
-  }, []);
 
   useEffect(() => {
     const availableDates: Date[] = calculateAvailableDaysExceptPastDays(
@@ -246,7 +233,7 @@ const RegisterPage = () => {
           summary={summary.value}
           content={content.value}
           date={date}
-          time={time}
+          time={PresentationTimeMap[time]}
           toggleType={toggleType}
           closeModal={() => {
             setShowResponseModal(false);
