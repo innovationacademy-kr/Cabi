@@ -30,6 +30,7 @@ const DetailTableBodyItemMiddleTr = ({
       onClick={() => {
         !itemInfo.itemStatus && handleItemClick(itemInfo.item);
       }}
+      isItemOpen={isItemOpen}
     >
       {itemInfo.itemStatus ? (
         <NoEventTableRow
@@ -51,6 +52,7 @@ const DetailTableBodyItemMiddleTr = ({
 export default DetailTableBodyItemMiddleTr;
 const MobileMiddleTrStysled = styled.tr<{
   itemStatus: itemType;
+  isItemOpen: boolean;
 }>`
   background-color: ${(props) =>
     !props.itemStatus
@@ -75,6 +77,10 @@ const MobileMiddleTrStysled = styled.tr<{
     background-color: #3f69fd;
     font-weight: bold;
     font-size: 1rem;
+  }
+
+  & > td {
+    border-radius: ${(props) => (props.isItemOpen ? "" : "0 0 10px 10px")};
   }
 
   & > td > #mobileSubjectDiv {
