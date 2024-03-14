@@ -9,6 +9,7 @@ import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.InvalidDateResponseDto;
 import org.ftclub.cabinet.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.dto.PresentationFormResponseDto;
+import org.ftclub.cabinet.dto.PresentationMainData;
 import org.ftclub.cabinet.dto.PresentationMyPagePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.presentation.service.PresentationService;
@@ -44,8 +45,8 @@ public class PresentationController {
 	}
 
 	@GetMapping("")
-//	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public PresentationFormResponseDto getMainData(
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public PresentationMainData getMainData(
 		@RequestParam(value = "pastFormCount") Integer pastFormCount,
 		@RequestParam(value = "upcomingFormCount") Integer upcomingFormCount) {
 		return presentationService.getPastAndUpcomingPresentations(pastFormCount,

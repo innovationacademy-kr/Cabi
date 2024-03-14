@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.InvalidDateResponseDto;
 import org.ftclub.cabinet.dto.PresentationFormData;
 import org.ftclub.cabinet.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.dto.PresentationFormResponseDto;
+import org.ftclub.cabinet.dto.PresentationMainData;
 import org.ftclub.cabinet.dto.PresentationMyPageDto;
 import org.ftclub.cabinet.dto.PresentationMyPagePaginationDto;
 import org.ftclub.cabinet.dto.PresentationUpdateDto;
@@ -119,18 +119,20 @@ public class PresentationService {
 	 * @param upcomingFormCount 가장 가까운 미래 신청서의 개수
 	 * @return
 	 */
-	public PresentationFormResponseDto getPastAndUpcomingPresentations(int pastFormCount,
+	public PresentationMainData getPastAndUpcomingPresentations(int pastFormCount,
 		int upcomingFormCount) {
 		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount);
 		List<Presentation> upcomingPresentations = getLatestUpcomingPresentations(
 			upcomingFormCount);
 
-		List<PresentationFormData> result =
-			Stream.concat(pastPresentations.stream(), upcomingPresentations.stream())
-				.map(presentationMapper::toPresentationFormDataDto)
-				.collect(Collectors.toList());
+		List<PresentationFormData> past = pastPresentations.stream()
+			.map(presentationMapper::toPresentationFormDataDto)
+			.collect(Collectors.toList());
+		List<PresentationFormData> upcoming = upcomingPresentations.stream()
+			.map(presentationMapper::toPresentationFormDataDto)
+			.collect(Collectors.toList());
 
-		return new PresentationFormResponseDto(result);
+		return presentationMapper.toPresentationMainData(past, upcoming);
 	}
 
 	/**
