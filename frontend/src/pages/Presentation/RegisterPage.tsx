@@ -43,7 +43,8 @@ const toggleList: toggleItem[] = Object.entries(
   PresentationCategoryTypeLabelMap
 ).map(([key, name]) => ({ name, key }));
 
-const NotificationDetail = `시작 시간은 수요일 오후 2시로 고정되며, 시간은 각각 30분, 1시간, 1시간 30분, 2시간 중에서 선택하실 수 있습니다.
+const NotificationDetail = `발표 시작 시간은 수요일 오후 2시이며
+추후에 변경될 수 있습니다.
 `;
 
 const RegisterPage = () => {
@@ -151,7 +152,7 @@ const RegisterPage = () => {
             </SubSectionStyled>
             <SubSectionStyled>
               <SubNameStyled>
-                시간{" "}
+                시간
                 <CautionIconStyled
                   src={CautionIcon}
                   alt="Notification Icon"
@@ -319,7 +320,7 @@ const DropdownStyled = styled.div`
   border: none;
   resize: none;
   outline: none;
-  cursor: pointer;
+  /* cursor: pointer; */
 `;
 
 const RegisterButtonStyled = styled.button`
@@ -360,13 +361,13 @@ const CautionIconStyled = styled.img`
 
 const TooltipBoxStyled = styled.div`
   position: absolute;
-  top: -50px;
-  left: 360%;
+  top: -32px;
+  left: 340%;
   transform: translateX(-50%);
   font-weight: 400;
   color: white;
   background-color: rgba(0, 0, 0, 0.8);
-  width: 260px;
+  width: 240px;
   padding: 10px;
   border-radius: 4px;
   font-size: 0.75rem;
