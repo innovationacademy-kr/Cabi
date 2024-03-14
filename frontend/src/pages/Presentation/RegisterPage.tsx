@@ -182,7 +182,7 @@ const RegisterPage = () => {
               maxLength={MAX_TITLE_LENGTH}
               placeholder="제목을 입력해주세요"
               isFocused={focusedSection === "title"}
-              isTextArea={true}
+              isInputArea={true}
             />
           </SubSectionStyled>
           <SubSectionStyled>
@@ -195,7 +195,7 @@ const RegisterPage = () => {
               maxLength={MAX_SUMMARY_LENGTH}
               placeholder="한 줄 요약을 입력해주세요"
               isFocused={focusedSection === "summary"}
-              isTextArea={true}
+              isInputArea={true}
             />
           </SubSectionStyled>
           <SubSectionStyled>
@@ -208,7 +208,7 @@ const RegisterPage = () => {
               maxLength={MAX_CONTENT_LENGTH}
               placeholder="내용을 입력해주세요"
               isFocused={focusedSection === "content"}
-              isTextArea={true}
+              isInputArea={false}
             />
           </SubSectionStyled>
           <RegisterButtonStyled onClick={tryRegister} disabled={isClicked}>

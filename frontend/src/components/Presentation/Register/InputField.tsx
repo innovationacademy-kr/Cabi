@@ -22,7 +22,7 @@ interface InputFieldProps {
       | React.FocusEvent<HTMLTextAreaElement>
   ) => void;
   isFocused: boolean;
-  isTextArea?: boolean;
+  isInputArea?: boolean;
 }
 
 const InputField = ({
@@ -34,12 +34,12 @@ const InputField = ({
   onFocus,
   onBlur,
   isFocused,
-  isTextArea = false,
+  isInputArea = false,
 }: InputFieldProps) => {
   return (
     <>
-      {title && <SubNameStyled>제목</SubNameStyled>}
-      {isTextArea ? (
+      {title && <SubNameStyled>{title}</SubNameStyled>}
+      {isInputArea ? (
         <InputAreaStyled
           value={value}
           onChange={onChange}
@@ -104,7 +104,7 @@ const DetailTextareaStyled = styled.textarea<{ isFocused: boolean }>`
 
 const CharacterCountStyled = styled.div`
   margin-left: auto;
-  margin-top: 5px;
+  margin-top: 0.5rem;
   font-size: 0.75rem;
   color: #a9a9a9;
 `;
