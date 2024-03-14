@@ -41,24 +41,22 @@ const DetailTableBodyItemTopTr = ({
   handleItemClick,
   isMobile,
   mobileColSpanSize,
-  hasNoCurrentEvent,
   navigator,
   tableHeadEntriesWithoutDate,
-  tableHeadEntries,
+  tableHeadEntriesWithoutDateAndSubject,
 }: {
   itemInfo: IItem;
   isItemOpen: boolean;
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
   isMobile: boolean;
   mobileColSpanSize: number;
-  hasNoCurrentEvent: boolean;
   navigator: NavigateFunction;
   tableHeadEntriesWithoutDate: [string, string][];
-  tableHeadEntries: [string, string][];
+  tableHeadEntriesWithoutDateAndSubject: [string, string][];
 }) => {
   return (
     <>
-      <TableTrStyled
+      <TopTrStyled
         itemStatus={itemInfo.itemStatus}
         id={isItemOpen ? "selected" : ""}
         onClick={() => {
@@ -94,7 +92,7 @@ const DetailTableBodyItemTopTr = ({
               <>
                 <NoEventTableRow
                   itemStatus={itemInfo.itemStatus}
-                  hasNoCurrentEvent={hasNoCurrentEvent}
+                  hasNoCurrentEvent={itemInfo.hasNoCurrentEvent}
                   navigator={navigator}
                   colNum={tableHeadEntriesWithoutDate.length}
                   phrase={noEventPhrase}
@@ -104,23 +102,21 @@ const DetailTableBodyItemTopTr = ({
             {!itemInfo.itemStatus && (
               // 발표 있을때
               <>
-                {tableHeadEntries
-                  .filter((head) => head[0] !== "date")
-                  .map((head, idx) => {
-                    return (
-                      <td
-                        className={
-                          head[0] === "presentationLocation" ? "rightEnd" : ""
-                        }
-                        key={idx}
-                        title={
-                          head[0] === "subject" ? itemInfo.item.subject! : ""
-                        }
-                      >
-                        <div>{renderCellDetail(head[0], itemInfo.item)}</div>
-                      </td>
-                    );
-                  })}
+                {tableHeadEntriesWithoutDate.map((head, idx) => {
+                  return (
+                    <td
+                      className={
+                        head[0] === "presentationLocation" ? "rightEnd" : ""
+                      }
+                      key={idx}
+                      title={
+                        head[0] === "subject" ? itemInfo.item.subject! : ""
+                      }
+                    >
+                      <div>{renderCellDetail(head[0], itemInfo.item)}</div>
+                    </td>
+                  );
+                })}
                 {/* TODO: 함수나 컴포넌트로 빼기 */}
               </>
             )}
@@ -131,32 +127,30 @@ const DetailTableBodyItemTopTr = ({
             {!isItemOpen && <></>}
             {isItemOpen && (
               <>
-                {tableHeadEntries
-                  .filter((head) => head[0] !== "subject" && head[0] !== "date")
-                  .map((head, idx) => {
-                    return (
-                      <td
-                        className={
-                          head[0] === "presentationLocation" ? "rightEnd" : ""
-                        }
-                        key={idx}
-                      >
-                        <div>{renderCellDetail(head[0], itemInfo.item)}</div>
-                      </td>
-                    );
-                  })}
+                {tableHeadEntriesWithoutDateAndSubject.map((head, idx) => {
+                  return (
+                    <td
+                      className={
+                        head[0] === "presentationLocation" ? "rightEnd" : ""
+                      }
+                      key={idx}
+                    >
+                      <div>{renderCellDetail(head[0], itemInfo.item)}</div>
+                    </td>
+                  );
+                })}
               </>
             )}
           </>
         )}
-      </TableTrStyled>
+      </TopTrStyled>
     </>
   );
 };
 
 export default DetailTableBodyItemTopTr;
 
-const TableTrStyled = styled.tr<{
+const TopTrStyled = styled.tr<{
   itemStatus: itemType;
   open?: boolean;
 }>`

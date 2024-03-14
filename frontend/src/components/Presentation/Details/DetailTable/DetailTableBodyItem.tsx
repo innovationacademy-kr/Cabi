@@ -30,20 +30,19 @@ export interface IItem {
   item: IPresentationScheduleDetailInfo;
   itemStatus: itemType;
   itemDateInIDate: IDate;
+  hasNoCurrentEvent: boolean;
 }
 
 const DetailTableBodyItem = ({
   isAdmin,
   openAdminModal,
   itemInfo,
-  hasNoCurrentEvent,
   tableHeadEntries,
   isMobile,
 }: {
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
   itemInfo: IItem;
-  hasNoCurrentEvent: boolean;
   tableHeadEntries: [string, string][];
   isMobile: boolean;
 }) => {
@@ -80,6 +79,14 @@ const DetailTableBodyItem = ({
     }
   };
 
+  const tableHeadEntriesWithoutDate = tableHeadEntries.filter(
+    (head) => head[0] !== "date"
+  );
+
+  const tableHeadEntriesWithoutDateAndSubject = tableHeadEntries.filter(
+    (head) => head[0] !== "date" && head[0] !== "subject"
+  );
+
   return (
     <>
       <DetailTableBodyItemTopTr
@@ -87,46 +94,28 @@ const DetailTableBodyItem = ({
         isItemOpen={isItemOpen}
         handleItemClick={handleItemClick}
         isMobile={isMobile}
-        mobileColSpanSize={
-          tableHeadEntries.filter(
-            (head) => head[0] !== "subject" && head[0] !== "date"
-          ).length + 1
-        }
-        hasNoCurrentEvent={hasNoCurrentEvent}
+        mobileColSpanSize={tableHeadEntriesWithoutDateAndSubject.length + 1}
         navigator={navigator}
-        tableHeadEntriesWithoutDate={tableHeadEntries.filter(
-          (head) => head[0] !== "date"
-        )}
-        tableHeadEntries={tableHeadEntries}
+        tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
+        tableHeadEntriesWithoutDateAndSubject={
+          tableHeadEntriesWithoutDateAndSubject
+        }
         // TODO : DetailTableBodyItem랑 props 같으면 정의해서 사용
       />
       <DetailTableBodyItemMiddleTr
         itemInfo={itemInfo}
         isItemOpen={isItemOpen}
         handleItemClick={handleItemClick}
-        mobileColSpanSize={
-          tableHeadEntries.filter(
-            (head) => head[0] !== "subject" && head[0] !== "date"
-          ).length + 1
-        }
-        hasNoCurrentEvent={hasNoCurrentEvent}
+        mobileColSpanSize={tableHeadEntriesWithoutDateAndSubject.length + 1}
         navigator={navigator}
-        tableHeadEntriesWithoutDate={tableHeadEntries.filter(
-          (head) => head[0] !== "date"
-        )}
+        tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
       />
       <DetailTableBodyItemBottomTr
-        handleItemClick={handleItemClick}
-        tableHeadEntriesWithoutDate={tableHeadEntries.filter(
-          (head) => head[0] !== "date"
-        )}
         itemInfo={itemInfo}
-        mobileColSpanSize={
-          tableHeadEntries.filter(
-            (head) => head[0] !== "subject" && head[0] !== "date"
-          ).length + 1
-        }
         isItemOpen={isItemOpen}
+        handleItemClick={handleItemClick}
+        tableHeadEntriesWithoutDate={tableHeadEntriesWithoutDate}
+        mobileColSpanSize={tableHeadEntriesWithoutDateAndSubject.length + 1}
       />
       <WhiteSpaceTrStyled />
     </>

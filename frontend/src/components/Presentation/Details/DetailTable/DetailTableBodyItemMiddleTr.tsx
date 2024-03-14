@@ -13,7 +13,6 @@ const DetailTableBodyItemMiddleTr = ({
   isItemOpen,
   handleItemClick,
   mobileColSpanSize,
-  hasNoCurrentEvent,
   navigator,
   tableHeadEntriesWithoutDate,
 }: {
@@ -21,7 +20,6 @@ const DetailTableBodyItemMiddleTr = ({
   isItemOpen: boolean;
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
   mobileColSpanSize: number;
-  hasNoCurrentEvent: boolean;
   navigator: NavigateFunction;
   tableHeadEntriesWithoutDate: [string, string][];
 }) => {
@@ -37,7 +35,7 @@ const DetailTableBodyItemMiddleTr = ({
       {itemInfo.itemStatus ? (
         <NoEventTableRow
           itemStatus={itemInfo.itemStatus}
-          hasNoCurrentEvent={hasNoCurrentEvent}
+          hasNoCurrentEvent={itemInfo.hasNoCurrentEvent}
           navigator={navigator}
           colNum={tableHeadEntriesWithoutDate.length}
           phrase={noEventPhraseMobile}

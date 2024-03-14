@@ -19,7 +19,7 @@ const DetailTableBodyItemBottomTr = ({
   return (
     <>
       {isItemOpen ? (
-        <TableDetailTrStyled
+        <BottomTrStyled
           onClick={() => {
             !itemInfo.itemStatus && handleItemClick(itemInfo.item);
           }}
@@ -34,7 +34,7 @@ const DetailTableBodyItemBottomTr = ({
           <td colSpan={mobileColSpanSize} id="mobileDetail">
             <div>{itemInfo.item.detail}</div>
           </td>
-        </TableDetailTrStyled>
+        </BottomTrStyled>
       ) : null}
     </>
   );
@@ -42,7 +42,7 @@ const DetailTableBodyItemBottomTr = ({
 
 export default DetailTableBodyItemBottomTr;
 
-const TableDetailTrStyled = styled.tr<{
+const BottomTrStyled = styled.tr<{
   itemStatus: itemType;
 }>`
   background-color: #91b5fa;

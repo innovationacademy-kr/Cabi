@@ -39,6 +39,7 @@ const DetailTable = ({
             item: item,
             itemStatus: itemStatus,
             itemDateInIDate: makeIDateObj(new Date(item.dateTime)),
+            hasNoCurrentEvent: itemStatus === itemType.NO_EVENT_CURRENT,
           };
           return (
             <DetailTableBodyItem
@@ -46,7 +47,6 @@ const DetailTable = ({
               openAdminModal={openAdminModal}
               itemInfo={itemInfo}
               key={idx}
-              hasNoCurrentEvent={itemStatus === itemType.NO_EVENT_CURRENT}
               tableHeadEntries={tableHeadEntries}
               isMobile={isMobile}
             />
