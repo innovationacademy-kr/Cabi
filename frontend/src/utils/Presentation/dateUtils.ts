@@ -112,7 +112,7 @@ export const calculateAvailableDaysExceptPastDays = (
 ) => {
   let availableDates: Date[] = [];
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  today.setHours(today.getHours() + 9);
 
   for (let monthOffset = 0; monthOffset < maxMonthOffset; monthOffset++) {
     const monthStart = startOfMonth(addMonths(baseDate, monthOffset));
