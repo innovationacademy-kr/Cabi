@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
@@ -30,6 +30,8 @@ interface IInputData {
   length: number;
 }
 
+const defaultInputData: IInputData = { value: "", length: 0 };
+
 export type PresentationTimeKey =
   | ""
   | "30분"
@@ -50,12 +52,11 @@ const RegisterPage = () => {
   );
   const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<PresentationTimeKey>("30분");
-  const [title, setTitle] = useState<IInputData>({ value: "", length: 0 });
-  const [summary, setSummary] = useState<IInputData>({ value: "", length: 0 });
-  const [content, setContent] = useState<IInputData>({ value: "", length: 0 });
+  const [title, setTitle] = useState<IInputData>(defaultInputData);
+  const [summary, setSummary] = useState<IInputData>(defaultInputData);
+  const [content, setContent] = useState<IInputData>(defaultInputData);
   const [focusedSection, setFocusedSection] = useState<string | null>(null);
   const [isClicked, setIsClicked] = useState<boolean>(false);
-  const invalidDates = useInvalidDates();
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -63,9 +64,9 @@ const RegisterPage = () => {
   const [showNotificationBox, setShowNotificationBox] = useState<boolean>(true);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const handleDateChange = (selectedDate: string) => {
-    setDate(selectedDate);
-  };
+  const invalidDates: string[] = useInvalidDates().map((date) =>
+    format(date, "M/d")
+  );
 
   const handleInputChange =
     (
@@ -76,10 +77,6 @@ const RegisterPage = () => {
       const data = e.target.value.slice(0, maxLength);
       setInput({ value: data, length: data.length });
     };
-
-  const handleTimeChange = (selectedTime: PresentationTimeKey) => {
-    setTime(selectedTime);
-  };
 
   const handleFocus = (sectionName: string) => {
     setFocusedSection(sectionName);
@@ -97,7 +94,7 @@ const RegisterPage = () => {
     setShowTooltip(false);
   };
 
-  const tryRegister = async () => {
+  const tryRegister = () => {
     if (
       date === "" ||
       time === "" ||
@@ -124,7 +121,7 @@ const RegisterPage = () => {
       format(date, "M/d")
     );
     setAvailableDates(formattedAvailableDates);
-  }, [invalidDates]);
+  }, []);
 
   return (
     <>
@@ -145,7 +142,7 @@ const RegisterPage = () => {
               <SubNameStyled>날짜</SubNameStyled>
               <DropdownStyled>
                 <DropdownDateMenu
-                  onClick={handleDateChange}
+                  onClick={setDate}
                   data={availableDates}
                   invalidDates={invalidDates}
                 />
@@ -170,7 +167,7 @@ const RegisterPage = () => {
                 )}
               </SubNameStyled>
               <DropdownStyled>
-                <DropdownTimeMenu onClick={handleTimeChange} />
+                <DropdownTimeMenu onClick={setTime} />
               </DropdownStyled>
             </SubSection>
           </DateTimeContainer>
