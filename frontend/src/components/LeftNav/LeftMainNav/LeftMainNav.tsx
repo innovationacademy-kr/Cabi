@@ -120,7 +120,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickPresentationRegisterButton}
               >
-                신청하기
+                발표신청
               </TopBtnStyled>
               <TopBtnStyled
                 className={
