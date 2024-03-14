@@ -95,7 +95,7 @@ const DetailTableBodyItemTopTr = ({
               <>
                 <NoEventTableRow
                   itemStatus={itemInfo.itemStatus}
-                  hasNoCurrentEvent={itemInfo.hasNoCurrentEvent}
+                  hasNoUpcomingEvent={itemInfo.hasNoUpcomingEvent}
                   navigator={navigator}
                   colSpanSize={tableHeadEntriesWithoutDate.length}
                   phrase={noEventPhraseWeb}

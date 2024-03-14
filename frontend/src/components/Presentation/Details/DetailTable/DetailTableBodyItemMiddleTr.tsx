@@ -34,7 +34,7 @@ const DetailTableBodyItemMiddleTr = ({
       {itemInfo.itemStatus ? (
         <NoEventTableRow
           itemStatus={itemInfo.itemStatus}
-          hasNoCurrentEvent={itemInfo.hasNoCurrentEvent}
+          hasNoUpcomingEvent={itemInfo.hasNoUpcomingEvent}
           navigator={navigator}
           colSpanSize={mobileColSpanSize}
           phrase={noEventPhraseMobile}

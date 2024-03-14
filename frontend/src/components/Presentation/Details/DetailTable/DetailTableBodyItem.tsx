@@ -17,7 +17,7 @@ export interface IItem {
   item: IPresentationScheduleDetailInfo;
   itemStatus: itemType;
   itemDateInIDate: IDate;
-  hasNoCurrentEvent: boolean;
+  hasNoUpcomingEvent: boolean;
 }
 
 const DetailTableBodyItem = ({

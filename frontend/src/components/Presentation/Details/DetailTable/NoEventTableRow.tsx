@@ -6,13 +6,13 @@ import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 
 const NoEventTableRow = ({
   itemStatus,
-  hasNoCurrentEvent,
+  hasNoUpcomingEvent,
   navigator,
   colSpanSize,
   phrase,
 }: {
   itemStatus: itemType.NO_EVENT_CURRENT | itemType.NO_EVENT_PAST;
-  hasNoCurrentEvent: boolean;
+  hasNoUpcomingEvent: boolean;
   navigator: NavigateFunction;
   colSpanSize: number;
   phrase: {
@@ -22,15 +22,16 @@ const NoEventTableRow = ({
 }) => {
   return (
     <>
+      {/* TODO : event 관련 current -> upcoming */}
       <td className="rightEnd" colSpan={colSpanSize}>
-        <NoEventDivStyled hasNoCurrentEvent={hasNoCurrentEvent}>
-          <NoEventPhraseStyled hasNoCurrentEvent={hasNoCurrentEvent}>
+        <NoEventDivStyled hasNoUpcomingEvent={hasNoUpcomingEvent}>
+          <NoEventPhraseStyled hasNoUpcomingEvent={hasNoUpcomingEvent}>
             <div>{phrase[itemStatus]}</div>
-            <CcabiStyled hasNoCurrentEvent={hasNoCurrentEvent}>
-              {hasNoCurrentEvent ? <HappyCcabiImg /> : <SadCcabiImg />}
+            <CcabiStyled hasNoUpcomingEvent={hasNoUpcomingEvent}>
+              {hasNoUpcomingEvent ? <HappyCcabiImg /> : <SadCcabiImg />}
             </CcabiStyled>
           </NoEventPhraseStyled>
-          {hasNoCurrentEvent ? (
+          {hasNoUpcomingEvent && (
             <button
               onClick={() => {
                 navigator("/presentation/register");
@@ -38,7 +39,7 @@ const NoEventTableRow = ({
             >
               신청하기
             </button>
-          ) : null}
+          )}
         </NoEventDivStyled>
       </td>
     </>
@@ -47,10 +48,10 @@ const NoEventTableRow = ({
 
 export default NoEventTableRow;
 
-const NoEventDivStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
+const NoEventDivStyled = styled.div<{ hasNoUpcomingEvent: boolean }>`
   display: flex;
   justify-content: ${(props) =>
-    props.hasNoCurrentEvent ? "space-evenly" : "center"};
+    props.hasNoUpcomingEvent ? "space-evenly" : "center"};
   align-items: center;
 
   @media (max-width: 1150px) {
@@ -60,7 +61,7 @@ const NoEventDivStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
   }
 `;
 
-const NoEventPhraseStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
+const NoEventPhraseStyled = styled.div<{ hasNoUpcomingEvent: boolean }>`
   display: flex;
   align-items: center;
   padding: 0 10px;
@@ -72,7 +73,7 @@ const NoEventPhraseStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
   }
 `;
 
-const CcabiStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
+const CcabiStyled = styled.div<{ hasNoUpcomingEvent: boolean }>`
   width: 30px;
   height: 30px;
   display: flex;
@@ -88,6 +89,6 @@ const CcabiStyled = styled.div<{ hasNoCurrentEvent: boolean }>`
   }
 
   @media (max-width: 1220px) {
-    display: ${(props) => (props.hasNoCurrentEvent ? "none" : "")};
+    display: ${(props) => (props.hasNoUpcomingEvent ? "none" : "")};
   }
 `;
