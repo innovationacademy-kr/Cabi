@@ -65,7 +65,7 @@ const DetailContentContainer = () => {
       const response = await axiosGetPresentationSchedule(
         requestDate.year + "-" + requestDate.month
       );
-      let objAry = response.data.forms;
+      let objAry: IPresentationScheduleDetailInfo[] = response.data.forms;
       const availableDays = calculateAvailableDaysInWeeks(
         new Date(
           parseInt(todayDate!.year),

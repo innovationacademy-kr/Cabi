@@ -4,7 +4,6 @@ import { itemType } from "@/components/Presentation/Details/DetailTable/DetailTa
 import {
   IItem,
   noEventPhrase,
-  noEventPhraseMobile,
 } from "@/components/Presentation/Details/DetailTable/DetailTableBodyItem";
 import NoEventTableRow from "@/components/Presentation/Details/DetailTable/NoEventTableRow";
 import {

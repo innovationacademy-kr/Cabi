@@ -54,6 +54,12 @@ const DetailTableBodyItem = ({
   const [isItemOpen, setIsItemOpen] = useState<boolean>(false);
 
   useEffect(() => {
+    if (isItemOpen) {
+      setIsItemOpen(false);
+    }
+  }, [itemInfo]);
+
+  useEffect(() => {
     setIsItemOpen(clickedItem?.dateTime === itemInfo.item.dateTime);
   }, [clickedItem]);
 
