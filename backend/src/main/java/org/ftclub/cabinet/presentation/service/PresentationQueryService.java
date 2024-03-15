@@ -10,16 +10,11 @@ import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class PresentationQueryService {
-
-	private static final Integer DEFAULT_PAGE = 0;
-	private static final Integer DEFAULT_MINUS_YEAR = 10;
-	private static final String DATE_TIME = "dateTime";
 
 	private final PresentationRepository presentationRepository;
 
@@ -33,22 +28,9 @@ public class PresentationQueryService {
 			.collect(Collectors.toList());
 	}
 
-	public List<Presentation> getLatestPastPresentationsByCount(
-		LocalDateTime limitDate, int count) {
-		LocalDateTime start = limitDate.minusYears(DEFAULT_MINUS_YEAR);
-		PageRequest pageRequest =
-			PageRequest.of(DEFAULT_PAGE, count, Sort.by(DATE_TIME).descending());
-
-		return presentationRepository.findByDateTimeBetween(start, limitDate,
-			pageRequest);
-	}
-
-	public List<Presentation> getUpcomingPresentationByCount(LocalDateTime start, LocalDateTime end,
-		int count) {
-
-		PageRequest pageRequest =
-			PageRequest.of(DEFAULT_PAGE, count, Sort.by(DATE_TIME).ascending());
-
+	public List<Presentation> getPresentationsBetweenWithPageRequest(LocalDateTime start,
+		LocalDateTime end,
+		PageRequest pageRequest) {
 		return presentationRepository.findByDateTimeBetween(start, end, pageRequest);
 	}
 

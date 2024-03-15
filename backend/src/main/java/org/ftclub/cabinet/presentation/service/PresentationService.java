@@ -24,7 +24,9 @@ import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,14 +37,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class PresentationService {
 
 	private static final Integer START_DAY = 1;
+	private static final Integer DEFAULT_PAGE = 0;
 	// 쿼리로 받?
 	private static final Integer MAX_MONTH = 3;
-
+	private static final String DATE_TIME = "dateTime";
 	private final PresentationRepository presentationRepository;
 	private final PresentationPolicyService presentationPolicyService;
 	private final PresentationMapper presentationMapper;
 	private final PresentationQueryService presentationQueryService;
-
 	private final UserQueryService userQueryService;
 
 	/**
@@ -94,9 +96,13 @@ public class PresentationService {
 	public List<Presentation> getLatestPastPresentations(int count) {
 		LocalDate now = LocalDate.now();
 		LocalDateTime limit = now.atStartOfDay();
+		LocalDateTime start = limit.minusYears(10);
+		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
+			Sort.by(DATE_TIME).descending());
 
 		List<Presentation> presentations =
-			presentationQueryService.getLatestPastPresentationsByCount(limit, count);
+			presentationQueryService.getPresentationsBetweenWithPageRequest(start, limit,
+				pageRequest);
 
 		return presentations.stream()
 			.filter(presentation ->
@@ -114,9 +120,11 @@ public class PresentationService {
 		LocalDate now = LocalDate.now();
 		LocalDateTime start = now.atStartOfDay();
 		LocalDateTime end = start.plusMonths(MAX_MONTH);
+		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
+			Sort.by(DATE_TIME).ascending());
 
 		List<Presentation> presentations = presentationQueryService.
-			getUpcomingPresentationByCount(start, end, count);
+			getPresentationsBetweenWithPageRequest(start, end, pageRequest);
 
 		return presentations.stream()
 			.filter(presentation ->
