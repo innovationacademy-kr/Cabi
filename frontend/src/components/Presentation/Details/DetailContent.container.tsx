@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import DetailContent from "@/components/Presentation/Details/DetailContent";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
-import { axiosGetPresentationSchedule } from "@/api/axios/axios.custom";
+import {
+  axiosGetPresentationSchedule,
+  getAdminPresentationSchedule,
+} from "@/api/axios/axios.custom";
 import { calculateAvailableDaysInWeeks } from "@/utils/Presentation/dateUtils";
 import {
   AVAILABLE_WEEKS,
@@ -21,6 +25,8 @@ const DetailContentContainer = () => {
     IPresentationScheduleDetailInfo[] | null
   >(null);
   const firstPresentationDate: IDate = { year: "2024", month: "3", day: "1" };
+  const { pathname } = useLocation();
+  const isAdmin = pathname.includes("admin/presentation");
 
   useEffect(() => {
     const tmpTodayDate = makeIDateObj(new Date());
@@ -62,10 +68,15 @@ const DetailContentContainer = () => {
 
   const getPresentationSchedule = async (requestDate: IDate) => {
     try {
-      const response = await axiosGetPresentationSchedule(
-        requestDate.year + "-" + requestDate.month
-      );
+      const response = !isAdmin
+        ? await axiosGetPresentationSchedule(
+            requestDate.year + "-" + requestDate.month
+          )
+        : await getAdminPresentationSchedule(
+            requestDate.year + "-" + requestDate.month
+          );
       let objAry: IPresentationScheduleDetailInfo[] = response.data.forms;
+      console.log(objAry);
       const availableDays = calculateAvailableDaysInWeeks(
         new Date(
           parseInt(todayDate!.year),
