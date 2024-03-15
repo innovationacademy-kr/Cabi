@@ -29,8 +29,7 @@ const DetailTable = ({
     <TableStyled>
       <DetailTableHead
         isMobile={isMobile}
-        headEntries={tableHeadEntries}
-        isAdmin={isAdmin}
+        tableHeadEntries={tableHeadEntries}
       />
       <TableBodyStyled>
         <WhiteSpaceTrStyled />
