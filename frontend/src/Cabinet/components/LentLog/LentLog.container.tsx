@@ -1,10 +1,10 @@
-import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
-import useMenu from "@/Cabinet/hooks/useMenu";
 import { useEffect, useState } from "react";
 import LentLog from "@/Cabinet/components/LentLog/LentLog";
 import { LentLogResponseType } from "@/Cabinet/types/dto/lent.dto";
 import { axiosMyLentLog } from "@/Cabinet/api/axios/axios.custom";
-import { getTotalPage } from "@/Cabinet/@/Cabinet/constants/StatusCode;
+import useMenu from "@/Cabinet/hooks/useMenu";
+import { getTotalPage } from "@/Cabinet/utils/paginationUtils";
+import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const LentLogContainer = () => {
   const { closeLent } = useMenu();
