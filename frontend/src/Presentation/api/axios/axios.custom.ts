@@ -1,4 +1,4 @@
-import instance from "@/api/axios/axios.instance";
+import instance from "@/Cabinet/api/axios/axios.instance";
 
 /**
  * 수요지식회 (구 까비지식회) API

@@ -1,9 +1,9 @@
+import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import { toggleItem } from "@/Cabinet/components/Common/MultiToggleSwitch";
+import MultiToggleSwitchSeparated from "@/Cabinet/components/Common/MultiToggleSwitchSeparated";
 import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { toggleItem } from "@/components/Common/MultiToggleSwitch";
-import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
 import CautionIcon from "@/assets/images/cautionSign.svg";
 import { RegisterErrorModal } from "@/Presentation/components/Modals/RegisterModal/RegisterErrorModal";
 import RegisterModal from "@/Presentation/components/Modals/RegisterModal/RegisterModal";

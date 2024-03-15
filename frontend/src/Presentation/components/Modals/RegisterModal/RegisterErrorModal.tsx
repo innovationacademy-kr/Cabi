@@ -1,6 +1,6 @@
-import Modal, { IModalContents } from "@/components/Modals/Modal";
-import ModalPortal from "@/components/Modals/ModalPortal";
-import IconType from "@/types/enum/icon.type.enum";
+import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import IconType from "@/Cabinet/types/enum/icon.type.enum";
 
 export const RegisterErrorModal = ({
   title,

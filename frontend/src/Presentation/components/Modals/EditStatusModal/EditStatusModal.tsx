@@ -1,17 +1,17 @@
+import Button from "@/Cabinet/components/Common/Button";
+import Dropdown, {
+  IDropdown,
+  IDropdownOptions,
+} from "@/Cabinet/components/Common/Dropdown";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import Button from "@/components/Common/Button";
-import Dropdown, {
-  IDropdown,
-  IDropdownOptions,
-} from "@/components/Common/Dropdown";
-import ModalPortal from "@/components/Modals/ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
 import { currentPresentationState } from "@/Presentation/recoil/atoms";
 import {
   PresentationLocation,

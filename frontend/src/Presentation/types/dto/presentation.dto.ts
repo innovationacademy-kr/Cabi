@@ -1,4 +1,4 @@
-import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
+import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 import {
   PresentationCategoryType,
   PresentationLocation,

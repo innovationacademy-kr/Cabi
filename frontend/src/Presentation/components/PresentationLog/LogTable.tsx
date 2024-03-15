@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
+import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 import {
   PresentationLocationLabelMap,
   PresentationStatusTypeLabelMap,

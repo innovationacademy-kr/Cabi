@@ -1,12 +1,12 @@
-import { SetStateAction, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Modal, { IModalContents } from "@/components/Modals/Modal";
-import ModalPortal from "@/components/Modals/ModalPortal";
+import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
   FailResponseModal,
   SuccessResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
-import IconType from "@/types/enum/icon.type.enum";
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import { SetStateAction, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { axiosPostPresentationForm } from "@/Presentation/api/axios/axios.custom";
 
 const RegisterModal = ({

@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import styled, { css } from "styled-components";
+import { additionalModalType } from "@/Cabinet/assets/data/maps";
+import CabinetInfoAreaContainer from "@/Cabinet/components/CabinetInfoArea/CabinetInfoArea.container";
+import ClubMemberInfoAreaContainer fr@/assets/data/mapslub/ClubMemberInfoArea/ClubMemberInfoArea.container";
+import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import LeftNav from "@/Cabinet/components/LeftNav/LeftNav";
+import MapInfoContainer from "@/Cabinet/components/MapInfo/MapInfo.container";
+import OverduePenaltyModal from "@/Cabinet/components/Modals/OverduePenaltyModal/OverduePenaltyModal";
+import TopNavContainer from "@/Cabinet/components/TopNav/TopNav.container";
+import useMenu from "@/Cabinet/hooks/useMenu";
 import {
   myClubListState,
   serverTimeState,
   targetClubInfoState,
   userState,
-} from "@/recoil/atoms";
-import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
-import ClubMemberInfoAreaContainer from "@/components/Club/ClubMemberInfoArea/ClubMemberInfoArea.container";
-import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import LeftNav from "@/components/LeftNav/LeftNav";
-import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
-import OverduePenaltyModal from "@/components/Modals/OverduePenaltyModal/OverduePenaltyModal";
-import TopNavContainer from "@/components/TopNav/TopNav.container";
-import { additionalModalType } from "@/assets/data/maps";
+} from "@/Cabinet/recoil/atoms";
 import {
   ClubPaginationResponseDto,
   ClubResponseDto,
-} from "@/types/dto/club.dto";
-import { UserDto, UserInfo } from "@/types/dto/user.dto";
-import { axiosMyClubList, axiosMyInfo } from "@/api/axios/axios.custom";
-import { getCookie } from "@/api/react_cookie/cookies";
-import useMenu from "@/hooks/useMenu";
+} from "@/Cabinet/types/dto/club.dto";
+import { UserDto, UserInfo } from "@/Cabinet/types/dto/user.dto";
+import React, { useEffect, useState } from "react";
+import { Outlet } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import styled, { css } from "styled-components";
+import { axiosMyClubList, axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
+import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const token = getCookie("access_token");
 
