@@ -189,7 +189,7 @@ const MoreButtonStyled = styled.button`
     transform: translateY(-40%);
     width: 20px;
     height: 20px;
-    background: url(/src/assets/images/selectPurple.svg) no-repeat 100%;
+    background: url(/src/Cabinet/assets/images/selectPurple.svg) no-repeat 100%;
   }
 `;
 

@@ -137,7 +137,10 @@ const AvailablePage = () => {
             <LoadingAnimation />
           ) : (
             <>
-              <img src="/src/assets/images/rotateRight.svg" alt="새로고침" />
+              <img
+                src="/src/Cabinet/assets/images/rotateRight.svg"
+                alt="새로고침"
+              />
               <AvailableCountdown observeOpenTime={() => setIsOpenTime(true)} />
             </>
           )}

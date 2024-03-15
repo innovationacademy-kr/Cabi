@@ -1,4 +1,3 @@
-import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import React from "react";
 import { useRecoilValue } from "recoil";
 import styled, { css } from "styled-components";
@@ -21,6 +20,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
+import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import { CabinetPreviewInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";

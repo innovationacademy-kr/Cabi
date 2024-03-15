@@ -1,8 +1,8 @@
-import { ClubUserResponseDto } from "@/Cabinet/types/dto/club.dto";
 import { memo } from "react";
 import styled, { css } from "styled-components";
-import { ReactComponent as CrownImg } from "@/assets/images/crown.svg";
-import { ReactComponent as UserImg } from "@/assets/images/privateIcon.svg";
+import { ReactComponent as CrownImg } from "@/Cabinet/assets/images/crown.svg";
+import { ReactComponent as UserImg } from "@/Cabinet/assets/images/privateIcon.svg";
+import { ClubUserResponseDto } from "@/Cabinet/types/dto/club.dto";
 
 interface ClubMemberListItemProps {
   bgColor?: string;

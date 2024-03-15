@@ -3,7 +3,7 @@ import styled from "styled-components";
 const NoSearch = () => (
   <WraaperStyled>
     <NoSearchStyled>
-      <img src="/src/assets/images/logoBlack.svg" alt="로고 블랙" />
+      <img src="/src/Cabinet/assets/images/logoBlack.svg" alt="로고 블랙" />
       <p>검색 결과가 없습니다</p>
     </NoSearchStyled>
   </WraaperStyled>

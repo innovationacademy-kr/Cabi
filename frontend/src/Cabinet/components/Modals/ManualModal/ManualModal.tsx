@@ -1,8 +1,8 @@
-import { ReactComponent as MoveBtnImg } from "@/assets/images/moveButton.svg";
 import React from "react";
 import { useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
+import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
 interface ModalProps {

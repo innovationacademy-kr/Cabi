@@ -1,5 +1,5 @@
 import LoginTemplate from "@/Cabinet/components/Login/LoginTemplate";
-import "@/assets/css/loginPage.css";
+import "@/Cabinet/assets/css/loginPage.css";
 
 const LoginPage = () => {
   const ORIGIN_URL = window.location.origin;
@@ -10,7 +10,7 @@ const LoginPage = () => {
       url={`${url}?redirect=${ORIGIN_URL}/post-login`}
       pageTitle="Cabi"
       pageSubTitle="여러분의 일상을 가볍게"
-      imgSrc="/src/assets/images/loginImg.svg"
+      imgSrc="/src/Cabinet/assets/images/loginImg.svg"
     />
   );
 };

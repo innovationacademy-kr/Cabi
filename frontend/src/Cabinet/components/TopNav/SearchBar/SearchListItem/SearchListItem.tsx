@@ -1,6 +1,6 @@
-import ChangeToHTML from "@/Cabinet/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import ChangeToHTML from "@/Cabinet/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 
 const SearchListItem = (props: {
   floor?: number;
@@ -21,8 +21,8 @@ const SearchListItem = (props: {
   const navigate = useNavigate();
 
   const chooseImage = (isCabinet: boolean | undefined) => {
-    if (isCabinet) return "/src/assets/images/cabinet.svg";
-    return "/src/assets/images/privateIcon.svg";
+    if (isCabinet) return "/src/Cabinet/assets/images/cabinet.svg";
+    return "/src/Cabinet/assets/images/privateIcon.svg";
   };
 
   return (

@@ -34,30 +34,30 @@ const PresentationCardContainer = ({
 
   const presentationCategoryIcon = [
     {
-      name: "/src/assets/images/PresentationFortyTwo.svg",
+      name: "/src/Cabinet/assets/images/PresentationFortyTwo.svg",
       key: PresentationCategoryType.TASK,
     },
     {
-      name: "/src/assets/images/PresentationDevelop.svg",
+      name: "/src/Cabinet/assets/images/PresentationDevelop.svg",
       key: PresentationCategoryType.DEVELOP,
     },
     {
-      name: "/src/assets/images/PresentationAcademic.svg",
+      name: "/src/Cabinet/assets/images/PresentationAcademic.svg",
       key: PresentationCategoryType.STUDY,
     },
     {
-      name: "/src/assets/images/PresentationHobby.svg",
+      name: "/src/Cabinet/assets/images/PresentationHobby.svg",
       key: PresentationCategoryType.HOBBY,
     },
     {
-      name: "/src/assets/images/PresentationJob.svg",
+      name: "/src/Cabinet/assets/images/PresentationJob.svg",
       key: PresentationCategoryType.JOB,
     },
     {
-      name: "/src/assets/images/PresentationEtc.svg",
+      name: "/src/Cabinet/assets/images/PresentationEtc.svg",
       key: PresentationCategoryType.ETC,
     },
-    { name: "/src/assets/images/PresentationEmpty.svg", key: "" },
+    { name: "/src/Cabinet/assets/images/PresentationEmpty.svg", key: "" },
   ];
 
   const searchCategory = (categoryName: string): string | undefined => {

@@ -1,4 +1,3 @@
-import useMenu from "@/hooks/useMenu";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -6,7 +5,8 @@ import styled from "styled-components";
 import { currentFloorNumberState } from "@/Cabinet/recoil/atoms";
 import { currentBuildingFloorState } from "@/Cabinet/recoil/selectors";
 import { ISectionInfo } from "@/Cabinet/assets/data/mapPositionData";
-import SectionType fr@/Cabinet/hooks/useMenuypes/enum/map.type.enum";
+import SectionType from "@/Cabinet/types/enum/map.type.enum";
+import useMenu from "@/Cabinet/hooks/useMenu";
 
 const MapItem: React.FC<{
   floor: number;
@@ -78,7 +78,7 @@ const ItemStyled = styled.div<{
 const IconContainerStyled = styled.div`
   width: 100%;
   height: 48px;
-  background-image: url("/src/assets/images/stairs.svg");
+  background-image: url("/src/Cabinet/assets/images/stairs.svg");
   background-size: contain;
   background-repeat: no-repeat;
 `;

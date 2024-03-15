@@ -1,6 +1,6 @@
+import styled from "styled-components";
 import MapFloorSelect from "@/Cabinet/components/MapInfo/MapFloorSelect/MapFloorSelect";
 import MapGrid from "@/Cabinet/components/MapInfo/MapGrid/MapGrid";
-import styled from "styled-components";
 
 const MapInfo = ({
   touchStart,
@@ -28,7 +28,7 @@ const MapInfo = ({
         <img
           className="cabiButton"
           onClick={closeMap}
-          src="/src/assets/images/exitButton.svg"
+          src="/src/Cabinet/assets/images/exitButton.svg"
           alt=""
           style={{ width: "24px", cursor: "pointer" }}
         />

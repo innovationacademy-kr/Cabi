@@ -1,8 +1,8 @@
-import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { useState } from "react";
 import styled from "styled-components";
-import { ReactComponent as LoginImg } from "@/assets/images/loginImg.svg";
-import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
+import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import { ReactComponent as LoginImg } from "@/Cabinet/assets/images/loginImg.svg";
+import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 
 const LoginTemplate = (props: {
   url: string;

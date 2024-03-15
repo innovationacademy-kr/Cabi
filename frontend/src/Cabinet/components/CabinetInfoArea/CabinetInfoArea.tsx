@@ -1,6 +1,3 @@
-import alertImg from "@/assets/images/cautionSign.svg";
-import { ReactComponent as ExtensionImg } from "@/assets/images/extensionTicket.svg";
-import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import React from "react";
 import styled, { css } from "styled-components";
 import {
@@ -25,6 +22,9 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
+import alertImg from "@/Cabinet/assets/images/cautionSign.svg";
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extensionTicket.svg";
+import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 

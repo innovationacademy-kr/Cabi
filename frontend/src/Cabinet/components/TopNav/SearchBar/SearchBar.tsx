@@ -218,7 +218,8 @@ const SearchBarInputStyled = styled.input`
 `;
 
 const SearchButtonStyled = styled.button`
-  background: url("/src/assets/images/searchWhite.svg") no-repeat 50% 50%;
+  background: url("/src/Cabinet/assets/images/searchWhite.svg") no-repeat 50%
+    50%;
   width: 32px;
   height: 32px;
   position: absolute;

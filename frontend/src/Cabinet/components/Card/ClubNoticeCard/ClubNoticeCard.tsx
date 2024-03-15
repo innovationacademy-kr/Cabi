@@ -1,8 +1,8 @@
+import { useState } from "react";
+import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import { CardContentWrapper } from "@/Cabinet/components/Card/CardStyles";
 import ClubMemoModalContainer from "@/Cabinet/components/Modals/ClubModal/ClubMemoModal.container";
-import { useState } from "react";
-import styled from "styled-components";
 
 const ClubNoticeCard = ({
   notice,
@@ -30,7 +30,7 @@ const ClubNoticeCard = ({
             ? [
                 {
                   onClick: openModal,
-                  icon: "/src/assets/images/edit.svg",
+                  icon: "/src/Cabinet/assets/images/edit.svg",
                   isClickable: true,
                 },
               ]

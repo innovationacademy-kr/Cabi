@@ -33,7 +33,7 @@ const RealViewNotification: React.FC<{ colNum: number }> = (props) => {
 };
 
 const ToolTipIcon = styled.div<{ hasEnoughWidth: boolean }>`
-  background-image: url("/src/assets/images/cautionSign.svg");
+  background-image: url("/src/Cabinet/assets/images/cautionSign.svg");
   width: 24px;
   height: 24px;
   margin: 0px auto;

@@ -13,7 +13,7 @@ interface ContentStatusData {
 export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.PRIVATE]: {
     contentTitle: "개인 사물함",
-    imagePath: "/src/assets/images/privateIcon.svg",
+    imagePath: "/src/Cabinet/assets/images/privateIcon.svg",
     background: "linear-gradient(to bottom, #A17BF3, #8337E5)",
     rentalPeriod: `${import.meta.env.VITE_PRIVATE_LENT_PERIOD}일`,
     capacity: "1인",
@@ -34,7 +34,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.SHARE]: {
     contentTitle: "공유 사물함",
-    imagePath: "/src/assets/images/shareIcon.svg",
+    imagePath: "/src/Cabinet/assets/images/shareIcon.svg",
     background: "linear-gradient(to bottom, #7EBFFB, #406EE4)",
     rentalPeriod: `${import.meta.env.VITE_SHARE_LENT_PERIOD}일 + n * ${
       import.meta.env.VITE_SHARE_BONUS_PER_PERSON
@@ -63,7 +63,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.CLUB]: {
     contentTitle: "동아리 사물함",
-    imagePath: "/src/assets/images/clubIcon.svg",
+    imagePath: "/src/Cabinet/assets/images/clubIcon.svg",
     background: "linear-gradient(to bottom, #F473B1, #D72766)",
     rentalPeriod: "상세내용 참조",
     capacity: "동아리",
@@ -106,7 +106,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.IN_SESSION]: {
     contentTitle: "대기중",
-    imagePath: "/src/assets/images/clock.svg",
+    imagePath: "/src/Cabinet/assets/images/clock.svg",
     background: "#F5F5F7",
     contentText: `<span>◦ 상세 내용</span><br/>
     <div>공유 사물함 대여 시 <strong>10분</strong>간의 대기 시간이 발생합니다.<br/>
@@ -126,7 +126,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.EXTENSION]: {
     contentTitle: "연장권 이용방법 안내서",
-    imagePath: "/src/assets/images/extension.svg",
+    imagePath: "/src/Cabinet/assets/images/extension.svg",
     background: "#F5F5F7",
     contentText: `<span>◦ 연장권 취득 조건</span><br/>
     <div>

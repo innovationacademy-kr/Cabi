@@ -78,7 +78,10 @@ const PresentationCardMobile = ({
                       <NameStyled>{p.userName} </NameStyled>
                       <CalendarStyled>
                         <IconStyled>
-                          <img src="/src/assets/images/calendar.svg" alt="" />
+                          <img
+                            src="/src/Cabinet/assets/images/calendar.svg"
+                            alt=""
+                          />
                         </IconStyled>
                         <span>
                           {tmpDate?.month}/{tmpDate?.day}

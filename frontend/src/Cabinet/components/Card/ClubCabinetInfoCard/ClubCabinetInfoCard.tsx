@@ -1,3 +1,5 @@
+import { useState } from "react";
+import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import {
   CardContentStyled,
@@ -5,8 +7,6 @@ import {
 } from "@/Cabinet/components/Card/CardStyles";
 import ClubPasswordModalContainer from "@/Cabinet/components/Modals/ClubModal/ClubPasswordModal.container";
 import { ClubInfoResponseDto } from "@/Cabinet/types/dto/club.dto";
-import { useState } from "react";
-import styled from "styled-components";
 
 const ClubCabinetInfoCard = ({
   clubInfo,
@@ -35,7 +35,7 @@ const ClubCabinetInfoCard = ({
             ? [
                 {
                   onClick: handleLockLogoClick,
-                  icon: "/src/assets/images/lock.svg",
+                  icon: "/src/Cabinet/assets/images/lock.svg",
                   isClickable: true,
                 },
               ]
@@ -150,7 +150,7 @@ const CabinetIconStyled = styled.div`
   width: 22px;
   height: 18px;
   margin-right: 0.5rem;
-  background-image: url("/src/assets/images/leader.svg");
+  background-image: url("/src/Cabinet/assets/images/leader.svg");
   background-size: contain;
   background-repeat: no-repeat;
 `;

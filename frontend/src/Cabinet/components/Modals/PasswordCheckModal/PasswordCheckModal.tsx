@@ -1,8 +1,8 @@
-import { ReactComponent as CheckIcon } from "@/assets/images/checkIcon.svg";
 import React from "react";
 import styled, { css } from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import { ReactComponent as CheckIcon } from "@/Cabinet/assets/images/checkIcon.svg";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
 
 const PasswordCheckModal: React.FC<{

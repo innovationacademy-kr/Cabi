@@ -1,6 +1,6 @@
+import styled, { css } from "styled-components";
 import LogTable from "@/Cabinet/components/LentLog/LogTable/LogTable";
 import { ILentLog } from "@/Cabinet/types/dto/lent.dto";
-import styled, { css } from "styled-components";
 
 const AdminUserLentLog = ({
   closeLent,
@@ -23,7 +23,10 @@ const AdminUserLentLog = ({
         >
           <ImgCenterStyled>
             <ImageStyled>
-              <img src="/src/assets/images/LeftSectionButton.svg" alt="" />
+              <img
+                src="/src/Cabinet/assets/images/LeftSectionButton.svg"
+                alt=""
+              />
             </ImageStyled>
           </ImgCenterStyled>
         </PageButtonStyled>
@@ -36,7 +39,10 @@ const AdminUserLentLog = ({
         >
           <ImgCenterStyled>
             <ImageStyled>
-              <img src="/src/assets/images/LeftSectionButton.svg" alt="" />
+              <img
+                src="/src/Cabinet/assets/images/LeftSectionButton.svg"
+                alt=""
+              />
             </ImageStyled>
           </ImgCenterStyled>
         </PageButtonStyled>

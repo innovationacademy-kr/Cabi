@@ -32,7 +32,7 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
           </div>
         )}
         <p style={{ paddingLeft: "10px" }}>{currentName}</p>
-        <img src="/src/assets/images/dropdownChevron.svg" />
+        <img src="/src/Cabinet/assets/images/dropdownChevron.svg" />
       </DropdownSelectionBoxStyled>
       <DropdownItemContainerStyled isVisible={isOpen}>
         {options?.map((option) => {

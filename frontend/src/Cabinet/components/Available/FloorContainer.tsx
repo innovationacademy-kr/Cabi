@@ -1,9 +1,9 @@
-import AdminCabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/AdminCabinetListItem";
-import CabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/CabinetListItem";
-import { CabinetPreviewInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import AdminCabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/AdminCabinetListItem";
+import CabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/CabinetListItem";
+import { CabinetPreviewInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
 // 하나의 층에 대한 타이틀과 캐비넷 리스트를 담고 있는 컴포넌트
 const FloorContainer = ({
@@ -40,7 +40,10 @@ const FloorContainer = ({
       ) : (
         <NoAvailableCabinetMessageStyled isToggled={isToggled}>
           <p>해당 층에는 사용 가능한 사물함이 없습니다 </p>
-          <img src="/src/assets/images/sadCcabi.png" alt="noAvailable" />
+          <img
+            src="/src/Cabinet/assets/images/sadCcabi.png"
+            alt="noAvailable"
+          />
         </NoAvailableCabinetMessageStyled>
       )}
     </FloorContainerStyled>
@@ -67,7 +70,8 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
     z-index: 2;
     height: 30px;
     width: 20px;
-    background: url(/src/assets/images/select.svg) no-repeat center center;
+    background: url(/src/Cabinet/assets/images/select.svg) no-repeat center
+      center;
     transform: ${(props) =>
       props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
   }

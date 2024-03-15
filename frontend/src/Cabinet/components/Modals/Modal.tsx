@@ -1,10 +1,10 @@
-import { ReactComponent as CheckIcon } from "@/assets/images/checkIcon.svg";
-import { ReactComponent as ErrorIcon } from "@/assets/images/errorIcon.svg";
-import { ReactComponent as NotificationIcon } from "@/assets/images/notificationSign.svg";
 import React, { ReactElement } from "react";
 import styled, { css } from "styled-components";
 import AdminClubLogContainer from "@/Cabinet/components/Club/AdminClubLog.container";
 import Button from "@/Cabinet/components/Common/Button";
+import { ReactComponent as CheckIcon } from "@/Cabinet/assets/images/checkIcon.svg";
+import { ReactComponent as ErrorIcon } from "@/Cabinet/assets/images/errorIcon.svg";
+import { ReactComponent as NotificationIcon } from "@/Cabinet/assets/images/notificationSign.svg";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
 

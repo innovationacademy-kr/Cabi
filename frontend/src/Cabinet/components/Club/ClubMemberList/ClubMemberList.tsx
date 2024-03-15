@@ -1,3 +1,6 @@
+import { useRecoilValue } from "recoil";
+import styled from "styled-components";
+import { targetClubUserInfoState, userState } from "@/Cabinet/recoil/atoms";
 import {
   ICurrentClubMemberModalStateInfo,
   TClubMemberModalState,
@@ -5,11 +8,8 @@ import {
 import ClubMemberListItem from "@/Cabinet/components/Club/ClubMemberList/ClubMemberListItem/ClubMemberListItem";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import AddClubMemberModalContainer from "@/Cabinet/components/Modals/ClubModal/AddClubMemberModal.container";
-import { targetClubUserInfoState, userState } from "@/Cabinet/recoil/atoms";
+import { ReactComponent as Select } from "@/Cabinet/assets/images/selectMaincolor.svg";
 import { ClubUserResponseDto } from "@/Cabinet/types/dto/club.dto";
-import { useRecoilValue } from "recoil";
-import styled from "styled-components";
-import { ReactComponent as Select } from "@/assets/images/selectMaincolor.svg";
 
 interface ClubMemberListProps {
   isLoading: boolean;
@@ -45,7 +45,9 @@ const ClubMemberList = ({
         <TitleContainerStyled>
           <p>동아리 멤버</p>
           <UserCountContainerStyled>
-            <UserCountImgStyled src={"/src/assets/images/shareIcon.svg"} />
+            <UserCountImgStyled
+              src={"/src/Cabinet/assets/images/shareIcon.svg"}
+            />
             <UserCountTextStyled id="membersLength">
               {clubUserCount}
             </UserCountTextStyled>

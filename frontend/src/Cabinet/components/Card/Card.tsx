@@ -97,7 +97,7 @@ export const CardTitleStyled = styled.div`
 `;
 
 const ToolTipIcon = styled.div`
-  background-image: url("/src/assets/images/notificationSign_grey.svg");
+  background-image: url("/src/Cabinet/assets/images/notificationSign_grey.svg");
   background-size: contain;
   width: 16px;
   height: 16px;

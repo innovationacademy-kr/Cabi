@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ReactComponent as ClockImg } from "@/assets/images/clock.svg";
+import { ReactComponent as ClockImg } from "@/Cabinet/assets/images/clock.svg";
 
 interface CountTimeProps {
   minutes: string;

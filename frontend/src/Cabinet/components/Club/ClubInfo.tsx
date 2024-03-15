@@ -1,4 +1,3 @@
-import useClubInfo from "@/hooks/useClubInfo";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -7,7 +6,8 @@ import ClubCabinetInfoCard from "@/Cabinet/components/Card/ClubCabinetInfoCard/C
 import ClubNoticeCard from "@/Cabinet/components/Card/ClubNoticeCard/ClubNoticeCard";
 import ClubMemberListContainer from "@/Cabinet/components/Club/ClubMemberList/ClubMemberList.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { ClubInfoResponse@/Cabinet/hooks/useClubInfoet/types/dto/club.dto";
+import { ClubInfoResponseDto } from "@/Cabinet/types/dto/club.dto";
+import useClubInfo from "@/Cabinet/hooks/useClubInfo";
 import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const ClubInfo = () => {
@@ -30,7 +30,7 @@ const ClubInfo = () => {
         <EmptyClubCabinetTextStyled>
           동아리 사물함이 없어요
           <SadCcabiStyled>
-            <img src="/src/assets/images/sadCcabi.png" />
+            <img src="/src/Cabinet/assets/images/sadCcabi.png" />
           </SadCcabiStyled>
         </EmptyClubCabinetTextStyled>
       ) : (

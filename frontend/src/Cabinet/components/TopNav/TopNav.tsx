@@ -1,9 +1,9 @@
-import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import React from "react";
 import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
 import SearchBar from "@/Cabinet/components/TopNav/SearchBar/SearchBar";
 import TopNavButtonGroup from "@/Cabinet/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
+import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import useOutsideClick from "@/Cabinet/hooks/useOutsideClick";
 
 interface IBuildingListItem {
@@ -140,7 +140,7 @@ const BuildingSelectBoxStyled = styled.span`
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
-    background: url(/src/assets/images/select.svg) no-repeat 100%;
+    background: url(/src/Cabinet/assets/images/select.svg) no-repeat 100%;
   }
 `;
 

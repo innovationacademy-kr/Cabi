@@ -36,9 +36,9 @@ const AnnounceTemplate = (props: Itext) => {
       <TitleStyled>{title}</TitleStyled>
       <CabiImgStyled>
         {type === "ERROR" ? (
-          <img src="/src/assets/images/sadCcabiWhite.png"></img>
+          <img src="/src/Cabinet/assets/images/sadCcabiWhite.png"></img>
         ) : (
-          <img src="/src/assets/images/happyCcabiWhite.png"></img>
+          <img src="/src/Cabinet/assets/images/happyCcabiWhite.png"></img>
         )}
       </CabiImgStyled>
       <SubTitleStyled>{subTitle}</SubTitleStyled>

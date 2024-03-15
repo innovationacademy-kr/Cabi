@@ -90,7 +90,7 @@ const AdminReturnModal: React.FC<{
 
   const renderSelector = () => (
     <Selector
-      iconSrc="/src/assets/images/shareIcon.svg"
+      iconSrc="/src/Cabinet/assets/images/shareIcon.svg"
       selectList={targetCabinetInfo.lents.map((info) => {
         return { key: info.userId, value: info.name };
       })}

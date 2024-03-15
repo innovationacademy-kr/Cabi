@@ -20,7 +20,7 @@ const WarningNotification: React.FC<WarningNotificationProps> = ({
 
 const WarningIcon = styled.div<{ isVisible: boolean }>`
   display: ${({ isVisible }) => (isVisible ? "block" : "none")};
-  background-image: url("/src/assets/images/warningTriangleIcon.svg");
+  background-image: url("/src/Cabinet/assets/images/warningTriangleIcon.svg");
   width: 24px;
   height: 24px;
   margin: 0px auto;
@@ -47,7 +47,7 @@ const WarningBox = styled.div`
   white-space: pre-line;
   z-index: 100;
   transition: visibility 0.5s, color 0.5s, background-color 0.5s, width 0.5s,
-  padding 0.5s ease-in-out;
+    padding 0.5s ease-in-out;
 `;
 
 const WarningWrapper = styled.div<{ isVisible: boolean }>`
@@ -62,9 +62,9 @@ const WarningWrapper = styled.div<{ isVisible: boolean }>`
     background-color: rgba(0, 0, 0, 0.8);
     &:before {
       border-color: transparent transparent rgba(0, 0, 0, 0.8)
-      rgba(0, 0, 0, 0.8);
+        rgba(0, 0, 0, 0.8);
     }
   }
 `;
-  
+
 export default WarningNotification;

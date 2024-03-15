@@ -1,8 +1,8 @@
-import { ReactComponent as ClockImg } from "@/assets/images/clock.svg";
-import { ReactComponent as ManualPeopleImg } from "@/assets/images/manualPeople.svg";
-import { ReactComponent as MoveBtnImg } from "@/assets/images/moveButton.svg";
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
+import { ReactComponent as ClockImg } from "@/Cabinet/assets/images/clock.svg";
+import { ReactComponent as ManualPeopleImg } from "@/Cabinet/assets/images/manualPeople.svg";
+import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
 interface MaunalContentBoxProps {

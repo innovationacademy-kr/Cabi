@@ -1,7 +1,7 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
-import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
-import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
+import { ReactComponent as HappyCcabiImg } from "@/Cabinet/assets/images/happyCcabi.svg";
+import { ReactComponent as SadCcabiImg } from "@/Cabinet/assets/images/sadCcabi.svg";
 import { itemType } from "@/Presentation/components/Details/DetailTable/DetailTable.container";
 
 const NoEventTableRow = ({

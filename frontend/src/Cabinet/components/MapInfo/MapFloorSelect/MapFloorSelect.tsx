@@ -1,5 +1,5 @@
-import MapFloorSelectOption from "@/Cabinet/components/MapInfo/MapFloorSelectOption/MapFloorSelectOption";
 import styled from "styled-components";
+import MapFloorSelectOption from "@/Cabinet/components/MapInfo/MapFloorSelectOption/MapFloorSelectOption";
 
 interface IMapFloorSelect {
   floor: number;
@@ -29,8 +29,8 @@ const MapFloorSelect = ({ floor, setFloor, floorInfo }: IMapFloorSelect) => {
 };
 
 const MapFloorSelectStyled = styled.div`
-  background: url("/src/assets/images/select.svg") var(--main-color) no-repeat
-    80% 55%;
+  background: url("/src/Cabinet/assets/images/select.svg") var(--main-color)
+    no-repeat 80% 55%;
   color: white;
   cursor: pointer;
   width: 65px;

@@ -1,10 +1,10 @@
-import useMenu from "@/hooks/useMenu";
-import { useEffect, u@/Cabinet/hooks/useMenu"react";
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
 import AdminUserLentLog from "@/Cabinet/components/LentLog/AdminUserLentLog";
 import { LentLogResponseType } from "@/Cabinet/types/dto/lent.dto";
 import { axiosGetUserLentLog } from "@/Cabinet/api/axios/axios.custom";
+import useMenu from "@/Cabinet/hooks/useMenu";
 import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const AdminUserLentLogContainer = () => {

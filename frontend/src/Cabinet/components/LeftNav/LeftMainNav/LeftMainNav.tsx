@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { ReactComponent as LogoutImg } from "@/assets/images/close-square.svg";
-import { ReactComponent as CulbImg } from "@/assets/images/clubIconGray.svg";
-import { ReactComponent as ProfileImg } from "@/assets/images/profile-circle.svg";
-import { ReactComponent as SearchImg } from "@/assets/images/search.svg";
-import { ReactComponent as SlackImg } from "@/assets/images/slack.svg";
+import { ReactComponent as LogoutImg } from "@/Cabinet/assets/images/close-square.svg";
+import { ReactComponent as CulbImg } from "@/Cabinet/assets/images/clubIconGray.svg";
+import { ReactComponent as ProfileImg } from "@/Cabinet/assets/images/profile-circle.svg";
+import { ReactComponent as SearchImg } from "@/Cabinet/assets/images/search.svg";
+import { ReactComponent as SlackImg } from "@/Cabinet/assets/images/slack.svg";
 
 interface ILeftMainNav {
   pathname: string;

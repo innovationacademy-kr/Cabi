@@ -4,7 +4,7 @@ const EmptySection = ({ message }: { message: string }): JSX.Element => {
   return (
     <EmptySectionStyled>
       <CabiImageStyled
-        src="/src/assets/images/happyCcabi.png"
+        src="/src/Cabinet/assets/images/happyCcabi.png"
         alt="happy cabi"
       />
       <ContentStyled>{message}</ContentStyled>

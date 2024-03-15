@@ -30,7 +30,7 @@ const ClubListDropd = ({
           </div>
         )}
         <p style={{ paddingLeft: "10px" }}>{currentName}</p>
-        <img src="/src/assets/images/ClubListDropdChevron.svg" />
+        <img src="/src/Cabinet/assets/images/ClubListDropdChevron.svg" />
       </ClubListDropdSelectionBoxStyled>
       <ClubListDropdItemContainerStyled isVisible={isOpen}>
         {options?.map((option) => {

@@ -1,10 +1,10 @@
-import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
-import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import alertImg from "@/assets/images/cautionSign.svg";
-import { ReactComponent as ClockImg } from "@/assets/images/clock.svg";
+import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
+import alertImg from "@/Cabinet/assets/images/cautionSign.svg";
+import { ReactComponent as ClockImg } from "@/Cabinet/assets/images/clock.svg";
+import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 
 interface CountTimeProps {
   minutes: string;

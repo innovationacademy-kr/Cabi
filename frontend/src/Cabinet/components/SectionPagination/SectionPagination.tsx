@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
+import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
 
 const SectionPagination: React.FC<{
   currentSectionName: string;

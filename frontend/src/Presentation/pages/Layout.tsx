@@ -1,6 +1,6 @@
 import { additionalModalType } from "@/Cabinet/assets/data/maps";
 import CabinetInfoAreaContainer from "@/Cabinet/components/CabinetInfoArea/CabinetInfoArea.container";
-import ClubMemberInfoAreaContainer fr@/assets/data/mapslub/ClubMemberInfoArea/ClubMemberInfoArea.container";
+import ClubMemberInfoAreaContainer fr@/Cabinet/assets/data/mapslub/ClubMemberInfoArea/ClubMemberInfoArea.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import LeftNav from "@/Cabinet/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/Cabinet/components/MapInfo/MapInfo.container";

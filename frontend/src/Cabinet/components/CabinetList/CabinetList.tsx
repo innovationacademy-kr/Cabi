@@ -46,7 +46,7 @@ const AdminToggleButtonStyled = styled.div`
   bottom: 40px;
   right: 40px;
   cursor: pointer;
-  background-image: url("/src/assets/images/proceedMultiSelect.svg");
+  background-image: url("/src/Cabinet/assets/images/proceedMultiSelect.svg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
 `;

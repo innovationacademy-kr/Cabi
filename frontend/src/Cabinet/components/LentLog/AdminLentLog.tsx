@@ -36,7 +36,10 @@ const AdminLentLog = ({ lentType }: { lentType: string }) => {
         <TitleStyled isClick={isSearchPage} onClick={switchLentType}>
           {isSearchPage && (
             <ImageStyled>
-              <img src="/src/assets/images/LeftSectionButton.svg" alt="" />
+              <img
+                src="/src/Cabinet/assets/images/LeftSectionButton.svg"
+                alt=""
+              />
             </ImageStyled>
           )}
           {getLentTypeText(togglelentType)} 대여 기록

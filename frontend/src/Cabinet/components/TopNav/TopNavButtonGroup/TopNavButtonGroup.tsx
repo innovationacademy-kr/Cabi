@@ -94,7 +94,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
       {import.meta.env.VITE_UNBAN === "true" && (
         <TopNavButton
           onClick={() => axiosDeleteCurrentBanLog(myInfo.userId)}
-          imgSrc="/src/assets/images/happyCcabiWhite.png"
+          imgSrc="/src/Cabinet/assets/images/happyCcabiWhite.png"
           width="32px"
           height="32px"
         />
@@ -103,7 +103,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
         <TopNavButton
           id="searchButton"
           onClick={clickSearchButton}
-          imgSrc="/src/assets/images/searchWhite.svg"
+          imgSrc="/src/Cabinet/assets/images/searchWhite.svg"
           width="28px"
           height="28px"
           disable={true}
@@ -113,10 +113,13 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
         <TopNavButton
           disable={!myInfo.cabinetId}
           onClick={clickMyCabinet}
-          imgSrc="/src/assets/images/myCabinetIcon.svg"
+          imgSrc="/src/Cabinet/assets/images/myCabinetIcon.svg"
         />
       )}
-      <TopNavButton onClick={toggleMap} imgSrc="/src/assets/images/map.svg" />
+      <TopNavButton
+        onClick={toggleMap}
+        imgSrc="/src/Cabinet/assets/images/map.svg"
+      />
     </NaviButtonsStyled>
   );
 };

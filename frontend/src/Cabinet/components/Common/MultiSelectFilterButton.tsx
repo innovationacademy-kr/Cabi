@@ -17,8 +17,8 @@ const MultiSelectFilterButton = ({
         <FilterIconStyled
           src={
             theme === "line"
-              ? "/src/assets/images/selectFilterIconOff.svg"
-              : "/src/assets/images/selectFilterIconOn.svg"
+              ? "/src/Cabinet/assets/images/selectFilterIconOff.svg"
+              : "/src/Cabinet/assets/images/selectFilterIconOn.svg"
           }
         />
       </FilterIconWrapperStyled>

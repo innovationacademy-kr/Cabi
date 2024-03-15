@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
+import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 
 const SearchDefault = () => (
   <WraaperStyled>

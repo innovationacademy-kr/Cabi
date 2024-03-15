@@ -1,9 +1,6 @@
-import { STATUS_401_UNAUTHORIZED } from "@/constants/StatusCode";
 import axios from "axios";
-import {
-  getCookie,
-  removeCookie,
-} from "@/Cabinet/constants/StatusCodeokie/cookies";
+import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
+import { STATUS_401_UNAUTHORIZED } from "@/Cabinet/constants/StatusCode";
 
 axios.defaults.withCredentials = true;
 

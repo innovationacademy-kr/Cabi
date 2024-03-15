@@ -1,13 +1,13 @@
-import { axiosAdminAuthLogin } from "@/Cabinet/api/axios/axios.custom";
-import { additionalModalType } from "@/Cabinet/assets/data/maps";
-import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import UnavailableModal from "@/Cabinet/components/Modals/UnavailableModal/UnavailableModal";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { ReactComponent as AdminLoginImg } from "@/assets/images/adminLoginImg.svg";
-import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
+import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import UnavailableModal from "@/Cabinet/components/Modals/UnavailableModal/UnavailableModal";
+import { additionalModalType } from "@/Cabinet/assets/data/maps";
+import { ReactComponent as AdminLoginImg } from "@/Cabinet/assets/images/adminLoginImg.svg";
+import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
+import { axiosAdminAuthLogin } from "@/Cabinet/api/axios/axios.custom";
 
 const AdminLoginTemplate = (props: {
   url: string;

@@ -1,8 +1,8 @@
+import styled, { css } from "styled-components";
 import ClubLogTable from "@/Cabinet/components/Club/ClubLogTable";
 import { MoveSectionButtonStyled } from "@/Cabinet/components/SectionPagination/SectionPagination";
+import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
 import { IClubLog } from "@/Cabinet/types/dto/lent.dto";
-import styled, { css } from "styled-components";
-import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 
 const AdminClubLog = ({
   logs,

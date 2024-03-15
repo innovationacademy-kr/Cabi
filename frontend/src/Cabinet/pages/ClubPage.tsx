@@ -1,11 +1,11 @@
-import ClubInfo from "@/Cabinet/components/Club/ClubInfo";
-import { myClubListState } from "@/Cabinet/recoil/atoms";
-import { ClubPaginationResponseDto } from "@/Cabinet/types/dto/club.dto";
-import { deleteRecoilPersistFloorSection } from "@/Cabinet/utils/recoilPersistUtils";
 import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
+import { myClubListState } from "@/Cabinet/recoil/atoms";
+import ClubInfo from "@/Cabinet/components/Club/ClubInfo";
+import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
+import { ClubPaginationResponseDto } from "@/Cabinet/types/dto/club.dto";
+import { deleteRecoilPersistFloorSection } from "@/Cabinet/utils/recoilPersistUtils";
 
 const ClubPage = () => {
   const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);

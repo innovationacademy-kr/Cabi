@@ -1,4 +1,3 @@
-import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import styled from "styled-components";
 import {
   ICurrentClubModalStateInfo,
@@ -12,6 +11,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
+import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import {
   ClubCabinetInfo,
   ClubResponseDto,
@@ -193,7 +193,7 @@ const ClubMasterIconStyled = styled.div`
   min-width: 24px;
   min-height: 24px;
   margin-bottom: 10px;
-  background-image: url("/src/assets/images/leader.svg");
+  background-image: url("/src/Cabinet/assets/images/leader.svg");
   background-size: contain;
   background-repeat: no-repeat;
 `;

@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import chevronIcon from "@/assets/images/dropdownChevron.svg";
+import chevronIcon from "@/Cabinet/assets/images/dropdownChevron.svg";
 import useClickOutside from "@/Presentation/hooks/useClickOutside";
 
 const DropdownDateMenu = ({

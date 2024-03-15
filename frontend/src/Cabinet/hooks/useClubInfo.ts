@@ -1,5 +1,4 @@
-import useMenu from "@/hooks/useMenu";
-import { useEffect, u@/Cabinet/hooks/useMenu } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   isCurrentSectionRenderState,
@@ -11,6 +10,7 @@ import {
   ClubInfoResponseType,
 } from "@/Cabinet/types/dto/club.dto";
 import { axiosGetClubInfo } from "@/Cabinet/api/axios/axios.custom";
+import useMenu from "@/Cabinet/hooks/useMenu";
 import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const useClubInfo = () => {
