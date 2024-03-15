@@ -17,23 +17,13 @@ export enum itemType {
   NO_EVENT_PAST = "noEventPast",
 }
 
-const tableHeadArray = {
+export const tableHeadArray = {
   date: "날짜",
   subject: "제목",
   userName: "ID",
   category: "카테고리",
   presentationTime: "시간",
   presentationLocation: "장소",
-};
-
-const adminTableHeadArray = {
-  date: "날짜",
-  subject: "제목",
-  userName: "ID",
-  category: "카테고리",
-  presentationTime: "시간",
-  presentationLocation: "장소",
-  presentationStatus: "상태",
 };
 
 const DetailTableContainer = ({
@@ -52,9 +42,7 @@ const DetailTableContainer = ({
     null
   );
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const tableHeadEntries = !isAdmin
-    ? Object.entries(tableHeadArray)
-    : Object.entries(adminTableHeadArray);
+  const tableHeadEntries = Object.entries(tableHeadArray);
 
   useEffect(() => {
     const handleResize = () => {
