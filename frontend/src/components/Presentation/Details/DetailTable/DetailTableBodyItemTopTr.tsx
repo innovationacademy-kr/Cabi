@@ -52,6 +52,7 @@ const DetailTableBodyItemTopTr = ({
   tableHeadEntriesWithoutDate,
   tableHeadEntriesWithoutDateAndSubject,
 }: {
+  isAdmin: boolean;
   itemInfo: IItem;
   isItemOpen: boolean;
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
@@ -60,7 +61,6 @@ const DetailTableBodyItemTopTr = ({
   navigator: NavigateFunction;
   tableHeadEntriesWithoutDate: [string, string][];
   tableHeadEntriesWithoutDateAndSubject: [string, string][];
-  isAdmin: boolean;
 }) => {
   return (
     <>
@@ -89,6 +89,7 @@ const DetailTableBodyItemTopTr = ({
               // 발표 없을때
               <>
                 <NoEventTableRow
+                  isAdmin={isAdmin}
                   itemStatus={itemInfo.itemStatus}
                   hasNoUpcomingEvent={itemInfo.hasNoUpcomingEvent}
                   navigator={navigator}
