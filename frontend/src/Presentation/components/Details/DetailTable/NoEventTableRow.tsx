@@ -48,8 +48,6 @@ const NoEventTableRow = ({
   );
 };
 
-export default NoEventTableRow;
-
 const NoEventDivStyled = styled.div<{ hasNoUpcomingEvent: boolean }>`
   display: flex;
   justify-content: ${(props) =>
@@ -94,3 +92,5 @@ const CcabiStyled = styled.div<{ hasNoUpcomingEvent: boolean }>`
     display: ${(props) => (props.hasNoUpcomingEvent ? "none" : "")};
   }
 `;
+
+export default NoEventTableRow;
