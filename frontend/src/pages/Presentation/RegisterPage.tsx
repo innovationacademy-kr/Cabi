@@ -43,8 +43,12 @@ const toggleList: toggleItem[] = Object.entries(
   PresentationCategoryTypeLabelMap
 ).map(([key, name]) => ({ name, key }));
 
-const NotificationDetail = `발표 시작 시간은 수요일 오후 2시이며
+const NotificationTimeDetail = `발표 시작 시간은 수요일 오후 2시이며
 추후에 변경될 수 있습니다.
+`;
+const NotificationDateDetail = `현재 달부터 두 달 후까지의 날짜 중에서
+선택이 가능합니다. 각 월별로 신청 가능한
+일정이 업데이트됩니다.
 `;
 
 const RegisterPage = () => {
@@ -141,7 +145,23 @@ const RegisterPage = () => {
           </SubSectionStyled>
           <DateTimeContainer>
             <SubSectionStyled>
-              <SubNameStyled>날짜</SubNameStyled>
+              <SubNameStyled>
+                날짜
+                <CautionIconStyled
+                  src={CautionIcon}
+                  alt="Notification Icon"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                />
+                {showTooltip && (
+                  <TooltipBoxDateStyled
+                    onMouseEnter={() => handleMouseEnter()}
+                    onMouseLeave={() => handleMouseLeave()}
+                  >
+                    {NotificationDateDetail}
+                  </TooltipBoxDateStyled>
+                )}
+              </SubNameStyled>
               <DropdownStyled>
                 <DropdownDateMenu
                   onClick={setDate}
@@ -160,12 +180,12 @@ const RegisterPage = () => {
                   onMouseLeave={handleMouseLeave}
                 />
                 {showTooltip && (
-                  <TooltipBoxStyled
+                  <TooltipBoxTimeStyled
                     onMouseEnter={() => handleMouseEnter()}
                     onMouseLeave={() => handleMouseLeave()}
                   >
-                    {NotificationDetail}
-                  </TooltipBoxStyled>
+                    {NotificationTimeDetail}
+                  </TooltipBoxTimeStyled>
                 )}
               </SubNameStyled>
               <DropdownStyled>
@@ -328,7 +348,7 @@ const RegisterButtonStyled = styled.button`
   height: 48px;
   font-size: 1rem;
   font-weight: 480;
-  margin-top: 30px;
+  margin-top: 20px;
   background-color: #3f69fd;
   @media (max-width: 700px) {
     width: 100%;
@@ -359,15 +379,51 @@ const CautionIconStyled = styled.img`
   }
 `;
 
-const TooltipBoxStyled = styled.div`
+const TooltipBoxDateStyled = styled.div`
   position: absolute;
-  top: -32px;
+  top: -50px;
   left: 340%;
   transform: translateX(-50%);
   font-weight: 400;
   color: white;
   background-color: rgba(0, 0, 0, 0.8);
   width: 240px;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-align: center;
+  line-height: 1.25rem;
+  letter-spacing: -0.02rem;
+  white-space: pre-line;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 82%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent rgba(0, 0, 0, 0.8) transparent transparent;
+  }
+
+  ${SubNameStyled}:hover & {
+    opacity: 1;
+  }
+`;
+
+const TooltipBoxTimeStyled = styled.div`
+  position: absolute;
+  top: -32px;
+  left: 320%;
+  transform: translateX(-50%);
+  font-weight: 400;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 220px;
   padding: 10px;
   border-radius: 4px;
   font-size: 0.75rem;

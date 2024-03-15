@@ -163,8 +163,7 @@ const DropdownOption = styled.li`
   padding: 10px;
   cursor: pointer;
   &:hover {
-    background-color: #f0f0f0;
-    color: #3f69fd;
+    background-color: #dce7ff;
   }
 `;
 

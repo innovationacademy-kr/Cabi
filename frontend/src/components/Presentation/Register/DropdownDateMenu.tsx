@@ -154,11 +154,12 @@ const AnimatedDropdownOptions = styled.ul<{
 const DropdownOption = styled.li<{ invalid: boolean }>`
   font-size: 0.875rem;
   padding: 10px;
-  color: ${({ invalid }) => (invalid ? "var(--gray-color)" : "var(--black)")};
+  color: var(--gray-color);
   background-color: ${({ invalid }) => (invalid ? "#f0f0f0" : "transparent")};
   &:hover {
     background-color: ${({ invalid }) => (invalid ? "#f0f0f0" : "#DCE7FD")};
-    color: ${({ invalid }) => (invalid ? "var(--gray-color)" : "#3f69fd")};
+    color: ${({ invalid }) =>
+      invalid ? "var(--gray-color)" : "var(--gray-color)"};
     cursor: ${({ invalid }) => (invalid ? "not-allowed" : "pointer")};
   }
 
