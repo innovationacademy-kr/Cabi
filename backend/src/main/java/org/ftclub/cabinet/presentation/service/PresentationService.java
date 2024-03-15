@@ -168,6 +168,8 @@ public class PresentationService {
 		List<PresentationFormData> result =
 			presentationQueryService.getPresentationsByYearMonth(startDate, endDayDate)
 				.stream()
+				.filter(presentation ->
+					!presentation.getPresentationStatus().equals(PresentationStatus.CANCEL))
 				.map(presentationMapper::toPresentationFormDataDto)
 				.collect(Collectors.toList());
 
