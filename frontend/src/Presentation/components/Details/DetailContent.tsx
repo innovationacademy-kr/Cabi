@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { MoveSectionButtonStyled } from "@/components/SectionPagination/SectionPagination";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import { IDate } from "@/Presentation/components/Details/DetailContent.container";
 import DetailTableContainer from "@/Presentation/components/Details/DetailTable/DetailTable.container";
+import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 
 const DetailContent = ({
   moveMonth,

@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { PresentationHistoryResponseType } from "@/types/dto/presentation.dto";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 import {
   PresentationLocationLabelMap,
   PresentationStatusTypeLabelMap,
 } from "@/Presentation/assets/data/maps";
+import { PresentationHistoryResponseType } from "@/Presentation/types/dto/presentation.dto";
 
 const dateOptions: Intl.DateTimeFormatOptions = {
   year: "2-digit",

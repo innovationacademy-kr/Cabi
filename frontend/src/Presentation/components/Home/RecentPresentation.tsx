@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import PresentationCardContainer from "@/Presentation/components/Home/PresentationCard.container";
+import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import { axiosGetPresentation } from "@/Presentation/api/axios/axios.custom";
 
 const RecentPresentation = ({

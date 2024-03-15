@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import { IDate } from "@/Presentation/components/Details/DetailContent.container";
 import {
   TAdminModalState,
@@ -7,6 +6,7 @@ import {
 } from "@/Presentation/components/Details/DetailTable/DetailTable.container";
 import DetailTableBodyItem from "@/Presentation/components/Details/DetailTable/DetailTableBodyItem";
 import DetailTableHead from "@/Presentation/components/Details/DetailTable/DetailTableHead";
+import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 
 const DetailTable = ({
   isMobile,

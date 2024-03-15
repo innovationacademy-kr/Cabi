@@ -1,6 +1,5 @@
 import { NavigateFunction } from "react-router-dom";
 import styled from "styled-components";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import { itemType } from "@/Presentation/components/Details/DetailTable/DetailTable.container";
 import { IItem } from "@/Presentation/components/Details/DetailTable/DetailTableBodyItem";
 import NoEventTableRow from "@/Presentation/components/Details/DetailTable/NoEventTableRow";
@@ -10,6 +9,7 @@ import {
   PresentationPeriodTypeNumberLabelMap,
   PresentationStatusTypeLabelMap,
 } from "@/Presentation/assets/data/maps";
+import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 
 const noEventPhraseDesktop = {
   noEventPast: "수요지식회가 열리지 않았습니다",

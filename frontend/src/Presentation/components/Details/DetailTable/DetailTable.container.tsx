@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 import { IDate } from "@/Presentation/components/Details/DetailContent.container";
 import DetailTable from "@/Presentation/components/Details/DetailTable/DetailTable";
 import EditStatusModal from "@/Presentation/components/Modals/EditStatusModal/EditStatusModal";
+import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 
 export interface IAdminCurrentModalStateInfo {
   statusModal: boolean;
