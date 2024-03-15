@@ -34,8 +34,6 @@ const renderCellDetail = (
       );
     case "presentationLocation":
       return PresentationLocationLabelMap[item.presentationLocation!];
-    case "presentationStatus":
-      return PresentationStatusTypeLabelMap[item.presentationStatus!];
     default:
       return null;
   }
@@ -104,16 +102,8 @@ const DetailTableBodyItemTopTr = ({
                 {tableHeadEntriesWithoutDate.map((head, idx) => {
                   return (
                     <td
-                      /* 
-                      NOTE : 
-                      admin 페이지가 아니고 && 발표장소 || admin 페이지고 && 발표상태면
-                      border-radius 적용
-                      */
                       className={
-                        (!isAdmin && head[0] === "presentationLocation") ||
-                        (isAdmin && head[0] === "presentationStatus")
-                          ? "rightEnd"
-                          : ""
+                        head[0] === "presentationLocation" ? "rightEnd" : ""
                       }
                       key={idx}
                       title={
