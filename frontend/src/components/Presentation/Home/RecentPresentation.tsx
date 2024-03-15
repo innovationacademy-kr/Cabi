@@ -14,17 +14,15 @@ const RecentPresentation = ({
   const [currentPresentations, setCurrentPresentations] = useState<
     IPresentationScheduleDetailInfo[] | null
   >(null);
-  // 뭐하는 변수일까
-  // const [presentationLists, setPresentationLists] = useState(false);
   const navigator = useNavigate();
 
   const getCurrentPresentation = async () => {
     try {
       const response = await axiosGetPresentation();
-      setCurrentPresentations(response.data.forms);
-      if (response.data.forms) {
-        // setPresentationLists(true); // 아마 받아오는 데이터가 없을떄 .. 이건 나중에 고려
-      }
+      setCurrentPresentations([
+        ...response.data.past,
+        ...response.data.upcoming,
+      ]);
       // else setPresentationLists(false);
     } catch (error: any) {
       // TODO
