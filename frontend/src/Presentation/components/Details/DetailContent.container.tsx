@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import DetailContent from "@/Presentation/components/Details/DetailContent";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
-import { axiosGetPresentationSchedule } from "@/Presentation/api/axios/axios.custom";
+import {
+  axiosGetPresentationSchedule,
+  getAdminPresentationSchedule,
+} from "@/Presentation/api/axios/axios.custom";
 import { calculateAvailableDaysInWeeks } from "@/Presentation/utils/dateUtils";
 import {
   AVAILABLE_WEEKS,
