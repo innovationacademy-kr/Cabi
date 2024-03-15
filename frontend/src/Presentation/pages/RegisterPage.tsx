@@ -69,8 +69,6 @@ const RegisterPage = () => {
   const [modalTitle, setModalTitle] = useState<string>("");
   const [showNotificationBox, setShowNotificationBox] = useState<boolean>(true);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
-  const [errorDetails, setErrorDetails] = useState("");
 
   const invalidDates: string[] = useInvalidDates().map((date) =>
     format(date, "M/d")
@@ -105,30 +103,16 @@ const RegisterPage = () => {
   };
 
   const tryRegister = () => {
-    let missingFields = [];
-    if (date === "") {
-      missingFields.push("날짜");
-    }
-    if (time === "") {
-      missingFields.push("시간");
-    }
-    if (title.value === "") {
-      missingFields.push("제목");
-    }
-    if (summary.value === "") {
-      missingFields.push("한 줄 요약");
-    }
-    if (content.value === "") {
-      missingFields.push("내용");
-    }
-
-    if (missingFields.length > 0) {
-      const errorMessage = `${missingFields.join(", ")}을(를) 입력해주세요.`;
-      setErrorDetails(errorMessage);
-      setShowErrorModal(true);
+    if (
+      date === "" ||
+      time === "" ||
+      title.value === "" ||
+      summary.value === "" ||
+      content.value === ""
+    ) {
+      alert("모든 항목을 입력해주세요");
       return;
     }
-
     setIsClicked(true);
     setShowResponseModal(true);
   };
@@ -267,13 +251,6 @@ const RegisterPage = () => {
             setIsClicked(false);
           }}
           setIsClicked={setIsClicked}
-        />
-      )}
-      {showErrorModal && (
-        <RegisterErrorModal
-          title="입력 오류"
-          detail={errorDetails}
-          closeModal={() => setShowErrorModal(false)}
         />
       )}
     </>
