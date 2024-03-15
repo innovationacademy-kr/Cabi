@@ -159,7 +159,6 @@ const DropdownOptions = styled.ul`
 
 const DropdownOption = styled.li`
   font-size: 0.875rem;
-  color: var(--gray-color);
   padding: 10px;
   cursor: pointer;
   &:hover {
