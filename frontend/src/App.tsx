@@ -8,13 +8,13 @@ import LogPage from "@/pages/LogPage";
 import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
 import PostLogin from "@/pages/PostLogin";
-import DetailPage from "@/pages/Presentation/DetailPage";
-import WednesdayHomePage from "@/pages/Presentation/HomePage";
-import PresentationLogPage from "@/pages/Presentation/LogPage";
-import RegisterPage from "@/pages/Presentation/RegisterPage";
 import ProfilePage from "@/pages/ProfilePage";
 import AdminMainPage from "@/pages/admin/AdminMainPage";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import DetailPage from "@/Presentation/pages/DetailPage";
+import PresentationHomePage from "@/Presentation/pages/HomePage";
+import PresentationLogPage from "@/Presentation/pages/LogPage";
+import RegisterPage from "@/Presentation/pages/RegisterPage";
 
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));
@@ -43,7 +43,7 @@ function App(): React.ReactElement {
             <Route path="clubs" element={<ClubPage />} />
           </Route>
           <Route path="/presentation/" element={<Layout />}>
-            <Route path="home" element={<WednesdayHomePage />} />
+            <Route path="home" element={<PresentationHomePage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="detail" element={<DetailPage />} />
             <Route path="log" element={<PresentationLogPage />} />
