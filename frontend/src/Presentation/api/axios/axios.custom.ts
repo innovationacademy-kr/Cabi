@@ -100,3 +100,17 @@ export const axiosUpdatePresentationStatus = async (
     throw error;
   }
 };
+
+const axiosGetAdminPresentationScheduleURL = "/v5/admin/presentation/schedule/";
+export const getAdminPresentationSchedule = async (
+  yearMonth: string
+): Promise<any> => {
+  try {
+    const response = await instance.get(axiosGetAdminPresentationScheduleURL, {
+      params: { yearMonth },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
