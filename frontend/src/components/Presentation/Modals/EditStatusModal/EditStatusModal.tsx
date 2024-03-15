@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { currentPresentationState } from "@/recoil/atoms";
 import Button from "@/components/Common/Button";
@@ -48,7 +48,9 @@ const floorOptions: IDropdownOptions[] = [
 ];
 
 const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
-  const currentPresentation = useRecoilValue(currentPresentationState);
+  const [currentPresentation, setCurrentPresentation] = useRecoilState(
+    currentPresentationState
+  );
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
@@ -74,6 +76,8 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
       setPresentationStatus(val);
     },
   });
+  console.log("currentPresentation", currentPresentation);
+
   const [datesDropdownProps, setDatesDropdownProps] = useState<IDropdown>({
     options: [],
     defaultValue: currentPresentation?.dateTime
@@ -84,6 +88,7 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
       setPresentationDate(val);
     },
   });
+
   const [locationDropdownProps, setLocationDropdownProps] = useState<IDropdown>(
     {
       options: floorOptions,
@@ -111,6 +116,7 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
         presentationStatus,
         location
       );
+
       setModalTitle("수정이 완료되었습니다");
     } catch (error: any) {
       setModalTitle(error.response.data.message);
