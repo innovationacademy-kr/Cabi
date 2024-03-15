@@ -136,7 +136,7 @@ const AnimatedDropdownOptions = styled.ul<{
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #aaa transparent;
+  scrollbar-color: #aaa #fff;
   opacity: ${(props) => (props.isVisible ? 1 : 0)};
   visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
   animation: ${(props) =>
@@ -154,10 +154,12 @@ const AnimatedDropdownOptions = styled.ul<{
 const DropdownOption = styled.li<{ invalid: boolean }>`
   font-size: 0.875rem;
   padding: 10px;
-  color: ${({ invalid }) => (invalid ? "var(--gray-color)" : "black")};
+  color: var(--gray-color);
   background-color: ${({ invalid }) => (invalid ? "#f0f0f0" : "transparent")};
   &:hover {
     background-color: ${({ invalid }) => (invalid ? "#f0f0f0" : "#DCE7FD")};
+    color: ${({ invalid }) =>
+      invalid ? "var(--gray-color)" : "var(--gray-color)"};
     cursor: ${({ invalid }) => (invalid ? "not-allowed" : "pointer")};
   }
 
