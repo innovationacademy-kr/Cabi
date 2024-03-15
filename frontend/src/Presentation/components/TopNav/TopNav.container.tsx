@@ -7,13 +7,13 @@ import {
   myCabinetInfoState,
 } from "@/Cabinet/recoil/atoms";
 import { buildingsState } from "@/Cabinet/recoil/selectors";
-import TopNav from "@/Cabinet/components/TopNav/TopNav";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import {
   axiosBuildingFloor,
   axiosMyLentInfo,
 } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
+import TopNav from "@/Presentation/components/TopNav/TopNav";
 
 const TopNavContainer: React.FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
