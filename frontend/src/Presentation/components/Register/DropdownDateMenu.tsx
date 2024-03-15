@@ -136,7 +136,6 @@ const AnimatedDropdownOptions = styled.ul<{
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #aaa transparent;
   opacity: ${(props) => (props.isVisible ? 1 : 0)};
   visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
   animation: ${(props) =>
