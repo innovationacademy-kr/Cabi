@@ -13,6 +13,7 @@ import AdminMainPage from "@/Cabinet/pages/admin/AdminMainPage";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import DetailPage from "@/Presentation/pages/DetailPage";
 import PresentationHomePage from "@/Presentation/pages/HomePage";
+import PresentationLayout from "@/Presentation/pages/Layout";
 import PresentationLogPage from "@/Presentation/pages/LogPage";
 import RegisterPage from "@/Presentation/pages/RegisterPage";
 
@@ -44,7 +45,7 @@ function App(): React.ReactElement {
             <Route path="profile/log" element={<LogPage />} />
             <Route path="clubs" element={<ClubPage />} />
           </Route>
-          <Route path="/presentation/" element={<Layout />}>
+          <Route path="/presentation/" element={<PresentationLayout />}>
             <Route path="home" element={<PresentationHomePage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="detail" element={<DetailPage />} />

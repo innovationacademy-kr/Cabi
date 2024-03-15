@@ -132,7 +132,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   };
 
   const onClickPresentationHomeButton = () => {
-    navigator("home");
+    navigator("/presentation/home");
     closeAll();
   };
 
@@ -143,7 +143,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
 
   const onClickPresentationDetailButton = () => {
     if (isAdmin) {
-      navigator("presentation/detail");
+      navigator("/presentation/detail");
     } else {
       navigator("detail");
     }

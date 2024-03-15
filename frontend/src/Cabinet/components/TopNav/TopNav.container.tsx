@@ -70,8 +70,8 @@ const TopNavContainer: React.FC<{
 
   useEffect(() => {
     if (buildingsList.length === 0) return;
-
-    setCurrentBuildingName(buildingsList[0]);
+    // TODO: TopNav 위에 Cabi 와 수요지식회 추가 후 uncomment 해야 함
+    // setCurrentBuildingName(buildingsList[0]);
   }, [buildingsList]);
 
   useEffect(() => {
