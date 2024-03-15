@@ -2,17 +2,19 @@ import styled from "styled-components";
 
 const DetailTableHead = ({
   isMobile,
-  tableHeadEntries,
+  headEntries,
+  isAdmin,
 }: {
   isMobile: boolean;
-  tableHeadEntries: [string, string][];
+  headEntries: [string, string][];
+  isAdmin: boolean;
 }) => {
   return (
     <>
       {!isMobile ? (
-        <TableHeadStyled>
+        <TableHeadStyled isAdmin={isAdmin}>
           <tr>
-            {tableHeadEntries.map((head, idx) => {
+            {headEntries.map((head, idx) => {
               return (
                 <th key={idx} id={head[0]}>
                   {head[1]}
@@ -27,7 +29,7 @@ const DetailTableHead = ({
 };
 
 export default DetailTableHead;
-const TableHeadStyled = styled.thead`
+const TableHeadStyled = styled.thead<{ isAdmin: boolean }>`
   margin-bottom: 10px;
   height: 40px;
   line-height: 40px;
@@ -46,7 +48,7 @@ const TableHeadStyled = styled.thead`
   }
 
   & #subject {
-    width: 42%;
+    width: ${(props) => (!props.isAdmin ? "42%" : "31%")};
   }
 
   & #userName {
@@ -63,6 +65,11 @@ const TableHeadStyled = styled.thead`
 
   & #presentationLocation {
     width: 14%;
+    border-radius: ${(props) => (!props.isAdmin ? "0 10px 10px 0" : "")};
+  }
+
+  & #presentationStatus {
+    width: 11%;
     border-radius: 0 10px 10px 0;
   }
 `;

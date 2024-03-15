@@ -75,6 +75,7 @@ const DetailTableBodyItem = ({
   return (
     <>
       <DetailTableBodyItemTopTr
+        isAdmin={isAdmin}
         itemInfo={itemInfo}
         isItemOpen={isItemOpen}
         handleItemClick={handleItemClick}
