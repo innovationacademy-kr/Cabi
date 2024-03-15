@@ -88,6 +88,7 @@ const DetailTableBodyItem = ({
         }
       />
       <DetailTableBodyItemMiddleTr
+        isAdmin={isAdmin}
         itemInfo={itemInfo}
         isItemOpen={isItemOpen}
         handleItemClick={handleItemClick}
