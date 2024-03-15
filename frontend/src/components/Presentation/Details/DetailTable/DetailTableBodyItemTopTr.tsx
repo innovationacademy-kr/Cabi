@@ -7,6 +7,7 @@ import {
   PresentationCategoryTypeLabelMap,
   PresentationLocationLabelMap,
   PresentationPeriodTypeNumberLabelMap,
+  PresentationStatusTypeLabelMap,
 } from "@/assets/data/Presentation/maps";
 import { IPresentationScheduleDetailInfo } from "@/types/dto/presentation.dto";
 
@@ -33,12 +34,15 @@ const renderCellDetail = (
       );
     case "presentationLocation":
       return PresentationLocationLabelMap[item.presentationLocation!];
+    case "presentationStatus":
+      return PresentationStatusTypeLabelMap[item.presentationStatus!];
     default:
       return null;
   }
 };
 
 const DetailTableBodyItemTopTr = ({
+  isAdmin,
   itemInfo,
   isItemOpen,
   handleItemClick,
@@ -48,6 +52,7 @@ const DetailTableBodyItemTopTr = ({
   tableHeadEntriesWithoutDate,
   tableHeadEntriesWithoutDateAndSubject,
 }: {
+  isAdmin: boolean;
   itemInfo: IItem;
   isItemOpen: boolean;
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
@@ -84,6 +89,7 @@ const DetailTableBodyItemTopTr = ({
               // 발표 없을때
               <>
                 <NoEventTableRow
+                  isAdmin={isAdmin}
                   itemStatus={itemInfo.itemStatus}
                   hasNoUpcomingEvent={itemInfo.hasNoUpcomingEvent}
                   navigator={navigator}
@@ -98,8 +104,16 @@ const DetailTableBodyItemTopTr = ({
                 {tableHeadEntriesWithoutDate.map((head, idx) => {
                   return (
                     <td
+                      /* 
+                      NOTE : 
+                      admin 페이지가 아니고 && 발표장소 || admin 페이지고 && 발표상태면
+                      border-radius 적용
+                      */
                       className={
-                        head[0] === "presentationLocation" ? "rightEnd" : ""
+                        (!isAdmin && head[0] === "presentationLocation") ||
+                        (isAdmin && head[0] === "presentationStatus")
+                          ? "rightEnd"
+                          : ""
                       }
                       key={idx}
                       title={
@@ -149,11 +163,11 @@ const TopTrStyled = styled.tr<{
 }>`
   width: 100%;
   text-align: center;
-  
+
   & .leftEnd {
     border-radius: ${(props) => (props.open ? "10px 0 0 0" : "10px 0 0 10px")};
   }
-  
+
   & .rightEnd {
     border-radius: ${(props) => (props.open ? "0 10px 0 0" : "0 10px 10px 0")};
   }

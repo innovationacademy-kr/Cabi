@@ -26,6 +26,7 @@ import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +37,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class PresentationService {
 
 	private static final Integer START_DAY = 1;
+	private static final Integer DEFAULT_PAGE = 0;
 	// 쿼리로 받?
 	private static final Integer MAX_MONTH = 3;
-
+	private static final String DATE_TIME = "dateTime";
 	private final PresentationRepository presentationRepository;
 	private final PresentationPolicyService presentationPolicyService;
 	private final PresentationMapper presentationMapper;
+	private final PresentationQueryService presentationQueryService;
 	private final UserQueryService userQueryService;
 
 	/**
@@ -75,11 +78,12 @@ public class PresentationService {
 		LocalDateTime start = now.atStartOfDay();
 		LocalDateTime end = start.plusMonths(MAX_MONTH);
 
-		List<Presentation> presentationList =
-			presentationRepository.findByDateTime(start, end);
-		List<LocalDateTime> invalidDates = presentationList.stream()
-			.map(Presentation::getDateTime)
-			.collect(Collectors.toList());
+		List<LocalDateTime> invalidDates =
+			presentationQueryService.getRegisteredPresentations(start, end)
+				.stream()
+				.map(Presentation::getDateTime)
+				.collect(Collectors.toList());
+
 		return new InvalidDateResponseDto(invalidDates);
 	}
 
@@ -92,9 +96,18 @@ public class PresentationService {
 	public List<Presentation> getLatestPastPresentations(int count) {
 		LocalDate now = LocalDate.now();
 		LocalDateTime limit = now.atStartOfDay();
+		LocalDateTime start = limit.minusYears(10);
+		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
+			Sort.by(DATE_TIME).descending());
 
-		return presentationRepository
-			.findByDateTimeBeforeOrderByDateTimeDesc(limit, PageRequest.of(0, count));
+		List<Presentation> presentations =
+			presentationQueryService.getPresentationsBetweenWithPageRequest(start, limit,
+				pageRequest);
+
+		return presentations.stream()
+			.filter(presentation ->
+				presentation.getPresentationStatus().equals(PresentationStatus.DONE))
+			.collect(Collectors.toList());
 	}
 
 	/**
@@ -105,11 +118,18 @@ public class PresentationService {
 	 */
 	public List<Presentation> getLatestUpcomingPresentations(int count) {
 		LocalDate now = LocalDate.now();
-
 		LocalDateTime start = now.atStartOfDay();
 		LocalDateTime end = start.plusMonths(MAX_MONTH);
-		return presentationRepository
-			.findByDateTimeBetweenOrderByDateTimeAsc(start, end, PageRequest.of(0, count));
+		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
+			Sort.by(DATE_TIME).ascending());
+
+		List<Presentation> presentations = presentationQueryService.
+			getPresentationsBetweenWithPageRequest(start, end, pageRequest);
+
+		return presentations.stream()
+			.filter(presentation ->
+				presentation.getPresentationStatus().equals(PresentationStatus.EXPECTED))
+			.collect(Collectors.toList());
 	}
 
 	/**
@@ -119,8 +139,8 @@ public class PresentationService {
 	 * @param upcomingFormCount 가장 가까운 미래 신청서의 개수
 	 * @return
 	 */
-	public PresentationMainData getPastAndUpcomingPresentations(int pastFormCount,
-		int upcomingFormCount) {
+	public PresentationMainData getPastAndUpcomingPresentations(
+		int pastFormCount, int upcomingFormCount) {
 		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount);
 		List<Presentation> upcomingPresentations = getLatestUpcomingPresentations(
 			upcomingFormCount);
@@ -146,7 +166,7 @@ public class PresentationService {
 		LocalDateTime endDayDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
 
 		List<PresentationFormData> result =
-			presentationRepository.findByDateTimeBetweenOrderByDateTime(startDate, endDayDate)
+			presentationQueryService.getPresentationsByYearMonth(startDate, endDayDate)
 				.stream()
 				.map(presentationMapper::toPresentationFormDataDto)
 				.collect(Collectors.toList());
@@ -191,7 +211,7 @@ public class PresentationService {
 	 * @return
 	 */
 	public PresentationMyPagePaginationDto getUserPresentations(Long userId, Pageable pageable) {
-		Page<Presentation> presentations = presentationRepository.findPaginationById(userId,
+		Page<Presentation> presentations = presentationQueryService.getPresentationsById(userId,
 			pageable);
 
 		List<PresentationMyPageDto> result = presentations.stream()

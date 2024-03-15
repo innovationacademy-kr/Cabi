@@ -38,7 +38,7 @@ export interface IPresentationScheduleDetailInfo {
   dateTime: string;
   category: PresentationCategoryType | null;
   userName: string | null;
-  presentationStatus?: string | null;
+  presentationStatus: PresentationStatusType | null;
   presentationTime: PresentationPeriodType | null;
   presentationLocation?: PresentationLocation | null;
 }

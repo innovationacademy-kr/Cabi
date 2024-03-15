@@ -5,12 +5,14 @@ import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg"
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 
 const NoEventTableRow = ({
+  isAdmin,
   itemStatus,
   hasNoUpcomingEvent,
   navigator,
   colSpanSize,
   phrase,
 }: {
+  isAdmin: boolean;
   itemStatus: itemType.NO_EVENT_CURRENT | itemType.NO_EVENT_PAST;
   hasNoUpcomingEvent: boolean;
   navigator: NavigateFunction;
@@ -31,7 +33,7 @@ const NoEventTableRow = ({
               {hasNoUpcomingEvent ? <HappyCcabiImg /> : <SadCcabiImg />}
             </CcabiStyled>
           </NoEventPhraseStyled>
-          {hasNoUpcomingEvent && (
+          {hasNoUpcomingEvent && !isAdmin ? (
             <button
               onClick={() => {
                 navigator("/presentation/register");
@@ -39,7 +41,7 @@ const NoEventTableRow = ({
             >
               신청하기
             </button>
-          )}
+          ) : null}
         </NoEventDivStyled>
       </td>
     </>

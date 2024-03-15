@@ -93,6 +93,7 @@ const DetailContentContainer = () => {
               category: null,
               userName: null,
               presentationTime: null,
+              presentationStatus: null,
             };
           });
         }
@@ -110,6 +111,7 @@ const DetailContentContainer = () => {
                 category: null,
                 userName: null,
                 presentationTime: null,
+                presentationStatus: null,
               };
           });
         }
