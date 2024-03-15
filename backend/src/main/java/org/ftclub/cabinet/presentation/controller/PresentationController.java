@@ -58,7 +58,7 @@ public class PresentationController {
 		@RequestParam(value = "yearMonth")
 		@DateTimeFormat(pattern = "yyyy-MM")
 		YearMonth yearMonth) {
-		return presentationService.getPresentationSchedule(yearMonth);
+		return presentationService.getUserPresentationSchedule(yearMonth);
 	}
 
 	/**

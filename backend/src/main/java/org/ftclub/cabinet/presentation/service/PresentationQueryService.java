@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.presentation.service;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PresentationQueryService {
+
+	private static final Integer START_DAY = 1;
 
 	private final PresentationRepository presentationRepository;
 
@@ -34,8 +37,12 @@ public class PresentationQueryService {
 		return presentationRepository.findByDateTimeBetween(start, end, pageRequest);
 	}
 
-	public List<Presentation> getPresentationsByYearMonth(LocalDateTime start, LocalDateTime end) {
-		return presentationRepository.findAllByDateTimeBetweenOrderByDateTime(start, end);
+	public List<Presentation> getPresentationsByYearMonth(YearMonth yearMonth) {
+		LocalDateTime startDate = yearMonth.atDay(START_DAY).atStartOfDay();
+		LocalDateTime endDayDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
+
+		return presentationRepository.findAllByDateTimeBetweenOrderByDateTime(startDate,
+			endDayDate);
 	}
 
 	public Page<Presentation> getPresentationsById(Long id, Pageable pageable) {
