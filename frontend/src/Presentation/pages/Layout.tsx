@@ -6,11 +6,11 @@ import styled, { css } from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import LeftNav from "@/Cabinet/components/LeftNav/LeftNav";
-import TopNavContainer from "@/Cabinet/components/TopNav/TopNav.container";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
+import TopNavContainer from "@/Presentation/components/TopNav/TopNav.container";
 
 const token = getCookie("access_token");
 
