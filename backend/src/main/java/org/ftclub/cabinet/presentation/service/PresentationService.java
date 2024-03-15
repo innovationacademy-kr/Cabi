@@ -161,15 +161,24 @@ public class PresentationService {
 	 * @param yearMonth yyyy-MM 타입
 	 * @return
 	 */
-	public PresentationFormResponseDto getPresentationSchedule(YearMonth yearMonth) {
-		LocalDateTime startDate = yearMonth.atDay(START_DAY).atStartOfDay();
-		LocalDateTime endDayDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
+	public PresentationFormResponseDto getUserPresentationSchedule(YearMonth yearMonth) {
 
 		List<PresentationFormData> result =
-			presentationQueryService.getPresentationsByYearMonth(startDate, endDayDate)
+			presentationQueryService.getPresentationsByYearMonth(yearMonth)
 				.stream()
 				.filter(presentation ->
 					!presentation.getPresentationStatus().equals(PresentationStatus.CANCEL))
+				.map(presentationMapper::toPresentationFormDataDto)
+				.collect(Collectors.toList());
+
+		return new PresentationFormResponseDto(result);
+	}
+
+	public PresentationFormResponseDto getAdminPresentationSchedule(YearMonth yearMonth) {
+
+		List<PresentationFormData> result =
+			presentationQueryService.getPresentationsByYearMonth(yearMonth)
+				.stream()
 				.map(presentationMapper::toPresentationFormDataDto)
 				.collect(Collectors.toList());
 
