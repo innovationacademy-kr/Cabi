@@ -75,7 +75,7 @@ const PresentationCardMobile = ({
                     <TitleStyled>{p.subject}</TitleStyled>
                     <SubTitleStyled>{p.summary}</SubTitleStyled>
                     <DetailFooterStyled>
-                      <NameStyled>{p.userName} | </NameStyled>
+                      <NameStyled>{p.userName}  </NameStyled>
                       <CalendarStyled>
                         <IconStyled>
                           <img src="/src/assets/images/calendar.svg" alt="" />
@@ -184,6 +184,10 @@ const NameStyled = styled.div`
   margin-right: 5px;
   color: #9d9d9d;
   font-weight: 500;
+
+  ::after {
+    content: "ㅣ";
+  }
 `;
 
 const CalendarStyled = styled.div`

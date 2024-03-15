@@ -43,8 +43,10 @@ const toggleList: toggleItem[] = Object.entries(
   PresentationCategoryTypeLabelMap
 ).map(([key, name]) => ({ name, key }));
 
-const NotificationDetail = `발표 시작 시간은 수요일 오후 2시이며
+const NotificationTimeDetail = `발표 시작 시간은 수요일 오후 2시이며
 추후에 변경될 수 있습니다.
+`;
+const NotificationDateDetail = `현재 달부터 두 달 후까지의 날짜 중에서 선택이 가능합니다. 각 월별로 신청 가능한 일정이 업데이트됩니다. 
 `;
 
 const RegisterPage = () => {
@@ -141,7 +143,22 @@ const RegisterPage = () => {
           </SubSectionStyled>
           <DateTimeContainer>
             <SubSectionStyled>
-              <SubNameStyled>날짜</SubNameStyled>
+              <SubNameStyled>날짜
+              <CautionIconStyled
+                  src={CautionIcon}
+                  alt="Notification Icon"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                />
+                {showTooltip && (
+                  <TooltipBoxStyled
+                    onMouseEnter={() => handleMouseEnter()}
+                    onMouseLeave={() => handleMouseLeave()}
+                  >
+                    {NotificationDateDetail}
+                  </TooltipBoxStyled>
+                )}
+              </SubNameStyled>
               <DropdownStyled>
                 <DropdownDateMenu
                   onClick={setDate}
@@ -164,7 +181,7 @@ const RegisterPage = () => {
                     onMouseEnter={() => handleMouseEnter()}
                     onMouseLeave={() => handleMouseLeave()}
                   >
-                    {NotificationDetail}
+                    {NotificationTimeDetail}
                   </TooltipBoxStyled>
                 )}
               </SubNameStyled>
