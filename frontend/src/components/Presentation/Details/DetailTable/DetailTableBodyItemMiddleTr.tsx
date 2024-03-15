@@ -11,12 +11,14 @@ const noEventPhraseMobile = {
 };
 
 const DetailTableBodyItemMiddleTr = ({
+  isAdmin,
   itemInfo,
   isItemOpen,
   handleItemClick,
   mobileColSpanSize,
   navigator,
 }: {
+  isAdmin: boolean;
   itemInfo: IItem;
   isItemOpen: boolean;
   handleItemClick: (item: IPresentationScheduleDetailInfo) => void;
@@ -34,6 +36,7 @@ const DetailTableBodyItemMiddleTr = ({
     >
       {itemInfo.itemStatus ? (
         <NoEventTableRow
+          isAdmin={isAdmin}
           itemStatus={itemInfo.itemStatus}
           hasNoUpcomingEvent={itemInfo.hasNoUpcomingEvent}
           navigator={navigator}
