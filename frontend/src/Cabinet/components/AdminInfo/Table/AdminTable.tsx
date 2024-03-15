@@ -1,7 +1,7 @@
-import { ITableData } from "@/Cabinet/types/dto/admin.dto";
 import { useState } from "react";
 import styled from "styled-components";
-import Pagination from "./Pagination";
+import Pagination from "@/Cabinet/components/AdminInfo/Table/Pagination";
+import { ITableData } from "@/Cabinet/types/dto/admin.dto";
 
 const AdminTable = ({
   data,
