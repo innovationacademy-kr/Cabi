@@ -36,7 +36,7 @@ const RegisterModal = ({
   const registerDetail = `발표를 신청한 후에는 내용 수정이 <strong>불가능</strong>합니다.
 발표 날짜와 시간을 수정하고 싶으시다면
 Cabi 슬랙 채널로 문의해주세요.
-<strong>${date}</strong> 에 수요지식회 발표를 등록하시겠습니까?`;
+<strong>${date}</strong> 에 수요지식회 발표를 신청하시겠습니까?`;
   const navigate = useNavigate();
 
   // 신청한 후 내용 수정 불가
@@ -76,9 +76,9 @@ Cabi 슬랙 채널로 문의해주세요.
 
   const swapModalContents: IModalContents = {
     type: "hasProceedBtn",
-    title: "제출하기",
+    title: "신청하기",
     detail: registerDetail,
-    proceedBtnText: "네, 제출할게요",
+    proceedBtnText: "네, 신청할게요",
     onClickProceed: tryRegister,
     closeModal: closeModal,
     isLoading: isLoading,
