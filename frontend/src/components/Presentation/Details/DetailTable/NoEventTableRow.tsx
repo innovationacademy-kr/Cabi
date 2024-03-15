@@ -5,12 +5,14 @@ import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg"
 import { ReactComponent as SadCcabiImg } from "@/assets/images/sadCcabi.svg";
 
 const NoEventTableRow = ({
+  isAdmin,
   itemStatus,
   hasNoUpcomingEvent,
   navigator,
   colSpanSize,
   phrase,
 }: {
+  isAdmin: boolean;
   itemStatus: itemType.NO_EVENT_CURRENT | itemType.NO_EVENT_PAST;
   hasNoUpcomingEvent: boolean;
   navigator: NavigateFunction;
