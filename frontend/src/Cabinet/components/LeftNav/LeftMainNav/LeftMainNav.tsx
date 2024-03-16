@@ -18,10 +18,6 @@ interface ILeftMainNav {
   onClickMainClubButton: React.MouseEventHandler;
   onClickProfileButton: React.MouseEventHandler;
   onClickAvailableButton: React.MouseEventHandler;
-  onClickPresentationHomeButton: React.MouseEventHandler;
-  onClickPresentationRegisterButton: React.MouseEventHandler;
-  onClickPresentationDetailButton: React.MouseEventHandler;
-  onClickPresentationLogButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
@@ -38,17 +34,13 @@ const LeftMainNav = ({
   onClickMainClubButton,
   onClickProfileButton,
   onClickAvailableButton,
-  onClickPresentationHomeButton,
-  onClickPresentationRegisterButton,
-  onClickPresentationDetailButton,
-  onClickPresentationLogButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
     <LeftNavStyled>
       <TopSectionStyled>
         <TopBtnsStyled>
-          {currentBuildingName === "새롬관" ? (
+          {currentBuildingName === "새롬관" && (
             <>
               <TopBtnStyled
                 className={
@@ -83,64 +75,6 @@ const LeftMainNav = ({
                 onClick={onClickAvailableButton}
               >
                 사용가능
-              </TopBtnStyled>
-            </>
-          ) : currentBuildingName === "수지회" && isAdmin ? (
-            <TopBtnStyled
-              className={
-                pathname.includes("presentation/detail") ||
-                pathname.includes("presentation/detail")
-                  ? "leftNavButtonActive cabiButton"
-                  : "cabiButton"
-              }
-              onClick={onClickPresentationDetailButton}
-            >
-              {"일정관리"}
-            </TopBtnStyled>
-          ) : (
-            <>
-              <TopBtnStyled
-                className={
-                  pathname.includes("presentation/home") ||
-                  pathname.includes("presentation/home")
-                    ? "leftNavButtonActive cabiButton"
-                    : "cabiButton"
-                }
-                onClick={onClickPresentationHomeButton}
-              >
-                Home
-              </TopBtnStyled>
-              <TopBtnStyled
-                className={
-                  pathname.includes("presentation/register") ||
-                  pathname.includes("presentation/register")
-                    ? "leftNavButtonActive cabiButton"
-                    : "cabiButton"
-                }
-                onClick={onClickPresentationRegisterButton}
-              >
-                발표신청
-              </TopBtnStyled>
-              <TopBtnStyled
-                className={
-                  pathname.includes("presentation/log")
-                    ? "leftNavButtonActive cabiButton"
-                    : "cabiButton"
-                }
-                onClick={onClickPresentationLogButton}
-              >
-                발표기록
-              </TopBtnStyled>
-              <TopBtnStyled
-                className={
-                  pathname.includes("presentation/detail") ||
-                  pathname.includes("presentation/detail")
-                    ? "leftNavButtonActive cabiButton"
-                    : "cabiButton"
-                }
-                onClick={onClickPresentationDetailButton}
-              >
-                {isAdmin ? "일정관리" : "상세정보"}
               </TopBtnStyled>
             </>
           )}
@@ -216,15 +150,6 @@ const LeftMainNav = ({
                 Profile
               </BottomBtnStyled>
             </>
-          )}
-          {!isAdmin && currentBuildingName === "수지회" && (
-            <BottomBtnStyled
-              className="cabiButton"
-              onClick={onClickLogoutButton}
-            >
-              <LogoutImg stroke="var(--gray-color)" />
-              Logout
-            </BottomBtnStyled>
           )}
         </BottomBtnsStyled>
       </BottomSectionStyled>

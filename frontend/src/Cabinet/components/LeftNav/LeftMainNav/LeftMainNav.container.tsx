@@ -47,9 +47,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (currentBuilding === "수지회") {
-      return;
-    } else if (currentFloor === undefined) {
+    if (currentFloor === undefined) {
       setCurrentMapFloor(floors[0]);
       return;
     }
@@ -131,30 +129,6 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
-  const onClickPresentationHomeButton = () => {
-    navigator("/presentation/home");
-    closeAll();
-  };
-
-  const onClickPresentationRegisterButton = () => {
-    navigator("/presentation/register");
-    closeAll();
-  };
-
-  const onClickPresentationDetailButton = () => {
-    if (isAdmin) {
-      navigator("/presentation/detail");
-    } else {
-      navigator("detail");
-    }
-    closeAll();
-  };
-
-  const onClickPresentationLogButton = () => {
-    navigator("/presentation/log");
-    closeAll();
-  };
-
   const onClickLogoutButton = (): void => {
     const adminToken = isAdmin ? "admin_" : "";
     if (import.meta.env.VITE_IS_LOCAL === "true") {
@@ -187,10 +161,6 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickMainClubButton={onClickMainClubButton}
       onClickProfileButton={onClickProfileButton}
       onClickAvailableButton={onClickAvailableButton}
-      onClickPresentationHomeButton={onClickPresentationHomeButton}
-      onClickPresentationRegisterButton={onClickPresentationRegisterButton}
-      onClickPresentationDetailButton={onClickPresentationDetailButton}
-      onClickPresentationLogButton={onClickPresentationLogButton}
       isAdmin={isAdmin}
     />
   );
