@@ -48,7 +48,7 @@ const LeftMainNav = ({
     <LeftNavStyled>
       <TopSectionStyled>
         <TopBtnsStyled>
-          {currentBuildingName === "새롬관" && (
+          {currentBuildingName === "새롬관" ? (
             <>
               <TopBtnStyled
                 className={
@@ -85,8 +85,7 @@ const LeftMainNav = ({
                 사용가능
               </TopBtnStyled>
             </>
-          )}
-          {currentBuildingName === "수지회" && isAdmin ? (
+          ) : currentBuildingName === "수지회" && isAdmin ? (
             <TopBtnStyled
               className={
                 pathname.includes("presentation/detail") ||
