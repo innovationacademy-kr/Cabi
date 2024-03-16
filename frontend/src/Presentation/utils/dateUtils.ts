@@ -67,6 +67,7 @@ export const filterInvalidDates = (
  * @param availableWeeks 보여줄 주차 목록
  * @param dayOfTheWeek 보여줄 요일 (0-6)
  * @param maxMonthOffset 계산할 최대 개월 수
+ * @param filterPastDates 과거 날짜를 필터링할지 여부
  *
  * @returns maxMonthOffset 개월 내의 주어진 주차 중 주어진 요일 에 해당하는 날짜들
  *
@@ -79,9 +80,13 @@ export const calculateAvailableDaysInWeeks = (
   baseDate: Date,
   availableWeeks: number[],
   dayOfTheWeek: number,
-  maxMonthOffset: number
+  maxMonthOffset: number,
+  filterPastDates: boolean = false
 ) => {
   let availableDates: Date[] = [];
+  const today = new Date();
+  // NOTE: KST (UTC+9) 기준으로 시간을 설정
+  today.setHours(today.getHours() + 9);
   // NOTE: baseDate부터 maxMonthOffset 달 만큼, availableWeeks 에 해당하는 주차 중 dayOfTheWeek 요일에 해당하는 날짜를 구함
   for (let monthOffset = 0; monthOffset < maxMonthOffset; monthOffset++) {
     // NOTE: baseDate부터 monthOffset 만큼의 달을 더한 달의 첫번째 날을 구함
@@ -96,40 +101,11 @@ export const calculateAvailableDaysInWeeks = (
       const weekOffset = (week - 1) * 7;
       const nextOccurrence = addDays(firstOccurrence, weekOffset);
       // NOTE: nextOccurrence 가 해당 월의 첫번째 날짜 (monthStart) 와 같은 달인지 확인
-      if (nextOccurrence.getMonth() === monthStart.getMonth())
-        availableDates.push(nextOccurrence);
-    });
-  }
-  return availableDates;
-};
-
-// 위의 코드와 동일하지만, 오늘을 기준으로 과거 날짜는 제외하도록 수정한 코드
-export const calculateAvailableDaysExceptPastDays = (
-  baseDate: Date,
-  availableWeeks: number[],
-  dayOfTheWeek: number,
-  maxMonthOffset: number
-) => {
-  let availableDates: Date[] = [];
-  const today = new Date();
-  today.setHours(today.getHours() + 9);
-
-  for (let monthOffset = 0; monthOffset < maxMonthOffset; monthOffset++) {
-    const monthStart = startOfMonth(addMonths(baseDate, monthOffset));
-    const firstOccurrence = calculateFirstDayEncountered(
-      monthStart,
-      dayOfTheWeek
-    );
-
-    availableWeeks.forEach((week) => {
-      const weekOffset = (week - 1) * 7;
-      const nextOccurrence = addDays(firstOccurrence, weekOffset);
       if (
         nextOccurrence.getMonth() === monthStart.getMonth() &&
-        nextOccurrence >= today
-      ) {
+        (!filterPastDates || nextOccurrence >= today)
+      )
         availableDates.push(nextOccurrence);
-      }
     });
   }
   return availableDates;

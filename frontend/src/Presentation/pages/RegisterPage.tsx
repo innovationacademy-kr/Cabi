@@ -16,7 +16,7 @@ import {
 } from "@/Presentation/assets/data/maps";
 import { PresentationCategoryType } from "@/Presentation/types/enum/presentation.type.enum";
 import useInvalidDates from "@/Presentation/hooks/useInvalidDates";
-import { calculateAvailableDaysExceptPastDays } from "@/Presentation/utils/dateUtils";
+import { calculateAvailableDaysInWeeks } from "@/Presentation/utils/dateUtils";
 import { WEDNESDAY } from "@/Presentation/constants/dayOfTheWeek";
 import {
   AVAILABLE_WEEKS,
@@ -136,11 +136,12 @@ const RegisterPage = () => {
   };
 
   useEffect(() => {
-    const availableDates: Date[] = calculateAvailableDaysExceptPastDays(
+    const availableDates: Date[] = calculateAvailableDaysInWeeks(
       new Date(),
       AVAILABLE_WEEKS,
       WEDNESDAY,
-      FUTURE_MONTHS_TO_DISPLAY
+      FUTURE_MONTHS_TO_DISPLAY,
+      true
     );
     const formattedAvailableDates = availableDates.map((date) =>
       format(date, "M/d")
