@@ -137,7 +137,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   };
 
   const onClickPresentationRegisterButton = () => {
-    navigator("register");
+    navigator("/presentation/register");
     closeAll();
   };
 
@@ -151,7 +151,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   };
 
   const onClickPresentationLogButton = () => {
-    navigator("log");
+    navigator("/presentation/log");
     closeAll();
   };
 
