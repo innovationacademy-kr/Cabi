@@ -6,9 +6,9 @@ import {
   currentBuildingNameState,
 } from "@/Cabinet/recoil/atoms";
 import { buildingsState } from "@/Cabinet/recoil/selectors";
-import TopNav from "@/Cabinet/components/TopNav/TopNav";
 import { axiosBuildingFloor } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
+import TopNav from "@/Presentation/components/TopNav/TopNav";
 
 const AdminTopNavContainer: React.FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;

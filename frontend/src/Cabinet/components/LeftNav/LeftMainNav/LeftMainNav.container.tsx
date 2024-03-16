@@ -68,7 +68,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
         currentSectionFromPersist &&
         sections.includes(currentSectionFromPersist)
           ? setCurrentSection(currentSectionFromPersist)
-          : setCurrentSection(response.data[0].section);
+          : setCurrentSection(response.data[0]?.section);
       })
       .catch((error) => {
         console.error(error);
