@@ -73,7 +73,7 @@ export const filterInvalidDates = (
  *
  * @example
  * // 2024년 3월 4일부터 2개월 내에서, 매 달의 1, 3 주차 중 수요일 (3) 에 해당하는 날짜들을 구함
- * const result = calculateAvailableDaysInWeeks(new Date(2024, 2, 4), [1, 3], 3, 2)
+ * const result = calculateAvailableDaysInWeeks(new Date(2024, 2, 4), [1, 3], 3, 2, false)
  * //=> [Wed Mar 06 2024 00:00:00, Wed Mar 20 2024 00:00:00, Wed Apr 03 2024 00:00:00, Wed Apr 17 2024 00:00:00]
  */
 export const calculateAvailableDaysInWeeks = (
