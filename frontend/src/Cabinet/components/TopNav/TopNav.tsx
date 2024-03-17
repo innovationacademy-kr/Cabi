@@ -96,6 +96,7 @@ const TopNavContainerStyled = styled.nav`
   width: 100%;
   display: flex;
   flex-direction: column;
+  background-color: white;
   z-index: 10;
 `;
 
@@ -106,11 +107,9 @@ const TopNavWrapperStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: white;
   border-bottom: 1px solid var(--line-color);
   padding: 0 28px;
   color: var(--gray-color);
-  z-index: 10;
 `;
 
 const LogoStyled = styled.div`

@@ -1,24 +1,40 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as CabiLogo } from "@/Cabinet/assets/images/logo.svg";
 import { ReactComponent as PresentationLogo } from "@/Presentation/assets/images/logo.svg";
 
 const TopNavDomainGroup = () => {
   const navigator = useNavigate();
+  const { pathname } = useLocation();
+
   return (
     <DomainGroupContainerStyled>
       <DomainWrapperStyled onClick={() => navigator("/home")}>
         <LogoContainerStyled>
           <CabiLogo />
         </LogoContainerStyled>
-        <DomainTitleStyled fontWeight="bold">Cabi</DomainTitleStyled>
+        <DomainTitleStyled
+          className={
+            !pathname.includes("presentation") ? "domainButtonActive" : ""
+          }
+          fontWeight="bold"
+        >
+          Cabi
+        </DomainTitleStyled>
       </DomainWrapperStyled>
       <DomainSeparatorStyled />
       <DomainWrapperStyled onClick={() => navigator("/presentation/home")}>
         <LogoContainerStyled>
           <PresentationLogo />
         </LogoContainerStyled>
-        <DomainTitleStyled fontWeight="bold">수요지식회</DomainTitleStyled>
+        <DomainTitleStyled
+          className={
+            pathname.includes("presentation") ? "domainButtonActive" : ""
+          }
+          fontWeight="bold"
+        >
+          수요지식회
+        </DomainTitleStyled>
       </DomainWrapperStyled>
     </DomainGroupContainerStyled>
   );
@@ -32,7 +48,6 @@ const DomainGroupContainerStyled = styled.div`
   border-bottom: 1px solid var(--line-color);
   padding: 0 28px;
   color: var(--gray-color);
-  z-index: 10;
   font-size: 0.875rem;
 `;
 

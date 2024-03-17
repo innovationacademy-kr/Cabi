@@ -37,13 +37,7 @@ const AdminTopNavContainer: React.FC<{
       try {
         await setTimeoutPromise(500);
         const buildingsFloorData = await axiosBuildingFloor();
-        setBuildingsFloor([
-          ...buildingsFloorData.data,
-          {
-            building: "수지회",
-            floors: [2, 3, 4],
-          },
-        ]);
+        setBuildingsFloor([...buildingsFloorData.data]);
       } catch (error) {
         console.log(error);
       }
@@ -60,9 +54,7 @@ const AdminTopNavContainer: React.FC<{
 
   useEffect(() => {
     if (currentBuildingName === undefined) return;
-    else if (currentBuildingName === "수지회") {
-      navigator("/admin/presentation/detail");
-    } else if (currentBuildingName === "새롬관") {
+    else if (currentBuildingName === "새롬관") {
       navigator("/admin/main");
     }
   }, [currentBuildingName]);

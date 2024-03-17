@@ -168,3 +168,7 @@ input {
 .cabiButton {
   -webkit-tap-highlight-color: transparent;
 }
+
+.domainButtonActive {
+  color: var(--main-color) !important;
+}

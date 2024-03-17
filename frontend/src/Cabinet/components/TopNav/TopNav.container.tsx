@@ -42,13 +42,7 @@ const TopNavContainer: React.FC<{
       try {
         await setTimeoutPromise(500);
         const buildingsFloorData = await axiosBuildingFloor();
-        setBuildingsFloor([
-          ...buildingsFloorData.data,
-          {
-            building: "수지회",
-            floors: [2, 3, 4],
-          },
-        ]);
+        setBuildingsFloor([...buildingsFloorData.data]);
       } catch (error) {
         console.log(error);
       }
@@ -70,15 +64,12 @@ const TopNavContainer: React.FC<{
 
   useEffect(() => {
     if (buildingsList.length === 0) return;
-    // TODO: TopNav 위에 Cabi 와 수요지식회 추가 후 uncomment 해야 함
-    // setCurrentBuildingName(buildingsList[0]);
+    setCurrentBuildingName(buildingsList[0]);
   }, [buildingsList]);
 
   useEffect(() => {
     if (currentBuildingName === undefined) return;
-    else if (currentBuildingName === "수지회") {
-      navigator("/presentation/home");
-    } else if (currentBuildingName === "새롬관") {
+    else if (currentBuildingName === "새롬관") {
       navigator("/home");
     }
   }, [currentBuildingName]);
