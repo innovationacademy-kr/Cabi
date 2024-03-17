@@ -1,6 +1,6 @@
+import styled, { css } from "styled-components";
 import LogTable from "@/Cabinet/components/LentLog/LogTable/LogTable";
 import { ILentLog } from "@/Cabinet/types/dto/lent.dto";
-import styled, { css } from "styled-components";
 
 const LentLog = ({
   closeLent,
@@ -95,10 +95,10 @@ const TitleStyled = styled.h1`
 
 const LentLogStyled = styled.div`
   position: fixed;
-  top: 80px;
+  top: 120px;
   right: 0;
   min-width: 330px;
-  height: calc(100% - 80px);
+  height: calc(100% - 120px);
   padding: 40px 20px;
   z-index: 9;
   transform: translateX(120%);

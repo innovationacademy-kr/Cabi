@@ -10,7 +10,6 @@ import LeftNav from "@/Cabinet/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/Cabinet/components/MapInfo/MapInfo.container";
 import AdminTopNavContainer from "@/Cabinet/components/TopNav/AdminTopNav.container";
 import UserInfoAreaContainer from "@/Cabinet/components/UserInfoArea/UserInfoArea.container";
-import ColorType from "@/Cabinet/types/enum/color.type.enum";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -115,9 +114,9 @@ const DetailInfoContainerStyled = styled.div<{ isFloat: boolean }>`
     props.isFloat &&
     css`
       position: fixed;
-      top: 80px;
+      top: 120px;
       right: 0;
-      height: calc(100% - 80px);
+      height: calc(100% - 120px);
       z-index: 9;
       transform: translateX(120%);
       transition: transform 0.3s ease-in-out;

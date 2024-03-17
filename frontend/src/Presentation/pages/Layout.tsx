@@ -90,30 +90,6 @@ const MainStyled = styled.main`
   user-select: none;
 `;
 
-const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
-  min-width: 330px;
-  padding: 45px 40px 20px;
-  position: relative;
-  border-left: 1px solid var(--line-color);
-  background-color: var(--white);
-  overflow-y: auto;
-  ${(props) =>
-    props.isHomePage &&
-    css`
-      position: fixed;
-      top: 80px;
-      right: 0;
-      height: calc(100% - 80px);
-      z-index: 9;
-      transform: translateX(120%);
-      transition: transform 0.3s ease-in-out;
-      box-shadow: 0 0 40px 0 var(--bg-shadow);
-      &.on {
-        transform: translateX(0%);
-      }
-    `}
-`;
-
 const MenuBgStyled = styled.div`
   position: none;
 `;

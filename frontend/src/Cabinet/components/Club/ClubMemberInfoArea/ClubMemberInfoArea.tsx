@@ -132,11 +132,11 @@ const CabiLogoStyled = styled.div`
 `;
 const ClubMemberInfoAreaStyled = styled.div`
   position: fixed;
-  top: 80px;
+  top: 120px;
   right: 0;
   min-width: 330px;
   width: 330px;
-  height: calc(100% - 80px);
+  height: calc(100% - 120px);
   padding: 40px;
   z-index: 9;
   transform: translateX(120%);

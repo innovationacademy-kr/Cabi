@@ -2,10 +2,10 @@
   /* left navigation */
   #leftNavWrap {
     position: fixed;
-    top: 80px;
+    top: 120px;
     left: 0;
     background-color: var(--white);
-    height: calc(100% - 80px);
+    height: calc(100% - 120px);
     z-index: 9;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
@@ -33,9 +33,9 @@
   /* cabinetDetailArea(rightSection) */
   #cabinetDetailArea {
     position: fixed;
-    top: 80px;
+    top: 120px;
     right: 0;
-    height: calc(100% - 80px);
+    height: calc(100% - 120px);
     z-index: 9;
     transform: translateX(120%);
     transition: transform 0.3s ease-in-out;
@@ -54,9 +54,9 @@
 /* ClubMemberInfoArea(rightSection) */
 /* #clubMemberInfoArea {
     position: fixed;
-    top: 80px;
+    top: 120px;
     right: 0;
-    height: calc(100% - 80px);
+    height: calc(100% - 120px);
     z-index: 9;
     transform: translateX(120%);
     transition: transform 0.3s ease-in-out;
