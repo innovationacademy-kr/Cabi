@@ -3,39 +3,52 @@ import styled from "styled-components";
 import { ReactComponent as CabiLogo } from "@/Cabinet/assets/images/logo.svg";
 import { ReactComponent as PresentationLogo } from "@/Presentation/assets/images/logo.svg";
 
+interface ITopNavDomain {
+  path: string;
+  logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  title: string;
+  active: (pathname: string) => boolean;
+}
+
+const domains: ITopNavDomain[] = [
+  {
+    path: "/home",
+    logo: CabiLogo,
+    title: "Cabi",
+    active: (pathname) => !pathname.includes("presentation"),
+  },
+  {
+    path: "/presentation/home",
+    logo: PresentationLogo,
+    title: "수요지식회",
+    active: (pathname) => pathname.includes("presentation"),
+  },
+];
+
 const TopNavDomainGroup = () => {
   const navigator = useNavigate();
   const { pathname } = useLocation();
-
   return (
     <DomainGroupContainerStyled>
-      <DomainWrapperStyled onClick={() => navigator("/home")}>
-        <LogoContainerStyled>
-          <CabiLogo />
-        </LogoContainerStyled>
-        <DomainTitleStyled
-          className={
-            !pathname.includes("presentation") ? "domainButtonActive" : ""
-          }
-          fontWeight="bold"
-        >
-          Cabi
-        </DomainTitleStyled>
-      </DomainWrapperStyled>
-      <DomainSeparatorStyled />
-      <DomainWrapperStyled onClick={() => navigator("/presentation/home")}>
-        <LogoContainerStyled>
-          <PresentationLogo />
-        </LogoContainerStyled>
-        <DomainTitleStyled
-          className={
-            pathname.includes("presentation") ? "domainButtonActive" : ""
-          }
-          fontWeight="bold"
-        >
-          수요지식회
-        </DomainTitleStyled>
-      </DomainWrapperStyled>
+      {domains.map((domain, index) => (
+        <>
+          <DomainWrapperStyled
+            key={domain.title}
+            onClick={() => navigator(domain.path)}
+          >
+            <LogoContainerStyled>
+              <domain.logo />
+            </LogoContainerStyled>
+            <DomainTitleStyled
+              className={domain.active(pathname) ? "domainButtonActive" : ""}
+              fontWeight="bold"
+            >
+              {domain.title}
+            </DomainTitleStyled>
+          </DomainWrapperStyled>
+          {index < domains.length - 1 && <DomainSeparatorStyled />}
+        </>
+      ))}
     </DomainGroupContainerStyled>
   );
 };
