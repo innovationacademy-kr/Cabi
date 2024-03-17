@@ -26,6 +26,7 @@ import { axiosMyClubList, axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
+const root: HTMLElement = document.documentElement;
 const token = getCookie("access_token");
 
 const Layout = (): JSX.Element => {
@@ -41,10 +42,15 @@ const Layout = (): JSX.Element => {
     useSetRecoilState<ClubResponseDto>(targetClubInfoState);
   const navigate = useNavigate();
   const location = useLocation();
+  const { closeAll } = useMenu();
 
   const isRootPath: boolean = location.pathname === "/";
   const isLoginPage: boolean = location.pathname === "/login";
   const isMainPage: boolean = location.pathname === "/main";
+
+  const savedMainColor = localStorage.getItem("main-color");
+  const savedSubColor = localStorage.getItem("sub-color");
+  const savedMineColor = localStorage.getItem("mine-color");
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -52,6 +58,10 @@ const Layout = (): JSX.Element => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleClickBg = () => {
+    closeAll();
   };
 
   const getMyInfo = async () => {
@@ -91,11 +101,6 @@ const Layout = (): JSX.Element => {
     }
   };
 
-  const savedMainColor = localStorage.getItem("main-color");
-  const savedSubColor = localStorage.getItem("sub-color");
-  const savedMineColor = localStorage.getItem("mine-color");
-  const root: HTMLElement = document.documentElement;
-
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/login");
     else if (token) {
@@ -115,12 +120,6 @@ const Layout = (): JSX.Element => {
     root.style.setProperty("--sub-color", savedSubColor);
     root.style.setProperty("--mine", savedMineColor);
   }, [savedMainColor, savedSubColor, savedMineColor]);
-
-  const { closeAll } = useMenu();
-
-  const handleClickBg = () => {
-    closeAll();
-  };
 
   return isLoginPage ? (
     <Outlet />

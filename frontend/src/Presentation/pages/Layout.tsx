@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
@@ -13,6 +13,7 @@ import LeftNav from "@/Presentation/components/LeftNav/LeftNav";
 import TopNavContainer from "@/Presentation/components/TopNav/TopNav.container";
 
 const token = getCookie("access_token");
+const root: HTMLElement = document.documentElement;
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -20,10 +21,11 @@ const Layout = (): JSX.Element => {
   const setUser = useSetRecoilState<UserDto>(userState);
   const navigate = useNavigate();
   const location = useLocation();
+  const { closeAll } = useMenu();
 
   const isRootPath: boolean = location.pathname === "/presentation/";
   const isLoginPage: boolean = location.pathname === "/login";
-  const isMainPage: boolean = location.pathname === "/main";
+  const isHomePage: boolean = location.pathname === "/home";
 
   const getMyInfo = async () => {
     try {
@@ -38,7 +40,9 @@ const Layout = (): JSX.Element => {
     }
   };
 
-  const root: HTMLElement = document.documentElement;
+  const handleClickBg = () => {
+    closeAll();
+  };
 
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/login");
@@ -50,12 +54,6 @@ const Layout = (): JSX.Element => {
     // root.style.setProperty("--sub-color", "");
   }, []);
 
-  const { closeAll } = useMenu();
-
-  const handleClickBg = () => {
-    closeAll();
-  };
-
   return isLoginPage ? (
     <Outlet />
   ) : (
@@ -65,7 +63,7 @@ const Layout = (): JSX.Element => {
         <LoadingAnimation />
       ) : (
         <WrapperStyled>
-          <LeftNav isVisible={isMainPage} />
+          <LeftNav isVisible={isHomePage} />
           <MainStyled>
             <MenuBgStyled onClick={handleClickBg} id="menuBg" />
             <Outlet />
