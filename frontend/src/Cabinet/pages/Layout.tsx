@@ -157,8 +157,6 @@ const Layout = (): JSX.Element => {
   );
 };
 
-export default Layout;
-
 const WrapperStyled = styled.div`
   width: 100%;
   height: 100%;
@@ -200,3 +198,5 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
 const MenuBgStyled = styled.div`
   position: none;
 `;
+
+export default Layout;

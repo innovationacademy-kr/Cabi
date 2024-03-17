@@ -3,6 +3,7 @@ import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
 import SearchBar from "@/Cabinet/components/TopNav/SearchBar/SearchBar";
 import TopNavButtonGroup from "@/Cabinet/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
+import TopNavDomainGroup from "@/Cabinet/components/TopNav/TopNavDomainGroup/TopNavDomainGroup";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import useOutsideClick from "@/Cabinet/hooks/useOutsideClick";
 
@@ -10,6 +11,16 @@ interface IBuildingListItem {
   building: string;
   onUpdate: SetterOrUpdater<string>;
   onClose: React.Dispatch<boolean>;
+}
+
+interface ITopNavProps {
+  currentBuildingName: string;
+  buildingsList: Array<string>;
+  buildingClicked: boolean;
+  setBuildingClicked: React.Dispatch<boolean>;
+  onClickLogo: React.MouseEventHandler<SVGSVGElement>;
+  setCurrentBuildingName: SetterOrUpdater<string>;
+  isAdmin?: boolean;
 }
 
 const BuildingListItem: React.FC<IBuildingListItem> = ({
@@ -30,62 +41,65 @@ const BuildingListItem: React.FC<IBuildingListItem> = ({
   );
 };
 
-const TopNav: React.FC<{
-  currentBuildingName: string;
-  buildingsList: Array<string>;
-  buildingClicked: boolean;
-  setBuildingClicked: React.Dispatch<boolean>;
-  onClickLogo: React.MouseEventHandler<SVGSVGElement>;
-  setCurrentBuildingName: SetterOrUpdater<string>;
-  isAdmin?: boolean;
-}> = (props) => {
-  const {
-    currentBuildingName,
-    buildingsList,
-    buildingClicked,
-    setBuildingClicked,
-    onClickLogo,
-    setCurrentBuildingName,
-    isAdmin,
-  } = props;
-
+const TopNav = ({
+  currentBuildingName,
+  buildingsList,
+  buildingClicked,
+  setBuildingClicked,
+  onClickLogo,
+  setCurrentBuildingName,
+  isAdmin = false,
+}: ITopNavProps): JSX.Element => {
   const buildingDom = React.useRef<HTMLElement>(null);
   useOutsideClick(buildingDom, () => {
     if (buildingClicked) setBuildingClicked(false);
   });
 
   return (
-    <TopNavContainerStyled id="topNavWrap">
-      <LogoStyled id="topNavLogo" className="cabiButton">
-        <LogoDivStyled>
-          <LogoImg className="cabiButton" onClick={onClickLogo} />
-        </LogoDivStyled>
-        <BuildingSelectBoxStyled ref={buildingDom} className="cabiButton">
-          <div
-            className="cabiButton"
-            onClick={() => setBuildingClicked(!buildingClicked)}
-          >
-            {currentBuildingName}
-          </div>
-          <BuildingListStyled clicked={buildingClicked} className="cabiButton">
-            {buildingsList.map((building, index) => (
-              <BuildingListItem
-                building={building}
-                key={index}
-                onUpdate={setCurrentBuildingName}
-                onClose={setBuildingClicked}
-              />
-            ))}
-          </BuildingListStyled>
-        </BuildingSelectBoxStyled>
-      </LogoStyled>
-      {isAdmin && <SearchBar />}
-      <TopNavButtonGroup isAdmin={isAdmin} />
+    <TopNavContainerStyled>
+      <TopNavDomainGroup />
+      <TopNavWrapperStyled id="topNavWrap">
+        <LogoStyled id="topNavLogo" className="cabiButton">
+          <LogoDivStyled>
+            <LogoImg className="cabiButton" onClick={onClickLogo} />
+          </LogoDivStyled>
+          <BuildingSelectBoxStyled ref={buildingDom} className="cabiButton">
+            <div
+              className="cabiButton"
+              onClick={() => setBuildingClicked(!buildingClicked)}
+            >
+              {currentBuildingName}
+            </div>
+            <BuildingListStyled
+              clicked={buildingClicked}
+              className="cabiButton"
+            >
+              {buildingsList.map((building, index) => (
+                <BuildingListItem
+                  building={building}
+                  key={index}
+                  onUpdate={setCurrentBuildingName}
+                  onClose={setBuildingClicked}
+                />
+              ))}
+            </BuildingListStyled>
+          </BuildingSelectBoxStyled>
+        </LogoStyled>
+        {isAdmin && <SearchBar />}
+        <TopNavButtonGroup isAdmin={isAdmin} />
+      </TopNavWrapperStyled>
     </TopNavContainerStyled>
   );
 };
 
 const TopNavContainerStyled = styled.nav`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+`;
+
+const TopNavWrapperStyled = styled.div`
   width: 100%;
   height: 80px;
   min-height: 80px;
@@ -93,7 +107,7 @@ const TopNavContainerStyled = styled.nav`
   justify-content: space-between;
   align-items: center;
   background-color: white;
-  border-bottom: 1px solid #bcbcbc;
+  border-bottom: 1px solid var(--line-color);
   padding: 0 28px;
   color: var(--gray-color);
   z-index: 10;
