@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { isCurrentModalState } from "@/Presentation/recoil/atoms";
 import DetailContent from "@/Presentation/components/Details/DetailContent";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import {
@@ -27,6 +29,8 @@ const DetailContentContainer = () => {
   const firstPresentationDate: IDate = { year: "2024", month: "3", day: "1" };
   const { pathname } = useLocation();
   const isAdmin = pathname.includes("admin/presentation");
+  const [isCurrentRender, setIsCurrentRender] =
+    useRecoilState(isCurrentModalState);
 
   useEffect(() => {
     const tmpTodayDate = makeIDateObj(new Date());
@@ -44,8 +48,9 @@ const DetailContentContainer = () => {
   }, []);
 
   useEffect(() => {
+    setIsCurrentRender(false);
     if (currentDate) getPresentationSchedule(currentDate);
-  }, [currentDate]);
+  }, [currentDate, isCurrentRender]);
 
   const makeIDateObj = (date: Date) => {
     let offset = date.getTimezoneOffset() * 60000;
@@ -176,6 +181,7 @@ const DetailContentContainer = () => {
             parseInt(todayDate.month) + FUTURE_MONTHS_TO_DISPLAY - 1
           : false
       }
+      setIsCurrentRender={setIsCurrentRender}
     />
   );
 };

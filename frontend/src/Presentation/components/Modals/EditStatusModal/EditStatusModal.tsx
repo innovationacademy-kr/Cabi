@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import Dropdown, {
@@ -12,7 +12,10 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
-import { currentPresentationState } from "@/Presentation/recoil/atoms";
+import {
+  currentPresentationState,
+  isCurrentModalState,
+} from "@/Presentation/recoil/atoms";
 import {
   PresentationLocation,
   PresentationStatusType,
@@ -49,6 +52,7 @@ const floorOptions: IDropdownOptions[] = [
 
 const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   const currentPresentation = useRecoilValue(currentPresentationState);
+  const setIsCurrentModalRender = useSetRecoilState(isCurrentModalState);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
@@ -112,6 +116,7 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
         location
       );
       setModalTitle("수정이 완료되었습니다");
+      setIsCurrentModalRender(true);
     } catch (error: any) {
       setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
