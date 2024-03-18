@@ -33,15 +33,17 @@ const RegisterModal = ({
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+
   const registerDetail = `발표를 신청한 후에는 내용 수정이 <strong>불가능</strong>합니다.
 발표 날짜와 시간을 수정하고 싶으시다면
 Cabi 슬랙 채널로 문의해주세요.
 <strong>${date}</strong> 에 수요지식회 발표를 신청하시겠습니까?`;
-  const navigate = useNavigate();
 
-  // 신청한 후 내용 수정 불가
-  // 신청한 후 시간, 날짜는 Admin 에게 연락해야 수정 가능
-  // 발표 날짜를 보이게 해야 할까?
+  const closeResponseModal = (e: React.MouseEvent) => {
+    closeModal(e);
+    setIsClicked(false);
+  };
 
   const tryRegister = async () => {
     try {
@@ -92,16 +94,12 @@ Cabi 슬랙 채널로 문의해주세요.
         (hasErrorOnResponse ? (
           <FailResponseModal
             modalTitle={modalTitle}
-            closeModal={() => {
-              setShowResponseModal(false);
-            }}
+            closeModal={closeResponseModal}
           />
         ) : (
           <SuccessResponseModal
             modalTitle={modalTitle}
-            closeModal={() => {
-              setShowResponseModal(false);
-            }}
+            closeModal={closeResponseModal}
           />
         ))}
     </ModalPortal>

@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { toggleItem } from "@/Cabinet/components/Common/MultiToggleSwitch";
@@ -69,9 +69,6 @@ const RegisterPage = () => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
-  const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>("");
-  const [showNotificationBox, setShowNotificationBox] = useState<boolean>(true);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const [errorDetails, setErrorDetails] = useState("");
