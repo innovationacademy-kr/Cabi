@@ -181,7 +181,6 @@ const DetailContentContainer = () => {
             parseInt(todayDate.month) + FUTURE_MONTHS_TO_DISPLAY - 1
           : false
       }
-      setIsCurrentRender={setIsCurrentRender}
     />
   );
 };

@@ -18,6 +18,7 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
   const [currentName, setCurrentName] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const selectedIdx = options.findIndex((op) => op.name === currentName) ?? 0;
+
   return (
     <DropdownContainerStyled>
       <DropdownSelectionBoxStyled
