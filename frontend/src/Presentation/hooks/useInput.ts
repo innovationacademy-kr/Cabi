@@ -32,7 +32,7 @@ const useInput = (
     }
   };
 
-  return [value, onChange, error] as const;
+  return [value, onChange, error];
 };
 
 export default useInput;

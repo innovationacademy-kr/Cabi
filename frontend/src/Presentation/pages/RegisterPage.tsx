@@ -48,6 +48,7 @@ const NotificationDateDetail = `현재 달부터 두 달 후까지의 날짜 중
 일정이 업데이트됩니다.
 `;
 
+// TODO: implement error handling for each input field
 const requiredValidator = (value: string): IValidationResult => ({
   isValid: value.trim().length > 0,
   message: "* 필수 항목입니다.",
