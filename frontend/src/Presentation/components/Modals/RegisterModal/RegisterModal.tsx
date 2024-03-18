@@ -1,4 +1,5 @@
 import { SetStateAction, useState } from "react";
+import { set } from "react-ga";
 import { useNavigate } from "react-router-dom";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
@@ -17,7 +18,7 @@ const RegisterModal = ({
   time,
   toggleType,
   closeModal,
-  setIsClicked,
+  setIsFinished,
 }: {
   title: string;
   summary: string;
@@ -26,7 +27,7 @@ const RegisterModal = ({
   time: string;
   toggleType: string;
   closeModal: React.MouseEventHandler;
-  setIsClicked: React.Dispatch<SetStateAction<boolean>>;
+  setIsFinished: React.Dispatch<SetStateAction<boolean>>;
 }) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -42,7 +43,6 @@ Cabi 슬랙 채널로 문의해주세요.
 
   const closeResponseModal = (e: React.MouseEvent) => {
     closeModal(e);
-    setIsClicked(false);
   };
 
   const tryRegister = async () => {
@@ -68,6 +68,7 @@ Cabi 슬랙 채널로 문의해주세요.
       setTimeout(() => {
         navigate("/presentation/home");
       }, 1500);
+      setIsFinished(true);
     } catch (error: any) {
       setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);

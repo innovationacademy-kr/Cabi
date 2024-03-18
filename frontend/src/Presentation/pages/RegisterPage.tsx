@@ -16,7 +16,7 @@ import {
   PresentationTimeMap,
 } from "@/Presentation/assets/data/maps";
 import { PresentationCategoryType } from "@/Presentation/types/enum/presentation.type.enum";
-import useInput from "@/Presentation/hooks/useInput";
+import useInput, { IValidationResult } from "@/Presentation/hooks/useInput";
 import useInvalidDates from "@/Presentation/hooks/useInvalidDates";
 import { calculateAvailableDaysInWeeks } from "@/Presentation/utils/dateUtils";
 import { WEDNESDAY } from "@/Presentation/constants/dayOfTheWeek";
@@ -42,10 +42,16 @@ const toggleList: toggleItem[] = Object.entries(
 const NotificationTimeDetail = `발표 시작 시간은 수요일 오후 2시이며
 추후에 변경될 수 있습니다.
 `;
+
 const NotificationDateDetail = `현재 달부터 두 달 후까지의 날짜 중에서
 선택이 가능합니다. 각 월별로 신청 가능한
 일정이 업데이트됩니다.
 `;
+
+const requiredValidator = (value: string): IValidationResult => ({
+  isValid: value.trim().length > 0,
+  message: "* 필수 항목입니다.",
+});
 
 const validateFields = (fields: { name: string; value: string }[]) => {
   return fields.reduce(
@@ -67,14 +73,27 @@ const RegisterPage = () => {
   const [time, setTime] = useState<PresentationTimeKey>("");
   const [focusedSection, setFocusedSection] = useState<string | null>(null);
   const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const [errorDetails, setErrorDetails] = useState("");
-  const [title, setTitle] = useInput("", MAX_TITLE_LENGTH);
-  const [summary, setSummary] = useInput("", MAX_SUMMARY_LENGTH);
-  const [content, setContent] = useInput("", MAX_CONTENT_LENGTH);
+  const [title, setTitle, titleError] = useInput(
+    "",
+    MAX_TITLE_LENGTH,
+    requiredValidator
+  );
+  const [summary, setSummary, summaryError] = useInput(
+    "",
+    MAX_SUMMARY_LENGTH,
+    requiredValidator
+  );
+  const [content, setContent, contentError] = useInput(
+    "",
+    MAX_CONTENT_LENGTH,
+    requiredValidator
+  );
 
   const invalidDates: string[] = useInvalidDates().map((date) =>
     format(date, "M/d")
@@ -97,6 +116,10 @@ const RegisterPage = () => {
   };
 
   const tryRegister = () => {
+    // TODO: implement error handling for each input field
+    if (titleError || summaryError || contentError) {
+      return;
+    }
     const fields = [
       { name: "날짜", value: date },
       { name: "시간", value: time },
@@ -235,8 +258,11 @@ const RegisterPage = () => {
               isInputArea={false}
             />
           </SubSectionStyled>
-          <RegisterButtonStyled onClick={tryRegister} disabled={isClicked}>
-            {isClicked ? <LoadingAnimation /> : "신청하기"}
+          <RegisterButtonStyled
+            onClick={tryRegister}
+            disabled={isClicked || isFinished}
+          >
+            {isClicked || isFinished ? <LoadingAnimation /> : "신청하기"}
           </RegisterButtonStyled>
         </BackgroundStyled>
       </RegisterPageStyled>
@@ -252,7 +278,7 @@ const RegisterPage = () => {
             setShowResponseModal(false);
             setIsClicked(false);
           }}
-          setIsClicked={setIsClicked}
+          setIsFinished={setIsFinished}
         />
       )}
       {showErrorModal && (
