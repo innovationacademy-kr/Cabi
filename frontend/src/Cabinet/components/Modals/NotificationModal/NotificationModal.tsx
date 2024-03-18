@@ -6,17 +6,19 @@ export const NotificationModal = ({
   title,
   detail,
   closeModal,
+  iconType = IconType.NOTIFICATIONICON,
 }: {
   title: string;
   detail: string;
   closeModal: React.MouseEventHandler;
+  iconType?: IconType;
 }) => {
   const modalContents: IModalContents = {
     type: "noBtn",
     title: title,
     detail: detail,
     closeModal: closeModal,
-    iconType: IconType.NOTIFICATIONICON,
+    iconType: iconType,
   };
   return (
     <ModalPortal>

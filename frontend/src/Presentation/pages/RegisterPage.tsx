@@ -4,8 +4,9 @@ import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { toggleItem } from "@/Cabinet/components/Common/MultiToggleSwitch";
 import MultiToggleSwitchSeparated from "@/Cabinet/components/Common/MultiToggleSwitchSeparated";
+import { NotificationModal } from "@/Cabinet/components/Modals/NotificationModal/NotificationModal";
 import CautionIcon from "@/Cabinet/assets/images/cautionSign.svg";
-import { RegisterErrorModal } from "@/Presentation/components/Modals/RegisterModal/RegisterErrorModal";
+import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import RegisterModal from "@/Presentation/components/Modals/RegisterModal/RegisterModal";
 import DropdownDateMenu from "@/Presentation/components/Register/DropdownDateMenu";
 import DropdownTimeMenu from "@/Presentation/components/Register/DropdownTimeMenu";
@@ -15,6 +16,7 @@ import {
   PresentationTimeMap,
 } from "@/Presentation/assets/data/maps";
 import { PresentationCategoryType } from "@/Presentation/types/enum/presentation.type.enum";
+import useInput from "@/Presentation/hooks/useInput";
 import useInvalidDates from "@/Presentation/hooks/useInvalidDates";
 import { calculateAvailableDaysInWeeks } from "@/Presentation/utils/dateUtils";
 import { WEDNESDAY } from "@/Presentation/constants/dayOfTheWeek";
@@ -25,13 +27,6 @@ import {
   MAX_SUMMARY_LENGTH,
   MAX_TITLE_LENGTH,
 } from "@/Presentation/constants/policy";
-
-interface IInputData {
-  value: string;
-  length: number;
-}
-
-const defaultInputData: IInputData = { value: "", length: 0 };
 
 export type PresentationTimeKey =
   | ""
@@ -52,15 +47,24 @@ const NotificationDateDetail = `현재 달부터 두 달 후까지의 날짜 중
 일정이 업데이트됩니다.
 `;
 
+const validateFields = (fields: { name: string; value: string }[]) => {
+  return fields.reduce(
+    (acc, field) => {
+      if (field.value.trim() === "") {
+        acc.missingFields.push(field.name);
+      }
+      return acc;
+    },
+    { missingFields: [] as string[] }
+  );
+};
+
 const RegisterPage = () => {
   const [toggleType, setToggleType] = useState<PresentationCategoryType>(
     PresentationCategoryType.DEVELOP
   );
   const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<PresentationTimeKey>("");
-  const [title, setTitle] = useState<IInputData>(defaultInputData);
-  const [summary, setSummary] = useState<IInputData>(defaultInputData);
-  const [content, setContent] = useState<IInputData>(defaultInputData);
   const [focusedSection, setFocusedSection] = useState<string | null>(null);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [availableDates, setAvailableDates] = useState<string[]>([]);
@@ -71,21 +75,12 @@ const RegisterPage = () => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const [errorDetails, setErrorDetails] = useState("");
+  const [title, setTitle] = useInput("", MAX_TITLE_LENGTH);
+  const [summary, setSummary] = useInput("", MAX_SUMMARY_LENGTH);
+  const [content, setContent] = useInput("", MAX_CONTENT_LENGTH);
 
   const invalidDates: string[] = useInvalidDates().map((date) =>
     format(date, "M/d")
-  );
-
-  const handleInputChange = useCallback(
-    (
-        setInput: React.Dispatch<React.SetStateAction<IInputData>>,
-        maxLength: number
-      ) =>
-      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const data = e.target.value.slice(0, maxLength);
-        setInput({ value: data, length: data.length });
-      },
-    []
   );
 
   const handleFocus = (sectionName: string) => {
@@ -105,23 +100,14 @@ const RegisterPage = () => {
   };
 
   const tryRegister = () => {
-    let missingFields = [];
-    if (date === "") {
-      missingFields.push("날짜");
-    }
-    if (time === "") {
-      missingFields.push("시간");
-    }
-    if (title.value === "") {
-      missingFields.push("제목");
-    }
-    if (summary.value === "") {
-      missingFields.push("한 줄 요약");
-    }
-    if (content.value === "") {
-      missingFields.push("내용");
-    }
-
+    const fields = [
+      { name: "날짜", value: date },
+      { name: "시간", value: time },
+      { name: "제목", value: title },
+      { name: "한 줄 요약", value: summary },
+      { name: "내용", value: content },
+    ];
+    const { missingFields } = validateFields(fields);
     if (missingFields.length > 0) {
       const errorMessage = `<strong>${missingFields.join(
         ", "
@@ -216,8 +202,8 @@ const RegisterPage = () => {
           <SubSectionStyled>
             <InputField
               title="제목"
-              value={title.value}
-              onChange={handleInputChange(setTitle, MAX_TITLE_LENGTH)}
+              value={title}
+              onChange={setTitle}
               onFocus={() => handleFocus("title")}
               onBlur={handleBlur}
               maxLength={MAX_TITLE_LENGTH}
@@ -229,8 +215,8 @@ const RegisterPage = () => {
           <SubSectionStyled>
             <InputField
               title="한 줄 요약"
-              value={summary.value}
-              onChange={handleInputChange(setSummary, MAX_SUMMARY_LENGTH)}
+              value={summary}
+              onChange={setSummary}
               onFocus={() => handleFocus("summary")}
               onBlur={handleBlur}
               maxLength={MAX_SUMMARY_LENGTH}
@@ -242,8 +228,8 @@ const RegisterPage = () => {
           <SubSectionStyled>
             <InputField
               title="내용"
-              value={content.value}
-              onChange={handleInputChange(setContent, MAX_CONTENT_LENGTH)}
+              value={content}
+              onChange={setContent}
               onFocus={() => handleFocus("content")}
               onBlur={handleBlur}
               maxLength={MAX_CONTENT_LENGTH}
@@ -259,9 +245,9 @@ const RegisterPage = () => {
       </RegisterPageStyled>
       {showResponseModal && (
         <RegisterModal
-          title={title.value}
-          summary={summary.value}
-          content={content.value}
+          title={title}
+          summary={summary}
+          content={content}
           date={date}
           time={PresentationTimeMap[time]}
           toggleType={toggleType}
@@ -273,10 +259,11 @@ const RegisterPage = () => {
         />
       )}
       {showErrorModal && (
-        <RegisterErrorModal
+        <NotificationModal
           title="입력 오류"
           detail={errorDetails}
           closeModal={() => setShowErrorModal(false)}
+          iconType={IconType.ERRORICON}
         />
       )}
     </>
