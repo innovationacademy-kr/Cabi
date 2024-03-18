@@ -12,7 +12,6 @@ const token = getCookie("admin_access_token");
 const root: HTMLElement = document.documentElement;
 
 const Layout = (): JSX.Element => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
   const isLoginPage: boolean = location.pathname === "/admin/login";
@@ -29,8 +28,7 @@ const Layout = (): JSX.Element => {
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/admin/login");
     else if (token) {
-      setIsLoading(true);
-      if (checkPath()) navigate("/admin/presentation/home");
+      if (checkPath()) navigate("/admin/presentation/detail");
     }
   }, []);
 
@@ -47,18 +45,14 @@ const Layout = (): JSX.Element => {
     <Outlet />
   ) : (
     <React.Fragment>
-      {token && <AdminTopNavContainer setIsLoading={setIsLoading} />}
-      {isLoading ? (
-        <LoadingAnimation />
-      ) : (
-        <WrapperStyled>
-          <LeftNav isAdmin={true} isVisible={isMainPage} />
-          <MainStyled>
-            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
-            <Outlet />
-          </MainStyled>
-        </WrapperStyled>
-      )}
+      {token && <AdminTopNavContainer />}
+      <WrapperStyled>
+        <LeftNav isAdmin={true} isVisible={isMainPage} />
+        <MainStyled>
+          <MenuBgStyled onClick={handleClickBg} id="menuBg" />
+          <Outlet />
+        </MainStyled>
+      </WrapperStyled>
     </React.Fragment>
   );
 };

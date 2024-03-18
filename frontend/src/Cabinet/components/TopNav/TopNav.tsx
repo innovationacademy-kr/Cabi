@@ -57,7 +57,7 @@ const TopNav = ({
 
   return (
     <TopNavContainerStyled>
-      <TopNavDomainGroup />
+      <TopNavDomainGroup isAdmin={isAdmin} />
       <TopNavWrapperStyled id="topNavWrap">
         <LogoStyled id="topNavLogo" className="cabiButton">
           <LogoDivStyled>

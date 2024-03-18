@@ -5,6 +5,7 @@ import { ReactComponent as PresentationLogo } from "@/Presentation/assets/images
 
 interface ITopNavDomain {
   path: string;
+  adminPath: string;
   logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   title: string;
   active: (pathname: string) => boolean;
@@ -13,26 +14,30 @@ interface ITopNavDomain {
 const domains: ITopNavDomain[] = [
   {
     path: "/home",
+    adminPath: "/admin/home",
     logo: CabiLogo,
     title: "Cabi",
     active: (pathname) => !pathname.includes("presentation"),
   },
   {
-    path: "/presentation/home",
+    path: "/presentation/",
+    adminPath: "/admin/presentation/detail",
     logo: PresentationLogo,
     title: "수요지식회",
     active: (pathname) => pathname.includes("presentation"),
   },
 ];
 
-const TopNavDomainGroup = () => {
+const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
   const navigator = useNavigate();
   const { pathname } = useLocation();
   return (
     <DomainGroupContainerStyled>
       {domains.map((domain, index) => (
         <DomainWrapperStyled key={domain.title}>
-          <DomainContainerStyled onClick={() => navigator(domain.path)}>
+          <DomainContainerStyled
+            onClick={() => navigator(isAdmin ? domain.adminPath : domain.path)}
+          >
             <LogoContainerStyled>
               <domain.logo />
             </LogoContainerStyled>
