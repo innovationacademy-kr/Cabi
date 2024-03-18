@@ -45,7 +45,7 @@ const RecentPresentation = ({
     <ConTainerStyled>
       <HeaderStyled>
         <TitleContainerStyled>
-          <h1 className="title">수요지식회</h1>
+          <p>수요지식회</p>
           <RegistButtonStyled
             onClick={() => {
               navigator("/presentation/register");
@@ -54,7 +54,7 @@ const RecentPresentation = ({
             발표신청
           </RegistButtonStyled>
         </TitleContainerStyled>
-        <span className="subtitle">수요일 오후 2시 지식이 일상이 되다.</span>
+        <span>지식이 일상이 되다.</span>
       </HeaderStyled>
 
       <PresentationCardContainer
@@ -80,7 +80,6 @@ const ConTainerStyled = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
 `;
@@ -102,11 +101,8 @@ const HeaderStyled = styled.div`
     word-break: keep-all;
   }
 
-  @media screen and (max-width: 425px) {
-    .title {
-      font-size: 1.5rem;
-    }
-    .subtitle {
+  @media screen and (max-width: 430px) {
+    & > span {
       font-size: 1.25rem;
     }
     & > div {
@@ -118,11 +114,6 @@ const HeaderStyled = styled.div`
 `;
 
 const TitleContainerStyled = styled.div`
-  & > h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-  }
-
   padding-bottom: 10px;
   margin-bottom: 10px;
   height: 60px;
@@ -132,6 +123,20 @@ const TitleContainerStyled = styled.div`
   font-weight: 700;
   border-bottom: 2px solid #d9d9d9;
   width: 100%;
+  font-size: 2.5rem;
+
+  @media screen and (max-width: 430px) {
+    & > p {
+      font-size: 1.5rem;
+      padding-bottom: 10px;
+    }
+    height: 35px;
+  }
+
+  & > h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
 `;
 
 const RegistButtonStyled = styled.button`
@@ -146,7 +151,6 @@ const MobileRegistButtonStyled = styled.button`
   background-color: #3f69fd;
   width: 80%;
   height: 50px;
-  font-weight: 60;
   margin-bottom: 30px;
   margin-top: 30px;
   @media screen and (min-width: 425px) {
