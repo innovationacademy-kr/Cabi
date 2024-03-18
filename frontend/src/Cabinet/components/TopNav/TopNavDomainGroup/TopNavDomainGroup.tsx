@@ -31,11 +31,8 @@ const TopNavDomainGroup = () => {
   return (
     <DomainGroupContainerStyled>
       {domains.map((domain, index) => (
-        <>
-          <DomainWrapperStyled
-            key={domain.title}
-            onClick={() => navigator(domain.path)}
-          >
+        <DomainWrapperStyled key={domain.title}>
+          <DomainContainerStyled onClick={() => navigator(domain.path)}>
             <LogoContainerStyled>
               <domain.logo />
             </LogoContainerStyled>
@@ -45,9 +42,9 @@ const TopNavDomainGroup = () => {
             >
               {domain.title}
             </DomainTitleStyled>
-          </DomainWrapperStyled>
+          </DomainContainerStyled>
           {index < domains.length - 1 && <DomainSeparatorStyled />}
-        </>
+        </DomainWrapperStyled>
       ))}
     </DomainGroupContainerStyled>
   );
@@ -65,6 +62,11 @@ const DomainGroupContainerStyled = styled.div`
 `;
 
 const DomainWrapperStyled = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const DomainContainerStyled = styled.div`
   display: flex;
   align-items: center;
 `;
