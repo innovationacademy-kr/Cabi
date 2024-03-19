@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import Dropdown, {
@@ -51,7 +51,9 @@ const floorOptions: IDropdownOptions[] = [
 ];
 
 const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
-  const currentPresentation = useRecoilValue(currentPresentationState);
+  const [currentPresentation, setCurrentPresentation] = useRecoilState(
+    currentPresentationState
+  );
   const setIsCurrentModalRender = useSetRecoilState(isCurrentModalState);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
