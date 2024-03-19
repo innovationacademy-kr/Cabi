@@ -34,6 +34,8 @@ const renderCellDetail = (
       );
     case "presentationLocation":
       return PresentationLocationLabelMap[item.presentationLocation!];
+    case "presentationStatus":
+      return PresentationStatusTypeLabelMap[item.presentationStatus!];
     default:
       return null;
   }
