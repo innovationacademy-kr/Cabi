@@ -68,6 +68,10 @@ const MapInfoContainerStyled = styled.div`
   flex-direction: column;
   align-items: center;
   background: var(--color-background);
+  border-left: 1px solid var(--color-line);
+  &.on {
+    transform: translateX(0%);
+  }
 `;
 
 export default MapInfo;

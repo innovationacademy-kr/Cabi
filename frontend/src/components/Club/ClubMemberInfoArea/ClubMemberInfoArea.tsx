@@ -146,6 +146,7 @@ const ClubMemberInfoAreaStyled = styled.div`
   align-items: center;
   background: var(--color-background);
   box-shadow: 0 0 40px 0 var(--bg-shadow-200);
+  border-left: 1px solid var(--color-line);
   &.on {
     transform: translateX(0%);
   }

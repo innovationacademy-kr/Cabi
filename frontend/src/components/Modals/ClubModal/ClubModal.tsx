@@ -292,7 +292,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-300);
+  background: var(--bg-shadow-100);
   z-index: 1000;
 `;
 

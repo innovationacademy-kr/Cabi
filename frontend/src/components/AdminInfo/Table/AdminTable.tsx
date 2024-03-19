@@ -80,7 +80,7 @@ const TableWrapperStyled = styled.div`
   width: 80%;
   height: 100%;
   margin: 0 auto;
-  background: var(--white);
+  background: var(--color-background);
 `;
 
 const TableBorderStyled = styled.div`
@@ -91,6 +91,7 @@ const TableBorderStyled = styled.div`
 
 const TableStyled = styled.table`
   width: 100%;
+  background: var(--color-background);
   background: var(--white);
   overflow: scroll;
 
@@ -104,7 +105,7 @@ const TheadStyled = styled.thead`
   height: 45px;
   line-height: 45px;
   background-color: var(--main-color);
-  color: var(--white);
+  color: var(--color-background);
 `;
 
 const TbodyStyled = styled.tbody`

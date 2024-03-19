@@ -31,11 +31,6 @@
   }
 }
 
-/* mapInfo */
-#mapInfo.on {
-  transform: translateX(0%);
-}
-
 /* search */
 @media (max-width: 768px) {
   #searchBar {

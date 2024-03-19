@@ -61,6 +61,7 @@ const HoverBox = styled.div`
   background-color: rgba(73, 73, 73, 0.99);
   border-radius: 10px;
   box-shadow: 4px 4px 20px 0px var(--bg-shadow-300);
+  /* TODO : HoverBox 안쓰면 지우고, 쓰면 바꾸기 */
   font-size: 0.75rem;
   color: var(--color-background);
   display: flex;
