@@ -33,7 +33,7 @@ const NoEventTableRow = ({
               {hasNoUpcomingEvent ? <HappyCcabiImg /> : <SadCcabiImg />}
             </CcabiStyled>
           </NoEventPhraseStyled>
-          {hasNoUpcomingEvent && (
+          {hasNoUpcomingEvent && !isAdmin ? (
             <button
               onClick={() => {
                 navigator("/presentation/register");
@@ -41,7 +41,7 @@ const NoEventTableRow = ({
             >
               신청하기
             </button>
-          )}
+          ) : null}
         </NoEventDivStyled>
       </td>
     </>
