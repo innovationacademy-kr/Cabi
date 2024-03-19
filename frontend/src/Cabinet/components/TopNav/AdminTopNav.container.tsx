@@ -48,8 +48,7 @@ const AdminTopNavContainer: React.FC<{
 
   useEffect(() => {
     if (buildingsList.length === 0) return;
-
-    // setCurrentBuildingName(buildingsList[0]);
+    setCurrentBuildingName(buildingsList[0]);
   }, [buildingsList]);
 
   useEffect(() => {
