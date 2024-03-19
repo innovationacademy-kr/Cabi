@@ -104,8 +104,16 @@ const DetailTableBodyItemTopTr = ({
                 {tableHeadEntriesWithoutDate.map((head, idx) => {
                   return (
                     <td
+                      /* 
+                      NOTE : 
+                      admin 페이지가 아니고 && 발표장소 || admin 페이지고 && 발표상태면
+                      border-radius 적용
+                      */
                       className={
-                        head[0] === "presentationLocation" ? "rightEnd" : ""
+                        (!isAdmin && head[0] === "presentationLocation") ||
+                        (isAdmin && head[0] === "presentationStatus")
+                          ? "rightEnd"
+                          : ""
                       }
                       key={idx}
                       title={
