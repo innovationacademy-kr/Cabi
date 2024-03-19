@@ -81,7 +81,6 @@ const DetailContentContainer = () => {
             requestDate.year + "-" + requestDate.month
           );
       let objAry: IPresentationScheduleDetailInfo[] = response.data.forms;
-      console.log(objAry);
       const availableDays = calculateAvailableDaysInWeeks(
         new Date(
           parseInt(todayDate!.year),
@@ -110,6 +109,7 @@ const DetailContentContainer = () => {
               userName: null,
               presentationTime: null,
               presentationStatus: null,
+              presentationLocation: null,
             };
           });
         }
@@ -128,6 +128,7 @@ const DetailContentContainer = () => {
                 userName: null,
                 presentationTime: null,
                 presentationStatus: null,
+                presentationLocation: null,
               };
           });
         }

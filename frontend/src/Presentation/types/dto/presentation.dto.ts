@@ -40,7 +40,7 @@ export interface IPresentationScheduleDetailInfo {
   userName: string | null;
   presentationStatus: PresentationStatusType | null;
   presentationTime: PresentationPeriodType | null;
-  presentationLocation?: PresentationLocation | null;
+  presentationLocation: PresentationLocation | null;
 }
 
 export interface IAnimation {

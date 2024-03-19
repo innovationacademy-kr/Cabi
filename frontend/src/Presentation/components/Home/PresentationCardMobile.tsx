@@ -175,7 +175,6 @@ const SubTitleStyled = styled.div`
   line-height: 1.5;
   margin-bottom: 12px;
   color: #797979;
-  /* TODO : index.css에 있는 변수 사용 */
 `;
 
 const DetailFooterStyled = styled.div`
