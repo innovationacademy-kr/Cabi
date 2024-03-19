@@ -134,18 +134,21 @@ const ClubMemberInfoAreaStyled = styled.div`
   position: fixed;
   top: 80px;
   right: 0;
-  min-width: 330px;
-  width: 330px;
   height: calc(100% - 80px);
-  padding: 40px;
   z-index: 9;
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;
-  box-shadow: 0 0 40px 0 var(--bg-shadow-200);
+  min-width: 330px;
+  width: 330px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
   background: var(--color-background);
+  box-shadow: 0 0 40px 0 var(--bg-shadow-200);
+  &.on {
+    transform: translateX(0%);
+  }
 `;
 
 const TextStyled = styled.p<{

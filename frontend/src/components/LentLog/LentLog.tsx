@@ -2,6 +2,7 @@ import styled, { css } from "styled-components";
 import LogTable from "@/components/LentLog/LogTable/LogTable";
 import { ILentLog } from "@/types/dto/lent.dto";
 
+// 더 이상 안쓰는 컴포넌트
 const LentLog = ({
   closeLent,
   logs,

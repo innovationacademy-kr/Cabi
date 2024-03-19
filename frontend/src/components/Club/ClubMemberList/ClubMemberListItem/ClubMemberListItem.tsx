@@ -57,8 +57,9 @@ const MemberListItemContainerStyled = styled.div<{
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px var(--bg-shadow-200),
-        0px 4px 4px var(--bg-shadow-200);
+      box-shadow: inset 5px 5px 5px var(--bg-black-shadow-200),
+        0px 4px 4px var(--bg-black-shadow-200);
+      /* black shadow 여야함! */
     `}
 
   @media (hover: hover) and (pointer: fine) {

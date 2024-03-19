@@ -122,7 +122,8 @@ const CabiImgStyled = styled.div`
 `;
 
 const ButtonStyled = styled.button`
-  box-shadow: 10px 10px 40px 0px var(--bg-shadow-200);
+  box-shadow: 10px 10px 40px 0px var(--bg-black-shadow-200);
+  /* black shadow 여야함! */
 `;
 
 export default AnnounceTemplate;
