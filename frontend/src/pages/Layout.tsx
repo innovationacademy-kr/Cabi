@@ -136,8 +136,7 @@ const Layout = (): JSX.Element => {
         <WrapperStyled>
           <LeftNav isVisible={isMainPage} />
           <MainStyled>
-            {/* <MenuBgStyled onClick={handleClickBg} id="menuBg" /> */}
-            {/* TODO : 없어져도 되지 않을까? */}
+            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
             <Outlet />
           </MainStyled>
           <DetailInfoContainerStyled
