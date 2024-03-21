@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { useLocation } from "react-router-dom";
 
-const TrackPageView = () => {
+const PageTracker = () => {
   const location = useLocation();
   const [initialized, setInitialized] = useState(false);
 
@@ -29,4 +29,4 @@ const TrackPageView = () => {
   return null;
 };
 
-export default TrackPageView;
+export default PageTracker;
