@@ -62,7 +62,7 @@ const UlStyled = styled.ul`
   border-radius: 10px;
   text-align: left;
   padding: 10px;
-  color: var(--black);
+  color: var(--color-text-normal);
   background-color: var(--color-background);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   opacity: 0.9;

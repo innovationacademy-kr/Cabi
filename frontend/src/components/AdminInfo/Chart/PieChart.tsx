@@ -105,7 +105,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
               {
                 on: "hover",
                 style: {
-                  itemTextColor: "var(--black)",
+                  itemTextColor: "var(--color-text-normal)",
                 },
               },
             ],

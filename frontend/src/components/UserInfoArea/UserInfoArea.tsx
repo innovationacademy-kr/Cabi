@@ -60,8 +60,7 @@ const UserInfoArea: React.FC<{
         {selectedUserInfo.isBanned ? "!" : "-"}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
-      {/* <TextStyled fontSize="1rem" fontColor="black"> */}
-      <TextStyled fontSize="1rem" fontColor="var(--black)">
+      <TextStyled fontSize="1rem" fontColor="var(--color-text-normal))">
         {selectedUserInfo.name}
       </TextStyled>
 

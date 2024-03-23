@@ -112,7 +112,7 @@ const ContentItemTextAreaStyled = styled.textarea<{
   height: 100%;
   border-radius: 10px;
   font-size: 1.125rem;
-  color: var(--black);
+  color: var(--color-text-normal);
   overflow-y: auto;
   word-break: break-all;
   white-space: pre-wrap;
@@ -122,7 +122,7 @@ const ContentItemTextAreaStyled = styled.textarea<{
 
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
   color: ${({ mode }) =>
-    mode === "read" ? "var(--main-color)" : "var(--black)"};
+    mode === "read" ? "var(--main-color)" : "var(--color-text-normal)"};
   &::placeholder {
     color: ${({ mode }) =>
       mode === "read" ? "var(--main-color)" : "var(--color-line)"};

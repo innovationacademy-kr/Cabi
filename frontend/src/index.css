@@ -230,7 +230,7 @@ img {
 }
 
 input {
-  color: var(--black);
+  color: var(--color-text-normal);
   text-align: center;
   border: none;
   font-size: 1rem;

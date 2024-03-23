@@ -154,14 +154,9 @@ const MaunalContentBoxStyled = styled.div<{
     stroke: ${(props) =>
       props.contentStatus === ContentStatus.IN_SESSION
         ? "var(--main-color)"
-        : // : props.contentStatus === ContentStatus.EXTENSION
-        // ? "var(--black)"
-        // : "white"};
-        // light
-        props.contentStatus === ContentStatus.EXTENSION
+        : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--color-text-normal)"
         : "var(--color-background)"};
-    // dark
     cursor: pointer;
   }
 

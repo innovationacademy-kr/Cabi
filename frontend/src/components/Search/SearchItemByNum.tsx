@@ -111,7 +111,9 @@ const RectangleStyled = styled.div<{ status: CabinetStatus }>`
   background-color: ${(props) => cabinetStatusColorMap[props.status]};
   font-size: 1.625rem;
   color: ${(props) =>
-    props.status ? cabinetLabelColorMap[props.status] : "var(--black)"};
+    props.status
+      ? cabinetLabelColorMap[props.status]
+      : "var(--color-text-normal)"};
   display: flex;
   justify-content: center;
   align-items: center;

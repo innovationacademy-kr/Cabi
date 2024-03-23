@@ -209,6 +209,5 @@ export const targetClubUserInfoState = atom<ClubUserResponseDto>({
 
 export const darkModeState = atom<string>({
   key: "darkMode",
-  // default: "black",
-  default: "var(--black)",
+  default: "var(--color-text-normal)",
 });
