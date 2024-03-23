@@ -6,6 +6,7 @@ import {
   ContentDetailStyled,
 } from "@/components/Card/CardStyles";
 import ClubPasswordModalContainer from "@/components/Modals/ClubModal/ClubPasswordModal.container";
+import { ReactComponent as LeaderIcon } from "@/assets/images/leader.svg";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 
 const ClubCabinetInfoCard = ({
@@ -64,8 +65,13 @@ const ClubCabinetInfoCard = ({
                 {clubInfo.floor + "층 - " + clubInfo.section}
               </CabinetInfoTextStyled>
               <CabinetUserListWrapper>
-                <CabinetIconStyled />
-                <CabinetInfoTextStyled fontSize={"1rem"} fontColor="var(--color-text-normal)">
+                <CabinetIconStyled>
+                  <LeaderIcon />
+                </CabinetIconStyled>
+                <CabinetInfoTextStyled
+                  fontSize={"1rem"}
+                  fontColor="var(--color-text-normal)"
+                >
                   {clubInfo.clubMaster.userName}
                 </CabinetInfoTextStyled>
               </CabinetUserListWrapper>
@@ -109,7 +115,8 @@ const CabinetRectangleStyled = styled.div`
   border-radius: 10px;
   margin-right: 20px;
   background-color: var(--full);
-  color: var(--color-text-normal);
+  color: var(--black);
+  /* black으로 */
   font-size: 2rem;
   text-align: center;
 `;
@@ -150,9 +157,17 @@ const CabinetIconStyled = styled.div`
   width: 22px;
   height: 18px;
   margin-right: 0.5rem;
-  background-image: url("/src/assets/images/leader.svg");
-  background-size: contain;
-  background-repeat: no-repeat;
+
+  & > svg {
+    width: 22px;
+    height: 18px;
+  }
+
+  & > svg > path {
+    stroke: var(--gray-tmp-7);
+    /* TODO : darkmode */
+    transform: scale(1.1);
+  }
 `;
 
 const ContentInfoStyled = styled.div<{

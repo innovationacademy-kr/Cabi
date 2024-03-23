@@ -5,7 +5,7 @@ export interface IButtonProps {
   label?: string; // NOTE: icon 이 없을 경우, label 을 표시
   onClick?: () => void;
   backgroundColor?: string;
-  color?: string;
+  fontColor?: string;
   icon?: string; // NOTE: icon 이 있을 경우, icon 을 표시
   isClickable: boolean;
   isExtensible?: boolean;
@@ -39,7 +39,7 @@ const Card = ({
                 <CardButtonStyled
                   key={index}
                   onClick={button.onClick}
-                  color={button.color}
+                  fontColor={button.fontColor}
                   backgroundColor={button.backgroundColor}
                   icon={button.icon}
                   isClickable={button.isClickable}
@@ -92,7 +92,7 @@ export const CardButtonWrapper = styled.div`
 
 export const CardButtonStyled = styled.div<{
   backgroundColor?: string;
-  color?: string;
+  fontColor?: string;
   icon?: string;
   isClickable?: boolean;
   isExtensible?: boolean;
@@ -110,8 +110,8 @@ export const CardButtonStyled = styled.div<{
           background-color: ${props.backgroundColor
             ? props.backgroundColor
             : "var(--color-background)"};
-          color: ${props.color
-            ? props.color
+          color: ${props.fontColor
+            ? props.fontColor
             : props.isExtensible
             ? "var(--main-color)"
             : "var(--gray-tmp-5)"};

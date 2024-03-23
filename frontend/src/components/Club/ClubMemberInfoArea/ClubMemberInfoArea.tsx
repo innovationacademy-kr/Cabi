@@ -11,6 +11,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import { ReactComponent as LeaderIcon } from "@/assets/images/leader.svg";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import {
   ClubCabinetInfo,
@@ -68,12 +69,14 @@ const ClubMemberInfoArea = ({
                 {selectedClubInfo!.clubName}
               </TextStyled>
             </ClubInfoWrapperStyled>
-            {selectedClubMemberInfo!.userName ===
-            selectedClubInfo.clubMaster ? (
-              <ClubMasterIconStyled />
-            ) : (
-              <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
-            )}
+            <ClubMemberIconStyled>
+              {selectedClubMemberInfo!.userName ===
+              selectedClubInfo.clubMaster ? (
+                <LeaderIcon />
+              ) : (
+                <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
+              )}
+            </ClubMemberIconStyled>
             <TextStyled fontSize="1rem" fontColor="var(--color-text-normal)">
               {selectedClubMemberInfo!.userName || "-"}
             </TextStyled>
@@ -215,6 +218,7 @@ const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
   background-size: contain;
   background-repeat: no-repeat;
 `;
+
 const CabinetInfoButtonsContainerStyled = styled.div`
   display: flex;
   flex-direction: column;
@@ -224,6 +228,23 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   max-height: 320px;
   margin: 3vh 0;
   width: 100%;
+`;
+
+const ClubMemberIconStyled = styled.div`
+  width: 24px;
+  height: 24px;
+  background-color: pink;
+
+  & > svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  & > svg > path {
+    stroke: var(--gray-tmp-7);
+    /* TODO : darkmode */
+    transform: scale(1.3);
+  }
 `;
 
 export default ClubMemberInfoArea;

@@ -9,6 +9,7 @@ import ClubMemberListItem from "@/components/Club/ClubMemberList/ClubMemberListI
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import AddClubMemberModalContainer from "@/components/Modals/ClubModal/AddClubMemberModal.container";
 import { ReactComponent as Select } from "@/assets/images/selectMaincolor.svg";
+import { ReactComponent as UserCountIcon } from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
 
 interface ClubMemberListProps {
@@ -45,7 +46,9 @@ const ClubMemberList = ({
         <TitleContainerStyled>
           <p>동아리 멤버</p>
           <UserCountContainerStyled>
-            <UserCountImgStyled src={"/src/assets/images/shareIcon.svg"} />
+            <UserCountIconStyled>
+              <UserCountIcon />
+            </UserCountIconStyled>
             <UserCountTextStyled id="membersLength">
               {clubUserCount}
             </UserCountTextStyled>
@@ -142,9 +145,13 @@ const MemberSectionStyled = styled.div`
   margin: 1rem 0 1rem;
 `;
 
-const UserCountImgStyled = styled.img`
+const UserCountIconStyled = styled.div`
   width: 24px;
   height: 24px;
+
+  & > svg > path {
+    stroke: var(--color-text-normal);
+  }
 `;
 
 const AddMemberCardStyled = styled.div`
@@ -155,7 +162,7 @@ const AddMemberCardStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23333' stroke-width='1' stroke-dasharray='6' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='gray' stroke-width='1' stroke-dasharray='6' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
   transition: transform 0.2s, opacity 0.2s;
   cursor: pointer;
 

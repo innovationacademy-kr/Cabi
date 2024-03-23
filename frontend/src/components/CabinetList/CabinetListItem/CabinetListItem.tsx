@@ -306,6 +306,7 @@ const CabinetIconContainerStyled = styled.div<{
     css`
       color: var(--color-text-normal);
     `};
+  // TODO : + 내 동아리면
 `;
 
 export default CabinetListItem;
