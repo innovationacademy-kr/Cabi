@@ -177,7 +177,7 @@ const MoreButtonStyled = styled.button`
   border: 1px solid var(--main-color);
   border-radius: 30px;
   text-indent: -20px;
-  background-color: var(--white);
+  background-color: var(--color-background);
   color: var(--main-color);
   position: relative;
 

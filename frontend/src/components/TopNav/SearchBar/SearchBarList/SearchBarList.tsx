@@ -58,12 +58,12 @@ const UlStyled = styled.ul`
   top: 50px;
   left: 0;
   width: 300px;
-  border: 1px solid var(--white);
+  border: 1px solid var(--color-background);
   border-radius: 10px;
   text-align: left;
   padding: 10px;
   color: var(--black);
-  background-color: var(--white);
+  background-color: var(--color-background);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   opacity: 0.9;
   overflow: hidden;

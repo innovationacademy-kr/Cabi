@@ -39,7 +39,7 @@ const MultiSelectButtonContainerStyled = styled.button`
     props.theme === "fill" &&
     css`
       background: var(--main-color);
-      color: var(--white);
+      color: var(--color-background);
     `}
   ${(props) =>
     props.theme === "line" &&

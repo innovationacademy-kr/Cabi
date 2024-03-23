@@ -92,7 +92,6 @@ const TableBorderStyled = styled.div`
 const TableStyled = styled.table`
   width: 100%;
   background: var(--color-background);
-  background: var(--white);
   overflow: scroll;
 
   @media screen and (max-width: 1300px) {

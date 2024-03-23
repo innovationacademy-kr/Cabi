@@ -68,7 +68,7 @@ const LogTableWrapperstyled = styled.div`
 
 const LogTableStyled = styled.table`
   width: 100%;
-  background: var(--white);
+  background: var(--color-background);
   overflow: scroll;
 `;
 
@@ -77,7 +77,7 @@ const TheadStyled = styled.thead`
   height: 50px;
   line-height: 50px;
   background-color: var(--main-color);
-  color: var(--white);
+  color: var(--color-background);
   & > tr > th:first-child {
     padding-left: 20px;
   }

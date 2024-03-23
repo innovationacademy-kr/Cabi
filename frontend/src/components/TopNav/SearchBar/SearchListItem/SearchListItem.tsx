@@ -56,10 +56,10 @@ const LiStyled = styled.li`
 
   &.active {
     background-color: var(--main-color);
-    color: var(--white);
+    color: var(--color-background);
   }
   &.active strong {
-    color: var(--white);
+    color: var(--color-background);
   }
   &.active img {
     filter: invert(100%);
@@ -68,10 +68,10 @@ const LiStyled = styled.li`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--main-color);
-      color: var(--white);
+      color: var(--color-background);
     }
     &:hover strong {
-      color: var(--white);
+      color: var(--color-background);
     }
     &:hover img {
       filter: invert(100%);
