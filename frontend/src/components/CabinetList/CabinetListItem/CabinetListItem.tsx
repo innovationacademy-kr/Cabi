@@ -267,7 +267,8 @@ const CabinetLabelStyled = styled.p<{
   ${(props) =>
     props.isMine &&
     css`
-      color: var(--color-text-normal);
+      color: var(--black);
+      /* 내 사물함이면 black */
     `}
 `;
 
@@ -280,7 +281,8 @@ const CabinetNumberStyled = styled.p<{
   ${(props) =>
     props.isMine &&
     css`
-      color: var(--color-text-normal);
+      color: var(--black);
+      /* 내 사물함이면 black */
     `}
   ${({ status }) =>
     status === "IN_SESSION" &&
