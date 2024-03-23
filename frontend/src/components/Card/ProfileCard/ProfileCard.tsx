@@ -18,9 +18,9 @@ const ProfileCard = ({ name, button }: ProfileProps) => {
     >
       <ProfileContent>
         <LogoStyled id="topNavLogo" className="cabiButton">
-          <LogoDivStyled>
+          <CabiLogoStyled>
             <LogoImg className="cabiButton" />
-          </LogoDivStyled>
+          </CabiLogoStyled>
         </LogoStyled>
         <ProfileDetailWrapper>
           <ProfileDetail>{name}</ProfileDetail>
@@ -51,12 +51,24 @@ const LogoStyled = styled.div`
   background-color: var(--color-background);
 `;
 
-const LogoDivStyled = styled.div`
+const CabiLogoStyled = styled.div`
   width: 45px;
   height: 45px;
   svg {
     .logo_svg__currentPath {
       fill: var(--main-color);
+    }
+    .logo_svg__top {
+      fill: var(--color-background);
+    }
+    .logo_svg__left {
+      fill: var(--color-background);
+    }
+    .logo_svg__line {
+      stroke: var(--color-background);
+    }
+    .logo_svg__border {
+      stroke: var(--color-text-normal);
     }
   }
 `;

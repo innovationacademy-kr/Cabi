@@ -15,6 +15,20 @@ const ColorPicker = ({ color, onChange, customColors }: ColorPickerProps) => {
         triangle={"hide"}
         onChangeComplete={onChange}
         colors={customColors}
+        styles={{
+          default: {
+            card: {
+              background: "var(--color-background)",
+              boxShadow: "var(--bg-shadow-200) 0px 1px 4px",
+            },
+            input: {
+              boxShadow: "var(--gray-tmp-2) 0px 0px 0px 1px inset",
+            },
+            hash: {
+              background: "var(--gray-tmp-2)",
+            },
+          },
+        }}
       />
     </TwitterPickerWrapper>
   );
