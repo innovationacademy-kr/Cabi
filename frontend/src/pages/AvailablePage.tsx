@@ -8,6 +8,7 @@ import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import MultiToggleSwitch, {
   toggleItem,
 } from "@/components/Common/MultiToggleSwitch";
+import { ReactComponent as RefreshIcon } from "@/assets/images/refresh.svg";
 import {
   AvailableCabinetsInfo,
   CabinetPreviewInfo,
@@ -139,11 +140,7 @@ const AvailablePage = () => {
           <span>매일 오후 1시</span> 사용 가능한 사물함이 업데이트됩니다.
         </h2>
         <RefreshButtonStyled onClick={refreshAvailableCabinets}>
-          {isRefreshing ? (
-            <LoadingAnimation />
-          ) : (
-            <img src="/src/assets/images/refresh.svg" alt="새로고침" />
-          )}
+          {isRefreshing ? <LoadingAnimation /> : <RefreshIcon />}
         </RefreshButtonStyled>
       </SubHeaderStyled>
       <AvailableCountdown observeOpenTime={() => setIsOpenTime(true)} />
@@ -206,16 +203,21 @@ const RefreshButtonStyled = styled.button`
   width: 35px;
   height: 35px;
   padding: 0;
-  img {
+
+  & > svg {
     width: 35px;
     height: 35px;
+    fill: var(--color-text-normal);
   }
+
   &:hover {
     opacity: 0.7;
   }
+
   &:active {
     transform: scale(0.8);
   }
+
   transition: all 0.3s ease;
 `;
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { serverTimeState } from "@/recoil/atoms";
+import { ReactComponent as AlarmIcon } from "@/assets/images/alarm.svg";
 import Time from "@/types/enum/time.enum";
 
 const openTime = new Date();
@@ -40,7 +41,9 @@ const AvailableCountdown = ({
 
   return (
     <>
-      <AvailableCountdownIconStyled src="/src/assets/images/alarm.svg" />
+      <AvailableCountdownIconStyled>
+        <AlarmIcon />
+      </AvailableCountdownIconStyled>
       <AvailableCountdownStyled>
         {remainingTime === 0
           ? "OPEN"
@@ -50,7 +53,7 @@ const AvailableCountdown = ({
   );
 };
 
-const AvailableCountdownIconStyled = styled.img`
+const AvailableCountdownIconStyled = styled.div`
   height: 25px;
   width: 25px;
   margin-top: 50px;
