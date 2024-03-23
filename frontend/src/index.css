@@ -146,7 +146,7 @@
     color: var(--color-text-normal);
     background-color: var(--color-background);
 
-    --gray-tmp-1: var(--gray-800);
+    --gray-tmp-1: var(--gray-700);
     --gray-tmp-2: var(--gray-700);
     --gray-tmp-3: var(--gray-600);
     --gray-tmp-4: var(--gray-500);
