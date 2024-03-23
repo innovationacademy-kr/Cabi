@@ -63,7 +63,7 @@ const LogTableWrapperStyled = styled.div`
 
 const LogTableStyled = styled.table`
   width: 100%;
-  background: white;
+  background: var(--color-background);
   overflow: scroll;
   border-spacing: 0 0.3em;
   border-collapse: separate;

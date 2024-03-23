@@ -24,7 +24,7 @@ const MultiToggleSwitchSeparated = <T,>({
 
     buttons?.forEach((button) => {
       if (button.className === `${initialState}`) {
-        button.style.color = "white";
+        button.style.color = "var(--color-background)";
         button.style.backgroundColor = "var(--main-color)";
       }
     });
@@ -43,7 +43,7 @@ const MultiToggleSwitchSeparated = <T,>({
       button.style.backgroundColor = "var(--gray-tmp-1)";
     });
 
-    target.style.color = "white";
+    target.style.color = "var(--color-background)";
     target.style.backgroundColor = "var(--main-color)";
 
     setState(target.className as React.SetStateAction<T>);

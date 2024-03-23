@@ -60,7 +60,11 @@ const ClubMemberInfoArea = ({
           <>
             <ClubInfoWrapperStyled>
               {/* <CabinetTypeIconStyled cabinetType={CabinetType.CLUB} /> */}
-              <TextStyled fontSize="1rem" fontColor="black" fontWeight={700}>
+              <TextStyled
+                fontSize="1rem"
+                fontColor="var(--color-text-normal)"
+                fontWeight={700}
+              >
                 {selectedClubInfo!.clubName}
               </TextStyled>
             </ClubInfoWrapperStyled>
@@ -70,7 +74,7 @@ const ClubMemberInfoArea = ({
             ) : (
               <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
             )}
-            <TextStyled fontSize="1rem" fontColor="black">
+            <TextStyled fontSize="1rem" fontColor="var(--color-text-normal)">
               {selectedClubMemberInfo!.userName || "-"}
             </TextStyled>
             <CabinetInfoButtonsContainerStyled>
