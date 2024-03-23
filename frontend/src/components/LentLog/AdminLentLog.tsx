@@ -96,11 +96,12 @@ const AdminLentLogStyled = styled.div`
   z-index: 9;
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;
-  box-shadow: 0 0 40px 0 var(--bg-shadow);
+  box-shadow: 0 0 40px 0 var(--bg-shadow-300);
+  /* TODO : box-shadow 적용안해도 될듯? */
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--white);
+  background: var(--color-background);
   &.on {
     transform: translateX(0);
   }
