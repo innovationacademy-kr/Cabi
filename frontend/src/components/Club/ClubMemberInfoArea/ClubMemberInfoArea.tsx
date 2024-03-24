@@ -13,6 +13,7 @@ import {
 } from "@/assets/data/maps";
 import { ReactComponent as LeaderIcon } from "@/assets/images/leader.svg";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
+import { ReactComponent as UserImg } from "@/assets/images/privateIcon.svg";
 import {
   ClubCabinetInfo,
   ClubResponseDto,
@@ -31,6 +32,7 @@ interface ClubMemberInfoAreaProps {
   clubModal: ICurrentClubModalStateInfo;
   openModal: (modalName: TClubModalState) => void;
   closeModal: (modalName: TClubModalState) => void;
+  isMasterSelected: boolean;
 }
 
 const ClubMemberInfoArea = ({
@@ -43,6 +45,7 @@ const ClubMemberInfoArea = ({
   clubModal,
   openModal,
   closeModal,
+  isMasterSelected,
 }: ClubMemberInfoAreaProps) => {
   return (
     <>
@@ -69,13 +72,8 @@ const ClubMemberInfoArea = ({
                 {selectedClubInfo!.clubName}
               </TextStyled>
             </ClubInfoWrapperStyled>
-            <ClubMemberIconStyled>
-              {selectedClubMemberInfo!.userName ===
-              selectedClubInfo.clubMaster ? (
-                <LeaderIcon />
-              ) : (
-                <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
-              )}
+            <ClubMemberIconStyled isMasterSelected={isMasterSelected}>
+              {isMasterSelected ? <LeaderIcon /> : <UserImg />}
             </ClubMemberIconStyled>
             <TextStyled fontSize="1rem" fontColor="var(--color-text-normal)">
               {selectedClubMemberInfo!.userName || "-"}
@@ -197,28 +195,6 @@ const ClubInfoWrapperStyled = styled.div`
   margin: 1rem 0;
 `;
 
-const ClubMasterIconStyled = styled.div`
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
-  min-height: 24px;
-  margin-bottom: 10px;
-  background-image: url("/src/assets/images/leader.svg");
-  background-size: contain;
-  background-repeat: no-repeat;
-`;
-
-const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
-  min-height: 24px;
-  margin-bottom: 10px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
-  background-size: contain;
-  background-repeat: no-repeat;
-`;
-
 const CabinetInfoButtonsContainerStyled = styled.div`
   display: flex;
   flex-direction: column;
@@ -230,10 +206,9 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   width: 100%;
 `;
 
-const ClubMemberIconStyled = styled.div`
+const ClubMemberIconStyled = styled.div<{ isMasterSelected: boolean }>`
   width: 24px;
   height: 24px;
-  background-color: pink;
 
   & > svg {
     width: 24px;
@@ -241,9 +216,9 @@ const ClubMemberIconStyled = styled.div`
   }
 
   & > svg > path {
-    stroke: var(--gray-tmp-7);
-    /* TODO : darkmode */
-    transform: scale(1.3);
+    stroke: var(--color-text-normal);
+    transform: ${(props) =>
+      props.isMasterSelected ? "scale(1.3)" : "scale(1.0)"};
   }
 `;
 

@@ -119,6 +119,7 @@ const ContentItemTextAreaStyled = styled.textarea<{
   line-height: 1.2rem;
   letter-spacing: 0.8px;
   resize: none;
+  background-color: var(--color-background);
 
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
   color: ${({ mode }) =>
