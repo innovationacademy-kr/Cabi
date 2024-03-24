@@ -124,6 +124,7 @@ const BackgroundStyled = styled.div`
   right: 0;
   bottom: 0;
   background: var(--bg-shadow-100);
+  /* 배경 */
   z-index: 1000;
 `;
 

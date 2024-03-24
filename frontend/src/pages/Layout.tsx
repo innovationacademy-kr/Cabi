@@ -204,6 +204,7 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
       transform: translateX(120%);
       transition: transform 0.3s ease-in-out;
       box-shadow: 0 0 40px 0 var(--bg-shadow-200);
+      /* 테두리 */
       &.on {
         transform: translateX(0%);
       }

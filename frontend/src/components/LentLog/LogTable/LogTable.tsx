@@ -63,6 +63,7 @@ const LogTableWrapperstyled = styled.div`
   overflow: hidden;
   margin: 0 auto;
   box-shadow: 0 0 10px 0 var(--bg-shadow-100);
+  /* 테두리 */
 `;
 
 const LogTableStyled = styled.table`

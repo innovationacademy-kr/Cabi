@@ -189,6 +189,7 @@ const BackgroundStyled = styled.div`
   /* light */
   background: var(--bg-white-shadow-100);
   /* dark */
+  /* 배경 */
   animation: fadeInBg 0.5s;
   @keyframes fadeInBg {
     0% {

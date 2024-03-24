@@ -111,6 +111,7 @@ const BackgroundOverlayStyled = styled.div`
   width: 100%;
   height: 100%;
   background: var(--bg-shadow-100);
+  /* 배경 */
   z-index: 1;
 `;
 

@@ -241,10 +241,11 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  /* background: var(--bg-black-shadow-300); */
+  background: var(--bg-black-shadow-300);
   /* light */
   background: var(--bg-white-shadow-100);
   /* dark */
+  /* 배경 */
   z-index: 1000;
 `;
 

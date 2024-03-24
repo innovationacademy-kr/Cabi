@@ -26,6 +26,7 @@ const OptionWrapperStyled = styled.div`
   background: var(--color-background);
   border-radius: 10px;
   box-shadow: 0 0 10px 0 var(--bg-shadow-100);
+/* 테두리 */
   overflow: hidden;
   z-index: 99;
   display: none;
