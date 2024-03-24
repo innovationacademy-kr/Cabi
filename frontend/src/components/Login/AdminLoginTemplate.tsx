@@ -271,7 +271,7 @@ const CardInputStyled = styled.input<{ isFocus: boolean }>`
     props.isFocus
       ? "1px solid var(--main-color)"
       : "1px solid var(--gray-tmp-4)"};
-  color: var(--text-normal);
+  color: var(--color-text-normal);
 `;
 
 const CardGoogleOauthStyled = styled.button`
