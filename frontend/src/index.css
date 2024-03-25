@@ -118,7 +118,7 @@
 }
 
 /* main color variable */
-/* cabinet color variable  */
+/* cabinet color variable */
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--black);

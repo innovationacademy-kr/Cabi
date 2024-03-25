@@ -7,7 +7,8 @@ import {
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import { MyCabinetInfo } from "@/components/Card/LentInfoCard/LentInfoCard.container";
-import { cabinetIconSrcMap } from "@/assets/data/maps";
+import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
+import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { formatDate } from "@/utils/dateUtils";
@@ -65,7 +66,12 @@ const LentInfoCard = ({
               <CabinetIconStyled
                 title={cabinetInfo.lentType}
                 cabinetType={cabinetInfo.lentType}
-              />
+              >
+                {cabinetInfo.lentType === CabinetType.PRIVATE && (
+                  <PrivateIcon />
+                )}
+                {cabinetInfo.lentType === CabinetType.CLUB && <ShareIcon />}
+              </CabinetIconStyled>
               <CabinetInfoTextStyled
                 fontSize={calculateFontSize(cabinetInfo.userCount)}
                 fontColor="var(--color-text-normal)"
@@ -182,9 +188,16 @@ const CabinetIconStyled = styled.div<{ cabinetType: CabinetType }>`
   width: 18px;
   height: 18px;
   margin-right: 10px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
-  background-size: contain;
-  background-repeat: no-repeat;
+
+  & > svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  & > svg > path {
+    stroke: var(--color-text-normal);
+    transform: scale(0.8);
+  }
 `;
 
 export default LentInfoCard;
