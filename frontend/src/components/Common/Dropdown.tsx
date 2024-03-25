@@ -49,9 +49,9 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
             >
               {option.imageSrc && (
                 <OptionsImgStyled isSelected={option.name === currentName}>
-                  {options[selectedIdx].value === "PRIVATE" && <PrivateIcon />}
-                  {options[selectedIdx].value === "CLUB" && <ClubIcon />}
-                  {options[selectedIdx].value === "SHARE" && <ShareIcon />}
+                  {option.value === "PRIVATE" && <PrivateIcon />}
+                  {option.value === "CLUB" && <ClubIcon />}
+                  {option.value === "SHARE" && <ShareIcon />}
                 </OptionsImgStyled>
               )}
               <p style={{ paddingLeft: "10px" }}>{option.name}</p>

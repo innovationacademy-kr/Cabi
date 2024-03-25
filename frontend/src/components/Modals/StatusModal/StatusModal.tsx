@@ -10,6 +10,9 @@ import {
   cabinetStatusLabelMap,
   cabinetTypeLabelMap,
 } from "@/assets/data/maps";
+import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
+import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
+import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import ModalPortal from "../ModalPortal";
@@ -112,9 +115,11 @@ const StatusModal = ({
               <ContentItemTitleStyled>사물함 타입</ContentItemTitleStyled>
               {mode === "read" ? (
                 <ContentItemContainerStyled mode={mode}>
-                  <div style={{ width: "18px", height: "18px" }}>
-                    <img src={cabinetIconSrcMap[cabinetType]} />
-                  </div>
+                  <ContentItemIconStyled>
+                    {cabinetType === CabinetType.PRIVATE && <PrivateIcon />}
+                    {cabinetType === CabinetType.CLUB && <ClubIcon />}
+                    {cabinetType === CabinetType.SHARE && <ShareIcon />}
+                  </ContentItemIconStyled>
                   <p>{cabinetTypeLabelMap[newCabinetType]}</p>
                 </ContentItemContainerStyled>
               ) : (
@@ -232,6 +237,21 @@ const ContentItemContainerStyled = styled.div<{ mode: string }>`
   color: var(--main-color);
   & > p {
     padding-left: 10px;
+  }
+`;
+
+const ContentItemIconStyled = styled.div`
+  width: 18px;
+  height: 18px;
+
+  & > svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  & > svg path {
+    transform: scale(0.8);
+    stroke: var(--color-text-normal);
   }
 `;
 

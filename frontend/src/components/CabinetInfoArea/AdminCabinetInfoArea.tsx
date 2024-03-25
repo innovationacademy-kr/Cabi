@@ -16,11 +16,13 @@ import ClubLentModal from "@/components/Modals/LentModal/ClubLentModal";
 import AdminReturnModal from "@/components/Modals/ReturnModal/AdminReturnModal";
 import StatusModalContainer from "@/components/Modals/StatusModal/StatusModal.container";
 import {
-  cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
+import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
+import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import { CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
@@ -138,10 +140,13 @@ const AdminCabinetInfoArea: React.FC<{
       >
         {selectedCabinetInfo!.visibleNum}
       </CabinetRectangleStyled>
-      <CabinetTypeIconStyled
-        title={selectedCabinetInfo!.lentType}
-        cabinetType={selectedCabinetInfo!.lentType}
-      />
+      <CabinetTypeIconStyled title={selectedCabinetInfo!.lentType}>
+        {selectedCabinetInfo!.lentType === CabinetType.CLUB && <ClubIcon />}
+        {selectedCabinetInfo!.lentType === CabinetType.PRIVATE && (
+          <PrivateIcon />
+        )}
+        {selectedCabinetInfo!.lentType === CabinetType.SHARE && <ShareIcon />}
+      </CabinetTypeIconStyled>
       <TextStyled fontSize="1rem" fontColor="var(--color-text-normal)">
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
@@ -233,15 +238,16 @@ const CabiLogoStyled = styled.div`
   }
 `;
 
-const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
+const CabinetTypeIconStyled = styled.div`
   width: 24px;
   height: 24px;
   min-width: 24px;
   min-height: 24px;
   margin-bottom: 10px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
-  background-size: contain;
-  background-repeat: no-repeat;
+
+  & path {
+    stroke: var(--color-text-normal);
+  }
 `;
 
 const LinkTextStyled = styled.div`
@@ -334,9 +340,8 @@ const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
   justify-content: center;
   align-items: center;
   background-color: ${({ status }) => cabinetStatusColorMap[status]};
+  color: ${({ status }) => cabinetLabelColorMap[status]};
   border-radius: 5px;
-  color: ${({ status }) =>
-    status === CabinetStatus.FULL ? "var(--color-text-normal)" : "var(--color-background)"};
 `;
 
 export default AdminCabinetInfoArea;
