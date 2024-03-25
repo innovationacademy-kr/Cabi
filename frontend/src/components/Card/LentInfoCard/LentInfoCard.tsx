@@ -63,14 +63,11 @@ const LentInfoCard = ({
             </CabinetInfoTextStyled>
 
             <CabinetUserListWrapper>
-              <CabinetIconStyled
-                title={cabinetInfo.lentType}
-                cabinetType={cabinetInfo.lentType}
-              >
+              <CabinetIconStyled title={cabinetInfo.lentType}>
                 {cabinetInfo.lentType === CabinetType.PRIVATE && (
                   <PrivateIcon />
                 )}
-                {cabinetInfo.lentType === CabinetType.CLUB && <ShareIcon />}
+                {cabinetInfo.lentType === CabinetType.SHARE && <ShareIcon />}
               </CabinetIconStyled>
               <CabinetInfoTextStyled
                 fontSize={calculateFontSize(cabinetInfo.userCount)}
@@ -184,7 +181,7 @@ const CabinetUserListWrapper = styled.div`
   align-items: center;
 `;
 
-const CabinetIconStyled = styled.div<{ cabinetType: CabinetType }>`
+const CabinetIconStyled = styled.div`
   width: 18px;
   height: 18px;
   margin-right: 10px;

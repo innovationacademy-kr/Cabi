@@ -13,10 +13,12 @@ import {
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import {
   cabinetFilterMap,
-  cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
+import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
+import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import {
   CabinetInfo,
   CabinetPreviewInfo,
@@ -145,7 +147,11 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
           lentType={props.lentType}
           isMine={isMine}
           status={props.status}
-        />
+        >
+          {props.lentType === CabinetType.PRIVATE && <PrivateIcon />}
+          {props.lentType === CabinetType.SHARE && <ShareIcon />}
+          {props.lentType === CabinetType.CLUB && <ClubIcon />}
+        </CabinetIconContainerStyled>
         <CabinetNumberStyled status={props.status} isMine={isMine}>
           {props.visibleNum}
         </CabinetNumberStyled>
@@ -264,12 +270,6 @@ const CabinetLabelStyled = styled.p<{
   line-height: 1.25rem;
   letter-spacing: -0.02rem;
   color: ${(props) => cabinetLabelColorMap[props.status]};
-  ${(props) =>
-    props.isMine &&
-    css`
-      color: var(--black);
-      /* 내 사물함이면 black */
-    `}
 `;
 
 const CabinetNumberStyled = styled.p<{
@@ -278,12 +278,7 @@ const CabinetNumberStyled = styled.p<{
 }>`
   font-size: 0.875rem;
   color: ${(props) => cabinetLabelColorMap[props.status]};
-  ${(props) =>
-    props.isMine &&
-    css`
-      color: var(--black);
-      /* 내 사물함이면 black */
-    `}
+
   ${({ status }) =>
     status === "IN_SESSION" &&
     css`
@@ -298,15 +293,11 @@ const CabinetIconContainerStyled = styled.div<{
 }>`
   width: 16px;
   height: 16px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.lentType]});
-  background-size: contain;
-  color: ${(props) => cabinetFilterMap[props.status]};
-  ${(props) =>
-    props.isMine &&
-    css`
-      color: var(--color-text-normal);
-    `};
-  // TODO : + 내 동아리면
+
+  & > svg > path {
+    stroke: ${(props) => cabinetFilterMap[props.status]};
+    transform: scale(0.7);
+  }
 `;
 
 export default CabinetListItem;

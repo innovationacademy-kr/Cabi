@@ -25,13 +25,15 @@ export const cabinetIconSrcMap = {
 
 export const cabinetLabelColorMap = {
   [CabinetStatus.AVAILABLE]: "var(--color-background)",
-  [CabinetStatus.FULL]: "var(--color-text-normal)",
+  [CabinetStatus.FULL]: "var(--black)",
+  // black
   [CabinetStatus.OVERDUE]: "var(--color-background)",
   [CabinetStatus.BROKEN]: "var(--color-background)",
   [CabinetStatus.BANNED]: "var(--color-background)",
   [CabinetStatus.IN_SESSION]: "var(--main-color)",
   [CabinetStatus.PENDING]: "var(--color-background)",
-  MINE: "var(--color-text-normal)",
+  MINE: "var(--black)",
+  // black
 };
 
 export const cabinetStatusColorMap = {
@@ -185,7 +187,8 @@ export const modalPropsMap = {
 
 export const cabinetFilterMap = {
   [CabinetStatus.AVAILABLE]: "var(--color-background)",
-  [CabinetStatus.FULL]: "var(--color-text-normal)",
+  [CabinetStatus.FULL]: "var(--black)",
+  // black
   [CabinetStatus.OVERDUE]: "var(--color-background)",
   [CabinetStatus.BROKEN]: "var(--color-background)",
   [CabinetStatus.BANNED]: "var(--color-background)",
