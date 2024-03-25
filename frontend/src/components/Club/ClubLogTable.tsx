@@ -82,7 +82,7 @@ const TbodyStyled = styled.tbody`
     text-align: center;
     height: 50px;
     cursor: pointer;
-    background-color: var(--purple-100);
+    background: var(--purple-tmp-1);
   }
   & > tr td:first-of-type {
     border-radius: 8px 0 0 8px;

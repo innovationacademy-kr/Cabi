@@ -36,6 +36,7 @@
   --purple-400: #a17bf3;
   --purple-500: #9747ff;
   --purple-600: #8337e5;
+  --purple-700: #3c1c66;
 
   /* pink color variable */
   --pink-100: #f473b1;
@@ -115,6 +116,8 @@
   --gray-tmp-5: var(--gray-500);
   --gray-tmp-6: var(--gray-600);
   --gray-tmp-7: var(--gray-700);
+
+  --purple-tmp-1: var(--purple-100);
 }
 
 /* main color variable */
@@ -154,6 +157,8 @@
     --gray-tmp-5: var(--gray-500);
     --gray-tmp-6: var(--gray-300);
     --gray-tmp-7: var(--gray-200);
+
+    --purple-tmp-1: var(--purple-700);
   }
 }
 

@@ -117,7 +117,7 @@ const TbodyStyled = styled.tbody`
     line-height: 45px;
   }
   & > tr:nth-child(2n) {
-    background: var(--purple-100);
+    background: var(--purple-tmp-1);
   }
   cursor: pointer;
 

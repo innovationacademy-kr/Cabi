@@ -98,7 +98,7 @@ const TbodyStyled = styled.tbody`
     width: 33.3%;
   }
   & > tr:nth-child(2n) {
-    background: var(--purple-100);
+    background: var(--purple-tmp-1);
   }
   & > tr > td:first-child {
     padding-left: 20px;
