@@ -59,7 +59,6 @@ const ManualModal: React.FC<ModalProps> = ({
           </CloseButton>
           {hasImage && (
             <BasicInfo>
-              {/* <img className="contentImg" src={contentData.imagePath} alt="" /> */}
               <ContentImgStyled contentStatus={contentStatus}>
                 {contentStatus === ContentStatus.PRIVATE && (
                   <PrivateIcon className="contentImg" />

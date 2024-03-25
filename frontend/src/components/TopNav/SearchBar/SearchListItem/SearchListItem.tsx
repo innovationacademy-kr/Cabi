@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
+import { ReactComponent as CabinetIcon } from "@/assets/images/cabinet.svg";
+import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
 
 const SearchListItem = (props: {
   floor?: number;
@@ -20,11 +22,6 @@ const SearchListItem = (props: {
   } = props;
   const navigate = useNavigate();
 
-  const chooseImage = (isCabinet: boolean | undefined) => {
-    if (isCabinet) return "/src/assets/images/cabinet.svg";
-    return "/src/assets/images/privateIcon.svg";
-  };
-
   return (
     <LiStyled
       className={isTargetIndex ? "active" : ""}
@@ -39,7 +36,9 @@ const SearchListItem = (props: {
         resetSearchState();
       }}
     >
-      <ImgStyled src={chooseImage(isNum)} alt="유저" />
+      <ContentIconStyled isNum={isNum} title="유저">
+        {isNum ? <CabinetIcon /> : <PrivateIcon />}
+      </ContentIconStyled>
       {isNum && <span>{floor}F - </span>}
       <ChangeToHTML origin={resultText} replace={inputText} />
     </LiStyled>
@@ -50,6 +49,8 @@ const LiStyled = styled.li`
   padding: 12px;
   border-radius: 10px;
   cursor: pointer;
+  display: flex;
+
   & strong {
     color: var(--main-color);
   }
@@ -61,7 +62,7 @@ const LiStyled = styled.li`
   &.active strong {
     color: var(--color-background);
   }
-  &.active img {
+  &.active div {
     filter: invert(100%);
   }
 
@@ -73,16 +74,26 @@ const LiStyled = styled.li`
     &:hover strong {
       color: var(--color-background);
     }
-    &:hover img {
+    &:hover div {
       filter: invert(100%);
     }
   }
 `;
 
-const ImgStyled = styled.img`
+const ContentIconStyled = styled.div<{ isNum?: boolean }>`
   width: 20px;
   height: 20px;
   margin-right: 8px;
+
+  & > svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  & path {
+    stroke: var(--color-text-normal);
+    transform: ${(props) => (props.isNum ? "scale(1)" : "scale(0.8)")};
+  }
 `;
 
 export default SearchListItem;
