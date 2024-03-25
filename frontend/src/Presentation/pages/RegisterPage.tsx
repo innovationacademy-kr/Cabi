@@ -96,7 +96,7 @@ const RegisterPage = () => {
     requiredValidator
   );
 
-  const invalidDates: string[] = useInvalidDates().map((date) =>
+  const invalidDates: string[] = useInvalidDates()?.map((date) =>
     format(date, "M/d")
   );
 

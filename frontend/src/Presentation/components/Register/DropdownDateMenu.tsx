@@ -76,7 +76,7 @@ const DropdownDateMenu = ({
           <DropdownOption
             key={time}
             onClick={() => handleOptionSelect(time)}
-            invalid={invalidDates.includes(time)}
+            invalid={invalidDates?.includes(time)}
           >
             {time}
           </DropdownOption>
