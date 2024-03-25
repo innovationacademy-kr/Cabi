@@ -211,7 +211,6 @@ const SearchBarInputStyled = styled.input`
   text-align: left;
   padding: 0 20px;
   color: var(--gray-tmp-5);
-  background-color: rgba(255, 255, 255, 0.2);
   &::placeholder {
     color: var(--gray-tmp-5);
   }

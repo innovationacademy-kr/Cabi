@@ -92,12 +92,12 @@ const LineChart = ({ data }: { data: IMonthlyData[] }) => (
           itemOpacity: 0.75,
           symbolSize: 12,
           symbolShape: "circle",
-          symbolBorderColor: "rgba(0, 0, 0, .5)",
           effects: [
             {
               on: "hover",
               style: {
-                itemBackground: "rgba(0, 0, 0, .03)",
+                itemBackground: "var(--bg-black-shadow-100)",
+// TODO : shadow
                 itemOpacity: 1,
               },
             },

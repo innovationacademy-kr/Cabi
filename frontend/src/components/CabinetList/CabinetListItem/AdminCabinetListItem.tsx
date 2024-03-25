@@ -152,16 +152,18 @@ const CabinetListItemStyled = styled.div<{
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
-        0px 4px 4px rgba(0, 0, 0, 0.25);
+      box-shadow: inset 5px 5px 5px var(--bg-black-shadow-200),
+        0px 4px 4px var(--bg-black-shadow-200);
+// TODO : shadow
     `}
   ${({ isMultiSelected }) =>
     isMultiSelected &&
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
-        0px 4px 4px rgba(0, 0, 0, 0.25);
+      box-shadow: inset 5px 5px 5px var(--bg-black-shadow-200),
+        0px 4px 4px var(--bg-black-shadow-200);
+// TODO : shadow
     `}
 
   ${({ status }) =>

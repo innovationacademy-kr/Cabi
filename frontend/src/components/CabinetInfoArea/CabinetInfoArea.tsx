@@ -353,7 +353,7 @@ const CabinetRectangleStyled = styled.div<{
   font-size: 2rem;
   color: ${(props) =>
     props.isMine ? "var(--black)" : cabinetLabelColorMap[props.cabinetStatus]};
-  /* 내 사물함이면 black */
+  /* black */
   text-align: center;
 
   ${({ cabinetStatus }) =>

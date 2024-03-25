@@ -152,7 +152,7 @@ const CabinetRectangleStyled = styled.div<{
       : props.status === "IN_SESSION"
       ? "var(--main-color)"
       : "var(--black)"};
-  /* 내 사물함이면 black */
+  /* black */
   font-size: 2rem;
   text-align: center;
 `;

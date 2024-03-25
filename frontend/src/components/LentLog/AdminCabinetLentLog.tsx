@@ -79,7 +79,8 @@ const PageButtonStyled = styled.div<{
   position: absolute;
   opacity: 0.5;
   transition: opacity 0.5s;
-  background: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.5));
+  background: linear-gradient(to left, transparent, var(--bg-black-shadow-300));
+// TODO : shadow
   display: ${({ page, totalPage, type }) => {
     if (type == "prev" && page == 0) return "none";
     if (type == "next" && (totalPage == 0 || page == totalPage - 1))

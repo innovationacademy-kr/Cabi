@@ -116,7 +116,7 @@ const CabinetRectangleStyled = styled.div`
   margin-right: 20px;
   background-color: var(--full);
   color: var(--black);
-  /* black으로 */
+  /* black */
   font-size: 2rem;
   text-align: center;
 `;

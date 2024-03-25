@@ -56,6 +56,7 @@
   --bg-white-shadow-200: rgba(245, 245, 245, 0.25);
   --bg-white-shadow-300: rgba(245, 245, 245, 0.4);
   --bg-white-shadow-400: rgba(245, 245, 245, 0.8);
+  --bg-white-shadow-500: rgba(255, 255, 255, 0.8);
 
   /* custom color variable */
   --custom-blue-100: #74b9ff;
