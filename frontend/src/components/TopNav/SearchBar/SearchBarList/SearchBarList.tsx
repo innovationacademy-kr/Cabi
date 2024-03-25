@@ -64,8 +64,7 @@ const UlStyled = styled.ul`
   padding: 10px;
   color: var(--color-text-normal);
   background-color: var(--color-background);
-  box-shadow: 0 0 10px 0 var(--bg-black-shadow-200);
-  // TODO : shadow
+  box-shadow: 0 0 10px 0 var(--bg-shadow-200);
   opacity: 0.9;
   overflow: hidden;
   @media (max-width: 768px) {

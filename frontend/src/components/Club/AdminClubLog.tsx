@@ -74,8 +74,8 @@ const SectionPaginationStyled = styled.div`
   padding: 10px 0;
   position: sticky;
   top: 0;
-  background: var(--bg-white-shadow-500);
-// TODO : shadow
+  background: var(--color-background);
+  opacity: 0.8;
   z-index: 1;
 `;
 

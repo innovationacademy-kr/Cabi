@@ -96,8 +96,7 @@ const LineChart = ({ data }: { data: IMonthlyData[] }) => (
             {
               on: "hover",
               style: {
-                itemBackground: "var(--bg-black-shadow-100)",
-// TODO : shadow
+                itemBackground: "var(--bg-shadow-100)",
                 itemOpacity: 1,
               },
             },

@@ -95,7 +95,7 @@ const WrapperStyled = styled.div<{ isSelected: boolean }>`
       transform: scale(1.02);
       box-shadow: inset 4px 4px 4px var(--bg-black-shadow-100),
         2px 2px 4px var(--bg-black-shadow-100);
-// TODO : shadow
+      /* black */
     `}
   @media (hover: hover) and (pointer: fine) {
     &:hover {

@@ -154,7 +154,7 @@ const CabinetListItemStyled = styled.div<{
       transform: scale(1.05);
       box-shadow: inset 5px 5px 5px var(--bg-black-shadow-200),
         0px 4px 4px var(--bg-black-shadow-200);
-// TODO : shadow
+      // black
     `}
   ${({ isMultiSelected }) =>
     isMultiSelected &&
@@ -163,7 +163,7 @@ const CabinetListItemStyled = styled.div<{
       transform: scale(1.05);
       box-shadow: inset 5px 5px 5px var(--bg-black-shadow-200),
         0px 4px 4px var(--bg-black-shadow-200);
-// TODO : shadow
+      // black
     `}
 
   ${({ status }) =>
