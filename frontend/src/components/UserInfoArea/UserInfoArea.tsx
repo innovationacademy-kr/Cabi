@@ -5,6 +5,7 @@ import BanModal from "@/components/Modals/BanModal/BanModal";
 import AdminReturnModal from "@/components/Modals/ReturnModal/AdminReturnModal";
 import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 import {
+  cabinetIconComponentMap,
   cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
@@ -27,6 +28,7 @@ const UserInfoArea: React.FC<{
 }> = (props) => {
   const { selectedUserInfo, closeCabinet, openLent } = props;
   const [showBanModal, setShowBanModal] = useState<boolean>(false);
+  const CabinetTypeIcon = cabinetIconComponentMap[CabinetType.PRIVATE];
 
   const handleOpenBanModal = () => {
     setShowBanModal(true);
@@ -59,7 +61,9 @@ const UserInfoArea: React.FC<{
       >
         {selectedUserInfo.isBanned ? "!" : "-"}
       </CabinetRectangleStyled>
-      <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
+      <CabinetTypeIconStyled>
+        <CabinetTypeIcon />
+      </CabinetTypeIconStyled>
       <TextStyled fontSize="1rem" fontColor="var(--color-text-normal))">
         {selectedUserInfo.name}
       </TextStyled>
@@ -110,15 +114,21 @@ const CabiLogoStyled = styled.img`
   margin-bottom: 10px;
 `;
 
-const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
+const CabinetTypeIconStyled = styled.div`
   width: 24px;
   height: 24px;
   min-width: 24px;
   min-height: 24px;
   margin-bottom: 10px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
-  background-size: contain;
-  background-repeat: no-repeat;
+
+  & > svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  & > svg > path {
+    stroke: var(--color-text-normal);
+  }
 `;
 
 const LinkTextStyled = styled.div`
