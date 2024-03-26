@@ -50,7 +50,7 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
         tooltip: {
           container: {
             backgroundColor: "var(--color-background)",
-            boxShadow: "var(--bg-shadow-200) 0 1px 2px",
+            boxShadow: "var(--border-shadow-200) 0 1px 2px",
             color: "var(--color-text-normal)",
           },
         },

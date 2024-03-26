@@ -167,12 +167,10 @@ const MaunalContentBoxStyled = styled.div<{
         ? css`
             border: 5px double var(--main-color);
             box-shadow: inset 0px 0px 0px 5px var(--color-background),
-              10px 10px 25px 0 var(--bg-shadow-200);
-            /* 테두리 */
+              10px 10px 25px 0 var(--border-shadow-200);
           `
         : css`
-            box-shadow: 10px 10px 25px 0 var(--bg-shadow-200);
-            /* 테두리 */
+            box-shadow: 10px 10px 25px 0 var(--border-shadow-200);
           `}
     p {
       transition: all 0.3s ease-in-out;

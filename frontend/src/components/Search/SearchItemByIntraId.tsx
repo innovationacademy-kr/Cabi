@@ -85,7 +85,6 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       openCabinet();
     }
   };
-
   return cabinetInfo?.cabinetId ? (
     <WrapperStyled
       className="cabiButton"
@@ -142,9 +141,8 @@ const WrapperStyled = styled.div<{ isSelected: boolean }>`
     css`
       opacity: 0.9;
       transform: scale(1.02);
-      box-shadow: inset 4px 4px 4px var(--bg-black-shadow-100),
-        2px 2px 4px var(--bg-black-shadow-100);
-      /* black */
+      box-shadow: inset 4px 4px 4px var(--border-shadow-100),
+        2px 2px 4px var(--border-shadow-100);
     `}
   @media (hover: hover) and (pointer: fine) {
     &:hover {
@@ -173,7 +171,8 @@ const RectangleStyled = styled.div<{
       ? "var(--color-background)"
       : props.status
       ? cabinetLabelColorMap[props.status]
-      : "var(--color-text-normal)"};
+      : "var(--black)"};
+  /* black */
   display: flex;
   justify-content: center;
   align-items: center;

@@ -300,7 +300,8 @@ const CabinetRectangleStyled = styled.div<{
       : "none"};
   `}
   ${({ cabinetStatus }) => css`
-    box-shadow: ${cabinetStatus === "PENDING" && "inset 0px 0px 0px 2px white"};
+    box-shadow: ${cabinetStatus === "PENDING" &&
+    "inset 0px 0px 0px 2px var(--color-background)"};
   `}
 `;
 

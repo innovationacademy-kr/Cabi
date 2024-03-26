@@ -19,8 +19,7 @@ const ColorPicker = ({ color, onChange, customColors }: ColorPickerProps) => {
           default: {
             card: {
               background: "var(--color-background)",
-              boxShadow: "var(--bg-shadow-200) 0px 1px 4px",
-              // 테두리
+              boxShadow: "var(--border-shadow-200) 0px 1px 4px",
             },
             input: {
               boxShadow: "var(--gray-tmp-2) 0px 0px 0px 1px inset",

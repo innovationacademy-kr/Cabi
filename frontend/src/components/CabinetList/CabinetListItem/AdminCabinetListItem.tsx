@@ -152,18 +152,16 @@ const CabinetListItemStyled = styled.div<{
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px var(--bg-black-shadow-200),
-        0px 4px 4px var(--bg-black-shadow-200);
-      // black
+      box-shadow: inset 5px 5px 5px var(--border-shadow-200),
+        0px 4px 4px var(--border-shadow-200);
     `}
   ${({ isMultiSelected }) =>
     isMultiSelected &&
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px var(--bg-black-shadow-200),
-        0px 4px 4px var(--bg-black-shadow-200);
-      // black
+      box-shadow: inset 5px 5px 5px var(--border-shadow-200),
+        0px 4px 4px var(--border-shadow-200);
     `}
 
   ${({ status }) =>
@@ -171,6 +169,7 @@ const CabinetListItemStyled = styled.div<{
     css`
       border: 2px double var(--main-color);
       box-shadow: inset 0px 0px 0px 2px var(--color-background);
+      // 테두리
     `}
 
     ${({ status }) =>

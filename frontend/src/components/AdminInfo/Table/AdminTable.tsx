@@ -86,7 +86,7 @@ const TableWrapperStyled = styled.div`
 const TableBorderStyled = styled.div`
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 10px 10px 0px var(--bg-shadow-100);
+  box-shadow: 0 10px 10px 0px var(--border-shadow-100);
 `;
 
 const TableStyled = styled.table`

@@ -47,16 +47,10 @@
   --session: var(--gray-200);
 
   /* shadow variable */
-  --bg-black-shadow-100: rgba(0, 0, 0, 0.1);
-  --bg-black-shadow-200: rgba(0, 0, 0, 0.25);
-  --bg-black-shadow-300: rgba(0, 0, 0, 0.4);
-  --bg-black-shadow-400: rgba(0, 0, 0, 0.8);
-
-  --bg-white-shadow-100: rgba(245, 245, 245, 0.1);
-  --bg-white-shadow-200: rgba(245, 245, 245, 0.25);
-  --bg-white-shadow-300: rgba(245, 245, 245, 0.4);
-  --bg-white-shadow-400: rgba(245, 245, 245, 0.8);
-  /* TODO : 245말고 255 테스트? */
+  --black-shadow-100: rgba(0, 0, 0, 0.1);
+  --black-shadow-200: rgba(0, 0, 0, 0.25);
+  --black-shadow-300: rgba(0, 0, 0, 0.4);
+  --black-shadow-400: rgba(0, 0, 0, 0.8);
 
   /* custom color variable */
   --custom-blue-100: #74b9ff;
@@ -102,10 +96,13 @@
   --default-sub-color: var(--purple-300);
   --default-mine-color: var(--green-100);
 
-  --bg-shadow-100: var(--bg-black-shadow-100);
-  --bg-shadow-200: var(--bg-black-shadow-200);
-  --bg-shadow-300: var(--bg-black-shadow-300);
-  --bg-shadow-400: var(--bg-black-shadow-400);
+  --bg-shadow-100: var(--black-shadow-100);
+  --bg-shadow-200: var(--black-shadow-200);
+  --bg-shadow-300: var(--black-shadow-300);
+  --bg-shadow-400: var(--black-shadow-400);
+  --border-shadow-100: var(--black-shadow-100);
+  --border-shadow-200: var(--black-shadow-200);
+  --border-shadow-300: var(--black-shadow-300);
 
   color: var(--color-text-normal);
   background-color: var(--color-background);
@@ -143,10 +140,13 @@
     --default-sub-color: var(--purple-300);
     --default-mine-color: var(--green-200);
 
-    --bg-shadow-100: var(--bg-white-shadow-100);
-    --bg-shadow-200: var(--bg-white-shadow-200);
-    --bg-shadow-300: var(--bg-white-shadow-300);
-    --bg-shadow-400: var(--bg-white-shadow-400);
+    --bg-shadow-100: var(--black-shadow-200);
+    --bg-shadow-200: var(--black-shadow-300);
+    --bg-shadow-300: var(--black-shadow-400);
+    --bg-shadow-400: var(--black-shadow-400);
+    --border-shadow-100: var(--black-shadow-200);
+    --border-shadow-200: var(--black-shadow-300);
+    --border-shadow-300: var(--black-shadow-400);
 
     color: var(--color-text-normal);
     background-color: var(--color-background);
@@ -249,8 +249,7 @@ input {
 
 .modal {
   border-radius: 10px;
-  box-shadow: 10px 10px 40px 0px var(--bg-black-shadow-200);
-  /* black shadow 여야함! */
+  box-shadow: 10px 10px 40px 0px var(--border-shadow-200);
 }
 
 .textNowrap {

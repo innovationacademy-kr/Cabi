@@ -167,8 +167,7 @@ const BuildingListStyled = styled.ul<{ clicked: boolean }>`
   background: var(--color-background);
   opacity: 0.9;
   border-radius: 4px;
-  box-shadow: 0 0 10px 0 var(--bg-shadow-200);
-  /* 테두리 */
+  box-shadow: 0 0 10px 0 var(--border-shadow-200);
   z-index: 100;
   display: ${(props) => (props.clicked ? "block" : "none")};
   user-select: none !important;

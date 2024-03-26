@@ -52,7 +52,7 @@ const LineChart = ({ data }: { data: IMonthlyData[] }) => (
         tooltip: {
           container: {
             backgroundColor: "var(--color-background)",
-            boxShadow: "var(--bg-shadow-200) 0 1px 2px",
+            boxShadow: "var(--border-shadow-200) 0 1px 2px",
             color: "var(--color-text-normal)",
           },
         },
@@ -106,7 +106,6 @@ const LineChart = ({ data }: { data: IMonthlyData[] }) => (
             {
               on: "hover",
               style: {
-                itemBackground: "var(--bg-shadow-100)",
                 itemOpacity: 1,
               },
             },

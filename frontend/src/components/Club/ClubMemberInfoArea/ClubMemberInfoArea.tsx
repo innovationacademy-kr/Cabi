@@ -150,8 +150,7 @@ const ClubMemberInfoAreaStyled = styled.div`
   flex-direction: column;
   align-items: center;
   background: var(--color-background);
-  box-shadow: 0 0 40px 0 var(--bg-shadow-200);
-  /* 테두리 */
+  box-shadow: 0 0 40px 0 var(--border-shadow-200);
   border-left: 1px solid var(--color-line);
   &.on {
     transform: translateX(0%);

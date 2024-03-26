@@ -121,7 +121,7 @@ const DetailInfoContainerStyled = styled.div<{ isFloat: boolean }>`
       z-index: 9;
       transform: translateX(120%);
       transition: transform 0.3s ease-in-out;
-      box-shadow: 0 0 40px 0 var(--bg-shadow-200);
+      box-shadow: 0 0 40px 0 var(--border-shadow-200);
       &.on {
         transform: translateX(0%);
       }
