@@ -59,6 +59,13 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
         theme={{
           legends: { text: { fontSize: "15px" } },
           labels: { text: { fontSize: "15px" } },
+          tooltip: {
+            container: {
+              backgroundColor: "var(--color-background)",
+              boxShadow: "var(--bg-shadow-200) 0 1px 2px",
+              color: "var(--color-text-normal)",
+            },
+          },
         }}
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
         colors={[
