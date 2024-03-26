@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import styled, { css, keyframes } from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { manualContentData } from "@/assets/data/ManualContent";
 import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
 import { ReactComponent as ExtensionIcon } from "@/assets/images/extension.svg";
