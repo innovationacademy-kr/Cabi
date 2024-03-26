@@ -141,7 +141,7 @@ const CabinetRectangleStyled = styled.div<{
       ? "var(--expired)"
       : props.isLented
       ? "var(--mine)"
-      : "var(--gray-tmp-2)"};
+      : "var(--full)"};
   color: ${(props) =>
     props.banned
       ? "var(--color-background)"
