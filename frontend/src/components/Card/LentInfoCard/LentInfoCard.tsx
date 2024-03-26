@@ -7,10 +7,8 @@ import {
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import { MyCabinetInfo } from "@/components/Card/LentInfoCard/LentInfoCard.container";
-import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
-import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
+import { cabinetIconComponentMap } from "@/assets/data/maps";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
-import CabinetType from "@/types/enum/cabinet.type.enum";
 import { formatDate } from "@/utils/dateUtils";
 
 const calculateFontSize = (userCount: number): string => {
@@ -32,6 +30,7 @@ const LentInfoCard = ({
   cabinetInfo: MyCabinetInfo;
   unbannedAt: Date | null | undefined;
 }) => {
+  const CabinetIcon = cabinetIconComponentMap[cabinetInfo.lentType];
   return (
     <Card
       title={"대여정보"}
@@ -64,10 +63,7 @@ const LentInfoCard = ({
 
             <CabinetUserListWrapper>
               <CabinetIconStyled title={cabinetInfo.lentType}>
-                {cabinetInfo.lentType === CabinetType.PRIVATE && (
-                  <PrivateIcon />
-                )}
-                {cabinetInfo.lentType === CabinetType.SHARE && <ShareIcon />}
+                <CabinetIcon />
               </CabinetIconStyled>
               <CabinetInfoTextStyled
                 fontSize={calculateFontSize(cabinetInfo.userCount)}

@@ -6,13 +6,11 @@ import WarningNotification, {
   WarningNotificationProps,
 } from "@/components/Common/WarningNotification";
 import {
+  cabinetIconComponentMap,
   cabinetIconSrcMap,
   cabinetStatusLabelMap,
   cabinetTypeLabelMap,
 } from "@/assets/data/maps";
-import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
-import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
-import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import ModalPortal from "../ModalPortal";
@@ -68,6 +66,7 @@ const StatusModal = ({
   const handleClickWriteMode = (e: any) => {
     setMode("write");
   };
+  const CabinetIcon = cabinetIconComponentMap[cabinetType];
 
   const handleDropdownChangeValue = (val: CabinetType | CabinetStatus) => {
     if (Object.values(CabinetType).includes(val as CabinetType)) {
@@ -116,9 +115,7 @@ const StatusModal = ({
               {mode === "read" ? (
                 <ContentItemContainerStyled mode={mode}>
                   <ContentItemIconStyled>
-                    {cabinetType === CabinetType.PRIVATE && <PrivateIcon />}
-                    {cabinetType === CabinetType.CLUB && <ClubIcon />}
-                    {cabinetType === CabinetType.SHARE && <ShareIcon />}
+                    <CabinetIcon />
                   </ContentItemIconStyled>
                   <p>{cabinetTypeLabelMap[newCabinetType]}</p>
                 </ContentItemContainerStyled>

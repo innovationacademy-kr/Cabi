@@ -18,17 +18,14 @@ import SwapModal from "@/components/Modals/SwapModal/SwapModal";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import {
   additionalModalType,
+  cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
 import alertImg from "@/assets/images/cautionSign.svg";
-import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
 import { ReactComponent as ExtensionImg } from "@/assets/images/extensionTicket.svg";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
-import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
-import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
-import CabinetType from "@/types/enum/cabinet.type.enum";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -62,6 +59,9 @@ const CabinetInfoArea: React.FC<{
     selectedCabinetInfo &&
     selectedCabinetInfo.lentsLength <= 1 &&
     selectedCabinetInfo.lentType === "SHARE";
+  const CabinetIcon = selectedCabinetInfo
+    ? cabinetIconComponentMap[selectedCabinetInfo.lentType]
+    : null;
 
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
@@ -89,11 +89,7 @@ const CabinetInfoArea: React.FC<{
           : "-"}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled title={selectedCabinetInfo!.lentType}>
-        {selectedCabinetInfo!.lentType === CabinetType.CLUB && <ClubIcon />}
-        {selectedCabinetInfo!.lentType === CabinetType.PRIVATE && (
-          <PrivateIcon />
-        )}
-        {selectedCabinetInfo!.lentType === CabinetType.SHARE && <ShareIcon />}
+        {CabinetIcon && <CabinetIcon />}
       </CabinetTypeIconStyled>
       <TextStyled fontSize="1rem" fontColor="var(--color-text-normal)">
         {selectedCabinetInfo!.userNameList}

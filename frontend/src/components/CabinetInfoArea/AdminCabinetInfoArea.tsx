@@ -16,13 +16,11 @@ import ClubLentModal from "@/components/Modals/LentModal/ClubLentModal";
 import AdminReturnModal from "@/components/Modals/ReturnModal/AdminReturnModal";
 import StatusModalContainer from "@/components/Modals/StatusModal/StatusModal.container";
 import {
+  cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
-import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
-import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import { CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
@@ -56,6 +54,9 @@ const AdminCabinetInfoArea: React.FC<{
   const currentSection = useRecoilValue(currentSectionNameState);
   const { targetCabinetInfoList, typeCounts } = multiSelectTargetInfo ?? {};
   const { resetMultiSelectMode } = useMultiSelect();
+  const CabinetIcon = selectedCabinetInfo
+    ? cabinetIconComponentMap[selectedCabinetInfo.lentType]
+    : null;
 
   const isLented: boolean = selectedCabinetInfo?.userNameList.at(0) !== "-";
 
@@ -141,11 +142,7 @@ const AdminCabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.visibleNum}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled title={selectedCabinetInfo!.lentType}>
-        {selectedCabinetInfo!.lentType === CabinetType.CLUB && <ClubIcon />}
-        {selectedCabinetInfo!.lentType === CabinetType.PRIVATE && (
-          <PrivateIcon />
-        )}
-        {selectedCabinetInfo!.lentType === CabinetType.SHARE && <ShareIcon />}
+        {CabinetIcon && <CabinetIcon />}
       </CabinetTypeIconStyled>
       <TextStyled fontSize="1rem" fontColor="var(--color-text-normal)">
         {selectedCabinetInfo!.userNameList}

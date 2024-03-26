@@ -13,12 +13,10 @@ import {
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import {
   cabinetFilterMap,
+  cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
-import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
-import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import {
   CabinetInfo,
   CabinetPreviewInfo,
@@ -85,6 +83,7 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const currentFloor = useRecoilValue<number>(currentFloorNumberState);
   const setCurrentFloorData = useSetRecoilState(currentFloorCabinetState);
   const myInfo = useRecoilValue(userState);
+  const CabinetIcon = cabinetIconComponentMap[props.lentType];
 
   const selectCabinetOnClick = (status: CabinetStatus, cabinetId: number) => {
     if (currentCabinetId === cabinetId) {
@@ -148,9 +147,7 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
           isMine={isMine}
           status={props.status}
         >
-          {props.lentType === CabinetType.PRIVATE && <PrivateIcon />}
-          {props.lentType === CabinetType.SHARE && <ShareIcon />}
-          {props.lentType === CabinetType.CLUB && <ClubIcon />}
+          <CabinetIcon />
         </CabinetIconContainerStyled>
         <CabinetNumberStyled status={props.status} isMine={isMine}>
           {props.visibleNum}

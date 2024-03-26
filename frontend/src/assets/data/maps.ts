@@ -1,3 +1,6 @@
+import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
+import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
+import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 
@@ -16,6 +19,16 @@ export enum additionalModalType {
   MODAL_OWN_EXTENSION = "MODAL_OWN_EXTENSION",
   MODAL_CANCEL = "MODAL_CANCEL",
 }
+
+type CabinetIconComponentMap = {
+  [key in CabinetType]: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+};
+
+export const cabinetIconComponentMap: CabinetIconComponentMap = {
+  [CabinetType.PRIVATE]: PrivateIcon,
+  [CabinetType.SHARE]: ShareIcon,
+  [CabinetType.CLUB]: ClubIcon,
+};
 
 export const cabinetIconSrcMap = {
   [CabinetType.PRIVATE]: "/src/assets/images/privateIcon.svg",
