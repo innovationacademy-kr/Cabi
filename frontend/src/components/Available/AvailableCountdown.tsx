@@ -44,9 +44,6 @@ const AvailableCountdown = ({
 
   return (
     <>
-      <AvailableCountdownIconStyled>
-        <AlarmIcon />
-      </AvailableCountdownIconStyled>
       <AvailableCountdownStyled>
         {remainingTime === 0
           ? "OPEN"
