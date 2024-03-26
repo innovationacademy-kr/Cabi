@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 import org.ftclub.cabinet.alarm.fcm.config.FirebaseConfig;
 import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -24,7 +25,6 @@ import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
-import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,27 +62,11 @@ public class UserFacadeService {
 		LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(
 				lentExtension);
 		User currentUser = userQueryService.getUser(user.getUserId());
-		boolean isDeviceTokenExpired = currentUser.getAlarmTypes().isPush()
+		AlarmTypeResponseDto userAlarmTypes = currentUser.getAlarmTypes();
+		boolean isDeviceTokenExpired = userAlarmTypes.isPush()
 				&& fcmTokenRedisService.findByUserName(user.getName()).isEmpty();
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-				lentExtensionResponseDto, currentUser.getAlarmTypes(), isDeviceTokenExpired);
-	}
-
-	/**
-	 * 유저의 모든 연장권 정보를 가져옵니다.
-	 *
-	 * @param user 유저의 세션 정보
-	 * @return 유저의 모든 연장권 정보를 반환합니다.
-	 */
-	@Transactional(readOnly = true)
-	public LentExtensionPaginationDto getLentExtensions(UserSessionDto user) {
-		List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionQueryService.findLentExtensionsInLatestOrder(
-						user.getUserId())
-				.stream()
-				.map(userMapper::toLentExtensionResponseDto)
-				.collect(Collectors.toList());
-		return userMapper.toLentExtensionPaginationDto(lentExtensionResponseDtos,
-				(long) lentExtensionResponseDtos.size());
+				lentExtensionResponseDto, userAlarmTypes, isDeviceTokenExpired);
 	}
 
 	/**
@@ -92,16 +76,14 @@ public class UserFacadeService {
 	 * @return 유저의 사용 가능한 연장권 정보를 반환합니다.
 	 */
 	@Transactional(readOnly = true)
-	public LentExtensionPaginationDto getActiveLentExtensionsPage(UserSessionDto user) {
-		LentExtensions lentExtensions = lentExtensionQueryService.findActiveLentExtensions(
-				user.getUserId());
-		List<LentExtensionResponseDto> LentExtensionResponseDtos = lentExtensions.getLentExtensions()
-				.stream()
+	public LentExtensionPaginationDto getActiveLentExtensions(UserSessionDto user) {
+		List<LentExtension> lentExtensions =
+				lentExtensionQueryService.findActiveLentExtensions(user.getUserId());
+		List<LentExtensionResponseDto> result = lentExtensions.stream()
 				.map(userMapper::toLentExtensionResponseDto)
 				.collect(Collectors.toList());
 
-		return userMapper.toLentExtensionPaginationDto(LentExtensionResponseDtos,
-				(long) LentExtensionResponseDtos.size());
+		return userMapper.toLentExtensionPaginationDto(result, (long) lentExtensions.size());
 	}
 
 	/**

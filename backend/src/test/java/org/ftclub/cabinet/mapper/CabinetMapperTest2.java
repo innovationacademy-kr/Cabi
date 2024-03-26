@@ -1,18 +1,15 @@
 package org.ftclub.cabinet.mapper;
 
-import org.ftclub.cabinet.cabinet.domain.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CabinetMapperTest2 {
 
@@ -26,17 +23,17 @@ class CabinetMapperTest2 {
 	@BeforeEach
 	void setUp() {
 		// 사물함
-		cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.PRIVATE, 1,
-				Grid.of(1, 1),
-				CabinetPlace.of(
-						Location.of("building", 1, "section"),
-						SectionFormation.of(1, 1),
-						MapArea.of(1, 1, 1, 1)));
-		// 사용자
-		user = User.of("user", "email@email.com", DateUtil.getInfinityDate(), UserRole.USER);
-		// 대여 기록
-		lentHistory = LentHistory.of(LocalDateTime.now(), DateUtil.getInfinityDate(), 1L,
-				1L);
+//		cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.PRIVATE, 1,
+//				Grid.of(1, 1),
+//				CabinetPlace.of(
+//						Location.of("building", 1, "section"),
+//						SectionFormation.of(1, 1),
+//						MapArea.of(1, 1, 1, 1)));
+//		// 사용자
+//		user = User.of("user", "email@email.com", DateUtil.getInfinityDate(), UserRole.USER);
+//		// 대여 기록
+//		lentHistory = LentHistory.of(LocalDateTime.now(), DateUtil.getInfinityDate(), 1L,
+//				1L);
 
 	}
 
@@ -58,14 +55,14 @@ class CabinetMapperTest2 {
 	@DisplayName("CabinetDto null 매핑 성공 - null 프로퍼티를 갖는 Dto 반환")
 	void toCabinetDto_성공_null_값() {
 		CabinetDto dto = mapper.toCabinetDto(null);
-		assertEquals(null, dto.getCabinetId());
-		assertEquals(null, dto.getVisibleNum());
-		assertEquals(null, dto.getLocation());
-		assertEquals(null, dto.getLentType());
-		assertEquals(null, dto.getMaxUser());
-		assertEquals(null, dto.getTitle());
-		assertEquals(null, dto.getStatus());
-		assertEquals(null, dto.getStatusNote());
+		assertNull(dto.getCabinetId());
+		assertNull(dto.getVisibleNum());
+		assertNull(dto.getLocation());
+		assertNull(dto.getLentType());
+		assertNull(dto.getMaxUser());
+		assertNull(dto.getTitle());
+		assertNull(dto.getStatus());
+		assertNull(dto.getStatusNote());
 	}
 
 	@Test

@@ -1,5 +1,12 @@
 package org.ftclub.cabinet.cabinet.service;
 
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.BROKEN;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.FULL;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
+
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -12,16 +19,11 @@ import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.utils.ExceptionUtil;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.*;
-import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
-
 @Service
 @RequiredArgsConstructor
 @Logging(level = LogLevel.DEBUG)
 public class CabinetCommandService {
+
 	private static final String EMPTY_STRING = "";
 
 	private final CabinetRepository cabinetRepository;
@@ -34,7 +36,6 @@ public class CabinetCommandService {
 	 */
 	public void changeStatus(Cabinet cabinet, CabinetStatus cabinetStatus) {
 		cabinet.specifyStatus(cabinetStatus);
-		cabinetRepository.save(cabinet);
 	}
 
 	/**
@@ -55,7 +56,6 @@ public class CabinetCommandService {
 		if (userCount == cabinet.getMaxUser()) {
 			cabinet.specifyStatus(FULL);
 		}
-		cabinetRepository.save(cabinet);
 	}
 
 	/**
@@ -66,7 +66,6 @@ public class CabinetCommandService {
 	 */
 	public void updateTitle(Cabinet cabinet, String title) {
 		cabinet.writeTitle(title);
-		cabinetRepository.save(cabinet);
 	}
 
 	/**
@@ -77,7 +76,6 @@ public class CabinetCommandService {
 	 */
 	public void updateMemo(Cabinet cabinet, String memo) {
 		cabinet.writeMemo(memo);
-		cabinetRepository.save(cabinet);
 	}
 
 	/**
@@ -92,7 +90,8 @@ public class CabinetCommandService {
 		List<Long> cabinetIds = cabinets.stream()
 				.map(Cabinet::getId).collect(Collectors.toList());
 		if (userCount == 0) {
-			cabinetRepository.updateStatusAndTitleAndMemoByCabinetIdsIn(cabinetIds, PENDING, EMPTY_STRING, EMPTY_STRING);
+			cabinetRepository.updateStatusAndTitleAndMemoByCabinetIdsIn(cabinetIds, PENDING,
+					EMPTY_STRING, EMPTY_STRING);
 		} else {
 			cabinetRepository.updateStatusByCabinetIdsIn(cabinetIds, FULL);
 		}
@@ -138,6 +137,10 @@ public class CabinetCommandService {
 		cabinet.specifyStatus(status);
 	}
 
+	public void updateStatusBulk(List<Long> cabinetIds, CabinetStatus status) {
+		cabinetRepository.updateStatusByCabinetIdsIn(cabinetIds, status);
+	}
+
 	/**
 	 * 사물함의 대여타입을 변경합니다.
 	 *
@@ -147,18 +150,5 @@ public class CabinetCommandService {
 
 	public void updateLentType(Cabinet cabinet, LentType lentType) {
 		cabinet.specifyLentType(lentType);
-	}
-
-	/**
-	 * 동아리 사물함으로 업데이트 합니다
-	 *
-	 * @param cabinet    변경될 사물함
-	 * @param clubName   동아리 이름
-	 * @param statusNote 상태 메모(동아리 장의 intra id)
-	 */
-	public void updateClubStatus(Cabinet cabinet, String clubName, String statusNote) {
-		cabinet.writeTitle(clubName);
-		cabinet.writeStatusNote(statusNote);
-		cabinet.specifyLentType(LentType.CLUB);
 	}
 }

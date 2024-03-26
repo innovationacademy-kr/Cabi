@@ -15,7 +15,10 @@ import {
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { modalPropsMap } from "@/assets/data/maps";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { axiosCabinetById, axiosLentClubUser } from "@/api/axios/axios.custom";
+import {
+  axiosCabinetById,
+  axiosLentClubCabinet,
+} from "@/api/axios/axios.custom";
 
 const ClubLentModal: React.FC<{
   lentType: string;
@@ -34,7 +37,8 @@ const ClubLentModal: React.FC<{
 
   const tryLentRequest = async (e: React.MouseEvent) => {
     try {
-      await axiosLentClubUser(selectedClubInfo!.userId, currentCabinetId!, "");
+      if (!currentCabinetId || !selectedClubInfo) return;
+      await axiosLentClubCabinet(selectedClubInfo.clubId, currentCabinetId);
       setIsCurrentSectionRender(true);
       setNumberOfAdminWork((prev) => prev + 1);
       setModalTitle("대여가 완료되었습니다");

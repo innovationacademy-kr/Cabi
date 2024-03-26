@@ -17,7 +17,6 @@ import {
   axiosSearchByCabinetNum,
   axiosSearchDetailByIntraId,
 } from "@/api/axios/axios.custom";
-import { getTotalPage } from "@/utils/dateUtils";
 
 interface ISearchDetail {
   name: string;

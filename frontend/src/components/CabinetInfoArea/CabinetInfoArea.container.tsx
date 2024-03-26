@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import {
   myCabinetInfoState,
   targetCabinetInfoState,
@@ -131,10 +131,7 @@ export const getDetailMessage = (
   // 동아리 사물함
   else if (lentType === "CLUB") return "동아리 사물함";
   // 사용 중 사물함
-  else if (
-    status === CabinetStatus.FULL ||
-    status === CabinetStatus.OVERDUE
-  )
+  else if (status === CabinetStatus.FULL || status === CabinetStatus.OVERDUE)
     return getCalcualtedTimeString(new Date(lents[0].expiredAt));
   // 빈 사물함
   else return null;
@@ -160,11 +157,9 @@ export const getDetailMessageColor = (
 };
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
-  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
-    targetCabinetInfoState
-  );
-  const [myCabinetInfo, setMyLentInfo] =
-    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
+  const myCabinetInfo =
+    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const myInfo = useRecoilValue<UserDto>(userState);
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const { closeCabinet, toggleLent } = useMenu();

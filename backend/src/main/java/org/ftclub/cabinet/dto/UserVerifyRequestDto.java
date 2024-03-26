@@ -6,13 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.domain.UserRole;
 
 @Getter
 @AllArgsConstructor
 public class UserVerifyRequestDto {
 
-	private UserRole userRole;
+	//	private UserRole userRole;
 	private LocalDateTime blackholedAt;
 	private int lentCount;
 	private Long cabinetId;
