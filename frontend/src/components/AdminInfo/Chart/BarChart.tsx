@@ -46,6 +46,14 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
         legends: { text: { fontSize: "14px" } },
         axis: { ticks: { text: { fontSize: "14px" } } },
         labels: { text: { fontSize: "14px" } },
+        textColor: "var(--color-text-normal)",
+        tooltip: {
+          container: {
+            backgroundColor: "var(--color-background)",
+            boxShadow: "var(--bg-shadow-200) 0 1px 2px",
+            color: "var(--color-text-normal)",
+          },
+        },
       }}
       data={convert(data)}
       keys={["사용불가", "반납지연", "사용 중", "사용가능"]}

@@ -47,6 +47,16 @@ const convertData = (data: IMonthlyData[]) =>
 const LineChart = ({ data }: { data: IMonthlyData[] }) => (
   <LineChartStyled>
     <ResponsiveLine
+      theme={{
+        textColor: "var(--color-text-normal)",
+        tooltip: {
+          container: {
+            backgroundColor: "var(--color-background)",
+            boxShadow: "var(--bg-shadow-200) 0 1px 2px",
+            color: "var(--color-text-normal)",
+          },
+        },
+      }}
       data={convertData(data)}
       margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
       xScale={{ type: "point" }}
