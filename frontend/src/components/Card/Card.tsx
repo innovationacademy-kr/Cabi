@@ -13,6 +13,7 @@ export interface IButtonProps {
 
 interface CardProps {
   title?: string;
+  onClickToolTip?: () => void;
   children: React.ReactElement;
   buttons?: IButtonProps[];
   gridArea: string;
@@ -22,17 +23,21 @@ interface CardProps {
 
 const Card = ({
   title,
+  onClickToolTip,
   gridArea,
   width = "350px",
   height = "163px",
-  buttons = [],
+  buttons = ([] = []),
   children,
 }: CardProps) => {
   return (
     <CardStyled gridArea={gridArea} width={width} height={height}>
       {(title || buttons.length > 0) && (
         <CardHeaderStyled>
-          {title && <CardTitleStyled>{title}</CardTitleStyled>}
+          <CardTitleWrapperStyled>
+            {title && <CardTitleStyled>{title}</CardTitleStyled>}
+            {onClickToolTip && <ToolTipIcon onClick={onClickToolTip} />}
+          </CardTitleWrapperStyled>
           {buttons.length > 0 && (
             <CardButtonWrapper>
               {buttons?.map((button, index) => (
@@ -80,10 +85,29 @@ export const CardHeaderStyled = styled.div`
   padding: 20px 20px 10px 30px;
 `;
 
+const CardTitleWrapperStyled = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export const CardTitleStyled = styled.div`
   font-size: 1.2em;
   font-weight: bold;
   margin-right: auto;
+`;
+
+const ToolTipIcon = styled.div`
+  background-image: url("/src/assets/images/notificationSign_grey.svg");
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  margin-top: 0.1rem;
+  margin-left: 0.25rem;
+  opacity: 0.6;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 export const CardButtonWrapper = styled.div`

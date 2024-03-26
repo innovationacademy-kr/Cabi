@@ -44,15 +44,10 @@ export const axiosActiveExtensionInfo = async (): Promise<any> => {
   }
 };
 
-const axiosUseExtensionURL = "/v4/users/me/lent-extensions/use";
+const axiosUseExtensionURL = "/v4/users/me/lent-extensions";
 export const axiosUseExtension = async (): Promise<any> => {
   try {
-    const response = await instance.get(axiosUseExtensionURL, {
-      validateStatus: function (status) {
-        return status < 500;
-      },
-    });
-    if (response.status === 401) throw response;
+    const response = await instance.post(axiosUseExtensionURL);
     return response;
   } catch (error) {
     throw error;

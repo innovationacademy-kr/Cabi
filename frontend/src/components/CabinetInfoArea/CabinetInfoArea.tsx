@@ -123,7 +123,7 @@ const CabinetInfoArea: React.FC<{
               />
               <ButtonContainer
                 onClick={() => openModal("memoModal")}
-                text="메모관리"
+                text="사물함 설정"
                 theme="line"
               />
               <ButtonContainer

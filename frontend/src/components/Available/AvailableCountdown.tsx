@@ -21,6 +21,9 @@ const AvailableCountdown = ({
   const hours = Math.floor(remainingTime / 3600000);
   const minutes = Math.floor((remainingTime % 3600000) / 60000);
   const seconds = Math.floor((remainingTime % 60000) / 1000);
+  const twoDigitsHours = String(hours).padStart(2, "0");
+  const twoDigitsMinutes = String(minutes).padStart(2, "0");
+  const twoDigitsSeconds = String(seconds).padStart(2, "0");
 
   useEffect(() => {
     if (serverTime.toLocaleTimeString() === Time.PENDING_OPEN)
@@ -47,7 +50,7 @@ const AvailableCountdown = ({
       <AvailableCountdownStyled>
         {remainingTime === 0
           ? "OPEN"
-          : `${hours}시간 ${minutes}분 ${seconds}초`}
+          : `${twoDigitsHours}:${twoDigitsMinutes}:${twoDigitsSeconds} 남았습니다`}
       </AvailableCountdownStyled>
     </>
   );
@@ -60,9 +63,8 @@ const AvailableCountdownIconStyled = styled.div`
 `;
 
 const AvailableCountdownStyled = styled.div`
-  margin-top: 5px;
-  color: var(--main-color);
-  font-size: 1.8rem;
+  color: white;
+  font-size: 1.1rem;
   font-weight: 600;
 `;
 

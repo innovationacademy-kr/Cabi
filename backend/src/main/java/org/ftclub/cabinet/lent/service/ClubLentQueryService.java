@@ -16,6 +16,12 @@ public class ClubLentQueryService {
 
 	private final ClubLentRepository clubLentRepository;
 
+	public void findAlreadyExistsClubLentHistory(Long clubId) {
+		clubLentRepository.findByClubIdAndEndedAtIsNull(clubId).ifPresent(clubLentHistory -> {
+			throw ExceptionStatus.LENT_ALREADY_EXISTED.asServiceException();
+		});
+	}
+
 	public ClubLentHistory findActiveLentHistoryWithClub(Long cabinetId) {
 		return clubLentRepository.findByCabinetIdAndEndedAtIsNullJoinClub(cabinetId)
 				.orElse(null);

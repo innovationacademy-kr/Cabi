@@ -13,6 +13,7 @@ import { currentFloorSectionState } from "@/recoil/selectors";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
+import SectionType from "@/types/enum/map.type.enum";
 import useCabinetListRefresh from "@/hooks/useCabinetListRefresh";
 import useMenu from "@/hooks/useMenu";
 
@@ -109,14 +110,17 @@ const MainPage = () => {
         <SectionPaginationContainer />
         <CabinetListWrapperStyled>
           <CabinetListContainer isAdmin={false} />
-          <RefreshButtonStyled
-            className="cabiButton"
-            title="새로고침"
-            id="refreshButton"
-            onClick={refreshCabinetList}
-          >
-            새로고침
-          </RefreshButtonStyled>
+          {currentSectionName !== SectionType.elevator &&
+            currentSectionName !== SectionType.stairs && (
+              <RefreshButtonStyled
+                className="cabiButton"
+                title="새로고침"
+                id="refreshButton"
+                onClick={refreshCabinetList}
+              >
+                새로고침
+              </RefreshButtonStyled>
+            )}
         </CabinetListWrapperStyled>
       </WrapperStyled>
     </>

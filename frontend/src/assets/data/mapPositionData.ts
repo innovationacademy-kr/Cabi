@@ -1,3 +1,5 @@
+import SectionType from "@/types/enum/map.type.enum";
+
 /**
  * @interface
  * @description 클러스터 사물함 위치 더미 데이터
@@ -14,7 +16,7 @@ export interface ISectionInfo {
   rowStart: number;
   rowEnd: number;
   name: string;
-  type: string;
+  type: SectionType;
 }
 
 export interface IFloorSectionsInfo {
@@ -29,7 +31,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 1,
       rowEnd: 2,
       name: "End of Cluster 2",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 1,
@@ -37,7 +39,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 3,
       rowEnd: 4,
       name: `Oasis`,
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 1,
@@ -45,7 +47,15 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 4,
       rowEnd: 5,
       name: `E/V`,
-      type: "elevator",
+      type: SectionType.elevator,
+    },
+    {
+      colStart: 5,
+      colEnd: 6,
+      rowStart: 4,
+      rowEnd: 5,
+      name: "Stairs",
+      type: SectionType.stairs,
     },
     {
       colStart: 4,
@@ -53,7 +63,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 6,
       rowEnd: 7,
       name: "Cluster 1 - OA",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 4,
@@ -61,7 +71,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 8,
       rowEnd: 9,
       name: `End of Cluster 1`,
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 1,
@@ -69,7 +79,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 5,
       rowEnd: 6,
       name: "Cluster 1 - Terrace1",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 1,
@@ -77,7 +87,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 7,
       rowEnd: 9,
       name: "Cluster 1 - Terrace2",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 3,
@@ -85,7 +95,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 4,
       rowEnd: 6,
       name: "2F",
-      type: "floorInfo",
+      type: SectionType.floorInfo,
     },
   ],
   "3": [
@@ -95,7 +105,15 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 8,
       rowEnd: 9,
       name: `E/V`,
-      type: "elevator",
+      type: SectionType.elevator,
+    },
+    {
+      colStart: 5,
+      colEnd: 6,
+      rowStart: 8,
+      rowEnd: 9,
+      name: "Stairs",
+      type: SectionType.stairs,
     },
     {
       colStart: 4,
@@ -103,7 +121,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 7,
       rowEnd: 8,
       name: "Cluster X - 7",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 4,
@@ -111,7 +129,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 6,
       rowEnd: 7,
       name: "Cluster X - 6",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 4,
@@ -119,7 +137,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 5,
       rowEnd: 6,
       name: "Cluster X - 5",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 4,
@@ -127,7 +145,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 4,
       rowEnd: 5,
       name: "Cluster X - 4",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 4,
@@ -135,7 +153,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 3,
       rowEnd: 4,
       name: "Cluster X - 3",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 4,
@@ -143,7 +161,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 2,
       rowEnd: 3,
       name: "Cluster X - 2",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 4,
@@ -151,7 +169,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 1,
       rowEnd: 2,
       name: "Cluster X - 1",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 3,
@@ -159,7 +177,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 4,
       rowEnd: 6,
       name: "3F",
-      type: "floorInfo",
+      type: SectionType.floorInfo,
     },
   ],
   "4": [
@@ -169,7 +187,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 1,
       rowEnd: 2,
       name: `End of Cluster 4`,
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 1,
@@ -177,7 +195,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 3,
       rowEnd: 4,
       name: `Oasis`,
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 1,
@@ -185,7 +203,15 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 4,
       rowEnd: 5,
       name: `E/V`,
-      type: "elevator",
+      type: SectionType.elevator,
+    },
+    {
+      colStart: 5,
+      colEnd: 6,
+      rowStart: 4,
+      rowEnd: 5,
+      name: "Stairs",
+      type: SectionType.stairs,
     },
     {
       colStart: 4,
@@ -193,7 +219,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 6,
       rowEnd: 7,
       name: `Cluster 3 - OA`,
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 4,
@@ -201,7 +227,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 8,
       rowEnd: 9,
       name: `End of Cluster 3`,
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 3,
@@ -209,7 +235,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 4,
       rowEnd: 6,
       name: "4F",
-      type: "floorInfo",
+      type: SectionType.floorInfo,
     },
   ],
   "5": [
@@ -219,7 +245,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 1,
       rowEnd: 2,
       name: `End of Cluster 6`,
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 1,
@@ -227,7 +253,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 3,
       rowEnd: 4,
       name: `Oasis`,
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 1,
@@ -235,7 +261,15 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 4,
       rowEnd: 5,
       name: `E/V`,
-      type: "elevator",
+      type: SectionType.elevator,
+    },
+    {
+      colStart: 5,
+      colEnd: 6,
+      rowStart: 4,
+      rowEnd: 5,
+      name: "Stairs",
+      type: SectionType.stairs,
     },
     {
       colStart: 4,
@@ -243,7 +277,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 6,
       rowEnd: 7,
       name: "Cluster 5 - OA",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 4,
@@ -251,7 +285,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 8,
       rowEnd: 9,
       name: "End of Cluster 5",
-      type: "cabinet",
+      type: SectionType.cabinet,
     },
     {
       colStart: 3,
@@ -259,7 +293,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 4,
       rowEnd: 6,
       name: "5F",
-      type: "floorInfo",
+      type: SectionType.floorInfo,
     },
   ],
 };
