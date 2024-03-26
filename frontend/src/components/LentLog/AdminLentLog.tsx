@@ -97,7 +97,6 @@ const AdminLentLogStyled = styled.div`
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;
   box-shadow: 0 0 40px 0 var(--border-shadow-300);
-  /* TODO : box-shadow 적용안해도 될듯? */
   display: flex;
   flex-direction: column;
   align-items: center;

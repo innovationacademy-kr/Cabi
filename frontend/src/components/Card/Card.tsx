@@ -6,7 +6,7 @@ export interface IButtonProps {
   onClick?: () => void;
   backgroundColor?: string;
   fontColor?: string;
-  icon?: string; // NOTE: icon 이 있을 경우, icon 을 표시
+  icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null; // NOTE: icon 이 있을 경우, icon 을 표시
   isClickable: boolean;
   isExtensible?: boolean;
 }
@@ -45,7 +45,7 @@ const Card = ({
                   isClickable={button.isClickable}
                   isExtensible={button.isExtensible}
                 >
-                  {button.label}
+                  {!button.icon ? button.label : <button.icon />}
                 </CardButtonStyled>
               ))}
             </CardButtonWrapper>
@@ -93,18 +93,15 @@ export const CardButtonWrapper = styled.div`
 export const CardButtonStyled = styled.div<{
   backgroundColor?: string;
   fontColor?: string;
-  icon?: string;
+  icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null;
   isClickable?: boolean;
   isExtensible?: boolean;
 }>`
   ${(props) =>
     props.icon
       ? css`
-          background-image: url(${props.icon});
           height: 20px;
           width: 20px;
-          background-size: contain;
-          background-repeat: no-repeat;
         `
       : css`
           background-color: ${props.backgroundColor
@@ -125,6 +122,17 @@ export const CardButtonStyled = styled.div<{
           }
         `}
   cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
+
+  & > svg {
+    height: 20px;
+    width: 20px;
+  }
+
+  & > svg > path {
+    transform: ${(props) =>
+      props.icon?.name === "SvgLock" ? "" : "scale(1.1)"};
+    stroke: var(--color-text-normal);
+  }
 `;
 
 export default Card;

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Card from "@/components/Card/Card";
 import { CardContentWrapper } from "@/components/Card/CardStyles";
 import ClubMemoModalContainer from "@/components/Modals/ClubModal/ClubMemoModal.container";
+import { ReactComponent as EditIcon } from "@/assets/images/edit.svg";
 
 const ClubNoticeCard = ({
   notice,
@@ -30,7 +31,7 @@ const ClubNoticeCard = ({
             ? [
                 {
                   onClick: openModal,
-                  icon: "/src/assets/images/edit.svg",
+                  icon: EditIcon,
                   isClickable: true,
                 },
               ]
@@ -39,7 +40,7 @@ const ClubNoticeCard = ({
                 {
                   backgroundColor: "var(--gray-tmp-1)",
                   onClick: () => {},
-                  icon: "",
+                  icon: null,
                   isClickable: false,
                 },
               ]

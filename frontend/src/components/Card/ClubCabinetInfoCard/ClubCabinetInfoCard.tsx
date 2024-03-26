@@ -7,6 +7,7 @@ import {
 } from "@/components/Card/CardStyles";
 import ClubPasswordModalContainer from "@/components/Modals/ClubModal/ClubPasswordModal.container";
 import { ReactComponent as LeaderIcon } from "@/assets/images/leader.svg";
+import { ReactComponent as LockIcon } from "@/assets/images/lock.svg";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 
 const ClubCabinetInfoCard = ({
@@ -36,7 +37,7 @@ const ClubCabinetInfoCard = ({
             ? [
                 {
                   onClick: handleLockLogoClick,
-                  icon: "/src/assets/images/lock.svg",
+                  icon: LockIcon,
                   isClickable: true,
                 },
               ]
@@ -45,7 +46,7 @@ const ClubCabinetInfoCard = ({
                 {
                   backgroundColor: "var(--gray-tmp-1)",
                   onClick: () => {},
-                  icon: "",
+                  icon: null,
                   isClickable: false,
                 },
               ]
@@ -164,8 +165,7 @@ const CabinetIconStyled = styled.div`
   }
 
   & > svg > path {
-    stroke: var(--gray-tmp-7);
-    /* TODO : darkmode */
+    stroke: var(--color-text-normal);
     transform: scale(1.1);
   }
 `;
