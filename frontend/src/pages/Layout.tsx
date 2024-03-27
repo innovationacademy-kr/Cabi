@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { set } from "react-ga";
 import { Outlet } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";

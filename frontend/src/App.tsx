@@ -11,6 +11,7 @@ import PostLogin from "@/pages/PostLogin";
 import ProfilePage from "@/pages/ProfilePage";
 import AdminMainPage from "@/pages/admin/AdminMainPage";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import PageTracker from "@/api/analytics/PageTracker";
 
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));
@@ -26,6 +27,8 @@ const AdminHomePage = lazy(() => import("@/pages/admin/AdminHomePage"));
 function App(): React.ReactElement {
   return (
     <BrowserRouter>
+      {/* GA4 Page Tracking Component */}
+      <PageTracker />
       <Suspense fallback={<LoadingAnimation />}>
         <Routes>
           <Route path="/post-login" element={<PostLogin />} />
