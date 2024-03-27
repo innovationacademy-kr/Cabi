@@ -9,14 +9,14 @@ const DetailContent = ({
   moveMonth,
   currentDate,
   presentationDetailInfo,
-  makeIDateObj,
+
   canMoveLeft,
   canMoveRight,
 }: {
   moveMonth: (direction: string) => void;
   currentDate: IDate | null;
   presentationDetailInfo: IPresentationScheduleDetailInfo[] | null;
-  makeIDateObj: (date: Date) => IDate;
+
   canMoveLeft: boolean;
   canMoveRight: boolean;
 }) => {
@@ -47,10 +47,7 @@ const DetailContent = ({
         )}
       </HeaderStyled>
       <BodyStyled>
-        <DetailTableContainer
-          presentationDetailInfo={presentationDetailInfo}
-          makeIDateObj={makeIDateObj}
-        />
+        <DetailTableContainer presentationDetailInfo={presentationDetailInfo} />
       </BodyStyled>
     </ContainerStyled>
   );

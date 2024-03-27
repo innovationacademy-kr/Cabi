@@ -8,7 +8,10 @@ import {
   axiosGetPresentationSchedule,
   getAdminPresentationSchedule,
 } from "@/Presentation/api/axios/axios.custom";
-import { calculateAvailableDaysInWeeks } from "@/Presentation/utils/dateUtils";
+import {
+  calculateAvailableDaysInWeeks,
+  makeIDateObj,
+} from "@/Presentation/utils/dateUtils";
 import {
   AVAILABLE_WEEKS,
   FUTURE_MONTHS_TO_DISPLAY,
@@ -51,25 +54,6 @@ const DetailContentContainer = () => {
     setIsCurrentRender(false);
     if (currentDate) getPresentationSchedule(currentDate);
   }, [currentDate, isCurrentRender]);
-
-  const makeIDateObj = (date: Date) => {
-    let offset = date.getTimezoneOffset() * 60000;
-    let dateOffset = new Date(date.getTime() - offset);
-
-    let dateISO = dateOffset.toISOString();
-    // 1. T 앞에서 끊고
-    let dateBeforeT = dateISO.substring(0, 10);
-    // 2. -로 분리
-    let dateSplited = dateBeforeT.split("-");
-
-    const iDateObj: IDate = {
-      year: dateSplited[0],
-      month: dateSplited[1],
-      day: dateSplited[2],
-    };
-
-    return iDateObj;
-  };
 
   const getPresentationSchedule = async (requestDate: IDate) => {
     try {
@@ -172,7 +156,6 @@ const DetailContentContainer = () => {
       moveMonth={moveMonth}
       currentDate={currentDate}
       presentationDetailInfo={presentationDetailInfo}
-      makeIDateObj={makeIDateObj}
       canMoveLeft={
         currentDate
           ? parseInt(currentDate.month) > parseInt(firstPresentationDate.month)

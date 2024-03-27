@@ -38,10 +38,8 @@ const adminTableHeadArray = {
 
 const DetailTableContainer = ({
   presentationDetailInfo,
-  makeIDateObj,
 }: {
   presentationDetailInfo: IPresentationScheduleDetailInfo[] | null;
-  makeIDateObj: (date: Date) => IDate;
 }) => {
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     statusModal: false,
@@ -102,7 +100,6 @@ const DetailTableContainer = ({
         list={list}
         isAdmin={isAdmin}
         openAdminModal={openAdminModal}
-        makeIDateObj={makeIDateObj}
         groupEvent={groupEvent}
         tableHeadEntries={tableHeadEntries}
       />

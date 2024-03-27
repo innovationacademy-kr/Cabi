@@ -2,10 +2,10 @@ import { useRef } from "react";
 import styled from "styled-components";
 import { IDate } from "@/Presentation/components/Details/DetailContent.container";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
+import { makeIDateObj } from "@/Presentation/utils/dateUtils";
 
 const PresentationCardMobile = ({
   refinePresentations,
-  makeIDateObj,
   searchCategory,
   selectIndex,
   slide,
@@ -13,7 +13,6 @@ const PresentationCardMobile = ({
   swipeSection,
 }: {
   refinePresentations: IPresentationScheduleDetailInfo[] | undefined;
-  makeIDateObj: (date: Date) => IDate;
   searchCategory: (categoryName: string) => string | undefined;
   selectIndex: number;
   slide: number;

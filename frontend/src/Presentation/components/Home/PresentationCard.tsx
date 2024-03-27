@@ -1,13 +1,12 @@
 import styled from "styled-components";
 import { IDate } from "@/Presentation/components/Details/DetailContent.container";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
+import { makeIDateObj } from "@/Presentation/utils/dateUtils";
 
 const PresentationCard = ({
-  makeIDateObj,
   searchCategory,
   refinePresentations,
 }: {
-  makeIDateObj: (date: Date) => IDate;
   searchCategory: (categoryName: string) => string | undefined;
   refinePresentations: IPresentationScheduleDetailInfo[] | undefined;
 }) => {

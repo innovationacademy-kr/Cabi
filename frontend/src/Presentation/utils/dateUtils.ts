@@ -110,3 +110,13 @@ export const calculateAvailableDaysInWeeks = (
   }
   return availableDates;
 };
+
+export const makeIDateObj = (date: Date) => {
+  let dateISO = date.toISOString().substring(0, 10).split("-");
+
+  return {
+    year: dateISO[0],
+    month: dateISO[1],
+    day: dateISO[2],
+  };
+};

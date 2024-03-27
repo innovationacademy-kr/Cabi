@@ -7,13 +7,13 @@ import {
 import DetailTableBodyItem from "@/Presentation/components/Details/DetailTable/DetailTableBodyItem";
 import DetailTableHead from "@/Presentation/components/Details/DetailTable/DetailTableHead";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
+import { makeIDateObj } from "@/Presentation/utils/dateUtils";
 
 const DetailTable = ({
   isMobile,
   list,
   isAdmin,
   openAdminModal,
-  makeIDateObj,
   groupEvent,
   tableHeadEntries,
 }: {
@@ -21,7 +21,6 @@ const DetailTable = ({
   list: IPresentationScheduleDetailInfo[] | null;
   isAdmin: boolean;
   openAdminModal: (modal: TAdminModalState) => void;
-  makeIDateObj: (date: Date) => IDate;
   groupEvent: (item: IPresentationScheduleDetailInfo) => itemType;
   tableHeadEntries: [string, string][];
 }) => {
