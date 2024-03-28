@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { IDate } from "@/Presentation/components/Details/DetailContent.container";
+import { presentationCategoryIconMap } from "@/Presentation/assets/data/maps";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import { makeIDateObj } from "@/Presentation/utils/dateUtils";
 
@@ -7,13 +7,16 @@ const PresentationCard = ({
   searchCategory,
   refinePresentations,
 }: {
-  searchCategory: (categoryName: string) => string | undefined;
+  searchCategory: (
+    categoryName?: keyof typeof presentationCategoryIconMap
+  ) => string | undefined;
   refinePresentations: IPresentationScheduleDetailInfo[] | undefined;
 }) => {
   return (
-    <ContainerStyled>
+    <Container>
       {refinePresentations?.map((p, index) => {
         const tmpDate = p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
+
         return (
           <PresentationCardStyled key={index}>
             {p.id !== -1 ? (
@@ -46,7 +49,7 @@ const PresentationCard = ({
               <>
                 <CategoryStyled>
                   <CategoryIconStyled>
-                    <img src={searchCategory("")} />
+                    <img src={searchCategory()} />
                   </CategoryIconStyled>
                 </CategoryStyled>
                 <TitleStyled>예정된 일정이 없습니다.</TitleStyled>
@@ -56,13 +59,13 @@ const PresentationCard = ({
           </PresentationCardStyled>
         );
       })}
-    </ContainerStyled>
+    </Container>
   );
 };
 
 export default PresentationCard;
 
-const ContainerStyled = styled.div`
+const Container = styled.div`
   width: 100%;
   display: flex;
   align-items: flex-start;

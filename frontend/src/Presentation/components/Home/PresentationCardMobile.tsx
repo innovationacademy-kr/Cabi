@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import styled from "styled-components";
 import { IDate } from "@/Presentation/components/Details/DetailContent.container";
+import { presentationCategoryIconMap } from "@/Presentation/assets/data/maps";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import { makeIDateObj } from "@/Presentation/utils/dateUtils";
 
@@ -13,7 +14,9 @@ const PresentationCardMobile = ({
   swipeSection,
 }: {
   refinePresentations: IPresentationScheduleDetailInfo[] | undefined;
-  searchCategory: (categoryName: string) => string | undefined;
+  searchCategory: (
+    categoryName?: keyof typeof presentationCategoryIconMap
+  ) => string;
   selectIndex: number;
   slide: number;
   onClick: (index: number) => void;
@@ -40,7 +43,7 @@ const PresentationCardMobile = ({
 
   return (
     <>
-      <ContainerStyled select={slide}>
+      <Container select={slide}>
         {refinePresentations?.map((p, index) => {
           const tmpDate =
             p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
@@ -93,7 +96,7 @@ const PresentationCardMobile = ({
                 <>
                   <CategoryStyled>
                     <CategoryIconStyled>
-                      <img src={searchCategory("")} />
+                      <img src={searchCategory()} />
                     </CategoryIconStyled>
                   </CategoryStyled>
                   <TitleStyled>예정된 일정이 없습니다.</TitleStyled>
@@ -103,7 +106,7 @@ const PresentationCardMobile = ({
             </PresentationCardStyled>
           );
         })}
-      </ContainerStyled>
+      </Container>
       <PaginationStyled>{components}</PaginationStyled>
     </>
   );
@@ -111,7 +114,7 @@ const PresentationCardMobile = ({
 
 export default PresentationCardMobile;
 
-const ContainerStyled = styled.div<{ select: number }>`
+const Container = styled.div<{ select: number }>`
   overflow-x: hidden;
   display: flex;
   align-items: flex-start;

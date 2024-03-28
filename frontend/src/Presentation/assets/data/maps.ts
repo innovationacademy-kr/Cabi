@@ -44,3 +44,18 @@ export const PresentationCategoryTypeLabelMap = {
   [PresentationCategoryType.TASK]: "42",
   [PresentationCategoryType.ETC]: "기타",
 };
+
+export const presentationCategoryIconMap = {
+  [PresentationCategoryType.DEVELOP]:
+    "/src/Cabinet/assets/images/PresentationDevelop.svg",
+  [PresentationCategoryType.STUDY]:
+    "/src/Cabinet/assets/images/PresentationAcademic.svg",
+  [PresentationCategoryType.HOBBY]:
+    "/src/Cabinet/assets/images/PresentationHobby.svg",
+  [PresentationCategoryType.JOB]:
+    "/src/Cabinet/assets/images/PresentationJob.svg",
+  [PresentationCategoryType.TASK]:
+    "/src/Cabinet/assets/images/PresentationFortyTwo.svg",
+  [PresentationCategoryType.ETC]:
+    "/src/Cabinet/assets/images/PresentationEtc.svg",
+};

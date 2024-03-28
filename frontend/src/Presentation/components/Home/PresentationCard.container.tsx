@@ -1,8 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { IDate } from "@/Presentation/components/Details/DetailContent.container";
 import PresentationCard from "@/Presentation/components/Home/PresentationCard";
 import PresentationCardMobile from "@/Presentation/components/Home/PresentationCardMobile";
+import { presentationCategoryIconMap } from "@/Presentation/assets/data/maps";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/Presentation/types/enum/presentation.type.enum";
 
@@ -16,39 +16,12 @@ const PresentationCardContainer = ({
   const [selectIndex, setSelectIndex] = useState(1);
   const [slide, setSlide] = useState(0);
 
-  const presentationCategoryIcon = [
-    {
-      name: "/src/Cabinet/assets/images/PresentationFortyTwo.svg",
-      key: PresentationCategoryType.TASK,
-    },
-    {
-      name: "/src/Cabinet/assets/images/PresentationDevelop.svg",
-      key: PresentationCategoryType.DEVELOP,
-    },
-    {
-      name: "/src/Cabinet/assets/images/PresentationAcademic.svg",
-      key: PresentationCategoryType.STUDY,
-    },
-    {
-      name: "/src/Cabinet/assets/images/PresentationHobby.svg",
-      key: PresentationCategoryType.HOBBY,
-    },
-    {
-      name: "/src/Cabinet/assets/images/PresentationJob.svg",
-      key: PresentationCategoryType.JOB,
-    },
-    {
-      name: "/src/Cabinet/assets/images/PresentationEtc.svg",
-      key: PresentationCategoryType.ETC,
-    },
-    { name: "/src/Cabinet/assets/images/PresentationEmpty.svg", key: "" },
-  ];
-
-  const searchCategory = (categoryName: string): string | undefined => {
-    const foundCategory = presentationCategoryIcon.find(
-      (category) => category.key === categoryName
-    );
-    return foundCategory ? foundCategory.name : undefined;
+  const searchCategory = (
+    categoryName?: keyof typeof presentationCategoryIconMap
+  ): string => {
+    return categoryName != undefined
+      ? presentationCategoryIconMap[categoryName]
+      : "/src/Cabinet/assets/images/PresentationEmpty.svg";
   };
 
   const onClick = (index: number) => {
@@ -100,7 +73,7 @@ const PresentationCardContainer = ({
   );
 
   return (
-    <ConTainerStyled>
+    <ConTainer>
       {isMobile ? (
         <PresentationCardMobile
           refinePresentations={refinePresentations}
@@ -116,13 +89,13 @@ const PresentationCardContainer = ({
           searchCategory={searchCategory}
         />
       )}
-    </ConTainerStyled>
+    </ConTainer>
   );
 };
 
 export default PresentationCardContainer;
 
-const ConTainerStyled = styled.div`
+const ConTainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
