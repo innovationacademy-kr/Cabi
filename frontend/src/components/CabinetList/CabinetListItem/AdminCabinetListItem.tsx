@@ -7,7 +7,7 @@ import {
 } from "@/recoil/atoms";
 import {
   cabinetFilterMap,
-  cabinetIconSrcMap,
+  cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
@@ -31,6 +31,7 @@ const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const { openCabinet, closeCabinet } = useMenu();
   const { isMultiSelect, clickCabinetOnMultiSelectMode, containsCabinet } =
     useMultiSelect();
+  const CabinetIcon = cabinetIconComponentMap[props.lentType];
 
   let cabinetLabelText = "";
 
@@ -102,7 +103,9 @@ const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
           lentType={props.lentType}
           isMine={false}
           status={props.status}
-        />
+        >
+          <CabinetIcon />
+        </CabinetIconContainerStyled>
         <CabinetNumberStyled status={props.status} isMine={false}>
           {props.visibleNum}
         </CabinetNumberStyled>
@@ -244,9 +247,11 @@ const CabinetIconContainerStyled = styled.div<{
 }>`
   width: 16px;
   height: 16px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.lentType]});
-  background-size: contain;
-  filter: ${(props) => cabinetFilterMap[props.status]};
+
+  & > svg > path {
+    stroke: ${(props) => cabinetFilterMap[props.status]};
+    transform: scale(0.7);
+  }
 `;
 
 export default AdminCabinetListItem;
