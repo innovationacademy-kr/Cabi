@@ -69,6 +69,10 @@ const TopNavButtonStyled = styled.div<{
       fill: var(--color-background);
     }
   }
+
+  & > svg > path {
+    stroke: var(--gray-tmp-5);
+  }
 `;
 
 export default TopNavButton;
