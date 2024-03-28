@@ -6,6 +6,7 @@ import ClubCabinetInfoCard from "@/components/Card/ClubCabinetInfoCard/ClubCabin
 import ClubNoticeCard from "@/components/Card/ClubNoticeCard/ClubNoticeCard";
 import ClubMemberListContainer from "@/components/Club/ClubMemberList/ClubMemberList.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import { ReactComponent as SadCcabi } from "@/assets/images/sadCcabi.svg";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 import useClubInfo from "@/hooks/useClubInfo";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
@@ -30,7 +31,7 @@ const ClubInfo = () => {
         <EmptyClubCabinetTextStyled>
           동아리 사물함이 없어요
           <SadCcabiStyled>
-            <img src="/src/assets/images/sadCcabi.png" />
+            <SadCcabi />
           </SadCcabiStyled>
         </EmptyClubCabinetTextStyled>
       ) : (
@@ -63,13 +64,20 @@ const EmptyClubCabinetTextStyled = styled.div`
 
 const SadCcabiStyled = styled.div`
   display: flex;
-  align-items: center;
   margin-left: 5px;
+  width: 30px;
+  height: 30px;
+  margin-left: 8px;
+  padding-top: 3px;
 
-  img {
+  & > svg {
     width: 30px;
-    aspect-ratio: 1 / 1;
-    margin-left: 8px;
+    height: 30px;
+  }
+
+  & > svg > path {
+    fill: var(--gray-tmp-5);
+    transform: scale(0.6);
   }
 `;
 

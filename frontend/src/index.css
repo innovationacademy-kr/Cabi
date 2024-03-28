@@ -107,7 +107,7 @@
 
   color: var(--color-text-normal);
   background-color: var(--color-background);
-
+  /* #252425 */
   --gray-tmp-1: var(--gray-100);
   --gray-tmp-2: var(--gray-200);
   --gray-tmp-3: var(--gray-300);
