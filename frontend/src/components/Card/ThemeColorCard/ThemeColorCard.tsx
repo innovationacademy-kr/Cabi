@@ -51,7 +51,7 @@ const ThemeColorCard = ({
                   {
                     label: "저장",
                     onClick: handleSave,
-                    fontColor: "var(--color-background)",
+                    fontColor: "var(--color-text-with-bg)",
                     backgroundColor: "var(--main-color)",
                     isClickable: true,
                   },

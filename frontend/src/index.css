@@ -9,8 +9,9 @@
   --gray-400: #bcbcbc;
   --gray-500: #7b7b7b;
   --gray-600: #3c3c3c;
-  --gray-700: #262626;
-  --gray-800: #1f1f1f;
+  --gray-700: #313233;
+  --gray-800: #262626;
+  --gray-900: #1f1f1f;
   --black: #181818;
 
   /* red color variable */
@@ -80,6 +81,7 @@
   --color-line: var(--gray-tmp-4);
   --color-text-normal: var(--black);
   --color-text-with-bg: var(--white);
+  --color-card-content-bg: var(--white);
 
   /* main color variable */
   --main-color: var(--purple-500);
@@ -114,7 +116,7 @@
   --gray-tmp-4: var(--gray-400);
   --gray-tmp-5: var(--gray-500);
   --gray-tmp-6: var(--gray-600);
-  --gray-tmp-7: var(--gray-700);
+  --gray-tmp-7: var(--gray-800);
 
   --purple-tmp-1: var(--purple-100);
 }
@@ -123,10 +125,11 @@
 /* cabinet color variable */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--gray-800);
+    --color-background: var(--gray-900);
     --color-line: var(--gray-tmp-3);
     --color-text-normal: var(--gray-100);
     --color-text-with-bg: var(--gray-100);
+    --color-card-content-bg: var(--gray-700);
 
     --main-color: var(--purple-600);
     --sub-color: var(--purple-300);
@@ -153,7 +156,7 @@
     color: var(--color-text-normal);
     background-color: var(--color-background);
 
-    --gray-tmp-1: var(--gray-700);
+    --gray-tmp-1: var(--gray-800);
     --gray-tmp-2: var(--gray-700);
     --gray-tmp-3: var(--gray-600);
     --gray-tmp-4: var(--gray-500);

@@ -130,6 +130,8 @@ export const CardButtonStyled = styled.div<{
       : css`
           background-color: ${props.backgroundColor
             ? props.backgroundColor
+            : props.isClickable
+            ? "var(--color-card-content-bg)"
             : "var(--color-background)"};
           color: ${props.fontColor
             ? props.fontColor

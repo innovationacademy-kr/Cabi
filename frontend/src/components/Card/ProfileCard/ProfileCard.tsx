@@ -48,7 +48,7 @@ const LogoStyled = styled.div`
   height: 60px;
   border-radius: 10px;
   margin-right: 20px;
-  background-color: var(--color-background);
+  background-color: var(--color-card-content-bg);
 `;
 
 const CabiLogoStyled = styled.div`
