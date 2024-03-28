@@ -159,6 +159,7 @@ const RefreshButtonStyled = styled.button`
   font-size: 16px;
   border-radius: 30px;
   margin: 30px;
+  color: var(--color-text-with-bg);
   @media (max-height: 745px) {
     margin-bottom: 8px;
   }

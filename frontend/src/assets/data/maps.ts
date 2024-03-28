@@ -37,14 +37,14 @@ export const cabinetIconSrcMap = {
 };
 
 export const cabinetLabelColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--color-background)",
+  [CabinetStatus.AVAILABLE]: "var(--color-text-with-bg)",
   [CabinetStatus.FULL]: "var(--black)",
   // black
-  [CabinetStatus.OVERDUE]: "var(--color-background)",
-  [CabinetStatus.BROKEN]: "var(--color-background)",
-  [CabinetStatus.BANNED]: "var(--color-background)",
+  [CabinetStatus.OVERDUE]: "var(--color-text-with-bg)",
+  [CabinetStatus.BROKEN]: "var(--color-text-with-bg)",
+  [CabinetStatus.BANNED]: "var(--color-text-with-bg)",
   [CabinetStatus.IN_SESSION]: "var(--main-color)",
-  [CabinetStatus.PENDING]: "var(--color-background)",
+  [CabinetStatus.PENDING]: "var(--color-text-with-bg)",
   MINE: "var(--black)",
   // black
 };
@@ -199,14 +199,14 @@ export const modalPropsMap = {
 };
 
 export const cabinetFilterMap = {
-  [CabinetStatus.AVAILABLE]: "var(--color-background)",
+  [CabinetStatus.AVAILABLE]: "var(--color-text-with-bg)",
   [CabinetStatus.FULL]: "var(--black)",
   // black
-  [CabinetStatus.OVERDUE]: "var(--color-background)",
-  [CabinetStatus.BROKEN]: "var(--color-background)",
-  [CabinetStatus.BANNED]: "var(--color-background)",
+  [CabinetStatus.OVERDUE]: "var(--color-text-with-bg)",
+  [CabinetStatus.BROKEN]: "var(--color-text-with-bg)",
+  [CabinetStatus.BANNED]: "var(--color-text-with-bg)",
   [CabinetStatus.IN_SESSION]: "var(--color-text-normal)",
-  [CabinetStatus.PENDING]: "var(--color-background)",
+  [CabinetStatus.PENDING]: "var(--color-text-with-bg)",
 };
 
 export const cabinetStatusLabelMap = {

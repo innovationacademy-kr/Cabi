@@ -83,7 +83,9 @@ const MemberListItemStyled = styled.div<{ isMaster: boolean }>`
 
   & > svg > path {
     stroke: ${(props) =>
-      props.isMaster ? "var(--color-background)" : "var(--color-text-normal)"};
+      props.isMaster
+        ? "var(--color-text-with-bg)"
+        : "var(--color-text-normal)"};
     transform: ${(props) => (props.isMaster ? "" : "scale(0.7)")};
   }
 `;
@@ -94,7 +96,7 @@ const MemberNameStyled = styled.p<{
   line-height: 28px;
   height: 28px;
   font-size: 14px;
-  color: ${(props) => (props.isMaster ? "var(--color-background)" : "")};
+  color: ${(props) => (props.isMaster ? "var(--color-text-with-bg)" : "")};
 `;
 
 export default memo(ClubMemberListItem);
