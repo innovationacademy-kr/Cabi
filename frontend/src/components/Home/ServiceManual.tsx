@@ -145,9 +145,9 @@ const NotionBtn = styled.button`
   height: 40px;
   border-radius: 8px;
   font-size: 0.875rem;
-  color: var(--gray-tmp-6);
+  color: var(--gray-tmp-7);
   background: var(--color-background);
-  border: 1px solid var(--gray-tmp-3);
+  border: 1px solid var(--gray-tmp-4);
   :hover {
     color: var(--color-text-normal);
     font-weight: 400;
