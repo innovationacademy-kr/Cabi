@@ -5,6 +5,7 @@ import DarkMode from "@/components/TopNav/DarkMode/DarkMode";
 import SearchBar from "@/components/TopNav/SearchBar/SearchBar";
 import TopNavButtonGroup from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
+import { ReactComponent as SelectIcon } from "@/assets/images/select.svg";
 import useOutsideClick from "@/hooks/useOutsideClick";
 
 interface IBuildingListItem {
@@ -67,7 +68,11 @@ const TopNav: React.FC<{
             onClick={() => setBuildingClicked(!buildingClicked)}
           >
             {currentBuildingName}
+            <SelectIconStyled>
+              <SelectIcon />
+            </SelectIconStyled>
           </div>
+
           <BuildingListStyled clicked={buildingClicked} className="cabiButton">
             {buildingsList.map((building, index) => (
               <BuildingListItem
@@ -135,16 +140,6 @@ const BuildingSelectBoxStyled = styled.span`
       opacity: 0.9;
     }
   }
-  & > div::after {
-    content: "";
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    background: url(/src/assets/images/select.svg) no-repeat 100%;
-  }
 `;
 
 const BuildingListStyled = styled.ul<{ clicked: boolean }>`
@@ -173,6 +168,22 @@ const BuildingListItemStyled = styled.li`
     &:hover {
       opacity: 0.8;
     }
+  }
+`;
+
+const SelectIconStyled = styled.div`
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > svg > path {
+    stroke: var(--gray-tmp-5);
   }
 `;
 
