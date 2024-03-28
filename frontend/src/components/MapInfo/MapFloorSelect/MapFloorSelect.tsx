@@ -32,7 +32,7 @@ const MapFloorSelect = ({ floor, setFloor, floorInfo }: IMapFloorSelect) => {
 
 const MapFloorSelectStyled = styled.div`
   background-color: var(--main-color);
-  color: var(--color-background);
+  color: var(--color-text-with-bg);
   cursor: pointer;
   width: 65px;
   height: 40px;
@@ -51,7 +51,7 @@ const MapFloorSelectStyled = styled.div`
   }
 
   & > svg > path {
-    stroke: var(--color-background);
+    stroke: var(--color-text-with-bg);
     stroke-width: 1.5;
   }
 `;

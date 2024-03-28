@@ -241,9 +241,9 @@ const BottomBtnStyled = styled.li`
     margin-bottom: 4px;
   }
   &.active {
-    color: var(--main-color);
+    color: var(--color-button-line);
     svg {
-      stroke: var(--main-color);
+      stroke: var(--color-button-line);
     }
   }
   svg {
@@ -251,12 +251,12 @@ const BottomBtnStyled = styled.li`
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--main-color);
+      color: var(--color-button-line);
       svg {
-        stroke: var(--main-color);
+        stroke: var(--color-button-line);
       }
       a {
-        color: var(--main-color);
+        color: var(--color-button-line);
       }
     }
   }

@@ -187,7 +187,7 @@ const ContentInfoStyled = styled.div<{
 `;
 
 const CardContentWrapper = styled.div`
-  background-color: var(--color-background);
+  background-color: var(--color-card-content-bg);
   border-radius: 10px;
   padding: 10px 0;
   margin: 5px 5px 5px 5px;

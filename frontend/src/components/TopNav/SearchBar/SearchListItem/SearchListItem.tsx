@@ -52,11 +52,11 @@ const LiStyled = styled.li`
   display: flex;
 
   & strong {
-    color: var(--main-color);
+    color: var(--color-button-line);
   }
 
   &.active {
-    background-color: var(--main-color);
+    background-color: var(--color-button-line);
     color: var(--color-background);
   }
   &.active strong {
@@ -68,7 +68,7 @@ const LiStyled = styled.li`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--main-color);
+      background-color: var(--color-button-line);
       color: var(--color-background);
     }
     &:hover strong {

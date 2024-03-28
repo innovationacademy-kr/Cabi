@@ -37,7 +37,7 @@
   --purple-400: #a17bf3;
   --purple-500: #9747ff;
   --purple-600: #8337e5;
-  --purple-700: #3c1c66;
+  --purple-700: #252425;
 
   /* pink color variable */
   --pink-100: #f473b1;
@@ -82,6 +82,7 @@
   --color-text-normal: var(--black);
   --color-text-with-bg: var(--white);
   --color-card-content-bg: var(--white);
+  --color-button-line: var(--default-main-color);
 
   /* main color variable */
   --main-color: var(--purple-500);
@@ -130,6 +131,7 @@
     --color-text-normal: var(--gray-100);
     --color-text-with-bg: var(--gray-100);
     --color-card-content-bg: var(--gray-700);
+    --color-button-line: var(--default-sub-color);
 
     --main-color: var(--purple-600);
     --sub-color: var(--purple-300);
