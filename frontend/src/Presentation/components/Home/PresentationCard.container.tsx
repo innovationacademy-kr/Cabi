@@ -5,12 +5,13 @@ import PresentationCardMobile from "@/Presentation/components/Home/PresentationC
 import { presentationCategoryIconMap } from "@/Presentation/assets/data/maps";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import { PresentationCategoryType } from "@/Presentation/types/enum/presentation.type.enum";
+import useIsMobile from "@/Presentation/hooks/useIsMobile";
 
 const PresentationCardContainer = ({
-  isMobile,
+  // isMobile,
   currentPresentations,
 }: {
-  isMobile: boolean;
+  // isMobile: boolean;
   currentPresentations: IPresentationScheduleDetailInfo[] | null;
 }) => {
   const [selectIndex, setSelectIndex] = useState(1);
@@ -74,7 +75,7 @@ const PresentationCardContainer = ({
 
   return (
     <ConTainer>
-      {isMobile ? (
+      {useIsMobile() ? (
         <PresentationCardMobile
           refinePresentations={refinePresentations}
           searchCategory={searchCategory}

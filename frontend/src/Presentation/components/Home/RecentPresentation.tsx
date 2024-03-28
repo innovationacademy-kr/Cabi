@@ -4,13 +4,13 @@ import styled from "styled-components";
 import PresentationCardContainer from "@/Presentation/components/Home/PresentationCard.container";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import { axiosGetPresentation } from "@/Presentation/api/axios/axios.custom";
+import useIsMobile from "@/Presentation/hooks/useIsMobile";
 
 const RecentPresentation = ({
   presentButtonHandler,
 }: {
   presentButtonHandler: () => void;
 }) => {
-  const [isMobile, setIsMobile] = useState(false);
   const [currentPresentations, setCurrentPresentations] = useState<
     IPresentationScheduleDetailInfo[] | null
   >(null);
@@ -33,12 +33,6 @@ const RecentPresentation = ({
 
   useEffect(() => {
     getCurrentPresentation();
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1150);
-    };
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -58,7 +52,7 @@ const RecentPresentation = ({
       </HeaderStyled>
 
       <PresentationCardContainer
-        isMobile={isMobile}
+        // isMobile={isMobile}
         currentPresentations={currentPresentations}
       />
       <MobileRegistButtonStyled
