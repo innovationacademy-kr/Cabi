@@ -122,8 +122,8 @@
 /* cabinet color variable */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--black);
-    --color-line: var(--gray-tmp-4);
+    --color-background: var(--gray-800);
+    --color-line: var(--gray-tmp-3);
     --color-text-normal: var(--gray-100);
 
     --main-color: var(--purple-600);
@@ -206,7 +206,7 @@ button {
   cursor: pointer;
   border: none;
   background-color: var(--main-color);
-  color: var(--color-background);
+  color: var(--color-text-normal);
   width: 200px;
   height: 60px;
   font-size: 1.125rem;

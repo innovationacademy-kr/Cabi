@@ -80,7 +80,7 @@ const TopNav: React.FC<{
           </BuildingListStyled>
         </BuildingSelectBoxStyled>
       </LogoStyled>
-      <DarkMode />
+      {/* <DarkMode /> */}
       {/* TODO : 임시 위치 */}
       {isAdmin && <SearchBar />}
       <TopNavButtonGroup isAdmin={isAdmin} />
@@ -114,18 +114,6 @@ const LogoDivStyled = styled.div`
   svg {
     .logo_svg__currentPath {
       fill: var(--main-color);
-    }
-    .logo_svg__top {
-      fill: var(--color-background);
-    }
-    .logo_svg__left {
-      fill: var(--color-background);
-    }
-    .logo_svg__line {
-      stroke: var(--color-background);
-    }
-    .logo_svg__border {
-      stroke: var(--color-text-normal);
     }
   }
 `;

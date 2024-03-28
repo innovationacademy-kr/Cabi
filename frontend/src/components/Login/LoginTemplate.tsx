@@ -134,18 +134,6 @@ const CardLogoStyled = styled.div`
     .logo_svg__currentPath {
       fill: var(--main-color);
     }
-    .logo_svg__top {
-      fill: var(--color-background);
-    }
-    .logo_svg__left {
-      fill: var(--color-background);
-    }
-    .logo_svg__line {
-      stroke: var(--color-background);
-    }
-    .logo_svg__border {
-      stroke: var(--color-text-normal);
-    }
   }
 `;
 
