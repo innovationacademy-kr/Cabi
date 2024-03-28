@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import PresentationCard from "@/Presentation/components/Home/PresentationCard";
 import PresentationCardMobile from "@/Presentation/components/Home/PresentationCardMobile";
@@ -8,12 +8,11 @@ import { PresentationCategoryType } from "@/Presentation/types/enum/presentation
 import useIsMobile from "@/Presentation/hooks/useIsMobile";
 
 const PresentationCardContainer = ({
-  // isMobile,
   currentPresentations,
 }: {
-  // isMobile: boolean;
   currentPresentations: IPresentationScheduleDetailInfo[] | null;
 }) => {
+  const isMobile = useIsMobile(1150);
   const [selectIndex, setSelectIndex] = useState(1);
   const [slide, setSlide] = useState(0);
 
@@ -25,7 +24,7 @@ const PresentationCardContainer = ({
       : "/src/Cabinet/assets/images/PresentationEmpty.svg";
   };
 
-  const onClick = (index: number) => {
+  const onCardClick = (index: number) => {
     if (selectIndex !== index) {
       setSelectIndex(index);
       setSlide(slide + (selectIndex - index) * 345);
@@ -65,23 +64,25 @@ const PresentationCardContainer = ({
     }
   };
 
-  const refinePresentations = currentPresentations?.concat(
-    new Array(Math.max(3 - (currentPresentations?.length || 0), 0)).fill({
-      id: -1,
-      subject: "예정된 일정이 없습니다. 당신의 이야기를 들려주세요",
-      category: "",
-    })
-  );
+  const refinePresentations = useMemo(() => {
+    return currentPresentations?.concat(
+      new Array(Math.max(3 - (currentPresentations?.length || 0), 0)).fill({
+        id: -1,
+        subject: "예정된 일정이 없습니다. 당신의 이야기를 들려주세요",
+        category: "",
+      })
+    );
+  }, [currentPresentations]);
 
   return (
     <ConTainer>
-      {useIsMobile() ? (
+      {isMobile ? (
         <PresentationCardMobile
           refinePresentations={refinePresentations}
           searchCategory={searchCategory}
           selectIndex={selectIndex}
           slide={slide}
-          onClick={onClick}
+          onCardClick={onCardClick}
           swipeSection={swipeSection}
         />
       ) : (

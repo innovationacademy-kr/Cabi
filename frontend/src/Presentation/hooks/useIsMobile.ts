@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { axiosGetInvalidDates } from "@/Presentation/api/axios/axios.custom";
+import { useEffect, useState } from "react";
 
-const useIsMobile = () => {
+const useIsMobile = (mobileView: number) => {
   const [useIsMobile, setUseIsMobile] = useState(false);
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1150) setUseIsMobile(true);
+      if (window.innerWidth < mobileView) setUseIsMobile(true);
       else setUseIsMobile(false);
     };
     window.addEventListener("resize", handleResize);

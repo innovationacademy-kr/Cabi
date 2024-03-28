@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PresentationCardContainer from "@/Presentation/components/Home/PresentationCard.container";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import { axiosGetPresentation } from "@/Presentation/api/axios/axios.custom";
-import useIsMobile from "@/Presentation/hooks/useIsMobile";
 
 const RecentPresentation = ({
   presentButtonHandler,
@@ -14,7 +12,6 @@ const RecentPresentation = ({
   const [currentPresentations, setCurrentPresentations] = useState<
     IPresentationScheduleDetailInfo[] | null
   >(null);
-  const navigator = useNavigate();
 
   const getCurrentPresentation = async () => {
     try {
@@ -23,7 +20,6 @@ const RecentPresentation = ({
         ...response.data.past,
         ...response.data.upcoming,
       ]);
-      // else setPresentationLists(false);
     } catch (error: any) {
       // TODO
     } finally {
@@ -40,28 +36,25 @@ const RecentPresentation = ({
       <HeaderStyled>
         <TitleContainerStyled>
           <p>수요지식회</p>
-          <RegistButtonStyled
+          <RegisterButtonStyled
             onClick={() => {
-              navigator("/presentation/register");
+              presentButtonHandler();
             }}
           >
             발표신청
-          </RegistButtonStyled>
+          </RegisterButtonStyled>
         </TitleContainerStyled>
         <span>지식이 일상이 되다.</span>
       </HeaderStyled>
 
-      <PresentationCardContainer
-        // isMobile={isMobile}
-        currentPresentations={currentPresentations}
-      />
-      <MobileRegistButtonStyled
+      <PresentationCardContainer currentPresentations={currentPresentations} />
+      <MobileRegisertButtonStyled
         onClick={() => {
-          navigator("/presentation/register");
+          presentButtonHandler();
         }}
       >
         발표신청
-      </MobileRegistButtonStyled>
+      </MobileRegisertButtonStyled>
     </ConTainerStyled>
   );
 };
@@ -133,7 +126,7 @@ const TitleContainerStyled = styled.div`
   }
 `;
 
-const RegistButtonStyled = styled.button`
+const RegisterButtonStyled = styled.button`
   background-color: #3f69fd;
   width: 150px;
   height: 50px;
@@ -142,7 +135,7 @@ const RegistButtonStyled = styled.button`
   }
 `;
 
-const MobileRegistButtonStyled = styled.button`
+const MobileRegisertButtonStyled = styled.button`
   background-color: #3f69fd;
   width: 80%;
   height: 50px;

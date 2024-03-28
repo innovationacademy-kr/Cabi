@@ -10,7 +10,7 @@ const PresentationCardMobile = ({
   searchCategory,
   selectIndex,
   slide,
-  onClick,
+  onCardClick,
   swipeSection,
 }: {
   refinePresentations: IPresentationScheduleDetailInfo[] | undefined;
@@ -19,7 +19,7 @@ const PresentationCardMobile = ({
   ) => string;
   selectIndex: number;
   slide: number;
-  onClick: (index: number) => void;
+  onCardClick: (index: number) => void;
   swipeSection: (
     touchEndPosX: number,
     touchEndPosY: number,
@@ -35,7 +35,7 @@ const PresentationCardMobile = ({
     components.push(
       <Paginations
         key={i}
-        onClick={() => onClick(i)}
+        onClick={() => onCardClick(i)}
         current={i == selectIndex}
       ></Paginations>
     );
@@ -51,7 +51,7 @@ const PresentationCardMobile = ({
           return (
             <PresentationCardStyled
               key={index}
-              onClick={() => onClick(index)}
+              onClick={() => onCardClick(index)}
               className={index == slide ? "check" : "not-check"}
               onTouchStart={(e: React.TouchEvent) => {
                 touchStartPosX.current = e.changedTouches[0].screenX;
