@@ -206,7 +206,8 @@ button {
   cursor: pointer;
   border: none;
   background-color: var(--main-color);
-  color: var(--color-text-normal);
+  color: var(--white);
+  /* white */
   width: 200px;
   height: 60px;
   font-size: 1.125rem;
@@ -285,7 +286,7 @@ input {
 
 .leftNavButtonActive {
   background: var(--main-color);
-  color: var(--color-background) !important;
+  color: var(--white) !important;
 }
 
 .cabiButton {

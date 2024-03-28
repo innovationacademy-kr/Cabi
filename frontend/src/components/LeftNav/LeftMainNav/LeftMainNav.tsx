@@ -189,7 +189,8 @@ const TopBtnStyled = styled.li`
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--color-background);
+      color: var(--white);
+      /* white */
       background-color: var(--main-color);
     }
   }
