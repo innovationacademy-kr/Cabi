@@ -8,14 +8,17 @@ import ClubMemberListContainer from "@/components/Club/ClubMemberList/ClubMember
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 import useClubInfo from "@/hooks/useClubInfo";
+import useMenu from "@/hooks/useMenu";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const ClubInfo = () => {
   const myInfo = useRecoilValue(userState);
   const { clubState, clubInfo, setPage } = useClubInfo();
   const [imMaster, setImMaster] = useState<boolean>(false);
+  const { closeAll } = useMenu();
 
   useEffect(() => {
+    closeAll();
     if (clubInfo && clubInfo !== STATUS_400_BAD_REQUEST) {
       let clubInfoTest = clubInfo as ClubInfoResponseDto;
       if (clubInfoTest.clubMaster.userName === myInfo.name) setImMaster(true);
