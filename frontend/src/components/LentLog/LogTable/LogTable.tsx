@@ -76,7 +76,8 @@ const TheadStyled = styled.thead`
   height: 50px;
   line-height: 50px;
   background-color: var(--main-color);
-  color: var(--color-background);
+  color: var(--color-text-with-bg);
+  
   & > tr > th:first-child {
     padding-left: 20px;
   }
