@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import {
   myCabinetInfoState,
@@ -64,6 +65,31 @@ export interface IAdminCurrentModalStateInfo {
   statusModal: boolean;
   clubLentModal: boolean;
 }
+
+/**
+ * @description 모달 상태 (interface) 를 받아 기본값 (false) 으로 초기화
+ *
+ * @param modalStateInfo 모달 상태 (interface)
+ *
+ * @returns 모달 상태 (interface) 의 각 속성을 false 로 초기화한 객체
+ *
+ * @example
+ * const defaultModalStateInfo: ICurrentModalStateInfo = initializeDefaultModalState({} as ICurrentModalStateInfo);
+ * //=> { lentModal: false, unavailableModal: false, returnModal: false, memoModal: false, passwordCheckModal: false, invitationCodeModal: false, extendModal: false, cancelModal: false, swapModal: false }
+ */
+const initializeDefaultModalState = <T extends Object>(modalStateInfo: T): T =>
+  Object.freeze(
+    Object.entries(modalStateInfo).reduce(
+      (acc, [key]) => ({ ...acc, [key]: false }),
+      {} as T
+    )
+  );
+
+const defaultModalStateInfo: ICurrentModalStateInfo =
+  initializeDefaultModalState({} as ICurrentModalStateInfo);
+
+const defaultAdminModalStateInfo: IAdminCurrentModalStateInfo =
+  initializeDefaultModalState({} as IAdminCurrentModalStateInfo);
 
 interface ICount {
   AVAILABLE: number;
@@ -161,26 +187,17 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const myInfo = useRecoilValue<UserDto>(userState);
+  const isAdmin = document.location.pathname.indexOf("/admin") > -1;
+  const [userModal, setUserModal] = useState<ICurrentModalStateInfo>(
+    defaultModalStateInfo
+  );
+  const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>(
+    defaultAdminModalStateInfo
+  );
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const { closeCabinet, toggleLent } = useMenu();
   const { isSameStatus, isSameType } = useMultiSelect();
-  const isAdmin = document.location.pathname.indexOf("/admin") > -1;
-  const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
-    lentModal: false,
-    unavailableModal: false,
-    returnModal: false,
-    memoModal: false,
-    passwordCheckModal: false,
-    invitationCodeModal: false,
-    extendModal: false,
-    cancelModal: false,
-    swapModal: false,
-  });
-  const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
-    returnModal: false,
-    statusModal: false,
-    clubLentModal: false,
-  });
+  const location = useLocation();
 
   const cabinetViewData: ISelectedCabinetInfo | null = targetCabinetInfo
     ? {
@@ -295,6 +312,11 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       return true;
     return false;
   };
+
+  useEffect(() => {
+    setUserModal(defaultModalStateInfo);
+    setAdminModal(defaultAdminModalStateInfo);
+  }, [location]);
 
   return isAdmin ? (
     <>
