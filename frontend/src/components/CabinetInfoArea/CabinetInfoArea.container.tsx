@@ -134,8 +134,9 @@ const getCalcualtedTimeString = (expireTime: Date) => {
 
 const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
   // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
-  const { lentType, title, maxUser, lents } = selectedCabinetInfo;
-  if (lentType === "CLUB" && title) return title;
+  const { lentType, title, maxUser, lents, status } = selectedCabinetInfo;
+  if (lentType === "CLUB" && title && status == CabinetStatus.FULL)
+    return title;
   else if (maxUser === 0) return "";
 
   // 그 외에는 유저리스트 반환
