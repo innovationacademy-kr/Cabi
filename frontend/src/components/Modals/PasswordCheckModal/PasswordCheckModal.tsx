@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
 import { IModalContents } from "@/components/Modals/Modal";

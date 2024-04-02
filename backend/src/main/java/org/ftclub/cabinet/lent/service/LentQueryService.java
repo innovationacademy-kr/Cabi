@@ -80,6 +80,10 @@ public class LentQueryService {
 		return lentRepository.findAllByCabinetIdIn(cabinetIds);
 	}
 
+	public List<LentHistory> findCabinetLentHistoriesWithCabinet(Long cabinetId) {
+		return lentRepository.findAllByCabinetIdJoinCabinet(cabinetId);
+	}
+
 	/**
 	 * 유저가 지금 빌리고 있는 사물함의 개수를 가져옵니다.
 	 *

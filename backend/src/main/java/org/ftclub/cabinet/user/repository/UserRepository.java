@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,8 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u WHERE u.id = :userId AND u.deletedAt IS NULL")
 	Optional<User> findById(@Param("userId") Long userId);
 
-	@Query("SELECT u FROM User u WHERE u.id = :userId AND u.role = :role AND u.deletedAt IS NULL")
-	Optional<User> findByIdAndRole(Long userId, UserRole role);
+//	@Query("SELECT u FROM User u WHERE u.id = :userId AND u.role = :role AND u.deletedAt IS NULL")
+//	Optional<User> findByIdAndRole(Long userId, UserRole role);
 
 	/**
 	 * 소프트 딜리트 사용으로 인한 Deprecated
@@ -82,7 +81,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	/**
 	 *
 	 */
-	Page<User> findAllByRoleAndDeletedAtIsNull(@Param("role") UserRole role, Pageable pageable);
+//	Page<User> findAllByRoleAndDeletedAtIsNull(@Param("role") UserRole role, Pageable pageable);
 
 	/**
 	 * 블랙홀에 빠질 위험이 있는 유저들의 정보를 조회합니다. blackholedAt이 현재 시간보다 과거인 유저들을 블랙홀에 빠질 위험이 있는 유저로 판단합니다.
@@ -123,4 +122,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Query("SELECT u FROM User u WHERE u.name IN :userNames AND u.deletedAt IS NULL")
 	List<User> findAllUsersInNames(List<String> userNames);
+
+	/**
+	 * 유저의 ID 리스트로 유저들을 가져옵니다.
+	 * <p>
+	 * 페이지 정보를 포함합니다.
+	 *
+	 * @param userIds  유저 ID 리스트
+	 * @param pageable 페이지 정보
+	 * @return {@link User} 리스트
+	 */
+	@Query("SELECT u FROM User u WHERE u.id IN :userIds AND u.deletedAt IS NULL")
+	Page<User> findPaginationByIds(@Param("userIds") List<Long> userIds, Pageable pageable);
 }

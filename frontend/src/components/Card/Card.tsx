@@ -1,17 +1,19 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export interface IButtonProps {
-  label: string;
+  label?: string; // NOTE: icon 이 없을 경우, label 을 표시
   onClick?: () => void;
   backgroundColor?: string;
   color?: string;
+  icon?: string; // NOTE: icon 이 있을 경우, icon 을 표시
   isClickable: boolean;
   isExtensible?: boolean;
 }
 
 interface CardProps {
-  title: string;
+  title?: string;
+  onClickToolTip?: () => void;
   children: React.ReactElement;
   buttons?: IButtonProps[];
   gridArea: string;
@@ -21,31 +23,40 @@ interface CardProps {
 
 const Card = ({
   title,
+  onClickToolTip,
   gridArea,
   width = "350px",
   height = "163px",
-  buttons,
+  buttons = ([] = []),
   children,
 }: CardProps) => {
   return (
     <CardStyled gridArea={gridArea} width={width} height={height}>
-      <CardHeaderStyled>
-        <CardTitleStyled>{title}</CardTitleStyled>
-        <CardButtonWrapper>
-          {buttons?.map((button, index) => (
-            <CardButtonStyled
-              key={index}
-              onClick={button.onClick}
-              color={button.color}
-              backgroundColor={button.backgroundColor}
-              isClickable={button.isClickable}
-              isExtensible={button.isExtensible}
-            >
-              {button.label}
-            </CardButtonStyled>
-          ))}
-        </CardButtonWrapper>
-      </CardHeaderStyled>
+      {(title || buttons.length > 0) && (
+        <CardHeaderStyled>
+          <CardTitleWrapperStyled>
+            {title && <CardTitleStyled>{title}</CardTitleStyled>}
+            {onClickToolTip && <ToolTipIcon onClick={onClickToolTip} />}
+          </CardTitleWrapperStyled>
+          {buttons.length > 0 && (
+            <CardButtonWrapper>
+              {buttons?.map((button, index) => (
+                <CardButtonStyled
+                  key={index}
+                  onClick={button.onClick}
+                  color={button.color}
+                  backgroundColor={button.backgroundColor}
+                  icon={button.icon}
+                  isClickable={button.isClickable}
+                  isExtensible={button.isExtensible}
+                >
+                  {button.label}
+                </CardButtonStyled>
+              ))}
+            </CardButtonWrapper>
+          )}
+        </CardHeaderStyled>
+      )}
       {children}
     </CardStyled>
   );
@@ -74,10 +85,29 @@ export const CardHeaderStyled = styled.div`
   padding: 20px 20px 10px 30px;
 `;
 
+const CardTitleWrapperStyled = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export const CardTitleStyled = styled.div`
   font-size: 1.2em;
   font-weight: bold;
   margin-right: auto;
+`;
+
+const ToolTipIcon = styled.div`
+  background-image: url("/src/assets/images/notificationSign_grey.svg");
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  margin-top: 0.1rem;
+  margin-left: 0.25rem;
+  opacity: 0.6;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 export const CardButtonWrapper = styled.div`
@@ -87,26 +117,38 @@ export const CardButtonWrapper = styled.div`
 export const CardButtonStyled = styled.div<{
   backgroundColor?: string;
   color?: string;
+  icon?: string;
   isClickable?: boolean;
   isExtensible?: boolean;
 }>`
-  background-color: ${(props) =>
-    props.backgroundColor ? props.backgroundColor : "var(--white)"};
-  color: ${(props) =>
-    props.color
-      ? props.color
-      : props.isExtensible
-      ? "var(--main-color)"
-      : "var(--gray-color)"};
-  padding: 5px 15px;
-  border: none;
-  border-radius: 5px;
-  font-weight: 350;
+  ${(props) =>
+    props.icon
+      ? css`
+          background-image: url(${props.icon});
+          height: 20px;
+          width: 20px;
+          background-size: contain;
+          background-repeat: no-repeat;
+        `
+      : css`
+          background-color: ${props.backgroundColor
+            ? props.backgroundColor
+            : "var(--white)"};
+          color: ${props.color
+            ? props.color
+            : props.isExtensible
+            ? "var(--main-color)"
+            : "var(--gray-color)"};
+          padding: 5px 15px;
+          border: none;
+          border-radius: 5px;
+          font-weight: 350;
+          margin-left: 10px;
+          &:hover {
+            font-weight: ${props.isClickable && 400};
+          }
+        `}
   cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
-  margin-left: 10px;
-  &:hover {
-    font-weight: ${(props) => props.isClickable && 400};
-  }
 `;
 
 export default Card;

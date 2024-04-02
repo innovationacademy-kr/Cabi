@@ -52,7 +52,7 @@ const MemoModal = ({
         <WriteModeButtonStyled mode={mode} onClick={handleClickWriteMode}>
           수정하기
         </WriteModeButtonStyled>
-        <H2Styled>메모 관리</H2Styled>
+        <H2Styled>사물함 설정</H2Styled>
         <ContentSectionStyled>
           <ContentItemSectionStyled>
             <ContentItemWrapperStyled>

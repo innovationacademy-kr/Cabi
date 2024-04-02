@@ -1,18 +1,18 @@
 package org.ftclub.cabinet.dto;
 
+
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@AllArgsConstructor
-@ToString
 @Getter
-public class CabinetClubStatusRequestDto {
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+public class ClubDeleteDto {
 
-	private final Long userId;
 	@NotNull
-	private final Long cabinetId;
-	@NotNull
-	private final String statusNote;
+	private Long clubId;
 }

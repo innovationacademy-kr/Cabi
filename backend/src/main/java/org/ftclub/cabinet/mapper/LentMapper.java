@@ -4,6 +4,7 @@ import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
@@ -31,6 +32,11 @@ public interface LentMapper {
 	@Mapping(target = "userId", source = "user.id")
 	LentDto toLentDto(User user, LentHistory lentHistory);
 
+	@Mapping(target = "lentHistoryId", source = "clubLentHistory.id")
+	@Mapping(target = "userId", source = "clubLentHistory.clubId")
+	@Mapping(target = "name", source = "clubLentHistory.club.name")
+	LentDto toLentDto(ClubLentHistory clubLentHistory);
+
 	@Mapping(target = "userId", source = "lentHistory.userId")
 	@Mapping(target = "cabinetId", source = "cabinet.id")
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
@@ -49,5 +55,6 @@ public interface LentMapper {
 			User user,
 			Cabinet cabinet,
 			Boolean isExpired,
-			Long daysFromExpireDate);
+			Long daysLeftFromExpireDate
+	);
 }

@@ -4,6 +4,7 @@ import AdminClubLogContainer from "@/components/Club/AdminClubLog.container";
 import Button from "@/components/Common/Button";
 import { ReactComponent as CheckIcon } from "@/assets/images/checkIcon.svg";
 import { ReactComponent as ErrorIcon } from "@/assets/images/errorIcon.svg";
+import { ReactComponent as NotificationIcon } from "@/assets/images/notificationSign.svg";
 import IconType from "@/types/enum/icon.type.enum";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
@@ -75,6 +76,11 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         {iconType === "ERROR" && !isClubLentModal && (
           <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
             <ErrorIcon stroke="var(--main-color)" />
+          </ModalIconImgStyled>
+        )}
+        {iconType === "NOTIFICATION" && (
+          <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
+            <NotificationIcon stroke="var(--main-color)" />
           </ModalIconImgStyled>
         )}
         <H2Styled>{title}</H2Styled>

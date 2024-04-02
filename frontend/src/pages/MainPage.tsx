@@ -13,6 +13,7 @@ import { currentFloorSectionState } from "@/recoil/selectors";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
+import SectionType from "@/types/enum/map.type.enum";
 import useCabinetListRefresh from "@/hooks/useCabinetListRefresh";
 import useMenu from "@/hooks/useMenu";
 
@@ -93,7 +94,7 @@ const MainPage = () => {
   return (
     <>
       {isLoading && <LoadingAnimation />}
-      <WapperStyled
+      <WrapperStyled
         ref={mainWrapperRef}
         onTouchStart={(e: React.TouchEvent) => {
           touchStartPosX.current = e.changedTouches[0].screenX;
@@ -109,21 +110,24 @@ const MainPage = () => {
         <SectionPaginationContainer />
         <CabinetListWrapperStyled>
           <CabinetListContainer isAdmin={false} />
-          <RefreshButtonStyled
-            className="cabiButton"
-            title="새로고침"
-            id="refreshButton"
-            onClick={refreshCabinetList}
-          >
-            새로고침
-          </RefreshButtonStyled>
+          {currentSectionName !== SectionType.elevator &&
+            currentSectionName !== SectionType.stairs && (
+              <RefreshButtonStyled
+                className="cabiButton"
+                title="새로고침"
+                id="refreshButton"
+                onClick={refreshCabinetList}
+              >
+                새로고침
+              </RefreshButtonStyled>
+            )}
         </CabinetListWrapperStyled>
-      </WapperStyled>
+      </WrapperStyled>
     </>
   );
 };
 
-const WapperStyled = styled.div`
+const WrapperStyled = styled.div`
   width: 100%;
   height: 100%;
   overflow-x: hidden;

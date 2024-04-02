@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import {
   myCabinetInfoState,
   targetCabinetInfoState,
@@ -64,6 +65,31 @@ export interface IAdminCurrentModalStateInfo {
   statusModal: boolean;
   clubLentModal: boolean;
 }
+
+/**
+ * @description 모달 상태 (interface) 를 받아 기본값 (false) 으로 초기화
+ *
+ * @param modalStateInfo 모달 상태 (interface)
+ *
+ * @returns 모달 상태 (interface) 의 각 속성을 false 로 초기화한 객체
+ *
+ * @example
+ * const defaultModalStateInfo: ICurrentModalStateInfo = initializeDefaultModalState({} as ICurrentModalStateInfo);
+ * //=> { lentModal: false, unavailableModal: false, returnModal: false, memoModal: false, passwordCheckModal: false, invitationCodeModal: false, extendModal: false, cancelModal: false, swapModal: false }
+ */
+const initializeDefaultModalState = <T extends Object>(modalStateInfo: T): T =>
+  Object.freeze(
+    Object.entries(modalStateInfo).reduce(
+      (acc, [key]) => ({ ...acc, [key]: false }),
+      {} as T
+    )
+  );
+
+const defaultModalStateInfo: ICurrentModalStateInfo =
+  initializeDefaultModalState({} as ICurrentModalStateInfo);
+
+const defaultAdminModalStateInfo: IAdminCurrentModalStateInfo =
+  initializeDefaultModalState({} as IAdminCurrentModalStateInfo);
 
 interface ICount {
   AVAILABLE: number;
@@ -131,10 +157,7 @@ export const getDetailMessage = (
   // 동아리 사물함
   else if (lentType === "CLUB") return "동아리 사물함";
   // 사용 중 사물함
-  else if (
-    status === CabinetStatus.FULL ||
-    status === CabinetStatus.OVERDUE
-  )
+  else if (status === CabinetStatus.FULL || status === CabinetStatus.OVERDUE)
     return getCalcualtedTimeString(new Date(lents[0].expiredAt));
   // 빈 사물함
   else return null;
@@ -160,32 +183,21 @@ export const getDetailMessageColor = (
 };
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
-  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
-    targetCabinetInfoState
-  );
-  const [myCabinetInfo, setMyLentInfo] =
-    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
+  const myCabinetInfo =
+    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const myInfo = useRecoilValue<UserDto>(userState);
+  const isAdmin = document.location.pathname.indexOf("/admin") > -1;
+  const [userModal, setUserModal] = useState<ICurrentModalStateInfo>(
+    defaultModalStateInfo
+  );
+  const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>(
+    defaultAdminModalStateInfo
+  );
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const { closeCabinet, toggleLent } = useMenu();
   const { isSameStatus, isSameType } = useMultiSelect();
-  const isAdmin = document.location.pathname.indexOf("/admin") > -1;
-  const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
-    lentModal: false,
-    unavailableModal: false,
-    returnModal: false,
-    memoModal: false,
-    passwordCheckModal: false,
-    invitationCodeModal: false,
-    extendModal: false,
-    cancelModal: false,
-    swapModal: false,
-  });
-  const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
-    returnModal: false,
-    statusModal: false,
-    clubLentModal: false,
-  });
+  const location = useLocation();
 
   const cabinetViewData: ISelectedCabinetInfo | null = targetCabinetInfo
     ? {
@@ -300,6 +312,11 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       return true;
     return false;
   };
+
+  useEffect(() => {
+    setUserModal(defaultModalStateInfo);
+    setAdminModal(defaultAdminModalStateInfo);
+  }, [location]);
 
   return isAdmin ? (
     <>

@@ -35,7 +35,7 @@ export const ContentInfoStyled = styled.div<{
   `}
 `;
 
-export const ContentDeatilStyled = styled.div<{
+export const ContentDetailStyled = styled.div<{
   status?: CabinetStatus;
 }>`
   color: ${(props) =>
