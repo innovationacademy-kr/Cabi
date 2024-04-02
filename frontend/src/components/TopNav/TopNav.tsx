@@ -30,7 +30,7 @@ const BuildingListItem: React.FC<IBuildingListItem> = ({
   );
 };
 
-const TopNav: React.FC<{
+interface ITopNav {
   currentBuildingName: string;
   buildingsList: Array<string>;
   buildingClicked: boolean;
@@ -38,17 +38,17 @@ const TopNav: React.FC<{
   onClickLogo: React.MouseEventHandler<SVGSVGElement>;
   setCurrentBuildingName: SetterOrUpdater<string>;
   isAdmin?: boolean;
-}> = (props) => {
-  const {
-    currentBuildingName,
-    buildingsList,
-    buildingClicked,
-    setBuildingClicked,
-    onClickLogo,
-    setCurrentBuildingName,
-    isAdmin,
-  } = props;
+}
 
+const TopNav = ({
+  currentBuildingName,
+  buildingsList,
+  buildingClicked,
+  setBuildingClicked,
+  onClickLogo,
+  setCurrentBuildingName,
+  isAdmin = false,
+}: ITopNav) => {
   const buildingDom = React.useRef<HTMLElement>(null);
   useOutsideClick(buildingDom, () => {
     if (buildingClicked) setBuildingClicked(false);
