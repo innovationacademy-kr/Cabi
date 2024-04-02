@@ -117,7 +117,7 @@ const ContentItemTextAreaStyled = styled.textarea<{
   word-break: break-all;
   white-space: pre-wrap;
   line-height: 1.2rem;
-  letter-spacing: 0.8px;
+  /* letter-spacing: 0.8px; */
   resize: none;
 
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
