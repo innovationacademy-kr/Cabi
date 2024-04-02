@@ -72,7 +72,7 @@ const ClubNoticeTextStyled = styled.div`
   white-space: pre-wrap;
   line-height: 1.2rem;
   overflow-y: auto;
-  letter-spacing: 0.8px;
+  /* letter-spacing: 0.8px; */
 
   ::-webkit-scrollbar {
     width: 20px;
