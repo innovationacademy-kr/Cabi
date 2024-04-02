@@ -100,7 +100,7 @@ const TitleStyled = styled.div`
 
 const CardGridWrapper = styled.div`
   display: grid;
-  margin: 1rem 0 2rem;
+  margin: 1rem 0 3rem;
   justify-content: center;
   align-items: center;
   width: 100%;
