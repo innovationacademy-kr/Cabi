@@ -250,6 +250,7 @@ public class LentFacadeService {
 
 		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now,
 				cabinet.getLentType(), 1);
+		clubLentQueryService.findAlreadyExistsClubLentHistory(clubId);
 		clubLentCommandService.startLent(clubId, cabinetId, expiredAt);
 		cabinetCommandService.updateTitle(cabinet, club.getName());
 		cabinetCommandService.changeUserCount(cabinet, userCount + 1);

@@ -25,7 +25,6 @@ const PostLogin = (): JSX.Element => {
       const { data: myInfo } = await axiosMyInfo();
       setUser(myInfo);
       setIsValidToken(true);
-      console.log(myInfo);
       if (myInfo.alarmTypes?.push && myInfo.isDeviceTokenExpired) {
         await deleteFcmToken();
         const deviceToken = await requestFcmAndGetDeviceToken();

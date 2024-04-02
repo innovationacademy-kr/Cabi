@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { set } from "react-ga";
 import { Outlet } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
@@ -16,7 +15,7 @@ import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import LeftNav from "@/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 import OverduePenaltyModal from "@/components/Modals/OverduePenaltyModal/OverduePenaltyModal";
-import TopNav from "@/components/TopNav/TopNav.container";
+import TopNavContainer from "@/components/TopNav/TopNav.container";
 import { additionalModalType } from "@/assets/data/maps";
 import {
   ClubPaginationResponseDto,
@@ -127,7 +126,7 @@ const Layout = (): JSX.Element => {
     <Outlet />
   ) : (
     <React.Fragment>
-      {isValidToken && <TopNav setIsLoading={setIsLoading} />}
+      {isValidToken && <TopNavContainer setIsLoading={setIsLoading} />}
       {isLoading ? (
         <LoadingAnimation />
       ) : (

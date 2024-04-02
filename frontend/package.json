@@ -25,7 +25,7 @@
     "react-color": "^2.19.3",
     "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
-    "react-ga": "^3.3.1",
+    "react-ga4": "^2.1.0",
     "react-router-dom": "^6.5.0",
     "recoil": "^0.7.6",
     "recoil-persist": "^4.2.0",
