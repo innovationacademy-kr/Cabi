@@ -196,11 +196,8 @@ public class PresentationService {
 	 * @RequestBody { LocalDateTime dateTime; // new Date().toISOString() String status; // [예정, 완료,
 	 * 취소] String location; // [3층 회의실, 지하 1층 오픈스튜디오] }
 	 */
+	@Transactional
 	public void updatePresentationByFormId(Long formId, PresentationUpdateDto dto) {
-		PresentationStatus newStatus = presentationPolicyService.verityPresentationStatus(
-			dto.getStatus());
-		PresentationLocation newLocation = presentationPolicyService.verityPresentationLocation(
-			dto.getLocation());
 		Presentation presentationToUpdate =
 			presentationRepository.findById(formId)
 				.orElseThrow(ExceptionStatus.INVALID_FORM_ID::asServiceException);
@@ -209,9 +206,7 @@ public class PresentationService {
 			presentationPolicyService.verifyReservationDate(dto.getDateTime());
 		}
 
-		presentationToUpdate.adminUpdate(newStatus, dto.getDateTime(), newLocation);
-		presentationRepository.save(presentationToUpdate);
-		presentationRepository.flush();
+		presentationToUpdate.adminUpdate(dto.getStatus(), dto.getDateTime(), dto.getLocation());
 	}
 
 	/**

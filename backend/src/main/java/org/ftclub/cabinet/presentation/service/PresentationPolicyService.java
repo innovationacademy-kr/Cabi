@@ -52,32 +52,4 @@ public class PresentationPolicyService {
 		return reservationDate.isBefore(now) ||
 			reservationDate.isAfter(now.plusMonths(MAXIMUM_MONTH));
 	}
-
-	public PresentationStatus verityPresentationStatus(String status) {
-
-		if (status.equals("CANCEL")) {
-			return PresentationStatus.CANCEL;
-		}
-		if (status.equals("DONE")) {
-			return PresentationStatus.DONE;
-		}
-		if (status.equals("EXPECTED")) {
-			return PresentationStatus.EXPECTED;
-		}
-		throw ExceptionStatus.INVALID_STATUS.asServiceException();
-	}
-
-	public PresentationLocation verityPresentationLocation(String status) {
-
-		if (status.equals("BASEMENT")) {
-			return PresentationLocation.BASEMENT;
-		}
-		if (status.equals("FIRST")) {
-			return PresentationLocation.FIRST;
-		}
-		if (status.equals("THIRD")) {
-			return PresentationLocation.THIRD;
-		}
-		throw ExceptionStatus.INVALID_LOCATION.asServiceException();
-	}
 }

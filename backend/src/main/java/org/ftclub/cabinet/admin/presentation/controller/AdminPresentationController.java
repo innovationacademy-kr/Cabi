@@ -3,6 +3,7 @@ package org.ftclub.cabinet.admin.presentation.controller;
 import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
 import java.time.YearMonth;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.PresentationFormResponseDto;
@@ -28,8 +29,8 @@ public class AdminPresentationController {
 	@PatchMapping("/{formId}/update")
 	@AuthGuard(level = ADMIN_ONLY)
 	public void updatePresentationByFormId(
-		@PathVariable("formId") Long formId,
-		@RequestBody PresentationUpdateDto dto) {
+			@PathVariable("formId") Long formId,
+			@Valid @RequestBody PresentationUpdateDto dto) {
 		presentationService.updatePresentationByFormId(formId, dto);
 	}
 

@@ -3,14 +3,13 @@ package org.ftclub.cabinet.dto;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotEmpty;
 import lombok.Data;
+import org.ftclub.cabinet.presentation.domain.PresentationLocation;
+import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 
 @Data
 public class PresentationUpdateDto {
 
-	@NotEmpty
 	private final LocalDateTime dateTime;
-	@NotEmpty
-	private final String status;
-	@NotEmpty
-	private final String location;
+	private final PresentationStatus status;
+	private final PresentationLocation location;
 }
