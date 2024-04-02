@@ -8,17 +8,20 @@ import ClubMemberListContainer from "@/components/Club/ClubMemberList/ClubMember
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 import useClubInfo from "@/hooks/useClubInfo";
+import useMenu from "@/hooks/useMenu";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const ClubInfo = () => {
   const myInfo = useRecoilValue(userState);
   const { clubState, clubInfo, setPage } = useClubInfo();
-  const [imMaster, setImMaster] = useState<boolean>(false);
+  const [isMaster, setIsMaster] = useState<boolean>(false);
+  const { closeAll } = useMenu();
 
   useEffect(() => {
+    closeAll();
     if (clubInfo && clubInfo !== STATUS_400_BAD_REQUEST) {
       let clubInfoTest = clubInfo as ClubInfoResponseDto;
-      if (clubInfoTest.clubMaster.userName === myInfo.name) setImMaster(true);
+      if (clubInfoTest.clubMaster.userName === myInfo.name) setIsMaster(true);
     }
     // console.log(clubInfo);
   }, [clubInfo]);
@@ -38,8 +41,8 @@ const ClubInfo = () => {
         <ClubInfoWrapperStyled>
           <TitleStyled>동아리 정보</TitleStyled>
           <CardGridWrapper>
-            <ClubCabinetInfoCard clubInfo={clubInfo} isMaster={imMaster} />
-            <ClubNoticeCard notice={clubInfo.clubNotice} isMaster={imMaster} />
+            <ClubCabinetInfoCard clubInfo={clubInfo} isMaster={isMaster} />
+            <ClubNoticeCard notice={clubInfo.clubNotice} isMaster={isMaster} />
           </CardGridWrapper>
           <ClubMemberListContainer
             clubInfo={clubInfo}
