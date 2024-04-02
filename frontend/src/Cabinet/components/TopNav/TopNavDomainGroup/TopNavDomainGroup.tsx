@@ -20,7 +20,7 @@ const domains: ITopNavDomain[] = [
     active: (pathname) => !pathname.includes("presentation"),
   },
   {
-    path: "/presentation/",
+    path: "/presentation/home",
     adminPath: "/admin/presentation/detail",
     logo: PresentationLogo,
     title: "수요지식회",
