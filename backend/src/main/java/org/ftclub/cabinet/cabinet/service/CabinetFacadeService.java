@@ -220,7 +220,7 @@ public class CabinetFacadeService {
 			if (cabinet.isStatus(AVAILABLE)) {
 				cabinetFloorMap.get(floor).add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 			}
-			if (cabinet.isStatus(PENDING)) {
+			if (cabinet.isStatus(PENDING) && lentHistoriesMap.containsKey(cabinet.getId())) {
 				lentHistoriesMap.get(cabinet.getId()).stream()
 						.map(LentHistory::getEndedAt)
 						.max(LocalDateTime::compareTo)
