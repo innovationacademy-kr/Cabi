@@ -1,4 +1,6 @@
-export const SlackChannel = [
+import { ISlackChannels } from "@/components/TopNav/SearchBar/SlackAlarmJ/SlackAlarmSearchBar";
+
+export const SlackChannels : ISlackChannels[] = [
   {
     title: "#random",
     channelId: "CU6MTFBNH",
