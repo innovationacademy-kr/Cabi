@@ -24,7 +24,7 @@ const AdminSlackNotiPage = () => {
       <ContainerStyled>
         <SubTitleStyled>자주 쓰는 템플릿</SubTitleStyled>
         <CapsuleWappingStyled>
-        {SlackAlarmTemplate.map((channel: any, idx: number) => {
+          {SlackAlarmTemplate.map((channel: any, idx: number) => {
             return (
               <CapsuleButtonStyled key={idx}>
                 {channel.title}
@@ -51,7 +51,9 @@ const AdminSlackNotiPage = () => {
           </FormContainerStyled>
           <FormButtonContainerStyled>
             <FormButtonStyled>초기화</FormButtonStyled>
-            <FormButtonStyled primary={true}>보내기</FormButtonStyled>
+            <FormButtonStyled primary={true} disabled={false}>
+              보내기
+            </FormButtonStyled>
           </FormButtonContainerStyled>
         </FormWappingStyled>
       </ContainerStyled>
@@ -186,7 +188,7 @@ const FormButtonContainerStyled = styled.div`
   justify-content: space-between;
 `;
 
-const FormButtonStyled = styled.div<{ primary?: boolean }>`
+const FormButtonStyled = styled.div<{ primary?: boolean; disabled?: boolean }>`
   padding: 10px 16px;
   font-size: 0.875rem;
   background-color: ${(props) =>
@@ -195,5 +197,10 @@ const FormButtonStyled = styled.div<{ primary?: boolean }>`
   font-weight: 700;
   border: 1px solid #eee;
   border-radius: 4px;
+  opacity: ${(props) => (props.disabled ? "0.3" : "1")};
+  cursor: pointer;
+  :hover {
+    opacity: 0.85;
+  }
 `;
 export default AdminSlackNotiPage;
