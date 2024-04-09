@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { SlackAlarmTemplate, SlackChannel } from "@/assets/data/SlackAlarm";
+import { SlackAlarmTemplates, SlackChannels } from "@/assets/data/SlackAlarm";
 
 const AdminSlackNotiPage = () => {
   return (
@@ -11,7 +11,7 @@ const AdminSlackNotiPage = () => {
       <ContainerStyled>
         <SubTitleStyled>자주 쓰는 채널</SubTitleStyled>
         <CapsuleWappingStyled>
-          {SlackChannel.map((channel: any, idx: number) => {
+          {SlackChannels.map((channel: any, idx: number) => {
             return (
               <CapsuleButtonStyled key={idx}>
                 {channel.title}
@@ -24,7 +24,7 @@ const AdminSlackNotiPage = () => {
       <ContainerStyled>
         <SubTitleStyled>자주 쓰는 템플릿</SubTitleStyled>
         <CapsuleWappingStyled>
-          {SlackAlarmTemplate.map((channel: any, idx: number) => {
+          {SlackAlarmTemplates.map((channel: any, idx: number) => {
             return (
               <CapsuleButtonStyled key={idx}>
                 {channel.title}

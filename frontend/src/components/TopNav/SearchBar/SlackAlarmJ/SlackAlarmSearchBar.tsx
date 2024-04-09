@@ -93,8 +93,8 @@ const SlackAlarmSearchBar = ({
           setTotalLength(0);
           setTargetIndex(-1);
         } else {
-          const searchResult = SlackChannels.filter((slackChannel) => {
-            return slackChannel.title.includes(searchValue);
+          const searchResult = SlackChannels.filter((SlackChannels) => {
+            return SlackChannels.title.includes(searchValue);
           });
           setSearchListById([]);
           setSearchListByChannel(searchResult);
