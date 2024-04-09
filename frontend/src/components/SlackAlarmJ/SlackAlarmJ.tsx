@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
-import { SlackAlarmTemplate, SlackChannels } from "@/assets/data/SlackAlarm";
+import { SlackAlarmTemplates, SlackChannels } from "@/assets/data/SlackAlarm";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import SlackAlarmSearchBar from "../TopNav/SearchBar/SlackAlarmJ/SlackAlarmSearchBar";
 
@@ -22,6 +22,14 @@ const SlackAlarmJ = () => {
     if (searchInput.current) searchInput.current.value = title;
   };
 
+  const renderTemplateTextArea = (title: string) => {
+    const template = SlackAlarmTemplates.find((template) => {
+      return template.title === title;
+    });
+    if (searchTextArea.current)
+      searchTextArea.current.value = template!.content;
+  };
+
   return (
     <>
       <h2>자주쓰는채널</h2>
@@ -33,11 +41,9 @@ const SlackAlarmJ = () => {
         );
       })}
       <h2>자주쓰는템플릿</h2>
-      {SlackAlarmTemplate.map((template) => {
+      {SlackAlarmTemplates.map((template) => {
         return (
-          <button
-          //   onClick={}
-          >
+          <button onClick={() => renderTemplateTextArea(template.title)}>
             {template.title}
           </button>
         );

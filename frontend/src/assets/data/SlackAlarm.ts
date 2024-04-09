@@ -1,6 +1,6 @@
 import { ISlackChannels } from "@/components/TopNav/SearchBar/SlackAlarmJ/SlackAlarmSearchBar";
 
-export const SlackChannels : ISlackChannels[] = [
+export const SlackChannels: ISlackChannels[] = [
   {
     title: "#random",
     channelId: "CU6MTFBNH",
@@ -11,7 +11,7 @@ export const SlackChannels : ISlackChannels[] = [
   },
 ];
 
-export const SlackAlarmTemplate = [
+export const SlackAlarmTemplates = [
   {
     title: "점검 시작",
     content: `:alert::alert::alert:<Cabi 서비스 점검 공지>:alert::alert::alert:
