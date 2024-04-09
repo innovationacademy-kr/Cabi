@@ -11,10 +11,13 @@ export interface ISlackChannels {
   channelId: string;
 }
 
-const SlackAlarmSearchBar = () => {
+const SlackAlarmSearchBar = ({
+  searchInput,
+}: {
+  searchInput: React.RefObject<HTMLInputElement>;
+}) => {
   const navigate = useNavigate();
   const searchWrap = useRef<HTMLDivElement>(null);
-  const searchInput = useRef<HTMLInputElement>(null);
   const [searchListById, setSearchListById] = useState<any[]>([]);
   const [searchListByChannel, setSearchListByChannel] = useState<
     ISlackChannels[]
