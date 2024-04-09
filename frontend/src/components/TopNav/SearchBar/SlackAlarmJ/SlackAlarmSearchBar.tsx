@@ -23,7 +23,7 @@ const SlackAlarmSearchBar = ({
     ISlackChannels[]
   >([]);
   const [totalLength, setTotalLength] = useState<number>(0);
-  const [isFocus, setIsFocus] = useState<boolean>(true);
+  const [isOnFocus, setIsOnFocus] = useState<boolean>(true);
   const [targetIndex, setTargetIndex] = useState<number>(-1);
   const [searchValue, setSearchValue] = useState<string>("");
   const [floor, setFloor] = useState<number>(0);
@@ -98,7 +98,6 @@ const SlackAlarmSearchBar = ({
           });
           setSearchListById([]);
           setSearchListByChannel(searchResult);
-          console.log("searchResult : ", searchResult);
           setTotalLength(searchResult.length);
         }
       } else {
@@ -127,7 +126,7 @@ const SlackAlarmSearchBar = ({
 
   // outside click
   useOutsideClick(searchWrap, () => {
-    setIsFocus(false);
+    setIsOnFocus(false);
   });
 
   const valueChangeHandler = () => {
@@ -174,15 +173,16 @@ const SlackAlarmSearchBar = ({
           type="text"
           placeholder="Search"
           onFocus={() => {
-            setIsFocus(true);
+            setIsOnFocus(true);
           }}
           onChange={debounce(typeSearchInput, 300)}
           onKeyDown={handleInputKey}
+          isOnFocus={isOnFocus}
         ></SearchBarInputStyled>
         <SearchButtonStyled onClick={clickSearchButton} />
       </SearchBarStyled>
       <CancelButtonStyled onClick={clickCancelButton}>취소</CancelButtonStyled>
-      {isFocus && searchInput.current?.value && totalLength > 0 && (
+      {isOnFocus && searchInput.current?.value && totalLength > 0 && (
         <>
           <SlackAlarmSearchBarList
             searchListById={searchListById}
@@ -207,7 +207,7 @@ const SearchBarStyled = styled.div`
   width: 100%;
 `;
 
-const SearchBarInputStyled = styled.input`
+const SearchBarInputStyled = styled.input<{ isOnFocus: boolean }>`
   width: 300px;
   height: 40px;
   border: 1px solid #7b7b7b;
@@ -219,6 +219,8 @@ const SearchBarInputStyled = styled.input`
   &::placeholder {
     color: #7b7b7b;
   }
+  border-color: ${(props) =>
+    props.isOnFocus ? "var(--main-color)" : "#7b7b7b"};
 `;
 
 const SearchButtonStyled = styled.button`

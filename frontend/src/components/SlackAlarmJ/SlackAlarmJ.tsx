@@ -1,6 +1,10 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import { SlackAlarmTemplates, SlackChannels } from "@/assets/data/SlackAlarm";
+import {
+  axiosSendSlackNotificationToChannel,
+  axiosSendSlackNotificationToUser,
+} from "@/api/axios/axios.custom";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import SlackAlarmSearchBar from "../TopNav/SearchBar/SlackAlarmJ/SlackAlarmSearchBar";
 
@@ -14,7 +18,8 @@ const SlackAlarmJ = () => {
     setOnFocus(false);
   });
 
-  const initialTextrea = () => {
+  const initializeInputandTextArea = () => {
+    if (searchInput.current) searchInput.current.value = "";
     if (searchTextArea.current) searchTextArea.current.value = "";
   };
 
@@ -28,6 +33,37 @@ const SlackAlarmJ = () => {
     });
     if (searchTextArea.current)
       searchTextArea.current.value = template!.content;
+  };
+
+  const submit = async () => {
+    if (!searchInput.current?.value) {
+      // TODO : 보내는이 입력하라고 알리기
+    } else if (!searchInput.current.value) {
+      // TODO : 메세지 입력하라고 알리기
+    } else
+      try {
+        if (searchInput.current!.value[0] === "#") {
+          let channelId = SlackChannels.find((channel) => {
+            return searchInput.current!.value === channel.title;
+          })?.channelId;
+          await axiosSendSlackNotificationToChannel(
+            searchInput.current.value,
+            searchTextArea.current!.value,
+            channelId
+          );
+        } else {
+          await axiosSendSlackNotificationToUser(
+            searchInput.current.value,
+            searchTextArea.current!.value
+          );
+        }
+      } catch (error: any) {
+        // TODO : response modal?
+        // setModalTitle(error.response.data.message);
+        // setModalContent(error.response.data.message);
+        // setHasErrorOnResponse(true);
+      } finally {
+      }
   };
 
   return (
@@ -60,8 +96,8 @@ const SlackAlarmJ = () => {
           ref={searchTextArea}
           isOnFocus={onFocus}
         />
-        <button onClick={initialTextrea}>초기화</button>
-        <button>보내기</button>
+        <button onClick={initializeInputandTextArea}>초기화</button>
+        <button onClick={submit}>보내기</button>
       </div>
     </>
   );
