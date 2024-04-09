@@ -3,6 +3,7 @@ import { ReactComponent as LogoutImg } from "/src/assets/images/close-square.svg
 import { ReactComponent as CulbImg } from "/src/assets/images/clubIconGray.svg";
 import { ReactComponent as ProfileImg } from "/src/assets/images/profile-circle.svg";
 import { ReactComponent as SearchImg } from "/src/assets/images/search.svg";
+import { ReactComponent as SlackNotiImg } from "/src/assets/images/slack-notification.svg";
 import { ReactComponent as SlackImg } from "/src/assets/images/slack.svg";
 
 interface ILeftMainNav {
@@ -12,6 +13,7 @@ interface ILeftMainNav {
   currentFloor: number;
   onClickFloorButton: Function;
   onClickLogoutButton: React.MouseEventHandler;
+  onClickSlackNotiButton: React.MouseEventHandler;
   onClickLentLogButton: React.MouseEventHandler;
   onClickSearchButton: React.MouseEventHandler;
   onClickAdminClubButton: React.MouseEventHandler;
@@ -28,6 +30,7 @@ const LeftMainNav = ({
   onClickHomeButton,
   onClickFloorButton,
   onClickLogoutButton,
+  onClickSlackNotiButton,
   onClickLentLogButton,
   onClickSearchButton,
   onClickAdminClubButton,
@@ -80,6 +83,17 @@ const LeftMainNav = ({
         <BottomBtnsStyled>
           {isAdmin && (
             <>
+              <BottomBtnStyled
+                className={
+                  pathname.includes("slack-notification")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                onClick={onClickSlackNotiButton}
+              >
+                <SlackNotiImg stroke="var(--gray-color)" />
+                Noti
+              </BottomBtnStyled>
               <BottomBtnStyled
                 className={
                   pathname.includes("search")

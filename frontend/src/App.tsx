@@ -24,6 +24,7 @@ const AdminLoginFailurePage = lazy(
   () => import("@/pages/admin/AdminLoginFailurePage")
 );
 const AdminHomePage = lazy(() => import("@/pages/admin/AdminHomePage"));
+const AdminSlackNotiPage = lazy(() => import("@/pages/admin/AdminSlackNotiPage"));
 
 function App(): React.ReactElement {
   return (
@@ -49,6 +50,7 @@ function App(): React.ReactElement {
             <Route path="main" element={<AdminMainPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="club" element={<AdminClubPage />} />
+            <Route path="slack-notification" element={<AdminSlackNotiPage />} />
             <Route path="available" element={<AvailablePage />} />
             <Route path="slack-alarm-j" element={<SlackAlarmJ />} />
           </Route>
