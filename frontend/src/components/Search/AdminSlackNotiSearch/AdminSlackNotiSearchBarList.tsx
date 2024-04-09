@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import SearchListItem from "@/components/TopNav/SearchBar/SearchListItem/SearchListItem";
-import { ISlackChannels } from "../SlackAlarmSearchBar";
+import { ISlackChannel } from "./AdminSlackNotiSearchBar";
+import AdminSlackNotiSearchListItem from "./AdminSlackNotiSearchListItem";
 
 interface ISearchListByIntraId {
   name: string;
@@ -11,38 +11,36 @@ const SlackAlarmSearchBarList = ({
   searchListById,
   searchListByChannel,
   searchWord,
-  resetSearchState,
-  totalLength,
   targetIndex,
+  renderReceiverInput,
 }: {
   searchListById: ISearchListByIntraId[];
-  searchListByChannel: ISlackChannels[];
-  resetSearchState: () => void;
-  searchWord?: string;
-  totalLength: number;
+  searchListByChannel: ISlackChannel[];
+  searchWord: string;
   targetIndex?: number;
+  renderReceiverInput: (title: string) => void;
 }) => {
   return (
     <UlStyled>
       {searchListById.map((item, index: number) => {
         return (
-          <SearchListItem
+          <AdminSlackNotiSearchListItem
             key={index}
             inputText={searchWord}
             resultText={item.name}
-            resetSearchState={resetSearchState}
             isTargetIndex={targetIndex === index}
+            renderReceiverInput={renderReceiverInput}
           />
         );
       })}
       {searchListByChannel.map((item, index: number) => {
         return (
-          <SearchListItem
+          <AdminSlackNotiSearchListItem
             key={index}
             inputText={searchWord}
             resultText={item.title}
-            resetSearchState={resetSearchState}
             isTargetIndex={targetIndex === index}
+            renderReceiverInput={renderReceiverInput}
           />
         );
       })}

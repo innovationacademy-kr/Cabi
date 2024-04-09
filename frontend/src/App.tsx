@@ -12,7 +12,6 @@ import ProfilePage from "@/pages/ProfilePage";
 import AdminMainPage from "@/pages/admin/AdminMainPage";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import PageTracker from "@/api/analytics/PageTracker";
-import SlackAlarmJ from "./components/SlackAlarmJ/SlackAlarmJ";
 
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));
@@ -24,7 +23,9 @@ const AdminLoginFailurePage = lazy(
   () => import("@/pages/admin/AdminLoginFailurePage")
 );
 const AdminHomePage = lazy(() => import("@/pages/admin/AdminHomePage"));
-const AdminSlackNotiPage = lazy(() => import("@/pages/admin/AdminSlackNotiPage"));
+const AdminSlackNotiPage = lazy(
+  () => import("@/pages/admin/AdminSlackNotiPage")
+);
 
 function App(): React.ReactElement {
   return (
@@ -52,7 +53,6 @@ function App(): React.ReactElement {
             <Route path="club" element={<AdminClubPage />} />
             <Route path="slack-notification" element={<AdminSlackNotiPage />} />
             <Route path="available" element={<AvailablePage />} />
-            <Route path="slack-alarm-j" element={<SlackAlarmJ />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route

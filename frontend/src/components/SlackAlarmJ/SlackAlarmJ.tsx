@@ -6,17 +6,11 @@ import {
   axiosSendSlackNotificationToUser,
 } from "@/api/axios/axios.custom";
 import useOutsideClick from "@/hooks/useOutsideClick";
-import SlackAlarmSearchBar from "../TopNav/SearchBar/SlackAlarmJ/SlackAlarmSearchBar";
+import AdminSlackNotiSearchBar from "../Search/AdminSlackNotiSearch/AdminSlackNotiSearchBar";
 
 const SlackAlarmJ = () => {
-  const [onFocus, setOnFocus] = useState(false);
   const searchTextArea = useRef<HTMLTextAreaElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
-
-  // outside click
-  useOutsideClick(searchTextArea, () => {
-    setOnFocus(false);
-  });
 
   const initializeInputandTextArea = () => {
     if (searchInput.current) searchInput.current.value = "";
@@ -87,15 +81,15 @@ const SlackAlarmJ = () => {
       <h2>알림보내기</h2>
       <div>
         <div>받는이(intraid/channel)</div>
-        <SlackAlarmSearchBar searchInput={searchInput} />
+        {/* <AdminSlackNotiSearchBar searchInput={searchInput} /> */}
         <div>메시지내용</div>
-        <ContentStyled
+        {/* <ContentStyled
           onFocus={() => {
             setOnFocus(true);
           }}
           ref={searchTextArea}
           isOnFocus={onFocus}
-        />
+        /> */}
         <button onClick={initializeInputandTextArea}>초기화</button>
         <button onClick={submit}>보내기</button>
       </div>
@@ -104,7 +98,3 @@ const SlackAlarmJ = () => {
 };
 
 export default SlackAlarmJ;
-
-const ContentStyled = styled.textarea<{ isOnFocus: boolean }>`
-  outline-color: ${(props) => (props.isOnFocus ? "var(--main-color)" : "")};
-`;

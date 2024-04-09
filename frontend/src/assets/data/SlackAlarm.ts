@@ -1,6 +1,6 @@
-import { ISlackChannels } from "@/components/TopNav/SearchBar/SlackAlarmJ/SlackAlarmSearchBar";
+import { ISlackChannel } from "@/components/Search/AdminSlackNotiSearch/AdminSlackNotiSearchBar";
 
-export const SlackChannels: ISlackChannels[] = [
+export const SlackChannels: ISlackChannel[] = [
   {
     title: "#random",
     channelId: "CU6MTFBNH",

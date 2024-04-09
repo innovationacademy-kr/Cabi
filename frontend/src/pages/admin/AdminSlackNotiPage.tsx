@@ -1,7 +1,31 @@
+import { useRef } from "react";
 import styled from "styled-components";
+import AdminSlackNotiSearchBar, {
+  ISlackChannel,
+} from "@/components/Search/AdminSlackNotiSearch/AdminSlackNotiSearchBar";
 import { SlackAlarmTemplates, SlackChannels } from "@/assets/data/SlackAlarm";
 
 const AdminSlackNotiPage = () => {
+  const searchInput = useRef<HTMLInputElement>(null);
+  const searchTextArea = useRef<HTMLTextAreaElement>(null);
+
+  const renderReceiverInput = (title: string) => {
+    if (searchInput.current) searchInput.current.value = title;
+  };
+
+  const renderTemplateTextArea = (title: string) => {
+    const template = SlackAlarmTemplates.find((template) => {
+      return template.title === title;
+    });
+    if (searchTextArea.current)
+      searchTextArea.current.value = template!.content;
+  };
+
+  const initializeInputandTextArea = () => {
+    if (searchInput.current) searchInput.current.value = "";
+    if (searchTextArea.current) searchTextArea.current.value = "";
+  };
+
   return (
     <WrapperStyled>
       <TitleContainerStyled>
@@ -11,9 +35,12 @@ const AdminSlackNotiPage = () => {
       <ContainerStyled>
         <SubTitleStyled>자주 쓰는 채널</SubTitleStyled>
         <CapsuleWappingStyled>
-          {SlackChannels.map((channel: any, idx: number) => {
+          {SlackChannels.map((channel: ISlackChannel, idx: number) => {
             return (
-              <CapsuleButtonStyled key={idx}>
+              <CapsuleButtonStyled
+                key={idx}
+                onClick={() => renderReceiverInput(channel.title)}
+              >
                 {channel.title}
               </CapsuleButtonStyled>
             );
@@ -24,14 +51,18 @@ const AdminSlackNotiPage = () => {
       <ContainerStyled>
         <SubTitleStyled>자주 쓰는 템플릿</SubTitleStyled>
         <CapsuleWappingStyled>
-          {SlackAlarmTemplates.map((channel: any, idx: number) => {
+          {SlackAlarmTemplates.map((template: any, idx: number) => {
             return (
-              <CapsuleButtonStyled key={idx}>
-                {channel.title}
+              <CapsuleButtonStyled
+                key={idx}
+                onClick={() => renderTemplateTextArea(template.title)}
+              >
+                {template.title}
               </CapsuleButtonStyled>
             );
           })}
           <CapsuleButtonStyled>사물함 대여</CapsuleButtonStyled>
+          {/* TODO : 사물함 대여일때 템플릿 */}
         </CapsuleWappingStyled>
       </ContainerStyled>
       <ContainerStyled>
@@ -41,16 +72,21 @@ const AdminSlackNotiPage = () => {
             <FormSubTitleStyled>
               받는이(Intra ID/ Channel)<span>*</span>
             </FormSubTitleStyled>
-            <FormInputStyled placeholder="#입력 시 채널 검색" />
+            <AdminSlackNotiSearchBar
+              searchInput={searchInput}
+              renderReceiverInput={renderReceiverInput}
+            />
           </FormContainerStyled>
           <FormContainerStyled>
             <FormSubTitleStyled>
               메시지 내용<span>*</span>
             </FormSubTitleStyled>
-            <FormTextareaStyled />
+            <FormTextareaStyled ref={searchTextArea} />
           </FormContainerStyled>
           <FormButtonContainerStyled>
-            <FormButtonStyled>초기화</FormButtonStyled>
+            <FormButtonStyled onClick={initializeInputandTextArea}>
+              초기화
+            </FormButtonStyled>
             <FormButtonStyled primary={true} disabled={false}>
               보내기
             </FormButtonStyled>
@@ -148,21 +184,6 @@ const FormSubTitleStyled = styled.h3`
   }
 `;
 
-const FormInputStyled = styled.input`
-  width: 100%;
-  height: 40px;
-  background-color: #fff;
-  border-radius: 8px;
-  border: 1px solid #eee;
-  :focus {
-    border: 1px solid var(--main-color);
-  }
-  text-align: left;
-  padding: 0 10px;
-  ::placeholder {
-    color: var(--line-color);
-  }
-`;
 const FormTextareaStyled = styled.textarea`
   box-sizing: border-box;
   width: 100%;

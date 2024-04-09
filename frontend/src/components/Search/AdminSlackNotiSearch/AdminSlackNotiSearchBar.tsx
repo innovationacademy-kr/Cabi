@@ -4,26 +4,31 @@ import styled from "styled-components";
 import { SlackChannels } from "@/assets/data/SlackAlarm";
 import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
 import useOutsideClick from "@/hooks/useOutsideClick";
-import SlackAlarmSearchBarList from "./SlackAlarmSearchBarList/SlackAlarmSearchBarList";
+import SlackAlarmSearchBarList from "./AdminSlackNotiSearchBarList";
 
-export interface ISlackChannels {
+export interface ISlackChannel {
   title: string;
   channelId: string;
 }
+// TODO : 위치 옮기기
 
-const SlackAlarmSearchBar = ({
+// TODO : 리팩토링
+// TODO : import
+
+const AdminSlackNotiSearchBar = ({
   searchInput,
+  renderReceiverInput,
 }: {
   searchInput: React.RefObject<HTMLInputElement>;
+  renderReceiverInput: (title: string) => void;
 }) => {
   const navigate = useNavigate();
-  const searchWrap = useRef<HTMLDivElement>(null);
   const [searchListById, setSearchListById] = useState<any[]>([]);
   const [searchListByChannel, setSearchListByChannel] = useState<
-    ISlackChannels[]
+    ISlackChannel[]
   >([]);
   const [totalLength, setTotalLength] = useState<number>(0);
-  const [isOnFocus, setIsOnFocus] = useState<boolean>(true);
+  const [onFocus, setOnFocus] = useState<boolean>(true);
   const [targetIndex, setTargetIndex] = useState<number>(-1);
   const [searchValue, setSearchValue] = useState<string>("");
   const [floor, setFloor] = useState<number>(0);
@@ -49,16 +54,8 @@ const SlackAlarmSearchBar = ({
       } else if (isNaN(Number(searchValue)) && searchValue.length <= 1) {
         resetSearchState();
         return alert("두 글자 이상의 검색어를 입력해주세요.");
-      } else {
-        let query = floor
-          ? `?q=${searchInput.current.value}&floor=${floor}`
-          : `?q=${searchInput.current.value}`;
-        navigate({
-          pathname: "search",
-          search: query,
-        });
-        resetSearchState();
       }
+      // TODO : search bar list item 선택됐을때 엔터눌렀을때
     }
   };
 
@@ -116,17 +113,9 @@ const SlackAlarmSearchBar = ({
     }
   };
 
-  const clickCancelButton = () => {
-    resetSearchState();
-    document.getElementById("searchBar")!.classList.remove("on");
-    document.getElementById("topNavLogo")!.classList.remove("pushOut");
-    document.getElementById("topNavButtonGroup")!.classList.remove("pushOut");
-    document.getElementById("topNavWrap")!.classList.remove("pushOut");
-  };
-
   // outside click
-  useOutsideClick(searchWrap, () => {
-    setIsOnFocus(false);
+  useOutsideClick(searchInput, () => {
+    setOnFocus(false);
   });
 
   const valueChangeHandler = () => {
@@ -164,83 +153,54 @@ const SlackAlarmSearchBar = ({
       }
     }
   };
-
   return (
-    <SearchBarWrapperStyled ref={searchWrap} id="searchBar">
+    <>
       <SearchBarStyled>
-        <SearchBarInputStyled
+        <FormInputStyled
+          placeholder="#입력 시 채널 검색"
           ref={searchInput}
           type="text"
-          placeholder="Search"
           onFocus={() => {
-            setIsOnFocus(true);
+            setOnFocus(true);
           }}
           onChange={debounce(typeSearchInput, 300)}
           onKeyDown={handleInputKey}
-          isOnFocus={isOnFocus}
-        ></SearchBarInputStyled>
-        <SearchButtonStyled onClick={clickSearchButton} />
+        />
       </SearchBarStyled>
-      <CancelButtonStyled onClick={clickCancelButton}>취소</CancelButtonStyled>
-      {isOnFocus && searchInput.current?.value && totalLength > 0 && (
+      {onFocus && searchInput.current?.value && totalLength > 0 && (
         <>
           <SlackAlarmSearchBarList
             searchListById={searchListById}
             searchListByChannel={searchListByChannel}
             searchWord={searchValue}
-            resetSearchState={resetSearchState}
-            totalLength={totalLength}
             targetIndex={targetIndex}
+            renderReceiverInput={renderReceiverInput}
           />
         </>
       )}
-    </SearchBarWrapperStyled>
+    </>
   );
 };
-
-const SearchBarWrapperStyled = styled.div`
-  position: relative;
-`;
 
 const SearchBarStyled = styled.div`
   position: relative;
   width: 100%;
 `;
 
-const SearchBarInputStyled = styled.input<{ isOnFocus: boolean }>`
-  width: 300px;
+const FormInputStyled = styled.input`
+  width: 100%;
   height: 40px;
-  border: 1px solid #7b7b7b;
-  border-radius: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  :focus {
+    border: 1px solid var(--main-color);
+  }
   text-align: left;
-  padding: 0 20px;
-  color: #7b7b7b;
-  background-color: rgba(255, 255, 255, 0.2);
-  &::placeholder {
-    color: #7b7b7b;
-  }
-  border-color: ${(props) =>
-    props.isOnFocus ? "var(--main-color)" : "#7b7b7b"};
-`;
-
-const SearchButtonStyled = styled.button`
-  background: url("/src/assets/images/searchWhite.svg") no-repeat 50% 50%;
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  top: 4px;
-  right: 14px;
-`;
-
-const CancelButtonStyled = styled.button`
-  min-width: 60px;
-  width: 60px;
-  height: 40px;
-  overflow: hidden;
-  display: none;
-  @media screen and (max-width: 768px) {
-    display: block;
+  padding: 0 10px;
+  ::placeholder {
+    color: var(--line-color);
   }
 `;
 
-export default SlackAlarmSearchBar;
+export default AdminSlackNotiSearchBar;
