@@ -17,6 +17,20 @@ const noEventPhraseDesktop = {
     "다양한 관심사를 함께 나누고 싶으신 분은 지금 바로 발표를 신청해보세요",
 };
 
+const renderTableData = (
+  className: string,
+  key: number,
+  title: string,
+  head: string,
+  item: IPresentationScheduleDetailInfo
+) => {
+  return (
+    <td className={className} key={key} title={title}>
+      <div>{renderCellDetail(head, item)}</div>
+    </td>
+  );
+};
+
 const renderCellDetail = (
   head: string,
   item: IPresentationScheduleDetailInfo
@@ -102,29 +116,17 @@ const DetailTableBodyItemTopTr = ({
               // 발표 있을때
               <>
                 {tableHeadEntriesWithoutDate.map((head, idx) => {
-                  return (
-                    <td
-                      /* 
-                      NOTE : 
-                      admin 페이지가 아니고 && 발표장소 || admin 페이지고 && 발표상태면
-                      border-radius 적용
-                      */
-                      className={
-                        (!isAdmin && head[0] === "presentationLocation") ||
-                        (isAdmin && head[0] === "presentationStatus")
-                          ? "rightEnd"
-                          : ""
-                      }
-                      key={idx}
-                      title={
-                        head[0] === "subject" ? itemInfo.item.subject! : ""
-                      }
-                    >
-                      <div>{renderCellDetail(head[0], itemInfo.item)}</div>
-                    </td>
+                  renderTableData(
+                    (!isAdmin && head[0] === "presentationLocation") ||
+                      (isAdmin && head[0] === "presentationStatus")
+                      ? "rightEnd"
+                      : "",
+                    idx,
+                    head[0] === "subject" ? itemInfo.item.subject! : "",
+                    head[0],
+                    itemInfo.item
                   );
                 })}
-                {/* TODO: 함수나 컴포넌트로 빼기 */}
               </>
             )}
           </>
@@ -135,15 +137,12 @@ const DetailTableBodyItemTopTr = ({
             {isItemOpen && (
               <>
                 {tableHeadEntriesWithoutDateAndSubject.map((head, idx) => {
-                  return (
-                    <td
-                      className={
-                        head[0] === "presentationLocation" ? "rightEnd" : ""
-                      }
-                      key={idx}
-                    >
-                      <div>{renderCellDetail(head[0], itemInfo.item)}</div>
-                    </td>
+                  return renderTableData(
+                    head[0] === "presentationLocation" ? "rightEnd" : "",
+                    idx,
+                    "",
+                    head[0],
+                    itemInfo.item
                   );
                 })}
               </>
