@@ -4,6 +4,10 @@ import AdminSlackNotiSearchBar, {
   ISlackChannel,
 } from "@/components/Search/AdminSlackNotiSearch/AdminSlackNotiSearchBar";
 import { SlackAlarmTemplates, SlackChannels } from "@/assets/data/SlackAlarm";
+import {
+  axiosSendSlackNotificationToChannel,
+  axiosSendSlackNotificationToUser,
+} from "@/api/axios/axios.custom";
 
 const AdminSlackNotiPage = () => {
   const searchInput = useRef<HTMLInputElement>(null);
@@ -26,12 +30,42 @@ const AdminSlackNotiPage = () => {
     if (searchTextArea.current) searchTextArea.current.value = "";
   };
 
+  const submit = async () => {
+    if (!searchInput.current?.value) {
+      alert("받는이를 입력해주세요.");
+    } else if (!searchTextArea.current?.value) {
+      alert("메시지 내용을 입력해주세요.");
+    } else
+      try {
+        if (searchInput.current!.value[0] === "#") {
+          let channelId = SlackChannels.find((channel) => {
+            return searchInput.current!.value === channel.title;
+          })?.channelId;
+          await axiosSendSlackNotificationToChannel(
+            searchInput.current.value,
+            searchTextArea.current!.value,
+            channelId
+          );
+        } else {
+          await axiosSendSlackNotificationToUser(
+            searchInput.current.value,
+            searchTextArea.current!.value
+          );
+        }
+        // TODO : 성공적으로 보냈다는 모달?
+      } catch (error: any) {
+        // TODO : response modal? alert?
+        // setModalTitle(error.response.data.message);
+        // setModalContent(error.response.data.message);
+        // setHasErrorOnResponse(true);
+      }
+  };
+
   return (
     <WrapperStyled>
       <TitleContainerStyled>
         <h1 className="title">알림</h1>
       </TitleContainerStyled>
-
       <ContainerStyled>
         <SubTitleStyled>자주 쓰는 채널</SubTitleStyled>
         <CapsuleWappingStyled>
@@ -47,7 +81,6 @@ const AdminSlackNotiPage = () => {
           })}
         </CapsuleWappingStyled>
       </ContainerStyled>
-
       <ContainerStyled>
         <SubTitleStyled>자주 쓰는 템플릿</SubTitleStyled>
         <CapsuleWappingStyled>
@@ -87,7 +120,7 @@ const AdminSlackNotiPage = () => {
             <FormButtonStyled onClick={initializeInputandTextArea}>
               초기화
             </FormButtonStyled>
-            <FormButtonStyled primary={true} disabled={false}>
+            <FormButtonStyled primary={true} disabled={false} onClick={submit}>
               보내기
             </FormButtonStyled>
           </FormButtonContainerStyled>
