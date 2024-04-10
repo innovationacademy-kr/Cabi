@@ -1,20 +1,15 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { SlackChannels } from "@/assets/data/SlackAlarm";
+import SlackNotiSearchBarList from "@/components/Search/SlackNotiSearch/SlackNotiSearchBarList";
+import { ISlackChannel, SlackChannels } from "@/assets/data/SlackAlarm";
 import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
 import useOutsideClick from "@/hooks/useOutsideClick";
-import SlackAlarmSearchBarList from "./AdminSlackNotiSearchBarList";
-
-export interface ISlackChannel {
-  title: string;
-  channelId: string;
-}
-// TODO : 위치 옮기기
 
 // TODO : 리팩토링
-// TODO : import
+// TODO : disabled useEffect말고 더 좋은방법있나?
+// TODO : 채널인지 유저인지에 따른 아이콘
 
-const AdminSlackNotiSearchBar = ({
+const SlackNotiSearchBar = ({
   searchInput,
   renderReceiverInput,
 }: {
@@ -128,9 +123,10 @@ const AdminSlackNotiSearchBar = ({
       }
     }
   };
+
   return (
     <>
-      <SearchBarStyled>
+      <SearchBarWrapStyled>
         <FormInputStyled
           placeholder="#입력 시 채널 검색"
           ref={searchInput}
@@ -141,25 +137,24 @@ const AdminSlackNotiSearchBar = ({
           onChange={debounce(typeSearchInput, 300)}
           onKeyDown={handleInputKey}
         />
-      </SearchBarStyled>
-      {onFocus && searchInput.current?.value && totalLength > 0 && (
-        <>
-          <SlackAlarmSearchBarList
-            searchListById={searchListById}
-            searchListByChannel={searchListByChannel}
-            searchWord={searchValue}
-            targetIndex={targetIndex}
-            renderReceiverInput={renderReceiverInput}
-          />
-        </>
-      )}
+        {onFocus && searchInput.current?.value && totalLength > 0 && (
+          <>
+            <SlackNotiSearchBarList
+              searchListById={searchListById}
+              searchListByChannel={searchListByChannel}
+              searchWord={searchValue}
+              targetIndex={targetIndex}
+              renderReceiverInput={renderReceiverInput}
+            />
+          </>
+        )}
+      </SearchBarWrapStyled>
     </>
   );
 };
 
-const SearchBarStyled = styled.div`
+const SearchBarWrapStyled = styled.div`
   position: relative;
-  width: 100%;
 `;
 
 const FormInputStyled = styled.input`
@@ -178,4 +173,4 @@ const FormInputStyled = styled.input`
   }
 `;
 
-export default AdminSlackNotiSearchBar;
+export default SlackNotiSearchBar;

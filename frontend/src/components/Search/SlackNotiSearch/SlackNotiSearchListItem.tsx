@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 
-const AdminSlackNotiSearchListItem = (props: {
+const SlackNotiSearchListItem = (props: {
   inputText: string;
   resultText: string;
   isTargetIndex?: boolean;
@@ -48,4 +48,4 @@ const LiStyled = styled.li`
   }
 `;
 
-export default AdminSlackNotiSearchListItem;
+export default SlackNotiSearchListItem;

@@ -1,4 +1,7 @@
-import { ISlackChannel } from "@/components/Search/AdminSlackNotiSearch/AdminSlackNotiSearchBar";
+export interface ISlackChannel {
+  title: string;
+  channelId: string;
+}
 
 export const SlackChannels: ISlackChannel[] = [
   {

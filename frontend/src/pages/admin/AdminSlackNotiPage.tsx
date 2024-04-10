@@ -1,55 +1,57 @@
 import { useRef } from "react";
 import styled from "styled-components";
-import AdminSlackNotiSearchBar, {
+import SlackNotiSearchBar from "@/components/Search/SlackNotiSearch/SlackNotiSearchBar";
+import {
   ISlackChannel,
-} from "@/components/Search/AdminSlackNotiSearch/AdminSlackNotiSearchBar";
-import { SlackAlarmTemplates, SlackChannels } from "@/assets/data/SlackAlarm";
+  SlackAlarmTemplates,
+  SlackChannels,
+} from "@/assets/data/SlackAlarm";
 import {
   axiosSendSlackNotificationToChannel,
   axiosSendSlackNotificationToUser,
 } from "@/api/axios/axios.custom";
 
 const AdminSlackNotiPage = () => {
-  const searchInput = useRef<HTMLInputElement>(null);
-  const searchTextArea = useRef<HTMLTextAreaElement>(null);
+  const receiverInputRef = useRef<HTMLInputElement>(null);
+  const msgTextAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const renderReceiverInput = (title: string) => {
-    if (searchInput.current) searchInput.current.value = title;
+    if (receiverInputRef.current) receiverInputRef.current.value = title;
   };
 
   const renderTemplateTextArea = (title: string) => {
     const template = SlackAlarmTemplates.find((template) => {
       return template.title === title;
     });
-    if (searchTextArea.current)
-      searchTextArea.current.value = template!.content;
+    if (msgTextAreaRef.current)
+      msgTextAreaRef.current.value = template!.content;
   };
 
   const initializeInputandTextArea = () => {
-    if (searchInput.current) searchInput.current.value = "";
-    if (searchTextArea.current) searchTextArea.current.value = "";
+    if (receiverInputRef.current) receiverInputRef.current.value = "";
+    if (msgTextAreaRef.current) msgTextAreaRef.current.value = "";
   };
 
   const submit = async () => {
-    if (!searchInput.current?.value) {
+    if (!receiverInputRef.current?.value) {
       alert("받는이를 입력해주세요.");
-    } else if (!searchTextArea.current?.value) {
+    } else if (!msgTextAreaRef.current?.value) {
       alert("메시지 내용을 입력해주세요.");
     } else
       try {
-        if (searchInput.current!.value[0] === "#") {
+        if (receiverInputRef.current!.value[0] === "#") {
           let channelId = SlackChannels.find((channel) => {
-            return searchInput.current!.value === channel.title;
+            return receiverInputRef.current!.value === channel.title;
           })?.channelId;
           await axiosSendSlackNotificationToChannel(
-            searchInput.current.value,
-            searchTextArea.current!.value,
+            receiverInputRef.current.value,
+            msgTextAreaRef.current!.value,
             channelId
           );
         } else {
           await axiosSendSlackNotificationToUser(
-            searchInput.current.value,
-            searchTextArea.current!.value
+            receiverInputRef.current.value,
+            msgTextAreaRef.current!.value
           );
         }
         // TODO : 성공적으로 보냈다는 모달?
@@ -105,8 +107,8 @@ const AdminSlackNotiPage = () => {
             <FormSubTitleStyled>
               받는이(Intra ID/ Channel)<span>*</span>
             </FormSubTitleStyled>
-            <AdminSlackNotiSearchBar
-              searchInput={searchInput}
+            <SlackNotiSearchBar
+              searchInput={receiverInputRef}
               renderReceiverInput={renderReceiverInput}
             />
           </FormContainerStyled>
@@ -114,7 +116,7 @@ const AdminSlackNotiPage = () => {
             <FormSubTitleStyled>
               메시지 내용<span>*</span>
             </FormSubTitleStyled>
-            <FormTextareaStyled ref={searchTextArea} />
+            <FormTextareaStyled ref={msgTextAreaRef} />
           </FormContainerStyled>
           <FormButtonContainerStyled>
             <FormButtonStyled onClick={initializeInputandTextArea}>
