@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { SlackChannels } from "@/assets/data/SlackAlarm";
 import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
@@ -22,7 +21,6 @@ const AdminSlackNotiSearchBar = ({
   searchInput: React.RefObject<HTMLInputElement>;
   renderReceiverInput: (title: string) => void;
 }) => {
-  const navigate = useNavigate();
   const [searchListById, setSearchListById] = useState<any[]>([]);
   const [searchListByChannel, setSearchListByChannel] = useState<
     ISlackChannel[]
@@ -31,33 +29,6 @@ const AdminSlackNotiSearchBar = ({
   const [onFocus, setOnFocus] = useState<boolean>(true);
   const [targetIndex, setTargetIndex] = useState<number>(-1);
   const [searchValue, setSearchValue] = useState<string>("");
-  const [floor, setFloor] = useState<number>(0);
-
-  const resetSearchState = () => {
-    setSearchListById([]);
-    setSearchListByChannel([]);
-    setTotalLength(0);
-    setTargetIndex(-1);
-    setFloor(0);
-    if (searchInput.current) {
-      searchInput.current.value = "";
-      setSearchValue("");
-    }
-  };
-
-  const clickSearchButton = () => {
-    if (searchInput.current) {
-      const searchValue = searchInput.current.value;
-      if (searchValue.length <= 0) {
-        resetSearchState();
-        return alert("검색어를 입력해주세요.");
-      } else if (isNaN(Number(searchValue)) && searchValue.length <= 1) {
-        resetSearchState();
-        return alert("두 글자 이상의 검색어를 입력해주세요.");
-      }
-      // TODO : search bar list item 선택됐을때 엔터눌렀을때
-    }
-  };
 
   const debounce = (func: Function, wait: number) => {
     let timeout: NodeJS.Timeout;
@@ -134,7 +105,11 @@ const AdminSlackNotiSearchBar = ({
 
   const handleInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      clickSearchButton();
+      if (targetIndex !== -1) {
+        searchInput.current!.value = valueChangeHandler();
+        setSearchValue(searchInput.current!.value);
+        setTotalLength(0);
+      }
     } else if (e.key == "ArrowUp") {
       if (totalLength > 0) {
         setTargetIndex((prev) =>
