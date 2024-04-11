@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import SlackNotiSearchBarList from "@/components/SlackNoti/SlackNotiSearch/SlackNotiSearchBarList";
+import SlackNotiSearchBarList from "@/components/SlackNoti/SlackNotiSearchBarList";
 import { ISlackChannel, SlackChannels } from "@/assets/data/SlackAlarm";
 import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
 import useOutsideClick from "@/hooks/useOutsideClick";
@@ -119,7 +119,6 @@ const SlackNotiSearchBar = ({
       }
     }
   };
-  console.log(onFocus, searchInput.current?.value, totalLength);
 
   return (
     <>
@@ -159,7 +158,7 @@ const FormInputStyled = styled.input`
   height: 40px;
   background-color: var(--white);
   border-radius: 8px;
-  border: 1px solid #eee;
+  border: 1px solid var(--full);
   :focus {
     border: 1px solid var(--main-color);
   }

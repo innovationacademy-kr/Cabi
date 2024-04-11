@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import styled from "styled-components";
-import SlackNotiSearchBar from "@/components/SlackNoti/SlackNotiSearch/SlackNotiSearchBar";
+import SlackNotiSearchBar from "@/components/SlackNoti/SlackNotiSearchBar";
 import {
   ISlackChannel,
   SlackAlarmTemplates,
@@ -177,8 +177,8 @@ const CapsuleButtonStyled = styled.span`
   justify-content: center;
   align-items: center;
   padding: 8px 20px;
-  background: #f5f5f5;
-  border: 1px solid #eeeeee;
+  background: var(--lightgray-color);
+  border: 1px solid var(--full);
   border-radius: 22px;
   cursor: pointer;
 
@@ -218,9 +218,9 @@ const FormTextareaStyled = styled.textarea`
   box-sizing: border-box;
   width: 100%;
   min-height: 200px;
-  background-color: #fff;
+  background-color: var(--white);
   border-radius: 8px;
-  border: 1px solid #eee;
+  border: 1px solid var(--full);
   resize: none;
   outline: none;
   :focus {
@@ -248,7 +248,7 @@ const FormButtonStyled = styled.button<{ primary?: boolean }>`
     props.primary ? "var(--main-color)" : "var(--white)"};
   color: ${(props) => (props.primary ? "var(--white)" : "var(--black)")};
   font-weight: 700;
-  border: 1px solid #eee;
+  border: 1px solid var(--full);
   border-radius: 4px;
   cursor: pointer;
   :hover {
