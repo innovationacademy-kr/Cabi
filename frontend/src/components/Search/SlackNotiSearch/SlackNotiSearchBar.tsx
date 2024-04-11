@@ -6,15 +6,15 @@ import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
 import useOutsideClick from "@/hooks/useOutsideClick";
 
 // TODO : 리팩토링
-// TODO : disabled useEffect말고 더 좋은방법있나?
-// TODO : 채널인지 유저인지에 따른 아이콘
 
 const SlackNotiSearchBar = ({
   searchInput,
   renderReceiverInput,
+  checkInputs,
 }: {
   searchInput: React.RefObject<HTMLInputElement>;
   renderReceiverInput: (title: string) => void;
+  checkInputs: () => void;
 }) => {
   const [searchListById, setSearchListById] = useState<any[]>([]);
   const [searchListByChannel, setSearchListByChannel] = useState<
@@ -26,6 +26,8 @@ const SlackNotiSearchBar = ({
   const [searchValue, setSearchValue] = useState<string>("");
 
   const debounce = (func: Function, wait: number) => {
+    checkInputs();
+
     let timeout: NodeJS.Timeout;
 
     return function executedFunction(...args: any[]) {
@@ -51,7 +53,7 @@ const SlackNotiSearchBar = ({
       }
       if (searchInput.current!.value[0] === "#") {
         // slack channel 검색
-        if (searchValue.length <= 1) {
+        if (searchValue.length <= 0) {
           setSearchListByChannel([]);
           setTotalLength(0);
           setTargetIndex(-1);

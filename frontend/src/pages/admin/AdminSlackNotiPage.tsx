@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import SlackNotiSearchBar from "@/components/Search/SlackNotiSearch/SlackNotiSearchBar";
 import {
@@ -14,6 +14,7 @@ import {
 const AdminSlackNotiPage = () => {
   const receiverInputRef = useRef<HTMLInputElement>(null);
   const msgTextAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
   const renderReceiverInput = (title: string) => {
     if (receiverInputRef.current) receiverInputRef.current.value = title;
@@ -63,6 +64,16 @@ const AdminSlackNotiPage = () => {
       }
   };
 
+  const checkInputs = () => {
+    setIsDisabled(
+      !receiverInputRef.current?.value || !msgTextAreaRef.current?.value
+    );
+  };
+
+  useEffect(() => {
+    checkInputs();
+  }, []);
+
   return (
     <WrapperStyled>
       <TitleContainerStyled>
@@ -96,8 +107,6 @@ const AdminSlackNotiPage = () => {
               </CapsuleButtonStyled>
             );
           })}
-          <CapsuleButtonStyled>사물함 대여</CapsuleButtonStyled>
-          {/* TODO : 사물함 대여일때 템플릿 */}
         </CapsuleWappingStyled>
       </ContainerStyled>
       <ContainerStyled>
@@ -110,19 +119,24 @@ const AdminSlackNotiPage = () => {
             <SlackNotiSearchBar
               searchInput={receiverInputRef}
               renderReceiverInput={renderReceiverInput}
+              checkInputs={checkInputs}
             />
           </FormContainerStyled>
           <FormContainerStyled>
             <FormSubTitleStyled>
               메시지 내용<span>*</span>
             </FormSubTitleStyled>
-            <FormTextareaStyled ref={msgTextAreaRef} />
+            <FormTextareaStyled ref={msgTextAreaRef} onChange={checkInputs} />
           </FormContainerStyled>
           <FormButtonContainerStyled>
             <FormButtonStyled onClick={initializeInputandTextArea}>
               초기화
             </FormButtonStyled>
-            <FormButtonStyled primary={true} disabled={false} onClick={submit}>
+            <FormButtonStyled
+              primary={true}
+              disabled={isDisabled}
+              onClick={submit}
+            >
               보내기
             </FormButtonStyled>
           </FormButtonContainerStyled>
@@ -244,7 +258,9 @@ const FormButtonContainerStyled = styled.div`
   justify-content: space-between;
 `;
 
-const FormButtonStyled = styled.div<{ primary?: boolean; disabled?: boolean }>`
+const FormButtonStyled = styled.button<{ primary?: boolean }>`
+  width: auto;
+  height: auto;
   padding: 10px 16px;
   font-size: 0.875rem;
   background-color: ${(props) =>
@@ -253,10 +269,14 @@ const FormButtonStyled = styled.div<{ primary?: boolean; disabled?: boolean }>`
   font-weight: 700;
   border: 1px solid #eee;
   border-radius: 4px;
-  opacity: ${(props) => (props.disabled ? "0.3" : "1")};
   cursor: pointer;
   :hover {
     opacity: 0.85;
   }
+  :disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+  }
 `;
+
 export default AdminSlackNotiPage;
