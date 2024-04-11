@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import SlackNotiSearchBarList from "@/components/Search/SlackNotiSearch/SlackNotiSearchBarList";
+import SlackNotiSearchBarList from "@/components/SlackNoti/SlackNotiSearch/SlackNotiSearchBarList";
 import { ISlackChannel, SlackChannels } from "@/assets/data/SlackAlarm";
 import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
 import useOutsideClick from "@/hooks/useOutsideClick";
@@ -10,11 +10,9 @@ import useOutsideClick from "@/hooks/useOutsideClick";
 const SlackNotiSearchBar = ({
   searchInput,
   renderReceiverInput,
-  checkInputs,
 }: {
   searchInput: React.RefObject<HTMLInputElement>;
   renderReceiverInput: (title: string) => void;
-  checkInputs: () => void;
 }) => {
   const [searchListById, setSearchListById] = useState<any[]>([]);
   const [searchListByChannel, setSearchListByChannel] = useState<
@@ -25,9 +23,11 @@ const SlackNotiSearchBar = ({
   const [targetIndex, setTargetIndex] = useState<number>(-1);
   const [searchValue, setSearchValue] = useState<string>("");
 
-  const debounce = (func: Function, wait: number) => {
-    checkInputs();
-
+  const debounce = (
+    func: Function,
+    wait: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     let timeout: NodeJS.Timeout;
 
     return function executedFunction(...args: any[]) {
@@ -136,7 +136,7 @@ const SlackNotiSearchBar = ({
           onFocus={() => {
             setOnFocus(true);
           }}
-          onChange={debounce(typeSearchInput, 300)}
+          onChange={(e) => debounce(typeSearchInput, 300, e)}
           onKeyDown={handleInputKey}
         />
         {onFocus && searchInput.current?.value && totalLength > 0 && (
@@ -162,7 +162,7 @@ const SearchBarWrapStyled = styled.div`
 const FormInputStyled = styled.input`
   width: 100%;
   height: 40px;
-  background-color: #fff;
+  background-color: var(--white);
   border-radius: 8px;
   border: 1px solid #eee;
   :focus {

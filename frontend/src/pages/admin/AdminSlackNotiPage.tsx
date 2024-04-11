@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import styled from "styled-components";
-import SlackNotiSearchBar from "@/components/Search/SlackNotiSearch/SlackNotiSearchBar";
+import SlackNotiSearchBar from "@/components/SlackNoti/SlackNotiSearch/SlackNotiSearchBar";
 import {
   ISlackChannel,
   SlackAlarmTemplates,
@@ -14,7 +14,6 @@ import {
 const AdminSlackNotiPage = () => {
   const receiverInputRef = useRef<HTMLInputElement>(null);
   const msgTextAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
   const renderReceiverInput = (title: string) => {
     if (receiverInputRef.current) receiverInputRef.current.value = title;
@@ -64,16 +63,6 @@ const AdminSlackNotiPage = () => {
       }
   };
 
-  const checkInputs = () => {
-    setIsDisabled(
-      !receiverInputRef.current?.value || !msgTextAreaRef.current?.value
-    );
-  };
-
-  useEffect(() => {
-    checkInputs();
-  }, []);
-
   return (
     <WrapperStyled>
       <TitleContainerStyled>
@@ -119,24 +108,19 @@ const AdminSlackNotiPage = () => {
             <SlackNotiSearchBar
               searchInput={receiverInputRef}
               renderReceiverInput={renderReceiverInput}
-              checkInputs={checkInputs}
             />
           </FormContainerStyled>
           <FormContainerStyled>
             <FormSubTitleStyled>
               메시지 내용<span>*</span>
             </FormSubTitleStyled>
-            <FormTextareaStyled ref={msgTextAreaRef} onChange={checkInputs} />
+            <FormTextareaStyled ref={msgTextAreaRef} />
           </FormContainerStyled>
           <FormButtonContainerStyled>
             <FormButtonStyled onClick={initializeInputandTextArea}>
               초기화
             </FormButtonStyled>
-            <FormButtonStyled
-              primary={true}
-              disabled={isDisabled}
-              onClick={submit}
-            >
+            <FormButtonStyled primary={true} onClick={submit}>
               보내기
             </FormButtonStyled>
           </FormButtonContainerStyled>
@@ -272,10 +256,6 @@ const FormButtonStyled = styled.button<{ primary?: boolean }>`
   cursor: pointer;
   :hover {
     opacity: 0.85;
-  }
-  :disabled {
-    cursor: not-allowed;
-    opacity: 0.3;
   }
 `;
 
