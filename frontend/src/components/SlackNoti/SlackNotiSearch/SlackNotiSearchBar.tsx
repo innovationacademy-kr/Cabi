@@ -21,11 +21,7 @@ const SlackNotiSearchBar = ({
   const [targetIndex, setTargetIndex] = useState<number>(-1);
   const [searchValue, setSearchValue] = useState<string>("");
 
-  const debounce = (
-    func: Function,
-    wait: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const debounce = (func: Function, wait: number) => {
     let timeout: NodeJS.Timeout;
 
     return function executedFunction(...args: any[]) {
@@ -123,6 +119,7 @@ const SlackNotiSearchBar = ({
       }
     }
   };
+  console.log(onFocus, searchInput.current?.value, totalLength);
 
   return (
     <>
@@ -134,7 +131,7 @@ const SlackNotiSearchBar = ({
           onFocus={() => {
             setOnFocus(true);
           }}
-          onChange={(e) => debounce(typeSearchInput, 300, e)}
+          onChange={debounce(typeSearchInput, 300)}
           onKeyDown={handleInputKey}
         />
         {onFocus && searchInput.current?.value && totalLength > 0 && (
