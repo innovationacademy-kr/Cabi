@@ -34,33 +34,30 @@ const AdminSlackNotiPage = () => {
 
   const submit = async () => {
     if (!receiverInputRef.current?.value) {
-      alert("받는이를 입력해주세요.");
+      return alert("받는이를 입력해주세요.");
     } else if (!msgTextAreaRef.current?.value) {
-      alert("메시지 내용을 입력해주세요.");
-    } else
-      try {
-        if (receiverInputRef.current!.value[0] === "#") {
-          let channelId = SlackChannels.find((channel) => {
-            return receiverInputRef.current!.value === channel.title;
-          })?.channelId;
-          await axiosSendSlackNotificationToChannel(
-            receiverInputRef.current.value,
-            msgTextAreaRef.current!.value,
-            channelId
-          );
-        } else {
-          await axiosSendSlackNotificationToUser(
-            receiverInputRef.current.value,
-            msgTextAreaRef.current!.value
-          );
-        }
-        // TODO : 성공적으로 보냈다는 모달?
-      } catch (error: any) {
-        // TODO : response modal? alert?
-        // setModalTitle(error.response.data.message);
-        // setModalContent(error.response.data.message);
-        // setHasErrorOnResponse(true);
+      return alert("메시지 내용을 입력해주세요.");
+    }
+
+    try {
+      if (receiverInputRef.current!.value[0] === "#") {
+        let channelId = SlackChannels.find((channel) => {
+          return receiverInputRef.current!.value === channel.title;
+        })?.channelId;
+        await axiosSendSlackNotificationToChannel(
+          receiverInputRef.current.value,
+          msgTextAreaRef.current!.value,
+          channelId
+        );
+      } else {
+        await axiosSendSlackNotificationToUser(
+          receiverInputRef.current.value,
+          msgTextAreaRef.current!.value
+        );
       }
+    } catch (error: any) {
+      alert(error.response.data.message);
+    }
   };
 
   return (

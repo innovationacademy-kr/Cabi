@@ -5,8 +5,6 @@ import { ISlackChannel, SlackChannels } from "@/assets/data/SlackAlarm";
 import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
 import useOutsideClick from "@/hooks/useOutsideClick";
 
-// TODO : 리팩토링
-
 const SlackNotiSearchBar = ({
   searchInput,
   renderReceiverInput,
