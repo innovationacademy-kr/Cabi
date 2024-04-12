@@ -58,7 +58,7 @@ const EmptyClubListTextStyled = styled.div`
 const CabiLogoStyled = styled.div`
   width: 35px;
   height: 35px;
-  margin-bottom: 2rem;
+  margin-bottom: 10px;
   svg {
     .logo_svg__currentPath {
       fill: var(--main-color);

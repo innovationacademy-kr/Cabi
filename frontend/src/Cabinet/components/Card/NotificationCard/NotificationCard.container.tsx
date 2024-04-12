@@ -3,7 +3,6 @@ import {
   requestFcmAndGetDeviceToken,
 } from "@/Cabinet/firebase/firebase-messaging-sw";
 import { useEffect, useMemo, useState } from "react";
-import { set } from "react-ga";
 import NotificationCard from "@/Cabinet/components/Card/NotificationCard/NotificationCard";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {

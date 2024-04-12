@@ -67,7 +67,7 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
         ? props.title
         : `${props.userCount} / ${props.maxUser}`;
     } else if (props.lentType === "CLUB")
-      cabinetLabelText = props.title ? props.title : "동아리";
+      cabinetLabelText = props.name ? props.name : "동아리";
   } else {
     if (props.status === "IN_SESSION") cabinetLabelText = "대기중";
     else if (props.status === "PENDING") cabinetLabelText = "오픈예정";

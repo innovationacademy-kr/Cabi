@@ -36,12 +36,19 @@
 - 캐비닛마다 `READ` / `UPDATE` 가능한 메모장을 제공합니다.
   - 공유 캐비닛의 경우, 캐비닛 사용자들끼리만 공유 가능한 메모장을 제공합니다.
 
+### 서비스 이용안내
+
+- https://cabi.oopy.io/d208e0c9-1022-4c88-be6d-94f191899111
+
 ### 기술적 도전
 
 - 지속할 수 있고, 확장할 수 있는 서비스를 지향하고, 한정된 자원으로 **증가하는 사용자**들에게 양질의 서비스를 제공하기 위해 **Cabi 팀**은 다음과 같이 노력했습니다:
 
 #### [Common](https://github.com/innovationacademy-kr/42cabi/)
 
+- CI 워크플로우를 구축하여 빌드, 테스트를 자동화하여 개발자들의 생산성을 높였습니다.
+- CD 워크플로우를 구축하여 배포과정을 자동화하여 안정적인 서비스를 제공했습니다.
+- 코드 리뷰를 통해 팀원들의 코드 품질을 향상시키고, 팀원들 간의 지식 공유를 통해 개발자들의 역량을 향상시켰습니다.
 - 유지/보수와 기능 추가가 용이하도록 코딩 컨벤션을 정하고, 문서화 작업 및 이슈 관리를 체계화했습니다.
 - Notion, Slack 등의 협업 툴들을 이용하여 팀원 간 정보 시차와 격차를 줄였습니다.
 - 주기적이지만 유동적인 회의를 통해 목표와 분업을 명확히 하여 효과적인 협업을 진행했습니다.
@@ -58,11 +65,10 @@
 #### [BackEnd](https://github.com/innovationacademy-kr/42cabi/tree/dev/backend)
 
 - 사용자가 층별로 캐비닛 정보를 조회할 때 빠른 응답속도를 위해 쿼리 최적화로 성능을 향상했습니다.
-- 공유 캐비닛 서비스를 구현하며 캐비닛 대여/반납 시 발생할 수 있는 여러 경우를 원활하게 제어하기 위해 캐비닛 상태에 따라 처리하게끔 DFA 알고리즘을 적용했습니다.
-- 동시에 들어오는 요청에 대해 특정 요청이 실패할 경우, 무결성을 위해 대여/반납의 과정을 트랜잭션으로 관리하였으며 격리 수준 구별로 데드락을 방지했습니다.
-- 블랙홀에 빠진 사용자(퇴학 처리된 사용자)를 적절하게 처리하도록 42API를 사용하였고 블랙홀 스케줄링을 고안, 적용했습니다.
-- 기존 버전에서 Express.js로 작성된 코드를 IoC, DI, AOP를 이용, 유지보수에 유리한 Nest.js로 포팅했습니다.
-- 불필요한 정보를 저장하는 컬럼을 제거, 트랜잭션의 로직을 재구성하는 등 DB 구조를 개선했습니다.
+- 공유 캐비닛에서 발생하는 동시성 문제를 해결하기 위해 적절한 락 전략을 구성하고, 데드락을 방지하는 로직을 구현했습니다.
+- 블랙홀에 빠진 사용자(퇴학 처리된 사용자)를 적절하게 처리하기 위해 스케줄러를 구성하여 자동으로 해당 사용자의 접근 및 권한을 정리하고 시스템에서 안전하게 제거하도록 했습니다.
+- 연체/대여/반납 등 중요한 이벤트에 대해 사용자에게 알림을 제공함으로써 사용자가 서비스를 더욱 편리하게 이용할 수 있도록 했습니다.
+- 로깅, 인증과 같은 횡단 관심사에 대해 AOP를 적용하여 중복되는 코드를 줄이고, 유지보수성을 높였습니다.
 
 <br/>
 
@@ -80,9 +86,6 @@
     <td>컴파일 타임에 에러를 검출하여 서비스 과정에서 발생할 수 있는 오류를 최소화했습니다.</td>
   </tr>
   <tr>
-    <td><img src="https://eslint.org/icon-512.png" width="15px" alt="_icon" /> ESLint</td>
-    <td>코딩 컨벤션에 위배되거나 안티 패턴을 미리 검출하여 에러 발생 요소를 줄였습니다.</td>
-  </tr>
   <tr>
     <td><img src="https://creazilla-store.fra1.digitaloceanspaces.com/icons/3256745/file-type-light-prettier-icon-md.png" width="15px" alt="_icon" /> Prettier</td>
     <td>기본적인 코딩룰 적용으로 가독성 향상 및 코드 양식을 통일했습니다.</td>
@@ -106,24 +109,17 @@
   </tr>
   <tr>
     <td rowspan="5" align="center">Back-End</td>
-    <td><img src="https://docs.nestjs.com/assets/logo-small.svg" width="15px" alt="_icon" /> NestJS</td>
-    <td>Express.js 대비 낮은 자유도로 협업에 적합한 프레임워크로 판단했고, IoC, DI, AOP를 통해 유지보수성을 높였습니다.</td>
+    <td><img src="https://cdn.simpleicons.org/spring/#6DB33F.svg" width="15px" alt="_icon" /> Spring Framework</td>
+    <td>Spring Framework 기반의 프로젝트로, 다양한 레퍼런스와 라이브러리를 활용하여 안정적인 서비스를 구축했습니다.</td>
   </tr>
   <tr>
     <td><img src="https://static-00.iconduck.com/assets.00/mariadb-icon-512x340-txozryr2.png" width="18px" alt="_icon" /> MariaDB</td>
     <td>활성화된 커뮤니티를 통해 여러 레퍼런스를 이용, 개발 중 발생하는 여러 문제들을 해결했습니다.</td>
   </tr>
   <tr>
-    <td><img src="https://seeklogo.com/images/T/typeorm-logo-F243B34DEE-seeklogo.com.png" width="15px" alt="_icon" /> TypeORM</td>
-    <td>Raw query로 작성하는 것보다 용이하고 추후 다른 DBMS로 쉽게 전환 가능한 라이브러리로, 이를 이용해 유지보수성을 높였습니다.</td>
+  <tr>
   </tr>
   <tr>
-    <td><img src="https://static-00.iconduck.com/assets.00/swagger-icon-512x512-halz44im.png" width="15px" alt="_icon" /> Swagger</td>
-    <td>명확한 HTTP API 명세를 통해 프론트엔드/백엔드의 원활한 협업을 이뤘습니다.</td>
-  </tr>
-  <tr>
-    <td><img src="http://www.passportjs.org/images/logo.svg" width="15px" alt="_icon" /> Passport</td>
-    <td>OAuth2 인증 방식 적용에 용이한 라이브러리로, 서버 자체 토큰 및 42 인트라 인증에 사용했습니다.</td>
   </tr>
   <tr>
     <td rowspan="5" align="center">Infra</td>
@@ -135,16 +131,16 @@
     <td>비용효율적이고 신뢰도가 높은 웹서비스로 판단, EC2/RDS/S3/CloudFront 등의 솔루션들을 사용하여 신속하고 안정적인 서비스 환경을 구성했습니다.</td>
   </tr>
   <tr>
-    <td><img src="https://raw.githubusercontent.com/unitech/pm2/master/pres/pm2.20d3ef.png" width="40px" alt="_icon" />PM2</td>
-    <td>서버 앱 프로세스의 명확한 관리와 무중단 서비스에 사용했습니다.</td>
-  </tr>
-  <tr>
     <td><img src="https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png" width="15px" alt="_icon" /> Docker</td>
-      <td>컨테이너를 통해 통일된 로컬 개발환경을 설정하여 개발의 호환성을 높였습니다.</td>
+      <td>컨테이너를 통해 프러덕션과 로컬 환경의 동일성을 유지하고, 배포과정을 자동화하여 개발환경의 일관성을 유지했습니다.</td>
   </tr>
   <tr>
     <td><img src="https://avatars.githubusercontent.com/u/44036562?s=280&v=4" width="15px" alt="_icon" /> Github Actions</td>
     <td>CI/CD를 통해 테스트, 배포를 자동화하여 무중단 서비스를 지원, 효율성과 효과성을 높였습니다.</td>
+  </tr>
+  <tr>
+    <td><img src="https://cdn.simpleicons.org/prometheus/#E6522C.svg" width="15px" alt="_icon" /> <img src="https://cdn.simpleicons.org/grafana/##F46800.svg" width="15px" alt="_icon" />Prometheus/Grafana</td>
+    <td>애플리케이션 서버의 상태를 모니터링하여 이상 징후를 빠르게 파악하고 대응하여 서비스의 안정성을 높였습니다.</td>
   </tr>
 </table>
 
@@ -167,8 +163,8 @@
 | [🍎 skim](https://github.com/subin195-09) | [🍪 spark](https://github.com/Hyunja27) | [✏️yooh](https://github.com/oyhoyhk) | [🪀 yoyoo](https://github.com/Yoowatney) | [🎒 yubchoi](https://github.com/yubinquitous) |
 | ----------------------------------------- | --------------------------------------- | ------------------------------------ | ---------------------------------------- | --------------------------------------------- |
 
-| [ 🌑 daewoole](https://github.com/LeeDaeWook) | [🐝 hyungnoh](https://github.com/YESHYUNGSEOK) | [원 jpark2](https://github.com/Z1park) | [🎨 jusohn](https://github.com/junyoung2015) | [🤓 seong-hui ](https://github.com/seong-hui) | [🚀 wchae](https://github.com/enaenen) |
-| --------------------------------------------- | ---------------------------------------------- | -------------------------------------- | -------------------------------------------- | --------------------------------------------- | -------------------------------------- |
+| [ 🌑 daewoole](https://github.com/LeeDaeWook) | [🐝 hyungnoh](https://github.com/YESHYUNGSEOK) | [🐻‍❄️ jpark2](https://github.com/Z1park) | [🎨 jusohn](https://github.com/junyoung2015) | [🤓 seonghmo ](https://github.com/seong-hui) | [🚀 wchae](https://github.com/enaenen) |
+| --------------------------------------------- | ---------------------------------------------- | -------------------------------------- | -------------------------------------------- | -------------------------------------------- | -------------------------------------- |
 
 | [ 🐶 surlee](https://github.com/Elineely) | [ 🐣 hyowchoi](https://github.com/chyo1/) | [ 👽 sohyupar](https://github.com/saewoo1) | [🦝 jimchoi](https://github.com/jimchoi9) | [ 🛼 jeekim](https://github.com/jnkeniaem) | [🍾 miyu](https://github.com/Minkyu01) | [🧸 gykoh](https://github.com/gykoh42) |
 | ----------------------------------------- | ----------------------------------------- | ------------------------------------------ | ----------------------------------------- | ------------------------------------------ | -------------------------------------- | -------------------------------------- |

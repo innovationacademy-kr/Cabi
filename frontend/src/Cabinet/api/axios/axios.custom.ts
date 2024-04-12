@@ -341,7 +341,7 @@ export const axiosAdminAuthLogin = async (
   }
 };
 
-const axiosAdminCabinetInfoByIdURL = "/v4/admin/cabinets/";
+const axiosAdminCabinetInfoByIdURL = "/v4/cabinets/";
 export const axiosAdminCabinetInfoByCabinetId = async (
   cabinetId: number | null
 ): Promise<any> => {

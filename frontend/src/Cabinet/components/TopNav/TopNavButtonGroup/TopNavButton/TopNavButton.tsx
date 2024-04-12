@@ -34,7 +34,8 @@ const TopNavButtonStyled = styled.div<{
   height: 32px;
   margin-right: 10px;
   cursor: pointer;
-  display: ${({ disable }) => (disable ? "none" : "block")};
+  /* display: ${({ disable }) => (disable ? "none" : "block")}; */
+  /* visibility: ${({ disable }) => (disable ? "hidden" : "visible")}; */
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       opacity: 0.9;

@@ -1,5 +1,11 @@
 package org.ftclub.cabinet.auth.service;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.concurrent.ExecutionException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
@@ -14,13 +20,6 @@ import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.concurrent.ExecutionException;
-
 /**
  * 인증 관련 비즈니스 로직을 처리하는 서비스입니다.
  */
@@ -28,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 public class AuthFacadeService {
 
+	private static final String REDIRECT_COOKIE_NAME = "redirect";
 	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
 	private final AdminQueryService adminQueryService;
@@ -35,10 +35,8 @@ public class AuthFacadeService {
 	private final UserOauthService userOauthService;
 	private final AdminOauthService adminOauthService;
 	private final AuthPolicyService authPolicyService;
-
 	private final TokenProvider tokenProvider;
 	private final CookieManager cookieManager;
-	private static final String REDIRECT_COOKIE_NAME = "redirect";
 
 	/**
 	 * 유저 로그인 페이지로 리다이렉트합니다.
@@ -83,6 +81,23 @@ public class AuthFacadeService {
 		FtProfile profile = userOauthService.getProfileByCode(code);
 		User user = userQueryService.findUser(profile.getIntraName())
 				.orElseGet(() -> userCommandService.createUserByFtProfile(profile));
+		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
+		Cookie cookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
+		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+		if (cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME) != null) {
+			String redirect = cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME);
+			cookieManager.deleteCookie(res, REDIRECT_COOKIE_NAME);
+			res.sendRedirect(redirect);
+			return;
+		}
+		res.sendRedirect(authPolicyService.getMainHomeUrl());
+	}
+
+	public void handlePublicLogin(HttpServletRequest req, HttpServletResponse res, String name)
+			throws IOException {
+
+		User user = userQueryService.findUser(name).orElseThrow(
+				ExceptionStatus.NOT_FOUND_USER::asServiceException);
 		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
 		Cookie cookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
 		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());

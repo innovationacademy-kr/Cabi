@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Log4j2
 public class AllRequestLogInterceptor implements HandlerInterceptor {
 
+	private final static String PAYLOAD_NAME = "name";
 	private final static String USER_ID = "userId";
 	private static final List<String> IP_HEADERS = Arrays.asList("X-Forwarded-For",
 			"Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR");
@@ -68,6 +69,7 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 	private String getUserId(HttpServletRequest request) {
 
 		JsonNode payloadJson = null;
+		final String NAME = "name";
 		try {
 			payloadJson = tokenValidator.getPayloadJson(
 					cookieManager.getCookieValue(request, jwtProperties.getMainTokenName()));
@@ -76,13 +78,20 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 			throw ExceptionStatus.JSON_PROCESSING_EXCEPTION.asControllerException();
 		}
 
-		if (payloadJson == null || payloadJson.get("name").isEmpty()) {
+		if (payloadJson == null || isValidPayLoadName(payloadJson)) {
 			String uuid = UUID.randomUUID().toString();
 			return uuid.substring(uuid.length() - 12);
 		}
 		return payloadJson
-				.get("name")
+				.get(PAYLOAD_NAME)
 				.asText();
+	}
 
+	private boolean isValidPayLoadName(JsonNode payloadJson) {
+
+		if (payloadJson.get(PAYLOAD_NAME) == null) {
+			return false;
+		}
+		return payloadJson.get(PAYLOAD_NAME).asText().isEmpty();
 	}
 }

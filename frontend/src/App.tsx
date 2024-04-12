@@ -1,3 +1,4 @@
+import PageTracker from "@/api/analytics/PageTracker";
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AvailablePage from "@/Cabinet/pages/AvailablePage";
@@ -34,6 +35,8 @@ const AdminHomePage = lazy(() => import("@/Cabinet/pages/admin/AdminHomePage"));
 function App(): React.ReactElement {
   return (
     <BrowserRouter>
+      {/* GA4 Page Tracking Component */}
+      <PageTracker />
       <Suspense fallback={<LoadingAnimation />}>
         <Routes>
           <Route path="/post-login" element={<PostLogin />} />
