@@ -62,8 +62,8 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' }}
         run: |
           cd frontend
-          mkdir -p dist/Cabinet/src/assets
-          mkdir -p dist/Presentation/src/assets
+          mkdir -p dist/src/Cabinet/assets
+          mkdir -p dist/src/Presentation/assets
           cp -r src/Cabinet/assets/images dist/src/Cabinet/assets
           cp -r src/Presentation/assets/images dist/src/Presentation/assets
           aws s3 sync ./dist s3://dev.cabi
