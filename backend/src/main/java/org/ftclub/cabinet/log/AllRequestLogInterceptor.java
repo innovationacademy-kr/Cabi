@@ -78,7 +78,7 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 			throw ExceptionStatus.JSON_PROCESSING_EXCEPTION.asControllerException();
 		}
 
-		if (payloadJson == null || isValidPayLoadName(payloadJson)) {
+		if (payloadJson == null || !isValidPayLoadName(payloadJson)) {
 			String uuid = UUID.randomUUID().toString();
 			return uuid.substring(uuid.length() - 12);
 		}
@@ -92,6 +92,6 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 		if (payloadJson.get(PAYLOAD_NAME) == null) {
 			return false;
 		}
-		return payloadJson.get(PAYLOAD_NAME).asText().isEmpty();
+		return !payloadJson.get(PAYLOAD_NAME).asText().isEmpty();
 	}
 }
