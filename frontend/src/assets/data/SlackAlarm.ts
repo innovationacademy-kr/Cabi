@@ -14,7 +14,12 @@ export const SlackChannels: ISlackChannel[] = [
   },
 ];
 
-export const SlackAlarmTemplates = [
+export interface ISlackAlarmTemplate {
+  title: string;
+  content: string;
+}
+
+export const SlackAlarmTemplates: ISlackAlarmTemplate[] = [
   {
     title: "점검 시작",
     content: `:alert::alert::alert:<Cabi 서비스 점검 공지>:alert::alert::alert:
