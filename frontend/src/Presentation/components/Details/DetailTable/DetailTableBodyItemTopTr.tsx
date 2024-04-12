@@ -116,13 +116,13 @@ const DetailTableBodyItemTopTr = ({
               // 발표 있을때
               <>
                 {tableHeadEntriesWithoutDate.map((head, idx) => {
-                  renderTableData(
+                  return renderTableData(
                     (!isAdmin && head[0] === "presentationLocation") ||
                       (isAdmin && head[0] === "presentationStatus")
                       ? "rightEnd"
                       : "",
                     idx,
-                    head[0] === "subject" ? itemInfo.item.subject! : "",
+                    head[0] === "subject" ? itemInfo.item.subject ?? "" : "",
                     head[0],
                     itemInfo.item
                   );
@@ -153,7 +153,6 @@ const DetailTableBodyItemTopTr = ({
     </>
   );
 };
-
 export default DetailTableBodyItemTopTr;
 
 const TopTrStyled = styled.tr<{
@@ -162,15 +161,12 @@ const TopTrStyled = styled.tr<{
 }>`
   width: 100%;
   text-align: center;
-
   & .leftEnd {
     border-radius: ${(props) => (props.open ? "10px 0 0 0" : "10px 0 0 10px")};
   }
-
   & .rightEnd {
     border-radius: ${(props) => (props.open ? "0 10px 0 0" : "0 10px 10px 0")};
   }
-
   @media (min-width: 1150px) {
     font-size: 18px;
     background-color: ${(props) =>
@@ -181,17 +177,14 @@ const TopTrStyled = styled.tr<{
         : "var(--full)"};
     height: 70px;
     line-height: 70px;
-
     & > td {
       padding: 0 10px;
     }
-
     & > td > div {
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
     }
-
     & button {
       width: 120px;
       height: 36px;
@@ -199,30 +192,25 @@ const TopTrStyled = styled.tr<{
       font-weight: bold;
       font-size: 1rem;
     }
-
     &:hover {
       cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
       background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
     }
   }
-
   @media (max-width: 1150px) {
     font-size: 16px;
     height: 40px;
     line-height: 40px;
     width: 100%;
     background-color: ${(props) => (props.open ? "#91B5FB" : "#3f69fd")};
-
     & > td {
       border-radius: ${(props) => (props.open ? "" : "10px 10px 0 0")};
     }
-
     & > td > #mobileTopDate {
       color: ${(props) => (props.open ? "var(--black)" : "var(--white)")};
       text-align: ${(props) => (props.open ? "center" : "start")};
       padding-left: 10px;
     }
-
     &:hover {
       cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     }
