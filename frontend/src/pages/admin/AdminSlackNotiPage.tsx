@@ -2,6 +2,7 @@ import { useRef } from "react";
 import styled from "styled-components";
 import SlackNotiSearchBar from "@/components/SlackNoti/SlackNotiSearchBar";
 import {
+  ISlackAlarmTemplate,
   ISlackChannel,
   SlackAlarmTemplates,
   SlackChannels,
@@ -67,7 +68,7 @@ const AdminSlackNotiPage = () => {
       </TitleContainerStyled>
       <ContainerStyled>
         <SubTitleStyled>자주 쓰는 채널</SubTitleStyled>
-        <CapsuleWappingStyled>
+        <CapsuleWrappingStyled>
           {SlackChannels.map((channel: ISlackChannel, idx: number) => {
             return (
               <CapsuleButtonStyled
@@ -78,22 +79,24 @@ const AdminSlackNotiPage = () => {
               </CapsuleButtonStyled>
             );
           })}
-        </CapsuleWappingStyled>
+        </CapsuleWrappingStyled>
       </ContainerStyled>
       <ContainerStyled>
         <SubTitleStyled>자주 쓰는 템플릿</SubTitleStyled>
-        <CapsuleWappingStyled>
-          {SlackAlarmTemplates.map((template: any, idx: number) => {
-            return (
-              <CapsuleButtonStyled
-                key={idx}
-                onClick={() => renderTemplateTextArea(template.title)}
-              >
-                {template.title}
-              </CapsuleButtonStyled>
-            );
-          })}
-        </CapsuleWappingStyled>
+        <CapsuleWrappingStyled>
+          {SlackAlarmTemplates.map(
+            (template: ISlackAlarmTemplate, idx: number) => {
+              return (
+                <CapsuleButtonStyled
+                  key={idx}
+                  onClick={() => renderTemplateTextArea(template.title)}
+                >
+                  {template.title}
+                </CapsuleButtonStyled>
+              );
+            }
+          )}
+        </CapsuleWrappingStyled>
       </ContainerStyled>
       <ContainerStyled>
         <SubTitleStyled>알림 보내기</SubTitleStyled>
@@ -164,7 +167,7 @@ const SubTitleStyled = styled.h2`
   margin-bottom: 20px;
 `;
 
-const CapsuleWappingStyled = styled.div`
+const CapsuleWrappingStyled = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
