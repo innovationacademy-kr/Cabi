@@ -32,7 +32,7 @@ const RecentPresentation = ({
   }, []);
 
   return (
-    <ConTainerStyled>
+    <ContainerStyled>
       <HeaderStyled>
         <TitleContainerStyled>
           <p>수요지식회</p>
@@ -55,13 +55,13 @@ const RecentPresentation = ({
       >
         발표신청
       </MobileRegisertButtonStyled>
-    </ConTainerStyled>
+    </ContainerStyled>
   );
 };
 
 export default RecentPresentation;
 
-const ConTainerStyled = styled.div`
+const ContainerStyled = styled.div`
   padding-top: 60px;
   display: flex;
   flex-direction: column;
