@@ -1,4 +1,5 @@
 import { addDays, addMonths, getDay, startOfMonth } from "date-fns";
+import { IDate } from "../components/Details/DetailContent.container";
 
 /**
  * @description 주어진 날짜부터 주어진 요일 이 되는 첫번째 날짜를 구함
@@ -111,12 +112,39 @@ export const calculateAvailableDaysInWeeks = (
   return availableDates;
 };
 
-export const makeIDateObj = (date: Date) => {
-  let dateISO = date.toISOString().substring(0, 10).split("-");
+export const makeIDateObj = (date: Date): IDate => {
+  const dateISO = toISOStringwithTimeZone(date).substring(0, 10).split("-");
 
   return {
     year: dateISO[0],
     month: dateISO[1],
     day: dateISO[2],
   };
+};
+
+const padTo2Digits = (num: number) => {
+  return `${Math.floor(Math.abs(num))}`.padStart(2, "0");
+};
+
+const getTimeZoneOffset = (date: Date): string => {
+  const offset = date.getTimezoneOffset();
+  const sign = offset > 0 ? "-" : "+";
+  return sign + padTo2Digits(offset / 60) + ":" + padTo2Digits(offset % 60);
+};
+
+export const toISOStringwithTimeZone = (date: Date): string => {
+  return (
+    date.getFullYear() +
+    "-" +
+    padTo2Digits(date.getMonth() + 1) +
+    "-" +
+    padTo2Digits(date.getDate()) +
+    "T" +
+    padTo2Digits(date.getHours()) +
+    ":" +
+    padTo2Digits(date.getMinutes()) +
+    ":" +
+    padTo2Digits(date.getSeconds()) +
+    getTimeZoneOffset(date)
+  );
 };

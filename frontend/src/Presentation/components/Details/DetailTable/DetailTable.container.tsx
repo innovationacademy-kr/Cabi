@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { IDate } from "@/Presentation/components/Details/DetailContent.container";
 import DetailTable from "@/Presentation/components/Details/DetailTable/DetailTable";
 import EditStatusModal from "@/Presentation/components/Modals/EditStatusModal/EditStatusModal";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
+import { toISOStringwithTimeZone } from "@/Presentation/utils/dateUtils";
 
 export interface IAdminCurrentModalStateInfo {
   statusModal: boolean;
@@ -82,7 +82,7 @@ const DetailTableContainer = ({
     // 발표가 없다면
     if (!item.id) {
       const date = new Date();
-      let dateISO = date.toISOString();
+      let dateISO = toISOStringwithTimeZone(date);
       const dateObj = new Date(dateISO);
 
       const itemDateObj = new Date(item.dateTime);

@@ -11,6 +11,7 @@ import {
 import {
   calculateAvailableDaysInWeeks,
   makeIDateObj,
+  toISOStringwithTimeZone,
 } from "@/Presentation/utils/dateUtils";
 import {
   AVAILABLE_WEEKS,
@@ -29,7 +30,7 @@ const DetailContentContainer = () => {
   const [presentationDetailInfo, setPresentationDetailInfo] = useState<
     IPresentationScheduleDetailInfo[] | null
   >(null);
-  const firstPresentationDate: IDate = { year: "2024", month: "3", day: "1" };
+  const firstPresentationDate: IDate = { year: "2024", month: "4", day: "24" };
   const { pathname } = useLocation();
   const isAdmin = pathname.includes("admin/presentation");
   const [isCurrentRender, setIsCurrentRender] =
@@ -88,7 +89,7 @@ const DetailContentContainer = () => {
               subject: null,
               summary: null,
               detail: null,
-              dateTime: day.toISOString(),
+              dateTime: toISOStringwithTimeZone(day),
               category: null,
               userName: null,
               presentationTime: null,
@@ -107,7 +108,7 @@ const DetailContentContainer = () => {
                 subject: null,
                 summary: null,
                 detail: null,
-                dateTime: day.toISOString(),
+                dateTime: toISOStringwithTimeZone(day),
                 category: null,
                 userName: null,
                 presentationTime: null,
