@@ -10,6 +10,9 @@
   --gray-color: #7b7b7b;
   --lightgray-color: #f5f5f5;
   --bg-shadow: rgba(0, 0, 0, 0.4);
+  /* 수요지식회 (구 까비지식회) */
+  --presentation-main-color: #3f69fd;
+  /* --presentation-sub-color: #3375f6; */
 
   /* cabinet color variable */
   --mine: #47ffa7;
@@ -164,4 +167,8 @@ input {
 
 .cabiButton {
   -webkit-tap-highlight-color: transparent;
+}
+
+.domainButtonActive {
+  color: var(--main-color) !important;
 }
