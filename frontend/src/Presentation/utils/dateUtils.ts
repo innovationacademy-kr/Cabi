@@ -1,5 +1,5 @@
 import { addDays, addMonths, getDay, startOfMonth } from "date-fns";
-import { IDate } from "../components/Details/DetailContent.container";
+import { IDate } from "@/Presentation/components/Details/DetailContent.container";
 
 /**
  * @description 주어진 날짜부터 주어진 요일 이 되는 첫번째 날짜를 구함
@@ -113,12 +113,13 @@ export const calculateAvailableDaysInWeeks = (
 };
 
 export const makeIDateObj = (date: Date): IDate => {
-  const dateISO = toISOStringwithTimeZone(date).substring(0, 10).split("-");
-
+  const [year, month, day] = toISOStringwithTimeZone(date)
+    .substring(0, 10)
+    .split("-");
   return {
-    year: dateISO[0],
-    month: dateISO[1],
-    day: dateISO[2],
+    year,
+    month,
+    day,
   };
 };
 
