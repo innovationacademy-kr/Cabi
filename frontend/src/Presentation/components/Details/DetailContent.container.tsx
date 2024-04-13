@@ -67,7 +67,7 @@ const DetailContentContainer = () => {
             requestDate.year + "-" + requestDate.month
           );
 
-      const objAry: IPresentationScheduleDetailInfo[] =
+      const objArr: IPresentationScheduleDetailInfo[] =
         response.data.forms || [];
       const availableDays = calculateAvailableDaysInWeeks(
         new Date(
@@ -80,7 +80,7 @@ const DetailContentContainer = () => {
         1
       );
       const mergedPresentationInfo = availableDays.map((day) => {
-        const existingPresentation = objAry.find((p) => {
+        const existingPresentation = objArr.find((p) => {
           const presentationDate = new Date(p.dateTime);
           return (
             presentationDate.getFullYear() === day.getFullYear() &&
