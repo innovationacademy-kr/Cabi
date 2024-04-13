@@ -127,12 +127,28 @@ const padTo2Digits = (num: number) => {
   return `${Math.floor(Math.abs(num))}`.padStart(2, "0");
 };
 
+/**
+ * @description Date 객체의 타임존 오프셋을 문자열로 반환
+ *
+ * @param date Date 객체
+ *
+ * @returns 타임존 오프셋 문자열 (±HH:mm) (e.g., +09:00)
+ */
 const getTimeZoneOffset = (date: Date): string => {
   const offset = date.getTimezoneOffset();
+  // NOTE: offset 은 UTC 시간과의 차이를 분 단위로 나타냄
   const sign = offset > 0 ? "-" : "+";
+  // NOTE: 시차를 시:분 형식으로 변환
   return sign + padTo2Digits(offset / 60) + ":" + padTo2Digits(offset % 60);
 };
 
+/**
+ * @description toISOString() 와 같이 ISO 8601 형식의 문자열을 반환하지만, 타임존 오프셋을 포함
+ *
+ * @param date Date 객체
+ *
+ * @returns ISO 8601 형식의 문자열 (YYYY-MM-DDTHH:mm:ss±HH:mm) (e.g., 2021-08-31T23:59:59+09:00)
+ */
 export const toISOStringwithTimeZone = (date: Date): string => {
   return (
     date.getFullYear() +
