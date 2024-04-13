@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import LeftNav from "@/Presentation/components/LeftNav/LeftNav";
@@ -34,7 +33,7 @@ const Layout = (): JSX.Element => {
 
   useEffect(() => {
     root.style.setProperty("--main-color", "var(--presentation-main-color)");
-    // root.style.setProperty("--sub-color", "");
+    root.style.setProperty("--sub-color", "var(--presentation-sub-color)");
   }, []);
 
   const handleClickBg = () => {
