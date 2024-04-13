@@ -25,6 +25,43 @@ export interface IDate {
   day: string;
 }
 
+const createEmptyPresentation = (day: Date) => ({
+  id: null,
+  subject: null,
+  summary: null,
+  detail: null,
+  dateTime: toISOStringwithTimeZone(day),
+  category: null,
+  userName: null,
+  presentationTime: null,
+  presentationStatus: null,
+  presentationLocation: null,
+});
+
+const findExistingPresentation = (
+  presentations: IPresentationScheduleDetailInfo[],
+  day: Date
+) => {
+  return presentations.find((p) => {
+    const presentationDate = new Date(p.dateTime);
+    return (
+      presentationDate.getFullYear() === day.getFullYear() &&
+      presentationDate.getMonth() === day.getMonth() &&
+      presentationDate.getDate() === day.getDate()
+    );
+  });
+};
+
+const mergePresentationsWithDays = (
+  presentations: IPresentationScheduleDetailInfo[],
+  days: Date[]
+) => {
+  return days.map((day) => {
+    const existingPresentation = findExistingPresentation(presentations, day);
+    return existingPresentation || createEmptyPresentation(day);
+  });
+};
+
 const DetailContentContainer = () => {
   const [currentDate, setCurrentDate] = useState<IDate | null>(null);
   const [todayDate, setTodayDate] = useState<IDate | null>(null);
@@ -39,7 +76,6 @@ const DetailContentContainer = () => {
 
   useEffect(() => {
     const tmpTodayDate = makeIDateObj(new Date());
-
     if (
       !(
         todayDate?.year === tmpTodayDate.year ||
@@ -48,7 +84,6 @@ const DetailContentContainer = () => {
       )
     )
       setTodayDate(tmpTodayDate);
-
     setCurrentDate(tmpTodayDate);
   }, []);
 
@@ -57,18 +92,18 @@ const DetailContentContainer = () => {
     if (currentDate) getPresentationSchedule(currentDate);
   }, [currentDate, isCurrentRender]);
 
+  const fetchPresentationData = async (year: string, month: string) => {
+    return !isAdmin
+      ? await axiosGetPresentationSchedule(year + "-" + month)
+      : await getAdminPresentationSchedule(year + "-" + month);
+  };
+
   const getPresentationSchedule = async (requestDate: IDate) => {
     try {
-      const response = !isAdmin
-        ? await axiosGetPresentationSchedule(
-            requestDate.year + "-" + requestDate.month
-          )
-        : await getAdminPresentationSchedule(
-            requestDate.year + "-" + requestDate.month
-          );
-
-      const objArr: IPresentationScheduleDetailInfo[] =
-        response.data.forms || [];
+      const response = await fetchPresentationData(
+        requestDate.year,
+        requestDate.month
+      );
       const availableDays = calculateAvailableDaysInWeeks(
         new Date(
           parseInt(requestDate.year),
@@ -79,30 +114,10 @@ const DetailContentContainer = () => {
         WEDNESDAY,
         1
       );
-      const mergedPresentationInfo = availableDays.map((day) => {
-        const existingPresentation = objArr.find((p) => {
-          const presentationDate = new Date(p.dateTime);
-          return (
-            presentationDate.getFullYear() === day.getFullYear() &&
-            presentationDate.getMonth() === day.getMonth() &&
-            presentationDate.getDate() === day.getDate()
-          );
-        });
-        return (
-          existingPresentation || {
-            id: null,
-            subject: null,
-            summary: null,
-            detail: null,
-            dateTime: toISOStringwithTimeZone(day),
-            category: null,
-            userName: null,
-            presentationTime: null,
-            presentationStatus: null,
-            presentationLocation: null,
-          }
-        );
-      });
+      const mergedPresentationInfo = mergePresentationsWithDays(
+        response.data.forms as IPresentationScheduleDetailInfo[],
+        availableDays
+      );
       setPresentationDetailInfo(mergedPresentationInfo);
     } catch (error) {
       console.error("Error fetching presentation schedule:", error);
