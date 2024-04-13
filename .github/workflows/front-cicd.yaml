@@ -73,7 +73,9 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           cd frontend
-          mkdir -p dist/src/assets
-          cp -r src/assets/images dist/src/assets
+          mkdir -p dist/src/Cabinet/assets
+          mkdir -p dist/src/Presentation/assets
+          cp -r src/Cabinet/assets/images dist/src/Cabinet/assets
+          cp -r src/Presentation/assets/images dist/src/Presentation/assets
           aws s3 sync ./dist s3://42cabi
           aws cloudfront create-invalidation --distribution-id E12WMB9HCNB1DT --paths '/*'
