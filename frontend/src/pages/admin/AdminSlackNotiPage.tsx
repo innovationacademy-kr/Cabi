@@ -1,5 +1,9 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/components/Modals/ResponseModal/ResponseModal";
 import SlackNotiSearchBar from "@/components/SlackNoti/SlackNotiSearchBar";
 import {
   ISlackAlarmTemplate,
@@ -15,6 +19,11 @@ import {
 const AdminSlackNotiPage = () => {
   const receiverInputRef = useRef<HTMLInputElement>(null);
   const msgTextAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
+  const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<string>("");
+  const [modalTitle, setModalTitle] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const renderReceiverInput = (title: string) => {
     if (receiverInputRef.current) receiverInputRef.current.value = title;
@@ -41,6 +50,7 @@ const AdminSlackNotiPage = () => {
     }
 
     try {
+      setIsLoading(true);
       if (receiverInputRef.current!.value[0] === "#") {
         let channelId = SlackChannels.find((channel) => {
           return receiverInputRef.current!.value === channel.title;
@@ -56,8 +66,13 @@ const AdminSlackNotiPage = () => {
           msgTextAreaRef.current!.value
         );
       }
+      setModalTitle("알림이 전송되었습니다");
     } catch (error: any) {
-      alert(error.response.data.message);
+      setHasErrorOnResponse(true);
+      setModalContent(error.response.data.message);
+    } finally {
+      setShowResponseModal(true);
+      setIsLoading(false);
     }
   };
 
@@ -120,12 +135,28 @@ const AdminSlackNotiPage = () => {
             <FormButtonStyled onClick={initializeInputandTextArea}>
               초기화
             </FormButtonStyled>
-            <FormButtonStyled primary={true} onClick={submit}>
+            <FormButtonStyled
+              primary={true}
+              onClick={submit}
+              disabled={isLoading}
+            >
               보내기
             </FormButtonStyled>
           </FormButtonContainerStyled>
         </FormWappingStyled>
       </ContainerStyled>
+      {showResponseModal &&
+        (hasErrorOnResponse ? (
+          <FailResponseModal
+            modalContents={modalContent}
+            closeModal={() => setShowResponseModal(false)}
+          />
+        ) : (
+          <SuccessResponseModal
+            modalTitle={modalTitle}
+            closeModal={() => setShowResponseModal(false)}
+          />
+        ))}
     </WrapperStyled>
   );
 };
