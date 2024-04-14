@@ -46,12 +46,12 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
         legends: { text: { fontSize: "14px" } },
         axis: { ticks: { text: { fontSize: "14px" } } },
         labels: { text: { fontSize: "14px" } },
-        textColor: "var(--color-text-normal)",
+        textColor: "var(--normal-text-color)",
         tooltip: {
           container: {
-            backgroundColor: "var(--color-background)",
-            boxShadow: "var(--border-shadow-200) 0 1px 2px",
-            color: "var(--color-text-normal)",
+            backgroundColor: "var(--bg-color)",
+            boxShadow: "var(--border-shadow-color-200) 0 1px 2px",
+            color: "var(--normal-text-color)",
           },
         },
       }}
@@ -63,9 +63,9 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
       colors={[
-        "var(--banned)",
-        "var(--expired)",
-        "var(--full)",
+        "var(--banned-color)",
+        "var(--expired-color)",
+        "var(--full-color)",
         "var(--main-color)",
       ]}
       // 사용불가와 사용 중은 헷갈릴 수 있으니 색 그대로

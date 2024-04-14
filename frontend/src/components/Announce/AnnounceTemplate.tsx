@@ -61,14 +61,14 @@ const AnnounceTemplateStyled = styled.div<{ backgroundColor: string }>`
   align-items: center;
   flex-direction: column;
   background-color: ${(props) => props.backgroundColor};
-  color: var(--color-background);
+  color: var(--bg-color);
 `;
 
 const TitleStyled = styled.h1`
   font-size: 5rem;
-  color: var(--mine);
+  color: var(--mine-color);
   font-family: "Do Hyeon", sans-serif;
-  filter: drop-shadow(0 0 0.75rem var(--mine));
+  filter: drop-shadow(0 0 0.75rem var(--mine-color));
   text-align: center;
   @media screen and (max-width: 768px) {
     font-size: 3.25rem;
@@ -122,7 +122,7 @@ const CabiImgStyled = styled.div`
 `;
 
 const ButtonStyled = styled.button`
-  box-shadow: 10px 10px 40px 0px var(--border-shadow-200);
+  box-shadow: 10px 10px 40px 0px var(--border-shadow-color-200);
 `;
 
 export default AnnounceTemplate;

@@ -220,7 +220,7 @@ const ModalContainerStyled = styled.div`
   top: 50%;
   left: 50%;
   width: 460px;
-  background: var(--color-background);
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -271,7 +271,7 @@ const ContentItemTitleStyled = styled.h3`
 `;
 
 const ContentItemInputStyled = styled.input`
-  border: 1px solid var(--color-line);
+  border: 1px solid var(--line-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -279,10 +279,10 @@ const ContentItemInputStyled = styled.input`
   text-indent: 20px;
   font-size: 1.125rem;
   /* cursor: input; */
-  color: var(--color-text-normal);
+  color: var(--normal-text-color);
 
   &::placeholder {
-    color: var(--gray-tmp-4);
+    color: var(--shared-gray-color-400);
   }
 `;
 
@@ -292,7 +292,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-100);
+  background: var(--bg-shadow-color-100);
   z-index: 1000;
 `;
 

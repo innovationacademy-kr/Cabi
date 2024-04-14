@@ -173,7 +173,7 @@ const ContainerStyled = styled.div`
   width: 100%;
   min-width: 0;
   min-height: 0;
-  background: var(--color-background);
+  background: var(--bg-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -210,7 +210,7 @@ const ContainerStyled = styled.div`
 `;
 
 const AdminHomeStyled = styled.div`
-  background: var(--color-background);
+  background: var(--bg-color);
   width: 100%;
   height: 100%;
   display: grid;

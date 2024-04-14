@@ -76,14 +76,14 @@ const LeftSectionNav = ({
           title="슬랙 캐비닛 채널 새창으로 열기"
         >
           문의하기
-          <LinkImg id="linknImg" stroke="var(--gray-tmp-5)" />
+          <LinkImg id="linknImg" stroke="var(--shared-gray-color-500)" />
         </SectionLinkStyled>
         <SectionLinkStyled
           onClick={() => onClickClubForm()}
           title="동아리 사물함 사용 신청서 새창으로 열기"
         >
           동아리 신청서
-          <LinkImg id="linknImg" stroke="var(--gray-tmp-5)" />
+          <LinkImg id="linknImg" stroke="var(--shared-gray-color-500)" />
         </SectionLinkStyled>
       </ProfileLeftNavOptionStyled>
       {isClub && <LeftSectionNavClubs />}
@@ -98,7 +98,7 @@ const LeftNavOptionStyled = styled.div<{
   min-width: 240px;
   height: 100%;
   padding: 32px 10px;
-  border-right: 1px solid var(--color-line);
+  border-right: 1px solid var(--line-color);
   font-weight: 300;
   position: relative;
 `;
@@ -110,13 +110,13 @@ const ProfileLeftNavOptionStyled = styled.div<{
   min-width: 240px;
   height: 100%;
   padding: 32px 10px;
-  border-right: 1px solid var(--color-line);
+  border-right: 1px solid var(--line-color);
   font-weight: 300;
   position: relative;
   & hr {
     width: 80%;
     height: 1px;
-    background-color: var(--gray-tmp-3);
+    background-color: var(--shared-gray-color-300);
     border: 0;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -129,13 +129,13 @@ export const FloorSectionStyled = styled.div`
   line-height: 40px;
   border-radius: 10px;
   text-indent: 20px;
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
   margin: 2px 0;
   cursor: pointer;
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--main-color);
-      color: var(--color-text-with-bg);
+      color: var(--text-with-bg-color);
     }
   }
 `;
@@ -150,7 +150,7 @@ const SectionLinkStyled = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
 
   #linknImg {
     width: 15px;
@@ -160,10 +160,10 @@ const SectionLinkStyled = styled.div`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--color-button-line);
+      color: var(--button-line-color);
 
       svg {
-        stroke: var(--color-button-line);
+        stroke: var(--button-line-color);
       }
     }
   }

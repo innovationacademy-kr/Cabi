@@ -24,7 +24,7 @@ const MultiToggleSwitch = <T,>({
 
     buttons?.forEach((button) => {
       if (button.className === initialState) {
-        button.style.color = "var(--color-text-with-bg)";
+        button.style.color = "var(--text-with-bg-color)";
         button.style.backgroundColor = "var(--main-color)";
       }
     });
@@ -38,11 +38,11 @@ const MultiToggleSwitch = <T,>({
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
-      button.style.color = "var(--color-text-normal)";
+      button.style.color = "var(--normal-text-color)";
       button.style.backgroundColor = "transparent";
     });
 
-    target.style.color = "var(--color-background)";
+    target.style.color = "var(--bg-color)";
     target.style.backgroundColor = "var(--main-color)";
 
     setState(target.className as React.SetStateAction<T>);
@@ -63,7 +63,7 @@ const WrapperStyled = styled.div`
   width: fit-content;
   display: flex;
   align-items: center;
-  background-color: var(--gray-tmp-1);
+  background-color: var(--shared-gray-color-100);
   border-radius: 10px;
   button {
     display: flex;
@@ -76,7 +76,7 @@ const WrapperStyled = styled.div`
     height: 30px;
     font-weight: 500;
     background-color: transparent;
-    color: var(--color-text-normal);
+    color: var(--normal-text-color);
     padding: 4px 12px;
   }
 `;

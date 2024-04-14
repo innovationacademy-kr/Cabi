@@ -56,8 +56,8 @@ const ItemStyled = styled.div<{
   cursor: ${({ info }) => (info.type === "floorInfo" ? "default" : "pointer")};
   color: ${({ info }) =>
     info.type === "floorInfo"
-      ? "var(--gray-tmp-4)"
-      : "var(--color-text-with-bg)"};
+      ? "var(--shared-gray-color-400)"
+      : "var(--text-with-bg-color)"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -72,7 +72,7 @@ const ItemStyled = styled.div<{
       ? "var(--main-color)"
       : info.type === "floorInfo"
       ? "transparent"
-      : "var(--gray-tmp-4)"};
+      : "var(--shared-gray-color-400)"};
   &:hover {
     opacity: ${({ info }) => (info.type === "cabinet" ? 0.9 : 1)};
   }

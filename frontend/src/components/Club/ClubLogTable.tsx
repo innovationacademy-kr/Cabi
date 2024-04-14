@@ -63,7 +63,7 @@ const LogTableWrapperStyled = styled.div`
 
 const LogTableStyled = styled.table`
   width: 100%;
-  background: var(--color-background);
+  background: var(--bg-color);
   overflow: scroll;
   border-spacing: 0 0.3em;
   border-collapse: separate;
@@ -73,16 +73,16 @@ const TheadStyled = styled.thead`
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background: var(--color-background);
+  background: var(--bg-color);
 `;
 
 const TbodyStyled = styled.tbody`
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
   & > tr {
     text-align: center;
     height: 50px;
     cursor: pointer;
-    background: var(--purple-tmp-1);
+    background: var(--shared-purple-color-100);
   }
   & > tr td:first-of-type {
     border-radius: 8px 0 0 8px;
@@ -98,7 +98,7 @@ const TbodyStyled = styled.tbody`
   & > tr:hover,
   & > tr.selected {
     background-color: var(--sub-color);
-    color: var(--color-background);
+    color: var(--bg-color);
   }
 `;
 

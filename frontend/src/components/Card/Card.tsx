@@ -69,7 +69,7 @@ export const CardStyled = styled.div<{
 }>`
   width: ${(props) => props.width};
   border-radius: 10px;
-  background-color: var(--gray-tmp-1);
+  background-color: var(--shared-gray-color-100);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -131,13 +131,13 @@ export const CardButtonStyled = styled.div<{
           background-color: ${props.backgroundColor
             ? props.backgroundColor
             : props.isClickable
-            ? "var(--color-card-content-bg)"
-            : "var(--color-background)"};
+            ? "var(--card-content-bg-color)"
+            : "var(--bg-color)"};
           color: ${props.fontColor
             ? props.fontColor
             : props.isExtensible
             ? "var(--main-color)"
-            : "var(--gray-tmp-5)"};
+            : "var(--shared-gray-color-500)"};
           padding: 5px 15px;
           border: none;
           border-radius: 5px;
@@ -157,7 +157,7 @@ export const CardButtonStyled = styled.div<{
   & > svg > path {
     transform: ${(props) =>
       props.icon?.name === "SvgLock" ? "" : "scale(1.1)"};
-    stroke: var(--color-text-normal);
+    stroke: var(--normal-text-color);
   }
 `;
 

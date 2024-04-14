@@ -19,7 +19,7 @@
   --red-200: #e54646;
 
   /* orange color variable */
-  --orange-color: #ef8172;
+  --orange: #ef8172;
 
   /* green color variable */
   --green-100: #47ffa7;
@@ -44,8 +44,8 @@
   --pink-200: #d72766;
 
   /* cabinet color variable */
-  --broken: var(--gray-600);
-  --session: var(--gray-200);
+  --broken-color: var(--gray-600);
+  --session-color: var(--gray-200);
 
   /* shadow variable */
   --black-shadow-100: rgba(0, 0, 0, 0.1);
@@ -77,96 +77,96 @@
 }
 
 :root {
-  --color-background: var(--white);
-  --color-line: var(--gray-tmp-4);
-  --color-text-normal: var(--black);
-  --color-text-with-bg: var(--white);
-  --color-card-content-bg: var(--white);
-  --color-button-line: var(--default-main-color);
+  --bg-color: var(--white);
+  --line-color: var(--shared-gray-color-400);
+  --normal-text-color: var(--black);
+  --text-with-bg-color: var(--white);
+  --card-content-bg-color: var(--white);
+  --button-line-color: var(--default-main-color);
 
   /* main color variable */
   --main-color: var(--purple-500);
   --sub-color: var(--purple-300);
 
-  /* cabinet color variable */
-  --mine: var(--green-100);
-  --available: var(--main-color);
-  --pending: var(--main-color);
-  --full: var(--gray-200);
-  --expired: var(--red-100);
-  --banned: var(--gray-600);
-
   --default-main-color: var(--purple-500);
   --default-sub-color: var(--purple-300);
   --default-mine-color: var(--green-100);
 
-  --bg-shadow-100: var(--black-shadow-100);
-  --bg-shadow-200: var(--black-shadow-200);
-  --bg-shadow-300: var(--black-shadow-300);
-  --bg-shadow-400: var(--black-shadow-400);
-  --border-shadow-100: var(--black-shadow-100);
-  --border-shadow-200: var(--black-shadow-200);
-  --border-shadow-300: var(--black-shadow-300);
+  /* cabinet color variable */
+  --mine-color: var(--green-100);
+  --available-color: var(--main-color);
+  --pending-color: var(--main-color);
+  --full-color: var(--gray-200);
+  --expired-color: var(--red-100);
+  --banned-color: var(--gray-600);
 
-  color: var(--color-text-normal);
-  background-color: var(--color-background);
-  /* #252425 */
-  --gray-tmp-1: var(--gray-100);
-  --gray-tmp-2: var(--gray-200);
-  --gray-tmp-3: var(--gray-300);
-  --gray-tmp-4: var(--gray-400);
-  --gray-tmp-5: var(--gray-500);
-  --gray-tmp-6: var(--gray-600);
-  --gray-tmp-7: var(--gray-800);
+  --bg-shadow-color-100: var(--black-shadow-100);
+  --bg-shadow-color-200: var(--black-shadow-200);
+  --bg-shadow-color-300: var(--black-shadow-300);
+  --bg-shadow-color-400: var(--black-shadow-400);
+  --border-shadow-color-100: var(--black-shadow-100);
+  --border-shadow-color-200: var(--black-shadow-200);
+  --border-shadow-color-300: var(--black-shadow-300);
 
-  --purple-tmp-1: var(--purple-100);
+  --shared-gray-color-100: var(--gray-100);
+  --shared-gray-color-200: var(--gray-200);
+  --shared-gray-color-300: var(--gray-300);
+  --shared-gray-color-400: var(--gray-400);
+  --shared-gray-color-500: var(--gray-500);
+  --shared-gray-color-600: var(--gray-600);
+  --shared-gray-color-700: var(--gray-800);
+
+  --shared-purple-color-100: var(--purple-100);
+
+  color: var(--normal-text-color);
+  background-color: var(--bg-color);
 }
 
 /* main color variable */
 /* cabinet color variable */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--gray-900);
-    --color-line: var(--gray-tmp-3);
-    --color-text-normal: var(--gray-100);
-    --color-text-with-bg: var(--gray-100);
-    --color-card-content-bg: var(--gray-700);
-    --color-button-line: var(--default-sub-color);
+    --bg-color: var(--gray-900);
+    --line-color: var(--shared-gray-color-300);
+    --normal-text-color: var(--gray-100);
+    --text-with-bg-color: var(--gray-100);
+    --card-content-bg-color: var(--gray-700);
+    --button-line-color: var(--default-sub-color);
 
     --main-color: var(--purple-600);
     --sub-color: var(--purple-300);
-
-    --mine: var(--green-200);
-    --available: var(--main-color);
-    --pending: var(--main-color);
-    --full: var(--gray-200);
-    --expired: var(--red-200);
-    --banned: var(--gray-600);
 
     --default-main-color: var(--purple-600);
     --default-sub-color: var(--purple-300);
     --default-mine-color: var(--green-200);
 
-    --bg-shadow-100: var(--black-shadow-200);
-    --bg-shadow-200: var(--black-shadow-300);
-    --bg-shadow-300: var(--black-shadow-400);
-    --bg-shadow-400: var(--black-shadow-400);
-    --border-shadow-100: var(--black-shadow-200);
-    --border-shadow-200: var(--black-shadow-300);
-    --border-shadow-300: var(--black-shadow-400);
+    --mine-color: var(--green-200);
+    --available-color: var(--main-color);
+    --pending-color: var(--main-color);
+    --full-color: var(--gray-200);
+    --expired-color: var(--red-200);
+    --banned-color: var(--gray-600);
 
-    color: var(--color-text-normal);
-    background-color: var(--color-background);
+    --bg-shadow-color-100: var(--black-shadow-200);
+    --bg-shadow-color-200: var(--black-shadow-300);
+    --bg-shadow-color-300: var(--black-shadow-400);
+    --bg-shadow-color-400: var(--black-shadow-400);
+    --border-shadow-color-100: var(--black-shadow-200);
+    --border-shadow-color-200: var(--black-shadow-300);
+    --border-shadow-color-300: var(--black-shadow-400);
 
-    --gray-tmp-1: var(--gray-800);
-    --gray-tmp-2: var(--gray-700);
-    --gray-tmp-3: var(--gray-600);
-    --gray-tmp-4: var(--gray-500);
-    --gray-tmp-5: var(--gray-400);
-    --gray-tmp-6: var(--gray-300);
-    --gray-tmp-7: var(--gray-200);
+    --shared-gray-color-100: var(--gray-800);
+    --shared-gray-color-200: var(--gray-700);
+    --shared-gray-color-300: var(--gray-600);
+    --shared-gray-color-400: var(--gray-500);
+    --shared-gray-color-500: var(--gray-400);
+    --shared-gray-color-600: var(--gray-300);
+    --shared-gray-color-700: var(--gray-200);
 
-    --purple-tmp-1: var(--purple-700);
+    --shared-purple-color-100: var(--purple-700);
+
+    color: var(--normal-text-color);
+    background-color: var(--bg-color);
   }
 }
 
@@ -201,7 +201,7 @@ body {
   flex-direction: column;
   overflow: hidden;
 
-  background-color: var(--color-background);
+  background-color: var(--bg-color);
 }
 
 h1 {
@@ -213,7 +213,7 @@ button {
   cursor: pointer;
   border: none;
   background-color: var(--main-color);
-  color: var(--color-text-with-bg);
+  color: var(--text-with-bg-color);
   width: 200px;
   height: 60px;
   font-size: 1.125rem;
@@ -245,7 +245,7 @@ img {
 }
 
 input {
-  color: var(--color-text-normal);
+  color: var(--normal-text-color);
   text-align: center;
   border: none;
   font-size: 1rem;
@@ -256,7 +256,7 @@ input {
 
 .modal {
   border-radius: 10px;
-  box-shadow: 10px 10px 40px 0px var(--border-shadow-200);
+  box-shadow: 10px 10px 40px 0px var(--border-shadow-color-200);
 }
 
 .textNowrap {
@@ -292,7 +292,7 @@ input {
 
 .leftNavButtonActive {
   background: var(--main-color);
-  color: var(--color-text-with-bg) !important;
+  color: var(--text-with-bg-color) !important;
 }
 
 .cabiButton {

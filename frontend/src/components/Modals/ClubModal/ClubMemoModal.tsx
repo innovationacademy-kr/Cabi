@@ -68,7 +68,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: var(--color-background);
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -108,25 +108,25 @@ const ContentItemTextAreaStyled = styled.textarea<{
   box-sizing: border-box;
   padding: 15px;
   width: 100%;
-  border: 1px solid var(--color-line);
+  border: 1px solid var(--line-color);
   height: 100%;
   border-radius: 10px;
   font-size: 1.125rem;
-  color: var(--color-text-normal);
+  color: var(--normal-text-color);
   overflow-y: auto;
   word-break: break-all;
   white-space: pre-wrap;
   line-height: 1.2rem;
   letter-spacing: 0.8px;
   resize: none;
-  background-color: var(--color-background);
+  background-color: var(--bg-color);
 
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
   color: ${({ mode }) =>
-    mode === "read" ? "var(--main-color)" : "var(--color-text-normal)"};
+    mode === "read" ? "var(--main-color)" : "var(--normal-text-color)"};
   &::placeholder {
     color: ${({ mode }) =>
-      mode === "read" ? "var(--main-color)" : "var(--color-line)"};
+      mode === "read" ? "var(--main-color)" : "var(--line-color)"};
   }
   ::-webkit-scrollbar {
     width: 20px;
@@ -134,7 +134,7 @@ const ContentItemTextAreaStyled = styled.textarea<{
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--color-line);
+    background: var(--line-color);
     border-radius: 50px;
     border: 6px solid transparent;
     background-clip: padding-box;
@@ -148,7 +148,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-100);
+  background: var(--bg-shadow-color-100);
   z-index: 1000;
 `;
 

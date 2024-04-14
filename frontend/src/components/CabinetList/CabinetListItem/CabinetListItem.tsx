@@ -182,7 +182,7 @@ const CabinetListItemStyled = styled.div<{
 }>`
   position: relative;
   background-color: ${({ status, isMine }) =>
-    isMine ? "var(--mine)" : cabinetStatusColorMap[status]};
+    isMine ? "var(--mine-color)" : cabinetStatusColorMap[status]};
 
   width: 80px;
   height: 80px;
@@ -200,15 +200,15 @@ const CabinetListItemStyled = styled.div<{
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px var(--border-shadow-200),
-        0px 4px 4px var(--border-shadow-200);
+      box-shadow: inset 5px 5px 5px var(--border-shadow-color-200),
+        0px 4px 4px var(--border-shadow-color-200);
     `}
 
   ${({ status }) =>
     status === "PENDING" &&
     css`
       border: 2px double var(--main-color);
-      box-shadow: inset 0px 0px 0px 2px var(--color-background);
+      box-shadow: inset 0px 0px 0px 2px var(--bg-color);
     `}
 
   ${({ status }) =>
@@ -233,9 +233,7 @@ const CabinetListItemStyled = styled.div<{
       status === "IN_SESSION" &&
       css`
         animation: ${Rotation} 1s linear infinite;
-        background-color: ${isMine
-          ? "var(--color-background)"
-          : "var(--main-color)"};
+        background-color: ${isMine ? "var(--bg-color)" : "var(--main-color)"};
       `}
   }
 
@@ -278,7 +276,7 @@ const CabinetNumberStyled = styled.p<{
   ${({ status }) =>
     status === "IN_SESSION" &&
     css`
-      color: var(--color-text-normal);
+      color: var(--normal-text-color);
     `}
 `;
 

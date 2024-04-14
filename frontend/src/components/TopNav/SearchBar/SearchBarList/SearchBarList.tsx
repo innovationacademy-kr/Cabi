@@ -58,13 +58,13 @@ const UlStyled = styled.ul`
   top: 50px;
   left: 0;
   width: 300px;
-  border: 1px solid var(--color-background);
+  border: 1px solid var(--bg-color);
   border-radius: 10px;
   text-align: left;
   padding: 10px;
-  color: var(--color-text-normal);
-  background-color: var(--color-background);
-  box-shadow: 0 0 10px 0 var(--border-shadow-200);
+  color: var(--normal-text-color);
+  background-color: var(--bg-color);
+  box-shadow: 0 0 10px 0 var(--border-shadow-color-200);
   opacity: 0.9;
   overflow: hidden;
   @media (max-width: 768px) {
@@ -74,7 +74,7 @@ const UlStyled = styled.ul`
 
 const TotalStyled = styled.li`
   font-size: 0.875rem;
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
   text-align: right;
   padding: 10px;
 `;

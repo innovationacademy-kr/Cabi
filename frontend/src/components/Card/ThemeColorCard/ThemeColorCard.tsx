@@ -51,7 +51,7 @@ const ThemeColorCard = ({
                   {
                     label: "저장",
                     onClick: handleSave,
-                    fontColor: "var(--color-text-with-bg)",
+                    fontColor: "var(--text-with-bg-color)",
                     backgroundColor: "var(--main-color)",
                     isClickable: true,
                   },
@@ -110,7 +110,7 @@ const BackgroundOverlayStyled = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--bg-shadow-100);
+  background: var(--bg-shadow-color-100);
   z-index: 1;
 `;
 

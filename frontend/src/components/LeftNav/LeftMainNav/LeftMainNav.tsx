@@ -88,7 +88,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickSearchButton}
               >
-                <SearchImg stroke="var(--gray-tmp-5)" />
+                <SearchImg stroke="var(--shared-gray-color-500)" />
                 Search
               </BottomBtnStyled>
               <BottomBtnStyled className="cabiButton">
@@ -97,7 +97,7 @@ const LeftMainNav = ({
                   target="_blank"
                   title="슬랙 캐비닛 채널 새창으로 열기"
                 >
-                  <SlackImg stroke="var(--gray-tmp-5)" />
+                  <SlackImg stroke="var(--shared-gray-color-500)" />
                   Contact
                 </a>
               </BottomBtnStyled>
@@ -109,14 +109,14 @@ const LeftMainNav = ({
                 }
                 onClick={onClickAdminClubButton}
               >
-                <CulbImg stroke="var(--gray-tmp-5)" />
+                <CulbImg stroke="var(--shared-gray-color-500)" />
                 Club
               </BottomBtnStyled>
               <BottomBtnStyled
                 className="cabiButton"
                 onClick={onClickLogoutButton}
               >
-                <LogoutImg stroke="var(--gray-tmp-5)" />
+                <LogoutImg stroke="var(--shared-gray-color-500)" />
                 Logout
               </BottomBtnStyled>
             </>
@@ -131,7 +131,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickMainClubButton}
               >
-                <CulbImg stroke="var(--gray-tmp-5)" />
+                <CulbImg stroke="var(--shared-gray-color-500)" />
                 Clubs
               </BottomBtnStyled>
               <BottomBtnStyled
@@ -142,7 +142,11 @@ const LeftMainNav = ({
                 }
                 onClick={onClickProfileButton}
               >
-                <ProfileImg stroke="var(--gray-tmp-5)" width={32} height={32} />
+                <ProfileImg
+                  stroke="var(--shared-gray-color-500)"
+                  width={32}
+                  height={32}
+                />
                 Profile
               </BottomBtnStyled>
             </>
@@ -158,7 +162,7 @@ const LeftNavStyled = styled.nav`
   min-width: 90px;
   position: relative;
   height: 100%;
-  border-right: 1px solid var(--color-line);
+  border-right: 1px solid var(--line-color);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -182,14 +186,14 @@ const TopBtnStyled = styled.li`
   font-weight: 300;
   margin-bottom: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
   cursor: pointer;
   &:last-child {
     margin-bottom: 0;
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--color-text-with-bg);
+      color: var(--text-with-bg-color);
       background-color: var(--main-color);
     }
   }
@@ -208,7 +212,7 @@ const BottomSectionStyled = styled.section`
     margin: 0 auto;
     width: 56px;
     height: 1px;
-    background-color: var(--gray-tmp-4);
+    background-color: var(--shared-gray-color-400);
   }
 `;
 const BottomBtnsStyled = styled.ul`
@@ -223,7 +227,7 @@ const BottomBtnStyled = styled.li`
   font-weight: 300;
   margin-top: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -232,7 +236,7 @@ const BottomBtnStyled = styled.li`
     margin-top: 0;
   }
   & a {
-    color: var(--gray-tmp-5);
+    color: var(--shared-gray-color-500);
   }
   & div {
     width: 24px;
@@ -241,9 +245,9 @@ const BottomBtnStyled = styled.li`
     margin-bottom: 4px;
   }
   &.active {
-    color: var(--color-button-line);
+    color: var(--button-line-color);
     svg {
-      stroke: var(--color-button-line);
+      stroke: var(--button-line-color);
     }
   }
   svg {
@@ -251,12 +255,12 @@ const BottomBtnStyled = styled.li`
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--color-button-line);
+      color: var(--button-line-color);
       svg {
-        stroke: var(--color-button-line);
+        stroke: var(--button-line-color);
       }
       a {
-        color: var(--color-button-line);
+        color: var(--button-line-color);
       }
     }
   }

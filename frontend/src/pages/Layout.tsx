@@ -115,7 +115,7 @@ const Layout = (): JSX.Element => {
   useEffect(() => {
     root.style.setProperty("--main-color", savedMainColor);
     root.style.setProperty("--sub-color", savedSubColor);
-    root.style.setProperty("--mine", savedMineColor);
+    root.style.setProperty("--mine-color", savedMineColor);
   }, [savedMainColor, savedSubColor, savedMineColor]);
 
   const { closeAll } = useMenu();
@@ -190,8 +190,8 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
   min-width: 330px;
   padding: 45px 40px 20px;
   position: relative;
-  border-left: 1px solid var(--color-line);
-  background-color: var(--color-background);
+  border-left: 1px solid var(--line-color);
+  background-color: var(--bg-color);
   overflow-y: auto;
   ${(props) =>
     props.isHomePage &&
@@ -203,7 +203,7 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
       z-index: 9;
       transform: translateX(120%);
       transition: transform 0.3s ease-in-out;
-      box-shadow: 0 0 40px 0 var(--border-shadow-200);
+      box-shadow: 0 0 40px 0 var(--border-shadow-color-200);
       &.on {
         transform: translateX(0%);
       }

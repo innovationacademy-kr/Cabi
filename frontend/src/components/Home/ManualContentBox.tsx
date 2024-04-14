@@ -70,7 +70,7 @@ const MaunalContentBoxStyled = styled.div<{
   flex-direction: column;
   align-items: flex-start;
   font-size: 1.75rem;
-  color: var(--color-text-with-bg);
+  color: var(--text-with-bg-color);
   padding: 25px;
   font-weight: bold;
   cursor: pointer;
@@ -89,8 +89,8 @@ const MaunalContentBoxStyled = styled.div<{
     & > path {
       stroke: ${(props) =>
         props.contentStatus === ContentStatus.EXTENSION
-          ? "var(--color-text-normal)"
-          : "var(--color-text-with-bg)"};
+          ? "var(--normal-text-color)"
+          : "var(--text-with-bg-color)"};
       transform: ${(props) =>
         props.contentStatus === ContentStatus.EXTENSION
           ? "scale(1.4)"
@@ -111,7 +111,7 @@ const MaunalContentBoxStyled = styled.div<{
     contentStatus === ContentStatus.PENDING &&
     css`
       border: 5px double var(--main-color);
-      box-shadow: inset 0px 0px 0px 5px var(--color-background);
+      box-shadow: inset 0px 0px 0px 5px var(--bg-color);
     `}
 
   ${({ contentStatus }) =>
@@ -125,7 +125,7 @@ const MaunalContentBoxStyled = styled.div<{
     contentStatus === ContentStatus.EXTENSION &&
     css`
       width: 900px;
-      color: var(--color-text-normal);
+      color: var(--normal-text-color);
       @media screen and (max-width: 1000px) {
         width: 280px;
         .peopleImg {
@@ -155,8 +155,8 @@ const MaunalContentBoxStyled = styled.div<{
       props.contentStatus === ContentStatus.IN_SESSION
         ? "var(--main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
-        ? "var(--color-text-normal)"
-        : "var(--color-text-with-bg)"};
+        ? "var(--normal-text-color)"
+        : "var(--text-with-bg-color)"};
     cursor: pointer;
   }
 
@@ -166,11 +166,11 @@ const MaunalContentBoxStyled = styled.div<{
       contentStatus === ContentStatus.PENDING
         ? css`
             border: 5px double var(--main-color);
-            box-shadow: inset 0px 0px 0px 5px var(--color-background),
-              10px 10px 25px 0 var(--border-shadow-200);
+            box-shadow: inset 0px 0px 0px 5px var(--bg-color),
+              10px 10px 25px 0 var(--border-shadow-color-200);
           `
         : css`
-            box-shadow: 10px 10px 25px 0 var(--border-shadow-200);
+            box-shadow: 10px 10px 25px 0 var(--border-shadow-color-200);
           `}
     p {
       transition: all 0.3s ease-in-out;

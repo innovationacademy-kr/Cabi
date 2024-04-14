@@ -90,7 +90,7 @@ const ModalStyled = styled.div`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: var(--color-background);
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -152,7 +152,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-100);
+  background: var(--bg-shadow-color-100);
   animation: fadeInBg 0.5s;
   @keyframes fadeInBg {
     0% {

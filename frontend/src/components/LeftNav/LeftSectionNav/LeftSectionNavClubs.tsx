@@ -46,13 +46,13 @@ const ClubLeftNavOptionStyled = styled.div`
   min-width: 240px;
   height: 100%;
   padding: 20px 10px 32px;
-  border-right: 1px solid var(--color-line);
+  border-right: 1px solid var(--line-color);
   font-weight: 300;
   position: relative;
   & hr {
     width: 80%;
     height: 1px;
-    background-color: var(--gray-tmp-3);
+    background-color: var(--shared-gray-color-300);
     border: 0;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -60,7 +60,7 @@ const ClubLeftNavOptionStyled = styled.div`
 `;
 
 const ListTitleStyled = styled.div`
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
   font-size: 0.9rem;
   margin: 0.5rem 0.75rem;
 `;

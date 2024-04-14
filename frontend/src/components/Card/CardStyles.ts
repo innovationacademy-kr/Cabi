@@ -2,7 +2,7 @@ import styled from "styled-components";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 
 export const CardContentWrapper = styled.div`
-  background-color: var(--color-card-content-bg);
+  background-color: var(--card-content-bg-color);
   border-radius: 10px;
   padding: 10px 0;
   margin: 5px 5px 5px 5px;
@@ -30,7 +30,7 @@ export const ContentInfoStyled = styled.div<{
     props.isSelected &&
     `
     background-color: ${props.selectedColor};
-    color: var(--color-text-with-bg);
+    color: var(--text-with-bg-color);
     border-radius: 8px;
   `}
 `;
@@ -39,7 +39,7 @@ export const ContentDetailStyled = styled.div<{
   status?: CabinetStatus;
 }>`
   color: ${(props) =>
-    props.status === CabinetStatus.OVERDUE ? "var(--expired)" : ""};
+    props.status === CabinetStatus.OVERDUE ? "var(--expired-color)" : ""};
   display: flex;
   margin: 5px 10px 5px 10px;
   font-weight: bold;

@@ -54,7 +54,7 @@ const LentInfoCard = ({
           <CabinetInfoDetailStyled>
             <CabinetInfoTextStyled
               fontSize={cabinetInfo.floor !== 0 ? "1rem" : "0.9rem"}
-              fontColor="var(--gray-tmp-5)"
+              fontColor="var(--shared-gray-color-500)"
             >
               {cabinetInfo.floor !== 0
                 ? cabinetInfo.floor + "층 - " + cabinetInfo.section
@@ -67,7 +67,7 @@ const LentInfoCard = ({
               </CabinetIconStyled>
               <CabinetInfoTextStyled
                 fontSize={calculateFontSize(cabinetInfo.userCount)}
-                fontColor="var(--color-text-normal)"
+                fontColor="var(--normal-text-color)"
               >
                 {cabinetInfo.userNameList}
               </CabinetInfoTextStyled>
@@ -138,13 +138,13 @@ const CabinetRectangleStyled = styled.div<{
   margin-right: 20px;
   background-color: ${(props) =>
     props.banned
-      ? "var(--expired)"
+      ? "var(--expired-color)"
       : props.isLented
-      ? "var(--mine)"
-      : "var(--full)"};
+      ? "var(--mine-color)"
+      : "var(--full-color)"};
   color: ${(props) =>
     props.banned
-      ? "var(--color-background)"
+      ? "var(--bg-color)"
       : props.status === "IN_SESSION"
       ? "var(--main-color)"
       : "var(--black)"};
@@ -188,7 +188,7 @@ const CabinetIconStyled = styled.div`
   }
 
   & > svg > path {
-    stroke: var(--color-text-normal);
+    stroke: var(--normal-text-color);
     transform: scale(0.8);
   }
 `;

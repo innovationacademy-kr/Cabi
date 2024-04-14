@@ -17,7 +17,7 @@ const LoginTemplate = (props: {
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">
         <TopContentsStyled>
-          <LoginTitleStyled color="var(--color-text-normal)">
+          <LoginTitleStyled color="var(--normal-text-color)">
             42서울 캐비닛 서비스
           </LoginTitleStyled>
           <LoginTitleStyled color="var(--sub-color)">
@@ -124,7 +124,7 @@ const LoginCardStyled = styled.div`
   align-items: center;
   flex-direction: column;
   padding: 85px 0;
-  background-color: var(--color-background);
+  background-color: var(--bg-color);
 `;
 
 const CardLogoStyled = styled.div`

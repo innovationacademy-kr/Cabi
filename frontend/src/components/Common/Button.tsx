@@ -43,38 +43,38 @@ const ButtonContainerStyled = styled.button`
     props.theme === "fill" &&
     css`
       background: var(--main-color);
-      color: var(--color-text-with-bg);
+      color: var(--text-with-bg-color);
     `}
   ${(props) =>
     props.theme === "line" &&
     css`
-      background: var(--color-background);
-      color: var(--color-button-line);
-      border: 1px solid var(--color-button-line);
+      background: var(--bg-color);
+      color: var(--button-line-color);
+      border: 1px solid var(--button-line-color);
     `}
   ${(props) =>
     props.theme === "light-grayLine" &&
     css`
-      background: var(--color-background);
-      color: var(--gray-tmp-4);
-      border: 1px solid var(--color-line);
+      background: var(--bg-color);
+      color: var(--shared-gray-color-400);
+      border: 1px solid var(--line-color);
     `}
   ${(props) =>
     props.theme === "grayLine" &&
     css`
-      background: var(--color-background);
-      color: var(--gray-tmp-5);
-      border: 1px solid var(--gray-tmp-5);
+      background: var(--bg-color);
+      color: var(--shared-gray-color-500);
+      border: 1px solid var(--shared-gray-color-500);
     `}
   ${(props) =>
     props.theme === "smallGrayLine" &&
     css`
       max-width: 200px;
       height: 40px;
-      background: var(--color-background);
-      color: var(--gray-tmp-5);
+      background: var(--bg-color);
+      color: var(--shared-gray-color-500);
       font-size: 0.875rem;
-      border: 1px solid var(--gray-tmp-5);
+      border: 1px solid var(--shared-gray-color-500);
     `}
 
   @media (max-height: 745px) {

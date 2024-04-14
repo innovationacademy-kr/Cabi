@@ -48,12 +48,12 @@ const LineChart = ({ data }: { data: IMonthlyData[] }) => (
   <LineChartStyled>
     <ResponsiveLine
       theme={{
-        textColor: "var(--color-text-normal)",
+        textColor: "var(--normal-text-color)",
         tooltip: {
           container: {
-            backgroundColor: "var(--color-background)",
-            boxShadow: "var(--border-shadow-200) 0 1px 2px",
-            color: "var(--color-text-normal)",
+            backgroundColor: "var(--bg-color)",
+            boxShadow: "var(--border-shadow-color-200) 0 1px 2px",
+            color: "var(--normal-text-color)",
           },
         },
       }}

@@ -55,7 +55,10 @@ const ClubMemberInfoArea = ({
             <CabiLogoStyled>
               <LogoImg />
             </CabiLogoStyled>
-            <TextStyled fontSize="1.125rem" fontColor="var(--gray-tmp-5)">
+            <TextStyled
+              fontSize="1.125rem"
+              fontColor="var(--shared-gray-color-500)"
+            >
               동아리를 <br />
               선택해주세요
             </TextStyled>
@@ -66,7 +69,7 @@ const ClubMemberInfoArea = ({
               {/* <CabinetTypeIconStyled cabinetType={CabinetType.CLUB} /> */}
               <TextStyled
                 fontSize="1rem"
-                fontColor="var(--color-text-normal)"
+                fontColor="var(--normal-text-color)"
                 fontWeight={700}
               >
                 {selectedClubInfo!.clubName}
@@ -75,7 +78,7 @@ const ClubMemberInfoArea = ({
             <ClubMemberIconStyled isMasterSelected={isMasterSelected}>
               {isMasterSelected ? <LeaderIcon /> : <UserImg />}
             </ClubMemberIconStyled>
-            <TextStyled fontSize="1rem" fontColor="var(--color-text-normal)">
+            <TextStyled fontSize="1rem" fontColor="var(--normal-text-color)">
               {selectedClubMemberInfo!.userName || "-"}
             </TextStyled>
             <CabinetInfoButtonsContainerStyled>
@@ -149,9 +152,9 @@ const ClubMemberInfoAreaStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--color-background);
-  box-shadow: 0 0 40px 0 var(--border-shadow-200);
-  border-left: 1px solid var(--color-line);
+  background: var(--bg-color);
+  box-shadow: 0 0 40px 0 var(--border-shadow-color-200);
+  border-left: 1px solid var(--line-color);
   &.on {
     transform: translateX(0%);
   }
@@ -216,7 +219,7 @@ const ClubMemberIconStyled = styled.div<{ isMasterSelected: boolean }>`
   }
 
   & > svg > path {
-    stroke: var(--color-text-normal);
+    stroke: var(--normal-text-color);
     transform: ${(props) =>
       props.isMasterSelected ? "scale(1.3)" : "scale(1.0)"};
   }

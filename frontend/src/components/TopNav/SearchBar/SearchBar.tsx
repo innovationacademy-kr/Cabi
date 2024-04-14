@@ -206,13 +206,13 @@ const SearchBarStyled = styled.div`
 const SearchBarInputStyled = styled.input`
   width: 300px;
   height: 40px;
-  border: 1px solid var(--gray-tmp-5);
+  border: 1px solid var(--shared-gray-color-500);
   border-radius: 10px;
   text-align: left;
   padding: 0 20px;
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
   &::placeholder {
-    color: var(--gray-tmp-5);
+    color: var(--shared-gray-color-500);
   }
 `;
 

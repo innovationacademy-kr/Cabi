@@ -10,9 +10,7 @@ const DarkMode: React.FC<{}> = () => {
       <button
         onClick={() => {
           setTest(
-            test === "white"
-              ? "var(--color-text-normal)"
-              : "var(--color-background)"
+            test === "white" ? "var(--normal-text-color)" : "var(--bg-color)"
           );
         }}
       >

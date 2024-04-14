@@ -71,7 +71,7 @@ const ClubListDropdSelectionBoxStyled = styled.div<{ isOpen: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid var(--gray-tmp-4);
+  border: 1px solid var(--shared-gray-color-400);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -113,8 +113,8 @@ const ClubListDropdItemStyled = styled.div<{ isSelected: boolean }>`
   display: flex;
   align-items: center;
   background-color: ${({ isSelected }) =>
-    isSelected ? "var(--gray-tmp-2)" : "var(--color-background)"};
-  border: 1px solid var(--gray-tmp-4);
+    isSelected ? "var(--shared-gray-color-200)" : "var(--bg-color)"};
+  border: 1px solid var(--shared-gray-color-400);
   border-width: 0px 1px 1px 1px;
   width: 100%;
   height: 60px;
@@ -122,7 +122,7 @@ const ClubListDropdItemStyled = styled.div<{ isSelected: boolean }>`
   padding-left: 20px;
   font-size: 1.125rem;
   color: ${({ isSelected }) =>
-    isSelected ? "var(--main-color)" : "var(--color-text-normal)"};
+    isSelected ? "var(--main-color)" : "var(--normal-text-color)"};
   cursor: pointer;
   &:first-child {
     border-radius: 10px 10px 0px 0px;
@@ -132,7 +132,7 @@ const ClubListDropdItemStyled = styled.div<{ isSelected: boolean }>`
     border-radius: 0px 0px 10px 10px;
   }
   &:hover {
-    background-color: var(--gray-tmp-2);
+    background-color: var(--shared-gray-color-200);
   }
 `;
 

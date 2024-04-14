@@ -38,7 +38,7 @@ const ThemeColorCardContainer = () => {
     setMineColor(mine);
     root.style.setProperty("--main-color", main);
     root.style.setProperty("--sub-color", sub);
-    root.style.setProperty("--mine", mine);
+    root.style.setProperty("--mine-color", mine);
     localStorage.setItem("main-color", main);
     localStorage.setItem("sub-color", sub);
     localStorage.setItem("mine-color", mine);
@@ -77,7 +77,7 @@ const ThemeColorCardContainer = () => {
 
   useEffect(() => {
     root.style.setProperty("--main-color", mainColor);
-    root.style.setProperty("--mine", mineColor);
+    root.style.setProperty("--mine-color", mineColor);
     const confirmBeforeUnload = (e: BeforeUnloadEvent) => {
       if (
         mainColor !== savedMainColor ||

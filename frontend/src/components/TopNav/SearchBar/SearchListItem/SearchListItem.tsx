@@ -52,15 +52,15 @@ const LiStyled = styled.li`
   display: flex;
 
   & strong {
-    color: var(--color-button-line);
+    color: var(--button-line-color);
   }
 
   &.active {
-    background-color: var(--color-button-line);
-    color: var(--color-background);
+    background-color: var(--button-line-color);
+    color: var(--bg-color);
   }
   &.active strong {
-    color: var(--color-background);
+    color: var(--bg-color);
   }
   &.active div {
     filter: invert(100%);
@@ -68,11 +68,11 @@ const LiStyled = styled.li`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--color-button-line);
-      color: var(--color-background);
+      background-color: var(--button-line-color);
+      color: var(--bg-color);
     }
     &:hover strong {
-      color: var(--color-background);
+      color: var(--bg-color);
     }
     &:hover div {
       filter: invert(100%);
@@ -91,7 +91,7 @@ const ContentIconStyled = styled.div<{ isNum?: boolean }>`
   }
 
   & path {
-    stroke: var(--color-text-normal);
+    stroke: var(--normal-text-color);
     transform: ${(props) => (props.isNum ? "scale(1)" : "scale(0.8)")};
   }
 `;

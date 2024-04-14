@@ -48,7 +48,7 @@ const LogoStyled = styled.div`
   height: 60px;
   border-radius: 10px;
   margin-right: 20px;
-  background-color: var(--color-card-content-bg);
+  background-color: var(--card-content-bg-color);
 `;
 
 const CabiLogoStyled = styled.div`
@@ -75,7 +75,7 @@ const ProfileDetail = styled.div`
 
 const EmailDetail = styled(ProfileDetail)`
   font-size: 0.9rem;
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
 `;
 
 export default ProfileCard;

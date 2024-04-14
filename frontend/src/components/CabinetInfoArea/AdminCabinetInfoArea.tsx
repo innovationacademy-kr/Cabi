@@ -70,7 +70,10 @@ const AdminCabinetInfoArea: React.FC<{
         <CabiLogoStyled>
           <LogoImg />
         </CabiLogoStyled>
-        <TextStyled fontSize="1.125rem" fontColor="var(--gray-tmp-5)">
+        <TextStyled
+          fontSize="1.125rem"
+          fontColor="var(--shared-gray-color-500)"
+        >
           사물함/유저를 <br />
           선택해주세요
         </TextStyled>
@@ -80,7 +83,7 @@ const AdminCabinetInfoArea: React.FC<{
   if (multiSelectTargetInfo) {
     return (
       <CabinetDetailAreaStyled>
-        <TextStyled fontSize="1rem" fontColor="var(--gray-tmp-5)">
+        <TextStyled fontSize="1rem" fontColor="var(--shared-gray-color-500)">
           {currentFloor + "F - " + currentSection}
         </TextStyled>
         <MultiCabinetIconWrapperStyled>
@@ -132,7 +135,7 @@ const AdminCabinetInfoArea: React.FC<{
   return (
     <CabinetDetailAreaStyled>
       <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--gray-tmp-5)">
+      <TextStyled fontSize="1rem" fontColor="var(--shared-gray-color-500)">
         {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
       </TextStyled>
       <CabinetRectangleStyled
@@ -144,7 +147,7 @@ const AdminCabinetInfoArea: React.FC<{
       <CabinetTypeIconStyled title={selectedCabinetInfo!.lentType}>
         {CabinetIcon && <CabinetIcon />}
       </CabinetTypeIconStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--color-text-normal)">
+      <TextStyled fontSize="1rem" fontColor="var(--normal-text-color)">
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
@@ -174,7 +177,7 @@ const AdminCabinetInfoArea: React.FC<{
       >
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
-      <CabinetLentDateInfoStyled textColor="var(--color-text-normal)">
+      <CabinetLentDateInfoStyled textColor="var(--normal-text-color)">
         {expireDate}
       </CabinetLentDateInfoStyled>
       {adminModal.returnModal && (
@@ -231,7 +234,7 @@ const CabinetTypeIconStyled = styled.div`
   margin-bottom: 10px;
 
   & path {
-    stroke: var(--color-text-normal);
+    stroke: var(--normal-text-color);
   }
 `;
 
@@ -272,7 +275,7 @@ const CabinetRectangleStyled = styled.div<{
   ${(props) =>
     props.isMine &&
     css`
-      background-color: var(--mine);
+      background-color: var(--mine-color);
     `};
   font-size: 2rem;
   color: ${(props) =>
@@ -289,7 +292,7 @@ const CabinetRectangleStyled = styled.div<{
   `}
   ${({ cabinetStatus }) => css`
     box-shadow: ${cabinetStatus === "PENDING" &&
-    "inset 0px 0px 0px 2px var(--color-background)"};
+    "inset 0px 0px 0px 2px var(--bg-color)"};
   `}
 `;
 

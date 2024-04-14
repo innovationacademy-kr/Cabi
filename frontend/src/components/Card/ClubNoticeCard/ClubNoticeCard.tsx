@@ -38,7 +38,7 @@ const ClubNoticeCard = ({
             : [
                 // NOTE: 이 부분은 레이아웃을 유지하기 위한 placeholder 버튼입니다.
                 {
-                  backgroundColor: "var(--gray-tmp-1)",
+                  backgroundColor: "var(--shared-gray-color-100)",
                   onClick: () => {},
                   icon: null,
                   isClickable: false,
@@ -81,7 +81,7 @@ const ClubNoticeTextStyled = styled.div`
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--gray-tmp-4);
+    background: var(--shared-gray-color-400);
     border-radius: 50px;
     border: 6px solid transparent;
     background-clip: padding-box;

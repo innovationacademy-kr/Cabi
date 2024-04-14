@@ -37,27 +37,27 @@ export const cabinetIconSrcMap = {
 };
 
 export const cabinetLabelColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--color-text-with-bg)",
+  [CabinetStatus.AVAILABLE]: "var(--text-with-bg-color)",
   [CabinetStatus.FULL]: "var(--black)",
   // black
-  [CabinetStatus.OVERDUE]: "var(--color-text-with-bg)",
-  [CabinetStatus.BROKEN]: "var(--color-text-with-bg)",
-  [CabinetStatus.BANNED]: "var(--color-text-with-bg)",
+  [CabinetStatus.OVERDUE]: "var(--text-with-bg-color)",
+  [CabinetStatus.BROKEN]: "var(--text-with-bg-color)",
+  [CabinetStatus.BANNED]: "var(--text-with-bg-color)",
   [CabinetStatus.IN_SESSION]: "var(--main-color)",
-  [CabinetStatus.PENDING]: "var(--color-text-with-bg)",
+  [CabinetStatus.PENDING]: "var(--text-with-bg-color)",
   MINE: "var(--black)",
   // black
 };
 
 export const cabinetStatusColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--available)",
-  [CabinetStatus.FULL]: "var(--full)",
-  [CabinetStatus.OVERDUE]: "var(--expired)",
-  [CabinetStatus.BROKEN]: "var(--broken)",
-  [CabinetStatus.BANNED]: "var(--banned)",
-  [CabinetStatus.IN_SESSION]: "var(--session)",
-  [CabinetStatus.PENDING]: "var(--pending)",
-  MINE: "var(--mine)",
+  [CabinetStatus.AVAILABLE]: "var(--available-color)",
+  [CabinetStatus.FULL]: "var(--full-color)",
+  [CabinetStatus.OVERDUE]: "var(--expired-color)",
+  [CabinetStatus.BROKEN]: "var(--broken-color)",
+  [CabinetStatus.BANNED]: "var(--banned-color)",
+  [CabinetStatus.IN_SESSION]: "var(--session-color)",
+  [CabinetStatus.PENDING]: "var(--pending-color)",
+  MINE: "var(--mine-color)",
 };
 
 export const modalPropsMap = {
@@ -199,14 +199,14 @@ export const modalPropsMap = {
 };
 
 export const cabinetFilterMap = {
-  [CabinetStatus.AVAILABLE]: "var(--color-text-with-bg)",
+  [CabinetStatus.AVAILABLE]: "var(--text-with-bg-color)",
   [CabinetStatus.FULL]: "var(--black)",
   // black
-  [CabinetStatus.OVERDUE]: "var(--color-text-with-bg)",
-  [CabinetStatus.BROKEN]: "var(--color-text-with-bg)",
-  [CabinetStatus.BANNED]: "var(--color-text-with-bg)",
-  [CabinetStatus.IN_SESSION]: "var(--color-text-normal)",
-  [CabinetStatus.PENDING]: "var(--color-text-with-bg)",
+  [CabinetStatus.OVERDUE]: "var(--text-with-bg-color)",
+  [CabinetStatus.BROKEN]: "var(--text-with-bg-color)",
+  [CabinetStatus.BANNED]: "var(--text-with-bg-color)",
+  [CabinetStatus.IN_SESSION]: "var(--normal-text-color)",
+  [CabinetStatus.PENDING]: "var(--text-with-bg-color)",
 };
 
 export const cabinetStatusLabelMap = {

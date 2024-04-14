@@ -21,7 +21,9 @@ const AdminClubLog = ({
         <IndexRectangleStyled
           key={i}
           filledColor={
-            currentPage === i ? "var(--main-color)" : "var(--gray-tmp-3)"
+            currentPage === i
+              ? "var(--main-color)"
+              : "var(--shared-gray-color-300)"
           }
           onClick={() => changePageOnClickIndexButton(i)}
           className="cabiButton"
@@ -74,7 +76,7 @@ const SectionPaginationStyled = styled.div`
   padding: 10px 0;
   position: sticky;
   top: 0;
-  background: var(--color-background);
+  background: var(--bg-color);
   opacity: 0.8;
   z-index: 1;
 `;

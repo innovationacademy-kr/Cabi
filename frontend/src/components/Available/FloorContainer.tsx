@@ -56,10 +56,10 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   display: flex;
   justify-content: space-between;
   font-size: 1.1rem;
-  color: var(--color-text-normal);
+  color: var(--normal-text-color);
   padding-left: 5px;
   padding-right: 5px;
-  border-bottom: 1.5px solid var(--gray-tmp-3);
+  border-bottom: 1.5px solid var(--shared-gray-color-300);
   cursor: pointer;
   button {
     all: initial;
@@ -91,7 +91,7 @@ const NoAvailableCabinetMessageStyled = styled.div<{ isToggled: boolean }>`
   margin-top: 20px;
   margin-left: 5px;
   p {
-    color: var(--gray-tmp-5);
+    color: var(--shared-gray-color-500);
     line-height: 1.5;
     word-break: keep-all;
   }

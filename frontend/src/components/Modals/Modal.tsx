@@ -127,7 +127,7 @@ const ModalStyled = styled.div`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: var(--color-background);
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -145,7 +145,7 @@ const ModalStyled = styled.div`
   align-items: center;
   text-align: center;
   padding: 40px 20px;
-  color: var(--color-text-normal);
+  color: var(--normal-text-color);
 `;
 
 const ModalIconImgStyled = styled.div<{ iconScaleEffect: boolean | undefined }>`
@@ -191,7 +191,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-100);
+  background: var(--bg-shadow-color-100);
   animation: fadeInBg 0.5s;
   @keyframes fadeInBg {
     0% {
@@ -219,7 +219,7 @@ const DropdownStyled = styled.select`
 `;
 
 const Option = styled.option`
-  background-color: var(--expired);
+  background-color: var(--expired-color);
 `;
 
 export default Modal;

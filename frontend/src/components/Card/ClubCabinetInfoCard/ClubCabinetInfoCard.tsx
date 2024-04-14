@@ -44,7 +44,7 @@ const ClubCabinetInfoCard = ({
             : [
                 // NOTE: 이 부분은 레이아웃을 유지하기 위한 placeholder 버튼입니다.
                 {
-                  backgroundColor: "var(--gray-tmp-1)",
+                  backgroundColor: "var(--shared-gray-color-100)",
                   onClick: () => {},
                   icon: null,
                   isClickable: false,
@@ -61,7 +61,7 @@ const ClubCabinetInfoCard = ({
               <ClubNameTextStyled>{clubInfo.clubName}</ClubNameTextStyled>
               <CabinetInfoTextStyled
                 fontSize={"1rem"}
-                fontColor="var(--gray-tmp-5)"
+                fontColor="var(--shared-gray-color-500)"
               >
                 {clubInfo.floor + "층 - " + clubInfo.section}
               </CabinetInfoTextStyled>
@@ -71,7 +71,7 @@ const ClubCabinetInfoCard = ({
                 </CabinetIconStyled>
                 <CabinetInfoTextStyled
                   fontSize={"1rem"}
-                  fontColor="var(--color-text-normal)"
+                  fontColor="var(--normal-text-color)"
                 >
                   {clubInfo.clubMaster.userName}
                 </CabinetInfoTextStyled>
@@ -115,7 +115,7 @@ const CabinetRectangleStyled = styled.div`
   line-height: 90px;
   border-radius: 10px;
   margin-right: 20px;
-  background-color: var(--full);
+  background-color: var(--full-color);
   color: var(--black);
   /* black */
   font-size: 2rem;
@@ -165,7 +165,7 @@ const CabinetIconStyled = styled.div`
   }
 
   & > svg > path {
-    stroke: var(--color-text-normal);
+    stroke: var(--normal-text-color);
     transform: scale(1.1);
   }
 `;
@@ -181,13 +181,13 @@ const ContentInfoStyled = styled.div<{
     props.isSelected &&
     `
     background-color: ${props.selectedColor};
-    color: var(--color-background);
+    color: var(--bg-color);
     border-radius: 8px;
   `}
 `;
 
 const CardContentWrapper = styled.div`
-  background-color: var(--color-card-content-bg);
+  background-color: var(--card-content-bg-color);
   border-radius: 10px;
   padding: 10px 0;
   margin: 5px 5px 5px 5px;

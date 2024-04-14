@@ -100,10 +100,10 @@ const TopNavContainerStyled = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--color-background);
-  border-bottom: 1px solid var(--color-line);
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--line-color);
   padding: 0 28px;
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
   z-index: 10;
 `;
 
@@ -147,10 +147,10 @@ const BuildingListStyled = styled.ul<{ clicked: boolean }>`
   top: 30px;
   left: -15px;
   padding: 5px 10px;
-  background: var(--color-background);
+  background: var(--bg-color);
   opacity: 0.9;
   border-radius: 4px;
-  box-shadow: 0 0 10px 0 var(--border-shadow-200);
+  box-shadow: 0 0 10px 0 var(--border-shadow-color-200);
   z-index: 100;
   display: ${(props) => (props.clicked ? "block" : "none")};
   user-select: none !important;
@@ -159,7 +159,7 @@ const BuildingListStyled = styled.ul<{ clicked: boolean }>`
 const BuildingListItemStyled = styled.li`
   width: 80px;
   height: 40px;
-  color: var(--color-text-normal);
+  color: var(--normal-text-color);
   font-size: 1.25rem;
   font-family: var(--main-font);
   line-height: 40px;
@@ -183,7 +183,7 @@ const SelectIconStyled = styled.div`
   align-items: center;
 
   & > svg > path {
-    stroke: var(--gray-tmp-5);
+    stroke: var(--shared-gray-color-500);
   }
 `;
 

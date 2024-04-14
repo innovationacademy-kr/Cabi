@@ -68,14 +68,14 @@ const CabinetInfoArea: React.FC<{
       <CabiLogoStyled>
         <LogoImg />
       </CabiLogoStyled>
-      <TextStyled fontSize="1.125rem" fontColor="var(--gray-tmp-5)">
+      <TextStyled fontSize="1.125rem" fontColor="var(--shared-gray-color-500)">
         사물함을 <br />
         선택해주세요
       </TextStyled>
     </NotSelectedStyled>
   ) : (
     <CabinetDetailAreaStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--gray-tmp-5)">
+      <TextStyled fontSize="1rem" fontColor="var(--shared-gray-color-500)">
         {selectedCabinetInfo!.floor !== 0
           ? selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section
           : "-"}
@@ -91,7 +91,7 @@ const CabinetInfoArea: React.FC<{
       <CabinetTypeIconStyled title={selectedCabinetInfo!.lentType}>
         {CabinetIcon && <CabinetIcon />}
       </CabinetTypeIconStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--color-text-normal)">
+      <TextStyled fontSize="1rem" fontColor="var(--normal-text-color)">
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
@@ -177,7 +177,7 @@ const CabinetInfoArea: React.FC<{
       >
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
-      <CabinetLentDateInfoStyled textColor="var(--color-text-normal)">
+      <CabinetLentDateInfoStyled textColor="var(--normal-text-color)">
         {selectedCabinetInfo!.cabinetId === 0 ? "" : expireDate}
       </CabinetLentDateInfoStyled>
       <ButtonHoverWrapper>
@@ -308,7 +308,7 @@ const CabinetTypeIconStyled = styled.div`
   margin-bottom: 10px;
 
   & path {
-    stroke: var(--color-text-normal);
+    stroke: var(--normal-text-color);
   }
 `;
 
@@ -332,7 +332,7 @@ const CabinetRectangleStyled = styled.div<{
   margin-top: 15px;
   margin-bottom: 3vh;
   background-color: ${({ cabinetStatus, isMine }) =>
-    isMine ? "var(--mine)" : cabinetStatusColorMap[cabinetStatus]};
+    isMine ? "var(--mine-color)" : cabinetStatusColorMap[cabinetStatus]};
 
   font-size: 2rem;
   color: ${(props) =>
@@ -350,7 +350,7 @@ const CabinetRectangleStyled = styled.div<{
     cabinetStatus === "PENDING" &&
     css`
       border: 2px double var(--main-color);
-      box-shadow: inset 0px 0px 0px 2px var(--color-background);
+      box-shadow: inset 0px 0px 0px 2px var(--bg-color);
     `}
 `;
 
@@ -375,7 +375,7 @@ const HoverBox = styled.div<{
   padding: 10px;
   background-color: rgba(73, 73, 73, 0.99);
   border-radius: 10px;
-  box-shadow: 4px 4px 20px 0px var(--bg-shadow-300);
+  box-shadow: 4px 4px 20px 0px var(--bg-shadow-color-300);
   /* TODO : HoverBox 안쓰면 지우고, 쓰면 바꾸기 */
   font-size: 0.875rem;
   text-align: center;
@@ -432,7 +432,7 @@ const AvailableMessageStyled = styled.p`
   text-align: center;
   font-weight: 700;
   line-height: 26px;
-  color: var(--color-text-normal);
+  color: var(--normal-text-color);
 `;
 
 const ButtonContainerStyled = styled.button`
@@ -453,7 +453,7 @@ const ButtonContainerStyled = styled.button`
   ${(props) =>
     props.theme === "line" &&
     css`
-      background: var(--color-background);
+      background: var(--bg-color);
       color: var(--main-color);
       border: 1px solid var(--main-color);
     `}

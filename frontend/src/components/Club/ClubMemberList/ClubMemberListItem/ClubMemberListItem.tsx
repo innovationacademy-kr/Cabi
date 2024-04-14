@@ -42,7 +42,7 @@ const MemberListItemContainerStyled = styled.div<{
   width: 80px;
   height: 80px;
   background-color: ${(props) =>
-    props.bgColor ? props.bgColor : "var(--gray-tmp-1)"};
+    props.bgColor ? props.bgColor : "var(--shared-gray-color-100)"};
   border-radius: 1rem;
   margin: 7px;
   padding: 10px;
@@ -57,8 +57,8 @@ const MemberListItemContainerStyled = styled.div<{
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px var(--border-shadow-200),
-        0px 4px 4px var(--border-shadow-200);
+      box-shadow: inset 5px 5px 5px var(--border-shadow-color-200),
+        0px 4px 4px var(--border-shadow-color-200);
     `}
 
   @media (hover: hover) and (pointer: fine) {
@@ -84,8 +84,8 @@ const MemberListItemStyled = styled.div<{ isMaster: boolean }>`
   & > svg > path {
     stroke: ${(props) =>
       props.isMaster
-        ? "var(--color-text-with-bg)"
-        : "var(--color-text-normal)"};
+        ? "var(--text-with-bg-color)"
+        : "var(--normal-text-color)"};
     transform: ${(props) => (props.isMaster ? "" : "scale(0.7)")};
   }
 `;
@@ -96,7 +96,7 @@ const MemberNameStyled = styled.p<{
   line-height: 28px;
   height: 28px;
   font-size: 14px;
-  color: ${(props) => (props.isMaster ? "var(--color-text-with-bg)" : "")};
+  color: ${(props) => (props.isMaster ? "var(--text-with-bg-color)" : "")};
 `;
 
 export default memo(ClubMemberListItem);

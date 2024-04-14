@@ -41,7 +41,10 @@ const UserInfoArea: React.FC<{
     return (
       <NotSelectedStyled>
         <CabiLogoStyled src={cabiLogo} />
-        <TextStyled fontSize="1.125rem" fontColor="var(--gray-tmp-5)">
+        <TextStyled
+          fontSize="1.125rem"
+          fontColor="var(--shared-gray-color-500)"
+        >
           사물함/유저를 <br />
           선택해주세요
         </TextStyled>
@@ -51,7 +54,7 @@ const UserInfoArea: React.FC<{
   return (
     <CabinetDetailAreaStyled>
       <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--gray-tmp-5)">
+      <TextStyled fontSize="1rem" fontColor="var(--shared-gray-color-500)">
         대여 중이 아닌 사용자
       </TextStyled>
       <CabinetRectangleStyled
@@ -64,7 +67,7 @@ const UserInfoArea: React.FC<{
       <CabinetTypeIconStyled>
         <CabinetTypeIcon />
       </CabinetTypeIconStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--color-text-normal))">
+      <TextStyled fontSize="1rem" fontColor="var(--normal-text-color))">
         {selectedUserInfo.name}
       </TextStyled>
 
@@ -78,7 +81,7 @@ const UserInfoArea: React.FC<{
         <ButtonContainer onClick={closeCabinet} text="닫기" theme="grayLine" />
       </CabinetInfoButtonsContainerStyled>
       {selectedUserInfo.isBanned && (
-        <CabinetLentDateInfoStyled textColor="var(--expired)">
+        <CabinetLentDateInfoStyled textColor="var(--expired-color)">
           {selectedUserInfo.bannedInfo!}
         </CabinetLentDateInfoStyled>
       )}
@@ -127,7 +130,7 @@ const CabinetTypeIconStyled = styled.div`
   }
 
   & > svg > path {
-    stroke: var(--color-text-normal);
+    stroke: var(--normal-text-color);
   }
 `;
 

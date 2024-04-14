@@ -131,7 +131,7 @@ const WrapperStyled = styled.div<{ isSelected: boolean }>`
   height: 110px;
   border-radius: 10px;
   padding: 25px;
-  background-color: var(--gray-tmp-1);
+  background-color: var(--shared-gray-color-100);
   display: flex;
   align-items: center;
   transition: transform 0.2s, opacity 0.2s;
@@ -141,8 +141,8 @@ const WrapperStyled = styled.div<{ isSelected: boolean }>`
     css`
       opacity: 0.9;
       transform: scale(1.02);
-      box-shadow: inset 4px 4px 4px var(--border-shadow-100),
-        2px 2px 4px var(--border-shadow-100);
+      box-shadow: inset 4px 4px 4px var(--border-shadow-color-100),
+        2px 2px 4px var(--border-shadow-color-100);
     `}
   @media (hover: hover) and (pointer: fine) {
     &:hover {
@@ -161,14 +161,14 @@ const RectangleStyled = styled.div<{
   border-radius: 10px;
   background-color: ${(props) =>
     props.banned
-      ? "var(--expired)"
+      ? "var(--expired-color)"
       : props.status
       ? cabinetStatusColorMap[props.status]
-      : "var(--full)"};
+      : "var(--full-color)"};
   font-size: 1.625rem;
   color: ${(props) =>
     props.banned
-      ? "var(--color-background)"
+      ? "var(--bg-color)"
       : props.status
       ? cabinetLabelColorMap[props.status]
       : "var(--black)"};
@@ -187,7 +187,7 @@ const TextWrapper = styled.div`
 const LocationStyled = styled.p`
   font-size: 0.875rem;
   line-height: 28px;
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
 `;
 
 const NameWrapperStyled = styled.div`

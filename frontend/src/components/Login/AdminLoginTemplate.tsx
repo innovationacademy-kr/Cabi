@@ -60,7 +60,7 @@ const AdminLoginTemplate = (props: {
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">
         <TopContentsStyled>
-          <LoginTitleStyled color="var(--color-text-normal)">
+          <LoginTitleStyled color="var(--normal-text-color)">
             42서울 캐비닛 서비스
           </LoginTitleStyled>
           <LoginTitleStyled color="var(--sub-color)">
@@ -208,7 +208,7 @@ const LoginCardStyled = styled.div`
   align-items: center;
   flex-direction: column;
   padding: 85px 40px;
-  background-color: var(--color-background);
+  background-color: var(--bg-color);
 `;
 
 const CardLogoStyled = styled.div`
@@ -252,19 +252,19 @@ const CardInputStyled = styled.input<{ isFocus: boolean }>`
   letter-spacing: 0.05rem;
   width: 100%;
   height: 48px;
-  background-color: var(--color-background);
+  background-color: var(--bg-color);
   border-radius: 8px;
   margin-bottom: 8px;
   border: ${(props) =>
     props.isFocus
       ? "1px solid var(--main-color)"
-      : "1px solid var(--gray-tmp-4)"};
-  color: var(--color-text-normal);
+      : "1px solid var(--shared-gray-color-400)"};
+  color: var(--normal-text-color);
 `;
 
 const CardGoogleOauthStyled = styled.button`
-  background-color: var(--color-background);
-  color: var(--color-text-normal);
+  background-color: var(--bg-color);
+  color: var(--normal-text-color);
   font-style: oblique;
   height: 30px;
   margin-top: 10px;

@@ -31,7 +31,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연체 페널티는 누적됩니다.
     </div>
   `,
-    pointColor: "var(--color-text-with-bg)",
+    pointColor: "var(--text-with-bg-color)",
   },
   [ContentStatus.SHARE]: {
     contentTitle: "공유 사물함",
@@ -60,7 +60,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연체 페널티는 누적됩니다.
     </div>
   `,
-    pointColor: "var(--color-text-with-bg)",
+    pointColor: "var(--text-with-bg-color)",
   },
   [ContentStatus.CLUB]: {
     contentTitle: "동아리 사물함",
@@ -87,7 +87,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     상세 페이지가 제공되지 않습니다.
     <br />
     비밀번호는 동아리 내에서 공유하여 이용하세요.</div>`,
-    pointColor: "var(--color-text-with-bg)",
+    pointColor: "var(--text-with-bg-color)",
   },
   [ContentStatus.PENDING]: {
     contentTitle: "오픈예정",
@@ -103,12 +103,12 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     title="슬랙 캐비닛 채널 새창으로 열기"
   >
     슬랙 캐비닛 채널</a>에서 확인하세요.</div>`,
-    pointColor: "var(--color-text-with-bg)",
+    pointColor: "var(--text-with-bg-color)",
   },
   [ContentStatus.IN_SESSION]: {
     contentTitle: "대기중",
     imagePath: "/src/assets/images/clock.svg",
-    background: "var(--gray-tmp-1)",
+    background: "var(--shared-gray-color-100)",
     contentText: `<span>◦ 상세 내용</span><br/>
     <div>공유 사물함 대여 시 <strong>10분</strong>간의 대기 시간이 발생합니다.<br/>
     대여 과정에서 생성된 <strong>초대 코드</strong>를 통해 공유 사물함에 입장할 수 있습니다.<br/>
@@ -128,7 +128,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.EXTENSION]: {
     contentTitle: "연장권 이용방법 안내서",
     imagePath: "/src/assets/images/extension.svg",
-    background: "var(--gray-tmp-1)",
+    background: "var(--shared-gray-color-100)",
     contentText: `<span>◦ 연장권 취득 조건</span><br/>
     <div>
     월 출석 시간이 <strong>기준 시간</strong> 이상일 시 연장권이 부여됩니다.<br/>
@@ -144,6 +144,6 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연장권은 <strong>해당 월의 마지막 날</strong>까지 사용 가능합니다.<br/>
     공유 사물함에 한 명만 남거나 연체된 상태라면 연장권 사용이 불가합니다.
     </div>`,
-    pointColor: "var(--color-text-normal)",
+    pointColor: "var(--normal-text-color)",
   },
 };

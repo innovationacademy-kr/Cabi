@@ -163,7 +163,7 @@ const ModalWrapper = styled.div<{
       : "none"};
   box-shadow: ${(props) =>
     props.contentStatus === ContentStatus.PENDING &&
-    "inset 0px 0px 0px 5px var(--color-background);"};
+    "inset 0px 0px 0px 5px var(--bg-color);"};
   border-bottom: none;
   @media screen and (max-width: 700px) {
     width: 100%;
@@ -182,8 +182,8 @@ const ModalContent = styled.div<{
     props.contentStatus === ContentStatus.IN_SESSION
       ? "var(--main-color)"
       : props.contentStatus === ContentStatus.EXTENSION
-      ? "var(--color-text-normal)"
-      : "var(--color-text-with-bg)"};
+      ? "var(--normal-text-color)"
+      : "var(--text-with-bg-color)"};
   font-size: 2.5rem;
   font-weight: bold;
   align-items: flex-start;
@@ -204,8 +204,8 @@ const ModalContent = styled.div<{
       props.contentStatus === ContentStatus.IN_SESSION
         ? "var(--main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
-        ? "var(--color-text-normal)"
-        : "var(--color-text-with-bg)"};
+        ? "var(--normal-text-color)"
+        : "var(--text-with-bg-color)"};
   }
 `;
 
@@ -226,8 +226,8 @@ const CloseButton = styled.div<{
       props.contentStatus === ContentStatus.IN_SESSION
         ? "var(--main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
-        ? "var(--color-text-normal)"
-        : "var(--color-background)"};
+        ? "var(--normal-text-color)"
+        : "var(--bg-color)"};
   }
   :hover {
     transform: translateX(-16px);
@@ -249,7 +249,7 @@ const BoxInfoWrap = styled.div`
 const BoxInfo1 = styled.div`
   width: 100px;
   height: 80px;
-  border: 1px solid var(--color-text-with-bg);
+  border: 1px solid var(--text-with-bg-color);
   border-radius: 15px;
   font-size: 0.875rem;
   font-weight: 400;
@@ -267,7 +267,7 @@ const BoxInfo1 = styled.div`
 const BoxInfo2 = styled.div`
   width: 80px;
   height: 80px;
-  border: 1px solid var(--color-text-with-bg);
+  border: 1px solid var(--text-with-bg-color);
   border-radius: 15px;
   font-size: 0.875rem;
   font-weight: 400;
@@ -337,8 +337,8 @@ const ContentImgStyled = styled.div<{
     & > path {
       stroke: ${(props) =>
         props.contentStatus === ContentStatus.EXTENSION
-          ? "var(--color-text-normal)"
-          : "var(--color-text-with-bg)"};
+          ? "var(--normal-text-color)"
+          : "var(--text-with-bg-color)"};
       transform: ${(props) =>
         props.contentStatus === ContentStatus.EXTENSION
           ? "scale(1.4)"

@@ -150,7 +150,7 @@ const UserCountIconStyled = styled.div`
   height: 24px;
 
   & > svg > path {
-    stroke: var(--color-text-normal);
+    stroke: var(--normal-text-color);
   }
 `;
 
@@ -198,7 +198,7 @@ const MoreButtonStyled = styled.button<{
   margin: 20px auto;
   border: 1px solid var(--main-color);
   border-radius: 30px;
-  background-color: var(--color-background);
+  background-color: var(--bg-color);
   color: var(--main-color);
   position: relative;
 `;

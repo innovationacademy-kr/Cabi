@@ -48,7 +48,7 @@ const HeaderStyled = styled.div`
   justify-content: space-between;
   width: 100%;
   align-items: center;
-  color: var(--color-text-normal);
+  color: var(--normal-text-color);
   font-weight: bold;
 `;
 
@@ -63,12 +63,12 @@ const MapInfoContainerStyled = styled.div`
   z-index: 9;
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;
-  box-shadow: 0 0 40px 0 var(--border-shadow-200);
+  box-shadow: 0 0 40px 0 var(--border-shadow-color-200);
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--color-background);
-  border-left: 1px solid var(--color-line);
+  background: var(--bg-color);
+  border-left: 1px solid var(--line-color);
   &.on {
     transform: translateX(0%);
   }

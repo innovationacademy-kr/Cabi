@@ -4,7 +4,7 @@
     position: fixed;
     top: 80px;
     left: 0;
-    background-color: var(--color-background);
+    background-color: var(--bg-color);
     height: calc(100% - 80px);
     z-index: 9;
     transform: translateX(-100%);
@@ -12,7 +12,7 @@
   }
   #leftNavWrap.on {
     transform: translateX(0%);
-    box-shadow: 0 0 40px 0 var(--border-shadow-200);
+    box-shadow: 0 0 40px 0 var(--border-shadow-color-200);
   }
 
   #menuBg {
@@ -22,7 +22,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--bg-shadow-100);
+    background-color: var(--bg-shadow-color-100);
     transform: translateX(-100%);
     z-index: 8;
   }
@@ -38,7 +38,7 @@
     z-index: 9;
     transform: translateX(120%);
     transition: transform 0.3s ease-in-out;
-    box-shadow: 0 0 40px 0 var(--border-shadow-200);
+    box-shadow: 0 0 40px 0 var(--border-shadow-color-200);
   }
   #cabinetDetailArea.on {
     transform: translateX(0%);

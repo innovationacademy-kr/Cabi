@@ -51,27 +51,27 @@ const TopNavButtonStyled = styled.div<{
 
   & svg {
     .happyCcabi_svg__hair {
-      fill: var(--color-background);
+      fill: var(--bg-color);
     }
     .happyCcabi_svg__leftArm {
-      fill: var(--color-background);
+      fill: var(--bg-color);
     }
     .happyCcabi_svg__rightArm {
-      fill: var(--color-background);
+      fill: var(--bg-color);
     }
     .happyCcabi_svg__leftEye {
-      fill: var(--color-background);
+      fill: var(--bg-color);
     }
     .happyCcabi_svg__rightEye {
-      fill: var(--color-background);
+      fill: var(--bg-color);
     }
     .happyCcabi_svg__mouth {
-      fill: var(--color-background);
+      fill: var(--bg-color);
     }
   }
 
   & > svg > path {
-    stroke: var(--gray-tmp-5);
+    stroke: var(--shared-gray-color-500);
   }
 `;
 

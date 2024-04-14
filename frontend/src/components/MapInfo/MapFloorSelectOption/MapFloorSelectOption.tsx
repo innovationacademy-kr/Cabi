@@ -23,9 +23,9 @@ const OptionWrapperStyled = styled.div`
   position: absolute;
   left: 0;
   top: 75px;
-  background: var(--color-background);
+  background: var(--bg-color);
   border-radius: 10px;
-  box-shadow: 0 0 10px 0 var(--border-shadow-100);
+  box-shadow: 0 0 10px 0 var(--border-shadow-color-100);
   overflow: hidden;
   z-index: 99;
   display: none;
@@ -37,12 +37,12 @@ const OptionWrapperStyled = styled.div`
 const OptionStyled = styled.div`
   width: 65px;
   height: 40px;
-  border-bottom: 1px solid var(--gray-tmp-2);
+  border-bottom: 1px solid var(--shared-gray-color-200);
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--color-background);
-  color: var(--color-text-normal);
+  background: var(--bg-color);
+  color: var(--normal-text-color);
   cursor: pointer;
 `;
 

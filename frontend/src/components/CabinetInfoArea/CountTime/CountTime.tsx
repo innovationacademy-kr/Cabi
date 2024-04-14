@@ -33,7 +33,7 @@ const CountTimeStyled = styled.div`
   align-items: center;
   border-radius: 10px;
   margin-bottom: 15px;
-  background: var(--color-background);
+  background: var(--bg-color);
   color: var(--main-color);
   border: 1px solid var(--main-color);
 `;

@@ -118,7 +118,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: var(--color-background);
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -171,7 +171,7 @@ const ContentItemTitleStyled = styled.h3`
 const ContentItemInputStyled = styled.input<{
   mode: string;
 }>`
-  border: 1px solid var(--color-line);
+  border: 1px solid var(--line-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -180,10 +180,10 @@ const ContentItemInputStyled = styled.input<{
   font-size: 1.125rem;
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
   color: ${({ mode }) =>
-    mode === "read" ? "var(--main-color)" : "var(--color-text-normal)"};
+    mode === "read" ? "var(--main-color)" : "var(--normal-text-color)"};
   &::placeholder {
     color: ${({ mode }) =>
-      mode === "read" ? "var(--main-color)" : "var(--gray-tmp-4)"};
+      mode === "read" ? "var(--main-color)" : "var(--shared-gray-color-400)"};
   }
 `;
 
@@ -193,7 +193,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-100);
+  background: var(--bg-shadow-color-100);
   z-index: 1000;
 `;
 

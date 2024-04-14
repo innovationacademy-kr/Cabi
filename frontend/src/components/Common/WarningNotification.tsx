@@ -58,11 +58,11 @@ const WarningWrapper = styled.div<{ isVisible: boolean }>`
   justify-content: center;
   & ${WarningIcon}:hover + ${WarningBox} {
     visibility: visible;
-    color: var(--color-text-normal);
-    background-color: var(--bg-shadow-400);
+    color: var(--normal-text-color);
+    background-color: var(--bg-shadow-color-400);
     &:before {
-      border-color: transparent transparent var(--bg-shadow-400)
-        var(--bg-shadow-400);
+      border-color: transparent transparent var(--bg-shadow-color-400)
+        var(--bg-shadow-color-400);
     }
   }
 `;

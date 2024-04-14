@@ -155,23 +155,23 @@ const CabinetListItemStyled = styled.div<{
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px var(--border-shadow-200),
-        0px 4px 4px var(--border-shadow-200);
+      box-shadow: inset 5px 5px 5px var(--border-shadow-color-200),
+        0px 4px 4px var(--border-shadow-color-200);
     `}
   ${({ isMultiSelected }) =>
     isMultiSelected &&
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px var(--border-shadow-200),
-        0px 4px 4px var(--border-shadow-200);
+      box-shadow: inset 5px 5px 5px var(--border-shadow-color-200),
+        0px 4px 4px var(--border-shadow-color-200);
     `}
 
   ${({ status }) =>
     status === "PENDING" &&
     css`
       border: 2px double var(--main-color);
-      box-shadow: inset 0px 0px 0px 2px var(--color-background);
+      box-shadow: inset 0px 0px 0px 2px var(--bg-color);
       // 테두리
     `}
 
@@ -236,7 +236,7 @@ const CabinetNumberStyled = styled.p<{
   ${({ status }) =>
     status === "IN_SESSION" &&
     css`
-      color: var(--color-text-normal);
+      color: var(--normal-text-color);
     `}
 `;
 

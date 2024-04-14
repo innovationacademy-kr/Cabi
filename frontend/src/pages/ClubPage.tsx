@@ -52,7 +52,7 @@ const EmptyClubListTextStyled = styled.div`
   height: 100%;
   font-size: 1.125rem;
   line-height: 1.75rem;
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
 `;
 
 const CabiLogoStyled = styled.div`

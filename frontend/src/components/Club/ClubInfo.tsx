@@ -59,7 +59,7 @@ const EmptyClubCabinetTextStyled = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 1.125rem;
-  color: var(--gray-tmp-5);
+  color: var(--shared-gray-color-500);
 `;
 
 const SadCcabiStyled = styled.div`
@@ -76,7 +76,7 @@ const SadCcabiStyled = styled.div`
   }
 
   & > svg > path {
-    fill: var(--gray-tmp-5);
+    fill: var(--shared-gray-color-500);
     transform: scale(0.6);
   }
 `;

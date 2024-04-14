@@ -121,7 +121,7 @@ const TitleContainerStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid var(--gray-tmp-3);
+  border-bottom: 2px solid var(--shared-gray-color-300);
   margin-bottom: 70px;
   color: var(--main-color);
   font-weight: 700;
@@ -136,7 +136,7 @@ const TitleContainerStyled = styled.div`
     margin-bottom: 20px;
   }
   .title > span {
-    color: var(--color-text-normal);
+    color: var(--normal-text-color);
   }
 `;
 
@@ -145,11 +145,11 @@ const NotionBtn = styled.button`
   height: 40px;
   border-radius: 8px;
   font-size: 0.875rem;
-  color: var(--gray-tmp-7);
-  background: var(--color-background);
-  border: 1px solid var(--gray-tmp-4);
+  color: var(--shared-gray-color-700);
+  background: var(--bg-color);
+  border: 1px solid var(--shared-gray-color-400);
   :hover {
-    color: var(--color-text-normal);
+    color: var(--normal-text-color);
     font-weight: 400;
   }
 `;
@@ -162,7 +162,7 @@ const WrapSectionStyled = styled.div`
     line-height: 1.4;
     text-align: left;
     font-weight: bold;
-    color: var(--color-text-normal);
+    color: var(--normal-text-color);
   }
 `;
 
@@ -199,7 +199,7 @@ const InfoSectionStyled = styled.section`
     text-align: center;
   }
   .redColor {
-    color: var(--orange-color);
+    color: var(--orange);
     margin-top: 15px;
   }
   .article > p > span {

@@ -24,7 +24,7 @@ const MultiToggleSwitchSeparated = <T,>({
 
     buttons?.forEach((button) => {
       if (button.className === `${initialState}`) {
-        button.style.color = "var(--color-background)";
+        button.style.color = "var(--bg-color)";
         button.style.backgroundColor = "var(--main-color)";
       }
     });
@@ -39,11 +39,11 @@ const MultiToggleSwitchSeparated = <T,>({
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
-      button.style.color = "var(--color-text-normal)";
-      button.style.backgroundColor = "var(--gray-tmp-1)";
+      button.style.color = "var(--normal-text-color)";
+      button.style.backgroundColor = "var(--shared-gray-color-100)";
     });
 
-    target.style.color = "var(--color-background)";
+    target.style.color = "var(--bg-color)";
     target.style.backgroundColor = "var(--main-color)";
 
     setState(target.className as React.SetStateAction<T>);
@@ -76,8 +76,8 @@ const WrapperStyled = styled.div`
     font-size: 0.9rem;
     height: 30px;
     font-weight: 500;
-    background-color: var(--gray-tmp-1);
-    color: var(--color-text-normal);
+    background-color: var(--shared-gray-color-100);
+    color: var(--normal-text-color);
     padding: 4px 12px;
     margin: 0px 4px;
   }

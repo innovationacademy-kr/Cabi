@@ -36,7 +36,7 @@ const MapGridStyled = styled.div`
   text-align: center;
   max-height: 580px;
   height: 100%;
-  background: var(--gray-tmp-2);
+  background: var(--shared-gray-color-200);
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(8, 1fr);
