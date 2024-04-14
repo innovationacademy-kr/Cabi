@@ -152,6 +152,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     resetCurrentSection();
     navigator("/login");
   };
+  
   return (
     <LeftMainNav
       pathname={pathname}

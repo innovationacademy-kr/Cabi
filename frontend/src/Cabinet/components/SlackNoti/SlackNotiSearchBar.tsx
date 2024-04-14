@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import SlackNotiSearchBarList from "@/components/SlackNoti/SlackNotiSearchBarList";
-import { ISlackChannel, SlackChannels } from "@/assets/data/SlackAlarm";
-import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
-import useDebounce from "@/hooks/useDebounce";
-import useOutsideClick from "@/hooks/useOutsideClick";
+import SlackNotiSearchBarList from "@/Cabinet/components/SlackNoti/SlackNotiSearchBarList";
+import { ISlackChannel, SlackChannels } from "@/Cabinet/assets/data/SlackAlarm";
+import { axiosSearchByIntraId } from "@/Cabinet/api/axios/axios.custom";
+import useDebounce from "@/Cabinet/hooks/useDebounce";
+import useOutsideClick from "@/Cabinet/hooks/useOutsideClick";
 
 const SlackNotiSearchBar = ({
   searchInput,

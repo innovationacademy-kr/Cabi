@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
+import ChangeToHTML from "@/Cabinet/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 
 const SlackNotiSearchListItem = (props: {
   inputText: string;

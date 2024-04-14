@@ -1,6 +1,6 @@
+import { ISlackChannel } from "@/Cabinet/assets/data/SlackAlarm";
 import styled from "styled-components";
-import SlackNotiSearchListItem from "@/components/SlackNoti/SlackNotiSearchListItem";
-import { ISlackChannel } from "@/assets/data/SlackAlarm";
+import SlackNotiSearchListItem from "@/Cabinet/components/SlackNoti/SlackNotiSearchListItem";
 
 interface ISearchListByIntraId {
   name: string;

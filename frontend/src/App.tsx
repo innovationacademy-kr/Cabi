@@ -32,7 +32,7 @@ const AdminLoginFailurePage = lazy(
 );
 const AdminHomePage = lazy(() => import("@/Cabinet/pages/admin/AdminHomePage"));
 const AdminSlackNotiPage = lazy(
-  () => import("@/pages/admin/AdminSlackNotiPage")
+  () => import("@/Cabinet/pages/admin/AdminSlackNotiPage")
 );
 
 function App(): React.ReactElement {

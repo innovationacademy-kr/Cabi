@@ -3,18 +3,18 @@ import styled from "styled-components";
 import {
   FailResponseModal,
   SuccessResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
-import SlackNotiSearchBar from "@/components/SlackNoti/SlackNotiSearchBar";
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import SlackNotiSearchBar from "@/Cabinet/components/SlackNoti/SlackNotiSearchBar";
 import {
   ISlackAlarmTemplate,
   ISlackChannel,
   SlackAlarmTemplates,
   SlackChannels,
-} from "@/assets/data/SlackAlarm";
+} from "@/Cabinet/assets/data/SlackAlarm";
 import {
   axiosSendSlackNotificationToChannel,
   axiosSendSlackNotificationToUser,
-} from "@/api/axios/axios.custom";
+} from "@/Cabinet/api/axios/axios.custom";
 
 const AdminSlackNotiPage = () => {
   const receiverInputRef = useRef<HTMLInputElement>(null);
