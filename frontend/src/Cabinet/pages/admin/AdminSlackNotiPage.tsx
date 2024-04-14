@@ -149,7 +149,10 @@ const AdminSlackNotiPage = () => {
         (hasErrorOnResponse ? (
           <FailResponseModal
             modalContents={modalContent}
-            closeModal={() => setShowResponseModal(false)}
+            closeModal={() => {
+              setShowResponseModal(false);
+              setHasErrorOnResponse(false);
+            }}
           />
         ) : (
           <SuccessResponseModal
