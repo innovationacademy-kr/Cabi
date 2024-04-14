@@ -25,8 +25,8 @@ const SlackNotiSearchBar = ({
 
   const typeSearchInput = async () => {
     if (searchInput.current) {
-      setSearchValue(searchInput.current.value);
       const searchValue = searchInput.current.value;
+      setSearchValue(searchValue);
       if (searchValue.length <= 0) {
         setSearchListById([]);
         setSearchListByChannel([]);

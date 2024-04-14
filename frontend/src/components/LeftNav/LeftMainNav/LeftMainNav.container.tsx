@@ -123,6 +123,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     navigator("slack-notification");
     closeAll();
   };
+  
   const onClickMainClubButton = () => {
     navigator("clubs");
     closeAll();

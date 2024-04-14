@@ -42,7 +42,7 @@ const AdminSlackNotiPage = () => {
     if (msgTextAreaRef.current) msgTextAreaRef.current.value = "";
   };
 
-  const submit = async () => {
+  const handleSubmitButton = async () => {
     if (!receiverInputRef.current?.value) {
       return alert("받는이를 입력해주세요.");
     } else if (!msgTextAreaRef.current?.value) {
@@ -137,7 +137,7 @@ const AdminSlackNotiPage = () => {
             </FormButtonStyled>
             <FormButtonStyled
               primary={true}
-              onClick={submit}
+              onClick={handleSubmitButton}
               disabled={isLoading}
             >
               보내기
