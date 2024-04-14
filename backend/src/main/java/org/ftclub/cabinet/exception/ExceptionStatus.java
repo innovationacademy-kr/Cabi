@@ -70,6 +70,12 @@ public enum ExceptionStatus {
 	NOT_CLUB_MASTER(HttpStatus.BAD_REQUEST, "동아리 장이 아닙니다."),
 	INVALID_CLUB_MASTER(HttpStatus.BAD_REQUEST, "동아리에 동아리 장이 없습니다."),
 	NOT_FOUND_CLUB_LENT_HISTORY(HttpStatus.NOT_FOUND, "동아리가 대여한 사물함이 없습니다."),
+	INVALID_PRESENTATION_CATEGORY(HttpStatus.BAD_REQUEST, "발표회에 정의된 카테고리가 아닙니다."),
+	INVALID_DATE(HttpStatus.BAD_REQUEST, "잘못된 날짜입니다."),
+	PRESENTATION_ALREADY_EXISTED(HttpStatus.CONFLICT, "이미 예약된 발표 날짜입니다"),
+	NOT_FOUND_FORM(HttpStatus.NOT_FOUND, "신청서가 존재하지 않습니다."),
+	INVALID_FORM_ID(HttpStatus.BAD_REQUEST, "잘못된 신청번호입니다."),
+	INVALID_LOCATION(HttpStatus.BAD_REQUEST, "잘못된 장소입니다."),
 	;
 
 	final private int statusCode;
