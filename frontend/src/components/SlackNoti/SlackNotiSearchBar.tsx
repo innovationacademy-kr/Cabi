@@ -3,6 +3,7 @@ import styled from "styled-components";
 import SlackNotiSearchBarList from "@/components/SlackNoti/SlackNotiSearchBarList";
 import { ISlackChannel, SlackChannels } from "@/assets/data/SlackAlarm";
 import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
+import useDebounce from "@/hooks/useDebounce";
 import useOutsideClick from "@/hooks/useOutsideClick";
 
 const SlackNotiSearchBar = ({
@@ -20,19 +21,7 @@ const SlackNotiSearchBar = ({
   const [onFocus, setOnFocus] = useState<boolean>(true);
   const [targetIndex, setTargetIndex] = useState<number>(-1);
   const [searchValue, setSearchValue] = useState<string>("");
-
-  const debounce = (func: Function, wait: number) => {
-    let timeout: NodeJS.Timeout;
-
-    return function executedFunction(...args: any[]) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  };
+  const { debounce } = useDebounce();
 
   const typeSearchInput = async () => {
     if (searchInput.current) {
@@ -130,7 +119,7 @@ const SlackNotiSearchBar = ({
           onFocus={() => {
             setOnFocus(true);
           }}
-          onChange={debounce(typeSearchInput, 300)}
+          onChange={() => debounce("slackNotiSearch", typeSearchInput, 300)}
           onKeyDown={handleInputKey}
         />
         {onFocus && searchInput.current?.value && totalLength > 0 && (

@@ -7,6 +7,7 @@ import {
   axiosSearchByCabinetNumSimple,
   axiosSearchByIntraId,
 } from "@/api/axios/axios.custom";
+import useDebounce from "@/hooks/useDebounce";
 import useOutsideClick from "@/hooks/useOutsideClick";
 
 const SearchBar = () => {
@@ -20,6 +21,7 @@ const SearchBar = () => {
   const [targetIndex, setTargetIndex] = useState<number>(-1);
   const [searchValue, setSearchValue] = useState<string>("");
   const [floor, setFloor] = useState<number>(0);
+  const { debounce } = useDebounce();
 
   const resetSearchState = () => {
     setSearchListById([]);
@@ -53,19 +55,6 @@ const SearchBar = () => {
         resetSearchState();
       }
     }
-  };
-
-  const debounce = (func: Function, wait: number) => {
-    let timeout: NodeJS.Timeout;
-
-    return function executedFunction(...args: any[]) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
   };
 
   const typeSearchInput = async () => {
@@ -172,7 +161,7 @@ const SearchBar = () => {
           onFocus={() => {
             setIsFocus(true);
           }}
-          onChange={debounce(typeSearchInput, 300)}
+          onChange={() => debounce("topNavSearch", typeSearchInput, 300)}
           onKeyDown={handleInputKey}
         ></SearchBarInputStyled>
         <SearchButtonStyled onClick={clickSearchButton} />
