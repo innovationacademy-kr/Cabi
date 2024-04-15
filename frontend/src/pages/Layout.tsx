@@ -23,7 +23,6 @@ import {
   ClubResponseDto,
 } from "@/types/dto/club.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
-import ColorType from "@/types/enum/color.type.enum";
 import { axiosMyClubList, axiosMyInfo } from "@/api/axios/axios.custom";
 import { getCookie } from "@/api/react_cookie/cookies";
 import useMenu from "@/hooks/useMenu";
@@ -128,7 +127,6 @@ const Layout = (): JSX.Element => {
     <Outlet />
   ) : (
     <React.Fragment>
-      {/* <ContainerStyled darkMode={darkMode}> */}
       {isValidToken && <TopNavContainer setIsLoading={setIsLoading} />}
       {isLoading ? (
         <LoadingAnimation />
@@ -156,21 +154,11 @@ const Layout = (): JSX.Element => {
           )}
         </WrapperStyled>
       )}
-      {/* </ContainerStyled> */}
     </React.Fragment>
   );
 };
 
 export default Layout;
-
-const ContainerStyled = styled.div<{ darkMode: string }>`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background-color: ${(props) => props.darkMode};
-`;
 
 const WrapperStyled = styled.div`
   width: 100%;

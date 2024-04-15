@@ -10,6 +10,7 @@ import {
   customColors,
   themeColorData,
 } from "@/components/Card/ThemeColorCard/colorInfo";
+import DarkMode from "@/components/TopNav/DarkMode/DarkMode";
 
 interface ThemeColorProps {
   showColorPicker: boolean;
@@ -40,6 +41,7 @@ const ThemeColorCard = ({
     <>
       {showColorPicker && <BackgroundOverlayStyled />}
       <ThemeColorCardWrapper>
+        <DarkMode />
         <Card
           title={"테마 컬러"}
           gridArea={"theme"}
