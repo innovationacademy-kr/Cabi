@@ -120,6 +120,10 @@
 
   color: var(--normal-text-color);
   background-color: var(--bg-color);
+
+  [color-theme="dark"] {
+    --main-color: var(--pink-100);
+  }
 }
 
 /* main color variable */
