@@ -1,27 +1,6 @@
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { createGlobalStyle, css } from "styled-components";
 import { darkModeState } from "@/recoil/atoms";
-
-export const lightValues = css`
-  --text: var(--blue);
-`;
-
-// set up dark theme CSS variables
-export const darkValues = css`
-  --text: var(--pink);
-`;
-
-const GlobalStyle = createGlobalStyle`
-  :root {
-    // define light theme values as the defaults within the root selector
-    ${lightValues}
-
-    [color-theme="true"] {
-      ${darkValues}
-    }
-  }
-`;
 
 const DarkMode = () => {
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
@@ -30,6 +9,14 @@ const DarkMode = () => {
       return prev === "light" ? "dark" : "light";
     });
   };
+
+  var darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+  useEffect(() => {
+    setDarkMode(() => {
+      return darkModeQuery.matches ? "dark" : "light";
+    });
+  }, []);
 
   useEffect(() => {
     document.body.setAttribute("color-theme", darkMode);
