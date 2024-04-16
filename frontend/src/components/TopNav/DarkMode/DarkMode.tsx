@@ -96,15 +96,10 @@ const darkValues = css`
 
 export const GlobalStyle = createGlobalStyle`
   :root {
-    // define light theme values as the defaults within the root selector
     ${lightValues}
 
-    // override with dark theme values if theme data attribute is set to dark
-    [color-theme="dark"],
-  &.no-js { 
-    @media (prefers-color-scheme: dark) { 
+    [color-theme="dark"] {
       ${darkValues}
-    }
     }
   }
 `;
