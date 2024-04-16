@@ -1,7 +1,7 @@
 import React from "react";
 import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
-import DarkMode from "@/components/TopNav/DarkMode/DarkMode";
+import DarkMode from "@/components/Card/ThemeColorCard/DarkMode/DarkMode";
 import SearchBar from "@/components/TopNav/SearchBar/SearchBar";
 import TopNavButtonGroup from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
