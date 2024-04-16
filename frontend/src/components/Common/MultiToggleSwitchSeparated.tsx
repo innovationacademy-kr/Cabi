@@ -10,12 +10,16 @@ interface MultiToggleSwitchProps<T> {
   initialState: T;
   setState: React.Dispatch<React.SetStateAction<T>>;
   toggleList: toggleItem[];
+  buttonHeight?: string;
+  buttonWidth?: string;
 }
 
 const MultiToggleSwitchSeparated = <T,>({
   initialState,
   setState,
   toggleList,
+  buttonHeight,
+  buttonWidth,
 }: MultiToggleSwitchProps<T>) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -50,7 +54,12 @@ const MultiToggleSwitchSeparated = <T,>({
   }
 
   return (
-    <WrapperStyled ref={wrapperRef} onClick={switchToggle}>
+    <WrapperStyled
+      ref={wrapperRef}
+      onClick={switchToggle}
+      buttonHeight={buttonHeight}
+      buttonWidth={buttonWidth}
+    >
       {toggleList.map((item) => (
         <button key={item.key} className={`${item.key}`}>
           {item.name}
@@ -60,26 +69,30 @@ const MultiToggleSwitchSeparated = <T,>({
   );
 };
 
-const WrapperStyled = styled.div`
+const WrapperStyled = styled.div<{
+  buttonHeight?: string;
+  buttonWidth?: string;
+}>`
   width: 100%;
   display: flex;
   align-items: center;
   border-radius: 10px;
+  justify-content: space-between;
 
   button {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: fit-content;
+    width: ${(props) =>
+      props.buttonWidth ? props.buttonWidth : "fit-content"};
     min-width: 50px;
     border-radius: 10px;
     font-size: 0.9rem;
-    height: 30px;
+    height: ${(props) => (props.buttonHeight ? props.buttonHeight : "30px")};
     font-weight: 500;
     background-color: var(--shared-gray-color-100);
     color: var(--normal-text-color);
     padding: 4px 12px;
-    margin: 0px 4px;
   }
 `;
 

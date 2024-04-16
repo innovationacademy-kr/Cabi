@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import Card from "@/components/Card/Card";
 import {
   CardContentStyled,
@@ -41,12 +41,11 @@ const ThemeColorCard = ({
     <>
       {showColorPicker && <BackgroundOverlayStyled />}
       <ThemeColorCardWrapper>
-        <DarkMode />
         <Card
-          title={"테마 컬러"}
+          title={"화면 스타일"}
           gridArea={"theme"}
           width={"350px"}
-          height={showColorPicker ? "330px" : "230px"}
+          height={showColorPicker ? "330px" : "350px"}
           buttons={
             showColorPicker
               ? [
@@ -73,6 +72,9 @@ const ThemeColorCard = ({
           }
         >
           <>
+            <CardContentWrapper>
+              <DarkMode />
+            </CardContentWrapper>
             <CardContentWrapper>
               {themeColorData.map(({ title, type, getColor }) => (
                 <CardContentStyled key={type}>

@@ -18,7 +18,6 @@ const MultiToggleSwitch = <T,>({
   toggleList,
 }: MultiToggleSwitchProps<T>) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
