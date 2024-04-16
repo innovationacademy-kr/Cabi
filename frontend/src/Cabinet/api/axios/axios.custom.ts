@@ -703,3 +703,34 @@ export const axiosGetAvailableCabinets = async (): Promise<any> => {
     throw error;
   }
 };
+
+const axiosSendSlackNotificationToUserURL = "/slack/send";
+export const axiosSendSlackNotificationToUser = async (
+  receiverName: string,
+  message: string
+): Promise<any> => {
+  try {
+    const response = await instance.post(axiosSendSlackNotificationToUserURL, {
+      receiverName: receiverName,
+      message: message,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosSendSlackNotificationToChannel = async (
+  receiverName: string,
+  message: string,
+  channel: string | undefined
+): Promise<any> => {
+  try {
+    await instance.post(axiosSendSlackNotificationToUserURL + `/${channel}`, {
+      receiverName: receiverName,
+      message: message,
+    });
+  } catch (error) {
+    throw error;
+  }
+};

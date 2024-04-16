@@ -29,6 +29,7 @@ const SearchPage = lazy(() => import("@/Cabinet/pages/admin/SearchPage"));
 const AdminClubPage = lazy(() => import("@/Cabinet/pages/admin/AdminClubPage"));
 const AdminLoginFailurePage = lazy(
   () => import("@/Cabinet/pages/admin/AdminLoginFailurePage")
+
 );
 const AdminHomePage = lazy(() => import("@/Cabinet/pages/admin/AdminHomePage"));
 
@@ -62,6 +63,7 @@ function App(): React.ReactElement {
             <Route path="main" element={<AdminMainPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="club" element={<AdminClubPage />} />
+            <Route path="slack-notification" element={<AdminSlackNotiPage />} />
             <Route path="available" element={<AvailablePage />} />
           </Route>
           <Route
