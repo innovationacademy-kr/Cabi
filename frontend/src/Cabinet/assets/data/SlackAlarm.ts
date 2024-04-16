@@ -38,9 +38,9 @@ export const SlackAlarmTemplates: ISlackAlarmTemplate[] = [
     content: `:dancing_kirby::dancing_kirby::dancing_kirby:<Cabi 서비스 점검 완료 공지>:dancing_kirby::dancing_kirby::dancing_kirby:
 		안녕하세요. Cabi 팀입니다! :happy_ccabi:
 		현시간부로 서비스 이용이 정상화되었습니다.
-		 :portal_blue_parrot: 서비스는 cabi.42seoul.io 를 이용해주시면 됩니다. :portal_orange_parrot:
-		:파일_수납장: 서비스 개선과 관련한 사항은 Cabi 채널 문의주세요! :파일_수납장:
-		 :party-dinosaur::party-dinosaur::party-dinosaur::party-dinosaur:기다려주셔서 감사합니다! :party-dinosaur::party-dinosaur::party-dinosaur::party-dinosaur:`,
+		:portal_blue_parrot: 서비스는 cabi.42seoul.io 를 이용해주시면 됩니다. :portal_orange_parrot:
+		:file_cabinet: 서비스 개선과 관련한 사항은 Cabi 채널 문의주세요! :file_cabinet:
+		:party-dinosaur::party-dinosaur::party-dinosaur::party-dinosaur:기다려주셔서 감사합니다! :party-dinosaur::party-dinosaur::party-dinosaur::party-dinosaur:`,
   },
   {
     title: "업데이트",
@@ -53,23 +53,23 @@ export const SlackAlarmTemplates: ISlackAlarmTemplate[] = [
   },
   {
     title: "이용 안내서",
-    content: `:파일_수납장: Cabi 이용 안내서 :파일_수납장:
+    content: `:file_cabinet: Cabi 이용 안내서 :file_cabinet:
 		:embarrassed_cabi: 42seoul의 사물함 대여 서비스를 운영중인 Cabi 팀입니다.:embarrassed_cabi:
 		자세한 이용 방법은 Cabi 가입 후 홈페이지의 이용 안내서를 참고해 주세요!
-		 :오른쪽을_가리키는_손_모양: https://cabi.42seoul.io/home
+		:point_right: https://cabi.42seoul.io/home
 		:alert: Cabi FAQ :alert:
-		:압정: 사물함의 물리적인 문제가 있습니다 (고장 났거나 잠겨있는 경우)
+		:pushpin: 사물함의 물리적인 문제가 있습니다 (고장 났거나 잠겨있는 경우)
 		:happy_ccabi: 사물함의 물리적인 문제는 데스크에 문의 부탁드립니다!
-		:압정: 사물함 비밀번호를 모릅니다 (잊어버렸습니다).
-		 :happy_ccabi: 저희 서비스에서 대여한 화면과 슬랙 화면을 준비해서 데스크에 문의해주시기 바랍니다!
-		 :압정: 사물함을 닫으려는데 빨간 열쇠 표시가 뜨면서 경고음이 나고 잠기지 않습니다.
-		 :happy_ccabi: 사물함 안이 꽉 차거나 제대로 닫히지 않은 경우에 발생하는데, 문을 누른 상태로 비밀번호를 입력해 보시고, 그래도 되지 않는다면 데스크에 문의 부탁드립니다!
-		 :압정: 사물함 대여 후 사용하려고 했더니 안에 짐이 가득 차 있습니다.
-		 :happy_ccabi: 이전 사용자의 짐과 관련한 문의는 데스크에 문의 부탁드립니다!
-		 :압정: 공유 사물함을 대여했는데 비밀번호는 어디서 알 수 있을까요?
-		 :happy_ccabi: 같이 사용하는 사람이 있다면 대여 내역에서 공유 메모에 적혀 있을 수 있습니다. 또는 함께 사용하는 분에게 여쭤보세요!
-		 :압정: 사물함을 연체 했는데 패널티는 무엇인가요?
-		 :happy_ccabi: 연체일만큼 누적 연체일이 증가하고, 누적일 만큼 대여가 불가능합니다:울음을_참는_얼굴:`,
+		:pushpin: 사물함 비밀번호를 모릅니다 (잊어버렸습니다).
+		:happy_ccabi: 저희 서비스에서 대여한 화면과 슬랙 화면을 준비해서 데스크에 문의해주시기 바랍니다!
+		:pushpin: 사물함을 닫으려는데 빨간 열쇠 표시가 뜨면서 경고음이 나고 잠기지 않습니다.
+		:happy_ccabi: 사물함 안이 꽉 차거나 제대로 닫히지 않은 경우에 발생하는데, 문을 누른 상태로 비밀번호를 입력해 보시고, 그래도 되지 않는다면 데스크에 문의 부탁드립니다!
+		:pushpin: 사물함 대여 후 사용하려고 했더니 안에 짐이 가득 차 있습니다.
+		:happy_ccabi: 이전 사용자의 짐과 관련한 문의는 데스크에 문의 부탁드립니다!
+		:pushpin: 공유 사물함을 대여했는데 비밀번호는 어디서 알 수 있을까요?
+		:happy_ccabi: 같이 사용하는 사람이 있다면 대여 내역에서 공유 메모에 적혀 있을 수 있습니다. 또는 함께 사용하는 분에게 여쭤보세요!
+		:pushpin: 사물함을 연체 했는데 패널티는 무엇인가요?
+		:happy_ccabi: 연체일만큼 누적 연체일이 증가하고, 누적일 만큼 대여가 불가능합니다:face_holding_back_tears:`,
   },
   {
     title: "모집 공고",
@@ -88,9 +88,8 @@ export const SlackAlarmTemplates: ISlackAlarmTemplate[] = [
 		:four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover:
 		:four_leaf_clover::arrow_right:지금 바로 지원하기:arrow_left::four_leaf_clover:
 		:four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover:
-		:절하는_남성: 상세한 정보는 구글 폼을 참고해주시고, 이외에 모집과 관련한 문의는
-		@sanan
-		 에게 DM 부탁드립니다! :man-bowing:`,
+		:man-bowing: 상세한 정보는 구글 폼을 참고해주시고, 이외에 모집과 관련한 문의는
+		@jpark2 에게 DM 부탁드립니다! :man-bowing:`,
   },
   {
     title: "동아리 사물함",
