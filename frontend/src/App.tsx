@@ -1,28 +1,36 @@
+import PageTracker from "@/api/analytics/PageTracker";
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AvailablePage from "@/pages/AvailablePage";
-import ClubPage from "@/pages/ClubPage";
-import HomePage from "@/pages/HomePage";
-import Layout from "@/pages/Layout";
-import LogPage from "@/pages/LogPage";
-import LoginPage from "@/pages/LoginPage";
-import MainPage from "@/pages/MainPage";
-import PostLogin from "@/pages/PostLogin";
-import ProfilePage from "@/pages/ProfilePage";
-import AdminMainPage from "@/pages/admin/AdminMainPage";
-import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import PageTracker from "@/api/analytics/PageTracker";
+import AvailablePage from "@/Cabinet/pages/AvailablePage";
+import ClubPage from "@/Cabinet/pages/ClubPage";
+import HomePage from "@/Cabinet/pages/HomePage";
+import Layout from "@/Cabinet/pages/Layout";
+import LogPage from "@/Cabinet/pages/LogPage";
+import LoginPage from "@/Cabinet/pages/LoginPage";
+import MainPage from "@/Cabinet/pages/MainPage";
+import PostLogin from "@/Cabinet/pages/PostLogin";
+import ProfilePage from "@/Cabinet/pages/ProfilePage";
+import AdminMainPage from "@/Cabinet/pages/admin/AdminMainPage";
+import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import DetailPage from "@/Presentation/pages/DetailPage";
+import PresentationHomePage from "@/Presentation/pages/HomePage";
+import PresentationLayout from "@/Presentation/pages/Layout";
+import PresentationLogPage from "@/Presentation/pages/LogPage";
+import RegisterPage from "@/Presentation/pages/RegisterPage";
+import AdminPresentationLayout from "@/Presentation/pages/admin/AdminLayout";
 
-const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
-const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));
-const AdminLayout = lazy(() => import("@/pages/admin/AdminLayout"));
-const AdminLoginPage = lazy(() => import("@/pages/admin/AdminLoginPage"));
-const SearchPage = lazy(() => import("@/pages/admin/SearchPage"));
-const AdminClubPage = lazy(() => import("@/pages/admin/AdminClubPage"));
-const AdminLoginFailurePage = lazy(
-  () => import("@/pages/admin/AdminLoginFailurePage")
+const NotFoundPage = lazy(() => import("@/Cabinet/pages/NotFoundPage"));
+const LoginFailurePage = lazy(() => import("@/Cabinet/pages/LoginFailurePage"));
+const AdminLayout = lazy(() => import("@/Cabinet/pages/admin/AdminLayout"));
+const AdminLoginPage = lazy(
+  () => import("@/Cabinet/pages/admin/AdminLoginPage")
 );
-const AdminHomePage = lazy(() => import("@/pages/admin/AdminHomePage"));
+const SearchPage = lazy(() => import("@/Cabinet/pages/admin/SearchPage"));
+const AdminClubPage = lazy(() => import("@/Cabinet/pages/admin/AdminClubPage"));
+const AdminLoginFailurePage = lazy(
+  () => import("@/Cabinet/pages/admin/AdminLoginFailurePage")
+);
+const AdminHomePage = lazy(() => import("@/Cabinet/pages/admin/AdminHomePage"));
 
 function App(): React.ReactElement {
   return (
@@ -41,6 +49,12 @@ function App(): React.ReactElement {
             <Route path="profile/log" element={<LogPage />} />
             <Route path="clubs" element={<ClubPage />} />
           </Route>
+          <Route path="/presentation/" element={<PresentationLayout />}>
+            <Route path="home" element={<PresentationHomePage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="detail" element={<DetailPage />} />
+            <Route path="log" element={<PresentationLogPage />} />
+          </Route>
           {/* admin용 라우터 */}
           <Route path="/admin/" element={<AdminLayout />}>
             <Route path="login" element={<AdminLoginPage />} />
@@ -49,6 +63,12 @@ function App(): React.ReactElement {
             <Route path="search" element={<SearchPage />} />
             <Route path="club" element={<AdminClubPage />} />
             <Route path="available" element={<AvailablePage />} />
+          </Route>
+          <Route
+            path="/admin/presentation/"
+            element={<AdminPresentationLayout />}
+          >
+            <Route path="detail" element={<DetailPage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route
