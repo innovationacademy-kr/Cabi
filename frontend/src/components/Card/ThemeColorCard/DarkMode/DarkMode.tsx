@@ -31,7 +31,7 @@ const DarkMode = () => {
     document.body.setAttribute("color-theme", darkMode);
     localStorage.setItem("color-theme", darkMode);
   }, [darkMode]);
-  const [toggleType, setToggleType] = useState("ALL");
+  const [toggleType, setToggleType] = useState("기기설정");
   // "ALL"
   // setToggleType
   // [{name: '전체', key: 'ALL'}, {name: '전체', key: 'ALL'}]
@@ -43,9 +43,9 @@ const DarkMode = () => {
           initialState={toggleType}
           setState={setToggleType}
           toggleList={[
-            { name: "전체", key: 0 },
-            { name: "전체", key: 0 },
-            { name: "전체", key: 0 },
+            { name: "라이트", key: 0 },
+            { name: "다크", key: 1 },
+            { name: "기기설정", key: 2 },
           ]}
           buttonHeight={"90px"}
           buttonWidth={"90px"}

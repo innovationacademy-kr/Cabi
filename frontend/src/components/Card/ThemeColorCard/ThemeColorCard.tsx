@@ -45,7 +45,7 @@ const ThemeColorCard = ({
           title={"화면 스타일"}
           gridArea={"theme"}
           width={"350px"}
-          height={showColorPicker ? "330px" : "350px"}
+          height={showColorPicker ? "448px" : "348px"}
           buttons={
             showColorPicker
               ? [

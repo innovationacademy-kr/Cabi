@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
+import { ReactComponent as SunIcon } from "@/assets/images/sun.svg";
 
 export interface toggleItem {
   name: string;
@@ -62,6 +63,7 @@ const MultiToggleSwitchSeparated = <T,>({
     >
       {toggleList.map((item) => (
         <button key={item.key} className={`${item.key}`}>
+          <SunIcon />
           {item.name}
         </button>
       ))}
@@ -87,7 +89,7 @@ const WrapperStyled = styled.div<{
       props.buttonWidth ? props.buttonWidth : "fit-content"};
     min-width: 50px;
     border-radius: 10px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     height: ${(props) => (props.buttonHeight ? props.buttonHeight : "30px")};
     font-weight: 500;
     background-color: var(--shared-gray-color-100);

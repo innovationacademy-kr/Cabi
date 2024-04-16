@@ -3,6 +3,9 @@ import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
 import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import { ReactComponent as SunIcon } from "@/assets/images/sun.svg";
+import { ReactComponent as MoonIcon } from "@/assets/images/moon.svg";
+import { ReactComponent as MonitorMobileIcon } from "@/assets/images/monitor-mobbile.svg";
 
 export enum additionalModalType {
   MODAL_RETURN = "MODAL_RETURN",
@@ -223,4 +226,10 @@ export const cabinetTypeLabelMap = {
   [CabinetType.CLUB]: "동아리 사물함",
   [CabinetType.PRIVATE]: "개인 사물함",
   [CabinetType.SHARE]: "공유 사물함",
+};
+
+export const colorThemeIconComponentMap: CabinetIconComponentMap = {
+  [CabinetType.PRIVATE]: SunIcon,
+  [CabinetType.SHARE]: MoonIcon,
+  [CabinetType.CLUB]: MonitorMobileIcon,
 };
