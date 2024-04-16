@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RecoilRoot } from "recoil";
-import { GlobalStyle } from "@/components/TopNav/DarkMode/DarkMode";
+import { GlobalStyle } from "@/assets/data/ColorTheme";
 import App from "./App";
 import "./assets/css/media.css";
 import "./assets/css/reset.css";
