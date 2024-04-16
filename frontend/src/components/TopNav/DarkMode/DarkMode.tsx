@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled, { createGlobalStyle, css } from "styled-components";
 import { darkModeState } from "@/recoil/atoms";
@@ -105,7 +105,12 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 const DarkMode = () => {
-  const [darkMode, setDarkMode] = useRecoilState(darkModeState);
+  const savedTheme = localStorage.getItem("color-theme");
+  var darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  // const [darkMode, setDarkMode] = useRecoilState(darkModeState);
+  const [darkMode, setDarkMode] = useState(
+    savedTheme ? savedTheme : darkModeQuery.matches ? "dark" : "light"
+  );
   const onClickHandler = () => {
     setDarkMode((prev) => {
       return prev === "light" ? "dark" : "light";
@@ -115,13 +120,14 @@ const DarkMode = () => {
   var darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
   useEffect(() => {
-    setDarkMode(() => {
-      return darkModeQuery.matches ? "dark" : "light";
-    });
+    darkModeQuery.addEventListener("change", (event) =>
+      setDarkMode(event.matches ? "dark" : "light")
+    );
   }, []);
 
   useEffect(() => {
     document.body.setAttribute("color-theme", darkMode);
+    localStorage.setItem("color-theme", darkMode);
   }, [darkMode]);
 
   return (
