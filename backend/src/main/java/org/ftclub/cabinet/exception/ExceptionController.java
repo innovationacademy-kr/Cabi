@@ -25,12 +25,9 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(ControllerException.class)
 	public ResponseEntity<?> controllerExceptionHandler(ControllerException e) {
-		StackTraceElement stackTraceElement = e.getStackTrace()[0];
-		log.info("[ControllerException] {} : {} at {}",
-				e.status.getError(), e.status.getMessage(),
-				stackTraceElement);
+		log.info("[ControllerException] {} : {}", e.status.getError(), e.status.getMessage());
 		if (log.isDebugEnabled()) {
-			log.debug(e);
+			log.debug("Exception stack trace: ", e);
 		}
 		return ResponseEntity
 				.status(e.status.getStatusCode())
@@ -41,7 +38,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> serviceExceptionHandler(ServiceException e) {
 		log.info("[ServiceException] {} : {}", e.status.getError(), e.status.getMessage());
 		if (log.isDebugEnabled()) {
-			log.debug(e);
+			log.debug("Exception stack trace: ", e);
 		}
 		return ResponseEntity
 				.status(e.status.getStatusCode())
@@ -52,7 +49,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> customServiceExceptionHandler(CustomServiceException e) {
 		log.info("[CustomServiceException] {} : {}", e.status.getError(), e.status.getMessage());
 		if (log.isDebugEnabled()) {
-			log.debug(e);
+			log.debug("Exception stack trace: ", e);
 		}
 		return ResponseEntity
 				.status(e.status.getStatusCode())
@@ -63,7 +60,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> domainExceptionHandler(DomainException e) {
 		log.warn("[DomainException] {} : {}", e.status.getError(), e.status.getMessage());
 		if (log.isDebugEnabled()) {
-			log.debug(e);
+			log.debug("Exception stack trace: ", e);
 		}
 		return ResponseEntity
 				.status(e.status.getStatusCode())
@@ -74,7 +71,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> utilExceptionHandler(UtilException e) {
 		log.warn("[UtilException] {} : {}", e.status.getError(), e.status.getMessage());
 		if (log.isDebugEnabled()) {
-			log.debug(e);
+			log.debug("Exception stack trace: ", e);
 		}
 		return ResponseEntity
 				.status(e.status.getStatusCode())
