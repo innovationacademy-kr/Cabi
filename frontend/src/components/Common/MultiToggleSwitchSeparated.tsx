@@ -55,51 +55,59 @@ const MultiToggleSwitchSeparated = <T,>({
   }
 
   return (
-    <WrapperStyled
-      ref={wrapperRef}
-      onClick={switchToggle}
-      buttonHeight={buttonHeight}
-      buttonWidth={buttonWidth}
-    >
+    <WrapperStyled ref={wrapperRef} onClick={switchToggle}>
       {toggleList.map((item) => {
         const ColorThemeIcon = item.icon;
-
         return (
-          <button key={item.key} className={`${item.key}`}>
-            {ColorThemeIcon && <ColorThemeIcon />}
+          <ButtonStyled
+            key={item.key}
+            className={`${item.key}`}
+            buttonHeight={buttonHeight}
+            buttonWidth={buttonWidth}
+            icon={ColorThemeIcon}
+          >
+            {ColorThemeIcon && (
+              <ColorThemeIconStyled>
+                <ColorThemeIcon />
+              </ColorThemeIconStyled>
+            )}
             {item.name}
-          </button>
+          </ButtonStyled>
         );
       })}
     </WrapperStyled>
   );
 };
 
-const WrapperStyled = styled.div<{
-  buttonHeight?: string;
-  buttonWidth?: string;
-}>`
+const WrapperStyled = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   border-radius: 10px;
   justify-content: space-between;
-
-  button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: ${(props) =>
-      props.buttonWidth ? props.buttonWidth : "fit-content"};
-    min-width: 50px;
-    border-radius: 10px;
-    font-size: 1rem;
-    height: ${(props) => (props.buttonHeight ? props.buttonHeight : "30px")};
-    font-weight: 500;
-    background-color: var(--shared-gray-color-100);
-    color: var(--normal-text-color);
-    padding: 4px 12px;
-  }
 `;
+
+const ButtonStyled = styled.div<{
+  buttonHeight?: string;
+  buttonWidth?: string;
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}>`
+  display: flex;
+  justify-content: ${(props) => (props.icon ? "space-between" : "center")};
+  align-items: center;
+  flex-direction: ${(props) => (props.icon ? "column" : "row")};
+  min-width: 50px;
+  width: ${(props) => (props.buttonWidth ? props.buttonWidth : "fit-content")};
+  min-width: 50px;
+  border-radius: 10px;
+  font-size: 1rem;
+  height: ${(props) => (props.buttonHeight ? props.buttonHeight : "30px")};
+  font-weight: 500;
+  background-color: var(--shared-gray-color-100);
+  color: var(--normal-text-color);
+  padding: ${(props) => (props.icon ? "12px 0 16px 0" : "4px 12px")}; ;
+`;
+
+const ColorThemeIconStyled = styled.div``;
 
 export default MultiToggleSwitchSeparated;
