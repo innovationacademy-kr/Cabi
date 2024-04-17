@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { darkModeState } from "@/recoil/atoms";
-import MultiToggleSwitch from "@/components/Common/MultiToggleSwitch";
 import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
+import { colorThemeIconComponentMap } from "@/assets/data/maps";
+import ColorThemeType from "@/types/enum/colorTheme.type.enum";
 
 // TODO : DarkMode 파일 폴더명 ColorTheme으로 변경
 
@@ -43,9 +44,21 @@ const DarkMode = () => {
           initialState={toggleType}
           setState={setToggleType}
           toggleList={[
-            { name: "라이트", key: 0 },
-            { name: "다크", key: 1 },
-            { name: "기기설정", key: 2 },
+            {
+              name: "라이트",
+              key: 0,
+              icon: colorThemeIconComponentMap[ColorThemeType.LIGHT],
+            },
+            {
+              name: "다크",
+              key: 1,
+              icon: colorThemeIconComponentMap[ColorThemeType.DARK],
+            },
+            {
+              name: "기기설정",
+              key: 2,
+              icon: colorThemeIconComponentMap[ColorThemeType.DEVICE],
+            },
           ]}
           buttonHeight={"90px"}
           buttonWidth={"90px"}

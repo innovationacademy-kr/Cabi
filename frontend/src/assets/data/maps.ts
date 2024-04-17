@@ -1,11 +1,12 @@
 import { ReactComponent as ClubIcon } from "@/assets/images/clubIcon.svg";
+import { ReactComponent as MonitorMobileIcon } from "@/assets/images/monitorMobile.svg";
+import { ReactComponent as MoonIcon } from "@/assets/images/moon.svg";
 import { ReactComponent as PrivateIcon } from "@/assets/images/privateIcon.svg";
 import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
+import { ReactComponent as SunIcon } from "@/assets/images/sun.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { ReactComponent as SunIcon } from "@/assets/images/sun.svg";
-import { ReactComponent as MoonIcon } from "@/assets/images/moon.svg";
-import { ReactComponent as MonitorMobileIcon } from "@/assets/images/monitor-mobbile.svg";
+import ColorThemeType from "@/types/enum/colorTheme.type.enum";
 
 export enum additionalModalType {
   MODAL_RETURN = "MODAL_RETURN",
@@ -228,8 +229,12 @@ export const cabinetTypeLabelMap = {
   [CabinetType.SHARE]: "공유 사물함",
 };
 
-export const colorThemeIconComponentMap: CabinetIconComponentMap = {
-  [CabinetType.PRIVATE]: SunIcon,
-  [CabinetType.SHARE]: MoonIcon,
-  [CabinetType.CLUB]: MonitorMobileIcon,
+type colorThemeIconComponentMap = {
+  [key in ColorThemeType]: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+};
+
+export const colorThemeIconComponentMap: colorThemeIconComponentMap = {
+  [ColorThemeType.LIGHT]: SunIcon,
+  [ColorThemeType.DARK]: MoonIcon,
+  [ColorThemeType.DEVICE]: MonitorMobileIcon,
 };

@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { ReactComponent as SunIcon } from "@/assets/images/sun.svg";
 
 export interface toggleItem {
   name: string;
   key: number;
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
 interface MultiToggleSwitchProps<T> {
@@ -61,12 +61,16 @@ const MultiToggleSwitchSeparated = <T,>({
       buttonHeight={buttonHeight}
       buttonWidth={buttonWidth}
     >
-      {toggleList.map((item) => (
-        <button key={item.key} className={`${item.key}`}>
-          <SunIcon />
-          {item.name}
-        </button>
-      ))}
+      {toggleList.map((item) => {
+        const ColorThemeIcon = item.icon;
+
+        return (
+          <button key={item.key} className={`${item.key}`}>
+            {ColorThemeIcon && <ColorThemeIcon />}
+            {item.name}
+          </button>
+        );
+      })}
     </WrapperStyled>
   );
 };
