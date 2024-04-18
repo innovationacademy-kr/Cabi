@@ -1,16 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
-export interface toggleItem {
+export interface toggleItemSeparated {
   name: string;
-  key: number;
+  key: string;
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
 interface MultiToggleSwitchProps<T> {
   initialState: T;
   setState: React.Dispatch<React.SetStateAction<T>>;
-  toggleList: toggleItem[];
+  toggleList: toggleItemSeparated[];
   buttonHeight?: string;
   buttonWidth?: string;
 }
@@ -28,7 +28,7 @@ const MultiToggleSwitchSeparated = <T,>({
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
-      if (button.className === `${initialState}`) {
+      if (button.id === `${initialState}`) {
         button.style.color = "var(--bg-color)";
         button.style.backgroundColor = "var(--main-color)";
       }
@@ -51,7 +51,7 @@ const MultiToggleSwitchSeparated = <T,>({
     target.style.color = "var(--bg-color)";
     target.style.backgroundColor = "var(--main-color)";
 
-    setState(target.className as React.SetStateAction<T>);
+    setState(target.id as React.SetStateAction<T>);
   }
 
   return (
@@ -61,7 +61,7 @@ const MultiToggleSwitchSeparated = <T,>({
         return (
           <ButtonStyled
             key={item.key}
-            className={`${item.key}`}
+            id={`${item.key}`}
             buttonHeight={buttonHeight}
             buttonWidth={buttonWidth}
             icon={ColorThemeIcon}
@@ -87,7 +87,7 @@ const WrapperStyled = styled.div`
   justify-content: space-between;
 `;
 
-const ButtonStyled = styled.div<{
+const ButtonStyled = styled.button<{
   buttonHeight?: string;
   buttonWidth?: string;
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
