@@ -6,7 +6,7 @@ import { ReactComponent as ShareIcon } from "@/assets/images/shareIcon.svg";
 import { ReactComponent as SunIcon } from "@/assets/images/sun.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import ColorThemeType from "@/types/enum/colorTheme.type.enum";
+import { ColorThemeToggleType } from "@/types/enum/colorTheme.type.enum";
 
 export enum additionalModalType {
   MODAL_RETURN = "MODAL_RETURN",
@@ -229,12 +229,15 @@ export const cabinetTypeLabelMap = {
   [CabinetType.SHARE]: "공유 사물함",
 };
 
-type colorThemeIconComponentMap = {
-  [key in ColorThemeType]: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+type colorThemeToggleIconComponentMap = {
+  [key in ColorThemeToggleType]: React.ComponentType<
+    React.SVGProps<SVGSVGElement>
+  >;
 };
 
-export const colorThemeIconComponentMap: colorThemeIconComponentMap = {
-  [ColorThemeType.LIGHT]: SunIcon,
-  [ColorThemeType.DARK]: MoonIcon,
-  [ColorThemeType.DEVICE]: MonitorMobileIcon,
-};
+export const colorThemeToggleIconComponentMap: colorThemeToggleIconComponentMap =
+  {
+    [ColorThemeToggleType.LIGHT]: SunIcon,
+    [ColorThemeToggleType.DARK]: MoonIcon,
+    [ColorThemeToggleType.DEVICE]: MonitorMobileIcon,
+  };
