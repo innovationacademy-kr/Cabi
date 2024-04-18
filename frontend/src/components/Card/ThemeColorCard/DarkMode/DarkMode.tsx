@@ -2,29 +2,61 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { darkModeState } from "@/recoil/atoms";
-import MultiToggleSwitchSeparated from "@/components/Common/MultiToggleSwitchSeparated";
-import { colorThemeIconComponentMap } from "@/assets/data/maps";
-import ColorThemeType from "@/types/enum/colorTheme.type.enum";
+import MultiToggleSwitchSeparated, {
+  toggleItemSeparated,
+} from "@/components/Common/MultiToggleSwitchSeparated";
+import { colorThemeToggleIconComponentMap } from "@/assets/data/maps";
+import {
+  ColorThemeToggleType,
+  ColorThemeType,
+} from "@/types/enum/colorTheme.type.enum";
 
 // TODO : DarkMode 파일 폴더명 ColorTheme으로 변경
 
+const toggleList: toggleItemSeparated[] = [
+  {
+    name: "라이트",
+    key: ColorThemeToggleType.LIGHT,
+    icon: colorThemeToggleIconComponentMap[ColorThemeToggleType.LIGHT],
+  },
+  {
+    name: "다크",
+    key: ColorThemeToggleType.DARK,
+    icon: colorThemeToggleIconComponentMap[ColorThemeToggleType.DARK],
+  },
+  {
+    name: "기기설정",
+    key: ColorThemeToggleType.DEVICE,
+    icon: colorThemeToggleIconComponentMap[ColorThemeToggleType.DEVICE],
+  },
+];
+
 const DarkMode = () => {
   const savedColorTheme = localStorage.getItem("color-theme");
+  const savedColorThemeToggle = localStorage.getItem("color-theme-toggle");
   var darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-  // const [darkMode, setDarkMode] = useRecoilState(darkModeState);
-  const [darkMode, setDarkMode] = useState(
-    savedColorTheme ? savedColorTheme : darkModeQuery.matches ? "dark" : "light"
+  const [darkMode, setDarkMode] = useState<ColorThemeType>(
+    savedColorTheme
+      ? (savedColorTheme as ColorThemeType)
+      : darkModeQuery.matches
+      ? ColorThemeType.DARK
+      : ColorThemeType.LIGHT
+  );
+  const [toggleType, setToggleType] = useState<ColorThemeToggleType>(
+    savedColorThemeToggle
+      ? (savedColorThemeToggle as ColorThemeToggleType)
+      : ColorThemeToggleType.DEVICE
   );
 
-  const onClickHandler = () => {
-    setDarkMode((prev) => {
-      return prev === "light" ? "dark" : "light";
-    });
-  };
+  // const onClickHandler = () => {
+  //   setDarkMode((prev) => {
+  //     return prev === "light" ? "dark" : "light";
+  //   });
+  // };
 
   useEffect(() => {
     darkModeQuery.addEventListener("change", (event) =>
-      setDarkMode(event.matches ? "dark" : "light")
+      setDarkMode(event.matches ? ColorThemeType.DARK : ColorThemeType.LIGHT)
     );
   }, []);
 
@@ -32,10 +64,11 @@ const DarkMode = () => {
     document.body.setAttribute("color-theme", darkMode);
     localStorage.setItem("color-theme", darkMode);
   }, [darkMode]);
-  const [toggleType, setToggleType] = useState("기기설정");
-  // "ALL"
-  // setToggleType
-  // [{name: '전체', key: 'ALL'}, {name: '전체', key: 'ALL'}]
+
+  useEffect(() => {
+    document.body.setAttribute("color-theme", darkMode);
+    localStorage.setItem("color-theme-toggle", toggleType);
+  }, [toggleType]);
 
   return (
     <>
@@ -43,23 +76,7 @@ const DarkMode = () => {
         <MultiToggleSwitchSeparated
           initialState={toggleType}
           setState={setToggleType}
-          toggleList={[
-            {
-              name: "라이트",
-              key: 0,
-              icon: colorThemeIconComponentMap[ColorThemeType.LIGHT],
-            },
-            {
-              name: "다크",
-              key: 1,
-              icon: colorThemeIconComponentMap[ColorThemeType.DARK],
-            },
-            {
-              name: "기기설정",
-              key: 2,
-              icon: colorThemeIconComponentMap[ColorThemeType.DEVICE],
-            },
-          ]}
+          toggleList={toggleList}
           buttonHeight={"90px"}
           buttonWidth={"90px"}
         ></MultiToggleSwitchSeparated>
@@ -72,10 +89,6 @@ const ButtonsWrapperStyled = styled.div`
   display: flex;
   justify-content: center;
   padding: 0 16px;
-`;
-
-const ButtonStyled = styled.button`
-  background-color: var(--normal-text-color);
 `;
 
 export default DarkMode;
