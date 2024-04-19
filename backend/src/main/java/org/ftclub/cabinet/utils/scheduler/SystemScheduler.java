@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.discord.DiscordScheduleAlarmMessage;
+import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
@@ -27,12 +29,19 @@ import org.springframework.stereotype.Component;
 public class SystemScheduler {
 
 	private static final long DELAY_TIME = 2000;
+	private static final String DEFAULT_ERROR_TITLE = "까비 스케줄러 작업 중 예기치 않은 오류가 발생했어요.🥲";
 	private final UserQueryService userQueryService;
 	private final LentExtensionManager lentExtensionManager;
 	private final OverdueManager overdueManager;
 	private final LentFacadeService lentFacadeService;
 	private final BlackholeManager blackholeManager;
 	private final ReleaseManager releaseManager;
+	private final DiscordWebHookMessenger discordWebHookMessenger;
+
+	private void errorHandle(Exception e, DiscordScheduleAlarmMessage message) {
+		log.error("Error message: {}, Error occurred in scheduled task: ", message, e);
+		discordWebHookMessenger.sendMessage(message);
+	}
 
 	/**
 	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거
@@ -42,7 +51,16 @@ public class SystemScheduler {
 		log.info("called checkAllLents");
 		List<ActiveLentHistoryDto> activeLents = lentFacadeService.getAllActiveLentHistories();
 		for (ActiveLentHistoryDto activeLent : activeLents) {
-			overdueManager.handleOverdue(activeLent);
+			try {
+				overdueManager.handleOverdue(activeLent);
+			} catch (Exception e) {
+				errorHandle(e, DiscordScheduleAlarmMessage.builder()
+						.subject(DEFAULT_ERROR_TITLE)
+						.taskName("연체 처리 작업")
+						.taskMethodName("checkAllLents")
+						.taskParameters(activeLent.toString())
+						.build());
+			}
 /*
             leaveAbsenceManager.handleLeaveAbsence(activeLent.getUserId(), activeLent.getName());
             try {
@@ -60,18 +78,24 @@ public class SystemScheduler {
 	@Scheduled(cron = "${cabinet.schedule.cron.risk-of-blackhole}")
 	public void checkRiskOfBlackhole() {
 		log.info("called checkRiskOfBlackhole");
-
 		List<UserBlackHoleEvent> closeWithBlackholeUsers = userQueryService.findUsersAtRiskOfBlackhole()
 				.stream()
 				.map(user -> UserBlackHoleEvent.of(user.getId(), user.getName(), user.getEmail(),
 						user.getBlackholedAt()))
 				.collect(Collectors.toList());
 		for (UserBlackHoleEvent blackholeInfo : closeWithBlackholeUsers) {
-			blackholeManager.handleBlackHole(blackholeInfo);
 			try {
+				blackholeManager.handleBlackHole(blackholeInfo);
 				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {
-				log.error(e.getMessage());
+				log.warn(e.getMessage());
+			} catch (Exception e) {
+				errorHandle(e, DiscordScheduleAlarmMessage.builder()
+						.subject(DEFAULT_ERROR_TITLE)
+						.taskName("블랙홀 처리 작업 (예정자)")
+						.taskMethodName("checkRiskOfBlackhole")
+						.taskParameters(blackholeInfo.toString())
+						.build());
 			}
 		}
 	}
@@ -90,11 +114,18 @@ public class SystemScheduler {
 				.collect(Collectors.toList());
 
 		for (UserBlackHoleEvent blackholeUserInfo : safeFromBlackholeUsers) {
-			blackholeManager.handleBlackHole(blackholeUserInfo);
 			try {
+				blackholeManager.handleBlackHole(blackholeUserInfo);
 				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {
-				log.error(e.getMessage());
+				log.warn(e.getMessage());
+			} catch (Exception e) {
+				errorHandle(e, DiscordScheduleAlarmMessage.builder()
+						.subject(DEFAULT_ERROR_TITLE)
+						.taskName("블랙홀 처리 작업 (전체)")
+						.taskMethodName("checkNoRiskOfBlackhole")
+						.taskParameters(blackholeUserInfo.toString())
+						.build());
 			}
 		}
 	}
@@ -106,13 +137,31 @@ public class SystemScheduler {
 	@Scheduled(cron = "${cabinet.schedule.cron.cabinet-release-time}")
 	public void releasePendingCabinet() {
 		log.info("releasePendingCabinet {}", LocalDateTime.now());
-		releaseManager.releasingCabinets();
+		try {
+			releaseManager.releasingCabinets();
+		} catch (Exception e) {
+			errorHandle(e, DiscordScheduleAlarmMessage.builder()
+					.subject(DEFAULT_ERROR_TITLE)
+					.taskName("Pending 사물함 Release 작업")
+					.taskMethodName("releasePendingCabinet")
+					.taskParameters("")
+					.build());
+		}
 	}
 
 	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
 	public void lentExtensionIssue() {
 		log.info("called lentExtensionIssue");
-		lentExtensionManager.issueLentExtension();
+		try {
+			lentExtensionManager.issueLentExtension();
+		} catch (Exception e) {
+			errorHandle(e, DiscordScheduleAlarmMessage.builder()
+					.subject(DEFAULT_ERROR_TITLE)
+					.taskName("연장권 발급 작업")
+					.taskMethodName("lentExtensionIssue")
+					.taskParameters("")
+					.build());
+		}
 	}
 
 //	@Scheduled(cron = "${cabinet.schedule.cron.extensible-user-check}")

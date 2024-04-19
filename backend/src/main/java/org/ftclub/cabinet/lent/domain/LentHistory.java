@@ -3,6 +3,7 @@ package org.ftclub.cabinet.lent.domain;
 import static javax.persistence.FetchType.LAZY;
 
 import java.time.LocalDateTime;
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -210,11 +211,12 @@ public class LentHistory {
 	}
 
 	/**
-	 * 만료일까지 남은 일수를 계산합니다. 만료시간이 설정되지 않았으면 null을 반환합니다.
+	 * 만료일까지 남은 일수를 계산합니다. 만료일이 설정되지 않았을 경우 {@code null}을 반환합니다.
 	 *
-	 * @return 만료일까지 남은 일수 (만료일 - 현재시간) (일 기준, 올림)
+	 * @param now 현재 시간을 나타내는 {@code LocalDateTime} 객체
+	 * @return 만료일까지 남은 일수를 일 단위로 반환합니다. 만료일이 설정되지 않았을 경우 {@code null} 반환.
 	 */
-	public Long getDaysUntilExpiration(LocalDateTime now) {
+	public @Nullable Long getDaysUntilExpiration(LocalDateTime now) {
 		if (isSetExpiredAt()) {
 			return DateUtil.calculateTwoDateDiffCeil(expiredAt, now);
 		}
