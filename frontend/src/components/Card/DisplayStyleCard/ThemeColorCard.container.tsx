@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ThemeColorCard from "@/components/Card/ThemeColorCard/ThemeColorCard";
+import ThemeColorCard from "@/components/Card/DisplayStyleCard/ThemeColorCard";
 import ColorType from "@/types/enum/color.type.enum";
 
 const ThemeColorCardContainer = () => {
@@ -50,6 +50,7 @@ const ThemeColorCardContainer = () => {
       "var(--default-sub-color)",
       "var(--default-mine-color)"
     );
+    // TODO : 컬러 테마 디바이스로
   };
 
   const handleSave = () => {

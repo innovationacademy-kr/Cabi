@@ -5,12 +5,12 @@ import {
   CardContentWrapper,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
-import ColorPicker from "@/components/Card/ThemeColorCard/ColorPicker";
-import DarkMode from "@/components/Card/ThemeColorCard/DarkMode/DarkMode";
+import ColorPicker from "@/components/Card/DisplayStyleCard/ColorPicker";
+import DarkMode from "@/components/Card/DisplayStyleCard/DarkMode/DarkMode";
 import {
   customColors,
   themeColorData,
-} from "@/components/Card/ThemeColorCard/colorInfo";
+} from "@/components/Card/DisplayStyleCard/colorInfo";
 
 interface ThemeColorProps {
   showColorPicker: boolean;
