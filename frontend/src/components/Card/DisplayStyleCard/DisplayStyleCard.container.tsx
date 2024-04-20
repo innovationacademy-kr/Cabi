@@ -43,7 +43,8 @@ const DisplayStyleCardContainer = () => {
   const setColorsAndLocalStorage = (
     main: string,
     sub: string,
-    mine: string
+    mine: string,
+    toggleType: ColorThemeToggleType
   ) => {
     setMainColor(main);
     setSubColor(sub);
@@ -54,29 +55,33 @@ const DisplayStyleCardContainer = () => {
     localStorage.setItem("main-color", main);
     localStorage.setItem("sub-color", sub);
     localStorage.setItem("mine-color", mine);
+
+    setToggleType(toggleType);
+    localStorage.setItem("color-theme-toggle", toggleType);
   };
 
   const handleReset = () => {
     setColorsAndLocalStorage(
       "var(--default-main-color)",
       "var(--default-sub-color)",
-      "var(--default-mine-color)"
+      "var(--default-mine-color)",
+      ColorThemeToggleType.DEVICE
     );
-    // TODO : 컬러 테마 디바이스로
   };
 
   const handleSave = () => {
-    setColorsAndLocalStorage(mainColor, subColor, mineColor);
-    toggleColorPicker(true);
+    setColorsAndLocalStorage(mainColor, subColor, mineColor, toggleType);
+    setShowColorPicker(!showColorPicker);
   };
 
   const handleCancel = () => {
-    setColorsAndLocalStorage(savedMainColor, savedSubColor, savedMineColor);
-    toggleColorPicker(true);
-  };
-
-  const toggleColorPicker = (isChange: boolean) => {
-    if (isChange) setShowColorPicker(!showColorPicker);
+    setColorsAndLocalStorage(
+      savedMainColor,
+      savedSubColor,
+      savedMineColor,
+      savedColorThemeToggle
+    );
+    setShowColorPicker(!showColorPicker);
   };
 
   const handlePointColorButtonClick = (pointColorType: string) => {
@@ -118,20 +123,16 @@ const DisplayStyleCardContainer = () => {
     savedSubColor,
   ]);
 
-  const savedColorTheme = localStorage.getItem("color-theme");
-  const savedColorThemeToggle = localStorage.getItem("color-theme-toggle");
+  const savedColorThemeToggle =
+    (localStorage.getItem("color-theme-toggle") as ColorThemeToggleType) ||
+    ColorThemeToggleType.DEVICE;
   var darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const [darkMode, setDarkMode] = useState<ColorThemeType>(
-    savedColorTheme
-      ? (savedColorTheme as ColorThemeType)
-      : darkModeQuery.matches
-      ? ColorThemeType.DARK
-      : ColorThemeType.LIGHT
+    ColorThemeType.LIGHT
   );
+
   const [toggleType, setToggleType] = useState<ColorThemeToggleType>(
     savedColorThemeToggle
-      ? (savedColorThemeToggle as ColorThemeToggleType)
-      : ColorThemeToggleType.DEVICE
   );
 
   useEffect(() => {
@@ -142,13 +143,9 @@ const DisplayStyleCardContainer = () => {
 
   useEffect(() => {
     document.body.setAttribute("color-theme", darkMode);
-    localStorage.setItem("color-theme", darkMode);
   }, [darkMode]);
 
   useEffect(() => {
-    if (!showColorPicker) setShowColorPicker(true);
-    localStorage.setItem("color-theme-toggle", toggleType);
-
     if (toggleType === ColorThemeToggleType.LIGHT) {
       setDarkMode(ColorThemeType.LIGHT);
     } else if (toggleType === ColorThemeToggleType.DARK) {

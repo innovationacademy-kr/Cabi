@@ -4,7 +4,6 @@ import { darkModeState } from "@/recoil/atoms";
 import { colorThemeToggleIconComponentMap } from "@/assets/data/maps";
 import { ColorThemeToggleType } from "@/types/enum/colorTheme.type.enum";
 
-// TODO : ColorTheme 파일 폴더명 ColorTheme으로 변경
 interface toggleItemSeparated {
   name: string;
   key: string;
