@@ -7,10 +7,7 @@ import {
 } from "@/components/Card/CardStyles";
 import ColorPicker from "@/components/Card/DisplayStyleCard/ColorPicker";
 import DarkMode from "@/components/Card/DisplayStyleCard/DarkMode/DarkMode";
-import {
-  customColors,
-  themeColorData,
-} from "@/components/Card/DisplayStyleCard/colorInfo";
+import { themeColorData } from "@/components/Card/DisplayStyleCard/colorInfo";
 
 interface ThemeColorProps {
   showColorPicker: boolean;
@@ -97,7 +94,6 @@ const ThemeColorCard = ({
                 <ColorPicker
                   color={mainColor}
                   onChange={(color) => handleChange(color, selectedColorType)}
-                  customColors={customColors}
                 />
               )}
             </CardContentWrapper>

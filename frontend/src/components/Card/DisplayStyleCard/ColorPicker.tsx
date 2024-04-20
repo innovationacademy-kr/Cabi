@@ -1,20 +1,20 @@
 import { TwitterPicker } from "react-color";
 import styled from "styled-components";
+import { GetCustomColorsValues } from "@/components/Card/DisplayStyleCard/colorInfo";
 
 interface ColorPickerProps {
   color: string;
   onChange: (color: { hex: string }) => void;
-  customColors: string[];
 }
 
-const ColorPicker = ({ color, onChange, customColors }: ColorPickerProps) => {
+const ColorPicker = ({ color, onChange }: ColorPickerProps) => {
   return (
     <TwitterPickerWrapper>
       <TwitterPicker
         color={color}
         triangle={"hide"}
         onChangeComplete={onChange}
-        colors={customColors}
+        colors={GetCustomColorsValues()}
         styles={{
           default: {
             card: {

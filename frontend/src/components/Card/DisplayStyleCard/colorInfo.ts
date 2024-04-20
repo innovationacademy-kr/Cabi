@@ -40,3 +40,17 @@ export const customColors = [
   "var(--custom-purple-100)",
   "var(--custom-purple-200)",
 ];
+
+export const GetCustomColorsValues = () => {
+  return customColors.map((color) => {
+    // NOTE : "var(--custom-pink)"에서 "--custom-pink" 추출
+    const startIndex = color.indexOf("(") + 1;
+    const endIndex = color.lastIndexOf(")");
+    const extractedValue = color.substring(startIndex, endIndex);
+
+    // NOTE : var(--custom-pink)의 값 구하기
+    return getComputedStyle(document.documentElement).getPropertyValue(
+      extractedValue
+    );
+  });
+};
