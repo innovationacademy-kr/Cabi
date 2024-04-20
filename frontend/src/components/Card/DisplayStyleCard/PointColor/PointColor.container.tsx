@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import ThemeColorCard from "@/components/Card/DisplayStyleCard/ThemeColorCard";
+import PointColor from "@/components/Card/DisplayStyleCard/PointColor/PointColor";
 import ColorType from "@/types/enum/color.type.enum";
 
-const ThemeColorCardContainer = () => {
+const PointColorContainer = () => {
   const savedMainColor =
     localStorage.getItem("main-color") || "var(--default-main-color)";
   const savedSubColor =
@@ -103,7 +103,7 @@ const ThemeColorCardContainer = () => {
   ]);
 
   return (
-    <ThemeColorCard
+    <PointColor
       showColorPicker={showColorPicker}
       handleChange={handleChange}
       handleReset={handleReset}
@@ -118,4 +118,4 @@ const ThemeColorCardContainer = () => {
   );
 };
 
-export default ThemeColorCardContainer;
+export default PointColorContainer;

@@ -3,10 +3,10 @@ import {
   requestFcmAndGetDeviceToken,
 } from "@/firebase/firebase-messaging-sw";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/recoil/atoms";
-import ThemeColorCardContainer from "@/components/Card/DisplayStyleCard/ThemeColorCard.container";
+import PointColorContainer from "@/components/Card/DisplayStyleCard/PointColor/PointColor.container";
 import ExtensionCardContainer from "@/components/Card/ExtensionCard/ExtensionCard.container";
 import LentInfoCardContainer from "@/components/Card/LentInfoCard/LentInfoCard.container";
 import NotificationCardContainer from "@/components/Card/NotificationCard/NotificationCard.container";
@@ -56,7 +56,7 @@ const ProfilePage = () => {
             name={myInfo.name}
             unbannedAt={myInfo.unbannedAt}
           />
-          <ThemeColorCardContainer />
+          <PointColorContainer />
           <NotificationCardContainer alarm={myInfo.alarmTypes} />
         </CardGridWrapper>
       )}

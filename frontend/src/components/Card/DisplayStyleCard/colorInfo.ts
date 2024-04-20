@@ -10,7 +10,7 @@ interface ColorData {
   }) => string;
 }
 
-export const themeColorData: ColorData[] = [
+export const pointColorData: ColorData[] = [
   {
     title: "메인 컬러",
     type: ColorType.MAIN,

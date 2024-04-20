@@ -5,11 +5,11 @@ import {
   CardContentWrapper,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
-import ColorPicker from "@/components/Card/DisplayStyleCard/ColorPicker";
 import DarkMode from "@/components/Card/DisplayStyleCard/DarkMode/DarkMode";
-import { themeColorData } from "@/components/Card/DisplayStyleCard/colorInfo";
+import ColorPicker from "@/components/Card/DisplayStyleCard/PointColor/ColorPicker";
+import { pointColorData } from "@/components/Card/DisplayStyleCard/colorInfo";
 
-interface ThemeColorProps {
+interface PointColorProps {
   showColorPicker: boolean;
   handleChange: (mainColor: { hex: string }, type: string) => void;
   handleReset: () => void;
@@ -22,7 +22,7 @@ interface ThemeColorProps {
   selectedColorType: string;
 }
 
-const ThemeColorCard = ({
+const PointColor = ({
   showColorPicker,
   handleChange,
   handleReset,
@@ -33,7 +33,7 @@ const ThemeColorCard = ({
   mineColor,
   handleColorButtonClick,
   selectedColorType,
-}: ThemeColorProps) => {
+}: PointColorProps) => {
   return (
     <>
       {showColorPicker && <BackgroundOverlayStyled />}
@@ -73,7 +73,7 @@ const ThemeColorCard = ({
               <DarkMode />
             </CardContentWrapper>
             <CardContentWrapper>
-              {themeColorData.map(({ title, type, getColor }) => (
+              {pointColorData.map(({ title, type, getColor }) => (
                 <CardContentStyled key={type}>
                   <ContentInfoStyled
                     isSelected={type === selectedColorType && showColorPicker}
@@ -132,4 +132,4 @@ const ColorButtonStyled = styled.button<{
     props.isSelected ? `${props.color} 0px 0px 4px` : "none"};
 `;
 
-export default ThemeColorCard;
+export default PointColor;
