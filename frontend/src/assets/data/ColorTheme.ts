@@ -94,8 +94,7 @@ const darkValues = css`
 export const GlobalStyle = createGlobalStyle`
   :root {
     ${lightValues}
-
-    [color-theme="dark"] {
+    [color-theme="DARK"] {
       ${darkValues}
     }
   }
