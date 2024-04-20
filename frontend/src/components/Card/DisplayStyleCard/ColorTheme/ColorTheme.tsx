@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { darkModeState } from "@/recoil/atoms";
 import { colorThemeToggleIconComponentMap } from "@/assets/data/maps";
 import { ColorThemeToggleType } from "@/types/enum/colorTheme.type.enum";
 
-// TODO : DarkMode 파일 폴더명 ColorTheme으로 변경
+// TODO : ColorTheme 파일 폴더명 ColorTheme으로 변경
+interface toggleItemSeparated {
+  name: string;
+  key: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
 
 const toggleList: toggleItemSeparated[] = [
   {
@@ -25,13 +29,7 @@ const toggleList: toggleItemSeparated[] = [
   },
 ];
 
-export interface toggleItemSeparated {
-  name: string;
-  key: string;
-  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-}
-
-const DarkMode = ({
+const ColorTheme = ({
   colorThemeToggle,
   handleColorThemeButtonClick,
 }: {
@@ -41,23 +39,20 @@ const DarkMode = ({
   return (
     <>
       <ButtonsWrapperStyled>
-        <WrapperStyled>
-          {toggleList.map((item) => {
-            const ColorThemeIcon = item.icon;
-            return (
-              <ButtonStyled
-                key={item.key}
-                id={`${item.key}`}
-                icon={ColorThemeIcon}
-                isClicked={colorThemeToggle === item.key}
-                onClick={() => handleColorThemeButtonClick(item.key)}
-              >
-                {ColorThemeIcon && <ColorThemeIcon />}
-                {item.name}
-              </ButtonStyled>
-            );
-          })}
-        </WrapperStyled>
+        {toggleList.map((item) => {
+          const ColorThemeIcon = item.icon;
+          return (
+            <ButtonStyled
+              key={item.key}
+              id={`${item.key}`}
+              isClicked={colorThemeToggle === item.key}
+              onClick={() => handleColorThemeButtonClick(item.key)}
+            >
+              {ColorThemeIcon && <ColorThemeIcon />}
+              {item.name}
+            </ButtonStyled>
+          );
+        })}
       </ButtonsWrapperStyled>
     </>
   );
@@ -66,26 +61,19 @@ const DarkMode = ({
 const ButtonsWrapperStyled = styled.div`
   display: flex;
   justify-content: center;
-  padding: 0 16px;
-`;
-
-const WrapperStyled = styled.div`
-  width: 100%;
-  display: flex;
   align-items: center;
   border-radius: 10px;
   justify-content: space-between;
+  padding: 0 16px;
 `;
 
 const ButtonStyled = styled.button<{
-  buttonWidth?: string;
-  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   isClicked: boolean;
 }>`
   display: flex;
-  justify-content: ${(props) => (props.icon ? "space-between" : "center")};
+  justify-content: space-between;
   align-items: center;
-  flex-direction: ${(props) => (props.icon ? "column" : "row")};
+  flex-direction: column;
   min-width: 50px;
   width: 90px;
   min-width: 50px;
@@ -97,7 +85,7 @@ const ButtonStyled = styled.button<{
     props.isClicked ? "var(--main-color)" : "var(--shared-gray-color-100)"};
   color: ${(props) =>
     props.isClicked ? "var(--text-with-bg-color)" : "var(--normal-text-color)"};
-  padding: ${(props) => (props.icon ? "12px 0 16px 0" : "4px 12px")};
+  padding: 12px 0 16px 0;
 
   & > svg {
     width: 30px;
@@ -112,4 +100,4 @@ const ButtonStyled = styled.button<{
   }
 `;
 
-export default DarkMode;
+export default ColorTheme;

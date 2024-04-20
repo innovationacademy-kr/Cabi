@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Card from "@/components/Card/Card";
 import { CardContentWrapper } from "@/components/Card/CardStyles";
-import DarkMode from "@/components/Card/DisplayStyleCard/DarkMode/DarkMode";
+import ColorTheme from "@/components/Card/DisplayStyleCard/ColorTheme/ColorTheme";
 import { ColorThemeToggleType } from "@/types/enum/colorTheme.type.enum";
 import PointColor from "./PointColor/PointColor";
 
@@ -70,7 +70,7 @@ const DisplayStyleCard = ({
         >
           <>
             <CardContentWrapper>
-              <DarkMode
+              <ColorTheme
                 colorThemeToggle={colorThemeToggle}
                 handleColorThemeButtonClick={handleColorThemeButtonClick}
               />
