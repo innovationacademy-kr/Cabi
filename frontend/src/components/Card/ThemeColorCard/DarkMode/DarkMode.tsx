@@ -74,7 +74,7 @@ const DarkMode = () => {
     <>
       <ButtonsWrapperStyled>
         <MultiToggleSwitchSeparated
-          initialState={toggleType}
+          state={toggleType}
           setState={setToggleType}
           toggleList={toggleList}
           buttonHeight={"90px"}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import styled from "styled-components";
 
 export interface toggleItemSeparated {
@@ -8,7 +8,7 @@ export interface toggleItemSeparated {
 }
 
 interface MultiToggleSwitchProps<T> {
-  initialState: T;
+  state: T;
   setState: React.Dispatch<React.SetStateAction<T>>;
   toggleList: toggleItemSeparated[];
   buttonHeight?: string;
@@ -16,46 +16,19 @@ interface MultiToggleSwitchProps<T> {
 }
 
 const MultiToggleSwitchSeparated = <T,>({
-  initialState,
   setState,
   toggleList,
   buttonHeight,
   buttonWidth,
+  state,
 }: MultiToggleSwitchProps<T>) => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const buttons = wrapperRef.current?.querySelectorAll("button");
-
-    buttons?.forEach((button) => {
-      if (button.id === `${initialState}`) {
-        button.style.color = "var(--bg-color)";
-        button.style.backgroundColor = "var(--main-color)";
-      }
-    });
-  }, [initialState]);
-
-  function switchToggle(e: any) {
-    const target = e.target as HTMLButtonElement;
-
-    if (target === e.currentTarget) return;
-
-    // setPage(0);
-    const buttons = wrapperRef.current?.querySelectorAll("button");
-
-    buttons?.forEach((button) => {
-      button.style.color = "var(--normal-text-color)";
-      button.style.backgroundColor = "var(--shared-gray-color-100)";
-    });
-
-    target.style.color = "var(--bg-color)";
-    target.style.backgroundColor = "var(--main-color)";
-
-    setState(target.id as React.SetStateAction<T>);
-  }
+  const switchToggle = (itemKey: string) => {
+    if (state === itemKey) return;
+    setState(itemKey as React.SetStateAction<T>);
+  };
 
   return (
-    <WrapperStyled ref={wrapperRef} onClick={switchToggle}>
+    <WrapperStyled>
       {toggleList.map((item) => {
         const ColorThemeIcon = item.icon;
         return (
@@ -65,12 +38,10 @@ const MultiToggleSwitchSeparated = <T,>({
             buttonHeight={buttonHeight}
             buttonWidth={buttonWidth}
             icon={ColorThemeIcon}
+            isClicked={state === item.key}
+            onClick={() => switchToggle(item.key)}
           >
-            {ColorThemeIcon && (
-              <ColorThemeIconStyled>
-                <ColorThemeIcon />
-              </ColorThemeIconStyled>
-            )}
+            {ColorThemeIcon && <ColorThemeIcon />}
             {item.name}
           </ButtonStyled>
         );
@@ -91,6 +62,7 @@ const ButtonStyled = styled.button<{
   buttonHeight?: string;
   buttonWidth?: string;
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  isClicked: boolean;
 }>`
   display: flex;
   justify-content: ${(props) => (props.icon ? "space-between" : "center")};
@@ -104,10 +76,22 @@ const ButtonStyled = styled.button<{
   height: ${(props) => (props.buttonHeight ? props.buttonHeight : "30px")};
   font-weight: 500;
   background-color: var(--shared-gray-color-100);
+  background-color: ${(props) =>
+    props.isClicked ? "var(--main-color)" : "var(--shared-gray-color-100)"};
   color: var(--normal-text-color);
-  padding: ${(props) => (props.icon ? "12px 0 16px 0" : "4px 12px")}; ;
-`;
+  color: ${(props) =>
+    props.isClicked ? "var(--bg-color)" : "var(--normal-text-color)"};
+  padding: ${(props) => (props.icon ? "12px 0 16px 0" : "4px 12px")};
 
-const ColorThemeIconStyled = styled.div``;
+  & > svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  & > svg > path {
+    stroke: ${(props) =>
+      props.isClicked ? "var(--bg-color)" : "var(--normal-text-color)"};
+  }
+`;
 
 export default MultiToggleSwitchSeparated;
