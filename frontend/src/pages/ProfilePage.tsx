@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/recoil/atoms";
-import PointColorContainer from "@/components/Card/DisplayStyleCard/PointColor/PointColor.container";
+import DisplayStyleCardContainer from "@/components/Card/DisplayStyleCard/DisplayStyleCard.container";
 import ExtensionCardContainer from "@/components/Card/ExtensionCard/ExtensionCard.container";
 import LentInfoCardContainer from "@/components/Card/LentInfoCard/LentInfoCard.container";
 import NotificationCardContainer from "@/components/Card/NotificationCard/NotificationCard.container";
@@ -56,8 +56,8 @@ const ProfilePage = () => {
             name={myInfo.name}
             unbannedAt={myInfo.unbannedAt}
           />
-          <PointColorContainer />
           <NotificationCardContainer alarm={myInfo.alarmTypes} />
+          <DisplayStyleCardContainer />
         </CardGridWrapper>
       )}
     </>
