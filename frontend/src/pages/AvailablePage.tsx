@@ -226,7 +226,7 @@ const RefreshButtonStyled = styled.button`
   }
 
   & > svg > path {
-    stroke: var(--normal-text-color);
+    stroke: var(--text-with-bg-color);
   }
 
   &:hover {
