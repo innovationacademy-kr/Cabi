@@ -68,11 +68,11 @@ const CardGridWrapper = styled.div`
   display: grid;
   padding: 60px 0;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   width: 100%;
   grid-gap: 20px;
   grid-template-columns: 350px 350px;
-  grid-template-rows: 163px 183px 230px;
+  grid-template-rows: 163px 183px 348px;
   grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "extension lentInfo" // h: 183px
     "notification theme"; // h: 230px h: 230px;

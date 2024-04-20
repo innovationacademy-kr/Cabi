@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import DisplayStyleCard from "@/components/Card/DisplayStyleCard/DisplayStyleCard";
 import ColorType from "@/types/enum/color.type.enum";
+import {
+  ColorThemeToggleType,
+  ColorThemeType,
+} from "@/types/enum/colorTheme.type.enum";
 
+// TODO: 포인트랑 테마 구분지을 수 있게 명명
 const DisplayStyleCardContainer = () => {
   const savedMainColor =
     localStorage.getItem("main-color") || "var(--default-main-color)";
@@ -17,7 +22,14 @@ const DisplayStyleCardContainer = () => {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const root: HTMLElement = document.documentElement;
 
-  const handleChange = (mainColor: { hex: string }, colorType: string) => {
+  const [selectedColorType, setSelectedColorType] = useState<string>(
+    ColorType.MAIN
+  );
+
+  const handlePointColorChange = (
+    mainColor: { hex: string },
+    colorType: string
+  ) => {
     const selectedColor: string = mainColor.hex;
     if (colorType === ColorType.MAIN) {
       setMainColor(selectedColor);
@@ -67,12 +79,16 @@ const DisplayStyleCardContainer = () => {
     if (isChange) setShowColorPicker(!showColorPicker);
   };
 
-  const [selectedColorType, setSelectedColorType] = useState<string>(
-    ColorType.MAIN
-  );
+  const handlePointColorButtonClick = (pointColorType: string) => {
+    setSelectedColorType(pointColorType);
+    setShowColorPicker(true);
+  };
 
-  const handleColorButtonClick = (colorType: string) => {
-    setSelectedColorType(colorType);
+  const handleColorThemeButtonClick = (colorThemeToggleType: string) => {
+    if (toggleType === colorThemeToggleType) return;
+    setToggleType(
+      colorThemeToggleType as React.SetStateAction<ColorThemeToggleType>
+    );
     setShowColorPicker(true);
   };
 
@@ -102,18 +118,62 @@ const DisplayStyleCardContainer = () => {
     savedSubColor,
   ]);
 
+  const savedColorTheme = localStorage.getItem("color-theme");
+  const savedColorThemeToggle = localStorage.getItem("color-theme-toggle");
+  var darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const [darkMode, setDarkMode] = useState<ColorThemeType>(
+    savedColorTheme
+      ? (savedColorTheme as ColorThemeType)
+      : darkModeQuery.matches
+      ? ColorThemeType.DARK
+      : ColorThemeType.LIGHT
+  );
+  const [toggleType, setToggleType] = useState<ColorThemeToggleType>(
+    savedColorThemeToggle
+      ? (savedColorThemeToggle as ColorThemeToggleType)
+      : ColorThemeToggleType.DEVICE
+  );
+
+  useEffect(() => {
+    darkModeQuery.addEventListener("change", (event) =>
+      setDarkMode(event.matches ? ColorThemeType.DARK : ColorThemeType.LIGHT)
+    );
+  }, []);
+
+  useEffect(() => {
+    document.body.setAttribute("color-theme", darkMode);
+    localStorage.setItem("color-theme", darkMode);
+  }, [darkMode]);
+
+  useEffect(() => {
+    if (!showColorPicker) setShowColorPicker(true);
+    localStorage.setItem("color-theme-toggle", toggleType);
+
+    if (toggleType === ColorThemeToggleType.LIGHT) {
+      setDarkMode(ColorThemeType.LIGHT);
+    } else if (toggleType === ColorThemeToggleType.DARK) {
+      setDarkMode(ColorThemeType.DARK);
+    } else {
+      setDarkMode(
+        darkModeQuery.matches ? ColorThemeType.DARK : ColorThemeType.LIGHT
+      );
+    }
+  }, [toggleType]);
+
   return (
     <DisplayStyleCard
       showColorPicker={showColorPicker}
-      handleChange={handleChange}
+      handlePointColorChange={handlePointColorChange}
       handleReset={handleReset}
       handleSave={handleSave}
       handleCancel={handleCancel}
       mainColor={mainColor}
       subColor={subColor}
       mineColor={mineColor}
-      handleColorButtonClick={handleColorButtonClick}
+      handlePointColorButtonClick={handlePointColorButtonClick}
       selectedColorType={selectedColorType}
+      colorThemeToggle={toggleType}
+      handleColorThemeButtonClick={handleColorThemeButtonClick}
     />
   );
 };

@@ -12,7 +12,7 @@ interface PointColorProps {
   mainColor: string;
   subColor: string;
   mineColor: string;
-  handleColorButtonClick: (colorType: string) => void;
+  handlePointColorButtonClick: (colorType: string) => void;
   selectedColorType: string;
 }
 
@@ -22,7 +22,7 @@ const PointColor = ({
   mainColor,
   subColor,
   mineColor,
-  handleColorButtonClick,
+  handlePointColorButtonClick,
   selectedColorType,
 }: PointColorProps) => {
   return (
@@ -32,12 +32,12 @@ const PointColor = ({
           <ContentInfoStyled
             isSelected={type === selectedColorType && showColorPicker}
             selectedColor={getColor({ mainColor, subColor, mineColor })}
-            onClick={() => handleColorButtonClick(type)}
+            onClick={() => handlePointColorButtonClick(type)}
           >
             {title}
           </ContentInfoStyled>
           <ColorButtonStyled
-            onClick={() => handleColorButtonClick(type)}
+            onClick={() => handlePointColorButtonClick(type)}
             color={getColor({ mainColor, subColor, mineColor })}
             isSelected={type === selectedColorType && showColorPicker}
             showColorPicker={showColorPicker}

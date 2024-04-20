@@ -2,33 +2,38 @@ import styled from "styled-components";
 import Card from "@/components/Card/Card";
 import { CardContentWrapper } from "@/components/Card/CardStyles";
 import DarkMode from "@/components/Card/DisplayStyleCard/DarkMode/DarkMode";
+import { ColorThemeToggleType } from "@/types/enum/colorTheme.type.enum";
 import PointColor from "./PointColor/PointColor";
 
-interface PointColorProps {
+interface DisplayStyleProps {
   showColorPicker: boolean;
-  handleChange: (mainColor: { hex: string }, type: string) => void;
+  handlePointColorChange: (mainColor: { hex: string }, type: string) => void;
   handleReset: () => void;
   handleSave: () => void;
   handleCancel: () => void;
   mainColor: string;
   subColor: string;
   mineColor: string;
-  handleColorButtonClick: (colorType: string) => void;
+  handlePointColorButtonClick: (colorType: string) => void;
   selectedColorType: string;
+  colorThemeToggle: ColorThemeToggleType;
+  handleColorThemeButtonClick: (colorThemeToggleType: string) => void;
 }
 
 const DisplayStyleCard = ({
   showColorPicker,
-  handleChange,
+  handlePointColorChange,
   handleReset,
   handleSave,
   handleCancel,
   mainColor,
   subColor,
   mineColor,
-  handleColorButtonClick,
+  handlePointColorButtonClick,
   selectedColorType,
-}: PointColorProps) => {
+  colorThemeToggle,
+  handleColorThemeButtonClick,
+}: DisplayStyleProps) => {
   return (
     <>
       {showColorPicker && <BackgroundOverlayStyled />}
@@ -65,16 +70,19 @@ const DisplayStyleCard = ({
         >
           <>
             <CardContentWrapper>
-              <DarkMode />
+              <DarkMode
+                colorThemeToggle={colorThemeToggle}
+                handleColorThemeButtonClick={handleColorThemeButtonClick}
+              />
             </CardContentWrapper>
             <CardContentWrapper>
               <PointColor
                 showColorPicker={showColorPicker}
-                handleChange={handleChange}
+                handleChange={handlePointColorChange}
                 mainColor={mainColor}
                 subColor={subColor}
                 mineColor={mineColor}
-                handleColorButtonClick={handleColorButtonClick}
+                handlePointColorButtonClick={handlePointColorButtonClick}
                 selectedColorType={selectedColorType}
               />
             </CardContentWrapper>
