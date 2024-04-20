@@ -48,12 +48,6 @@ const DarkMode = () => {
       : ColorThemeToggleType.DEVICE
   );
 
-  // const onClickHandler = () => {
-  //   setDarkMode((prev) => {
-  //     return prev === "light" ? "dark" : "light";
-  //   });
-  // };
-
   useEffect(() => {
     darkModeQuery.addEventListener("change", (event) =>
       setDarkMode(event.matches ? ColorThemeType.DARK : ColorThemeType.LIGHT)
@@ -66,8 +60,17 @@ const DarkMode = () => {
   }, [darkMode]);
 
   useEffect(() => {
-    document.body.setAttribute("color-theme", darkMode);
     localStorage.setItem("color-theme-toggle", toggleType);
+
+    if (toggleType === ColorThemeToggleType.LIGHT) {
+      setDarkMode(ColorThemeType.LIGHT);
+    } else if (toggleType === ColorThemeToggleType.DARK) {
+      setDarkMode(ColorThemeType.DARK);
+    } else {
+      setDarkMode(
+        darkModeQuery.matches ? ColorThemeType.DARK : ColorThemeType.LIGHT
+      );
+    }
   }, [toggleType]);
 
   return (
