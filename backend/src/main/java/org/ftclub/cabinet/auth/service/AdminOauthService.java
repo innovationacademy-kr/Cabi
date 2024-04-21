@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 @Log4j2
 @RequiredArgsConstructor
 public class AdminOauthService {
+
 	@Qualifier(OauthConfig.GOOGLE_OAUTH_20_SERVICE)
 	private final OAuth20Service googleOAuth20Service;
 	private final ObjectMapper objectMapper;
@@ -46,21 +47,24 @@ public class AdminOauthService {
 	 * @throws ExecutionException   비동기 처리시 스레드에서 발생한 오류 처리 예외
 	 * @throws InterruptedException 비동기 처리시 스레드 종료를 위한 예외
 	 */
-	public GoogleProfile getProfileByCode(String code) throws IOException, ExecutionException, InterruptedException {
+	public GoogleProfile getProfileByCode(String code)
+			throws IOException, ExecutionException, InterruptedException {
 		OAuth2AccessToken accessToken = googleOAuth20Service.getAccessToken(code);
-		OAuthRequest oAuthRequest = new OAuthRequest(Verb.GET, "https://www.googleapis.com/oauth2/v2/userinfo");
+		OAuthRequest oAuthRequest = new OAuthRequest(Verb.GET,
+				"https://www.googleapis.com/oauth2/v2/userinfo");
 		googleOAuth20Service.signRequest(accessToken, oAuthRequest);
 		try {
 			Response response = googleOAuth20Service.execute(oAuthRequest);
 			return convertJsonStringToProfile(response.getBody());
 		} catch (Exception e) {
-			if (e instanceof IOException)
+			if (e instanceof IOException) {
 				log.error("42 API 서버에서 프로필 정보를 가져오는데 실패했습니다."
 						+ "code: {}, message: {}", code, e.getMessage());
-			if (e instanceof ExecutionException || e instanceof InterruptedException)
+			}
+			if (e instanceof ExecutionException || e instanceof InterruptedException) {
 				log.error("42 API 서버에서 프로필 정보를 비동기적으로 가져오는데 실패했습니다."
 						+ "code: {}, message: {}", code, e.getMessage());
-			e.printStackTrace();
+			}
 			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asServiceException();
 		}
 	}
@@ -71,7 +75,8 @@ public class AdminOauthService {
 	 * @param jsonString
 	 * @return
 	 * @throws IOException
-	 * @see <a href="https://developers.google.com/identity/protocols/oauth2/openid-connect#obtainuserinfo">참고</a>
+	 * @see <a
+	 * href="https://developers.google.com/identity/protocols/oauth2/openid-connect#obtainuserinfo">참고</a>
 	 */
 	private GoogleProfile convertJsonStringToProfile(String jsonString) throws IOException {
 		JsonNode jsonNode = objectMapper.readTree(jsonString);
