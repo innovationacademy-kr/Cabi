@@ -207,4 +207,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 			@Param("status") CabinetStatus status,
 			@Param("title") String title,
 			@Param("memo") String memo);
+
+
+	List<Cabinet> findAllByStatus(CabinetStatus cabinetStatus);
 }
