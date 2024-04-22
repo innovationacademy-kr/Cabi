@@ -6,6 +6,7 @@ import static javax.persistence.FetchType.LAZY;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -22,12 +23,15 @@ import lombok.ToString;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "section_alarm")
+@Table(name = "SECTION_ALARM")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString(exclude = {"user", "cabinetPlace"})
+@EntityListeners(AuditingEntityListener.class)
 public class SectionAlarm {
 
 	@Id
@@ -37,67 +41,66 @@ public class SectionAlarm {
 	/**
 	 * 알람 상태
 	 */
-	@Column(name = "alarm_status")
+	@Column(name = "ALARM_STATUS")
 	@Enumerated(value = EnumType.STRING)
 	private AlarmStatus alarmStatus;
 
 	/**
 	 * 알람 등록 시간
 	 */
-	@Column(name = "registered_at", nullable = false)
+	@CreatedDate
+	@Column(name = "REGISTERED_AT", nullable = false)
 	private LocalDateTime registeredAt;
 
 	/**
 	 * 알람 발생 시간
 	 */
-	@Column(name = "alarmed_at")
+	@Column(name = "ALARMED_AT")
 	private LocalDateTime alarmedAt;
 
 	/**
 	 * 알람 종류
 	 */
-	@Column(name = "alarm_type")
+	@Column(name = "ALARM_TYPE")
 	@Enumerated(value = EnumType.STRING)
 	private AlarmType alarmType;
 
 	/**
 	 * 대여하는 유저
 	 */
-	@Column(name = "user_id", nullable = false)
+	@Column(name = "USER_ID", nullable = false)
 	private Long userId;
 
 	/**
 	 * 알람 등록된 관심 사물함 영역
 	 */
-	@Column(name = "cabinet_place_id", nullable = false)
+	@Column(name = "CABINET_PLACE_ID", nullable = false)
 	private Long cabinetPlaceId;
 
-	@JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "USER_ID", nullable = false, insertable = false, updatable = false)
 	@ManyToOne(fetch = LAZY)
 	private User user;
 
-	@JoinColumn(name = "cabinet_place_id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "CABINET_PLACE_ID", nullable = false, insertable = false, updatable = false)
 	@ManyToOne(fetch = LAZY)
 	private CabinetPlace cabinetPlace;
 
-	protected SectionAlarm(LocalDateTime registeredAt, Long userId, Long cabinetPlaceId,
+	protected SectionAlarm(Long userId, Long cabinetPlaceId,
 			AlarmType alarmType) {
-		this.registeredAt = registeredAt;
 		this.userId = userId;
 		this.cabinetPlaceId = cabinetPlaceId;
 		this.alarmType = alarmType;
 	}
 
 	/**
-	 * @param registeredAt   알람 등록 시간
 	 * @param userId         알람 발생 유저
 	 * @param cabinetPlaceId 알람 발생 사물함 영역
 	 * @param alarmType      알람 종류
 	 * @return 인자 정보를 담고있는 {@link SectionAlarm}
 	 */
-	public static SectionAlarm of(LocalDateTime registeredAt, Long userId, Long cabinetPlaceId,
+	public static SectionAlarm of(Long userId, Long cabinetPlaceId,
 			AlarmType alarmType) {
-		SectionAlarm sectionAlarm = new SectionAlarm(registeredAt, userId, cabinetPlaceId,
+		SectionAlarm sectionAlarm = new SectionAlarm(userId, cabinetPlaceId,
 				alarmType);
 		if (!sectionAlarm.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
