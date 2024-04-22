@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.data.annotation.CreatedDate;
 import org.ftclub.cabinet.user.domain.User;
 
@@ -27,11 +28,12 @@ public class ItemHistory {
 	@GeneratedValue(strategy =  GenerationType.IDENTITY)
 	private long id;
 
-	@JoinColumn(name = "USER_ID", nullable = false)
+	@JoinColumn(name = "USER", nullable = false)
 	@ManyToOne(fetch = LAZY)
 	private User user;
 
-	private long userId;
+	@Column(name = "USER_ID", nullable = false)
+	private Long userId;
 
 	@CreatedDate
 	@Column(name = "PURCHASE_AT", nullable = false, updatable = false)
@@ -45,4 +47,17 @@ public class ItemHistory {
 		this.purchaseAt = purchaseAt;
 		this.usedAt = usedAt;
 	}
+
+	public static ItemHistory of(long userId, LocalDateTime purchaseAt, LocalDateTime usedAt){
+		ItemHistory itemHistory = new ItemHistory(userId, purchaseAt, usedAt);
+		if (!itemHistory.isValid()){
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		return itemHistory;
+	}
+
+	private boolean isValid() {
+		return this.userId != null && this.purchaseAt != null;
+	}
+
 }
