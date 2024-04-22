@@ -19,12 +19,12 @@ const LeftStoreNav = ({
     name: string;
     route: string;
   }
-  
+
   const storeList: StoreItem[] = [
-    {name : "까비상점", route : "/store"},
-    {name : "인벤토리", route : "/store"},
-    {name : "아이템 사용내역", route : "/store"},
-    {name : "코인 내역", route : "/store"},
+    { name: "까비상점", route: "store" },
+    { name: "인벤토리", route: "store/inventory" },
+    { name: "아이템 사용내역", route: "store/item-use-log" },
+    { name: "코인 내역", route: "store/coin-log" },
   ];
   const [currentSection, SetCurrentSection] = useState("까비상점");
   const [userCoins, setUserCoins] = useState(420);
@@ -38,17 +38,20 @@ const LeftStoreNav = ({
             <span>{userCoins}</span> 까비
           </span>
         </CoinCountStyled>
-        {storeList.map((item: StoreItem, index: number) =>(
+        {storeList.map((item: StoreItem, index: number) => (
           <StoreSectionStyled
-          className={
-            item.name === currentSection? "leftNavButtonActive cabiButton" : "cabiButton"
-          }
-          onClick={() => {
-            SetCurrentSection(item.name);
-            onClickRedirectButton(item.route);
-          }
-          }
-          >{item.name}</StoreSectionStyled>
+            className={
+              item.name === currentSection
+                ? "leftNavButtonActive cabiButton"
+                : "cabiButton"
+            }
+            onClick={() => {
+              SetCurrentSection(item.name);
+              onClickRedirectButton(item.route);
+            }}
+          >
+            {item.name}
+          </StoreSectionStyled>
         ))}
       </StoreLeftNavOptionStyled>
     </>
