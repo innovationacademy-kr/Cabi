@@ -1,24 +1,35 @@
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as LinkImg } from "@/Cabinet/assets/images/link.svg";
 import { FloorSectionStyled } from "../LeftSectionNav/LeftSectionNav";
 
 const LeftProfileNav = ({
-  isProfile,
   onClickProfile,
-  pathname,
   onClickLentLogButton,
-  onClickSlack,
-  onClickClubForm,
 }: {
-  isProfile: boolean;
   onClickProfile: Function;
-  pathname: string;
   onClickLentLogButton: Function;
-  onClickSlack: Function;
-  onClickClubForm: Function;
 }) => {
+  const { pathname } = useLocation();
+
+  const onClickSlack = () => {
+    window.open(
+      "https://42born2code.slack.com/archives/C02V6GE8LD7",
+      "_blank",
+      "noopener noreferrer"
+    );
+  };
+
+  const onClickClubForm = () => {
+    window.open(
+      "https://docs.google.com/forms/d/e/1FAIpQLSfp-d7qq8gTvmQe5i6Gtv_mluNSICwuv5pMqeTBqt9NJXXP7w/closedform",
+      "_blank",
+      "noopener noreferrer"
+    );
+  };
+
   return (
-    <ProfileLeftNavOptionStyled isProfile={isProfile}>
+    <ProfileLeftNavOptionStyled>
       <FloorSectionStyled
         className={
           pathname === "/profile"
@@ -58,10 +69,8 @@ const LeftProfileNav = ({
   );
 };
 
-const ProfileLeftNavOptionStyled = styled.div<{
-  isProfile: boolean;
-}>`
-  display: ${(props) => (props.isProfile ? "block" : "none")};
+const ProfileLeftNavOptionStyled = styled.div`
+  display: block;
   min-width: 240px;
   height: 100%;
   padding: 32px 10px;

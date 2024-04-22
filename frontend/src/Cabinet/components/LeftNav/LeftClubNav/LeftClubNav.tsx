@@ -8,7 +8,7 @@ import {
 import useMenu from "@/Cabinet/hooks/useMenu";
 import { FloorSectionStyled } from "../LeftSectionNav/LeftSectionNav";
 
-const LeftClubNav = ({ isClub }: { isClub: boolean }) => {
+const LeftClubNav = () => {
   const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
   const [targetClubInfo, setTargetClubInfo] =
     useRecoilState<ClubResponseDto>(targetClubInfoState);
@@ -17,7 +17,7 @@ const LeftClubNav = ({ isClub }: { isClub: boolean }) => {
   return (
     <>
       {clubList.totalLength > 0 && (
-        <ClubLeftNavOptionStyled isClub={isClub}>
+        <ClubLeftNavOptionStyled>
           {/* <ListTitleStyled>내 동아리</ListTitleStyled> */}
           {clubList.result.map((club: ClubResponseDto, index: number) => (
             <FloorSectionStyled
@@ -41,10 +41,8 @@ const LeftClubNav = ({ isClub }: { isClub: boolean }) => {
   );
 };
 
-const ClubLeftNavOptionStyled = styled.div<{
-  isClub: boolean;
-}>`
-  display: ${(props) => (props.isClub ? "block" : "none")};
+const ClubLeftNavOptionStyled = styled.div`
+  display: block;
   min-width: 240px;
   height: 100%;
   padding: 32px 10px 32px;

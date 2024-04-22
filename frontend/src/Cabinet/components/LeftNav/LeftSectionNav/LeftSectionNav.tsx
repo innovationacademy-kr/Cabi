@@ -1,19 +1,19 @@
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import CabinetColorTable from "@/Cabinet/components/LeftNav/CabinetColorTable/CabinetColorTable";
 
 const LeftSectionNav = ({
-  isVisible,
-  floorSection,
   currentFloorSection,
   onClickSection,
 }: {
-  isVisible: boolean;
-  floorSection: string[];
   currentFloorSection: string;
   onClickSection: (section: string) => void;
 }) => {
+  const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
+
   return (
-    <LeftNavOptionStyled isVisible={isVisible}>
+    <LeftNavOptionStyled>
       {floorSection.map((section: string, index: number) => (
         <FloorSectionStyled
           className={
@@ -32,10 +32,8 @@ const LeftSectionNav = ({
   );
 };
 
-const LeftNavOptionStyled = styled.div<{
-  isVisible: boolean;
-}>`
-  display: ${(props) => (props.isVisible ? "block" : "none")};
+const LeftNavOptionStyled = styled.div`
+  display: block;
   min-width: 240px;
   height: 100%;
   padding: 32px 10px;
