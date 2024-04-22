@@ -4,11 +4,9 @@ import { FloorSectionStyled } from "@/Cabinet/components/LeftNav/LeftSectionNav/
 import { ReactComponent as LinkImg } from "@/Cabinet/assets/images/link.svg";
 
 const LeftProfileNav = ({
-  onClickProfile,
-  onClickLentLogButton,
+  onClickRedirectButton,
 }: {
-  onClickProfile: Function;
-  onClickLentLogButton: Function;
+  onClickRedirectButton: (location: string) => void;
 }) => {
   const { pathname } = useLocation();
 
@@ -36,7 +34,7 @@ const LeftProfileNav = ({
             ? "leftNavButtonActive cabiButton"
             : " cabiButton"
         }
-        onClick={() => onClickProfile()}
+        onClick={() => onClickRedirectButton("profile")}
       >
         내 정보
       </FloorSectionStyled>
@@ -46,7 +44,7 @@ const LeftProfileNav = ({
             ? "leftNavButtonActive cabiButton"
             : " cabiButton"
         }
-        onClick={() => onClickLentLogButton()}
+        onClick={() => onClickRedirectButton("profile/log")}
       >
         대여 기록
       </FloorSectionStyled>
