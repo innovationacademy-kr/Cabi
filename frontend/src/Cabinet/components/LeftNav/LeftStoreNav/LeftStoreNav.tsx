@@ -1,4 +1,4 @@
-const LeftStoreNav = ({ isVisible }: { isVisible: boolean }) => {
+const LeftStoreNav = () => {
   return <div>hi</div>;
 };
 

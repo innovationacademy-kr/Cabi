@@ -4,7 +4,7 @@ import LeftClubNav from "@/Cabinet/components/LeftNav/LeftClubNav/LeftClubNav";
 import LeftMainNavContainer from "@/Cabinet/components/LeftNav/LeftMainNav/LeftMainNav.container";
 import LeftProfileNav from "@/Cabinet/components/LeftNav/LeftProfileNav/LeftProfileNav";
 import LeftSectionNav from "@/Cabinet/components/LeftNav/LeftSectionNav/LeftSectionNav";
-import LeftStoreNavContainer from "@/Cabinet/components/LeftNav/LeftStoreNav/LeftStoreNav.container";
+import LeftStoreNav from "@/Cabinet/components/LeftNav/LeftStoreNav/LeftStoreNav";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
 const LeftNav: React.FC<{
@@ -15,6 +15,7 @@ const LeftNav: React.FC<{
   const { closeLeftNav } = useMenu();
   const isProfilePage: boolean = location.pathname.includes("profile");
   const isMainClubPage: boolean = location.pathname === "/clubs";
+  const isMainStorePage: boolean = location.pathname.includes("store");
 
   const onClickRedirectButton = (location: string) => {
     closeLeftNav();
@@ -29,7 +30,7 @@ const LeftNav: React.FC<{
         <LeftProfileNav onClickRedirectButton={onClickRedirectButton} />
       )}
       {isMainClubPage && <LeftClubNav closeLeftNav={closeLeftNav} />}
-      <LeftStoreNavContainer isVisible={isVisible} />
+      {isMainStorePage && <LeftStoreNav />}
     </LeftNavWrapStyled>
   );
 };
