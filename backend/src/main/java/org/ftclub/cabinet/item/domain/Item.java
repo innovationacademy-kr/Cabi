@@ -6,10 +6,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
 @Table(name = "ITEM")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString()
 public class Item {
 
@@ -30,4 +33,10 @@ public class Item {
 	@Column(name = "DESCRIPTION", nullable = false)
 	private String description;
 
+	protected Item(String name, long price, long sku, String description){
+		this.name = name;
+		this.price = price;
+		this.sku = sku;
+		this.description = description;
+	}
 }
