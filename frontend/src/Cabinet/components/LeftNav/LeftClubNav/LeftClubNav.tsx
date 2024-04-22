@@ -1,14 +1,14 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { myClubListState, targetClubInfoState } from "@/Cabinet/recoil/atoms";
-import { FloorSectionStyled } from "@/Cabinet/components/LeftNav/LeftSectionNav/LeftSectionNav";
 import {
   ClubPaginationResponseDto,
   ClubResponseDto,
 } from "@/Cabinet/types/dto/club.dto";
 import useMenu from "@/Cabinet/hooks/useMenu";
+import { FloorSectionStyled } from "../LeftSectionNav/LeftSectionNav";
 
-const LeftSectionNavClubs = () => {
+const LeftClubNav = ({ isClub }: { isClub: boolean }) => {
   const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
   const [targetClubInfo, setTargetClubInfo] =
     useRecoilState<ClubResponseDto>(targetClubInfoState);
@@ -17,7 +17,7 @@ const LeftSectionNavClubs = () => {
   return (
     <>
       {clubList.totalLength > 0 && (
-        <ClubLeftNavOptionStyled>
+        <ClubLeftNavOptionStyled isClub={isClub}>
           {/* <ListTitleStyled>내 동아리</ListTitleStyled> */}
           {clubList.result.map((club: ClubResponseDto, index: number) => (
             <FloorSectionStyled
@@ -41,8 +41,10 @@ const LeftSectionNavClubs = () => {
   );
 };
 
-const ClubLeftNavOptionStyled = styled.div`
-  display: block;
+const ClubLeftNavOptionStyled = styled.div<{
+  isClub: boolean;
+}>`
+  display: ${(props) => (props.isClub ? "block" : "none")};
   min-width: 240px;
   height: 100%;
   padding: 32px 10px 32px;
@@ -66,4 +68,4 @@ const ListTitleStyled = styled.div`
   font-weight: 500;
 `;
 
-export default LeftSectionNavClubs;
+export default LeftClubNav;
