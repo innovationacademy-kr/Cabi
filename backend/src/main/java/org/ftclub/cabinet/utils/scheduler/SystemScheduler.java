@@ -9,6 +9,7 @@ import org.ftclub.cabinet.alarm.discord.DiscordScheduleAlarmMessage;
 import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
+import org.ftclub.cabinet.exception.FtClubCabinetException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.LentExtensionManager;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -39,9 +40,14 @@ public class SystemScheduler {
 	private final DiscordWebHookMessenger discordWebHookMessenger;
 
 	private void errorHandle(Exception e, DiscordScheduleAlarmMessage message) {
-		log.error("Error message: {}, Error occurred in scheduled task: ", message, e);
-		discordWebHookMessenger.sendMessage(message);
+		if (!(e instanceof FtClubCabinetException)) {
+			log.error("Error message: {}, Error occurred in scheduled task: ", message, e);
+			discordWebHookMessenger.sendMessage(message);
+		} else {
+			log.warn("Handled FtClubCabinetException, no notification sent: ", e);
+		}
 	}
+
 
 	/**
 	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거
