@@ -18,6 +18,7 @@ import PresentationLayout from "@/Presentation/pages/Layout";
 import PresentationLogPage from "@/Presentation/pages/LogPage";
 import RegisterPage from "@/Presentation/pages/RegisterPage";
 import AdminPresentationLayout from "@/Presentation/pages/admin/AdminLayout";
+import StoreMainPage from "./Cabinet/pages/StoreMainPage";
 
 const NotFoundPage = lazy(() => import("@/Cabinet/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/Cabinet/pages/LoginFailurePage"));
@@ -51,6 +52,7 @@ function App(): React.ReactElement {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="profile/log" element={<LogPage />} />
             <Route path="clubs" element={<ClubPage />} />
+            <Route path="store" element={<StoreMainPage />} />
           </Route>
           <Route path="/presentation/" element={<PresentationLayout />}>
             <Route path="home" element={<PresentationHomePage />} />

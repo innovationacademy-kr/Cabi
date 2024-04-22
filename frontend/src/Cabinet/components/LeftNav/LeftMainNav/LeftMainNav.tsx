@@ -5,6 +5,7 @@ import { ReactComponent as ProfileImg } from "@/Cabinet/assets/images/profile-ci
 import { ReactComponent as SearchImg } from "@/Cabinet/assets/images/search.svg";
 import { ReactComponent as SlackNotiImg } from "@/Cabinet/assets/images/slack-notification.svg";
 import { ReactComponent as SlackImg } from "@/Cabinet/assets/images/slack.svg";
+import { ReactComponent as StoreImg } from "@/Cabinet/assets/images/storeIconGray.svg";
 
 interface ILeftMainNav {
   pathname: string;
@@ -20,6 +21,7 @@ interface ILeftMainNav {
   onClickMainClubButton: React.MouseEventHandler;
   onClickProfileButton: React.MouseEventHandler;
   onClickAvailableButton: React.MouseEventHandler;
+  onClickStoreButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
@@ -37,6 +39,7 @@ const LeftMainNav = ({
   onClickMainClubButton,
   onClickProfileButton,
   onClickAvailableButton,
+  onClickStoreButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
@@ -143,6 +146,17 @@ const LeftMainNav = ({
             <>
               <BottomBtnStyled
                 className={
+                  pathname.includes("store")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                onClick={onClickStoreButton}
+              >
+                <StoreImg stroke="var(--gray-color)" />
+                store
+              </BottomBtnStyled>
+              <BottomBtnStyled
+                className={
                   pathname.includes("clubs")
                     ? "active cabiButton"
                     : " cabiButton"
@@ -246,6 +260,7 @@ const BottomBtnStyled = styled.li`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
   &:first-child {
     margin-top: 0;
   }

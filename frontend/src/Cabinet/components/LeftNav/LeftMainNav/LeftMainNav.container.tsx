@@ -118,7 +118,12 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     navigator("slack-notification");
     closeAll();
   };
-  
+
+  const onClickStoreButton = (): void => {
+    navigator("store");
+    closeAll();
+  };
+
   const onClickMainClubButton = () => {
     navigator("clubs");
     closeAll();
@@ -152,7 +157,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     resetCurrentSection();
     navigator("/login");
   };
-  
+
   return (
     <LeftMainNav
       pathname={pathname}
@@ -168,6 +173,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickMainClubButton={onClickMainClubButton}
       onClickProfileButton={onClickProfileButton}
       onClickAvailableButton={onClickAvailableButton}
+      onClickStoreButton={onClickStoreButton}
       isAdmin={isAdmin}
     />
   );
