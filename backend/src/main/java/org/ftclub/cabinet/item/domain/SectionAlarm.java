@@ -34,16 +34,28 @@ public class SectionAlarm {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	/**
+	 * 알람 상태
+	 */
 	@Column(name = "alarm_status")
 	@Enumerated(value = EnumType.STRING)
 	private AlarmStatus alarmStatus;
 
+	/**
+	 * 알람 등록 시간
+	 */
 	@Column(name = "registered_at", nullable = false)
 	private LocalDateTime registeredAt;
 
+	/**
+	 * 알람 발생 시간
+	 */
 	@Column(name = "alarmed_at")
 	private LocalDateTime alarmedAt;
 
+	/**
+	 * 알람 종류
+	 */
 	@Column(name = "alarm_type")
 	@Enumerated(value = EnumType.STRING)
 	private AlarmType alarmType;
@@ -76,6 +88,13 @@ public class SectionAlarm {
 		this.alarmType = alarmType;
 	}
 
+	/**
+	 * @param registeredAt   알람 등록 시간
+	 * @param userId         알람 발생 유저
+	 * @param cabinetPlaceId 알람 발생 사물함 영역
+	 * @param alarmType      알람 종류
+	 * @return 인자 정보를 담고있는 {@link SectionAlarm}
+	 */
 	public static SectionAlarm of(LocalDateTime registeredAt, Long userId, Long cabinetPlaceId,
 			AlarmType alarmType) {
 		SectionAlarm sectionAlarm = new SectionAlarm(registeredAt, userId, cabinetPlaceId,
@@ -86,6 +105,11 @@ public class SectionAlarm {
 		return sectionAlarm;
 	}
 
+	/**
+	 * registeredAt, userId, cabinetPlaceId, alarmType 의 null 이 아닌지 확인합니다.
+	 *
+	 * @return 유효한 인스턴스 여부
+	 */
 	private boolean isValid() {
 		return this.registeredAt != null && this.userId != null && this.cabinetPlaceId != null
 				&& alarmType.isValid();
