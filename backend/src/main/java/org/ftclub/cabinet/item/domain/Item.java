@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 
 @Entity
 @Table(name = "ITEM")
@@ -38,5 +39,17 @@ public class Item {
 		this.price = price;
 		this.sku = sku;
 		this.description = description;
+	}
+
+	public static Item of(String name, long price, long sku, String description){
+		Item item = new Item(name, price, sku, description);
+		if (!item.isValid()){
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		return item;
+	}
+
+	private boolean isValid() {
+		return this.name != null && this.sku != null && this.description != null;
 	}
 }
