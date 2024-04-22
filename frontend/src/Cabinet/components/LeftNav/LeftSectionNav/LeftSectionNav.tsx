@@ -1,16 +1,15 @@
 import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { currentSectionNameState } from "@/Cabinet/recoil/atoms";
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import CabinetColorTable from "@/Cabinet/components/LeftNav/CabinetColorTable/CabinetColorTable";
 
-const LeftSectionNav = ({
-  currentFloorSection,
-  onClickSection,
-}: {
-  currentFloorSection: string;
-  onClickSection: (section: string) => void;
-}) => {
+const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
   const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
+  const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
+    currentSectionNameState
+  );
 
   return (
     <LeftNavOptionStyled>
@@ -22,7 +21,10 @@ const LeftSectionNav = ({
               : "cabiButton"
           }
           key={index}
-          onClick={() => onClickSection(section)}
+          onClick={() => {
+            closeLeftNav();
+            setCurrentFloorSection(section);
+          }}
         >
           {section}
         </FloorSectionStyled>
