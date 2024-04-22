@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { FloorSectionStyled } from "@/Cabinet/components/LeftNav/LeftSectionNav/LeftSectionNav";
 import { ReactComponent as LinkImg } from "@/Cabinet/assets/images/link.svg";
-import { FloorSectionStyled } from "../LeftSectionNav/LeftSectionNav";
 
 const LeftProfileNav = ({
   onClickProfile,

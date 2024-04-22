@@ -2,12 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { currentSectionNameState } from "@/Cabinet/recoil/atoms";
+import LeftClubNav from "@/Cabinet/components/LeftNav/LeftClubNav/LeftClubNav";
 import LeftMainNavContainer from "@/Cabinet/components/LeftNav/LeftMainNav/LeftMainNav.container";
+import LeftProfileNav from "@/Cabinet/components/LeftNav/LeftProfileNav/LeftProfileNav";
 import LeftSectionNav from "@/Cabinet/components/LeftNav/LeftSectionNav/LeftSectionNav";
+import LeftStoreNavContainer from "@/Cabinet/components/LeftNav/LeftStoreNav/LeftStoreNav.container";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import LeftClubNav from "./LeftClubNav/LeftClubNav";
-import LeftProfileNav from "./LeftProfileNav/LeftProfileNav";
-import LeftStoreNavContainer from "./LeftStoreNav/LeftStoreNav.container";
 
 const LeftNav: React.FC<{
   isVisible: boolean;
@@ -35,7 +35,7 @@ const LeftNav: React.FC<{
     closeLeftNav();
     navigator("profile/log");
   };
-  // TODO : club onClick 만들기
+
   return (
     <LeftNavWrapStyled id="leftNavWrap">
       <LeftMainNavContainer isAdmin={isAdmin} />
@@ -51,7 +51,7 @@ const LeftNav: React.FC<{
           onClickLentLogButton={onClickLentLogButton}
         />
       )}
-      {isMainClubPage && <LeftClubNav />}
+      {isMainClubPage && <LeftClubNav closeLeftNav={closeLeftNav} />}
       <LeftStoreNavContainer isVisible={isVisible} />
     </LeftNavWrapStyled>
   );

@@ -1,18 +1,16 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { myClubListState, targetClubInfoState } from "@/Cabinet/recoil/atoms";
+import { FloorSectionStyled } from "@/Cabinet/components/LeftNav/LeftSectionNav/LeftSectionNav";
 import {
   ClubPaginationResponseDto,
   ClubResponseDto,
 } from "@/Cabinet/types/dto/club.dto";
-import useMenu from "@/Cabinet/hooks/useMenu";
-import { FloorSectionStyled } from "../LeftSectionNav/LeftSectionNav";
 
-const LeftClubNav = () => {
+const LeftClubNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
   const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
   const [targetClubInfo, setTargetClubInfo] =
     useRecoilState<ClubResponseDto>(targetClubInfoState);
-  const { closeLeftNav } = useMenu();
 
   return (
     <>
