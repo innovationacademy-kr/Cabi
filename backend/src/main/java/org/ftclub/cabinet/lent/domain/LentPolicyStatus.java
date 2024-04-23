@@ -3,8 +3,7 @@ package org.ftclub.cabinet.lent.domain;
 /**
  * 대여 상태
  */
-public enum
-LentPolicyStatus {
+public enum LentPolicyStatus {
 	/**
 	 * 빌릴 수 있음
 	 */
