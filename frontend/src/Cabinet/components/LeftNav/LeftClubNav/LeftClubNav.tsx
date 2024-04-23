@@ -46,6 +46,7 @@ const ClubLeftNavOptionStyled = styled.div`
   padding: 32px 10px 32px;
   border-right: 1px solid var(--line-color);
   font-weight: 300;
+  font-size: var(--size-base);
   position: relative;
   & hr {
     width: 80%;

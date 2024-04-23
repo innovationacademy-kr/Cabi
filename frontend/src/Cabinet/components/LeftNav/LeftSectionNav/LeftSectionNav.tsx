@@ -35,6 +35,7 @@ const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
 };
 
 const LeftNavOptionStyled = styled.div`
+  font-size: var(--size-base);
   display: block;
   min-width: 240px;
   height: 100%;

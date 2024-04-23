@@ -1,20 +1,11 @@
 import { useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { myClubListState, targetClubInfoState } from "@/Cabinet/recoil/atoms";
-import { FloorSectionStyled } from "@/Cabinet/components/LeftNav/LeftSectionNav/LeftSectionNav";
-import {
-  ClubPaginationResponseDto,
-  ClubResponseDto,
-} from "@/Cabinet/types/dto/club.dto";
-import useMenu from "@/Cabinet/hooks/useMenu";
 
 const LeftStoreNav = ({
   onClickRedirectButton,
 }: {
   onClickRedirectButton: (location: string) => void;
 }) => {
-  // const storeList = ["까비상점", "인벤토리", "아이템 사용내역", "코인 내역"];
   interface StoreItem {
     name: string;
     route: string;
@@ -58,28 +49,13 @@ const LeftStoreNav = ({
   );
 };
 
-const CoinCountStyled = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 20px;
-  align-items: center;
-  justify-content: space-between;
-  font-weight: 400;
-  & span > span {
-    font-weight: 800;
-  }
-`;
-`
-
-// const StoreLeftNavOptionStyled = styled.div<{
-//   isProfile: boolean;
-// }>`;
 const StoreLeftNavOptionStyled = styled.div`
   min-width: 240px;
   height: 100%;
   padding: 32px 10px;
   border-right: 1px solid var(--line-color);
   font-weight: 300;
+  font-size: var(--size-base);
   position: relative;
   & hr {
     width: 80%;
@@ -90,6 +66,19 @@ const StoreLeftNavOptionStyled = styled.div`
     margin-bottom: 20px;
   }
 `;
+
+const CoinCountStyled = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 15px 20px 10px 20px;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 400;
+  & span > span {
+    font-weight: 800;
+  }
+`;
+
 const StoreSectionStyled = styled.div`
   width: 100%;
   height: 40px;
