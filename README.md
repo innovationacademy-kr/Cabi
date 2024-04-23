@@ -74,6 +74,10 @@
 
 <br/>
 
+## 🕸️ 인프라 구조도
+![Untitled](https://github.com/innovationacademy-kr/Cabi/assets/83565255/165c1529-6164-4988-9495-6bc2ba3ef0ab)
+
+
 ## 🛠 기술 스택
 
 <div>
