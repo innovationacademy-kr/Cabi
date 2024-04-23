@@ -152,8 +152,8 @@ const LeftMainNav = ({
                 }
                 onClick={onClickStoreButton}
               >
-                <StoreImg stroke="var(--gray-color)" />
-                store
+                <StoreImg stroke="var(--gray-color)" width={24} height={24} />
+                Store
               </BottomBtnStyled>
               <BottomBtnStyled
                 className={
@@ -163,7 +163,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickMainClubButton}
               >
-                <CulbImg stroke="var(--gray-color)" />
+                <CulbImg stroke="var(--gray-color)" width={24} height={24} />
                 Clubs
               </BottomBtnStyled>
               <BottomBtnStyled
@@ -174,7 +174,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickProfileButton}
               >
-                <ProfileImg stroke="var(--gray-color)" width={32} height={32} />
+                <ProfileImg stroke="var(--gray-color)" width={24} height={24} />
                 Profile
               </BottomBtnStyled>
             </>
@@ -211,6 +211,8 @@ const TopBtnStyled = styled.li`
   width: 100%;
   height: 48px;
   line-height: 48px;
+  /*   font-size: var(--size-base); */
+  font-size: var(--size-base);
   font-weight: 300;
   margin-bottom: 2.5vh;
   border-radius: 10px;
@@ -252,6 +254,7 @@ const BottomBtnStyled = styled.li`
   width: 100%;
   min-height: 48px;
   line-height: 1.125rem;
+  font-size: var(--size-base);
   font-weight: 300;
   margin-top: 2.5vh;
   border-radius: 10px;
