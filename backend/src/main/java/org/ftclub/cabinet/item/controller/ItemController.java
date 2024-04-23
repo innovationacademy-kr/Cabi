@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
 import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.service.ItemFacadeService;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
@@ -32,6 +34,14 @@ public class ItemController {
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public ItemHistoryResponseDto getItemHistory(@UserSession UserSessionDto user,
 			@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
-		return null;
+		return itemFacadeService.getItemHistory(user.getUserId(), start, end);
+	}
+
+	@GetMapping("/coin/history")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public CoinHistoryResponseDto getCoinHistory(@UserSession UserSessionDto user,
+			@RequestParam CoinHistoryType type,
+			@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
+		return itemFacadeService.getCoinHistory(user.getUserId(), type, start, end);
 	}
 }
