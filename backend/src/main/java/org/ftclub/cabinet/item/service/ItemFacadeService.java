@@ -1,5 +1,9 @@
 package org.ftclub.cabinet.item.service;
 
+import static org.ftclub.cabinet.item.domain.CoinHistoryType.ALL;
+import static org.ftclub.cabinet.item.domain.CoinHistoryType.EARN;
+import static org.ftclub.cabinet.item.domain.CoinHistoryType.USE;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
 import org.ftclub.cabinet.dto.CoinInformationDto;
+import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
-import org.ftclub.cabinet.dto.ItemPaginationDto;
+import org.ftclub.cabinet.dto.ItemResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.domain.Item;
@@ -34,9 +39,12 @@ public class ItemFacadeService {
 	private final ItemMapper itemMapper;
 
 	@Transactional
-	public ItemPaginationDto getItems() {
+	public ItemResponseDto getAllItems() {
 		List<Item> allItems = itemQueryService.getAllItems();
-		return null;
+		List<ItemDto> itemDtos = allItems.stream()
+				.map(itemMapper::toItemDto)
+				.collect(Collectors.toList());
+		return new ItemResponseDto(itemDtos);
 	}
 
 	@Transactional(readOnly = true)

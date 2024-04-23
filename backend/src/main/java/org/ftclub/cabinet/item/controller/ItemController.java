@@ -7,7 +7,7 @@ import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
 import org.ftclub.cabinet.dto.CoinInformationDto;
 import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
-import org.ftclub.cabinet.dto.ItemPaginationDto;
+import org.ftclub.cabinet.dto.ItemResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.service.ItemFacadeService;
@@ -28,8 +28,8 @@ public class ItemController {
 
 	@GetMapping("/")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public ItemPaginationDto getItems() {
-		return null;
+	public ItemResponseDto getAllItems() {
+		return itemFacadeService.getAllItems();
 	}
 
 	@GetMapping("/history")

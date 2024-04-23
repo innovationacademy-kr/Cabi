@@ -2,13 +2,11 @@ package org.ftclub.cabinet.mapper;
 
 import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
-import java.util.List;
-import org.ftclub.cabinet.dto.CoinHistoryDto;
-import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
+import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.item.domain.Item;
-import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring",
@@ -24,4 +22,11 @@ public interface ItemMapper {
 	CoinHistoryDto toCoinHistoryDto(ItemHistory itemHistory, Item item);
 
 	CoinHistoryResponseDto toCoinHistoryResponseDto(List<CoinHistoryDto> coinHistories);
+	ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
+
+	@Mapping(target = "itemId", source = "item.id")
+	@Mapping(target = "itemName", source = "item.name")
+	@Mapping(target = "itemPrice", source = "item.price")
+	@Mapping(target = "itemType", source = "item.sku")
+	ItemDto toItemDto(Item item);
 }
