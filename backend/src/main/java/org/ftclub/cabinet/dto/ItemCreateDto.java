@@ -13,10 +13,12 @@ import org.ftclub.cabinet.item.domain.Sku;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemDto {
+public class ItemCreateDto {
 
-	private Sku itemId;
-	private String itemName;
-	private Integer itemPrice;
-	private ItemType itemType;
+	private String name;
+	private Integer price;
+	private Sku sku;
+	private ItemType type;
+	private String description;
+
 }
