@@ -6,6 +6,23 @@ import {
   ColorThemeType,
 } from "@/types/enum/colorTheme.type.enum";
 
+// TODO : 토글말고 버튼으루
+export const getInitialColorTheme = (
+  savedColorThemeToggle: ColorThemeToggleType,
+  darkModeQuery: MediaQueryList
+) => {
+  // 라이트 / 다크 버튼
+  if (savedColorThemeToggle === ColorThemeToggleType.LIGHT)
+    return ColorThemeType.LIGHT;
+  else if (savedColorThemeToggle === ColorThemeToggleType.DARK)
+    return ColorThemeType.DARK;
+  // 디바이스 버튼
+  if (darkModeQuery.matches) {
+    return ColorThemeType.DARK;
+  }
+  return ColorThemeType.LIGHT;
+};
+
 // TODO: 포인트랑 테마 구분지을 수 있게 명명
 const DisplayStyleCardContainer = () => {
   const savedMainColor =
@@ -128,8 +145,12 @@ const DisplayStyleCardContainer = () => {
     (localStorage.getItem("color-theme-toggle") as ColorThemeToggleType) ||
     ColorThemeToggleType.DEVICE;
   var darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const initialColorTheme = getInitialColorTheme(
+    savedColorThemeToggle,
+    darkModeQuery
+  );
   const [darkMode, setDarkMode] = useState<ColorThemeType>(
-    ColorThemeType.LIGHT
+    initialColorTheme as ColorThemeType
   );
 
   const [toggleType, setToggleType] = useState<ColorThemeToggleType>(
