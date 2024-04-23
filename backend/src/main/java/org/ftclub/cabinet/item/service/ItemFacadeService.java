@@ -106,6 +106,6 @@ public class ItemFacadeService {
 	 */
 	public CoinInformationDto getCoinInformation(Long userId, Long itemId) {
 		LocalDateTime now = LocalDateTime.now();
-
+		itemHistoryQueryService.get
 	}
 }
