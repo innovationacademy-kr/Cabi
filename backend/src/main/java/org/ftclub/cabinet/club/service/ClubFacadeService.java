@@ -117,6 +117,7 @@ public class ClubFacadeService {
 	 * @param clubId   동아리 ID
 	 * @param name     추가할 사용자 이름
 	 */
+	@Transactional
 	public void addClubUser(Long masterId, Long clubId, String name) {
 		User clubMaster = userQueryService.getUser(masterId);
 		ClubRegistration clubMasterRegistration =
@@ -142,6 +143,7 @@ public class ClubFacadeService {
 	 * @param clubId        동아리 ID
 	 * @param deletedUserId 제거할 사용자 ID
 	 */
+	@Transactional
 	public void deleteClubUser(Long masterId, Long clubId, Long deletedUserId) {
 		User clubMaster = userQueryService.getUser(masterId);
 		userQueryService.getUser(deletedUserId);
@@ -167,6 +169,7 @@ public class ClubFacadeService {
 	 * @param clubId            동아리 ID
 	 * @param newClubMasterName 새로운 동아리 마스터 이름
 	 */
+	@Transactional
 	public void mandateClubUser(Long clubMasterId, Long clubId, String newClubMasterName) {
 		User newClubMaster = userQueryService.getUserByName(newClubMasterName);
 
