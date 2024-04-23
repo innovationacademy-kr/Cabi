@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Logging(level = LogLevel.DEBUG)
 public class ItemQueryService {
-	private static final ItemRepository itemRepository;
 
-	public static List<Item> getAllItems() {
+	private final ItemRepository itemRepository;
+
+	public List<Item> getAllItems() {
 		return itemRepository.findAllItems();
 	}
 
-	public Item getItem()
+//	public Item getItem()
 }

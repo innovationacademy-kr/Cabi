@@ -27,7 +27,7 @@ public class ItemFacadeService {
 
 	@Transactional
 	public ItemPaginationDto getItems() {
-		List<Item> allItems = ItemQueryService.getAllItems();
+		List<Item> allItems = itemQueryService.getAllItems();
 		return null;
 	}
 
