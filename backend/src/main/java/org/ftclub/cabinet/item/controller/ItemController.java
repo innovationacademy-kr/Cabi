@@ -32,6 +32,6 @@ public class ItemController {
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public ItemHistoryResponseDto getItemHistory(@UserSession UserSessionDto user,
 			@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
-		return null;
+		return itemFacadeService.getItemHistory(user.getUserId(), start, end);
 	}
 }
