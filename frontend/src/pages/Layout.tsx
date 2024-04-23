@@ -92,11 +92,6 @@ const Layout = (): JSX.Element => {
     }
   };
 
-  const savedMainColor = localStorage.getItem("main-color");
-  const savedSubColor = localStorage.getItem("sub-color");
-  const savedMineColor = localStorage.getItem("mine-color");
-  const root: HTMLElement = document.documentElement;
-
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/login");
     else if (token) {
@@ -110,6 +105,11 @@ const Layout = (): JSX.Element => {
       return () => clearInterval(serverTimer);
     }
   }, []);
+
+  const savedMainColor = localStorage.getItem("main-color");
+  const savedSubColor = localStorage.getItem("sub-color");
+  const savedMineColor = localStorage.getItem("mine-color");
+  const root: HTMLElement = document.documentElement;
 
   useEffect(() => {
     root.style.setProperty("--main-color", savedMainColor);

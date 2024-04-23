@@ -1,6 +1,40 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
+    <script>
+      (function () {
+        function getInitialColorMode() {
+          const isClient = typeof window !== "undefined";
+          if (isClient) {
+            // const persistedColorPreference =
+            //   window.localStorage.getItem("color-theme");
+            // if (persistedColorPreference) {
+            //   return persistedColorPreference;
+            // }
+            // const systemPreference = window.matchMedia(
+            //   "(prefers-color-scheme: dark)"
+            // );
+            // if (systemPreference.matches) {
+            //   return "DARK";
+            // }
+            // return "LIGHT";
+          }
+        }
+        // const colorMode = getInitialColorMode();
+        // document.documentElement.style.setProperty(
+        //   "background-color",
+        //   colorMode === "LIGHT" ? "#FFFFFF" : "#2F2F2F"
+        // );
+        // document.documentElement.style.setProperty("background-color", "blue");
+        // document.documentElement.style.setProperty(
+        //   "color",
+        //   colorMode === "DARK" ? "#000000" : "#e5e5e5"
+        // );
+      })();
+      document.addEventListener("DOMContentLoaded", function () {
+        document.body.setAttribute("color-theme", "DARK");
+      });
+    </script>
     <!-- Google tag (gtag.js) -->
     <script
       async

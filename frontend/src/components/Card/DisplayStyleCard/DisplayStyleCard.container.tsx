@@ -99,6 +99,7 @@ const DisplayStyleCardContainer = () => {
 
   useEffect(() => {
     root.style.setProperty("--main-color", mainColor);
+    root.style.setProperty("--sub-color", subColor);
     root.style.setProperty("--mine-color", mineColor);
     const confirmBeforeUnload = (e: BeforeUnloadEvent) => {
       if (
