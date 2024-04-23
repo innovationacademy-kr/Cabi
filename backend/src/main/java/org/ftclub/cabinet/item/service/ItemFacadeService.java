@@ -18,6 +18,7 @@ import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
+import org.ftclub.cabinet.item.domain.ItemType;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
@@ -47,37 +48,28 @@ public class ItemFacadeService {
 
 	@Transactional(readOnly = true)
 	public MyItemResponseDto getMyItems(UserSessionDto user) {
-//		List<ItemHistory> userItemHistories = itemHistoryQueryService.findAllItemHistoryByUser(user.getUserId());
-//
-//		List<ItemDto> extensionItems = getItemDtos(userItemHistories);
-//
-//		List<ItemDto> exchangeItems = userItemHistories.stream()
-//				.filter(ih -> ih.getItem())
-//				.map(ih -> itemMapper.toItemDto(ih.getItem()))
-//				.collect(Collectors.toList());
-//
-//		List<ItemDto> alarmItems = userItemHistories.stream()
-//				.filter(ih -> ih.getItem().getSku().isAlarmType())
-//				.map(ih -> itemMapper.toItemDto(ih.getItem()))
-//				.collect(Collectors.toList());
-//
-//		List<ItemDto> penaltyItems = userItemHistories.stream()
-//				.filter(ih -> ih.getItem().getSku().isPenaltyType())
-//				.map(ih -> itemMapper.toItemDto(ih.getItem()))
-//				.collect(Collectors.toList());
-//
-//		return itemMapper.toMyItemResponseDto(extensionItems, exchangeItems, alarmItems, penaltyItems);
-		return null;
+		List<ItemHistory> userItemHistories = itemHistoryQueryService.findAllItemHistoryByUser(
+				user.getUserId());
+
+		List<Item> items = userItemHistories.stream()
+				.map(ItemHistory::getItem)
+				.collect(Collectors.toList());
+
+		List<ItemDto> extensionItems = generateItemDto(items, ItemType.EXTENSION);
+		List<ItemDto> exchangeItems = generateItemDto(items, ItemType.EXCHANGE);
+		List<ItemDto> alarmItems = generateItemDto(items, ItemType.ALARM);
+		List<ItemDto> penaltyItems = generateItemDto(items, ItemType.PENALTY);
+
+		return itemMapper.toMyItemResponseDto(extensionItems, exchangeItems, alarmItems,
+				penaltyItems);
 	}
 
-//	private List<ItemDto> getItemDtos(List<ItemHistory> userItemHistories, ) {
-//		List<ItemDto> extensionItems = userItemHistories.stream()
-//				.filter(ih -> ih.getItem().getSku().isExtensionType())
-//				.map(ih -> itemMapper.toItemDto(ih.getItem()))
-//				.collect(Collectors.toList());
-//		return extensionItems;
-//	}
-
+	private List<ItemDto> generateItemDto(List<Item> items, ItemType type) {
+		return items.stream()
+				.filter(i -> i.getType().equals(type))
+				.map(itemMapper::toItemDto)
+				.collect(Collectors.toList());
+	}
 
 	@Transactional(readOnly = true)
 	public ItemHistoryResponseDto getItemHistory(Long userId,
