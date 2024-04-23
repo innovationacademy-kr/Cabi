@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.dto;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CoinHistoryResponseDto {
+public class CoinHistoryDto {
 
-	private List<CoinHistoryDto> coinHistories;
+	private LocalDateTime date;
+	private String history;
+	private Integer amount;
 }
