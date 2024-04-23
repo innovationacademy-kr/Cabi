@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.item.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,13 +70,13 @@ public class ItemFacadeService {
 		return null;
 	}
 
-	private List<ItemDto> getItemDtos(List<ItemHistory> userItemHistories, ) {
-		List<ItemDto> extensionItems = userItemHistories.stream()
-				.filter(ih -> ih.getItem().getSku().isExtensionType())
-				.map(ih -> itemMapper.toItemDto(ih.getItem()))
-				.collect(Collectors.toList());
-		return extensionItems;
-	}
+//	private List<ItemDto> getItemDtos(List<ItemHistory> userItemHistories, ) {
+//		List<ItemDto> extensionItems = userItemHistories.stream()
+//				.filter(ih -> ih.getItem().getSku().isExtensionType())
+//				.map(ih -> itemMapper.toItemDto(ih.getItem()))
+//				.collect(Collectors.toList());
+//		return extensionItems;
+//	}
 
 
 	@Transactional(readOnly = true)
@@ -112,12 +110,8 @@ public class ItemFacadeService {
 		List<CoinHistoryDto> result = coinHistories.stream()
 				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
 				.collect(Collectors.toList());
-		itemMapper.toCoinHistoryResponseDto(result);
-				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
-				.collect(Collectors.toList());
 		return new CoinHistoryResponseDto(result);
 	}
-
 
 //	/**
 //	 * 유저가 보유한 point와 비교한 후 아이템을 사용합니다.

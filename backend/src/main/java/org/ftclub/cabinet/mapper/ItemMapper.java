@@ -2,6 +2,7 @@ package org.ftclub.cabinet.mapper;
 
 import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
+import java.util.List;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
