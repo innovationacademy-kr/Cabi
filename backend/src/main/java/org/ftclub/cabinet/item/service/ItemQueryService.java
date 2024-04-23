@@ -1,6 +1,9 @@
 package org.ftclub.cabinet.item.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.item.domain.Item;
+import org.ftclub.cabinet.item.repository.ItemRepository;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.stereotype.Service;
@@ -10,4 +13,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Logging(level = LogLevel.DEBUG)
 public class ItemQueryService {
+	private static final ItemRepository itemRepository;
+
+	public static List<Item> getAllItems() {
+		return itemRepository.findAllItems();
+	}
+
+	public Item getItem()
 }
