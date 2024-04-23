@@ -99,11 +99,9 @@ public class ItemFacadeService {
 		Set<Item> items = new HashSet<>();
 		if (type.equals(CoinHistoryType.EARN) || type.equals(CoinHistoryType.ALL)) {
 			items.addAll(itemQueryService.getEarnItemIds());
-			System.out.println("a");
 		}
 		if (type.equals(CoinHistoryType.USE) || type.equals(CoinHistoryType.ALL)) {
 			items.addAll(itemQueryService.getUseItemIds());
-			System.out.println("b");
 		}
 		List<Long> itemIds = items.stream().map(Item::getId).collect(Collectors.toList());
 		List<ItemHistory> coinHistories =
