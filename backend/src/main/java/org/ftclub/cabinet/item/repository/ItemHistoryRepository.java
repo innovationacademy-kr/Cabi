@@ -20,6 +20,13 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 			@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
 			@Param("itemIds") List<Long> itemIds);
 
+	@Query("SELECT ih "
+			+ "FROM ItemHistory ih "
+			+ "JOIN FETCH ih.item "
+			+ "WHERE ih.userId = :userId "
+			+ "AND ih.usedAt BETWEEN :start AND :end")
+	List<ItemHistory> findAllByUserIdAndUsedAt(Long userId, LocalDateTime start, LocalDateTime end);
+
 
 	@Query("SELECT ih "
 			+ "FROM ItemHistory ih "
