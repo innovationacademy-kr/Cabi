@@ -11,7 +11,7 @@ public enum Sku {
 	PENALTY_31("31일"),
 
 	EXCHANGE("교환권"),
-	ALARM("알림권")
+	ALARM("알림권");
 
 
 	private final String type;

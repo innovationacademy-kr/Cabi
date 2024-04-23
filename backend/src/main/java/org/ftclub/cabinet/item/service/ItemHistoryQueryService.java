@@ -20,4 +20,10 @@ public class ItemHistoryQueryService {
 	public List<ItemHistory> getItemHistory(Long userId, LocalDateTime start, LocalDateTime end) {
 		return null;
 	}
+
+	public List<ItemHistory> getCoinHistoryOnItem(Long userId,
+			LocalDateTime start, LocalDateTime end, List<Long> itemIds) {
+		return itemHistoryRepository.findAllByUserIdAndPurchaseAtAndItemIdIn(userId, start, end,
+				itemIds);
+	}
 }

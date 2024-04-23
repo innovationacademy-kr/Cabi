@@ -13,6 +13,6 @@ import lombok.ToString;
 public class CoinHistoryDto {
 
 	private LocalDateTime date;
-	private String history;
 	private Integer amount;
+	private String history;
 }

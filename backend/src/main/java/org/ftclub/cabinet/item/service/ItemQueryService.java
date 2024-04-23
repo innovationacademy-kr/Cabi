@@ -21,4 +21,12 @@ public class ItemQueryService {
 	}
 
 //	public Item getItem()
+
+	public List<Item> getEarnItemIds() {
+		return itemRepository.findAllByPricePositive();
+	}
+
+	public List<Item> getUseItemIds() {
+		return itemRepository.findAllByPricePositive();
+	}
 }
