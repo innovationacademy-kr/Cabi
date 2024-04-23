@@ -28,20 +28,16 @@ public interface ItemMapper {
 	@Mapping(target = "history", source = "item.description")
 	CoinHistoryDto toCoinHistoryDto(ItemHistory itemHistory, Item item);
 
-	@Mapping(target = "itemId", source = "item.id")
+	@Mapping(target = "itemId", source = "item.sku")
 	@Mapping(target = "itemName", source = "item.name")
 	@Mapping(target = "itemPrice", source = "item.price")
-	@Mapping(target = "itemType", source = "item.sku")
+	@Mapping(target = "itemType", source = "item.type")
 	ItemDto toItemDto(Item item);
 
 	@Mapping(target = "date", source = "itemHistory.usedAt")
 	ItemHistoryDto toItemHistoryDto(ItemHistory itemHistory, ItemDto itemDto);
 
 
-	@Mapping(target = "extensionItems", source = "extensionItems")
-	@Mapping(target = "exchangeItems", source = "exchangeItems")
-	@Mapping(target = "alarmItems", source = "alarmItems")
-	@Mapping(target = "penaltyItems", source = "penaltyItems")
 	MyItemResponseDto toMyItemResponseDto(List<ItemDto> extensionItems, List<ItemDto> exchangeItems,
 			List<ItemDto> alarmItems, List<ItemDto> penaltyItems);
 }
