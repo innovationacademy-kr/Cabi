@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.item.domain;
 
+import lombok.Getter;
+
+@Getter
 public enum Sku {
 
 	EXTENSION_3("3일"),

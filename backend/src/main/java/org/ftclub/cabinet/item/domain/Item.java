@@ -47,17 +47,22 @@ public class Item {
 	@Enumerated(value = EnumType.STRING)
 	private Sku sku;
 
+	@Column(name = "Type", nullable = false)
+	@Enumerated(value = EnumType.STRING)
+	private ItemType type;
+
 	/**
 	 * 상품 설명
 	 */
 	@Column(name = "DESCRIPTION", nullable = false)
 	private String description;
 
-	protected Item(String name, long price, Sku sku, String description) {
+	protected Item(String name, long price, Sku sku, String description, ItemType type) {
 		this.name = name;
 		this.price = price;
 		this.sku = sku;
 		this.description = description;
+		this.type = type;
 	}
 
 	/**
@@ -67,8 +72,8 @@ public class Item {
 	 * @param description 상품 설명
 	 * @return 상품 객체	{@link Item}
 	 */
-	public static Item of(String name, long price, Sku sku, String description) {
-		Item item = new Item(name, price, sku, description);
+	public static Item of(String name, long price, Sku sku, String description, ItemType type) {
+		Item item = new Item(name, price, sku, description, type);
 		if (!item.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
@@ -81,7 +86,7 @@ public class Item {
 	 * @return 유효한 인스턴스 여부
 	 */
 	private boolean isValid() {
-		return this.name != null && this.sku.isValid()
+		return this.name != null && this.sku.isValid() && this.type.isValid()
 				&& !StringUtil.isNullOrEmpty(this.description);
 	}
 
