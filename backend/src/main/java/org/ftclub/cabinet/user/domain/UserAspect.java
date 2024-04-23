@@ -50,6 +50,9 @@ public class UserAspect {
 	// ToDo: 수정 필요
 	public UserSessionDto getUserSessionDtoByRequest(HttpServletRequest req)
 			throws JsonProcessingException {
+		System.out.println(cookieManager.getCookieValue(req, jwtProperties.getMainTokenName()));
+		System.out.println(tokenValidator.getPayloadJson(
+				cookieManager.getCookieValue(req, jwtProperties.getMainTokenName())));
 		String name = tokenValidator.getPayloadJson(
 						cookieManager.getCookieValue(req, jwtProperties.getMainTokenName())).get("name")
 				.asText();

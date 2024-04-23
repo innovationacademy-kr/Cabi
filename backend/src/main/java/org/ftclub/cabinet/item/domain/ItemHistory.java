@@ -50,7 +50,7 @@ public class ItemHistory {
 	/**
 	 * 아이템 소유자
 	 */
-	@JoinColumn(name = "USER", nullable = false)
+	@JoinColumn(name = "USER_ID", nullable = false)
 	@ManyToOne(fetch = LAZY)
 	private User user;
 

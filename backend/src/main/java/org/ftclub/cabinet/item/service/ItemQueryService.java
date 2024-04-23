@@ -27,6 +27,6 @@ public class ItemQueryService {
 	}
 
 	public List<Item> getUseItemIds() {
-		return itemRepository.findAllByPricePositive();
+		return itemRepository.findAllByPriceNegative();
 	}
 }
