@@ -1,6 +1,9 @@
 package org.ftclub.cabinet.item.service;
 
+import static org.ftclub.cabinet.exception.ExceptionStatus.ITEM_NOT_FOUND;
+
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.repository.ItemRepository;
@@ -18,6 +21,11 @@ public class ItemQueryService {
 
 	public List<Item> getAllItems() {
 		return itemRepository.findAll();
+	}
+
+	public List<Item> getItemsByIds(List<Long> itemIds) {
+		return Optional.of(itemRepository.findAllById(itemIds))
+				.orElseThrow(ITEM_NOT_FOUND::asServiceException);
 	}
 
 //	public Item getItem()
