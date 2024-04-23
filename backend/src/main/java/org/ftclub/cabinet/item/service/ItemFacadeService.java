@@ -17,6 +17,8 @@ public class ItemFacadeService {
 
 	private final ItemQueryService itemQueryService;
 	private final ItemCommandService itemCommandService;
+	private final ItemHistoryQueryService itemHistoryQueryService;
+	private final ItemHistoryCommandService itemHistoryCommandService;
 
 	@Transactional(readOnly = true)
 	public void getMyItems(UserSessionDto user) {
