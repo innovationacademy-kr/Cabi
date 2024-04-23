@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.item.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -83,8 +84,6 @@ public class ItemFacadeService {
 	@Transactional(readOnly = true)
 	public ItemHistoryResponseDto getItemHistory(Long userId,
 			LocalDateTime start, LocalDateTime end) {
-		return null;
-			LocalDateTime start, LocalDateTime end) {
 		List<ItemHistory> itemHistories =
 				itemHistoryQueryService.getItemHistory(userId, start, end);
 		List<ItemHistoryDto> result = itemHistories.stream()
@@ -96,8 +95,7 @@ public class ItemFacadeService {
 	@Transactional(readOnly = true)
 	public CoinHistoryResponseDto getCoinHistory(Long userId, CoinHistoryType type,
 			LocalDateTime start, LocalDateTime end) {
-		List<Item> items = new ArrayList<>();
-			LocalDateTime start, LocalDateTime end) {
+
 		Set<Item> items = new HashSet<>();
 		if (type.equals(CoinHistoryType.EARN) || type.equals(CoinHistoryType.ALL)) {
 			items.addAll(itemQueryService.getEarnItemIds());
@@ -116,11 +114,12 @@ public class ItemFacadeService {
 		List<CoinHistoryDto> result = coinHistories.stream()
 				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
 				.collect(Collectors.toList());
-		return itemMapper.toCoinHistoryResponseDto(result);
+		itemMapper.toCoinHistoryResponseDto(result);
 				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
 				.collect(Collectors.toList());
 		return new CoinHistoryResponseDto(result);
 	}
+
 
 //	/**
 //	 * 유저가 보유한 point와 비교한 후 아이템을 사용합니다.
