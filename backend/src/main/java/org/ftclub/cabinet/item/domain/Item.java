@@ -1,16 +1,25 @@
 package org.ftclub.cabinet.item.domain;
 
+import io.netty.util.internal.StringUtil;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "ITEM")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
+@Getter
 public class Item {
 
 	@Id
@@ -72,7 +81,8 @@ public class Item {
 	 * @return 유효한 인스턴스 여부
 	 */
 	private boolean isValid() {
-		return this.name != null && this.description != null && sku.isValid();
+		return this.name != null && this.sku.isValid()
+				&& !StringUtil.isNullOrEmpty(this.description);
 	}
 
 	@Override

@@ -4,6 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
+import org.ftclub.cabinet.dto.CoinInformationDto;
+import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
+import org.ftclub.cabinet.dto.ItemResponseDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.service.ItemFacadeService;
 import org.ftclub.cabinet.log.Logging;
@@ -23,11 +28,11 @@ public class ItemController {
 
     private final ItemFacadeService itemFacadeService;
 
-    @GetMapping("/")
-    @AuthGuard(level = AuthLevel.USER_ONLY)
-    public ItemPaginationDto getItems() {
-        return null;
-    }
+	@GetMapping("/")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public ItemResponseDto getAllItems() {
+		return itemFacadeService.getAllItems();
+	}
 
     @GetMapping("/history")
     @AuthGuard(level = AuthLevel.USER_ONLY)
@@ -35,6 +40,12 @@ public class ItemController {
                                                  @RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
         return itemFacadeService.getItemHistory(user.getUserId(), start, end);
     }
+	@GetMapping("/history")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public ItemHistoryResponseDto getItemHistory(@UserSession UserSessionDto user,
+		@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
+		return itemFacadeService.getItemHistory(user.getUserId(), start, end);
+	}
 
     @GetMapping("/coin/history")
     @AuthGuard(level = AuthLevel.USER_ONLY)
@@ -49,4 +60,27 @@ public class ItemController {
     public MyItemResponseDto getMyItems(@UserSession UserSessionDto user) {
         return itemFacadeService.getMyItems(user);
     }
+	@GetMapping("/coin/history")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public CoinHistoryResponseDto getCoinHistory(@UserSession UserSessionDto user,
+		@RequestParam CoinHistoryType type,
+		@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
+		return itemFacadeService.getCoinHistory(user.getUserId(), type, start, end);
+	}
+
+//	/**
+//	 * @param user
+//	 * @param itemId
+//	 */
+//	@PostMapping("/{itemId}/user")
+//	@AuthGuard(level = AuthLevel.USER_ONLY)
+//	public void useItem(@UserSession UserSessionDto user, @PathVariable Long itemId) {
+//		itemFacadeService.useItem(user.getUserId(), itemId);
+//	}
+
+	@GetMapping("/coin")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public CoinInformationDto getCoinInformation(@UserSession UserSessionDto user, Long itemId) {
+		return itemFacadeService.getCoinInformation(user.getUserId(), itemId);
+	}
 }

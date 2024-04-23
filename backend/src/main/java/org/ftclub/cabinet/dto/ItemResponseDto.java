@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ItemPaginationDto {
+public class ItemResponseDto {
 
 	private final List<ItemDto> result;
 }

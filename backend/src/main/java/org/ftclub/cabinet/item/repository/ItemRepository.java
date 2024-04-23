@@ -14,7 +14,17 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	 *
 	 * @return item {@Link List}
 	 */
-	@Query("SELECT p "
-			+ "FROM Item p ")
+	@Query("SELECT i "
+			+ "FROM Item i")
 	List<Item> findAllItems();
+
+	@Query("SELECT i "
+			+ "FROM Item i "
+			+ "WHERE i.price >= 0")
+	List<Item> findAllByPricePositive();
+
+	@Query("SELECT i "
+			+ "FROM Item i "
+			+ "WHERE i.price < 0")
+	List<Item> findAllByPriceNegative();
 }

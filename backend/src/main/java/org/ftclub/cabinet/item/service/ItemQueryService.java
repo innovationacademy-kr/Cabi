@@ -17,8 +17,16 @@ public class ItemQueryService {
 	private final ItemRepository itemRepository;
 
 	public List<Item> getAllItems() {
-		return itemRepository.findAllItems();
+		return itemRepository.findAll();
 	}
 
 //	public Item getItem()
+
+	public List<Item> getEarnItemIds() {
+		return itemRepository.findAllByPricePositive();
+	}
+
+	public List<Item> getUseItemIds() {
+		return itemRepository.findAllByPricePositive();
+	}
 }

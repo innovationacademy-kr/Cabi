@@ -18,11 +18,17 @@ public class ItemHistoryQueryService {
     private final ItemHistoryRepository itemHistoryRepository;
 
 
-    public List<ItemHistory> getItemHistory(Long userId, LocalDateTime start, LocalDateTime end) {
-        return null;
-    }
 
     public List<ItemHistory> findItemHistory(Long userId, LocalDateTime start, LocalDateTime end) {
         return itemHistoryRepository.findItemHistory(userId, start, end);
     }
+	public List<ItemHistory> getItemHistory(Long userId, LocalDateTime start, LocalDateTime end) {
+		return null;
+	}
+
+	public List<ItemHistory> getCoinHistoryOnItem(Long userId,
+			LocalDateTime start, LocalDateTime end, List<Long> itemIds) {
+		return itemHistoryRepository.findAllByUserIdAndPurchaseAtAndItemIdIn(userId, start, end,
+				itemIds);
+	}
 }
