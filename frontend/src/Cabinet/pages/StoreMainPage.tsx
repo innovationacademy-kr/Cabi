@@ -1,9 +1,9 @@
-import { Container } from "@nivo/core";
 import { useEffect } from "react";
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import CoinAnimation from "@/Cabinet/components/Store/CoinAnimation";
 import StoreCoinPick from "@/Cabinet/components/Store/StoreCoinPick";
+import StoreItemCard from "../components/Card/StoreItemCard/StoreItemCard";
 
 const StoreItems = {
   연장권: "Extension",
@@ -12,8 +12,25 @@ const StoreItems = {
   이사하기: "Relocation",
 };
 
+export interface Item {
+  ItemId: number;
+  ItemName: string;
+  ItemPrice: number;
+  ItemType: string;
+}
 const StoreMainPage = () => {
   // const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
+
+  const buttonClick = () => {
+    console.log("click");
+  };
+
+  const Items = {
+    ItemId: 1,
+    ItemName: "연장권",
+    ItemPrice: 300,
+    ItemType: "사물함을 연장 할 수 있는 연장권 설명 내용입니다.",
+  };
 
   return (
     <WrapperStyled>
@@ -23,6 +40,14 @@ const StoreMainPage = () => {
 
       <StoreCoinGridWrapper>
         <StoreCoinPick />
+        <StoreItemCard
+          Item={Items}
+          button={{
+            label: "구매하기",
+            onClick: buttonClick,
+            isClickable: true,
+          }}
+        />
       </StoreCoinGridWrapper>
     </WrapperStyled>
   );
@@ -45,7 +70,7 @@ const StoreCoinGridWrapper = styled.div`
   grid-gap: 20px;
   grid-template-columns: 350px 350px 350px;
   grid-template-rows: 150px 150px;
-  grid-template-areas: "coinPick lentInfo lentInfo" // h: 163px h: 366px
+  grid-template-areas: "coinPick Extension lentInfo" // h: 163px h: 366px
     "coinPick lentInfo lentInfo"; // h: 183px;
   // "theme notification"; // h: 230px h: 230px;
 
@@ -82,7 +107,7 @@ const WrapperStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 100%;
+  width: 8s0%;
   height: 100%;
 `;
 
