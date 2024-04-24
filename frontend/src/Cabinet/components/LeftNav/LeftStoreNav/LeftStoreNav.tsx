@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
 
 const LeftStoreNav = ({
   onClickRedirectButton,
@@ -25,9 +26,12 @@ const LeftStoreNav = ({
       <StoreLeftNavOptionStyled>
         <CoinCountStyled>
           코인
-          <span>
+          <FlexWrapper>
+            <CoinIconStyled>
+              <CoinIcon />
+            </CoinIconStyled>
             <span>{userCoins}</span> 까비
-          </span>
+          </FlexWrapper>
         </CoinCountStyled>
         {storeList.map((item: StoreItem) => (
           <StoreSectionStyled
@@ -74,7 +78,7 @@ const CoinCountStyled = styled.div`
   padding: 15px 20px 10px 20px;
   align-items: center;
   justify-content: space-between;
-  font-weight: 400;
+  color: var(--gray-color);
   & span > span {
     font-weight: 800;
   }
@@ -95,6 +99,20 @@ const StoreSectionStyled = styled.div`
       color: var(--white);
     }
   }
+`;
+
+const CoinIconStyled = styled.div`
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  & > svg > path {
+    stroke: var(--main-color);
+  }
+`;
+
+const FlexWrapper = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export default LeftStoreNav;
