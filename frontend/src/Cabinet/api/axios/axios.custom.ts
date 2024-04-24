@@ -1,8 +1,8 @@
-import { CoinLogFilterType } from "@/Cabinet/pages/CoinLogPage";
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import CoinLogToggleType from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 
 const axiosLogoutUrl = "/v4/auth/logout";
@@ -327,7 +327,7 @@ export const axiosExtendLentPeriod = async (): Promise<any> => {
 
 const axiosCoinLogURL = "/v5/items/coin/history";
 export const axiosCoinLog = async (
-  type: CoinLogFilterType,
+  type: CoinLogToggleType,
   start: Date,
   end: Date
 ): Promise<any> => {
