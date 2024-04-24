@@ -11,7 +11,7 @@ import lombok.ToString;
 public class MyItemResponseDto {
 
 	List<ItemDto> extensionItems;
-	List<ItemDto> swapItems;
+	List<ItemDto> exchangeItems;
 	List<ItemDto> alarmItems;
 	List<ItemDto> penaltyItems;
 }
