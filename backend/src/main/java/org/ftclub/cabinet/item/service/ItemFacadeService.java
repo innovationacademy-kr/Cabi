@@ -55,6 +55,7 @@ public class ItemFacadeService {
 	public ItemResponseDto getAllItems() {
 		List<Item> allItems = itemQueryService.getAllItems();
 		List<ItemDto> itemDtos = allItems.stream()
+				.filter(item -> item.getPrice() < 0)
 				.map(itemMapper::toItemDto)
 				.collect(Collectors.toList());
 		return new ItemResponseDto(itemDtos);
@@ -67,6 +68,7 @@ public class ItemFacadeService {
 
 		Map<ItemType, List<ItemDto>> itemMap = userItemHistories.stream()
 				.map(ItemHistory::getItem)
+				.filter(item -> item.getPrice() < 0)
 				.collect(Collectors.groupingBy(Item::getType,
 						Collectors.mapping(itemMapper::toItemDto, Collectors.toList())));
 
@@ -155,21 +157,24 @@ public class ItemFacadeService {
 	 */
 	@Transactional
 	public void purchaseItem(Long userId, Long itemId) {
-		User user = userQueryService.getUser(userId);
-
 		// 유저가 블랙홀인지 확인
+		User user = userQueryService.getUser(userId);
 		if (user.isBlackholed()) {
 			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
 		}
-		Item item = itemQueryService.getItemById(itemId);
-		Long userCoin = itemRedisService.getCoinCount(userId);
 
-		itemPolicyService.verifyIsAffordable(userCoin, item.getPrice());
+		Item item = itemQueryService.getItemById(itemId);
+		long price = item.getPrice();
+		long userCoin = itemRedisService.getCoinCount(userId);
+
+		// 아이템 Policy 검증
+		itemPolicyService.verifyOnSale(price);
+		itemPolicyService.verifyIsAffordable(userCoin, price);
 
 		// 아이템 구매 처리
 		itemCommandService.purchaseItem(user.getId(), itemId);
 
 		// 코인 차감
-		itemRedisService.saveCoinCount(userId, userCoin - item.getPrice());
+		itemRedisService.saveCoinCount(userId, userCoin - price);
 	}
 }

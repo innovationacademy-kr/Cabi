@@ -14,7 +14,12 @@ public enum Sku {
 	PENALTY_31("31일"),
 
 	SWAP("교환권"),
-	ALARM("알림권");
+	ALARM("알림권"),
+
+	COIN_COLLECT("동전 줍기"),
+	COIN_REWARD("동전 줍기 20일 보상"),
+	COIN_FULL_TIME("42 출석 보상"),
+	;
 
 
 	private final String type;
@@ -30,6 +35,7 @@ public enum Sku {
 	public boolean isValid() {
 		return this.equals(EXTENSION_3) || this.equals(EXTENSION_15) || this.equals(EXTENSION_31)
 				|| this.equals(PENALTY_3) || this.equals(PENALTY_7) || this.equals(PENALTY_31)
-				|| this.equals(SWAP) || this.equals(ALARM);
+				|| this.equals(SWAP) || this.equals(ALARM) || this.equals(COIN_COLLECT)
+				|| this.equals(COIN_REWARD) || this.equals(COIN_FULL_TIME);
 	}
 }

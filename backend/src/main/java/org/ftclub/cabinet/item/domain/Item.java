@@ -47,6 +47,9 @@ public class Item {
 	@Enumerated(value = EnumType.STRING)
 	private Sku sku;
 
+	/**
+	 * 상품 타입
+	 */
 	@Column(name = "Type", nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private ItemType type;

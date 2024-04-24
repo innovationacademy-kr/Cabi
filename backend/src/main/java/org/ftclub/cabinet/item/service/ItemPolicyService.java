@@ -11,4 +11,10 @@ public class ItemPolicyService {
 			throw ExceptionStatus.NOT_ENOUGH_COIN.asServiceException();
 		}
 	}
+
+	public void verifyOnSale(Long price) {
+		if (price >= 0) {
+			throw ExceptionStatus.ITEM_NOT_ON_SALE.asServiceException();
+		}
+	}
 }
