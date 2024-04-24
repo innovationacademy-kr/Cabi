@@ -26,13 +26,14 @@ const LeftStoreNav = ({
       <StoreLeftNavOptionStyled>
         <CoinCountStyled>
           코인
-          <FlexWrapper>
-            <CoinIconStyled>
-              <CoinIcon />
-            </CoinIconStyled>
-            <span>{userCoins}</span> 까비
-          </FlexWrapper>
+          <UserCoinsWrapperStyled>
+            <CoinIcon />
+            <CoinTextStyled>
+              <span>{userCoins}</span> 까비
+            </CoinTextStyled>
+          </UserCoinsWrapperStyled>
         </CoinCountStyled>
+        <hr />
         {storeList.map((item: StoreItem) => (
           <StoreSectionStyled
             key={item.name}
@@ -75,11 +76,20 @@ const StoreLeftNavOptionStyled = styled.div`
 const CoinCountStyled = styled.div`
   display: flex;
   width: 100%;
-  padding: 15px 20px 10px 20px;
+  padding: 0px 20px 0px 20px;
   align-items: center;
   justify-content: space-between;
   color: var(--gray-color);
-  & span > span {
+`;
+
+const UserCoinsWrapperStyled = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const CoinTextStyled = styled.span`
+  margin-left: 5px;
+  & span {
     font-weight: 800;
   }
 `;
@@ -99,20 +109,6 @@ const StoreSectionStyled = styled.div`
       color: var(--white);
     }
   }
-`;
-
-const CoinIconStyled = styled.div`
-  width: 18px;
-  height: 18px;
-  margin-right: 8px;
-  & > svg > path {
-    stroke: var(--main-color);
-  }
-`;
-
-const FlexWrapper = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 export default LeftStoreNav;
