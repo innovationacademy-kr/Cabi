@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import { ReactComponent as HappyCcabiImg } from "@/assets/images/happyCcabi.svg";
-import { ReactComponent as MapImg } from "@/assets/images/map.svg";
-import { ReactComponent as MyCabinetIcon } from "@/assets/images/myCabinetIcon.svg";
-import { ReactComponent as SearchImg } from "@/assets/images/searchWhite.svg";
+import { ReactComponent as HappyCcabiImg } from "@/Cabinet/assets/images/happyCcabi.svg";
+import { ReactComponent as MapImg } from "@/Cabinet/assets/images/map.svg";
+import { ReactComponent as MyCabinetIcon } from "@/Cabinet/assets/images/myCabinetIcon.svg";
+import { ReactComponent as SearchImg } from "@/Cabinet/assets/images/searchWhite.svg";
 
 interface ITopNavButton {
   onClick: React.MouseEventHandler<HTMLDivElement>;

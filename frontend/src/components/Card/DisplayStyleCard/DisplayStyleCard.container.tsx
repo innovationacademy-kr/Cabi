@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import DisplayStyleCard from "@/components/Card/DisplayStyleCard/DisplayStyleCard";
-import ColorType from "@/types/enum/color.type.enum";
-import {
-  ColorThemeToggleType,
-  ColorThemeType,
-} from "@/types/enum/colorTheme.type.enum";
+import { ColorThemeToggleType, ColorThemeType } from "@/Cabinet/types/enum/colorTheme.type.enum";
+import ColorType from "@/Cabinet/types/enum/color.type.enum";
 
 // TODO : 토글말고 버튼으루
 export const getInitialColorTheme = (

@@ -1,9 +1,9 @@
 import React from "react";
 import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
-import ColorTheme from "@/Cabinet/components/Card/DisplayStyleCard/ColorTheme/ColorTheme";
 import SearchBar from "@/Cabinet/components/TopNav/SearchBar/SearchBar";
 import TopNavButtonGroup from "@/Cabinet/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
+import TopNavDomainGroup from "@/Cabinet/components/TopNav/TopNavDomainGroup/TopNavDomainGroup";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import { ReactComponent as SelectIcon } from "@/Cabinet/assets/images/select.svg";
 import useOutsideClick from "@/Cabinet/hooks/useOutsideClick";
@@ -43,13 +43,13 @@ const BuildingListItem: React.FC<IBuildingListItem> = ({
 };
 
 const TopNav = ({
-  currentBuildingName: string;
-  buildingsList: Array<string>;
-  buildingClicked: boolean;
-  setBuildingClicked: React.Dispatch<boolean>;
-  onClickLogo: React.MouseEventHandler<SVGSVGElement>;
-  setCurrentBuildingName: SetterOrUpdater<string>;
-  isAdmin= false;
+  currentBuildingName,
+  buildingsList,
+  buildingClicked,
+  setBuildingClicked,
+  onClickLogo,
+  setCurrentBuildingName,
+  isAdmin = false,
 }: ITopNavProps): JSX.Element => {
   const buildingDom = React.useRef<HTMLElement>(null);
   useOutsideClick(buildingDom, () => {

@@ -1,4 +1,4 @@
-import ColorType from "@/types/enum/color.type.enum";
+import ColorType from "@/Cabinet/types/enum/color.type.enum";
 
 interface ColorData {
   title: string;

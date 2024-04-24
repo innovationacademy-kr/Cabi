@@ -35,9 +35,9 @@ export const cabinetIconComponentMap: CabinetIconComponentMap = {
 };
 
 export const cabinetIconSrcMap = {
-  [CabinetType.PRIVATE]: "/src/assets/images/privateIcon.svg",
-  [CabinetType.SHARE]: "/src/assets/images/shareIcon.svg",
-  [CabinetType.CLUB]: "/src/assets/images/clubIcon.svg",
+  [CabinetType.PRIVATE]: "/src/Cabinet/assets/images/privateIcon.svg",
+  [CabinetType.SHARE]: "/src/Cabinet/assets/images/shareIcon.svg",
+  [CabinetType.CLUB]: "/src/Cabinet/assets/images/clubIcon.svg",
 };
 
 export const cabinetLabelColorMap = {

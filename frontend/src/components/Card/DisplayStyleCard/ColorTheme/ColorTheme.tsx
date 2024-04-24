@@ -1,8 +1,8 @@
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { darkModeState } from "@/recoil/atoms";
-import { colorThemeToggleIconComponentMap } from "@/assets/data/maps";
-import { ColorThemeToggleType } from "@/types/enum/colorTheme.type.enum";
+import { darkModeState } from "@/Cabinet/recoil/atoms";
+import { colorThemeToggleIconComponentMap } from "@/Cabinet/assets/data/maps";
+import { ColorThemeToggleType } from "@/Cabinet/types/enum/colorTheme.type.enum";
 
 interface toggleItemSeparated {
   name: string;

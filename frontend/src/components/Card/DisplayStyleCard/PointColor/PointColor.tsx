@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {
   CardContentStyled,
   ContentInfoStyled,
-} from "@/components/Card/CardStyles";
+} from "@/Cabinet/components/Card/CardStyles";
 import ColorPicker from "@/components/Card/DisplayStyleCard/PointColor/ColorPicker";
 import { pointColorData } from "@/components/Card/DisplayStyleCard/colorInfo";
 

@@ -1,9 +1,9 @@
-import styled from "styled-components";
-import Card from "@/components/Card/Card";
-import { CardContentWrapper } from "@/components/Card/CardStyles";
 import ColorTheme from "@/components/Card/DisplayStyleCard/ColorTheme/ColorTheme";
-import { ColorThemeToggleType } from "@/types/enum/colorTheme.type.enum";
-import PointColor from "./PointColor/PointColor";
+import PointColor from "@/components/Card/DisplayStyleCard/PointColor/PointColor";
+import styled from "styled-components";
+import Card from "@/Cabinet/components/Card/Card";
+import { CardContentWrapper } from "@/Cabinet/components/Card/CardStyles";
+import { ColorThemeToggleType } from "@/Cabinet/types/enum/colorTheme.type.enum";
 
 interface DisplayStyleProps {
   showColorPicker: boolean;
