@@ -34,9 +34,9 @@ public class PresentationController {
 	@PostMapping("/form")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void createPresentationForm(
-		@UserSession UserSessionDto user,
-		@Valid @RequestBody PresentationFormRequestDto dto) {
-		presentationService.createPresentationFrom(user.getUserId(), dto);
+			@UserSession UserSessionDto user,
+			@Valid @RequestBody PresentationFormRequestDto dto) {
+		presentationService.createPresentationForm(user.getUserId(), dto);
 	}
 
 	@GetMapping("/form/invalid-date")
@@ -47,17 +47,17 @@ public class PresentationController {
 	@GetMapping("")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public PresentationMainData getMainData(
-		@RequestParam(value = "pastFormCount") Integer pastFormCount,
-		@RequestParam(value = "upcomingFormCount") Integer upcomingFormCount) {
+			@RequestParam(value = "pastFormCount") Integer pastFormCount,
+			@RequestParam(value = "upcomingFormCount") Integer upcomingFormCount) {
 		return presentationService.getPastAndUpcomingPresentations(pastFormCount,
-			upcomingFormCount);
+				upcomingFormCount);
 	}
 
 	@GetMapping("/schedule")
 	public PresentationFormResponseDto getPresentationSchedule(
-		@RequestParam(value = "yearMonth")
-		@DateTimeFormat(pattern = "yyyy-MM")
-		YearMonth yearMonth) {
+			@RequestParam(value = "yearMonth")
+			@DateTimeFormat(pattern = "yyyy-MM")
+			YearMonth yearMonth) {
 		return presentationService.getUserPresentationSchedule(yearMonth);
 	}
 
@@ -71,8 +71,8 @@ public class PresentationController {
 	@GetMapping("/me/histories")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public PresentationMyPagePaginationDto getUserPresentation(
-		@UserSession UserSessionDto user,
-		Pageable pageable
+			@UserSession UserSessionDto user,
+			Pageable pageable
 	) {
 		return presentationService.getUserPresentations(user.getUserId(), pageable);
 	}
