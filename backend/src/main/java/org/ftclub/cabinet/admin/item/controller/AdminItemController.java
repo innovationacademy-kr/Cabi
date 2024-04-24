@@ -31,5 +31,4 @@ public class AdminItemController {
 	public void assignItem(@RequestBody ItemAssignDto itemAssignDto) {
 		itemCommandService.assignItem(itemAssignDto);
 	}
-
 }

@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.item.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.dto.ItemAssignDto;
 import org.ftclub.cabinet.dto.ItemCreateDto;
 import org.ftclub.cabinet.item.domain.Item;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Logging(level = LogLevel.DEBUG)
-@Log4j2
 public class ItemCommandService {
 
 	private final ItemRepository itemRepository;
@@ -31,10 +29,7 @@ public class ItemCommandService {
 
 	public void assignItem(ItemAssignDto dto) {
 		Item item = itemRepository.findBySku(dto.getItemSku());
-		log.info("======================");
-		log.info("{}", item);
 		ItemHistory itemHistory = ItemHistory.of(dto.getUserId(), item.getId(), null);
-		log.info("{}", itemHistory);
 		itemHistoryRepository.save(
 				itemHistory);
 	}
