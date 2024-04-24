@@ -29,8 +29,9 @@ const LeftStoreNav = ({
             <span>{userCoins}</span> 까비
           </span>
         </CoinCountStyled>
-        {storeList.map((item: StoreItem, index: number) => (
+        {storeList.map((item: StoreItem) => (
           <StoreSectionStyled
+            key={item.name}
             className={
               item.name === currentSection
                 ? "leftNavButtonActive cabiButton"
