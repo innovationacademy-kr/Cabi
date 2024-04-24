@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import LeftMainNavContainer from "@/Presentation/components/LeftNav/LeftMainNav/LeftMainNav.container";
+import LeftSectionNavContainer from "@/Cabinet/components/LeftNav/LeftSectionNav/LeftSectionNav.container";
 
 const LeftNav: React.FC<{
   isVisible: boolean;
@@ -8,7 +9,7 @@ const LeftNav: React.FC<{
   return (
     <LeftNavWrapStyled id="leftNavWrap">
       <LeftMainNavContainer isAdmin={isAdmin} />
-      {/* <LeftSectionNavContainer isVisible={isVisible} /> */}
+      <LeftSectionNavContainer isVisible={isVisible} />
     </LeftNavWrapStyled>
   );
 };

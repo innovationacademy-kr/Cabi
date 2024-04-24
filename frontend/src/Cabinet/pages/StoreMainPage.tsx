@@ -17,20 +17,44 @@ export interface Item {
   ItemName: string;
   ItemPrice: number;
   ItemType: string;
+  grid: string;
 }
 const StoreMainPage = () => {
-  // const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
 
   const buttonClick = () => {
     console.log("click");
   };
 
-  const Items = {
-    ItemId: 1,
-    ItemName: "연장권",
-    ItemPrice: 300,
-    ItemType: "사물함을 연장 할 수 있는 연장권 설명 내용입니다.",
-  };
+  const Items = [
+    {
+      ItemId: 1,
+      ItemName: "연장권",
+      ItemPrice: 300,
+      ItemType: "사물함을 연장 할 수 있는 연장권 설명 내용입니다.",
+      grid: "extension",
+    },
+    {
+      ItemId: 2,
+      ItemName: "이사권",
+      ItemPrice: 100,
+      ItemType: "이사권 설명 내용입니다.",
+      grid: "move",
+    },
+    {
+      ItemId: 3,
+      ItemName: "알림 등록권",
+      ItemPrice: 100,
+      ItemType: "알림 등록권 설명 내용입니다.",
+      grid: "alarm",
+    },
+    {
+      ItemId: 4,
+      ItemName: "패널티 축소권",
+      ItemPrice: 600,
+      ItemType: "패널티 축소권 설명 내용입니다.",
+      grid: "penalty",
+    },
+  ];
 
   return (
     <WrapperStyled>
@@ -40,15 +64,17 @@ const StoreMainPage = () => {
 
       <StoreCoinGridWrapper>
         <StoreCoinPick />
-        {}
-        <StoreItemCard
-          Item={Items}
-          button={{
-            label: "구매하기",
-            onClick: buttonClick,
-            isClickable: true,
-          }}
-        />
+        {Items.map((item: Item) => (
+          <StoreItemCard
+            key={item.grid}
+            Item={item}
+            button={{
+              label: "구매하기",
+              onClick: buttonClick,
+              isClickable: true,
+            }}
+          />
+        ))}
       </StoreCoinGridWrapper>
     </WrapperStyled>
   );
@@ -71,8 +97,8 @@ const StoreCoinGridWrapper = styled.div`
   grid-gap: 20px;
   grid-template-columns: 350px 350px 350px;
   grid-template-rows: 150px 150px;
-  grid-template-areas: "coinPick Extension ." // h: 163px h: 366px
-    "coinPick . ."; // h: 183px;
+  grid-template-areas: "coinPick extension move" // h: 163px h: 366px
+    "coinPick alarm penalty"; // h: 183px;
   // "theme notification"; // h: 230px h: 230px;
 
   @media (max-width: 768px) {

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import type { Item } from "@/Cabinet/pages/StoreMainPage";
 import Card from "@/Cabinet/components/Card/Card";
 import type { IButtonProps } from "@/Cabinet/components/Card/Card";
+import { ReactComponent as CoinImg } from "@/Cabinet/assets/images/dollar-circle.svg";
 
 const StoreItemCard = ({
   Item,
@@ -23,7 +24,10 @@ const StoreItemCard = ({
         <SectionStyled>
           <BlockStyled>
             <IconBlockStyled>{"Icon"}</IconBlockStyled>
-            <PriseBlockStyled>{Item.ItemPrice}</PriseBlockStyled>
+            <PriseBlockStyled>
+              <CoinImg />
+              <span>{Item.ItemPrice}</span>
+            </PriseBlockStyled>
           </BlockStyled>
           <ItemDetailStyled>{Item.ItemType}</ItemDetailStyled>
         </SectionStyled>
@@ -33,6 +37,8 @@ const StoreItemCard = ({
 };
 
 const WrapperStyled = styled.div`
+  font-size: var(--size-base);
+
   /* padding: 15px; */
 `;
 const SectionStyled = styled.div`
@@ -40,6 +46,7 @@ const SectionStyled = styled.div`
   height: 80px;
   width: 90%;
   /* margin: 9px 0 9px 0; */
+  padding-left: 5px;
   align-items: center;
 `;
 
@@ -47,6 +54,7 @@ const BlockStyled = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: 10px;
+  justify-content: center;
 `;
 const IconBlockStyled = styled.div`
   width: 53px;
@@ -54,14 +62,25 @@ const IconBlockStyled = styled.div`
   border-radius: 10px;
   background-color: var(--main-color);
   margin-bottom: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const PriseBlockStyled = styled.div`
   width: 53px;
   height: 22px;
   background-color: var(--white);
-  border-radius: 10px;
-  font-size: 14px;
+  border-radius: 5px;
+  font-size: 10px;
+  color: var(--main-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > span {
+    margin-left: 3px;
+    font-weight: 600;
+  }
 `;
 
 const ItemDetailStyled = styled.div`
@@ -69,15 +88,11 @@ const ItemDetailStyled = styled.div`
   height: 100%;
   background-color: var(--white);
   border-radius: 10px;
-  padding: 10px 0;
+  padding: 10px 5px 5px 10px;
   margin: 5px 5px 5px 5px;
   width: 90%;
   display: flex;
   flex-direction: column;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 export default StoreItemCard;
