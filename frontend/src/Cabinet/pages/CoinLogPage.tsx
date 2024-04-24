@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { myCoinsState } from "@/Cabinet/recoil/atoms";
 import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
@@ -52,6 +54,7 @@ const CoinLogPage = () => {
   const [coinLogs, setCoinLogs] = useState<ICoinLog[] | null>(null);
   const inquiryPeriod = 3;
   // 조회기간
+  const [myCoin] = useRecoilState(myCoinsState);
 
   const getCoinLog = async (type: CoinLogToggleType) => {
     try {
@@ -83,6 +86,7 @@ const CoinLogPage = () => {
         <h1>코인 내역</h1>
         <div>icon</div>
       </TitleWrapperStyled>
+      보유 재화 : {myCoin}
       <MultiToggleSwitchStyled>
         <MultiToggleSwitch
           initialState={toggleType}
