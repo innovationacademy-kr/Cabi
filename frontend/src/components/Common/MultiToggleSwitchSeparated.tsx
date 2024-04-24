@@ -1,97 +1,105 @@
-// import React from "react";
-// import styled from "styled-components";
+import React, { useEffect, useRef } from "react";
+import styled from "styled-components";
 
-// export interface toggleItemSeparated {
-//   name: string;
-//   key: string;
-//   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-// }
+export interface ISeparatedtoggleItem {
+  name: string;
+  key: number;
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
 
-// interface MultiToggleSwitchProps<T> {
-//   state: T;
-//   setState: React.Dispatch<React.SetStateAction<T>>;
-//   toggleList: toggleItemSeparated[];
-//   buttonHeight?: string;
-//   buttonWidth?: string;
-// }
+interface MultiToggleSwitchProps<T> {
+  initialState: T;
+  setState: React.Dispatch<React.SetStateAction<T>>;
+  toggleList: ISeparatedtoggleItem[];
+  buttonHeight?: string;
+  buttonWidth?: string;
+}
 
-// const MultiToggleSwitchSeparated = <T,>({
-//   state,
-//   setState,
-//   toggleList,
-//   buttonHeight,
-//   buttonWidth,
-// }: MultiToggleSwitchProps<T>) => {
-//   const switchToggle = (itemKey: string) => {
-//     if (state === itemKey) return;
-//     setState(itemKey as React.SetStateAction<T>);
-//   };
+const MultiToggleSwitchSeparated = <T,>({
+  initialState,
+  setState,
+  toggleList,
+  buttonHeight,
+  buttonWidth,
+}: MultiToggleSwitchProps<T>) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-//   return (
-//     <WrapperStyled>
-//       {toggleList.map((item) => {
-//         const ColorThemeIcon = item.icon;
-//         return (
-//           <ButtonStyled
-//             key={item.key}
-//             id={`${item.key}`}
-//             buttonHeight={buttonHeight}
-//             buttonWidth={buttonWidth}
-//             icon={ColorThemeIcon}
-//             isClicked={state === item.key}
-//             onClick={() => switchToggle(item.key)}
-//           >
-//             {ColorThemeIcon && <ColorThemeIcon />}
-//             {item.name}
-//           </ButtonStyled>
-//         );
-//       })}
-//     </WrapperStyled>
-//   );
-// };
+  useEffect(() => {
+    const buttons = wrapperRef.current?.querySelectorAll("button");
 
-// const WrapperStyled = styled.div`
-//   width: 100%;
-//   display: flex;
-//   align-items: center;
-//   border-radius: 10px;
-//   justify-content: space-between;
-// `;
+    buttons?.forEach((button) => {
+      if (button.className === `${initialState}`) {
+        button.style.color = "var(--bg-color)";
+        button.style.backgroundColor = "var(--main-color)";
+      }
+    });
+  }, [initialState]);
 
-// const ButtonStyled = styled.button<{
-//   buttonHeight?: string;
-//   buttonWidth?: string;
-//   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-//   isClicked: boolean;
-// }>`
-//   display: flex;
-//   justify-content: ${(props) => (props.icon ? "space-between" : "center")};
-//   align-items: center;
-//   flex-direction: ${(props) => (props.icon ? "column" : "row")};
-//   min-width: 50px;
-//   width: ${(props) => (props.buttonWidth ? props.buttonWidth : "fit-content")};
-//   min-width: 50px;
-//   border-radius: 10px;
-//   font-size: 1rem;
-//   height: ${(props) => (props.buttonHeight ? props.buttonHeight : "30px")};
-//   font-weight: 500;
-//   background-color: ${(props) =>
-//     props.isClicked ? "var(--main-color)" : "var(--shared-gray-color-100)"};
-//   color: ${(props) =>
-//     props.isClicked ? "var(--text-with-bg-color)" : "var(--normal-text-color)"};
-//   padding: ${(props) => (props.icon ? "12px 0 16px 0" : "4px 12px")};
+  function switchToggle(e: any) {
+    const target = e.target as HTMLButtonElement;
 
-//   & > svg {
-//     width: 30px;
-//     height: 30px;
-//   }
+    if (target === e.currentTarget) return;
 
-//   & > svg > path {
-//     stroke: ${(props) =>
-//       props.isClicked
-//         ? "var(--text-with-bg-color)"
-//         : "var(--normal-text-color)"};
-//   }
-// `;
+    // setPage(0);
+    const buttons = wrapperRef.current?.querySelectorAll("button");
 
-// export default MultiToggleSwitchSeparated;
+    buttons?.forEach((button) => {
+      button.style.color = "var(--normal-text-color)";
+      button.style.backgroundColor = "var(--shared-gray-color-100)";
+    });
+
+    target.style.color = "var(--bg-color)";
+    target.style.backgroundColor = "var(--main-color)";
+
+    setState(target.className as React.SetStateAction<T>);
+  }
+
+  return (
+    <WrapperStyled
+      ref={wrapperRef}
+      onClick={switchToggle}
+      buttonHeight={buttonHeight}
+      buttonWidth={buttonWidth}
+    >
+      {toggleList.map((item) => {
+        const ColorThemeIcon = item.icon;
+
+        return (
+          <button key={item.key} className={`${item.key}`}>
+            {ColorThemeIcon && <ColorThemeIcon />}
+            {item.name}
+          </button>
+        );
+      })}
+    </WrapperStyled>
+  );
+};
+
+const WrapperStyled = styled.div<{
+  buttonHeight?: string;
+  buttonWidth?: string;
+}>`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  justify-content: space-between;
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: ${(props) =>
+      props.buttonWidth ? props.buttonWidth : "fit-content"};
+    min-width: 50px;
+    border-radius: 10px;
+    font-size: 1rem;
+    height: ${(props) => (props.buttonHeight ? props.buttonHeight : "30px")};
+    font-weight: 500;
+    background-color: var(--shared-gray-color-100);
+    color: var(--normal-text-color);
+    padding: 4px 12px;
+  }
+`;
+
+export default MultiToggleSwitchSeparated;
