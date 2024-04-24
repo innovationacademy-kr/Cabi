@@ -206,3 +206,9 @@ export const targetClubUserInfoState = atom<ClubUserResponseDto>({
     userName: "",
   },
 });
+
+/* store */
+export const myCoinsState = atom<number | null>({
+  key: "myCoins",
+  default: null,
+});

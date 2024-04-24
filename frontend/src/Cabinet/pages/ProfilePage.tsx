@@ -3,7 +3,7 @@ import {
   requestFcmAndGetDeviceToken,
 } from "@/Cabinet/firebase/firebase-messaging-sw";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
 import ExtensionCardContainer from "@/Cabinet/components/Card/ExtensionCard/ExtensionCard.container";
