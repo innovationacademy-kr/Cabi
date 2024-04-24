@@ -4,7 +4,6 @@ import LeftClubNav from "@/Cabinet/components/LeftNav/LeftClubNav/LeftClubNav";
 import LeftMainNavContainer from "@/Cabinet/components/LeftNav/LeftMainNav/LeftMainNav.container";
 import LeftProfileNav from "@/Cabinet/components/LeftNav/LeftProfileNav/LeftProfileNav";
 import LeftSectionNav from "@/Cabinet/components/LeftNav/LeftSectionNav/LeftSectionNav";
-import LeftSectionNavStore from "@/Cabinet/components/LeftNav/LeftStoreNav/LeftStoreNav";
 import LeftStoreNav from "@/Cabinet/components/LeftNav/LeftStoreNav/LeftStoreNav";
 import useMenu from "@/Cabinet/hooks/useMenu";
 

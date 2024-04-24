@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { myCoinsState } from "@/Cabinet/recoil/atoms";
 import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
 
 const LeftStoreNav = ({
@@ -18,8 +20,14 @@ const LeftStoreNav = ({
     { name: "아이템 사용내역", route: "store/item-use-log" },
     { name: "코인 내역", route: "store/coin-log" },
   ];
+  
   const [currentSection, SetCurrentSection] = useState("까비상점");
-  const [userCoins, setUserCoins] = useState(420);
+  const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
+
+  useEffect(() => {
+    setMyCoin(420);
+  }, []);
+  // TODO : 지울 예정.
 
   return (
     <>
@@ -29,7 +37,7 @@ const LeftStoreNav = ({
           <UserCoinsWrapperStyled>
             <CoinIcon />
             <CoinTextStyled>
-              <span>{userCoins}</span> 까비
+              <span>{myCoin}</span> 까비
             </CoinTextStyled>
           </UserCoinsWrapperStyled>
         </CoinCountStyled>
