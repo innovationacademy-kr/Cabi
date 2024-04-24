@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.ftclub.cabinet.item.domain.ItemType;
 import org.ftclub.cabinet.item.domain.Sku;
 
 @Getter
@@ -14,8 +15,8 @@ import org.ftclub.cabinet.item.domain.Sku;
 @AllArgsConstructor
 public class ItemDto {
 
-    private Sku itemId;
-    private String itemName;
-    private Integer itemPrice;
-    private String itemType;
+	private Sku itemId;
+	private String itemName;
+	private Integer itemPrice;
+	private ItemType itemType;
 }

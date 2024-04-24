@@ -31,7 +31,7 @@ public interface ItemMapper {
 	@Mapping(target = "itemId", source = "item.id")
 	@Mapping(target = "itemName", source = "item.name")
 	@Mapping(target = "itemPrice", source = "item.price")
-	@Mapping(target = "itemType", source = "item.sku")
+	@Mapping(target = "itemType", source = "item.type")
 	ItemDto toItemDto(Item item);
 
 	@Mapping(target = "date", source = "itemHistory.usedAt")
