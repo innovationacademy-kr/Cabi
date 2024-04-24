@@ -1,6 +1,12 @@
 package org.ftclub.cabinet.item.service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.item.domain.Item;
+import org.ftclub.cabinet.item.domain.ItemHistory;
+import org.ftclub.cabinet.item.repository.ItemHistoryRepository;
+import org.ftclub.cabinet.item.repository.ItemRepository;
 import org.ftclub.cabinet.dto.ItemAssignDto;
 import org.ftclub.cabinet.dto.ItemCreateDto;
 import org.ftclub.cabinet.item.domain.Item;
@@ -18,8 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Logging(level = LogLevel.DEBUG)
 public class ItemCommandService {
 
-	private final ItemRepository itemRepository;
 	private final ItemHistoryRepository itemHistoryRepository;
+	private final ItemRepository itemRepository;
+
+	public void purchaseItem(Long userId, Long itemId) {
+		ItemHistory itemHistory = ItemHistory.of(userId, itemId, null);
+		itemHistoryRepository.save(itemHistory);
+	}
 
 	public void createItem(ItemCreateDto dto) {
 		itemRepository.save(

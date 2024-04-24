@@ -10,15 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-	/**
-	 * 모든 item을 조회한다.
-	 *
-	 * @return item {@Link List}
-	 */
-	@Query("SELECT i "
-			+ "FROM Item i")
-	List<Item> findAllItems();
-
 	@Query("SELECT i "
 			+ "FROM Item i "
 			+ "WHERE i.price >= 0")
