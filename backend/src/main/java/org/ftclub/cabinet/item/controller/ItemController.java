@@ -36,9 +36,7 @@ public class ItemController {
 	@GetMapping("/history")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public ItemHistoryResponseDto getItemHistory(@UserSession UserSessionDto user,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-		System.out.println("date : " + start + " ~ " + end);
+			@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
 		return itemFacadeService.getItemHistory(user.getUserId(), start, end);
 	}
 

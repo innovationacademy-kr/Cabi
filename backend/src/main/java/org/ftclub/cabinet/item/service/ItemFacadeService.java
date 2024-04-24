@@ -75,8 +75,9 @@ public class ItemFacadeService {
 	public ItemHistoryResponseDto getItemHistory(Long userId,
 			LocalDateTime start, LocalDateTime end) {
 		List<ItemHistory> itemHistories =
-				itemHistoryQueryService.getItemHistory(userId, start, end);
+				itemHistoryQueryService.getItemHistoryWithItem(userId, start, end);
 		List<ItemHistoryDto> result = itemHistories.stream()
+				.filter(ih -> ih.getItem().getPrice() < 0)
 				.map(ih -> itemMapper.toItemHistoryDto(ih, itemMapper.toItemDto(ih.getItem())))
 				.collect(Collectors.toList());
 		return new ItemHistoryResponseDto(result);
@@ -95,7 +96,7 @@ public class ItemFacadeService {
 		}
 		List<Long> itemIds = items.stream().map(Item::getId).collect(Collectors.toList());
 		List<ItemHistory> coinHistories =
-				itemHistoryQueryService.getCoinHistoryOnItem(userId, start, end, itemIds);
+				itemHistoryQueryService.getCoinHistoryOnItems(userId, start, end, itemIds);
 
 		Map<Long, Item> itemMap = items.stream()
 				.collect(Collectors.toMap(Item::getId, item -> item));

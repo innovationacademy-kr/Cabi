@@ -20,11 +20,12 @@ public class ItemHistoryQueryService {
 		return itemHistoryRepository.getAllUnusedItemHistoryByUser(userId);
 	}
 
-	public List<ItemHistory> getItemHistory(Long userId, LocalDateTime start, LocalDateTime end) {
-		return itemHistoryRepository.findAllByUserIdAndUsedAt(userId, start, end);
+	public List<ItemHistory> getItemHistoryWithItem(Long userId,
+			LocalDateTime start, LocalDateTime end) {
+		return itemHistoryRepository.findAllByUserIdAndUsedAtJoinItem(userId, start, end);
 	}
 
-	public List<ItemHistory> getCoinHistoryOnItem(Long userId,
+	public List<ItemHistory> getCoinHistoryOnItems(Long userId,
 			LocalDateTime start, LocalDateTime end, List<Long> itemIds) {
 		return itemHistoryRepository.findAllByUserIdAndPurchaseAtAndItemIdIn(userId, start, end,
 				itemIds);
