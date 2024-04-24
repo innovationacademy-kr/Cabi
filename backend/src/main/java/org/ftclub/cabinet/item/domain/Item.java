@@ -30,7 +30,7 @@ public class Item {
 	/**
 	 * 상품명
 	 */
-	@Column(name = "NAME", unique = true, nullable = false)
+	@Column(name = "NAME", nullable = false)
 	private String name;
 
 

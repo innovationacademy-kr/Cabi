@@ -13,8 +13,8 @@ public enum Sku {
 	PENALTY_7("7일"),
 	PENALTY_31("31일"),
 
-	SWAP("교환권"),
-	ALARM("알림권"),
+	SWAP("이사권"),
+	ALARM("알림 등록권"),
 
 	COIN_COLLECT("동전 줍기"),
 	COIN_REWARD("동전 줍기 20일 보상"),

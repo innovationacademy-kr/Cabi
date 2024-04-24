@@ -5,9 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
-import org.ftclub.cabinet.dto.CoinInformationDto;
 import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
-import org.ftclub.cabinet.dto.ItemResponseDto;
+import org.ftclub.cabinet.dto.ItemStoreResponseDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
@@ -32,7 +31,7 @@ public class ItemController {
 
 	@GetMapping("/")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public ItemResponseDto getAllItems() {
+	public ItemStoreResponseDto getAllItems() {
 		return itemFacadeService.getAllItems();
 	}
 

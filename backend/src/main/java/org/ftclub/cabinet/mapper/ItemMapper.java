@@ -6,6 +6,7 @@ import java.util.List;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
+import org.ftclub.cabinet.dto.ItemStoreDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
@@ -33,6 +34,11 @@ public interface ItemMapper {
 	@Mapping(target = "itemPrice", source = "item.price")
 	@Mapping(target = "itemType", source = "item.type")
 	ItemDto toItemDto(Item item);
+
+	@Mapping(target = "itemSku", source = "item.sku")
+	@Mapping(target = "itemName", source = "item.name")
+	@Mapping(target = "itemPrice", source = "item.price")
+	ItemStoreDto toItemStoreDto(Item item, List<String> itemTypes);
 
 	@Mapping(target = "date", source = "itemHistory.usedAt")
 	ItemHistoryDto toItemHistoryDto(ItemHistory itemHistory, ItemDto itemDto);

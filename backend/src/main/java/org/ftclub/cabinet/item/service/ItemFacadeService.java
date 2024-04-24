@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.item.service;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,7 +17,7 @@ import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
 import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
-import org.ftclub.cabinet.dto.ItemResponseDto;
+import org.ftclub.cabinet.dto.ItemStoreResponseDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.dto.UserSessionDto;
@@ -52,13 +55,17 @@ public class ItemFacadeService {
 	 * @return 전체 아이템 리스트
 	 */
 	@Transactional
-	public ItemResponseDto getAllItems() {
+	public ItemStoreResponseDto getAllItems() {
 		List<Item> allItems = itemQueryService.getAllItems();
-		List<ItemDto> itemDtos = allItems.stream()
+		Map<ItemType, List<String>> itemTypeMap = allItems.stream()
 				.filter(item -> item.getPrice() < 0)
-				.map(itemMapper::toItemDto)
-				.collect(Collectors.toList());
-		return new ItemResponseDto(itemDtos);
+				.collect(groupingBy(Item::getType,
+						mapping(item -> item.getSku().getType(), Collectors.toList())));
+//		List<ItemStoreDto> itemStoreDtos = itemTypeMap.values().stream()
+//				.map(list -> itemMapper.toItemStoreDto())
+//		return new ItemResponseDto(itemDtos);
+//		return new ItemStoreResponseDto(itemStoreDtos);
+		return null;
 	}
 
 	@Transactional(readOnly = true)
@@ -69,8 +76,8 @@ public class ItemFacadeService {
 		Map<ItemType, List<ItemDto>> itemMap = userItemHistories.stream()
 				.map(ItemHistory::getItem)
 				.filter(item -> item.getPrice() < 0)
-				.collect(Collectors.groupingBy(Item::getType,
-						Collectors.mapping(itemMapper::toItemDto, Collectors.toList())));
+				.collect(groupingBy(Item::getType,
+						mapping(itemMapper::toItemDto, Collectors.toList())));
 
 		List<ItemDto> extensionItems = itemMap.getOrDefault(ItemType.EXTENSION,
 				Collections.emptyList());
