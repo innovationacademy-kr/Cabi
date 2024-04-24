@@ -42,6 +42,9 @@
   /* pink color variable */
   --pink-100: #f473b1;
   --pink-200: #d72766;
+  /* 수요지식회 (구 까비지식회) */
+  --presentation-main-color: #3f69fd;
+  --presentation-sub-color: #91b5fa;
 
   /* cabinet color variable */
   --broken-color: var(--gray-600);
@@ -203,4 +206,8 @@ input {
 
 .cabiButton {
   -webkit-tap-highlight-color: transparent;
+}
+
+.domainButtonActive {
+  color: var(--main-color) !important;
 }

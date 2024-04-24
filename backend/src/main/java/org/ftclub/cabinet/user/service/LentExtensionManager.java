@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Logging(level = LogLevel.DEBUG)
 public class LentExtensionManager {
 
@@ -27,6 +26,7 @@ public class LentExtensionManager {
 	/**
 	 * 연장권을 발급합니다.
 	 */
+	@Transactional
 	public void issueLentExtension() {
 		UserMonthDataDto[] userLastMonthOccupiedTime = occupiedTimeManager.getUserLastMonthOccupiedTime();
 		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(

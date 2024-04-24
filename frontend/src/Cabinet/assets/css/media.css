@@ -1,0 +1,82 @@
+@media only screen and (max-width: 1040px) {
+  /* left navigation */
+  #leftNavWrap {
+    position: fixed;
+    top: 120px;
+    left: 0;
+    background-color: var(--bg-color);
+    height: calc(100% - 120px);
+    z-index: 9;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  #leftNavWrap.on {
+    transform: translateX(0%);
+    box-shadow: 0 0 40px 0 var(--border-shadow-color-200);
+  }
+
+  #menuBg {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-shadow-color-100);
+    transform: translateX(-100%);
+    z-index: 8;
+  }
+  #menuBg.on {
+    transform: translateX(0%);
+  }
+
+  #cabinetDetailArea {
+    position: fixed;
+    top: 120px;
+    right: 0;
+    height: calc(100% - 120px);
+    z-index: 9;
+    transform: translateX(120%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 0 40px 0 var(--border-shadow-color-200);
+  }
+  #cabinetDetailArea.on {
+    transform: translateX(0%);
+  }
+}
+
+/* search */
+@media (max-width: 768px) {
+  #searchBar {
+    display: none;
+  }
+
+  #searchBar.on {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  #searchBar.on input {
+    width: 100%;
+  }
+
+  #searchButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #topNavWrap.pushOut {
+    justify-content: center;
+  }
+
+  #topNavLogo.pushOut {
+    display: none;
+  }
+
+  #topNavButtonGroup.pushOut {
+    display: none;
+  }
+}

@@ -2,6 +2,7 @@ package org.ftclub.cabinet.utils.blackhole.manager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDateTime;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.FtProfile;
@@ -44,7 +45,6 @@ public class BlackholeManager {
 	 * @param userName 42 intra name
 	 * @return 유저 프로필 {@link FtProfile}
 	 */
-
 	public FtProfile getUserRecentIntraProfile(String userName) {
 		try {
 			return userOauthService.getProfileByIntraName(tokenManager.getFtAccessToken(),
@@ -62,6 +62,7 @@ public class BlackholeManager {
 	 *
 	 * @param dto 유저 정보 {@link UserBlackHoleEvent}
 	 */
+	@Transactional
 	public void handleBlackHole(UserBlackHoleEvent dto) {
 		LocalDateTime now = LocalDateTime.now();
 		try {

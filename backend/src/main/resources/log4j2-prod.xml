@@ -20,16 +20,6 @@
         </Delete>
       </DefaultRolloverStrategy>
     </RollingFile>
-
-    <Http name="discordWebhook" url="${spring:webhook.discord-logging}" method="POST">
-      <Property name="Content-Type">application/json</Property>
-      <PatternLayout>
-        <Pattern>
-          {"content": "Profile: Main | %encode{%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level: %m%n}{JSON}"}
-        </Pattern>
-      </PatternLayout>
-      <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
-    </Http>
   </Appenders>
 
   <Loggers>
@@ -38,7 +28,6 @@
       <AppenderRef ref="rollingFile"/>
       <AppenderRef ref="discordWebhook"/>
     </Logger>
-
     <Logger name="org.ftclub.cabinet" level="info" additivity="false">
       <AppenderRef ref="console"/>
       <AppenderRef ref="rollingFile"/>

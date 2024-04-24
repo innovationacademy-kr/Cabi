@@ -96,6 +96,8 @@ public class TokenValidator {
 		} catch (IllegalArgumentException e) {
 			log.info("JWT 토큰이 잘못되었습니다.");
 		} catch (Exception e) {
+			log.error("token error = {}", e.toString());
+			log.error("token error message = {}", e.getMessage());
 			log.info("JWT 토큰 검사 중 알 수 없는 오류가 발생했습니다.");
 		}
 		return false;
