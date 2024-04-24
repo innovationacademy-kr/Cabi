@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.item.service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,25 +52,21 @@ public class ItemFacadeService {
 		List<ItemHistory> userItemHistories = itemHistoryQueryService.findAllItemHistoryByUser(
 				user.getUserId());
 
-		List<Item> items = userItemHistories.stream()
+		Map<ItemType, List<ItemDto>> itemMap = userItemHistories.stream()
 				.map(ItemHistory::getItem)
-				.collect(Collectors.toList());
+				.collect(Collectors.groupingBy(Item::getType,
+						Collectors.mapping(itemMapper::toItemDto, Collectors.toList())));
 
-		List<ItemDto> extensionItems = generateItemDto(items, ItemType.EXTENSION);
-		List<ItemDto> swapItems = generateItemDto(items, ItemType.SWAP);
-		List<ItemDto> alarmItems = generateItemDto(items, ItemType.ALARM);
-		List<ItemDto> penaltyItems = generateItemDto(items, ItemType.PENALTY);
+		List<ItemDto> extensionItems = itemMap.getOrDefault(ItemType.EXTENSION,
+				Collections.emptyList());
+		List<ItemDto> swapItems = itemMap.getOrDefault(ItemType.SWAP, Collections.emptyList());
+		List<ItemDto> alarmItems = itemMap.getOrDefault(ItemType.ALARM, Collections.emptyList());
+		List<ItemDto> penaltyItems = itemMap.getOrDefault(ItemType.PENALTY,
+				Collections.emptyList());
 
-		return itemMapper.toMyItemResponseDto(extensionItems, swapItems, alarmItems,
-				penaltyItems);
+		return itemMapper.toMyItemResponseDto(extensionItems, swapItems, alarmItems, penaltyItems);
 	}
 
-	private List<ItemDto> generateItemDto(List<Item> items, ItemType type) {
-		return items.stream()
-				.filter(i -> i.getType().equals(type))
-				.map(itemMapper::toItemDto)
-				.collect(Collectors.toList());
-	}
 
 	@Transactional(readOnly = true)
 	public ItemHistoryResponseDto getItemHistory(Long userId,
