@@ -40,6 +40,7 @@ const StoreMainPage = () => {
 
       <StoreCoinGridWrapper>
         <StoreCoinPick />
+        {}
         <StoreItemCard
           Item={Items}
           button={{
@@ -70,8 +71,8 @@ const StoreCoinGridWrapper = styled.div`
   grid-gap: 20px;
   grid-template-columns: 350px 350px 350px;
   grid-template-rows: 150px 150px;
-  grid-template-areas: "coinPick Extension lentInfo" // h: 163px h: 366px
-    "coinPick lentInfo lentInfo"; // h: 183px;
+  grid-template-areas: "coinPick Extension ." // h: 163px h: 366px
+    "coinPick . ."; // h: 183px;
   // "theme notification"; // h: 230px h: 230px;
 
   @media (max-width: 768px) {
@@ -84,14 +85,6 @@ const StoreCoinGridWrapper = styled.div`
       "theme"
       "notification";
   }
-
-  // padding-top: 80px;
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: flex-start;
-  // align-items: center;
-  // width: 100%;
-  // height: 100%;
 `;
 
 const HeaderStyled = styled.div`
