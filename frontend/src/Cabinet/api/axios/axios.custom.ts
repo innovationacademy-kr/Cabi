@@ -2,6 +2,7 @@ import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import CoinLogToggleType from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 
 const axiosLogoutUrl = "/v4/auth/logout";
@@ -318,6 +319,22 @@ const axiosExtendLentPeriodURL = "/v4/lent/cabinets/extend";
 export const axiosExtendLentPeriod = async (): Promise<any> => {
   try {
     const response = await instance.patch(axiosExtendLentPeriodURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCoinLogURL = "/v5/items/coin/history";
+export const axiosCoinLog = async (
+  type: CoinLogToggleType,
+  start: Date,
+  end: Date
+): Promise<any> => {
+  try {
+    const response = await instance.get(axiosCoinLogURL, {
+      params: { type: type, start: start, end: end },
+    });
     return response;
   } catch (error) {
     throw error;

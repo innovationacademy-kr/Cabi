@@ -5,6 +5,7 @@ import static org.ftclub.cabinet.exception.ExceptionStatus.ITEM_NOT_FOUND;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.repository.ItemRepository;
 import org.ftclub.cabinet.log.LogLevel;
@@ -21,6 +22,11 @@ public class ItemQueryService {
 
 	public List<Item> getAllItems() {
 		return itemRepository.findAll();
+	}
+
+	public Item getItemById(Long itemId) {
+		Optional<Item> item = itemRepository.findById(itemId);
+		return item.orElseThrow(ITEM_NOT_FOUND::asServiceException);
 	}
 
 	public List<Item> getItemsByIds(List<Long> itemIds) {

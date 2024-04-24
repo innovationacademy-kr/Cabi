@@ -28,7 +28,7 @@ public class ItemRedisService {
 		return Integer.parseInt(coinCount);
 	}
 
-	public void saveCoinCount(Long userId, int coinCount) {
+	public void saveCoinCount(Long userId, long coinCount) {
 		itemRedis.saveCoinCount(userId.toString(), String.valueOf(coinCount));
 	}
 
