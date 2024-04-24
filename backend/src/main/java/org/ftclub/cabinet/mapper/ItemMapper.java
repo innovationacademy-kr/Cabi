@@ -28,7 +28,7 @@ public interface ItemMapper {
 	@Mapping(target = "history", source = "item.description")
 	CoinHistoryDto toCoinHistoryDto(ItemHistory itemHistory, Item item);
 
-	@Mapping(target = "itemId", source = "item.sku")
+	@Mapping(target = "itemSku", source = "item.sku")
 	@Mapping(target = "itemName", source = "item.name")
 	@Mapping(target = "itemPrice", source = "item.price")
 	@Mapping(target = "itemType", source = "item.type")
