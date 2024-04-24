@@ -1,22 +1,16 @@
 package org.ftclub.cabinet.item.service;
 
-import static org.ftclub.cabinet.item.domain.CoinHistoryType.ALL;
-import static org.ftclub.cabinet.item.domain.CoinHistoryType.EARN;
-import static org.ftclub.cabinet.item.domain.CoinHistoryType.USE;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
-import org.ftclub.cabinet.dto.CoinInformationDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
 import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
@@ -24,7 +18,6 @@ import org.ftclub.cabinet.dto.ItemResponseDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
@@ -47,11 +40,11 @@ public class ItemFacadeService {
 	private final ItemQueryService itemQueryService;
 	private final ItemCommandService itemCommandService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
-	private final ItemHistoryCommandService itemHistoryCommandService;
 	private final ItemMapper itemMapper;
 	private final UserQueryService userQueryService;
 	private final ItemRedisService itemRedisService;
 	private final ApplicationEventPublisher eventPublisher;
+	private final ItemPolicyService itemPolicyService;
 
 	/**
 	 * 모든 아이템 리스트 반환
@@ -94,7 +87,7 @@ public class ItemFacadeService {
 		List<ItemHistory> itemHistories =
 				itemHistoryQueryService.getItemHistoryWithItem(userId, start, end);
 		List<ItemHistoryDto> result = itemHistories.stream()
-				.sorted((ih1, ih2) -> ih1.getUsedAt().compareTo(ih2.getUsedAt()))
+				.sorted(Comparator.comparing(ItemHistory::getUsedAt))
 				.filter(ih -> ih.getItem().getPrice() < 0)
 				.map(ih -> itemMapper.toItemHistoryDto(ih, itemMapper.toItemDto(ih.getItem())))
 				.collect(Collectors.toList());
@@ -119,7 +112,7 @@ public class ItemFacadeService {
 		Map<Long, Item> itemMap = items.stream()
 				.collect(Collectors.toMap(Item::getId, item -> item));
 		List<CoinHistoryDto> result = coinHistories.stream()
-				.sorted((ih1, ih2) -> ih1.getPurchaseAt().compareTo(ih2.getPurchaseAt()))
+				.sorted(Comparator.comparing(ItemHistory::getPurchaseAt))
 				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
 				.collect(Collectors.toList());
 		return new CoinHistoryResponseDto(result);
@@ -168,19 +161,15 @@ public class ItemFacadeService {
 		if (user.isBlackholed()) {
 			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
 		}
-
-		Long itemPrice = itemQueryService.getItemById(itemId).getPrice();
+		Item item = itemQueryService.getItemById(itemId);
 		Long userCoin = itemRedisService.getCoinCount(userId);
 
-		// 보유 코인 확인
-		if (userCoin < itemPrice) {
-			throw ExceptionStatus.NOT_ENOUGH_COIN.asServiceException();
-		}
+		itemPolicyService.verifyIsAffordable(userCoin, item.getPrice());
 
 		// 아이템 구매 처리
 		itemCommandService.purchaseItem(user.getId(), itemId);
 
 		// 코인 차감
-		itemRedisService.saveCoinCount(userId, userCoin - itemPrice);
+		itemRedisService.saveCoinCount(userId, userCoin - item.getPrice());
 	}
 }
