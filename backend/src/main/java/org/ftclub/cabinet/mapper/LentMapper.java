@@ -55,6 +55,6 @@ public interface LentMapper {
 			User user,
 			Cabinet cabinet,
 			Boolean isExpired,
-			Long daysLeftFromExpireDate
+			Long daysFromExpireDate
 	);
 }
