@@ -56,11 +56,11 @@ public class ItemFacadeService {
 				.collect(Collectors.toList());
 
 		List<ItemDto> extensionItems = generateItemDto(items, ItemType.EXTENSION);
-		List<ItemDto> exchangeItems = generateItemDto(items, ItemType.EXCHANGE);
+		List<ItemDto> swapItems = generateItemDto(items, ItemType.SWAP);
 		List<ItemDto> alarmItems = generateItemDto(items, ItemType.ALARM);
 		List<ItemDto> penaltyItems = generateItemDto(items, ItemType.PENALTY);
 
-		return itemMapper.toMyItemResponseDto(extensionItems, exchangeItems, alarmItems,
+		return itemMapper.toMyItemResponseDto(extensionItems, swapItems, alarmItems,
 				penaltyItems);
 	}
 

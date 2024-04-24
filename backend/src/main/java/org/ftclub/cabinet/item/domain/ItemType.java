@@ -7,7 +7,7 @@ public enum ItemType {
 
 	EXTENSION("연장권"),
 	PENALTY("패널티완화권"),
-	EXCHANGE("교환권"),
+	SWAP("교환권"),
 	ALARM("알림권");
 
 	private final String type;
@@ -21,7 +21,7 @@ public enum ItemType {
 	}
 
 	public boolean isValid() {
-		return this.equals(EXTENSION) || this.equals(PENALTY) || this.equals(EXCHANGE)
+		return this.equals(EXTENSION) || this.equals(PENALTY) || this.equals(SWAP)
 				|| this.equals(ALARM);
 	}
 }

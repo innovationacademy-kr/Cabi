@@ -38,6 +38,6 @@ public interface ItemMapper {
 	ItemHistoryDto toItemHistoryDto(ItemHistory itemHistory, ItemDto itemDto);
 
 
-	MyItemResponseDto toMyItemResponseDto(List<ItemDto> extensionItems, List<ItemDto> exchangeItems,
+	MyItemResponseDto toMyItemResponseDto(List<ItemDto> extensionItems, List<ItemDto> swapItems,
 			List<ItemDto> alarmItems, List<ItemDto> penaltyItems);
 }
