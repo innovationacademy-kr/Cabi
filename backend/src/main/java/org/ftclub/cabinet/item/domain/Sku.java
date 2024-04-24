@@ -13,7 +13,7 @@ public enum Sku {
 	PENALTY_7("7일"),
 	PENALTY_31("31일"),
 
-	EXCHANGE("교환권"),
+	SWAP("교환권"),
 	ALARM("알림권");
 
 
@@ -30,6 +30,6 @@ public enum Sku {
 	public boolean isValid() {
 		return this.equals(EXTENSION_3) || this.equals(EXTENSION_15) || this.equals(EXTENSION_31)
 				|| this.equals(PENALTY_3) || this.equals(PENALTY_7) || this.equals(PENALTY_31)
-				|| this.equals(EXCHANGE) || this.equals(ALARM);
+				|| this.equals(SWAP) || this.equals(ALARM);
 	}
 }

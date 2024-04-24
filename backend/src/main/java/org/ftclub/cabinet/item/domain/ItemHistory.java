@@ -50,27 +50,27 @@ public class ItemHistory {
 	/**
 	 * 아이템 소유자
 	 */
-	@JoinColumn(name = "USER_ID", nullable = false)
+	@JoinColumn(name = "USER_ID", nullable = false, updatable = false, insertable = false)
 	@ManyToOne(fetch = LAZY)
 	private User user;
 
 	/**
 	 * 사용한 아이템
 	 */
-	@JoinColumn(name = "ITEM_ID", nullable = false)
+	@JoinColumn(name = "ITEM_ID", nullable = false, updatable = false, insertable = false)
 	@ManyToOne(fetch = LAZY)
 	private Item item;
 
 	/**
 	 * 사용한 아이템 ID
 	 */
-	@Column(name = "ITEM_ID", nullable = false, updatable = false, insertable = false)
+	@Column(name = "ITEM_ID", nullable = false)
 	private Long itemId;
 
 	/**
 	 * 사용한 사용자 ID
 	 */
-	@Column(name = "USER_ID", nullable = false, updatable = false, insertable = false)
+	@Column(name = "USER_ID", nullable = false)
 	private Long userId;
 
 
@@ -100,7 +100,7 @@ public class ItemHistory {
 	 * @return 유효한 인스턴스 여부
 	 */
 	private boolean isValid() {
-		return this.userId != null && this.itemId != null && this.purchaseAt != null;
+		return this.userId != null && this.itemId != null;
 	}
 
 }

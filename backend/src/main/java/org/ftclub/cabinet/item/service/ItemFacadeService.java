@@ -6,6 +6,7 @@ import static org.ftclub.cabinet.item.domain.CoinHistoryType.USE;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
+import org.ftclub.cabinet.item.domain.ItemType;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
@@ -67,45 +69,33 @@ public class ItemFacadeService {
 
 	@Transactional(readOnly = true)
 	public MyItemResponseDto getMyItems(UserSessionDto user) {
-//		List<ItemHistory> userItemHistories = itemHistoryQueryService.findAllItemHistoryByUser(user.getUserId());
-//
-//		List<ItemDto> extensionItems = getItemDtos(userItemHistories);
-//
-//		List<ItemDto> exchangeItems = userItemHistories.stream()
-//				.filter(ih -> ih.getItem())
-//				.map(ih -> itemMapper.toItemDto(ih.getItem()))
-//				.collect(Collectors.toList());
-//
-//		List<ItemDto> alarmItems = userItemHistories.stream()
-//				.filter(ih -> ih.getItem().getSku().isAlarmType())
-//				.map(ih -> itemMapper.toItemDto(ih.getItem()))
-//				.collect(Collectors.toList());
-//
-//		List<ItemDto> penaltyItems = userItemHistories.stream()
-//				.filter(ih -> ih.getItem().getSku().isPenaltyType())
-//				.map(ih -> itemMapper.toItemDto(ih.getItem()))
-//				.collect(Collectors.toList());
-//
-//		return itemMapper.toMyItemResponseDto(extensionItems, exchangeItems, alarmItems, penaltyItems);
-		return null;
-	}
+		List<ItemHistory> userItemHistories = itemHistoryQueryService.findAllItemHistoryByUser(
+				user.getUserId());
 
-//	private List<ItemDto> getItemDtos(List<ItemHistory> userItemHistories, ) {
-//		List<ItemDto> extensionItems = userItemHistories.stream()
-//				.filter(ih -> ih.getItem().getSku().isExtensionType())
-//				.map(ih -> itemMapper.toItemDto(ih.getItem()))
-//				.collect(Collectors.toList());
-//		return extensionItems;
-//	}
+		Map<ItemType, List<ItemDto>> itemMap = userItemHistories.stream()
+				.map(ItemHistory::getItem)
+				.collect(Collectors.groupingBy(Item::getType,
+						Collectors.mapping(itemMapper::toItemDto, Collectors.toList())));
+
+		List<ItemDto> extensionItems = itemMap.getOrDefault(ItemType.EXTENSION,
+				Collections.emptyList());
+		List<ItemDto> swapItems = itemMap.getOrDefault(ItemType.SWAP, Collections.emptyList());
+		List<ItemDto> alarmItems = itemMap.getOrDefault(ItemType.ALARM, Collections.emptyList());
+		List<ItemDto> penaltyItems = itemMap.getOrDefault(ItemType.PENALTY,
+				Collections.emptyList());
+
+		return itemMapper.toMyItemResponseDto(extensionItems, swapItems, alarmItems, penaltyItems);
+	}
 
 
 	@Transactional(readOnly = true)
 	public ItemHistoryResponseDto getItemHistory(Long userId,
 			LocalDateTime start, LocalDateTime end) {
 		List<ItemHistory> itemHistories =
-				itemHistoryQueryService.getItemHistory(userId, start, end);
+				itemHistoryQueryService.getItemHistoryWithItem(userId, start, end);
 		List<ItemHistoryDto> result = itemHistories.stream()
 				.sorted((ih1, ih2) -> ih1.getUsedAt().compareTo(ih2.getUsedAt()))
+				.filter(ih -> ih.getItem().getPrice() < 0)
 				.map(ih -> itemMapper.toItemHistoryDto(ih, itemMapper.toItemDto(ih.getItem())))
 				.collect(Collectors.toList());
 		return new ItemHistoryResponseDto(result);
@@ -124,7 +114,7 @@ public class ItemFacadeService {
 		}
 		List<Long> itemIds = items.stream().map(Item::getId).collect(Collectors.toList());
 		List<ItemHistory> coinHistories =
-				itemHistoryQueryService.getCoinHistoryOnItem(userId, start, end, itemIds);
+				itemHistoryQueryService.getCoinHistoryOnItems(userId, start, end, itemIds);
 
 		Map<Long, Item> itemMap = items.stream()
 				.collect(Collectors.toMap(Item::getId, item -> item));

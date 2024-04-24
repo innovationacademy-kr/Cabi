@@ -1,13 +1,14 @@
 package org.ftclub.cabinet.item.controller;
 
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
-import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
 import org.ftclub.cabinet.dto.CoinInformationDto;
 import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
 import org.ftclub.cabinet.dto.ItemResponseDto;
+import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.service.ItemFacadeService;
@@ -20,8 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,7 +46,8 @@ public class ItemController {
 	@GetMapping("/history")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public ItemHistoryResponseDto getItemHistory(@UserSession UserSessionDto user,
-			@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
 		return itemFacadeService.getItemHistory(user.getUserId(), start, end);
 	}
 
