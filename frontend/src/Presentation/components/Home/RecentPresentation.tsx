@@ -108,7 +108,7 @@ const TitleContainerStyled = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   font-weight: 700;
-  border-bottom: 2px solid #d9d9d9;
+  border-bottom: 2px solid var(--shared-gray-color-300);
   width: 100%;
   font-size: 2.5rem;
 
@@ -127,7 +127,7 @@ const TitleContainerStyled = styled.div`
 `;
 
 const RegisterButtonStyled = styled.button`
-  background-color: #3f69fd;
+  background-color: var(--presentation-main-color);
   width: 150px;
   height: 50px;
   @media screen and (max-width: 425px) {
@@ -136,7 +136,7 @@ const RegisterButtonStyled = styled.button`
 `;
 
 const MobileRegisertButtonStyled = styled.button`
-  background-color: #3f69fd;
+  background-color: var(--presentation-main-color);
   width: 80%;
   height: 50px;
   margin-bottom: 30px;

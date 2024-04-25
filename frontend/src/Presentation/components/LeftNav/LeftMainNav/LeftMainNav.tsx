@@ -88,7 +88,7 @@ const LeftMainNav = ({
               className="cabiButton"
               onClick={onClickLogoutButton}
             >
-              <LogoutImg stroke="var(--gray-color)" />
+              <LogoutImg stroke="var(--shared-gray-color-500)" />
               Logout
             </BottomBtnStyled>
           )}
@@ -103,7 +103,7 @@ const LeftNavStyled = styled.nav`
   min-width: 90px;
   position: relative;
   height: 100%;
-  border-right: 1px solid var(--line-color);
+  border-right: 1px solid var(--shared-gray-color-400);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -127,15 +127,15 @@ const TopBtnStyled = styled.li`
   font-weight: 300;
   margin-bottom: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-color);
+  color: var(--shared-gray-color-500);
   cursor: pointer;
   &:last-child {
     margin-bottom: 0;
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--white);
-      background-color: var(--main-color);
+      color: var(--white-text-with-bg-color);
+      background-color: var(--presentation-main-color);
     }
   }
 `;
@@ -153,7 +153,7 @@ const BottomSectionStyled = styled.section`
     margin: 0 auto;
     width: 56px;
     height: 1px;
-    background-color: var(--line-color);
+    background-color: var(--shared-gray-color-400);
   }
 `;
 const BottomBtnsStyled = styled.ul`
@@ -168,7 +168,7 @@ const BottomBtnStyled = styled.li`
   font-weight: 300;
   margin-top: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-color);
+  color: var(--shared-gray-color-500);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -177,7 +177,7 @@ const BottomBtnStyled = styled.li`
     margin-top: 0;
   }
   & a {
-    color: var(--gray-color);
+    color: var(--shared-gray-color-500);
   }
   & div {
     width: 24px;
@@ -186,9 +186,9 @@ const BottomBtnStyled = styled.li`
     margin-bottom: 4px;
   }
   &.active {
-    color: var(--main-color);
+    color: var(--presentation-main-color);
     svg {
-      stroke: var(--main-color);
+      stroke: var(--presentation-main-color);
     }
   }
   svg {
@@ -196,12 +196,12 @@ const BottomBtnStyled = styled.li`
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--main-color);
+      color: var(--presentation-main-color);
       svg {
-        stroke: var(--main-color);
+        stroke: var(--presentation-main-color);
       }
       a {
-        color: var(--main-color);
+        color: var(--presentation-main-color);
       }
     }
   }

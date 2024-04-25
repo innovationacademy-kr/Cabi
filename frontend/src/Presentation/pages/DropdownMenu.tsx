@@ -89,7 +89,7 @@ const DropdownOption = styled.li`
   cursor: pointer;
   &:hover {
     background-color: #f0f0f0;
-    color: var(--main-color);
+    color: var(--presentation-main-color);
   }
 `;
 
@@ -99,7 +99,8 @@ const RegisterTimeInputStyled = styled.div<{ isFocused: boolean }>`
   border-radius: 10px;
   background-color: var(--white);
   border: 2px solid
-    ${(props) => (props.isFocused ? "var(--main-color)" : "var(--white)")};
+    ${(props) =>
+      props.isFocused ? "var(--presentation-main-color)" : "var(--white)"};
   resize: none;
   outline: none;
   color: var(--gray-color);

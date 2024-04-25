@@ -212,5 +212,5 @@ input {
 }
 
 .domainButtonActive {
-  color: var(--main-color) !important;
+  color: var(--presentation-main-color) !important;
 }
