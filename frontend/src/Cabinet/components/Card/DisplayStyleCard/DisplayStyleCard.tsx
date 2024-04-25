@@ -1,8 +1,8 @@
-import ColorTheme from "@/components/Card/DisplayStyleCard/ColorTheme/ColorTheme";
-import PointColor from "@/components/Card/DisplayStyleCard/PointColor/PointColor";
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import { CardContentWrapper } from "@/Cabinet/components/Card/CardStyles";
+import ColorTheme from "@/Cabinet/components/Card/DisplayStyleCard/ColorTheme/ColorTheme";
+import PointColor from "@/Cabinet/components/Card/DisplayStyleCard/PointColor/PointColor";
 import { ColorThemeToggleType } from "@/Cabinet/types/enum/colorTheme.type.enum";
 
 interface DisplayStyleProps {

@@ -38,8 +38,12 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
           <DomainContainerStyled
             onClick={() => navigator(isAdmin ? domain.adminPath : domain.path)}
           >
-            <LogoContainerStyled>
-              <domain.logo />
+            <LogoContainerStyled domainTitle={domain.title}>
+              <domain.logo
+                viewBox={
+                  domain.title === "수요지식회" ? "0.8 0.8 16 16" : "0 0 37 37"
+                }
+              />
             </LogoContainerStyled>
             <DomainTitleStyled
               className={domain.active(pathname) ? "domainButtonActive" : ""}
@@ -62,8 +66,9 @@ const DomainGroupContainerStyled = styled.div`
   height: 40px;
   border-bottom: 1px solid var(--line-color);
   padding: 0 28px;
-  color: var(--gray-color);
+  color: var(--shared-gray-color-500);
   font-size: 0.875rem;
+  background-color: var(--bg-color);
 `;
 
 const DomainWrapperStyled = styled.div`
@@ -76,16 +81,24 @@ const DomainContainerStyled = styled.div`
   align-items: center;
 `;
 
-const LogoContainerStyled = styled.div`
+const LogoContainerStyled = styled.div<{ domainTitle: string }>`
   display: flex;
   align-items: center;
   width: 14px;
   height: 14px;
   cursor: pointer;
+
   svg {
     .logo_svg__currentPath {
       fill: var(--default-main-color);
     }
+    width: 14px;
+    height: 14px;
+  }
+
+  & > svg > path {
+    transform: ${(props) =>
+      props.domainTitle === "수요지식회" ? "scale(1.08)" : "scale(1)"};
   }
 `;
 
@@ -102,7 +115,7 @@ const DomainSeparatorStyled = styled.div`
   width: 1px;
   height: 20px;
   margin: 0 8px;
-  background-color: #d9d9d9;
+  background-color: var(--shared-gray-color-300);
 `;
 
 export default TopNavDomainGroup;

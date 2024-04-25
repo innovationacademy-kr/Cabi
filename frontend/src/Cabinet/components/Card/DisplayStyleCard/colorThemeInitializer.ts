@@ -1,5 +1,8 @@
-import { ColorThemeToggleType, ColorThemeType } from "@/Cabinet/types/enum/colorTheme.type.enum";
-import { getInitialColorTheme } from "@/components/Card/DisplayStyleCard/DisplayStyleCard.container";
+import { getInitialColorTheme } from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
+import {
+  ColorThemeToggleType,
+  ColorThemeType,
+} from "@/Cabinet/types/enum/colorTheme.type.enum";
 
 (function () {
   const isClient = typeof window !== "undefined";

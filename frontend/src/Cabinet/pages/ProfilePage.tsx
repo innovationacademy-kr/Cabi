@@ -1,3 +1,4 @@
+import { deleteRecoilPersistFloorSection } from "@/Cabinet//utils/recoilPersistUtils";
 import {
   deleteFcmToken,
   requestFcmAndGetDeviceToken,
@@ -6,14 +7,16 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
+import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
 import ExtensionCardContainer from "@/Cabinet/components/Card/ExtensionCard/ExtensionCard.container";
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
 import NotificationCardContainer from "@/Cabinet/components/Card/NotificationCard/NotificationCard.container";
 import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileCard.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { axiosMyInfo, axiosUpdateDeviceToken } from "@/Cabinet/api/axios/axios.custom";
-import { deleteRecoilPersistFloorSection } from "@/Cabinet//utils/recoilPersistUtils";
-import DisplayStyleCardContainer from "@/components/Card/DisplayStyleCard/DisplayStyleCard.container";
+import {
+  axiosMyInfo,
+  axiosUpdateDeviceToken,
+} from "@/Cabinet/api/axios/axios.custom";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
