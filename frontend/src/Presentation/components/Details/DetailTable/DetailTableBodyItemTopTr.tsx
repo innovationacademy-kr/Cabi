@@ -171,7 +171,7 @@ const TopTrStyled = styled.tr<{
     font-size: 18px;
     background-color: ${(props) =>
       !props.itemStatus
-        ? "#dce7fd"
+        ? "var(--shared-blue-color-100)"
         : props.itemStatus === itemType.NO_EVENT_CURRENT
         ? "var(--white)"
         : "var(--full)"};
@@ -188,7 +188,7 @@ const TopTrStyled = styled.tr<{
     & button {
       width: 120px;
       height: 36px;
-      background-color: #3f69fd;
+      background-color: var(--presentation-main-color);
       font-weight: bold;
       font-size: 1rem;
     }
@@ -202,7 +202,8 @@ const TopTrStyled = styled.tr<{
     height: 40px;
     line-height: 40px;
     width: 100%;
-    background-color: ${(props) => (props.open ? "#91B5FB" : "#3f69fd")};
+    background-color: ${(props) =>
+      props.open ? "#91B5FB" : "var(--presentation-main-color)"};
     & > td {
       border-radius: ${(props) => (props.open ? "" : "10px 10px 0 0")};
     }

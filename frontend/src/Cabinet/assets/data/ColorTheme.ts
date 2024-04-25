@@ -44,6 +44,8 @@ const lightValues = css`
 
   --shared-purple-color-100: var(--purple-100);
 
+  --shared-blue-color-100: var(--blue-150);
+
   color: var(--normal-text-color);
   background-color: var(--bg-color);
 `;
@@ -90,6 +92,8 @@ const darkValues = css`
   --shared-gray-color-700: var(--gray-200);
 
   --shared-purple-color-100: var(--purple-700);
+
+  --shared-blue-color-100: var(--blue-150);
 
   color: var(--normal-text-color);
   background-color: var(--bg-color);

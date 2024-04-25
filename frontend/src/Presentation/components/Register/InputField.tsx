@@ -79,11 +79,15 @@ const InputAreaStyled = styled.input<{ isFocused: boolean }>`
   resize: none;
   box-sizing: border-box;
   font-size: 0.875rem;
-  background-color: var(--white);
+  background-color: var(--card-content-bg-color);
   font-family: "Noto Sans KR", sans-serif;
   outline: none;
   border: 2px solid
-    ${(props) => (props.isFocused ? "#91B5FA" : "var(--lightgray-color)")};
+    ${(props) =>
+      props.isFocused
+        ? "var(--presentation-sub-color)"
+        : "var(--shared-gray-color-100)"};
+  color: var(--normal-text-color);
 `;
 
 const DetailTextareaStyled = styled.textarea<{ isFocused: boolean }>`
@@ -95,18 +99,22 @@ const DetailTextareaStyled = styled.textarea<{ isFocused: boolean }>`
   resize: none;
   box-sizing: border-box;
   font-size: 0.875rem;
-  background-color: var(--white);
+  background-color: var(--card-content-bg-color);
   font-family: "Noto Sans KR", sans-serif;
   outline: none;
   border: 2px solid
-    ${(props) => (props.isFocused ? "#91B5FA" : "var(--lightgray-color)")};
+    ${(props) =>
+      props.isFocused
+        ? "var(--presentation-sub-color)"
+        : "var(--shared-gray-color-100)"};
+  color: var(--normal-text-color);
 `;
 
 const CharacterCountStyled = styled.div`
   margin-left: auto;
   margin-top: 0.5rem;
   font-size: 0.75rem;
-  color: #a9a9a9;
+  color: var(--shared-gray-color-400);
 `;
 
 export default InputField;

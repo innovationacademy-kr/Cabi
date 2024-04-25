@@ -102,7 +102,7 @@ const BodyStyled = styled.div`
   margin-bottom: 50px;
   width: 80%;
   padding: 24px 20px 10px 20px;
-  background-color: var(--lightgray-color);
+  background-color: var(--shared-gray-color-100);
   border-radius: 10px;
   display: flex;
   min-width: 375px;

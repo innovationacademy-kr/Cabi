@@ -89,7 +89,7 @@ const CategoryStyled = styled.div`
   height: 300px;
   margin-bottom: 16px;
   border-radius: 30px;
-  background-color: #3f69fd;
+  background-color: var(--presentation-main-color);
   display: flex;
   justify-content: center;
   align-items: center;

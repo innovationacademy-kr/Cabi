@@ -71,7 +71,7 @@ const TooltipCard = styled.div<{ hasEnoughWidth: boolean }>`
   justify-content: center;
   & ${ToolTipIcon}:hover + ${TooltipBox} {
     visibility: visible;
-    color: var(--normal-text-color);
+    color: var(--white-text-with-bg-color);
     background-color: var(--bg-shadow-color-400);
     &:before {
       border-color: transparent transparent var(--bg-shadow-color-400)

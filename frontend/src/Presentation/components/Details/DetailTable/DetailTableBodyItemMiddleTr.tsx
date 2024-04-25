@@ -58,7 +58,7 @@ const MobileMiddleTrStysled = styled.tr<{
 }>`
   background-color: ${(props) =>
     !props.itemStatus
-      ? "#dce7fd"
+      ? "var(--shared-blue-color-100)"
       : props.itemStatus === itemType.NO_EVENT_CURRENT
       ? "var(--white)"
       : "var(--full)"};
@@ -76,7 +76,7 @@ const MobileMiddleTrStysled = styled.tr<{
   & button {
     width: 100px;
     height: 36px;
-    background-color: #3f69fd;
+    background-color: var(--presentation-main-color);
     font-weight: bold;
     font-size: 1rem;
   }
