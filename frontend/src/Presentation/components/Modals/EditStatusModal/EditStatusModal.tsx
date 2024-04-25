@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import Dropdown, {

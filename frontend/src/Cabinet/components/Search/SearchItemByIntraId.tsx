@@ -167,7 +167,7 @@ const RectangleStyled = styled.div<{
   font-size: 1.625rem;
   color: ${(props) =>
     props.banned
-      ? "var(--bg-color)"
+      ? "var(--white-text-with-bg-color)"
       : props.status
       ? cabinetLabelColorMap[props.status]
       : "var(--black)"};

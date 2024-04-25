@@ -10,7 +10,7 @@ export interface IDropdownOptions {
   imageSrc?: string;
 }
 
-interface IDropdown {
+export interface IDropdown {
   options: IDropdownOptions[];
   defaultValue: string;
   defaultImageSrc?: string;

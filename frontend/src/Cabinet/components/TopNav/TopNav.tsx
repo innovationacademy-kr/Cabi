@@ -109,7 +109,7 @@ const TopNavWrapperStyled = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: var(--bg-color);
-  border-bottom: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--shared-gray-color-400);
   padding: 0 28px;
   color: var(--shared-gray-color-500);
 `;

@@ -64,7 +64,7 @@ const DomainGroupContainerStyled = styled.div`
   align-items: center;
   width: 100%;
   height: 40px;
-  border-bottom: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--shared-gray-color-400);
   padding: 0 28px;
   color: var(--shared-gray-color-500);
   font-size: 0.875rem;
