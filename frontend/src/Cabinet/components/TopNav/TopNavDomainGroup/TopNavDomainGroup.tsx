@@ -39,7 +39,7 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
             onClick={() => navigator(isAdmin ? domain.adminPath : domain.path)}
           >
             <LogoContainerStyled>
-              <domain.logo />
+              <domain.logo width="14" height="14"/>
             </LogoContainerStyled>
             <DomainTitleStyled
               className={domain.active(pathname) ? "domainButtonActive" : ""}

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import AdminCabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/AdminCabinetListItem";
 import CabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/CabinetListItem";
 import { CabinetPreviewInfo } from "@/Cabinet/types/dto/cabinet.dto";
+import { ReactComponent as SelectImg } from "@/Cabinet/assets/images/select.svg";
 
 // 하나의 층에 대한 타이틀과 캐비넷 리스트를 담고 있는 컴포넌트
 const FloorContainer = ({
@@ -25,10 +26,12 @@ const FloorContainer = ({
     <FloorContainerStyled>
       <FloorTitleStyled isToggled={isToggled} onClick={toggle}>
         <h2>{floorNumber}층</h2>
-        <button></button>
+        <button>
+          <SelectImg stroke="var(--gray-color)" />
+        </button>
       </FloorTitleStyled>
       {pendingCabinetsList.length !== 0 ? (
-        <FlootCabinetsContainerStyled isToggled={isToggled}>
+        <FloorCabinetsContainerStyled isToggled={isToggled}>
           {pendingCabinetsList.map((cabinet: CabinetPreviewInfo) =>
             isAdmin ? (
               <AdminCabinetListItem key={cabinet.cabinetId} {...cabinet} />
@@ -36,7 +39,7 @@ const FloorContainer = ({
               <CabinetListItem key={cabinet.cabinetId} {...cabinet} />
             )
           )}
-        </FlootCabinetsContainerStyled>
+        </FloorCabinetsContainerStyled>
       ) : (
         <NoAvailableCabinetMessageStyled isToggled={isToggled}>
           <p>해당 층에는 사용 가능한 사물함이 없습니다 </p>
@@ -69,15 +72,12 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
     cursor: inherit;
     z-index: 2;
     height: 30px;
-    width: 20px;
-    background: url(/src/Cabinet/assets/images/select.svg) no-repeat center
-      center;
     transform: ${(props) =>
       props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
   }
 `;
 
-const FlootCabinetsContainerStyled = styled.div<{ isToggled: boolean }>`
+const FloorCabinetsContainerStyled = styled.div<{ isToggled: boolean }>`
   display: ${(props) => (props.isToggled ? "none" : "flex")};
   transition: all 0.3s ease-in-out;
   flex-wrap: wrap;

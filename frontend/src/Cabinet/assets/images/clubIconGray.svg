@@ -1,7 +1,7 @@
-<svg width="24" height="24" viewBox="0 0 24 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15.0301 10.3212L20.6901 6.68912C21.2601 6.32495 21.4101 5.57745 21.0301 5.04078L19.2101 2.44368C18.8301 1.89743 18.0501 1.75368 17.4901 2.11785L11.8301 5.74994L15.0301 10.3212Z" stroke="current" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M12.1739 6.20921L7.39624 9.27576L9.95614 12.9386L14.7338 9.8721L12.1739 6.20921Z" stroke="current" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M5.83004 15.2374L9.78004 12.7074L7.54004 9.50659L3.59004 12.0366C3.13004 12.3337 3.01004 12.9278 3.32004 13.3687L4.45004 14.9787C4.75004 15.4099 5.37004 15.5249 5.83004 15.2374Z" stroke="current" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M12.0501 11.6917L7.56006 21.0833" stroke="current" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M12 11.6917L16.44 21.0833" stroke="current" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15.0281 10.7697L20.6881 6.97973C21.2581 6.59973 21.4081 5.81973 21.0281 5.25973L19.2081 2.54971C18.8281 1.97971 18.0481 1.82971 17.4881 2.20971L11.8281 5.99972L15.0281 10.7697Z" stroke="current" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12.1761 6.47981L7.39844 9.67969L9.95834 13.5018L14.736 10.302L12.1761 6.47981Z" stroke="current" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5.83053 15.8999L9.78053 13.2599L7.54053 9.91992L3.59053 12.5599C3.13053 12.8699 3.01053 13.4899 3.32053 13.9499L4.45053 15.6299C4.75053 16.0799 5.37053 16.1999 5.83053 15.8999Z" stroke="current" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12.0525 12.1992L7.5625 21.9992" stroke="current" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12 12.1992L16.44 21.9992" stroke="current" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
