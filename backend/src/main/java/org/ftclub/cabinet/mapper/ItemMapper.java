@@ -10,6 +10,7 @@ import org.ftclub.cabinet.dto.ItemStoreDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
+import org.ftclub.cabinet.item.domain.ItemType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -26,7 +27,8 @@ public interface ItemMapper {
 
 	@Mapping(target = "date", source = "itemHistory.usedAt")
 	@Mapping(target = "amount", source = "item.price")
-	CoinHistoryDto toCoinHistoryDto(ItemHistory itemHistory, Item item, String history);
+	@Mapping(target = "history", source = "item.type.description")
+	CoinHistoryDto toCoinHistoryDto(ItemHistory itemHistory, Item item);
 
 	@Mapping(target = "itemSku", source = "item.sku")
 	@Mapping(target = "itemName", source = "item.type.name")
@@ -41,5 +43,7 @@ public interface ItemMapper {
 	MyItemResponseDto toMyItemResponseDto(List<ItemDto> extensionItems, List<ItemDto> swapItems,
 			List<ItemDto> alarmItems, List<ItemDto> penaltyItems);
 
-	ItemStoreDto toItemStoreDto(String itemName, String description, List<ItemDto> itemTypes);
+	@Mapping(target = "itemName", source = "itemType.name")
+	@Mapping(target = "description", source = "itemType.description")
+	ItemStoreDto toItemStoreDto(ItemType itemType, List<ItemDto> itemTypes);
 }

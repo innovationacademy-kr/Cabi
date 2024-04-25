@@ -63,8 +63,7 @@ public class ItemFacadeService {
 				.collect(groupingBy(Item::getType,
 						mapping(itemMapper::toItemDto, Collectors.toList())));
 		List<ItemStoreDto> result = itemMap.entrySet().stream()
-				.map(entry -> itemMapper.toItemStoreDto(entry.getKey().getName(),
-						entry.getKey().getDescription(), entry.getValue()))
+				.map(entry -> itemMapper.toItemStoreDto(entry.getKey(), entry.getValue()))
 				.collect(Collectors.toList());
 		return new ItemStoreResponseDto(result);
 	}
@@ -123,10 +122,8 @@ public class ItemFacadeService {
 				.collect(Collectors.toMap(Item::getId, item -> item));
 		List<CoinHistoryDto> result = coinHistories.stream()
 				.sorted(Comparator.comparing(ItemHistory::getPurchaseAt))
-				.map(ih -> {
-					Item item = itemMap.get(ih.getItemId());
-					return itemMapper.toCoinHistoryDto(ih, item, item.getType().getDescription());
-				}).collect(Collectors.toList());
+				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
+				.collect(Collectors.toList());
 		return new CoinHistoryResponseDto(result);
 	}
 
