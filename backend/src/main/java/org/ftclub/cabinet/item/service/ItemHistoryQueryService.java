@@ -21,13 +21,18 @@ public class ItemHistoryQueryService {
 	}
 
 	public List<ItemHistory> getItemHistoryWithItem(Long userId,
-			LocalDateTime start, LocalDateTime end) {
+		LocalDateTime start, LocalDateTime end) {
 		return itemHistoryRepository.findAllByUserIdAndUsedAtJoinItem(userId, start, end);
 	}
 
 	public List<ItemHistory> getCoinHistoryOnItems(Long userId,
-			LocalDateTime start, LocalDateTime end, List<Long> itemIds) {
+		LocalDateTime start, LocalDateTime end, List<Long> itemIds) {
 		return itemHistoryRepository.findAllByUserIdAndPurchaseAtAndItemIdIn(userId, start, end,
-				itemIds);
+			itemIds);
+	}
+
+	public Long getCountByUserIdAndItemIdBetween(Long userId, Long itemId, LocalDateTime start,
+		LocalDateTime end) {
+		return itemHistoryRepository.getCountByUserIdAndItemIdBetween(userId, itemId, start, end);
 	}
 }

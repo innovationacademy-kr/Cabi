@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.item.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -11,6 +13,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
+import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
 import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
@@ -55,27 +58,27 @@ public class ItemFacadeService {
 	public ItemResponseDto getAllItems() {
 		List<Item> allItems = itemQueryService.getAllItems();
 		List<ItemDto> itemDtos = allItems.stream()
-				.map(itemMapper::toItemDto)
-				.collect(Collectors.toList());
+			.map(itemMapper::toItemDto)
+			.collect(Collectors.toList());
 		return new ItemResponseDto(itemDtos);
 	}
 
 	@Transactional(readOnly = true)
 	public MyItemResponseDto getMyItems(UserSessionDto user) {
 		List<ItemHistory> userItemHistories = itemHistoryQueryService.findAllItemHistoryByUser(
-				user.getUserId());
+			user.getUserId());
 
 		Map<ItemType, List<ItemDto>> itemMap = userItemHistories.stream()
-				.map(ItemHistory::getItem)
-				.collect(Collectors.groupingBy(Item::getType,
-						Collectors.mapping(itemMapper::toItemDto, Collectors.toList())));
+			.map(ItemHistory::getItem)
+			.collect(Collectors.groupingBy(Item::getType,
+				Collectors.mapping(itemMapper::toItemDto, Collectors.toList())));
 
 		List<ItemDto> extensionItems = itemMap.getOrDefault(ItemType.EXTENSION,
-				Collections.emptyList());
+			Collections.emptyList());
 		List<ItemDto> swapItems = itemMap.getOrDefault(ItemType.SWAP, Collections.emptyList());
 		List<ItemDto> alarmItems = itemMap.getOrDefault(ItemType.ALARM, Collections.emptyList());
 		List<ItemDto> penaltyItems = itemMap.getOrDefault(ItemType.PENALTY,
-				Collections.emptyList());
+			Collections.emptyList());
 
 		return itemMapper.toMyItemResponseDto(extensionItems, swapItems, alarmItems, penaltyItems);
 	}
@@ -83,20 +86,20 @@ public class ItemFacadeService {
 
 	@Transactional(readOnly = true)
 	public ItemHistoryResponseDto getItemHistory(Long userId,
-			LocalDateTime start, LocalDateTime end) {
+		LocalDateTime start, LocalDateTime end) {
 		List<ItemHistory> itemHistories =
-				itemHistoryQueryService.getItemHistoryWithItem(userId, start, end);
+			itemHistoryQueryService.getItemHistoryWithItem(userId, start, end);
 		List<ItemHistoryDto> result = itemHistories.stream()
-				.sorted(Comparator.comparing(ItemHistory::getUsedAt))
-				.filter(ih -> ih.getItem().getPrice() < 0)
-				.map(ih -> itemMapper.toItemHistoryDto(ih, itemMapper.toItemDto(ih.getItem())))
-				.collect(Collectors.toList());
+			.sorted(Comparator.comparing(ItemHistory::getUsedAt))
+			.filter(ih -> ih.getItem().getPrice() < 0)
+			.map(ih -> itemMapper.toItemHistoryDto(ih, itemMapper.toItemDto(ih.getItem())))
+			.collect(Collectors.toList());
 		return new ItemHistoryResponseDto(result);
 	}
 
 	@Transactional(readOnly = true)
 	public CoinHistoryResponseDto getCoinHistory(Long userId, CoinHistoryType type,
-			LocalDateTime start, LocalDateTime end) {
+		LocalDateTime start, LocalDateTime end) {
 
 		Set<Item> items = new HashSet<>();
 		if (type.equals(CoinHistoryType.EARN) || type.equals(CoinHistoryType.ALL)) {
@@ -107,45 +110,33 @@ public class ItemFacadeService {
 		}
 		List<Long> itemIds = items.stream().map(Item::getId).collect(Collectors.toList());
 		List<ItemHistory> coinHistories =
-				itemHistoryQueryService.getCoinHistoryOnItems(userId, start, end, itemIds);
+			itemHistoryQueryService.getCoinHistoryOnItems(userId, start, end, itemIds);
 
 		Map<Long, Item> itemMap = items.stream()
-				.collect(Collectors.toMap(Item::getId, item -> item));
+			.collect(Collectors.toMap(Item::getId, item -> item));
 		List<CoinHistoryDto> result = coinHistories.stream()
-				.sorted(Comparator.comparing(ItemHistory::getPurchaseAt))
-				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
-				.collect(Collectors.toList());
+			.sorted(Comparator.comparing(ItemHistory::getPurchaseAt))
+			.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
+			.collect(Collectors.toList());
 		return new CoinHistoryResponseDto(result);
 	}
 
-//	/**
-//	 * 유저가 보유한 point와 비교한 후 아이템을 사용합니다.
-//	 *
-//	 * @param userId
-//	 * @param itemId
-//	 */
-//	@Transactional
-//	public void useItem(Long userId, Long itemId) {
-//		Item item = itemQueryService.getById(itemId);
-//		Long price = item.getPrice();
-//
-//		Long userPoint = itemHistoryQueryService.getUserPoint(userId);
-//		if (price > userPoint) {
-//
-//		}
-//	}
-
 	/**
-	 * 해당 월의 총 Coin 아이템을 획득한 횟수, 요청일의 출석체크 해당 여부를 반환
-	 *
 	 * @param userId
 	 * @param itemId
 	 * @return
 	 */
-//	public CoinInformationDto getCoinInformation(Long userId, Long itemId) {
-//		LocalDateTime now = LocalDateTime.now();
-//		itemHistoryQueryService.get
-//	}
+	public CoinMonthlyCollectionDto getCoinMonthlyCollectionCount(Long userId, Long itemId) {
+		LocalDate today = LocalDate.now();
+		LocalDateTime start = today.withDayOfMonth(1).atStartOfDay();
+		LocalDateTime end = YearMonth.from(today).atEndOfMonth().atTime(23, 59);
+
+		Long coinCollectionCount =
+			itemHistoryQueryService.getCountByUserIdAndItemIdBetween(userId, itemId, start, end);
+		boolean todayCheck = itemRedisService.isCoinCollectable(userId);
+
+		return itemMapper.toCoinMonthlyCollectionDto(coinCollectionCount, todayCheck);
+	}
 
 	/**
 	 * user가 아이템 구매 요청
