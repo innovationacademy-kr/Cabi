@@ -95,7 +95,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickSlackNotiButton}
               >
-                <SlackNotiImg stroke="var(--gray-color)" />
+                <SlackNotiImg stroke="var(--shared-gray-color-500)" />
                 Noti
               </BottomBtnStyled>
               <BottomBtnStyled

@@ -7,6 +7,8 @@ const lightValues = css`
   --white-text-with-bg-color: var(--white);
   --card-content-bg-color: var(--white);
   --button-line-color: var(--default-main-color);
+  --capsule-btn-border-color: var(--gray-200);
+  --capsule-btn-hover-bg-color: var(--transparent-purple);
 
   /* main color variable */
   --main-color: var(--purple-500);
@@ -54,6 +56,8 @@ const darkValues = css`
   --white-text-with-bg-color: var(--gray-100);
   --card-content-bg-color: var(--gray-550);
   --button-line-color: var(--default-sub-color);
+  --capsule-btn-border-color: var(--gray-600);
+  --capsule-btn-hover-bg-color: var(--transparent-purple);
 
   --main-color: var(--purple-600);
   --sub-color: var(--purple-300);
