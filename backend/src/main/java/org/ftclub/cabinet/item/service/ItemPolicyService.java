@@ -12,7 +12,7 @@ public class ItemPolicyService {
 		}
 	}
 
-	public void verifyOnSale(Long price) {
+	public void verifyOnSale(long price) {
 		if (price >= 0) {
 			throw ExceptionStatus.ITEM_NOT_ON_SALE.asServiceException();
 		}
