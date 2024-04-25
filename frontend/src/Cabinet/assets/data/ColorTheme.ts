@@ -18,6 +18,9 @@ const lightValues = css`
   --default-sub-color: var(--purple-300);
   --default-mine-color: var(--green-100);
 
+  --presentation-main-color: var(--blue-400);
+  --presentation-sub-color: var(--blue-160);
+
   /* cabinet color variable */
   --mine-color: var(--green-100);
   --available-color: var(--main-color);
@@ -67,6 +70,9 @@ const darkValues = css`
   --default-main-color: var(--purple-600);
   --default-sub-color: var(--purple-300);
   --default-mine-color: var(--green-200);
+
+  --presentation-main-color: var(--blue-400);
+  --presentation-sub-color: var(--blue-160);
 
   --mine-color: var(--green-200);
   --available-color: var(--main-color);

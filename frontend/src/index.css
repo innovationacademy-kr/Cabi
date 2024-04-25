@@ -29,8 +29,10 @@
   /* blue color variable */
   --blue-100: #f5f7ff;
   --blue-150: #dce7fd;
+  --blue-160: #91b5fa;
   --blue-200: #7ebffb;
   --blue-300: #406ee4;
+  --blue-400: #3f69fd;
 
   /* purple color variable */
   --purple-100: #f9f6ff;
@@ -46,9 +48,6 @@
   /* pink color variable */
   --pink-100: #f473b1;
   --pink-200: #d72766;
-  /* 수요지식회 (구 까비지식회) */
-  --presentation-main-color: #3f69fd;
-  --presentation-sub-color: #91b5fa;
 
   /* cabinet color variable */
   --broken-color: var(--gray-600);
@@ -213,5 +212,5 @@ input {
 }
 
 .domainButtonActive {
-  color: var(--presentation-main-color) !important;
+  color: var(--main-color) !important;
 }
