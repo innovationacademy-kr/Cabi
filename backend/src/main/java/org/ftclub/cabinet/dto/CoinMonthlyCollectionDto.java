@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CoinInformationDto {
+public class CoinMonthlyCollectionDto {
 
 	private Long monthlyCoinCount;
 	private boolean todayCoinCollection;

@@ -4,6 +4,7 @@ import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
 import java.util.List;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
+import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
@@ -15,9 +16,9 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring",
-		nullValueMappingStrategy = RETURN_DEFAULT,
-		nullValueMapMappingStrategy = RETURN_DEFAULT,
-		nullValueIterableMappingStrategy = RETURN_DEFAULT)
+	nullValueMappingStrategy = RETURN_DEFAULT,
+	nullValueMapMappingStrategy = RETURN_DEFAULT,
+	nullValueIterableMappingStrategy = RETURN_DEFAULT)
 @Component
 public interface ItemMapper {
 
@@ -39,5 +40,8 @@ public interface ItemMapper {
 
 
 	MyItemResponseDto toMyItemResponseDto(List<ItemDto> extensionItems, List<ItemDto> swapItems,
-			List<ItemDto> alarmItems, List<ItemDto> penaltyItems);
+		List<ItemDto> alarmItems, List<ItemDto> penaltyItems);
+
+	CoinMonthlyCollectionDto toCoinMonthlyCollectionDto(Long monthlyCoinCount,
+		boolean todayCoinCollection);
 }
