@@ -1,5 +1,5 @@
-import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import styled from "styled-components";
+import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 
 export const CardContentWrapper = styled.div`
   background-color: var(--card-content-bg-color);
@@ -30,7 +30,7 @@ export const ContentInfoStyled = styled.div<{
     props.isSelected &&
     `
     background-color: ${props.selectedColor};
-    color: var(--text-with-bg-color);
+    color: var(--white-text-with-bg-color);
     border-radius: 8px;
   `}
 `;

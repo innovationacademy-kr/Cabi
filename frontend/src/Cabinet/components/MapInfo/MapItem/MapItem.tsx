@@ -57,7 +57,7 @@ const ItemStyled = styled.div<{
   color: ${({ info }) =>
     info.type === "floorInfo"
       ? "var(--shared-gray-color-400)"
-      : "var(--text-with-bg-color)"};
+      : "var(--white-text-with-bg-color)"};
   display: flex;
   justify-content: center;
   align-items: center;

@@ -49,7 +49,7 @@ const DisplayStyleCard = ({
                   {
                     label: "저장",
                     onClick: handleSave,
-                    fontColor: "var(--text-with-bg-color)",
+                    fontColor: "var(--white-text-with-bg-color)",
                     backgroundColor: "var(--main-color)",
                     isClickable: true,
                   },

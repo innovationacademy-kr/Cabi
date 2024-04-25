@@ -183,7 +183,7 @@ const ModalContent = styled.div<{
       ? "var(--main-color)"
       : props.contentStatus === ContentStatus.EXTENSION
       ? "var(--normal-text-color)"
-      : "var(--text-with-bg-color)"};
+      : "var(--white-text-with-bg-color)"};
   font-size: 2.5rem;
   font-weight: bold;
   align-items: flex-start;
@@ -205,7 +205,7 @@ const ModalContent = styled.div<{
         ? "var(--main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
-        : "var(--text-with-bg-color)"};
+        : "var(--white-text-with-bg-color)"};
   }
 `;
 
@@ -249,7 +249,7 @@ const BoxInfoWrap = styled.div`
 const BoxInfo1 = styled.div`
   width: 100px;
   height: 80px;
-  border: 1px solid var(--text-with-bg-color);
+  border: 1px solid var(--white-text-with-bg-color);
   border-radius: 15px;
   font-size: 0.875rem;
   font-weight: 400;
@@ -267,7 +267,7 @@ const BoxInfo1 = styled.div`
 const BoxInfo2 = styled.div`
   width: 80px;
   height: 80px;
-  border: 1px solid var(--text-with-bg-color);
+  border: 1px solid var(--white-text-with-bg-color);
   border-radius: 15px;
   font-size: 0.875rem;
   font-weight: 400;
@@ -338,7 +338,7 @@ const ContentImgStyled = styled.div<{
       stroke: ${(props) =>
         props.contentStatus === ContentStatus.EXTENSION
           ? "var(--normal-text-color)"
-          : "var(--text-with-bg-color)"};
+          : "var(--white-text-with-bg-color)"};
       transform: ${(props) =>
         props.contentStatus === ContentStatus.EXTENSION
           ? "scale(1.4)"

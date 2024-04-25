@@ -50,7 +50,7 @@ const MultiToggleSwitchSeparated = <T,>({
   }
 
   return (
-    <WrapperStyled ref={wrapperRef} onClick={switchToggle}  fontSize={fontSize}>
+    <WrapperStyled ref={wrapperRef} onClick={switchToggle} fontSize={fontSize}>
       {toggleList.map((item) => (
         <button key={item.key} className={`${item.key} categoryButton`}>
           {item.name}
@@ -80,12 +80,10 @@ const WrapperStyled = styled.div<{
     border-radius: 10px;
     font-size: ${(props) => props.fontSize};
     font-weight: 500;
-    background-color: var(--gray-tmp-1);
-    color: var(--color-text-normal);
     padding: 4px 12px;
     box-sizing: border-box;
   }
-  
+
   @media (max-width: 560px) {
     button {
       width: calc(33.333% - 10px);
@@ -93,13 +91,14 @@ const WrapperStyled = styled.div<{
   }
 
   button.categoryButton {
-    color: black;
-    background-color: var(--white);
+    color: var(--normal-text-color);
+    background-color: var(--card-content-bg-color);
   }
 
   button.selected {
-    color: white;
-    background-color: #3f69fd;
+    color: var(--white-text-with-bg-color);
+    background-color: var(--main-color);
+    /* background-color: var(--presentation-main-color); */
   }
 `;
 

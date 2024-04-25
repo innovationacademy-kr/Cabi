@@ -135,7 +135,7 @@ export const FloorSectionStyled = styled.div`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--main-color);
-      color: var(--text-with-bg-color);
+      color: var(--white-text-with-bg-color);
     }
   }
 `;

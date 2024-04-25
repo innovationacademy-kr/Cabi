@@ -83,7 +83,9 @@ const ButtonStyled = styled.button<{
   background-color: ${(props) =>
     props.isClicked ? "var(--main-color)" : "var(--shared-gray-color-100)"};
   color: ${(props) =>
-    props.isClicked ? "var(--text-with-bg-color)" : "var(--normal-text-color)"};
+    props.isClicked
+      ? "var(--white-text-with-bg-color)"
+      : "var(--normal-text-color)"};
   padding: 12px 0 16px 0;
 
   & > svg {
@@ -94,7 +96,7 @@ const ButtonStyled = styled.button<{
   & > svg > path {
     stroke: ${(props) =>
       props.isClicked
-        ? "var(--text-with-bg-color)"
+        ? "var(--white-text-with-bg-color)"
         : "var(--normal-text-color)"};
   }
 `;

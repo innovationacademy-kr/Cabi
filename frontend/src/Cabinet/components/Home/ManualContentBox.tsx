@@ -70,7 +70,7 @@ const MaunalContentBoxStyled = styled.div<{
   flex-direction: column;
   align-items: flex-start;
   font-size: 1.75rem;
-  color: var(--text-with-bg-color);
+  color: var(--white-text-with-bg-color);
   padding: 25px;
   font-weight: bold;
   cursor: pointer;
@@ -90,7 +90,7 @@ const MaunalContentBoxStyled = styled.div<{
       stroke: ${(props) =>
         props.contentStatus === ContentStatus.EXTENSION
           ? "var(--normal-text-color)"
-          : "var(--text-with-bg-color)"};
+          : "var(--white-text-with-bg-color)"};
       transform: ${(props) =>
         props.contentStatus === ContentStatus.EXTENSION
           ? "scale(1.4)"
@@ -156,7 +156,7 @@ const MaunalContentBoxStyled = styled.div<{
         ? "var(--main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
-        : "var(--text-with-bg-color)"};
+        : "var(--white-text-with-bg-color)"};
     cursor: pointer;
   }
 

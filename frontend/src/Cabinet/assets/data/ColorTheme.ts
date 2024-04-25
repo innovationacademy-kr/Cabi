@@ -4,7 +4,7 @@ const lightValues = css`
   --bg-color: var(--white);
   --line-color: var(--shared-gray-color-400);
   --normal-text-color: var(--black);
-  --text-with-bg-color: var(--white);
+  --white-text-with-bg-color: var(--white);
   --card-content-bg-color: var(--white);
   --button-line-color: var(--default-main-color);
 
@@ -51,7 +51,7 @@ const darkValues = css`
   --bg-color: var(--gray-900);
   --line-color: var(--shared-gray-color-300);
   --normal-text-color: var(--gray-100);
-  --text-with-bg-color: var(--gray-100);
+  --white-text-with-bg-color: var(--gray-100);
   --card-content-bg-color: var(--gray-550);
   --button-line-color: var(--default-sub-color);
 

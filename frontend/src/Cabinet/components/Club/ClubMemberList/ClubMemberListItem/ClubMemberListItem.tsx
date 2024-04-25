@@ -84,7 +84,7 @@ const MemberListItemStyled = styled.div<{ isMaster: boolean }>`
   & > svg > path {
     stroke: ${(props) =>
       props.isMaster
-        ? "var(--text-with-bg-color)"
+        ? "var(--white-text-with-bg-color)"
         : "var(--normal-text-color)"};
     transform: ${(props) => (props.isMaster ? "" : "scale(0.7)")};
   }
@@ -96,7 +96,8 @@ const MemberNameStyled = styled.p<{
   line-height: 28px;
   height: 28px;
   font-size: 14px;
-  color: ${(props) => (props.isMaster ? "var(--text-with-bg-color)" : "")};
+  color: ${(props) =>
+    props.isMaster ? "var(--white-text-with-bg-color)" : ""};
 `;
 
 export default memo(ClubMemberListItem);

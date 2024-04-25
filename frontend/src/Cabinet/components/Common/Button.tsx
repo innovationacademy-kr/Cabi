@@ -42,7 +42,7 @@ const ButtonContainerStyled = styled.button`
     props.theme === "fill" &&
     css`
       background: var(--main-color);
-      color: var(--text-with-bg-color);
+      color: var(--white-text-with-bg-color);
     `}
   ${(props) =>
     props.theme === "line" &&

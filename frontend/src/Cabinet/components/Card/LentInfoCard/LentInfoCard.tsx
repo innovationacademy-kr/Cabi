@@ -144,7 +144,7 @@ const CabinetRectangleStyled = styled.div<{
       : "var(--full-color)"};
   color: ${(props) =>
     props.banned
-      ? "var(--bg-color)"
+      ? "var(--white-text-with-bg-color)"
       : props.status === "IN_SESSION"
       ? "var(--main-color)"
       : "var(--black)"};

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { myClubListState } from "@/Cabinet/recoil/atoms";
 import ClubInfo from "@/Cabinet/components/Club/ClubInfo";
@@ -8,7 +8,7 @@ import { ClubPaginationResponseDto } from "@/Cabinet/types/dto/club.dto";
 import { deleteRecoilPersistFloorSection } from "@/Cabinet/utils/recoilPersistUtils";
 
 const ClubPage = () => {
-  const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
+  const [clubList] = useRecoilState<ClubPaginationResponseDto>(myClubListState);
 
   useEffect(() => {
     deleteRecoilPersistFloorSection();
