@@ -17,6 +17,7 @@ import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
 import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
+import org.ftclub.cabinet.dto.ItemStoreDto;
 import org.ftclub.cabinet.dto.ItemStoreResponseDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
@@ -57,15 +58,15 @@ public class ItemFacadeService {
 	@Transactional
 	public ItemStoreResponseDto getAllItems() {
 		List<Item> allItems = itemQueryService.getAllItems();
-		Map<ItemType, List<String>> itemTypeMap = allItems.stream()
+		Map<ItemType, List<ItemDto>> itemMap = allItems.stream()
 				.filter(item -> item.getPrice() < 0)
 				.collect(groupingBy(Item::getType,
-						mapping(item -> item.getSku().getType(), Collectors.toList())));
-//		List<ItemStoreDto> itemStoreDtos = itemTypeMap.values().stream()
-//				.map(list -> itemMapper.toItemStoreDto())
-//		return new ItemResponseDto(itemDtos);
-//		return new ItemStoreResponseDto(itemStoreDtos);
-		return null;
+						mapping(itemMapper::toItemDto, Collectors.toList())));
+		List<ItemStoreDto> result = itemMap.entrySet().stream()
+				.map(entry -> itemMapper.toItemStoreDto(entry.getKey().getName(),
+						entry.getKey().getDescription(), entry.getValue()))
+				.collect(Collectors.toList());
+		return new ItemStoreResponseDto(result);
 	}
 
 	@Transactional(readOnly = true)
@@ -122,8 +123,10 @@ public class ItemFacadeService {
 				.collect(Collectors.toMap(Item::getId, item -> item));
 		List<CoinHistoryDto> result = coinHistories.stream()
 				.sorted(Comparator.comparing(ItemHistory::getPurchaseAt))
-				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
-				.collect(Collectors.toList());
+				.map(ih -> {
+					Item item = itemMap.get(ih.getItemId());
+					return itemMapper.toCoinHistoryDto(ih, item, item.getType().getDescription());
+				}).collect(Collectors.toList());
 		return new CoinHistoryResponseDto(result);
 	}
 

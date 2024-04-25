@@ -15,10 +15,7 @@ import org.ftclub.cabinet.item.domain.Sku;
 @AllArgsConstructor
 public class ItemCreateDto {
 
-	private String name;
 	private Integer price;
 	private Sku sku;
 	private ItemType type;
-	private String description;
-
 }

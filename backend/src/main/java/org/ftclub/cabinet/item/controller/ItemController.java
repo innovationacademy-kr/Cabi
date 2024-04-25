@@ -29,7 +29,7 @@ public class ItemController {
 
 	private final ItemFacadeService itemFacadeService;
 
-	@GetMapping("/")
+	@GetMapping("")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public ItemStoreResponseDto getAllItems() {
 		return itemFacadeService.getAllItems();

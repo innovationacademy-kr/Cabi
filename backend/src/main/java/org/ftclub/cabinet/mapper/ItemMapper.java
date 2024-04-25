@@ -26,19 +26,13 @@ public interface ItemMapper {
 
 	@Mapping(target = "date", source = "itemHistory.usedAt")
 	@Mapping(target = "amount", source = "item.price")
-	@Mapping(target = "history", source = "item.description")
-	CoinHistoryDto toCoinHistoryDto(ItemHistory itemHistory, Item item);
+	CoinHistoryDto toCoinHistoryDto(ItemHistory itemHistory, Item item, String history);
 
 	@Mapping(target = "itemSku", source = "item.sku")
-	@Mapping(target = "itemName", source = "item.name")
+	@Mapping(target = "itemName", source = "item.type.name")
 	@Mapping(target = "itemPrice", source = "item.price")
 	@Mapping(target = "itemType", source = "item.type")
 	ItemDto toItemDto(Item item);
-
-	@Mapping(target = "itemSku", source = "item.sku")
-	@Mapping(target = "itemName", source = "item.name")
-	@Mapping(target = "itemPrice", source = "item.price")
-	ItemStoreDto toItemStoreDto(Item item, List<String> itemTypes);
 
 	@Mapping(target = "date", source = "itemHistory.usedAt")
 	ItemHistoryDto toItemHistoryDto(ItemHistory itemHistory, ItemDto itemDto);
@@ -46,4 +40,6 @@ public interface ItemMapper {
 
 	MyItemResponseDto toMyItemResponseDto(List<ItemDto> extensionItems, List<ItemDto> swapItems,
 			List<ItemDto> alarmItems, List<ItemDto> penaltyItems);
+
+	ItemStoreDto toItemStoreDto(String itemName, String description, List<ItemDto> itemTypes);
 }

@@ -1,12 +1,6 @@
 package org.ftclub.cabinet.item.service;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.item.domain.Item;
-import org.ftclub.cabinet.item.domain.ItemHistory;
-import org.ftclub.cabinet.item.repository.ItemHistoryRepository;
-import org.ftclub.cabinet.item.repository.ItemRepository;
 import org.ftclub.cabinet.dto.ItemAssignDto;
 import org.ftclub.cabinet.dto.ItemCreateDto;
 import org.ftclub.cabinet.item.domain.Item;
@@ -33,9 +27,7 @@ public class ItemCommandService {
 	}
 
 	public void createItem(ItemCreateDto dto) {
-		itemRepository.save(
-				Item.of(dto.getName(), dto.getPrice(), dto.getSku(), dto.getDescription(),
-						dto.getType()));
+		itemRepository.save(Item.of(dto.getPrice(), dto.getSku(), dto.getType()));
 	}
 
 	public void assignItem(ItemAssignDto dto) {
