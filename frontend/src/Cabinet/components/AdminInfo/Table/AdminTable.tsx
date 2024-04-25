@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ITableData } from "src/types/dto/admin.dto";
 import styled from "styled-components";
 import Pagination from "@/Cabinet/components/AdminInfo/Table/Pagination";
 import { ITableData } from "@/Cabinet/types/dto/admin.dto";

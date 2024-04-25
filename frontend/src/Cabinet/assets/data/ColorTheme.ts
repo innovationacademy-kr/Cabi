@@ -52,7 +52,7 @@ const darkValues = css`
   --line-color: var(--shared-gray-color-300);
   --normal-text-color: var(--gray-100);
   --text-with-bg-color: var(--gray-100);
-  --card-content-bg-color: var(--gray-700);
+  --card-content-bg-color: var(--gray-550);
   --button-line-color: var(--default-sub-color);
 
   --main-color: var(--purple-600);
@@ -77,7 +77,7 @@ const darkValues = css`
   --border-shadow-color-200: var(--black-shadow-300);
   --border-shadow-color-300: var(--black-shadow-400);
 
-  --shared-gray-color-100: var(--gray-800);
+  --shared-gray-color-100: var(--gray-700);
   --shared-gray-color-200: var(--gray-700);
   --shared-gray-color-300: var(--gray-600);
   --shared-gray-color-400: var(--gray-500);
