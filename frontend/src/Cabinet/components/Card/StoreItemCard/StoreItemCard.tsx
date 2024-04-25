@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import type { Item } from "@/Cabinet/pages/StoreMainPage";
+import type { IStoreItem } from "@/Cabinet/pages/StoreMainPage";
 import Card from "@/Cabinet/components/Card/Card";
 import type { IButtonProps } from "@/Cabinet/components/Card/Card";
 import { ReactComponent as CoinImg } from "@/Cabinet/assets/images/dollar-circle.svg";
@@ -9,7 +9,7 @@ const StoreItemCard = ({
   Item,
   button,
 }: {
-  Item: Item;
+  Item: IStoreItem;
   button: IButtonProps;
 }) => {
   return (
@@ -23,7 +23,7 @@ const StoreItemCard = ({
       >
         <SectionStyled>
           <BlockStyled>
-            <IconBlockStyled>{"Icon"}</IconBlockStyled>
+            <IconBlockStyled><Item.logo/></IconBlockStyled>
             <PriseBlockStyled>
               <CoinImg />
               <span>{Item.ItemPrice}</span>
@@ -38,14 +38,11 @@ const StoreItemCard = ({
 
 const WrapperStyled = styled.div`
   font-size: var(--size-base);
-
-  /* padding: 15px; */
 `;
 const SectionStyled = styled.div`
   display: flex;
   height: 80px;
   width: 90%;
-  /* margin: 9px 0 9px 0; */
   padding-left: 5px;
   align-items: center;
 `;
