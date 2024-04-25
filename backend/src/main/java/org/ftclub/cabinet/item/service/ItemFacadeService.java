@@ -26,6 +26,7 @@ import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.domain.ItemType;
+import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
@@ -160,17 +161,17 @@ public class ItemFacadeService {
 	 * user가 아이템 구매 요청
 	 *
 	 * @param userId
-	 * @param itemId
+	 * @param sku
 	 */
 	@Transactional
-	public void purchaseItem(Long userId, Long itemId) {
+	public void purchaseItem(Long userId, Sku sku) {
 		// 유저가 블랙홀인지 확인
 		User user = userQueryService.getUser(userId);
 		if (user.isBlackholed()) {
 			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
 		}
 
-		Item item = itemQueryService.getItemById(itemId);
+		Item item = itemQueryService.getItemBySku(sku);
 		long price = item.getPrice();
 		long userCoin = itemRedisService.getCoinCount(userId);
 
@@ -179,9 +180,9 @@ public class ItemFacadeService {
 		itemPolicyService.verifyIsAffordable(userCoin, price);
 
 		// 아이템 구매 처리
-		itemCommandService.purchaseItem(user.getId(), itemId);
+		itemCommandService.purchaseItem(user.getId(), item.getId());
 
 		// 코인 차감
-		itemRedisService.saveCoinCount(userId, userCoin - price);
+		itemRedisService.saveCoinCount(userId, userCoin + price);
 	}
 }

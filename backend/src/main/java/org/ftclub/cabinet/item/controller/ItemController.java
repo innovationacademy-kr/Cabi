@@ -10,6 +10,7 @@ import org.ftclub.cabinet.dto.ItemStoreResponseDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
+import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.item.service.ItemFacadeService;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
@@ -35,11 +36,11 @@ public class ItemController {
 		return itemFacadeService.getAllItems();
 	}
 
-	@PostMapping("/{itemId}/purchase")
+	@PostMapping("/{sku}/purchase")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void purchaseItem(@UserSession UserSessionDto user,
-			@PathVariable Long itemId) {
-		itemFacadeService.purchaseItem(user.getUserId(), itemId);
+			@PathVariable Sku sku) {
+		itemFacadeService.purchaseItem(user.getUserId(), sku);
 	}
 
 	@GetMapping("/history")

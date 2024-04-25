@@ -1,10 +1,10 @@
 package org.ftclub.cabinet.item.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.dto.ItemAssignDto;
-import org.ftclub.cabinet.dto.ItemCreateDto;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
+import org.ftclub.cabinet.item.domain.ItemType;
+import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.item.repository.ItemHistoryRepository;
 import org.ftclub.cabinet.item.repository.ItemRepository;
 import org.ftclub.cabinet.log.LogLevel;
@@ -26,15 +26,13 @@ public class ItemCommandService {
 		itemHistoryRepository.save(itemHistory);
 	}
 
-	public void createItem(ItemCreateDto dto) {
-		itemRepository.save(Item.of(dto.getPrice(), dto.getSku(), dto.getType()));
+	public void createItem(Integer price, Sku sku, ItemType type) {
+		itemRepository.save(Item.of(price, sku, type));
 	}
 
-	public void assignItem(ItemAssignDto dto) {
-		Item item = itemRepository.findBySku(dto.getItemSku());
-		ItemHistory itemHistory = ItemHistory.of(dto.getUserId(), item.getId(), null);
-		itemHistoryRepository.save(
-				itemHistory);
+	public void assignItem(Long userId, Long itemId) {
+		ItemHistory itemHistory = ItemHistory.of(userId, itemId, null);
+		itemHistoryRepository.save(itemHistory);
 	}
 
 }
