@@ -39,14 +39,19 @@ const Layout = (): JSX.Element => {
     }
   }, []);
 
-  const savedMainColor = localStorage.getItem("main-color");
-  const savedSubColor = localStorage.getItem("sub-color");
-  const savedMineColor = localStorage.getItem("mine-color");
-  const root: HTMLElement = document.documentElement;
+  const savedMainColor =
+    localStorage.getItem("main-color") || "var(--default-main-color)";
+  const savedSubColor =
+    localStorage.getItem("sub-color") || "var(--default-sub-color)";
+  const savedMineColor =
+    localStorage.getItem("mine-color") || "var(--default-mine-color)";
+
+  const body: HTMLElement = document.body;
+  
   useEffect(() => {
-    root.style.setProperty("--main-color", savedMainColor);
-    root.style.setProperty("--sub-color", savedSubColor);
-    root.style.setProperty("--mine-color", savedMineColor);
+    body.style.setProperty("--main-color", savedMainColor);
+    body.style.setProperty("--sub-color", savedSubColor);
+    body.style.setProperty("--mine-color", savedMineColor);
   }, [savedMainColor, savedSubColor, savedMineColor]);
 
   const { closeAll } = useMenu();

@@ -8,7 +8,7 @@ import LeftNav from "@/Presentation/components/LeftNav/LeftNav";
 import AdminTopNavContainer from "@/Presentation/components/TopNav/AdminTopNav.container";
 
 const token = getCookie("admin_access_token");
-const root: HTMLElement = document.documentElement;
+const body: HTMLElement = document.body;
 
 const Layout = (): JSX.Element => {
   const navigate = useNavigate();
@@ -32,8 +32,8 @@ const Layout = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    root.style.setProperty("--main-color", "var(--presentation-main-color)");
-    root.style.setProperty("--sub-color", "var(--presentation-sub-color)");
+    body.style.setProperty("--main-color", "var(--presentation-main-color)");
+    body.style.setProperty("--sub-color", "var(--presentation-sub-color)");
   }, []);
 
   const handleClickBg = () => {

@@ -6,7 +6,7 @@ const lightValues = css`
   --normal-text-color: var(--black);
   --white-text-with-bg-color: var(--white);
   --card-content-bg-color: var(--white);
-  --button-line-color: var(--default-main-color);
+  --button-line-color: var(--main-color);
   --capsule-btn-border-color: var(--gray-200);
   --capsule-btn-hover-bg-color: var(--transparent-purple);
   --presentation-no-event-past-color: var(--gray-200);
@@ -40,6 +40,9 @@ const lightValues = css`
   --border-shadow-color-300: var(--black-shadow-300);
   --table-border-shadow-color: var(--black-shadow-100);
   /* TODO : table에 다 적용 */
+
+  --custom-purple-200: var(--default-main-color);
+
   --shared-gray-color-100: var(--gray-100);
   --shared-gray-color-200: var(--gray-200);
   --shared-gray-color-300: var(--gray-300);
@@ -66,7 +69,7 @@ const darkValues = css`
   --normal-text-color: var(--gray-100);
   --white-text-with-bg-color: var(--gray-100);
   --card-content-bg-color: var(--gray-550);
-  --button-line-color: var(--default-sub-color);
+  --button-line-color: var(--main-color);
   --capsule-btn-border-color: var(--gray-600);
   --capsule-btn-hover-bg-color: var(--transparent-purple);
   --presentation-no-event-past-color: var(--bg-color);
@@ -98,6 +101,8 @@ const darkValues = css`
   --border-shadow-color-300: var(--black-shadow-400);
   --table-border-shadow-color: var(--black-shadow-400);
 
+  --custom-purple-200: var(--purple-600);
+
   --shared-gray-color-100: var(--gray-700);
   --shared-gray-color-200: var(--gray-700);
   --shared-gray-color-300: var(--gray-600);
@@ -119,9 +124,11 @@ const darkValues = css`
 
 export const GlobalStyle = createGlobalStyle`
   :root {
-    ${lightValues}
+    [color-theme="LIGHT"] {
+      ${lightValues}
+    }
     [color-theme="DARK"] {
       ${darkValues}
     }
   }
-`;
+  `;

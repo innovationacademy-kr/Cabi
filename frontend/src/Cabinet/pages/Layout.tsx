@@ -27,7 +27,7 @@ import { axiosMyClubList, axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
-const root: HTMLElement = document.documentElement;
+const body: HTMLElement = document.body;
 const token = getCookie("access_token");
 
 const Layout = (): JSX.Element => {
@@ -112,14 +112,17 @@ const Layout = (): JSX.Element => {
     }
   }, []);
 
-  const savedMainColor = localStorage.getItem("main-color");
-  const savedSubColor = localStorage.getItem("sub-color");
-  const savedMineColor = localStorage.getItem("mine-color");
+  const savedMainColor =
+    localStorage.getItem("main-color") || "var(--default-main-color)";
+  const savedSubColor =
+    localStorage.getItem("sub-color") || "var(--default-sub-color)";
+  const savedMineColor =
+    localStorage.getItem("mine-color") || "var(--default-mine-color)";
 
   useEffect(() => {
-    root.style.setProperty("--main-color", savedMainColor);
-    root.style.setProperty("--sub-color", savedSubColor);
-    root.style.setProperty("--mine-color", savedMineColor);
+    body.style.setProperty("--main-color", savedMainColor);
+    body.style.setProperty("--sub-color", savedSubColor);
+    body.style.setProperty("--mine-color", savedMineColor);
   }, [savedMainColor, savedSubColor, savedMineColor]);
 
   return isLoginPage ? (

@@ -37,7 +37,7 @@ const DisplayStyleCardContainer = () => {
   const [mineColor, setMineColor] = useState<string>(savedMineColor);
 
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const root: HTMLElement = document.documentElement;
+  const body: HTMLElement = document.body;
 
   const [selectedColorType, setSelectedColorType] = useState<string>(
     ColorType.MAIN
@@ -66,9 +66,9 @@ const DisplayStyleCardContainer = () => {
     setMainColor(main);
     setSubColor(sub);
     setMineColor(mine);
-    root.style.setProperty("--main-color", main);
-    root.style.setProperty("--sub-color", sub);
-    root.style.setProperty("--mine-color", mine);
+    body.style.setProperty("--main-color", main);
+    body.style.setProperty("--sub-color", sub);
+    body.style.setProperty("--mine-color", mine);
     localStorage.setItem("main-color", main);
     localStorage.setItem("sub-color", sub);
     localStorage.setItem("mine-color", mine);
@@ -115,9 +115,9 @@ const DisplayStyleCardContainer = () => {
   };
 
   useEffect(() => {
-    root.style.setProperty("--main-color", mainColor);
-    root.style.setProperty("--sub-color", subColor);
-    root.style.setProperty("--mine-color", mineColor);
+    body.style.setProperty("--main-color", mainColor);
+    body.style.setProperty("--sub-color", subColor);
+    body.style.setProperty("--mine-color", mineColor);
     const confirmBeforeUnload = (e: BeforeUnloadEvent) => {
       if (
         mainColor !== savedMainColor ||
