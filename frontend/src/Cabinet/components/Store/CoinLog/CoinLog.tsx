@@ -155,19 +155,30 @@ const LogItemStyled = styled.div<{
   border-radius: 10px;
   height: 70px;
   border: 1px solid #d9d9d9;
-  padding: 0 40px;
+  padding: 0 20px;
   display: flex;
   text-align: center;
+  display: flex;
+  align-items: center;
 
   & > #date {
     color: #595959;
+    width: 16%;
+    text-align: center;
   }
   & > #title {
     font-size: 18px;
     color: var(--black);
+    width: 74%;
+    text-align: start;
   }
   & > #amount {
-    color: ${(props) => (props.isEarned ? "#406ee4" : "var(--expired)")};
+    color: ${(props) =>
+      props.isEarned ? "var(--main-color)" : "var(--black)"};
+    font-size: 18px;
+    font-weight: bold;
+    width: 10%;
+    text-align: center;
   }
 `;
 
