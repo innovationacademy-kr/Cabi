@@ -10,8 +10,9 @@ const StoreInfo = () => {
     <WrapperStyled id="storeInfo">
       <HeaderStyled>동전줍기</HeaderStyled>
       <StoreCoinCheckBox />
+      {/*  */}
       <ButtonContainer
-        onClick={() => openModal("memoModal")}
+        onClick={() => console.log("성공 or 실패 모달 떠야함")}
         text="획득하기"
         theme="fill"
       />

@@ -18,7 +18,6 @@ export interface IStoreItem {
   grid: string;
   logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 }
-// const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
 
 const StoreMainPage = () => {
   const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
@@ -29,7 +28,6 @@ const StoreMainPage = () => {
     console.log(myCoin);
     setSelectedItem(item);
     setIsModalOpen(true);
-    // setShowMemoModal(true);
   };
 
   const handleCloseModal = () => {

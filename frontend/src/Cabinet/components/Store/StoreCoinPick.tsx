@@ -19,14 +19,16 @@ const StoreCoinPick = () => {
       height={"320px"}
       // buttons={[button]}
     >
-      <CoinAnimation />
-      <CoinSummary>
-        <p>상점에 흘린 동점을 주워보세요!</p>
-        <p> 매일 동전이 쏟아집니다💰</p>
-      </CoinSummary>
-      <CoinCheckButton onClick={() => openStore()}>
-        동전 확인하기
-      </CoinCheckButton>
+      <>
+        <CoinAnimation />
+        <CoinSummary>
+          <p>상점에 흘린 동점을 주워보세요!</p>
+          <p> 매일 동전이 쏟아집니다💰</p>
+        </CoinSummary>
+        <CoinCheckButton onClick={() => openStore()}>
+          동전 확인하기
+        </CoinCheckButton>
+      </>
     </Card>
   );
 };
