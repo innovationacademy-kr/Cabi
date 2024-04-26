@@ -4,8 +4,10 @@ import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
 import java.util.List;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
+import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
+import org.ftclub.cabinet.dto.ItemHistoryPaginationDto;
 import org.ftclub.cabinet.dto.ItemStoreDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.item.domain.Item;
@@ -46,4 +48,10 @@ public interface ItemMapper {
 	@Mapping(target = "itemName", source = "itemType.name")
 	@Mapping(target = "description", source = "itemType.description")
 	ItemStoreDto toItemStoreDto(ItemType itemType, List<ItemDto> itemTypes);
+
+	ItemHistoryPaginationDto toItemHistoryPaginationDto(List<ItemHistoryDto> result,
+			Long totalLength);
+
+	CoinHistoryPaginationDto toCoinHistoryPaginationDto(List<CoinHistoryDto> result,
+			Long totalLength);
 }

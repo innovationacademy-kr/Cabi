@@ -1,12 +1,13 @@
 package org.ftclub.cabinet.item.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.repository.ItemHistoryRepository;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,14 +21,11 @@ public class ItemHistoryQueryService {
 		return itemHistoryRepository.getAllUnusedItemHistoryByUser(userId);
 	}
 
-	public List<ItemHistory> getItemHistoryWithItem(Long userId,
-			LocalDateTime start, LocalDateTime end) {
-		return itemHistoryRepository.findAllByUserIdAndUsedAtJoinItem(userId, start, end);
+	public Page<ItemHistory> getItemHistoryWithItem(Long userId, Pageable pageable) {
+		return itemHistoryRepository.findAllByUserIdOnMinusPriceItemsWithSubQuery(userId, pageable);
 	}
 
-	public List<ItemHistory> getCoinHistoryOnItems(Long userId,
-			LocalDateTime start, LocalDateTime end, List<Long> itemIds) {
-		return itemHistoryRepository.findAllByUserIdAndPurchaseAtAndItemIdIn(userId, start, end,
-				itemIds);
+	public Page<ItemHistory> getCoinHistory(Long userId, Pageable pageable, List<Long> itemIds) {
+		return itemHistoryRepository.findAllByUserIdAndItemIdIn(userId, pageable, itemIds);
 	}
 }

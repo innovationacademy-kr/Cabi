@@ -3,9 +3,7 @@ package org.ftclub.cabinet.item.service;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +11,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
-import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
+import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
-import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
+import org.ftclub.cabinet.dto.ItemHistoryPaginationDto;
 import org.ftclub.cabinet.dto.ItemStoreDto;
 import org.ftclub.cabinet.dto.ItemStoreResponseDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
@@ -33,6 +31,8 @@ import org.ftclub.cabinet.mapper.ItemMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,21 +93,18 @@ public class ItemFacadeService {
 
 
 	@Transactional(readOnly = true)
-	public ItemHistoryResponseDto getItemHistory(Long userId,
-			LocalDateTime start, LocalDateTime end) {
-		List<ItemHistory> itemHistories =
-				itemHistoryQueryService.getItemHistoryWithItem(userId, start, end);
+	public ItemHistoryPaginationDto getItemHistory(Long userId, Pageable pageable) {
+		Page<ItemHistory> itemHistories =
+				itemHistoryQueryService.getItemHistoryWithItem(userId, pageable);
 		List<ItemHistoryDto> result = itemHistories.stream()
-				.sorted(Comparator.comparing(ItemHistory::getUsedAt))
-				.filter(ih -> ih.getItem().getPrice() < 0)
 				.map(ih -> itemMapper.toItemHistoryDto(ih, itemMapper.toItemDto(ih.getItem())))
 				.collect(Collectors.toList());
-		return new ItemHistoryResponseDto(result);
+		return itemMapper.toItemHistoryPaginationDto(result, itemHistories.getTotalElements());
 	}
 
 	@Transactional(readOnly = true)
-	public CoinHistoryResponseDto getCoinHistory(Long userId, CoinHistoryType type,
-			LocalDateTime start, LocalDateTime end) {
+	public CoinHistoryPaginationDto getCoinHistory(Long userId, CoinHistoryType type,
+			Pageable pageable) {
 
 		Set<Item> items = new HashSet<>();
 		if (type.equals(CoinHistoryType.EARN) || type.equals(CoinHistoryType.ALL)) {
@@ -117,16 +114,15 @@ public class ItemFacadeService {
 			items.addAll(itemQueryService.getUseItemIds());
 		}
 		List<Long> itemIds = items.stream().map(Item::getId).collect(Collectors.toList());
-		List<ItemHistory> coinHistories =
-				itemHistoryQueryService.getCoinHistoryOnItems(userId, start, end, itemIds);
+		Page<ItemHistory> coinHistories =
+				itemHistoryQueryService.getCoinHistory(userId, pageable, itemIds);
 
 		Map<Long, Item> itemMap = items.stream()
 				.collect(Collectors.toMap(Item::getId, item -> item));
 		List<CoinHistoryDto> result = coinHistories.stream()
-				.sorted(Comparator.comparing(ItemHistory::getPurchaseAt))
 				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
 				.collect(Collectors.toList());
-		return new CoinHistoryResponseDto(result);
+		return itemMapper.toCoinHistoryPaginationDto(result, coinHistories.getTotalElements());
 	}
 
 //	/**
