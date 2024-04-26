@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
+import { ReactComponent as MoveImg } from "@/Cabinet/assets/images/storeMove.svg";
+import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
 
 interface IItemUsageLog {
   date: Date;
   title: string;
+  logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 }
 
 const test: IItemUsageLog[] = [
@@ -16,6 +21,7 @@ const test: IItemUsageLog[] = [
       Number(new Date().getMinutes())
     ),
     title: "이사권",
+    logo: MoveImg,
   },
   {
     date: new Date(
@@ -26,6 +32,7 @@ const test: IItemUsageLog[] = [
       Number(new Date().getMinutes())
     ),
     title: "알림 등록권",
+    logo: AlarmImg,
   },
   {
     date: new Date(
@@ -35,7 +42,30 @@ const test: IItemUsageLog[] = [
       Number(new Date().getHours()),
       Number(new Date().getMinutes())
     ),
-    title: "연장권 - 3일", // type 이 있는 아이템의 경우 따로 처리 필요함
+    title: "연장권 - 3일",
+    logo: ExtensionImg,
+  },
+  {
+    date: new Date(
+      Number(new Date().getFullYear()),
+      Number(new Date().getMonth()),
+      Number(new Date().getDate() + 1),
+      Number(new Date().getHours()),
+      Number(new Date().getMinutes())
+    ),
+    title: "페널티 축소권",
+    logo: PenaltyImg,
+  },
+  {
+    date: new Date(
+      Number(new Date().getFullYear()),
+      Number(new Date().getMonth()),
+      Number(new Date().getDate() + 2),
+      Number(new Date().getHours()),
+      Number(new Date().getMinutes())
+    ),
+    title: "연장권 - 15일", // type 이 있는 아이템의 경우 따로 처리 필요함
+    logo: ExtensionImg,
   },
 ];
 
@@ -75,19 +105,23 @@ const ItemUsageLogPage = () => {
         <h1>아이템 사용 내역</h1>
       </TitleWrapperStyled>
       <ItemUsageLogWrapperStyled>
-        {Object.entries(groupedLogs).map(([date, logs]) => (
-          <DateSection key={date}>
-            <DateTitle>{date.replace(/-/g, ". ")}</DateTitle>
-            {logs.map((log, index) => (
+        {Object.entries(groupedLogs).map(([date, itemUsageLogs]) => (
+          <DateSectionStyled key={date}>
+            <DateTitleStyled>{date.replace(/-/g, ". ")}</DateTitleStyled>
+            {itemUsageLogs.map((itemUsageLog, index) => (
               <ItemUsageLogStyled key={index}>
-                <IconBlockStyled>{"Icon"}</IconBlockStyled>
+                <IconBlockStyled>
+                  <itemUsageLog.logo />
+                </IconBlockStyled>
                 <ItemUsageInfoStyled>
-                  <ItemDate>{formatDate(log.date)}</ItemDate>
-                  <ItemTitle>{log.title}</ItemTitle>
+                  <ItemDateStyled>
+                    {formatDate(itemUsageLog.date)}
+                  </ItemDateStyled>
+                  <ItemTitleStyled>{itemUsageLog.title}</ItemTitleStyled>
                 </ItemUsageInfoStyled>
               </ItemUsageLogStyled>
             ))}
-          </DateSection>
+          </DateSectionStyled>
         ))}
       </ItemUsageLogWrapperStyled>
     </WrapperStyled>
@@ -120,7 +154,7 @@ const ItemUsageLogWrapperStyled = styled.div`
 const ItemUsageLogStyled = styled.div`
   margin-top: 10px;
   border-radius: 10px;
-  height: 100px;
+  height: 90px;
   border: 1px solid #d9d9d9;
   display: flex;
   text-align: center;
@@ -135,8 +169,12 @@ const IconBlockStyled = styled.div`
   background-color: var(--main-color);
   justify-content: center;
   align-items: center;
-  margin-left: 38px;
+  margin-left: 30px;
   margin-right: 20px;
+  svg {
+    width: 40px;
+    height: 40px;
+  }
 `;
 
 const ItemUsageInfoStyled = styled.div`
@@ -146,24 +184,24 @@ const ItemUsageInfoStyled = styled.div`
   align-items: flex-start;
 `;
 
-const DateSection = styled.div`
+const DateSectionStyled = styled.div`
   margin-top: 30px;
 `;
 
-const DateTitle = styled.h2`
+const DateTitleStyled = styled.h2`
   font-size: 18px;
   font-weight: bold;
   margin-top: 20px;
   margin-bottom: 20px;
 `;
 
-const ItemDate = styled.div`
+const ItemDateStyled = styled.div`
   font-size: 16px;
   word-spacing: -2px;
   color: var(--gray-color);
 `;
 
-const ItemTitle = styled.div`
+const ItemTitleStyled = styled.div`
   font-size: 16px;
   font-weight: 800;
 `;
