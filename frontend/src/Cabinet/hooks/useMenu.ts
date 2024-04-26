@@ -1,3 +1,4 @@
+import { useResetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   currentIntraIdState,
@@ -5,7 +6,6 @@ import {
   targetClubUserInfoState,
   targetUserInfoState,
 } from "@/Cabinet/recoil/atoms";
-import { useResetRecoilState } from "recoil";
 
 const useMenu = () => {
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
@@ -69,6 +69,25 @@ const useMenu = () => {
     } else {
       openMap();
     }
+  };
+
+  const toggleStore = () => {
+    if (
+      document.getElementById("storeInfo")?.classList.contains("on") == true
+    ) {
+      closeStore();
+    } else {
+      openStore();
+    }
+  };
+
+  const openStore = () => {
+    document.getElementById("storeInfo")?.classList.add("on");
+  };
+
+  const closeStore = () => {
+    if (document.getElementById("storeInfo")?.classList.contains("on") == true)
+      document.getElementById("storeInfo")?.classList.remove("on");
   };
 
   const openMap = () => {
@@ -167,6 +186,7 @@ const useMenu = () => {
     openLeftNav,
     closeLeftNav,
     toggleMap,
+    toggleStore,
     openMap,
     closeMap,
     toggleCabinet,
@@ -179,6 +199,8 @@ const useMenu = () => {
     toggleClubMember,
     openClubMember,
     closeClubMember,
+    openStore,
+    closeStore,
   };
 };
 

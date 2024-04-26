@@ -2,32 +2,33 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import CoinAnimation from "@/Cabinet/components/Store/CoinAnimation";
+import useMenu from "@/Cabinet/hooks/useMenu";
 
 const StoreCoinPick = () => {
   // const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
+  const { openStore } = useMenu();
   const onClickCoinNav = () => {
     console.log("onClickCoinNav");
   };
-  // 상단에만 존재
-  // const button = {
-  //   label: "동전 확인하기",
-  //   onClick: onClickCoinNav,
-  //   isClickable: true,
-  // };
+
   return (
     <Card
       title={"동전 줍기"}
       gridArea={"coinPick"}
-      width={"350px"}
+      width={"340px"}
       height={"320px"}
       // buttons={[button]}
     >
-      <CoinAnimation />
-      <CoinSummary>
-        <p>상점에 흘린 동점을 주워보세요!</p>
-        <p> 매일 동전이 쏟아집니다💰</p>
-      </CoinSummary>
-      <CoinCheckButton onClick={onClickCoinNav}>동전 확인하기</CoinCheckButton>
+      <>
+        <CoinAnimation />
+        <CoinSummary>
+          <p>상점에 흘린 동점을 주워보세요!</p>
+          <p> 매일 동전이 쏟아집니다💰</p>
+        </CoinSummary>
+        <CoinCheckButton onClick={() => openStore()}>
+          동전 확인하기
+        </CoinCheckButton>
+      </>
     </Card>
   );
 };
