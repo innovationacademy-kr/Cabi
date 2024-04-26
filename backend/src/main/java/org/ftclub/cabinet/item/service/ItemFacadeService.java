@@ -45,6 +45,7 @@ public class ItemFacadeService {
 	private final ItemQueryService itemQueryService;
 	private final ItemCommandService itemCommandService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
+	private final ItemHistoryCommandService itemHistoryCommandService;
 	private final ItemMapper itemMapper;
 	private final UserQueryService userQueryService;
 	private final ItemRedisService itemRedisService;
@@ -180,7 +181,7 @@ public class ItemFacadeService {
 		itemPolicyService.verifyIsAffordable(userCoin, price);
 
 		// 아이템 구매 처리
-		itemCommandService.purchaseItem(user.getId(), item.getId());
+		itemHistoryCommandService.purchaseItem(user.getId(), item.getId());
 
 		// 코인 차감
 		itemRedisService.saveCoinCount(userId, userCoin + price);
