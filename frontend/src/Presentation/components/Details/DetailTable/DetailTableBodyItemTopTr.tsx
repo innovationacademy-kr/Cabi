@@ -171,7 +171,7 @@ const TopTrStyled = styled.tr<{
     font-size: 18px;
     background-color: ${(props) =>
       !props.itemStatus
-        ? "var(--shared-blue-color-100)"
+        ? "var(--shared-blue-color-200)"
         : props.itemStatus === itemType.NO_EVENT_CURRENT
         ? "var(--white)"
         : "var(--full)"};

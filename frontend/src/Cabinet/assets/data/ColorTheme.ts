@@ -36,7 +36,8 @@ const lightValues = css`
   --border-shadow-color-100: var(--black-shadow-100);
   --border-shadow-color-200: var(--black-shadow-200);
   --border-shadow-color-300: var(--black-shadow-300);
-
+  --table-border-shadow-color: var(--black-shadow-100);
+/* TODO : table에 다 적용 */
   --shared-gray-color-100: var(--gray-100);
   --shared-gray-color-200: var(--gray-200);
   --shared-gray-color-300: var(--gray-300);
@@ -47,7 +48,8 @@ const lightValues = css`
 
   --shared-purple-color-100: var(--purple-100);
 
-  --shared-blue-color-100: var(--blue-150);
+  --shared-blue-color-100: var(--blue-100);
+  --shared-blue-color-200: var(--blue-150);
 
   color: var(--normal-text-color);
   background-color: var(--bg-color);
@@ -88,6 +90,7 @@ const darkValues = css`
   --border-shadow-color-100: var(--black-shadow-200);
   --border-shadow-color-200: var(--black-shadow-300);
   --border-shadow-color-300: var(--black-shadow-400);
+  --table-border-shadow-color: var(--black-shadow-400);
 
   --shared-gray-color-100: var(--gray-700);
   --shared-gray-color-200: var(--gray-700);
@@ -99,7 +102,8 @@ const darkValues = css`
 
   --shared-purple-color-100: var(--purple-700);
 
-  --shared-blue-color-100: var(--blue-150);
+  --shared-blue-color-100: var(--blue-500);
+  --shared-blue-color-200: var(--blue-150);
 
   color: var(--normal-text-color);
   background-color: var(--bg-color);

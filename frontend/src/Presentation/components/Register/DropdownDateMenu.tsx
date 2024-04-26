@@ -161,8 +161,8 @@ const DropdownOption = styled.li<{ invalid: boolean }>`
     background-color: ${({ invalid }) =>
       invalid
         ? "var(--shared-gray-color-100)"
-        : "var(--shared-blue-color-100)"};
-    background-color: var(--shared-blue-color-100);
+        : "var(--shared-blue-color-200)"};
+    background-color: var(--shared-blue-color-200);
     cursor: ${({ invalid }) => (invalid ? "not-allowed" : "pointer")};
   }
 

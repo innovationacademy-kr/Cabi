@@ -162,7 +162,7 @@ const DropdownOption = styled.li`
   padding: 10px;
   cursor: pointer;
   &:hover {
-    background-color: var(--shared-blue-color-100);
+    background-color: var(--shared-blue-color-200);
   }
 `;
 
