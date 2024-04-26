@@ -20,7 +20,7 @@ const LeftStoreNav = ({
     { name: "아이템 사용내역", route: "store/item-use-log" },
     { name: "코인 내역", route: "store/coin-log" },
   ];
-  
+
   const [currentSection, SetCurrentSection] = useState("까비상점");
   const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
 
@@ -35,7 +35,9 @@ const LeftStoreNav = ({
         <CoinCountStyled>
           코인
           <UserCoinsWrapperStyled>
-            <CoinIcon />
+            <CoinIconStyled>
+              <CoinIcon />
+            </CoinIconStyled>
             <CoinTextStyled>
               <span>{myCoin}</span> 까비
             </CoinTextStyled>
@@ -117,6 +119,11 @@ const StoreSectionStyled = styled.div`
       color: var(--white);
     }
   }
+`;
+
+const CoinIconStyled = styled.div`
+  width: 20px;
+  height: 20px;
 `;
 
 export default LeftStoreNav;

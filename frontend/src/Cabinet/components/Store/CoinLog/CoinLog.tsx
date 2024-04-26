@@ -5,6 +5,7 @@ import { myCoinsState } from "@/Cabinet/recoil/atoms";
 import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
+import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
 import CoinLogToggleType from "@/Cabinet/types/enum/store.enum";
 import { axiosCoinLog } from "@/Cabinet/api/axios/axios.custom";
 
@@ -82,11 +83,16 @@ const CoinLog = () => {
 
   return (
     <WrapperStyled>
-      <TitleWrapperStyled>
-        <h1>코인 내역</h1>
-        <div>icon</div>
-      </TitleWrapperStyled>
-      보유 재화 : {myCoin}
+      <TitleStyled>코인 내역</TitleStyled>
+      <MyCoinWrapperStyled>
+        <MyCoinStyled>
+          <CoinIconStyled>
+            <CoinIcon />
+          </CoinIconStyled>
+          <span>{myCoin}</span>
+          까비
+        </MyCoinStyled>
+      </MyCoinWrapperStyled>
       <MultiToggleSwitchStyled>
         <MultiToggleSwitch
           initialState={toggleType}
@@ -123,20 +129,14 @@ const WrapperStyled = styled.div`
   padding: 60px 0;
 `;
 
-const TitleWrapperStyled = styled.div`
-  width: 80%;
-  border-bottom: 2px solid #d9d9d9;
+const TitleStyled = styled.h1`
   font-weight: 700;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
-
-  & > h1 {
-    font-size: 2rem;
-  }
-
-  & > div {
-  }
+  font-size: 2rem;
+  text-align: right;
+  margin-top: 20px;
 `;
 
 const MultiToggleSwitchStyled = styled.div`
@@ -169,6 +169,32 @@ const LogItemStyled = styled.div<{
   & > #amount {
     color: ${(props) => (props.isEarned ? "#406ee4" : "var(--expired)")};
   }
+`;
+
+const MyCoinWrapperStyled = styled.div`
+  width: 80%;
+  display: flex;
+  justify-content: end;
+`;
+
+const MyCoinStyled = styled.div`
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+
+  & > span {
+    font-weight: bold;
+    margin: 0 4px 0 8px;
+  }
+`;
+
+const CoinIconStyled = styled.div`
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: end;
 `;
 
 export default CoinLog;
