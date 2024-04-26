@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import CoinAnimation from "@/Cabinet/components/Store/CoinAnimation";
@@ -8,6 +8,10 @@ import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.s
 import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
 import { ReactComponent as MoveImg } from "@/Cabinet/assets/images/storeMove.svg";
 import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
+import { myCoinsState } from "@/Cabinet/recoil/atoms";
+import { useRecoilState } from "recoil";
+import StorModal from "../components/Modals/StoreModal/StoreBuyItemModal";
+
 
 // const StoreItems = {
 //   연장권: "Extension",
@@ -24,10 +28,32 @@ export interface IStoreItem {
   grid: string;
   logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 }
-const StoreMainPage = () => {
+// const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
 
-  const buttonClick = () => {
-    console.log("click");
+const StoreMainPage = () => {
+  const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<IStoreItem | null>(null);
+
+  const buttonClick = (item: IStoreItem) => {
+    console.log(myCoin);
+    setSelectedItem(item);
+    setIsModalOpen(true);
+    // setShowMemoModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedItem(null);
+  };
+
+  const handlePurchase = (selectedOption: string) => {
+    // 선택한 옵션에 따른 구매 처리 로직 구현
+    console.log("rnaogka");
+    console.log(`선택한 옵션: ${selectedOption}`);
+    // 구매 처리 후 모달 닫기
+    setIsModalOpen(false);
+    setSelectedItem(null);
   };
 
   const Items = [
@@ -65,6 +91,7 @@ const StoreMainPage = () => {
     },
   ];
 
+
   return (
     <WrapperStyled>
       <HeaderStyled>
@@ -79,12 +106,16 @@ const StoreMainPage = () => {
             Item={item}
             button={{
               label: "구매하기",
-              onClick: buttonClick,
-              isClickable: true,
+              onClick: () => buttonClick(item),
+              isClickable: myCoin !== null && myCoin > item.ItemPrice,
             }}
           />
         ))}
+        
       </StoreCoinGridWrapper>
+      {isModalOpen && selectedItem && (
+        <StorModal onClose={handleCloseModal} onPurchase={handlePurchase} />
+      )}
     </WrapperStyled>
   );
 };
