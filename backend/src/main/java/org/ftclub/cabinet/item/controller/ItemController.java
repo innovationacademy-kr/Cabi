@@ -66,10 +66,21 @@ public class ItemController {
 		return itemFacadeService.getCoinHistory(user.getUserId(), type, start, end);
 	}
 
+	/**
+	 * @param user
+	 * @param itemId
+	 * @return
+	 */
 	@GetMapping("/coin")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public CoinMonthlyCollectionDto getCoinMonthlyCollectionCount(@UserSession UserSessionDto user,
 		@RequestParam Long itemId) {
 		return itemFacadeService.getCoinMonthlyCollectionCount(user.getUserId(), itemId);
+	}
+
+	@PostMapping("{itemId}/use")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public void useItem(@UserSession UserSessionDto user, @PathVariable Long itemId) {
+		itemFacadeService.useItem(user.getUserId(), itemId);
 	}
 }

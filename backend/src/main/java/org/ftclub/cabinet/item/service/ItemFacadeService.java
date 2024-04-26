@@ -1,8 +1,6 @@
 package org.ftclub.cabinet.item.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -122,20 +120,35 @@ public class ItemFacadeService {
 	}
 
 	/**
+	 * 한 달 동안 수행한 동전 줍기 횟수와 오늘 동전줍기를 수행 여부를 반환합니다
+	 *
 	 * @param userId
 	 * @param itemId
 	 * @return
 	 */
 	public CoinMonthlyCollectionDto getCoinMonthlyCollectionCount(Long userId, Long itemId) {
-		LocalDate today = LocalDate.now();
-		LocalDateTime start = today.withDayOfMonth(1).atStartOfDay();
-		LocalDateTime end = YearMonth.from(today).atEndOfMonth().atTime(23, 59);
+		Long coinCollectionCountInMonth =
+			itemRedisService.getCoinCollectionCountInMonth(userId, itemId);
+		boolean isCollectedInToday = itemRedisService.isCoinCollectable(userId);
 
-		Long coinCollectionCount =
-			itemHistoryQueryService.getCountByUserIdAndItemIdBetween(userId, itemId, start, end);
-		boolean todayCheck = itemRedisService.isCoinCollectable(userId);
+		return itemMapper.toCoinMonthlyCollectionDto(coinCollectionCountInMonth,
+			isCollectedInToday);
+	}
 
-		return itemMapper.toCoinMonthlyCollectionDto(coinCollectionCount, todayCheck);
+	/**
+	 * 아이템 사용 기능
+	 * <p>
+	 * Q. interface를 사용할지, itemType 따라 case로 나누게 되는지? -> eventListener
+	 *
+	 * @param userId
+	 * @param itemId
+	 */
+	public void useItem(Long userId, Long itemId) {
+		User user = userQueryService.getUser(userId);
+		if (user.isBlackholed()) {
+			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
+		}
+		Item item = itemQueryService.getItemById(itemId);
 	}
 
 	/**
