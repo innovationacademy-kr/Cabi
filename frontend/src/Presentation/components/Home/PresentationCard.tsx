@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { ReactComponent as CalendarIcon } from "@/Cabinet/assets/images/calendar.svg";
 import { presentationCategoryIconMap } from "@/Presentation/assets/data/maps";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import { makeIDateObj } from "@/Presentation/utils/dateUtils";
@@ -33,10 +34,7 @@ const PresentationCard = ({
                     <NameStyled>{p.userName}</NameStyled>
                     <CalendarStyled>
                       <IconStyled>
-                        <img
-                          src="/src/Cabinet/assets/images/calendar.svg"
-                          alt=""
-                        />
+                        <CalendarIcon />
                       </IconStyled>
                       <span>
                         {tmpDate?.month}/{tmpDate?.day}
@@ -121,7 +119,7 @@ const SubTitleStyled = styled.div`
   word-break: break-all;
   line-height: 1.5;
   margin-bottom: 12px;
-  color: #797979;
+  color: var(--shared-gray-color-500);
 `;
 
 const DetailFooterStyled = styled.div`
@@ -132,7 +130,7 @@ const DetailFooterStyled = styled.div`
 const NameStyled = styled.div`
   white-space: nowrap;
   margin-right: 5px;
-  color: #9d9d9d;
+  color: var(--shared-gray-color-450);
   font-weight: 500;
 
   ::after {
@@ -146,11 +144,16 @@ const CalendarStyled = styled.div`
   justify-content: flex-end;
   font-size: 1rem;
   & > span {
-    color: #797979;
+    color: var(--shared-gray-color-500);
   }
 `;
 
 const IconStyled = styled.div`
   height: 15px;
+  width: 15px;
   margin-right: 8px;
+
+  & > svg > path {
+    stroke: var(--shared-gray-color-500);
+  }
 `;

@@ -176,7 +176,7 @@ const SubTitleStyled = styled.div`
   word-break: break-all;
   line-height: 1.5;
   margin-bottom: 12px;
-  color: #797979;
+  color: var(--shared-gray-color-500);
 `;
 
 const DetailFooterStyled = styled.div`
@@ -187,7 +187,7 @@ const DetailFooterStyled = styled.div`
 const NameStyled = styled.div`
   white-space: nowrap;
   margin-right: 5px;
-  color: #9d9d9d;
+  color: var(--shared-gray-color-450);
   font-weight: 500;
 
   ::after {
@@ -202,7 +202,7 @@ const CalendarStyled = styled.div`
   font-size: 1rem;
 
   & > span {
-    color: #797979;
+    color: var(--shared-gray-color-500);
   }
 `;
 
@@ -219,7 +219,10 @@ const PaginationStyled = styled.div`
 const Paginations = styled.div<{ current: boolean }>`
   width: 30px;
   height: 10px;
-  background-color: ${(props) => (props.current ? "#5378fd" : "gray")};
+  background-color: ${(props) =>
+    props.current
+      ? "var(--shared-blue-color-300)"
+      : "var(--shared-gray-color-500)"};
   border-radius: 12px;
   margin: 0 5px;
 `;

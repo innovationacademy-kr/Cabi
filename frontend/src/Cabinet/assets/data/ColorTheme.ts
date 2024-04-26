@@ -44,6 +44,7 @@ const lightValues = css`
   --shared-gray-color-200: var(--gray-200);
   --shared-gray-color-300: var(--gray-300);
   --shared-gray-color-400: var(--gray-400);
+  --shared-gray-color-450: var(--gray-450);
   --shared-gray-color-500: var(--gray-500);
   --shared-gray-color-600: var(--gray-600);
   --shared-gray-color-700: var(--gray-800);
@@ -52,6 +53,7 @@ const lightValues = css`
 
   --shared-blue-color-100: var(--blue-100);
   --shared-blue-color-200: var(--blue-150);
+  --shared-blue-color-300: var(--blue-250);
 
   color: var(--normal-text-color);
   background-color: var(--bg-color);
@@ -99,6 +101,7 @@ const darkValues = css`
   --shared-gray-color-100: var(--gray-700);
   --shared-gray-color-200: var(--gray-700);
   --shared-gray-color-300: var(--gray-600);
+  --shared-gray-color-450: var(--gray-450);
   --shared-gray-color-400: var(--gray-500);
   --shared-gray-color-500: var(--gray-400);
   --shared-gray-color-600: var(--gray-300);
@@ -108,6 +111,7 @@ const darkValues = css`
 
   --shared-blue-color-100: var(--blue-500);
   --shared-blue-color-200: var(--blue-150);
+  --shared-blue-color-300: var(--blue-250);
 
   color: var(--normal-text-color);
   background-color: var(--bg-color);
