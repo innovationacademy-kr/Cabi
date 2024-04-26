@@ -2,22 +2,15 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCoinsState } from "@/Cabinet/recoil/atoms";
-import Card from "@/Cabinet/components/Card/Card";
-import CoinAnimation from "@/Cabinet/components/Store/CoinAnimation";
 import StoreCoinPick from "@/Cabinet/components/Store/StoreCoinPick";
 import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
 import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
 import { ReactComponent as MoveImg } from "@/Cabinet/assets/images/storeMove.svg";
 import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
+
+import StorModal from "../components/Modals/StoreModal/StoreBuyItemModal";
 import StoreItemCard from "../components/Card/StoreItemCard/StoreItemCard";
 import StoreModal from "../components/Modals/StoreModal/StoreBuyItemModal";
-
-// const StoreItems = {
-//   연장권: "Extension",
-//   알림권: "NotificationRegistration",
-//   패널티삭제권: "PenaltyReduction",
-//   이사하기: "Relocation",
-// };
 
 export interface IStoreItem {
   ItemId: number;
@@ -27,7 +20,6 @@ export interface IStoreItem {
   grid: string;
   logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 }
-// const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
 
 const StoreMainPage = () => {
   const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
@@ -38,7 +30,6 @@ const StoreMainPage = () => {
     console.log(myCoin);
     setSelectedItem(item);
     setIsModalOpen(true);
-    // setShowMemoModal(true);
   };
 
   const handleCloseModal = () => {
@@ -53,6 +44,11 @@ const StoreMainPage = () => {
     setIsModalOpen(false);
     setSelectedItem(null);
   };
+
+  // const StoreMainPage = () => {
+  //   const buttonClick = () => {
+  //     console.log("click");
+  //   };
 
   const Items = [
     {
@@ -88,7 +84,6 @@ const StoreMainPage = () => {
       logo: PenaltyImg,
     },
   ];
-
 
 
   return (
@@ -143,6 +138,7 @@ const StoreCoinGridWrapper = styled.div`
     "coinPick alarm penalty"; // h: 183px;
   // "theme notification"; // h: 230px h: 230px;
 
+  // 나중에 고치기
   @media (max-width: 768px) {
     grid-template-columns: 350px;
     grid-template-rows: 163px 366px 183px 230px 230px;
@@ -157,7 +153,7 @@ const StoreCoinGridWrapper = styled.div`
 
 const HeaderStyled = styled.div`
   width: 80%;
-  max-width: 1000px;
+  max-width: 1060px;
   border-bottom: 2px solid #d9d9d9;
   margin-bottom: 25px;
 `;
