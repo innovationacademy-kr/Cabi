@@ -34,7 +34,7 @@ const test: ICoinLog[] = [
       Number(new Date().getMonth()),
       Number(new Date().getDate())
     ),
-    title: "160시간 출석",
+    title: "160시간 출석이다요오오오옹",
     amount: 2000,
   },
   {
@@ -108,7 +108,9 @@ const CoinLog = () => {
               <span id="date">
                 {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
               </span>
-              <span id="title">{log.title}</span>
+              <span id="title" title={log.title}>
+                {log.title}
+              </span>
               <span id="amount">
                 {isEarned ? "+" : ""}
                 {log.amount}
@@ -166,12 +168,17 @@ const LogItemStyled = styled.div<{
     width: 16%;
     text-align: center;
   }
+
   & > #title {
     font-size: 18px;
     color: var(--black);
     width: 74%;
     text-align: start;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
+
   & > #amount {
     color: ${(props) =>
       props.isEarned ? "var(--main-color)" : "var(--black)"};
@@ -179,6 +186,22 @@ const LogItemStyled = styled.div<{
     font-weight: bold;
     width: 10%;
     text-align: center;
+    min-width: 54px;
+  }
+
+  @media (max-width: 810px) {
+    & > #date {
+      width: 38%;
+      font-size: 14px;
+    }
+    & > #title {
+      width: 42%;
+      font-size: 16px;
+    }
+    & > #amount {
+      width: 20%;
+      font-size: 16px;
+    }
   }
 `;
 
@@ -186,6 +209,10 @@ const MyCoinWrapperStyled = styled.div`
   width: 80%;
   display: flex;
   justify-content: end;
+
+  @media (max-width: 810px) {
+    margin: 10px 0;
+  }
 `;
 
 const MyCoinStyled = styled.div`
