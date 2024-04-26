@@ -41,16 +41,13 @@ public class ItemRedisService {
 
 	public void collectCoin(Long userId) {
 		itemRedis.collectCoin(userId.toString());
-		itemRedis.addCoinCollectCount(userId.toString());
+		itemRedis.addCoinCollectionCount(userId.toString());
 	}
 
-	public Long getCollectCoinCount(Long userId, Long itemId) {
+	public Long getCoinCollectionCountInMonth(Long userId, Long itemId) {
 		String userIdToString = userId.toString();
 		String coinCollectionCount = itemRedis.getCoinCollectionCount(userIdToString);
 
-		// 처음 요청이 들어온거라면, itemHistoryRepository에서 받아온 뒤 저장하는게 나을지, redis에서 처리하는게 나을지?
-		// 연속 출석 체크 기록에 대한 중요도에 따라?? redis가 있으니, 쓰는게 맞나?
-		// +) 한 달이나 갖고 있어야하는데 ㄱㅊ?
 		if (coinCollectionCount == null) {
 			LocalDate today = LocalDate.now();
 			LocalDate lastDayOfMonth = today.with(TemporalAdjusters.lastDayOfMonth());

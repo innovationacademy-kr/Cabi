@@ -77,7 +77,7 @@ public class ItemRedis {
 	 *
 	 * @param userId
 	 */
-	public void addCoinCollectCount(String userId) {
+	public void addCoinCollectionCount(String userId) {
 		String key = userId + COIN_COLLECT_COUNT_KEY_SUFFIX;
 		Long currentCount = coinTemplate.opsForValue().increment(key, 1);
 
