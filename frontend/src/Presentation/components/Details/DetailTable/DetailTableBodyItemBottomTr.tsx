@@ -63,6 +63,8 @@ const BottomTrStyled = styled.tr<{
     line-height: 24px;
     padding: 30px 50px;
     font-size: 18px;
+    color: var(--black);
+    /* black */
   }
 
   &:hover {
