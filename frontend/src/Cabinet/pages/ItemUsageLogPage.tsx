@@ -101,9 +101,7 @@ const ItemUsageLogPage = () => {
 
   return (
     <WrapperStyled>
-      <TitleWrapperStyled>
-        <h1>아이템 사용 내역</h1>
-      </TitleWrapperStyled>
+      <TitleWrapperStyled>아이템 사용 내역</TitleWrapperStyled>
       <ItemUsageLogWrapperStyled>
         {Object.entries(groupedLogs).map(([date, itemUsageLogs]) => (
           <DateSectionStyled key={date}>
@@ -136,9 +134,10 @@ const WrapperStyled = styled.div`
 `;
 
 const TitleWrapperStyled = styled.div`
+  font-size: 32px;
   width: 80%;
   font-weight: 700;
-  margin-bottom: 2rem;
+  margin: 20px 0 16px;
   display: flex;
   justify-content: center;
 
