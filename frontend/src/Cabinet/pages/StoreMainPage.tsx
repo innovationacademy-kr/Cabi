@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { myCoinsState } from "@/Cabinet/recoil/atoms";
 import Card from "@/Cabinet/components/Card/Card";
 import CoinAnimation from "@/Cabinet/components/Store/CoinAnimation";
 import StoreCoinPick from "@/Cabinet/components/Store/StoreCoinPick";
-import StoreItemCard from "../components/Card/StoreItemCard/StoreItemCard";
 import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
 import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
 import { ReactComponent as MoveImg } from "@/Cabinet/assets/images/storeMove.svg";
 import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
-import { myCoinsState } from "@/Cabinet/recoil/atoms";
-import { useRecoilState } from "recoil";
-import StorModal from "../components/Modals/StoreModal/StoreBuyItemModal";
-
+import StoreItemCard from "../components/Card/StoreItemCard/StoreItemCard";
+import StoreModal from "../components/Modals/StoreModal/StoreBuyItemModal";
 
 // const StoreItems = {
 //   연장권: "Extension",
@@ -49,7 +48,6 @@ const StoreMainPage = () => {
 
   const handlePurchase = (selectedOption: string) => {
     // 선택한 옵션에 따른 구매 처리 로직 구현
-    console.log("rnaogka");
     console.log(`선택한 옵션: ${selectedOption}`);
     // 구매 처리 후 모달 닫기
     setIsModalOpen(false);
@@ -92,6 +90,7 @@ const StoreMainPage = () => {
   ];
 
 
+
   return (
     <WrapperStyled>
       <HeaderStyled>
@@ -111,10 +110,13 @@ const StoreMainPage = () => {
             }}
           />
         ))}
-        
       </StoreCoinGridWrapper>
       {isModalOpen && selectedItem && (
-        <StorModal onClose={handleCloseModal} onPurchase={handlePurchase} />
+        <StoreModal
+          onClose={handleCloseModal}
+          onPurchase={handlePurchase}
+          selectItem={selectedItem}
+        />
       )}
     </WrapperStyled>
   );
@@ -166,7 +168,7 @@ const WrapperStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 8s0%;
+  width: 80%;
   height: 100%;
 `;
 

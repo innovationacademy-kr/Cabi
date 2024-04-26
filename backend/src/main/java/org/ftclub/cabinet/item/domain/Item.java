@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.item.domain;
 
-import io.netty.util.internal.StringUtil;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -28,17 +27,11 @@ public class Item {
 	private Long id;
 
 	/**
-	 * 상품명
+	 * 상품 타입
 	 */
-	@Column(name = "NAME", unique = true, nullable = false)
-	private String name;
-
-
-	/**
-	 * 상품 가격
-	 */
-	@Column(name = "PRICE", nullable = false)
-	private Long price;
+	@Column(name = "Type", nullable = false)
+	@Enumerated(value = EnumType.STRING)
+	private ItemType type;
 
 	/**
 	 * 상품 고유 코드
@@ -47,33 +40,26 @@ public class Item {
 	@Enumerated(value = EnumType.STRING)
 	private Sku sku;
 
-	@Column(name = "Type", nullable = false)
-	@Enumerated(value = EnumType.STRING)
-	private ItemType type;
-
 	/**
-	 * 상품 설명
+	 * 상품 가격
 	 */
-	@Column(name = "DESCRIPTION", nullable = false)
-	private String description;
+	@Column(name = "PRICE", nullable = false)
+	private Long price;
 
-	protected Item(String name, long price, Sku sku, String description, ItemType type) {
-		this.name = name;
+
+	protected Item(long price, Sku sku, ItemType type) {
 		this.price = price;
 		this.sku = sku;
-		this.description = description;
 		this.type = type;
 	}
 
 	/**
-	 * @param name        상품 이름
-	 * @param price       상품 가격
-	 * @param sku         상품 코드
-	 * @param description 상품 설명
+	 * @param price 상품 가격
+	 * @param sku   상품 코드
 	 * @return 상품 객체	{@link Item}
 	 */
-	public static Item of(String name, long price, Sku sku, String description, ItemType type) {
-		Item item = new Item(name, price, sku, description, type);
+	public static Item of(long price, Sku sku, ItemType type) {
+		Item item = new Item(price, sku, type);
 		if (!item.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
@@ -86,8 +72,7 @@ public class Item {
 	 * @return 유효한 인스턴스 여부
 	 */
 	private boolean isValid() {
-		return this.name != null && this.sku.isValid() && this.type.isValid()
-				&& !StringUtil.isNullOrEmpty(this.description);
+		return sku.isValid() && type.isValid() && type.isValid();
 	}
 
 	@Override
