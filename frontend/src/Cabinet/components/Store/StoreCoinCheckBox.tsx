@@ -4,9 +4,9 @@ import { ReactComponent as CoinCheckOffImg } from "@/Cabinet/assets/images/store
 import { ReactComponent as CoinCheckOnImg } from "@/Cabinet/assets/images/storeCoinCheckOn.svg";
 
 const StoreCoinCheckBox = () => {
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState<number>();
 
-  const handleCheckboxClick = (index) => {
+  const handleCheckboxClick = (index: number) => {
     setSelectedIndex(index);
   };
 
