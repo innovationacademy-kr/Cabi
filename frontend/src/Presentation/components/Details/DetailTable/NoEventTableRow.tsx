@@ -85,7 +85,11 @@ const CcabiStyled = styled.div<{ hasNoUpcomingEvent: boolean }>`
   }
 
   & svg > path {
-    fill: var(--black);
+    fill: var(--normal-text-color);
+  }
+  
+  & svg > g {
+    fill: var(--normal-text-color);
   }
 
   @media (max-width: 1220px) {

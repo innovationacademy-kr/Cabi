@@ -60,8 +60,8 @@ const MobileMiddleTrStysled = styled.tr<{
     !props.itemStatus
       ? "var(--shared-blue-color-200)"
       : props.itemStatus === itemType.NO_EVENT_CURRENT
-      ? "var(--white)"
-      : "var(--full)"};
+      ? "var(--presentation-no-event-cur-color)"
+      : "var(--presentation-no-event-past-color)"};
   width: 100%;
   height: 50px;
   font-size: 14px;
@@ -90,6 +90,8 @@ const MobileMiddleTrStysled = styled.tr<{
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    color: var(--black);
+    /* black */
   }
 
   @media (min-width: 1150px) {

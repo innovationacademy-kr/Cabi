@@ -9,6 +9,8 @@ const lightValues = css`
   --button-line-color: var(--default-main-color);
   --capsule-btn-border-color: var(--gray-200);
   --capsule-btn-hover-bg-color: var(--transparent-purple);
+  --presentation-no-event-past-color: var(--gray-200);
+  --presentation-no-event-cur-color: var(--bg-color);
 
   /* main color variable */
   --main-color: var(--purple-500);
@@ -37,7 +39,7 @@ const lightValues = css`
   --border-shadow-color-200: var(--black-shadow-200);
   --border-shadow-color-300: var(--black-shadow-300);
   --table-border-shadow-color: var(--black-shadow-100);
-/* TODO : table에 다 적용 */
+  /* TODO : table에 다 적용 */
   --shared-gray-color-100: var(--gray-100);
   --shared-gray-color-200: var(--gray-200);
   --shared-gray-color-300: var(--gray-300);
@@ -65,6 +67,8 @@ const darkValues = css`
   --button-line-color: var(--default-sub-color);
   --capsule-btn-border-color: var(--gray-600);
   --capsule-btn-hover-bg-color: var(--transparent-purple);
+  --presentation-no-event-past-color: var(--bg-color);
+  --presentation-no-event-cur-color: var(--gray-600);
 
   --main-color: var(--purple-600);
   --sub-color: var(--purple-300);

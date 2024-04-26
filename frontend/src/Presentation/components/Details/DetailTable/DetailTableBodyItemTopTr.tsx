@@ -173,8 +173,8 @@ const TopTrStyled = styled.tr<{
       !props.itemStatus
         ? "var(--shared-blue-color-200)"
         : props.itemStatus === itemType.NO_EVENT_CURRENT
-        ? "var(--white)"
-        : "var(--full)"};
+        ? "var(--bg-color)"
+        : "var(--shared-gray-color-200)"};
     height: 70px;
     line-height: 70px;
     & > td {
@@ -208,12 +208,20 @@ const TopTrStyled = styled.tr<{
       border-radius: ${(props) => (props.open ? "" : "10px 10px 0 0")};
     }
     & > td > #mobileTopDate {
-      color: ${(props) => (props.open ? "var(--black)" : "var(--white)")};
+      color: ${(props) =>
+        props.open
+          ? "var(--black)"
+          : // black
+            "var(--white-text-with-bg-color)"};
       text-align: ${(props) => (props.open ? "center" : "start")};
       padding-left: 10px;
     }
     &:hover {
       cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
+    }
+    & > td > div {
+      color: var(--black);
+      /* black */
     }
   }
 `;
