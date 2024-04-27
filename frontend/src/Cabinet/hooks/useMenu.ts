@@ -68,18 +68,15 @@ const useMenu = () => {
   const toggleMap = () => {
     if (document.getElementById("mapInfo")?.classList.contains("on") == true) {
       closeMap();
-      closeStore();
     } else {
       openMap();
     }
   };
 
   const toggleStore = () => {
-    if (
-      document.getElementById("storeInfo")?.classList.contains("on") == true
-    ) {
+    if (document.getElementById("storeInfo")?.classList.contains("on") == true)
       closeStore();
-    } else {
+    else {
       openStore();
     }
   };
@@ -91,19 +88,24 @@ const useMenu = () => {
     closeLent();
     closeClubMember();
     document.getElementById("storeInfo")?.classList.add("on");
+    document.getElementById("menuBg")?.classList.add("on");
   };
 
   const closeStore = () => {
-    if (document.getElementById("storeInfo")?.classList.contains("on") == true)
+    if (
+      document.getElementById("storeInfo")?.classList.contains("on") == true
+    ) {
       document.getElementById("storeInfo")?.classList.remove("on");
+      document.getElementById("menuBg")?.classList.remove("on");
+    }
   };
 
   const openMap = () => {
+    closeStore();
     closeLeftNav();
     closeCabinet();
     closeLent();
     closeClubMember();
-    closeStore();
     document.getElementById("mapInfo")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
   };

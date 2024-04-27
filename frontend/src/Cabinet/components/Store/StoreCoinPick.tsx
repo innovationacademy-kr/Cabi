@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import CoinAnimation from "@/Cabinet/components/Store/CoinAnimation";
