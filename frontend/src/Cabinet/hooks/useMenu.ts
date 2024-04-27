@@ -27,6 +27,7 @@ const useMenu = () => {
   const openLeftNav = () => {
     closeCabinet();
     closeMap();
+    closeStore();
     closeLent();
     closeClubMember();
     document.getElementById("menuBg")?.classList.add("on");
@@ -53,6 +54,7 @@ const useMenu = () => {
   const openLent = () => {
     closeLeftNav();
     closeMap();
+    closeStore();
     document.getElementById("lentInfo")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
   };
@@ -66,6 +68,7 @@ const useMenu = () => {
   const toggleMap = () => {
     if (document.getElementById("mapInfo")?.classList.contains("on") == true) {
       closeMap();
+      closeStore();
     } else {
       openMap();
     }
@@ -82,6 +85,11 @@ const useMenu = () => {
   };
 
   const openStore = () => {
+    closeMap();
+    closeLeftNav();
+    closeCabinet();
+    closeLent();
+    closeClubMember();
     document.getElementById("storeInfo")?.classList.add("on");
   };
 
@@ -95,6 +103,7 @@ const useMenu = () => {
     closeCabinet();
     closeLent();
     closeClubMember();
+    closeStore();
     document.getElementById("mapInfo")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
   };
@@ -121,6 +130,7 @@ const useMenu = () => {
   const openCabinet = () => {
     closeLeftNav();
     closeMap();
+    closeStore();
     closeLent();
     closeClubMember();
     document.getElementById("cabinetDetailArea")?.classList.add("on");
@@ -156,6 +166,7 @@ const useMenu = () => {
   const openClubMember = () => {
     closeLeftNav();
     closeMap();
+    closeStore();
     closeLent();
     closeCabinet();
     document.getElementById("clubMemberInfoArea")?.classList.add("on");
@@ -178,6 +189,7 @@ const useMenu = () => {
     closeCabinet();
     closeLent();
     closeMap();
+    closeStore();
     closeClubMember();
   };
 
