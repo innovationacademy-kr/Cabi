@@ -47,7 +47,7 @@ const Layout = (): JSX.Element => {
     localStorage.getItem("mine-color") || "var(--default-mine-color)";
 
   const body: HTMLElement = document.body;
-  
+
   useEffect(() => {
     body.style.setProperty("--main-color", savedMainColor);
     body.style.setProperty("--sub-color", savedSubColor);

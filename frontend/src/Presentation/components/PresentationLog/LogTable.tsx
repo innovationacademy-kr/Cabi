@@ -69,7 +69,7 @@ const LogTableWrapperstyled = styled.div`
   border-radius: 10px;
   overflow: hidden;
   margin: 0 auto;
-  box-shadow: 0 0 10px 0 var(--table-border-shadow-color);
+  box-shadow: 0 0 10px 0 var(--table-border-shadow-color-200);
 `;
 
 const LogTableStyled = styled.table`

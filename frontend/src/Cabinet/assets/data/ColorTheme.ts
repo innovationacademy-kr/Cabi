@@ -42,7 +42,8 @@ const lightValues = css`
   --border-shadow-color-100: var(--black-shadow-100);
   --border-shadow-color-200: var(--black-shadow-200);
   --border-shadow-color-300: var(--black-shadow-300);
-  --table-border-shadow-color: var(--black-shadow-100);
+  --table-border-shadow-color-100: var(--black-shadow-100);
+  --table-border-shadow-color-200: var(--black-shadow-100);
   --color-picker-border-shadow-color: var(--black-shadow-200);
   /* TODO : table에 다 적용 */
 
@@ -108,7 +109,8 @@ const darkValues = css`
   --border-shadow-color-100: var(--black-shadow-200);
   --border-shadow-color-200: var(--black-shadow-300);
   --border-shadow-color-300: var(--black-shadow-400);
-  --table-border-shadow-color: var(--black-shadow-400);
+  --table-border-shadow-color-100: var(--black-shadow-300);
+  --table-border-shadow-color-200: var(--black-shadow-400);
   --color-picker-border-shadow-color: var(--black-shadow-200);
 
   --custom-purple-200: var(--purple-600);
@@ -134,9 +136,7 @@ const darkValues = css`
 
 export const GlobalStyle = createGlobalStyle`
   :root {
-    [color-theme="LIGHT"] {
       ${lightValues}
-    }
     [color-theme="DARK"] {
       ${darkValues}
     }

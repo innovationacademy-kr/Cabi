@@ -63,7 +63,7 @@ const LogTableWrapperstyled = styled.div`
   border-radius: 10px;
   overflow: hidden;
   margin: 0 auto;
-  box-shadow: 0 0 10px 0 var(--border-shadow-color-100);
+  box-shadow: 0 0 10px 0 var(--table-border-shadow-color-100);
 `;
 
 const LogTableStyled = styled.table`
@@ -77,7 +77,7 @@ const TheadStyled = styled.thead`
   height: 50px;
   line-height: 50px;
   background-color: var(--main-color);
-  color: var(--bg-color);
+  color: var(--white-text-with-bg-color);
   & > tr > th:first-child {
     padding-left: 20px;
   }

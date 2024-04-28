@@ -8,10 +8,10 @@ import "./Cabinet/assets/css/reset.css";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  // <React.StrictMode>
-  <RecoilRoot>
+  <React.StrictMode>
+    <RecoilRoot>
       <GlobalStyle />
-    <App />
-  </RecoilRoot>
-  // </React.StrictMode>
+      <App />
+    </RecoilRoot>
+  </React.StrictMode>
 );

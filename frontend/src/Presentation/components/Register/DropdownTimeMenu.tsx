@@ -134,7 +134,7 @@ const AnimatedDropdownOptions = styled.ul<{
   padding: 10px;
   color: var(--normal-text-color);
   background-color: var(--card-content-bg-color);
-  box-shadow: 0 0 10px 0 var(--border-shadow-color-100);
+  box-shadow: 0 0 10px 0 var(--table-border-shadow-color-100);
   overflow-y: auto;
   scrollbar-width: thin;
   /* scrollbar-color: #aaa #fff; */
