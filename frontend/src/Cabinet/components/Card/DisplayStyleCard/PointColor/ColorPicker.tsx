@@ -18,14 +18,17 @@ const ColorPicker = ({ color, onChange }: ColorPickerProps) => {
         styles={{
           default: {
             card: {
-              background: "var(--bg-color)",
-              boxShadow: "var(--border-shadow-color-200) 0px 1px 4px",
+              background: "var(--color-picker-bg-color)",
+              boxShadow: "var(--color-picker-border-shadow-color) 0px 1px 4px",
             },
             input: {
-              boxShadow: "var(--shared-gray-color-200) 0px 0px 0px 1px inset",
+              boxShadow:
+                "var(--color-picker-hash-bg-color) 0px 0px 0px 1px inset",
+              color: "var(--color-picker-input-color)",
             },
             hash: {
-              background: "var(--shared-gray-color-200)",
+              background: "var(--color-picker-hash-bg-color)",
+              color: "var(--color-picker-hash-color)",
             },
           },
         }}

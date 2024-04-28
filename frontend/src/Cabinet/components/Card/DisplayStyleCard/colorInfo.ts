@@ -29,28 +29,21 @@ export const pointColorData: ColorData[] = [
 ];
 
 export const customColors = [
-  "var(--custom-pink)",
-  "var(--custom-orange)",
-  "var(--custom-yellow)",
-  "var(--custom-green-100)",
-  "var(--custom-green-200)",
-  "var(--custom-blue-100)",
-  "var(--custom-blue-200)",
-  "var(--custom-blue-300)",
-  "var(--custom-purple-100)",
-  "var(--custom-purple-200)",
+  "--custom-pink",
+  "--custom-orange",
+  "--custom-yellow",
+  "--custom-green-100",
+  "--custom-green-200",
+  "--custom-blue-100",
+  "--custom-blue-200",
+  "--custom-blue-300",
+  "--custom-purple-100",
+  "--custom-purple-200",
 ];
 
 export const GetCustomColorsValues = () => {
   return customColors.map((color) => {
-    // NOTE : "var(--custom-pink)"에서 "--custom-pink" 추출
-    const startIndex = color.indexOf("(") + 1;
-    const endIndex = color.lastIndexOf(")");
-    const extractedValue = color.substring(startIndex, endIndex);
-
-    // NOTE : var(--custom-pink)의 값 구하기
-    return getComputedStyle(document.documentElement).getPropertyValue(
-      extractedValue
-    );
+    // NOTE : var(--custom-*)의 값 구하기
+    return getComputedStyle(document.body).getPropertyValue(color);
   });
 };

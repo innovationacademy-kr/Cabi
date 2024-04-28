@@ -11,6 +11,10 @@ const lightValues = css`
   --capsule-btn-hover-bg-color: var(--transparent-purple);
   --presentation-no-event-past-color: var(--gray-200);
   --presentation-no-event-cur-color: var(--bg-color);
+  --color-picker-bg-color: var(--bg-color);
+  --color-picker-hash-bg-color: var(--gray-200);
+  --color-picker-hash-color: var(--gray-450);
+  --color-picker-input-color: var(--gray-500);
 
   /* main color variable */
   --main-color: var(--purple-500);
@@ -39,6 +43,7 @@ const lightValues = css`
   --border-shadow-color-200: var(--black-shadow-200);
   --border-shadow-color-300: var(--black-shadow-300);
   --table-border-shadow-color: var(--black-shadow-100);
+  --color-picker-border-shadow-color: var(--black-shadow-200);
   /* TODO : table에 다 적용 */
 
   --custom-purple-200: var(--default-main-color);
@@ -74,6 +79,10 @@ const darkValues = css`
   --capsule-btn-hover-bg-color: var(--transparent-purple);
   --presentation-no-event-past-color: var(--bg-color);
   --presentation-no-event-cur-color: var(--gray-600);
+  --color-picker-bg-color: var(--gray-530);
+  --color-picker-hash-bg-color: var(--gray-550);
+  --color-picker-hash-color: var(--gray-450);
+  --color-picker-input-color: var(--gray-400);
 
   --main-color: var(--purple-600);
   --sub-color: var(--purple-300);
@@ -100,6 +109,7 @@ const darkValues = css`
   --border-shadow-color-200: var(--black-shadow-300);
   --border-shadow-color-300: var(--black-shadow-400);
   --table-border-shadow-color: var(--black-shadow-400);
+  --color-picker-border-shadow-color: var(--black-shadow-200);
 
   --custom-purple-200: var(--purple-600);
 
