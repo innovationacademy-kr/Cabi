@@ -66,7 +66,7 @@ const DomainGroupContainerStyled = styled.div`
   height: 40px;
   border-bottom: 1px solid var(--shared-gray-color-400);
   padding: 0 28px;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
   font-size: 0.875rem;
   background-color: var(--bg-color);
 `;
@@ -115,7 +115,7 @@ const DomainSeparatorStyled = styled.div`
   width: 1px;
   height: 20px;
   margin: 0 8px;
-  background-color: var(--shared-gray-color-300);
+  background-color: var(--service-man-title-border-btm-color);
 `;
 
 export default TopNavDomainGroup;

@@ -111,7 +111,7 @@ const TopNavWrapperStyled = styled.div`
   background-color: var(--bg-color);
   border-bottom: 1px solid var(--shared-gray-color-400);
   padding: 0 28px;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
 `;
 
 const LogoStyled = styled.div`
@@ -190,7 +190,7 @@ const SelectIconStyled = styled.div`
   align-items: center;
 
   & > svg > path {
-    stroke: var(--shared-gray-color-500);
+    stroke: var(--gray-line-btn-color);
   }
 `;
 

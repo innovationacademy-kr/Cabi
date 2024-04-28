@@ -62,7 +62,7 @@ const WrapperStyled = styled.div`
   width: fit-content;
   display: flex;
   align-items: center;
-  background-color: var(--shared-gray-color-100);
+  background-color: var(--card-bg-color);
   border-radius: 10px;
   button {
     display: flex;

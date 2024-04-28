@@ -130,7 +130,7 @@ const WrapperStyled = styled.div<{ isSelected: boolean }>`
   height: 110px;
   border-radius: 10px;
   padding: 25px;
-  background-color: var(--shared-gray-color-100);
+  background-color: var(--card-bg-color);
   display: flex;
   align-items: center;
   transition: transform 0.2s, opacity 0.2s;
@@ -186,7 +186,7 @@ const TextWrapper = styled.div`
 const LocationStyled = styled.p`
   font-size: 0.875rem;
   line-height: 28px;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
 `;
 
 const NameWrapperStyled = styled.div`

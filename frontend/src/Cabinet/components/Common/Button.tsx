@@ -62,8 +62,8 @@ const ButtonContainerStyled = styled.button`
     props.theme === "grayLine" &&
     css`
       background: var(--bg-color);
-      color: var(--shared-gray-color-500);
-      border: 1px solid var(--shared-gray-color-500);
+      color: var(--gray-line-btn-color);
+      border: 1px solid var(--gray-line-btn-color);
     `}
   ${(props) =>
     props.theme === "smallGrayLine" &&
@@ -71,9 +71,9 @@ const ButtonContainerStyled = styled.button`
       max-width: 200px;
       height: 40px;
       background: var(--bg-color);
-      color: var(--shared-gray-color-500);
+      color: var(--gray-line-btn-color);
       font-size: 0.875rem;
-      border: 1px solid var(--shared-gray-color-500);
+      border: 1px solid var(--gray-line-btn-color);
     `}
 
   @media (max-height: 745px) {

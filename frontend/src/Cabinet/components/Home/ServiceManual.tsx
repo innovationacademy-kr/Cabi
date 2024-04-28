@@ -121,7 +121,7 @@ const TitleContainerStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid var(--shared-gray-color-300);
+  border-bottom: 2px solid var(--service-man-title-border-btm-color);
   margin-bottom: 70px;
   color: var(--sys-main-color);
   font-weight: 700;
@@ -145,7 +145,7 @@ const NotionBtn = styled.button`
   height: 40px;
   border-radius: 8px;
   font-size: 0.875rem;
-  color: var(--shared-gray-color-700);
+  color: var(--notion-btn-text-color);
   background: var(--bg-color);
   border: 1px solid var(--shared-gray-color-400);
   :hover {

@@ -176,7 +176,7 @@ const SubTitleStyled = styled.div`
   word-break: break-all;
   line-height: 1.5;
   margin-bottom: 12px;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
 `;
 
 const DetailFooterStyled = styled.div`
@@ -187,7 +187,7 @@ const DetailFooterStyled = styled.div`
 const NameStyled = styled.div`
   white-space: nowrap;
   margin-right: 5px;
-  color: var(--shared-gray-color-450);
+  color: var(--presentation-card-speaker-name-color);
   font-weight: 500;
 
   ::after {
@@ -202,7 +202,7 @@ const CalendarStyled = styled.div`
   font-size: 1rem;
 
   & > span {
-    color: var(--shared-gray-color-500);
+    color: var(--gray-line-btn-color);
   }
 `;
 
@@ -221,8 +221,8 @@ const Paginations = styled.div<{ current: boolean }>`
   height: 10px;
   background-color: ${(props) =>
     props.current
-      ? "var(--shared-blue-color-300)"
-      : "var(--shared-gray-color-500)"};
+      ? "var(--presentation-blue-pagination-btn-color)"
+      : "var(--gray-line-btn-color)"};
   border-radius: 12px;
   margin: 0 5px;
 `;

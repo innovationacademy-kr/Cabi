@@ -70,10 +70,7 @@ const AdminCabinetInfoArea: React.FC<{
         <CabiLogoStyled>
           <LogoImg />
         </CabiLogoStyled>
-        <TextStyled
-          fontSize="1.125rem"
-          fontColor="var(--shared-gray-color-500)"
-        >
+        <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
           사물함/유저를 <br />
           선택해주세요
         </TextStyled>
@@ -83,7 +80,7 @@ const AdminCabinetInfoArea: React.FC<{
   if (multiSelectTargetInfo) {
     return (
       <CabinetDetailAreaStyled>
-        <TextStyled fontSize="1rem" fontColor="var(--shared-gray-color-500)">
+        <TextStyled fontSize="1rem" fontColor="var(--gray-line-btn-color)">
           {currentFloor + "F - " + currentSection}
         </TextStyled>
         <MultiCabinetIconWrapperStyled>
@@ -135,7 +132,7 @@ const AdminCabinetInfoArea: React.FC<{
   return (
     <CabinetDetailAreaStyled>
       <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--shared-gray-color-500)">
+      <TextStyled fontSize="1rem" fontColor="var(--gray-line-btn-color)">
         {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
       </TextStyled>
       <CabinetRectangleStyled

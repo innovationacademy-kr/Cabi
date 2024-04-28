@@ -117,7 +117,7 @@ const TbodyStyled = styled.tbody`
     line-height: 45px;
   }
   & > tr:nth-child(2n) {
-    background: var(--shared-purple-color-100);
+    background: var(--table-even-row-bg-color);
   }
   cursor: pointer;
 

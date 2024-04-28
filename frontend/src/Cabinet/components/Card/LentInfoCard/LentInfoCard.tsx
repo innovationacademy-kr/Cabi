@@ -54,7 +54,7 @@ const LentInfoCard = ({
           <CabinetInfoDetailStyled>
             <CabinetInfoTextStyled
               fontSize={cabinetInfo.floor !== 0 ? "1rem" : "0.9rem"}
-              fontColor="var(--shared-gray-color-500)"
+              fontColor="var(--gray-line-btn-color)"
             >
               {cabinetInfo.floor !== 0
                 ? cabinetInfo.floor + "층 - " + cabinetInfo.section

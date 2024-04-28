@@ -48,7 +48,7 @@ const ColorTableStyled = styled.div`
   left: 30px;
   width: auto;
   overflow: hidden;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
 `;
 
 const ColorTableItemStyled = styled.div<{ color: string }>`

@@ -310,7 +310,7 @@ const RegisterPageStyled = styled.div`
     right: 0;
   }
   @media (max-width: 700px) {
-    background-color: var(--shared-gray-color-100);
+    background-color: var(--card-bg-color);
   }
 `;
 
@@ -331,7 +331,7 @@ const BackgroundStyled = styled.div`
   width: 100%;
   max-width: 700px;
   border-radius: 10px;
-  background-color: var(--shared-gray-color-100);
+  background-color: var(--card-bg-color);
   margin-top: 20px;
   padding: 20px;
   margin-bottom: 20px;

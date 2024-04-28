@@ -154,15 +154,15 @@ const DropdownOption = styled.li<{ invalid: boolean }>`
   font-size: 0.875rem;
   padding: 10px;
   color: ${({ invalid }) =>
-    invalid ? "var(--shared-gray-color-500)" : "var(--normal-text-color)"};
+    invalid ? "var(--gray-line-btn-color)" : "var(--normal-text-color)"};
   background-color: ${({ invalid }) =>
-    invalid ? "var(--shared-gray-color-100)" : "transparent"};
+    invalid ? "var(--card-bg-color)" : "transparent"};
   &:hover {
     background-color: ${({ invalid }) =>
       invalid
-        ? "var(--shared-gray-color-100)"
-        : "var(--shared-blue-color-200)"};
-    background-color: var(--shared-blue-color-200);
+        ? "var(--card-bg-color)"
+        : "var(--presentation-dropdown-select-color)"};
+    background-color: var(--presentation-dropdown-select-color);
     cursor: ${({ invalid }) => (invalid ? "not-allowed" : "pointer")};
   }
 
@@ -198,7 +198,7 @@ const RegisterTimeInputStyled = styled.div<{
   padding-left: 10px;
   color: ${(props) =>
     props.isFocused || !props.hasSelectedOption
-      ? "var(--shared-gray-color-500)"
+      ? "var(--gray-line-btn-color)"
       : "var(--normal-text-color)"};
 `;
 

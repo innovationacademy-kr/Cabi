@@ -88,7 +88,7 @@ const LeftMainNav = ({
               className="cabiButton"
               onClick={onClickLogoutButton}
             >
-              <LogoutImg stroke="var(--shared-gray-color-500)" />
+              <LogoutImg stroke="var(--gray-line-btn-color)" />
               Logout
             </BottomBtnStyled>
           )}
@@ -127,7 +127,7 @@ const TopBtnStyled = styled.li`
   font-weight: 300;
   margin-bottom: 2.5vh;
   border-radius: 10px;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
   cursor: pointer;
   &:last-child {
     margin-bottom: 0;
@@ -168,7 +168,7 @@ const BottomBtnStyled = styled.li`
   font-weight: 300;
   margin-top: 2.5vh;
   border-radius: 10px;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -177,7 +177,7 @@ const BottomBtnStyled = styled.li`
     margin-top: 0;
   }
   & a {
-    color: var(--shared-gray-color-500);
+    color: var(--gray-line-btn-color);
   }
   & div {
     width: 24px;

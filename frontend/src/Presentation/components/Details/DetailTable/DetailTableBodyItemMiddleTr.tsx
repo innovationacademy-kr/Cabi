@@ -58,7 +58,7 @@ const MobileMiddleTrStysled = styled.tr<{
 }>`
   background-color: ${(props) =>
     !props.itemStatus
-      ? "var(--shared-blue-color-200)"
+      ? "var(--presentation-dropdown-select-color)"
       : props.itemStatus === itemType.NO_EVENT_CURRENT
       ? "var(--presentation-no-event-cur-color)"
       : "var(--presentation-no-event-past-color)"};

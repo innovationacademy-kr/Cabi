@@ -102,7 +102,7 @@ const BodyStyled = styled.div`
   margin-bottom: 50px;
   width: 80%;
   padding: 24px 20px 10px 20px;
-  background-color: var(--shared-gray-color-100);
+  background-color: var(--card-bg-color);
   border-radius: 10px;
   display: flex;
   min-width: 375px;

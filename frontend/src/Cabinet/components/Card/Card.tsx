@@ -69,7 +69,7 @@ export const CardStyled = styled.div<{
 }>`
   width: ${(props) => props.width};
   border-radius: 10px;
-  background-color: var(--shared-gray-color-100);
+  background-color: var(--card-bg-color);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -137,7 +137,7 @@ export const CardButtonStyled = styled.div<{
             ? props.fontColor
             : props.isExtensible
             ? "var(--sys-main-color)"
-            : "var(--shared-gray-color-500)"};
+            : "var(--gray-line-btn-color)"};
           padding: 5px 15px;
           border: none;
           border-radius: 5px;

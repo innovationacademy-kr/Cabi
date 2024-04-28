@@ -44,7 +44,7 @@ const ClubCabinetInfoCard = ({
             : [
                 // NOTE: 이 부분은 레이아웃을 유지하기 위한 placeholder 버튼입니다.
                 {
-                  backgroundColor: "var(--shared-gray-color-100)",
+                  backgroundColor: "var(--card-bg-color)",
                   onClick: () => {},
                   icon: null,
                   isClickable: false,
@@ -61,7 +61,7 @@ const ClubCabinetInfoCard = ({
               <ClubNameTextStyled>{clubInfo.clubName}</ClubNameTextStyled>
               <CabinetInfoTextStyled
                 fontSize={"1rem"}
-                fontColor="var(--shared-gray-color-500)"
+                fontColor="var(--gray-line-btn-color)"
               >
                 {clubInfo.floor + "층 - " + clubInfo.section}
               </CabinetInfoTextStyled>

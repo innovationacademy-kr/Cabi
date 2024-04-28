@@ -52,7 +52,7 @@ const TopNavWrapperStyled = styled.div`
   align-items: center;
   border-bottom: 1px solid var(--shared-gray-color-400);
   padding: 0 28px;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
 `;
 
 const LogoStyled = styled.div`

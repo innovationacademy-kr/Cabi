@@ -42,7 +42,7 @@ const MemberListItemContainerStyled = styled.div<{
   width: 80px;
   height: 80px;
   background-color: ${(props) =>
-    props.bgColor ? props.bgColor : "var(--shared-gray-color-100)"};
+    props.bgColor ? props.bgColor : "var(--card-bg-color)"};
   border-radius: 1rem;
   margin: 7px;
   padding: 10px;

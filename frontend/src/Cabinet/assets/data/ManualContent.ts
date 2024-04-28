@@ -110,7 +110,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.IN_SESSION]: {
     contentTitle: "대기중",
     imagePath: "/src/Cabinet/assets/images/clock.svg",
-    background: "var(--shared-gray-color-100)",
+    background: "var(--card-bg-color)",
     contentText: `<span>◦ 상세 내용</span><br/>
     <div>공유 사물함 대여 시 <strong>10분</strong>간의 대기 시간이 발생합니다.<br/>
     대여 과정에서 생성된 <strong>초대 코드</strong>를 통해 공유 사물함에 입장할 수 있습니다.<br/>
@@ -130,7 +130,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.EXTENSION]: {
     contentTitle: "연장권 이용방법 안내서",
     imagePath: "/src/Cabinet/assets/images/extension.svg",
-    background: "var(--shared-gray-color-100)",
+    background: "var(--card-bg-color)",
     contentText: `<span>◦ 연장권 취득 조건</span><br/>
     <div>
     월 출석 시간이 <strong>기준 시간</strong> 이상일 시 연장권이 부여됩니다.<br/>

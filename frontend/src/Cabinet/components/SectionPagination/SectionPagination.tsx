@@ -24,7 +24,7 @@ const SectionPagination: React.FC<{
       filledColor={
         sectionName === currentSectionName
           ? "var(--sys-main-color)"
-          : "var(--shared-gray-color-300)"
+          : "var(--service-man-title-border-btm-color)"
       }
       onClick={() => changeSectionOnClickIndexButton(index)}
       className="cabiButton"
@@ -94,7 +94,7 @@ const SectionNameTextStyled = styled.div`
   min-width: 220px;
   font-size: 1rem;
   text-align: center;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
 `;
 
 const SectionIndexStyled = styled.div`

@@ -68,14 +68,14 @@ const CabinetInfoArea: React.FC<{
       <CabiLogoStyled>
         <LogoImg />
       </CabiLogoStyled>
-      <TextStyled fontSize="1.125rem" fontColor="var(--shared-gray-color-500)">
+      <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
         사물함을 <br />
         선택해주세요
       </TextStyled>
     </NotSelectedStyled>
   ) : (
     <CabinetDetailAreaStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--shared-gray-color-500)">
+      <TextStyled fontSize="1rem" fontColor="var(--gray-line-btn-color)">
         {selectedCabinetInfo!.floor !== 0
           ? selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section
           : "-"}

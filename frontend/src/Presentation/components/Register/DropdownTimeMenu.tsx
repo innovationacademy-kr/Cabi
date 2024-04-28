@@ -162,7 +162,7 @@ const DropdownOption = styled.li`
   padding: 10px;
   cursor: pointer;
   &:hover {
-    background-color: var(--shared-blue-color-200);
+    background-color: var(--presentation-dropdown-select-color);
   }
 `;
 
@@ -190,7 +190,7 @@ const RegisterTimeInputStyled = styled.div<{
   padding-left: 10px;
   color: ${(props) =>
     props.isFocused || !props.hasSelectedOption
-      ? "var(--shared-gray-color-500)"
+      ? "var(--gray-line-btn-color)"
       : "var(--normal-text-color)"};
 `;
 

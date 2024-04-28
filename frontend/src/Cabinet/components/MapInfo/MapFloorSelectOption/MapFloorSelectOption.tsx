@@ -37,7 +37,7 @@ const OptionWrapperStyled = styled.div`
 const OptionStyled = styled.div`
   width: 65px;
   height: 40px;
-  border-bottom: 1px solid var(--shared-gray-color-200);
+  border-bottom: 1px solid var(--map-floor-color);
   display: flex;
   justify-content: center;
   align-items: center;

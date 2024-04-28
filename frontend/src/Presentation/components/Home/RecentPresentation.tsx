@@ -108,7 +108,7 @@ const TitleContainerStyled = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   font-weight: 700;
-  border-bottom: 2px solid var(--shared-gray-color-300);
+  border-bottom: 2px solid var(--service-man-title-border-btm-color);
   width: 100%;
   font-size: 2.5rem;
 

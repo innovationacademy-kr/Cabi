@@ -24,7 +24,7 @@ const AdminClubLog = ({
           filledColor={
             currentPage === i
               ? "var(--sys-main-color)"
-              : "var(--shared-gray-color-300)"
+              : "var(--service-man-title-border-btm-color)"
           }
           onClick={() => changePageOnClickIndexButton(i)}
           className="cabiButton"

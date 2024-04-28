@@ -48,20 +48,20 @@ const lightValues = css`
 
   --custom-purple-200: var(--sys-default-main-color);
 
-  --shared-gray-color-100: var(--ref-gray-100);
-  --shared-gray-color-200: var(--ref-gray-200);
-  --shared-gray-color-300: var(--ref-gray-300);
+  --card-bg-color: var(--ref-gray-100);
+  --map-floor-color: var(--ref-gray-200);
+  --service-man-title-border-btm-color: var(--ref-gray-300);
   --shared-gray-color-400: var(--ref-gray-400);
-  --shared-gray-color-450: var(--ref-gray-450);
-  --shared-gray-color-500: var(--ref-gray-500);
-  --shared-gray-color-600: var(--ref-gray-600);
-  --shared-gray-color-700: var(--ref-gray-800);
+  --presentation-card-speaker-name-color: var(--ref-gray-450);
+  --gray-line-btn-color: var(--ref-gray-500);
+  --pie-chart-label-text-color: var(--ref-gray-600);
+  --notion-btn-text-color: var(--ref-gray-800);
 
-  --shared-purple-color-100: var(--ref-purple-100);
+  --table-even-row-bg-color: var(--ref-purple-100);
 
-  --shared-blue-color-100: var(--ref-blue-100);
-  --shared-blue-color-200: var(--ref-blue-150);
-  --shared-blue-color-300: var(--ref-blue-250);
+  --presentation-table-even-row-bg-color: var(--ref-blue-100);
+  --presentation-dropdown-select-color: var(--ref-blue-150);
+  --presentation-blue-pagination-btn-color: var(--ref-blue-250);
 
   color: var(--normal-text-color);
   background-color: var(--bg-color);
@@ -70,7 +70,7 @@ const lightValues = css`
 // set up dark theme CSS variables
 const darkValues = css`
   --bg-color: var(--ref-gray-900);
-  --line-color: var(--shared-gray-color-300);
+  --line-color: var(--service-man-title-border-btm-color);
   --normal-text-color: var(--ref-gray-100);
   --white-text-with-bg-color: var(--ref-gray-100);
   --card-content-bg-color: var(--ref-gray-550);
@@ -114,20 +114,20 @@ const darkValues = css`
 
   --custom-purple-200: var(--ref-purple-600);
 
-  --shared-gray-color-100: var(--ref-gray-700);
-  --shared-gray-color-200: var(--ref-gray-700);
-  --shared-gray-color-300: var(--ref-gray-600);
-  --shared-gray-color-450: var(--ref-gray-450);
+  --card-bg-color: var(--ref-gray-700);
+  --map-floor-color: var(--ref-gray-700);
+  --service-man-title-border-btm-color: var(--ref-gray-600);
+  --presentation-card-speaker-name-color: var(--ref-gray-450);
   --shared-gray-color-400: var(--ref-gray-500);
-  --shared-gray-color-500: var(--ref-gray-400);
-  --shared-gray-color-600: var(--ref-gray-300);
-  --shared-gray-color-700: var(--ref-gray-200);
+  --gray-line-btn-color: var(--ref-gray-400);
+  --pie-chart-label-text-color: var(--ref-gray-300);
+  --notion-btn-text-color: var(--ref-gray-200);
 
-  --shared-purple-color-100: var(--ref-purple-700);
+  --table-even-row-bg-color: var(--ref-purple-700);
 
-  --shared-blue-color-100: var(--ref-blue-500);
-  --shared-blue-color-200: var(--ref-blue-150);
-  --shared-blue-color-300: var(--ref-blue-250);
+  --presentation-table-even-row-bg-color: var(--ref-blue-500);
+  --presentation-dropdown-select-color: var(--ref-blue-150);
+  --presentation-blue-pagination-btn-color: var(--ref-blue-250);
 
   color: var(--normal-text-color);
   background-color: var(--bg-color);

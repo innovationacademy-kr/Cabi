@@ -123,7 +123,7 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
   display: flex;
   align-items: center;
   background-color: ${({ isSelected }) =>
-    isSelected ? "var(--shared-gray-color-200)" : "var(--bg-color)"};
+    isSelected ? "var(--map-floor-color)" : "var(--bg-color)"};
   border: 1px solid var(--shared-gray-color-400);
   border-width: 0px 1px 1px 1px;
   width: 100%;
@@ -142,7 +142,7 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
     border-radius: 0px 0px 10px 10px;
   }
   &:hover {
-    background-color: var(--shared-gray-color-200);
+    background-color: var(--map-floor-color);
   }
 `;
 

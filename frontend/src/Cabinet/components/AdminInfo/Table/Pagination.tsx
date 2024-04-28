@@ -40,8 +40,8 @@ const PageButtonStyled = styled.div`
 `;
 
 const ActivaPageButtonStyled = styled(PageButtonStyled)`
-  background: var(--shared-gray-color-500);
-  border: 2px solid var(--shared-gray-color-500);
+  background: var(--gray-line-btn-color);
+  border: 2px solid var(--gray-line-btn-color);
 `;
 
 const ButtonContainerStyled = styled.div`

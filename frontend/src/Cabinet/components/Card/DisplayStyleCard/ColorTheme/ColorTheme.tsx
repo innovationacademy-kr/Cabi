@@ -81,7 +81,7 @@ const ButtonStyled = styled.button<{
   height: 90px;
   font-weight: 500;
   background-color: ${(props) =>
-    props.isClicked ? "var(--sys-main-color)" : "var(--shared-gray-color-100)"};
+    props.isClicked ? "var(--sys-main-color)" : "var(--card-bg-color)"};
   color: ${(props) =>
     props.isClicked
       ? "var(--white-text-with-bg-color)"

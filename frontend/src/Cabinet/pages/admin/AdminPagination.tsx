@@ -26,14 +26,14 @@ const PointStyled = styled.div<{ active: boolean }>`
   width: 23px;
   height: 23px;
   border-radius: 100%;
-  border: 3px solid var(--shared-gray-color-500);
+  border: 3px solid var(--gray-line-btn-color);
   cursor: pointer;
   transition: 0.5s;
   &:hover {
-    background: var(--shared-gray-color-500);
+    background: var(--gray-line-btn-color);
   }
   background: ${(props) =>
-    props.active ? "var(--shared-gray-color-500)" : "none"};
+    props.active ? "var(--gray-line-btn-color)" : "none"};
 `;
 
 const AdminPaginationStyled = styled.div<{ page: number }>`

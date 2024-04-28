@@ -57,7 +57,7 @@ const ClubMemberInfoArea = ({
             </CabiLogoStyled>
             <TextStyled
               fontSize="1.125rem"
-              fontColor="var(--shared-gray-color-500)"
+              fontColor="var(--gray-line-btn-color)"
             >
               동아리를 <br />
               선택해주세요

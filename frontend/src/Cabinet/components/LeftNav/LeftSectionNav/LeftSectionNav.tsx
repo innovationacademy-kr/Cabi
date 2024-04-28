@@ -76,14 +76,14 @@ const LeftSectionNav = ({
           title="슬랙 캐비닛 채널 새창으로 열기"
         >
           문의하기
-          <LinkImg id="linknImg" stroke="var(--shared-gray-color-500)" />
+          <LinkImg id="linknImg" stroke="var(--gray-line-btn-color)" />
         </SectionLinkStyled>
         <SectionLinkStyled
           onClick={() => onClickClubForm()}
           title="동아리 사물함 사용 신청서 새창으로 열기"
         >
           동아리 신청서
-          <LinkImg id="linknImg" stroke="var(--shared-gray-color-500)" />
+          <LinkImg id="linknImg" stroke="var(--gray-line-btn-color)" />
         </SectionLinkStyled>
       </ProfileLeftNavOptionStyled>
       {isClub && <LeftSectionNavClubs />}
@@ -116,7 +116,7 @@ const ProfileLeftNavOptionStyled = styled.div<{
   & hr {
     width: 80%;
     height: 1px;
-    background-color: var(--shared-gray-color-300);
+    background-color: var(--service-man-title-border-btm-color);
     border: 0;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -129,7 +129,7 @@ export const FloorSectionStyled = styled.div`
   line-height: 40px;
   border-radius: 10px;
   text-indent: 20px;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
   margin: 2px 0;
   cursor: pointer;
   @media (hover: hover) and (pointer: fine) {
@@ -150,7 +150,7 @@ const SectionLinkStyled = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
 
   #linknImg {
     width: 15px;

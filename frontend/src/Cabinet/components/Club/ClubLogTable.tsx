@@ -77,12 +77,12 @@ const TheadStyled = styled.thead`
 `;
 
 const TbodyStyled = styled.tbody`
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
   & > tr {
     text-align: center;
     height: 50px;
     cursor: pointer;
-    background: var(--shared-purple-color-100);
+    background: var(--table-even-row-bg-color);
   }
   & > tr td:first-of-type {
     border-radius: 8px 0 0 8px;

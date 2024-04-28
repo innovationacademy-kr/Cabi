@@ -178,7 +178,7 @@ const TitleContainerStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid var(--shared-gray-color-300);
+  border-bottom: 2px solid var(--service-man-title-border-btm-color);
   margin-bottom: 70px;
   font-weight: 700;
 
@@ -214,7 +214,7 @@ const CapsuleButtonStyled = styled.span`
   justify-content: center;
   align-items: center;
   padding: 8px 20px;
-  background: var(--shared-gray-color-100);
+  background: var(--card-bg-color);
   border: 1px solid var(--capsule-btn-border-color);
   border-radius: 22px;
   cursor: pointer;
@@ -231,7 +231,7 @@ const FormWappingStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: var(--shared-gray-color-100);
+  background-color: var(--card-bg-color);
   border-radius: 10px;
   padding: 30px 20px;
   gap: 20px;
@@ -242,7 +242,7 @@ const FormContainerStyled = styled.div`
 `;
 const FormSubTitleStyled = styled.h3`
   font-size: 0.875rem;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
   margin-bottom: 10px;
   span {
     color: var(--expired-color);

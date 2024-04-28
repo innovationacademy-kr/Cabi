@@ -41,10 +41,7 @@ const UserInfoArea: React.FC<{
     return (
       <NotSelectedStyled>
         <CabiLogoStyled src={cabiLogo} />
-        <TextStyled
-          fontSize="1.125rem"
-          fontColor="var(--shared-gray-color-500)"
-        >
+        <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
           사물함/유저를 <br />
           선택해주세요
         </TextStyled>
@@ -54,7 +51,7 @@ const UserInfoArea: React.FC<{
   return (
     <CabinetDetailAreaStyled>
       <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--shared-gray-color-500)">
+      <TextStyled fontSize="1rem" fontColor="var(--gray-line-btn-color)">
         대여 중이 아닌 사용자
       </TextStyled>
       <CabinetRectangleStyled

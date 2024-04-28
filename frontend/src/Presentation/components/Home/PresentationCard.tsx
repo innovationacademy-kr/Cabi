@@ -119,7 +119,7 @@ const SubTitleStyled = styled.div`
   word-break: break-all;
   line-height: 1.5;
   margin-bottom: 12px;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
 `;
 
 const DetailFooterStyled = styled.div`
@@ -130,7 +130,7 @@ const DetailFooterStyled = styled.div`
 const NameStyled = styled.div`
   white-space: nowrap;
   margin-right: 5px;
-  color: var(--shared-gray-color-450);
+  color: var(--presentation-card-speaker-name-color);
   font-weight: 500;
 
   ::after {
@@ -144,7 +144,7 @@ const CalendarStyled = styled.div`
   justify-content: flex-end;
   font-size: 1rem;
   & > span {
-    color: var(--shared-gray-color-500);
+    color: var(--gray-line-btn-color);
   }
 `;
 
@@ -154,6 +154,6 @@ const IconStyled = styled.div`
   margin-right: 8px;
 
   & > svg > path {
-    stroke: var(--shared-gray-color-500);
+    stroke: var(--gray-line-btn-color);
   }
 `;

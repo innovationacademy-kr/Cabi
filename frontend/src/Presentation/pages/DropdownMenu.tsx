@@ -84,7 +84,7 @@ const DropdownOptions = styled.ul`
 
 const DropdownOption = styled.li`
   font-size: 0.875rem;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
   padding: 10px;
   cursor: pointer;
   &:hover {
@@ -105,7 +105,7 @@ const RegisterTimeInputStyled = styled.div<{ isFocused: boolean }>`
         : "var(--ref-white)"};
   resize: none;
   outline: none;
-  color: var(--shared-gray-color-500);
+  color: var(--gray-line-btn-color);
   cursor: pointer;
   display: flex;
   align-items: center;

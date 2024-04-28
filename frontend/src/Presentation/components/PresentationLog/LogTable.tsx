@@ -106,7 +106,7 @@ const TbodyStyled = styled.tbody`
     padding-bottom: 10px;
   }
   & > tr:nth-child(2n) {
-    background-color: var(--shared-blue-color-100);
+    background-color: var(--presentation-table-even-row-bg-color);
     color: var(--normal-text-color);
   }
   & > tr > td:first-child {
