@@ -82,7 +82,7 @@ const TheadStyled = styled.thead`
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background-color: var(--presentation-main-color);
+  background-color: var(--sys-presentation-main-color);
   color: var(--white-text-with-bg-color);
   & > tr > th:first-child {
     padding-left: 0px;

@@ -58,7 +58,7 @@ const AdminLentLog = ({ lentType }: { lentType: string }) => {
 const GoBackButtonStyled = styled.div`
   position: absolute;
   top: 3%;
-  color: var(--sub-color);
+  color: var(--sys-sub-color);
   right: 6%;
   font-size: 0.875rem;
   text-decoration: underline;
@@ -79,7 +79,7 @@ const TitleStyled = styled.h1<{ isClick: boolean }>`
   display: flex;
   cursor: ${(props) => (props.isClick ? "pointer" : "default")};
   &:hover {
-    color: ${(props) => (props.isClick ? "var(--main-color)" : "")};
+    color: ${(props) => (props.isClick ? "var(--sys-main-color)" : "")};
   }
 `;
 
@@ -99,7 +99,7 @@ const AdminLentLogStyled = styled.div`
   z-index: 9;
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;
-  box-shadow: 0 0 40px 0 var(--border-shadow-color-300);
+  box-shadow: 0 0 40px 0 var(--page-btn-shadow-color);
   display: flex;
   flex-direction: column;
   align-items: center;

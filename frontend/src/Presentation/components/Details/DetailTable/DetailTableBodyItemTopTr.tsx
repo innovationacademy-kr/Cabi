@@ -200,7 +200,7 @@ const TopTrStyled = styled.tr<{
     & button {
       width: 120px;
       height: 36px;
-      background-color: var(--presentation-main-color);
+      background-color: var(--sys-presentation-main-color);
       font-weight: bold;
       font-size: 1rem;
     }
@@ -215,7 +215,7 @@ const TopTrStyled = styled.tr<{
     line-height: 40px;
     width: 100%;
     background-color: ${(props) =>
-      props.open ? "#91B5FB" : "var(--presentation-main-color)"};
+      props.open ? "#91B5FB" : "var(--sys-presentation-main-color)"};
     & > td {
       border-radius: ${(props) => (props.open ? "" : "10px 10px 0 0")};
     }

@@ -123,7 +123,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-color-200);
+  background: var(--modal-bg-shadow-color);
   z-index: 1000;
 `;
 

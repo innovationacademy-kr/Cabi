@@ -63,12 +63,12 @@ const AdminLoginTemplate = (props: {
           <LoginTitleStyled color="var(--normal-text-color)">
             42서울 캐비닛 서비스
           </LoginTitleStyled>
-          <LoginTitleStyled color="var(--sub-color)">
+          <LoginTitleStyled color="var(--sys-sub-color)">
             여러분의 일상을 가볍게
           </LoginTitleStyled>
         </TopContentsStyled>
         <LoginImgStyled>
-          <AdminLoginImg fill="var(--main-color)" />
+          <AdminLoginImg fill="var(--sys-main-color)" />
         </LoginImgStyled>
         <BottomContentsStyled>
           <p>
@@ -188,7 +188,7 @@ const BottomContentsStyled = styled.div`
 `;
 
 const CabiStyled = styled.span`
-  color: var(--main-color);
+  color: var(--sys-main-color);
 `;
 
 const RightSectionStyled = styled.section`
@@ -197,7 +197,7 @@ const RightSectionStyled = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--main-color);
+  background-color: var(--sys-main-color);
 `;
 
 const LoginCardStyled = styled.div`
@@ -216,7 +216,7 @@ const CardLogoStyled = styled.div`
   height: 70px;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
   }
 `;
@@ -232,7 +232,7 @@ const CardTitleStyled = styled.h1`
 `;
 
 const CardSubTitleStyled = styled.p`
-  color: var(--main-color);
+  color: var(--sys-main-color);
 `;
 
 const CardInputBoxStyled = styled.div`
@@ -257,7 +257,7 @@ const CardInputStyled = styled.input<{ isFocus: boolean }>`
   margin-bottom: 8px;
   border: ${(props) =>
     props.isFocus
-      ? "1px solid var(--main-color)"
+      ? "1px solid var(--sys-main-color)"
       : "1px solid var(--shared-gray-color-400)"};
   color: var(--normal-text-color);
 `;

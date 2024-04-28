@@ -221,7 +221,7 @@ const CabiLogoStyled = styled.div`
   margin-bottom: 10px;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
   }
 `;
@@ -245,7 +245,7 @@ const LinkTextStyled = styled.div`
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 0.875rem;
-  color: var(--sub-color);
+  color: var(--sys-sub-color);
   text-decoration: underline;
   :hover {
     cursor: pointer;
@@ -285,9 +285,9 @@ const CabinetRectangleStyled = styled.div<{
   text-align: center;
   ${({ cabinetStatus }) => css`
     border: ${cabinetStatus === "IN_SESSION"
-      ? "2px solid var(--main-color)"
+      ? "2px solid var(--sys-main-color)"
       : cabinetStatus === "PENDING"
-      ? "2px double var(--main-color)"
+      ? "2px double var(--sys-main-color)"
       : "none"};
   `}
   ${({ cabinetStatus }) => css`

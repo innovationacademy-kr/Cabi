@@ -133,7 +133,7 @@ const CabinetRectangleStyled = styled.div<{
   height: 60px;
   line-height: ${(props) => (props.status === "IN_SESSION" ? "56px" : "60px")};
   border: ${(props) =>
-    props.status === "IN_SESSION" && "2px solid var(--main-color);"};
+    props.status === "IN_SESSION" && "2px solid var(--sys-main-color);"};
   border-radius: 10px;
   margin-right: 20px;
   background-color: ${(props) =>
@@ -146,7 +146,7 @@ const CabinetRectangleStyled = styled.div<{
     props.banned
       ? "var(--white-text-with-bg-color)"
       : props.status === "IN_SESSION"
-      ? "var(--main-color)"
+      ? "var(--sys-main-color)"
       : "var(--ref-black)"};
   /* black */
   font-size: 2rem;

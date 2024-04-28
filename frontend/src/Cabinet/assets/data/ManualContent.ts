@@ -94,7 +94,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.PENDING]: {
     contentTitle: "오픈예정",
     imagePath: "",
-    background: "var(--main-color)",
+    background: "var(--sys-main-color)",
     contentText: `<span>◦ 상세 내용</span><br/>
     <div>사물함 반납 시, 해당 사물함은 오픈예정 상태로 변경됩니다.<br />
     오픈예정 상태의 사물함은 대여가 불가능합니다.<br />
@@ -125,7 +125,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     <span>◦ 주의 사항</span><br/>
     <div>초대 코드를 <strong>3번 이상</strong> 잘못 입력하면 <strong>입장이 제한</strong>됩니다.</div>
     `,
-    pointColor: "var(--main-color)",
+    pointColor: "var(--sys-main-color)",
   },
   [ContentStatus.EXTENSION]: {
     contentTitle: "연장권 이용방법 안내서",

@@ -78,7 +78,7 @@ const ClubListDropdSelectionBoxStyled = styled.div<{ isOpen: boolean }>`
   text-align: start;
   padding-left: 20px;
   font-size: 1.125rem;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   & > img {
     filter: contrast(0.6);
     width: 14px;
@@ -122,7 +122,7 @@ const ClubListDropdItemStyled = styled.div<{ isSelected: boolean }>`
   padding-left: 20px;
   font-size: 1.125rem;
   color: ${({ isSelected }) =>
-    isSelected ? "var(--main-color)" : "var(--normal-text-color)"};
+    isSelected ? "var(--sys-main-color)" : "var(--normal-text-color)"};
   cursor: pointer;
   &:first-child {
     border-radius: 10px 10px 0px 0px;

@@ -41,7 +41,7 @@ const ButtonContainerStyled = styled.button`
   ${(props) =>
     props.theme === "fill" &&
     css`
-      background: var(--main-color);
+      background: var(--sys-main-color);
       color: var(--white-text-with-bg-color);
     `}
   ${(props) =>

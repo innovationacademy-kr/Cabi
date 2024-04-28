@@ -56,7 +56,7 @@ const CabiLogoStyled = styled.div`
   height: 45px;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
   }
 `;

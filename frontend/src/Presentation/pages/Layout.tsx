@@ -50,8 +50,14 @@ const Layout = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    body.style.setProperty("--main-color", "var(--presentation-main-color)");
-    body.style.setProperty("--sub-color", "var(--presentation-sub-color)");
+    body.style.setProperty(
+      "--sys-main-color",
+      "var(--sys-presentation-main-color)"
+    );
+    body.style.setProperty(
+      "--sys-sub-color",
+      "var(--sys-presentation-sub-color)"
+    );
   }, []);
 
   return isLoginPage ? (

@@ -23,7 +23,7 @@ const AdminClubLog = ({
           key={i}
           filledColor={
             currentPage === i
-              ? "var(--main-color)"
+              ? "var(--sys-main-color)"
               : "var(--shared-gray-color-300)"
           }
           onClick={() => changePageOnClickIndexButton(i)}
@@ -124,7 +124,7 @@ const IndexRectangleStyled = styled.div<{ filledColor: string }>`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       transform: scale(1.3);
-      background-color: var(--sub-color);
+      background-color: var(--sys-sub-color);
     }
   }
 `;

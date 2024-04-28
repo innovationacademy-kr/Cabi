@@ -34,7 +34,7 @@ const CodeAndTime = ({ minutes, seconds, isTimeOver }: CountTimeProps) => {
       </CodeStyled>
       <TimeStyled>
         <ClockStyled>
-          <ClockImg stroke="var(--main-color)" />
+          <ClockImg stroke="var(--sys-main-color)" />
           제한시간
         </ClockStyled>
         {isTimeOver ? (
@@ -60,7 +60,7 @@ const HoverBox = styled.div`
   padding: 10px;
   background-color: rgba(73, 73, 73, 0.99);
   border-radius: 10px;
-  box-shadow: 4px 4px 20px 0px var(--bg-shadow-color-300);
+  box-shadow: 4px 4px 20px 0px var(--hover-box-shadow-color);
   font-size: 0.75rem;
   color: var(--bg-color);
   display: flex;
@@ -83,8 +83,8 @@ const CodeAndTimeStyled = styled.div`
   border-radius: 10px;
   margin-bottom: 15px;
   background: var(--bg-color);
-  color: var(--main-color);
-  border: 1px solid var(--main-color);
+  color: var(--sys-main-color);
+  border: 1px solid var(--sys-main-color);
   position: relative;
   &:hover ${HoverBox} {
     opacity: 1;
@@ -94,7 +94,7 @@ const CodeAndTimeStyled = styled.div`
 const CodeStyled = styled.div<{ copySuccess: boolean }>`
   width: 185px;
   height: 48px;
-  background-color: var(--main-color);
+  background-color: var(--sys-main-color);
   mask-image: url("data:image/svg+xml,%3Csvg width='184' height='48' viewBox='0 0 184 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0 0H184V14.4C184 14.4 184 14.4 184 14.4C178.766 14.4 174.523 18.6981 174.523 24C174.523 29.3019 178.766 33.6 184 33.6C184 33.6 184 33.6 184 33.6V48H0V33.6C5.2335 33.5998 9.47603 29.3018 9.47603 24C9.47603 18.6982 5.2335 14.4002 0 14.4V0Z' fill='%239747FF'/%3E%3C/svg%3E%0A");
   color: var(--bg-color);
   display: flex;

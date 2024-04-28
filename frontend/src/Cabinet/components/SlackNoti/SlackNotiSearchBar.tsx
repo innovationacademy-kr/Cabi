@@ -149,7 +149,7 @@ const FormInputStyled = styled.input`
   border-radius: 8px;
   border: 1px solid var(--capsule-btn-border-color);
   :focus {
-    border: 1px solid var(--main-color);
+    border: 1px solid var(--sys-main-color);
   }
   text-align: left;
   padding: 0 10px;

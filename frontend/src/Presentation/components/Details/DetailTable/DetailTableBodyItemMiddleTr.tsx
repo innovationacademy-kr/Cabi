@@ -76,7 +76,7 @@ const MobileMiddleTrStysled = styled.tr<{
   & button {
     width: 100px;
     height: 36px;
-    background-color: var(--presentation-main-color);
+    background-color: var(--sys-presentation-main-color);
     font-weight: bold;
     font-size: 1rem;
   }

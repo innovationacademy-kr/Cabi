@@ -141,7 +141,7 @@ const LinkTextStyled = styled.div`
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 0.875rem;
-  color: var(--sub-color);
+  color: var(--sys-sub-color);
   text-decoration: underline;
   :hover {
     cursor: pointer;
@@ -156,7 +156,7 @@ const TextStyled = styled.p<{ fontSize: string; fontColor: string }>`
   text-align: center;
   white-space: pre-line;
   & strong {
-    color: var(--main-color);
+    color: var(--sys-main-color);
   }
 `;
 

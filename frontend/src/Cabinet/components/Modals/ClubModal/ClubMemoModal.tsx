@@ -123,10 +123,10 @@ const ContentItemTextAreaStyled = styled.textarea<{
 
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
   color: ${({ mode }) =>
-    mode === "read" ? "var(--main-color)" : "var(--normal-text-color)"};
+    mode === "read" ? "var(--sys-main-color)" : "var(--normal-text-color)"};
   &::placeholder {
     color: ${({ mode }) =>
-      mode === "read" ? "var(--main-color)" : "var(--line-color)"};
+      mode === "read" ? "var(--sys-main-color)" : "var(--line-color)"};
   }
   ::-webkit-scrollbar {
     width: 20px;
@@ -148,7 +148,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-color-200);
+  background: var(--modal-bg-shadow-color);
   z-index: 1000;
 `;
 
@@ -168,7 +168,7 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   background: none;
   cursor: pointer;
   text-decoration: underline;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   &:hover {
     opacity: 0.8;
   }

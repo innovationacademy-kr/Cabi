@@ -173,7 +173,7 @@ const CabinetListItemStyled = styled.div<{
   ${({ status }) =>
     status === "PENDING" &&
     css`
-      border: 2px double var(--main-color);
+      border: 2px double var(--sys-main-color);
       box-shadow: inset 0px 0px 0px 2px var(--bg-color);
       // 테두리
     `}
@@ -181,7 +181,7 @@ const CabinetListItemStyled = styled.div<{
     ${({ status }) =>
     status === "IN_SESSION" &&
     css`
-      border: 2px solid var(--main-color);
+      border: 2px solid var(--sys-main-color);
     `}
 
     .cabinetLabelTextWrap {
@@ -191,7 +191,7 @@ const CabinetListItemStyled = styled.div<{
   .clockIconStyled {
     width: 16px;
     height: 17px;
-    background-color: var(--main-color);
+    background-color: var(--sys-main-color);
     mask-image: url("data:image/svg+xml,%3Csvg width='16' height='17' viewBox='0 0 16 17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14.6668 8.49967C14.6668 12.1797 11.6802 15.1663 8.00016 15.1663C4.32016 15.1663 1.3335 12.1797 1.3335 8.49967C1.3335 4.81967 4.32016 1.83301 8.00016 1.83301C11.6802 1.83301 14.6668 4.81967 14.6668 8.49967Z' stroke='%239747FF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M10.4734 10.6202L8.40675 9.38684C8.04675 9.1735 7.75342 8.66017 7.75342 8.24017V5.50684' stroke='%239747FF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
     margin-right: 4px;
     display: ${(props) => (props.status === "IN_SESSION" ? "block" : "none")};

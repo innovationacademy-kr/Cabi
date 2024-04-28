@@ -123,7 +123,7 @@ const TitleContainerStyled = styled.div`
   align-items: center;
   border-bottom: 2px solid var(--shared-gray-color-300);
   margin-bottom: 70px;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   font-weight: 700;
   .logo {
     width: 35px;

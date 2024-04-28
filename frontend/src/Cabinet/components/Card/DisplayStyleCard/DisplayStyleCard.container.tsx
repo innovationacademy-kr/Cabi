@@ -26,11 +26,11 @@ export const getInitialColorTheme = (
 // TODO: 포인트랑 테마 구분지을 수 있게 명명
 const DisplayStyleCardContainer = () => {
   const savedMainColor =
-    localStorage.getItem("main-color") || "var(--default-main-color)";
+    localStorage.getItem("main-color") || "var(--sys-default-main-color)";
   const savedSubColor =
-    localStorage.getItem("sub-color") || "var(--default-sub-color)";
+    localStorage.getItem("sub-color") || "var(--sys-default-sub-color)";
   const savedMineColor =
-    localStorage.getItem("mine-color") || "var(--default-mine-color)";
+    localStorage.getItem("mine-color") || "var(--sys-default-mine-color)";
 
   const [mainColor, setMainColor] = useState<string>(savedMainColor);
   const [subColor, setSubColor] = useState<string>(savedSubColor);
@@ -66,8 +66,8 @@ const DisplayStyleCardContainer = () => {
     setMainColor(main);
     setSubColor(sub);
     setMineColor(mine);
-    body.style.setProperty("--main-color", main);
-    body.style.setProperty("--sub-color", sub);
+    body.style.setProperty("--sys-main-color", main);
+    body.style.setProperty("--sys-sub-color", sub);
     body.style.setProperty("--mine-color", mine);
     localStorage.setItem("main-color", main);
     localStorage.setItem("sub-color", sub);
@@ -79,9 +79,9 @@ const DisplayStyleCardContainer = () => {
 
   const handleReset = () => {
     setColorsAndLocalStorage(
-      "var(--default-main-color)",
-      "var(--default-sub-color)",
-      "var(--default-mine-color)",
+      "var(--sys-default-main-color)",
+      "var(--sys-default-sub-color)",
+      "var(--sys-default-mine-color)",
       ColorThemeToggleType.DEVICE
     );
   };
@@ -115,8 +115,8 @@ const DisplayStyleCardContainer = () => {
   };
 
   useEffect(() => {
-    body.style.setProperty("--main-color", mainColor);
-    body.style.setProperty("--sub-color", subColor);
+    body.style.setProperty("--sys-main-color", mainColor);
+    body.style.setProperty("--sys-sub-color", subColor);
     body.style.setProperty("--mine-color", mineColor);
     const confirmBeforeUnload = (e: BeforeUnloadEvent) => {
       if (

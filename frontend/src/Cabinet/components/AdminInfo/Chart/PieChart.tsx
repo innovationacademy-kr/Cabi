@@ -71,7 +71,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
         colors={[
           "var(--full-color)",
           "var(--expired-color)",
-          "var(--main-color)",
+          "var(--sys-main-color)",
           "var(--banned-color)",
         ]}
         // 사용불가와 사용 중은 헷갈릴 수 있으니 색 그대로

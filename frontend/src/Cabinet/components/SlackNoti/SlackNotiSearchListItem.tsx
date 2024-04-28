@@ -26,11 +26,11 @@ const LiStyled = styled.li`
   border-radius: 10px;
   cursor: pointer;
   & strong {
-    color: var(--main-color);
+    color: var(--sys-main-color);
   }
 
   &.active {
-    background-color: var(--main-color);
+    background-color: var(--sys-main-color);
     color: var(--ref-white);
   }
   &.active strong {
@@ -39,7 +39,7 @@ const LiStyled = styled.li`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--main-color);
+      background-color: var(--sys-main-color);
       color: var(--ref-white);
     }
     &:hover strong {

@@ -97,7 +97,7 @@
 }
 
 a {
-  color: var(--main-color);
+  color: var(--sys-main-color);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -138,7 +138,7 @@ h1 {
 button {
   cursor: pointer;
   border: none;
-  background-color: var(--main-color);
+  background-color: var(--sys-main-color);
   color: var(--white-text-with-bg-color);
   width: 200px;
   height: 60px;
@@ -182,7 +182,7 @@ input {
 
 .modal {
   border-radius: 10px;
-  box-shadow: 10px 10px 40px 0px var(--border-shadow-color-200);
+  box-shadow: 10px 10px 40px 0px var(--login-card-border-shadow-color);
 }
 
 .textNowrap {
@@ -217,7 +217,7 @@ input {
 }
 
 .leftNavButtonActive {
-  background: var(--main-color);
+  background: var(--sys-main-color);
   color: var(--white-text-with-bg-color) !important;
 }
 
@@ -226,5 +226,5 @@ input {
 }
 
 .domainButtonActive {
-  color: var(--main-color) !important;
+  color: var(--sys-main-color) !important;
 }

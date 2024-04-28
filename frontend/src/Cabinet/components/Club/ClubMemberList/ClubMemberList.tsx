@@ -63,7 +63,7 @@ const ClubMemberList = ({
           {/* NOTE:  동아리장이 맨 앞에 오도록 배치 */}
           <ClubMemberListItem
             isMaster={true}
-            bgColor={"var(--main-color)"}
+            bgColor={"var(--sys-main-color)"}
             member={master}
             selectClubMemberOnClick={selectClubMemberOnClick}
             targetClubUser={targetClubUser}
@@ -87,7 +87,7 @@ const ClubMemberList = ({
                   <ButtonTextWrapperStyled>더보기</ButtonTextWrapperStyled>
                   <SelectIconWrapperStyled>
                     <Select
-                      stroke={"var(--main-color)"}
+                      stroke={"var(--sys-main-color)"}
                       width={13}
                       height={9}
                     />
@@ -196,10 +196,10 @@ const MoreButtonStyled = styled.button<{
   width: 200px;
   height: 50px;
   margin: 20px auto;
-  border: 1px solid var(--main-color);
+  border: 1px solid var(--sys-main-color);
   border-radius: 30px;
   background-color: var(--bg-color);
-  color: var(--main-color);
+  color: var(--sys-main-color);
   position: relative;
 `;
 

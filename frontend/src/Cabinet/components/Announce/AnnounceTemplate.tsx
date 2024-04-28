@@ -25,9 +25,9 @@ const AnnounceTemplate = (props: Itext) => {
 
   useEffect(() => {
     if (type === "LOADING") {
-      setBackgroundColor("var(--sub-color)");
+      setBackgroundColor("var(--sys-sub-color)");
     } else if (type === "ERROR") {
-      setBackgroundColor("var(--main-color)");
+      setBackgroundColor("var(--sys-main-color)");
     }
   }, []);
 

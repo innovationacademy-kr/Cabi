@@ -37,7 +37,7 @@ const PasswordCheckModal: React.FC<{
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
         {iconType === "CHECK" && (
           <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
-            <CheckIcon stroke="var(--main-color)" />
+            <CheckIcon stroke="var(--sys-main-color)" />
           </ModalIconImgStyled>
         )}
         <H2Styled>{title}</H2Styled>
@@ -72,7 +72,7 @@ const Input = styled.input<{ isEmpty: number | null }>`
   outline: none;
   border: ${({ isEmpty }) =>
     isEmpty
-      ? "1px solid var(--main-color)"
+      ? "1px solid var(--sys-main-color)"
       : "1px solid var(--ref-purple-200)"};
 `;
 
@@ -154,7 +154,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-color-200);
+  background: var(--modal-bg-shadow-color);
   animation: fadeInBg 0.5s;
   @keyframes fadeInBg {
     0% {

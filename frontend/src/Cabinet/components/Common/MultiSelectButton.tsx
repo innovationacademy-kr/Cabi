@@ -38,15 +38,15 @@ const MultiSelectButtonContainerStyled = styled.button`
   ${(props) =>
     props.theme === "fill" &&
     css`
-      background: var(--main-color);
+      background: var(--sys-main-color);
       color: var(--bg-color);
     `}
   ${(props) =>
     props.theme === "line" &&
     css`
       background: var(--bg-color);
-      color: var(--main-color);
-      border: 1px solid var(--main-color);
+      color: var(--sys-main-color);
+      border: 1px solid var(--sys-main-color);
     `}
 `;
 

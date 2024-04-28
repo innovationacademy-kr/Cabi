@@ -11,7 +11,7 @@ const CountTime = ({ minutes, seconds, isTimeOver }: CountTimeProps) => {
   return (
     <CountTimeStyled>
       <ClockStyled>
-        <ClockImg stroke="var(--main-color)" />
+        <ClockImg stroke="var(--sys-main-color)" />
         제한시간
       </ClockStyled>
       {isTimeOver ? (
@@ -34,8 +34,8 @@ const CountTimeStyled = styled.div`
   border-radius: 10px;
   margin-bottom: 15px;
   background: var(--bg-color);
-  color: var(--main-color);
-  border: 1px solid var(--main-color);
+  color: var(--sys-main-color);
+  border: 1px solid var(--sys-main-color);
 `;
 
 const ClockStyled = styled.div`

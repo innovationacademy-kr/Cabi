@@ -85,7 +85,7 @@ const InputAreaStyled = styled.input<{ isFocused: boolean }>`
   border: 2px solid
     ${(props) =>
       props.isFocused
-        ? "var(--presentation-sub-color)"
+        ? "var(--sys-presentation-sub-color)"
         : "var(--shared-gray-color-100)"};
   color: var(--normal-text-color);
 `;
@@ -105,7 +105,7 @@ const DetailTextareaStyled = styled.textarea<{ isFocused: boolean }>`
   border: 2px solid
     ${(props) =>
       props.isFocused
-        ? "var(--presentation-sub-color)"
+        ? "var(--sys-presentation-sub-color)"
         : "var(--shared-gray-color-100)"};
   color: var(--normal-text-color);
 `;

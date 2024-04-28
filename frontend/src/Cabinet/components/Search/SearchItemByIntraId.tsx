@@ -215,7 +215,7 @@ const NameStyled = styled.span`
   font-size: 0.875rem;
   margin-left: 4px;
   & strong {
-    color: var(--main-color);
+    color: var(--sys-main-color);
   }
 `;
 

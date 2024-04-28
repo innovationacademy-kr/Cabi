@@ -22,7 +22,7 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
       contentStatus={contentStatus}
     >
       {contentStatus === ContentStatus.EXTENSION && (
-        <ManualPeopleImg className="peopleImg" fill="var(--main-color)" />
+        <ManualPeopleImg className="peopleImg" fill="var(--sys-main-color)" />
       )}
       {contentStatus === ContentStatus.PRIVATE && (
         <PrivateIcon className="contentImg" />
@@ -38,7 +38,7 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
       )}
       <ContentTextStyled>
         {contentStatus === ContentStatus.IN_SESSION && (
-          <ClockImg stroke="var(--main-color)" className="clockImg" />
+          <ClockImg stroke="var(--sys-main-color)" className="clockImg" />
         )}
         <p>{contentData.contentTitle}</p>
       </ContentTextStyled>
@@ -106,15 +106,15 @@ const MaunalContentBoxStyled = styled.div<{
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.PENDING &&
     css`
-      border: 5px double var(--main-color);
+      border: 5px double var(--sys-main-color);
       box-shadow: inset 0px 0px 0px 5px var(--bg-color);
     `}
 
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.IN_SESSION &&
     css`
-      border: 5px solid var(--main-color);
-      color: var(--main-color);
+      border: 5px solid var(--sys-main-color);
+      color: var(--sys-main-color);
     `}
 
   ${({ contentStatus }) =>
@@ -149,7 +149,7 @@ const MaunalContentBoxStyled = styled.div<{
     bottom: 35px;
     stroke: ${(props) =>
       props.contentStatus === ContentStatus.IN_SESSION
-        ? "var(--main-color)"
+        ? "var(--sys-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
         : "var(--white-text-with-bg-color)"};
@@ -161,7 +161,7 @@ const MaunalContentBoxStyled = styled.div<{
     ${({ contentStatus }) =>
       contentStatus === ContentStatus.PENDING
         ? css`
-            border: 5px double var(--main-color);
+            border: 5px double var(--sys-main-color);
             box-shadow: inset 0px 0px 0px 5px var(--bg-color),
               10px 10px 25px 0 var(--left-nav-border-shadow-color);
           `

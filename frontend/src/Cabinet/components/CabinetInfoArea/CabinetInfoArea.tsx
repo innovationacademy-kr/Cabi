@@ -194,7 +194,7 @@ const CabinetInfoArea: React.FC<{
               }
             >
               <ExtensionImg
-                stroke="var(--main-color)"
+                stroke="var(--sys-main-color)"
                 width={24}
                 height={24}
                 style={{ marginRight: "10px" }}
@@ -295,7 +295,7 @@ const CabiLogoStyled = styled.div`
   margin-bottom: 10px;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
   }
 `;
@@ -345,13 +345,13 @@ const CabinetRectangleStyled = styled.div<{
   ${({ cabinetStatus }) =>
     cabinetStatus === "IN_SESSION" &&
     css`
-      border: 2px solid var(--main-color);
+      border: 2px solid var(--sys-main-color);
     `}
 
   ${({ cabinetStatus }) =>
     cabinetStatus === "PENDING" &&
     css`
-      border: 2px double var(--main-color);
+      border: 2px double var(--sys-main-color);
       box-shadow: inset 0px 0px 0px 2px var(--bg-color);
     `}
 `;
@@ -377,7 +377,7 @@ const HoverBox = styled.div<{
   padding: 10px;
   background-color: rgba(73, 73, 73, 0.99);
   border-radius: 10px;
-  box-shadow: 4px 4px 20px 0px var(--bg-shadow-color-300);
+  box-shadow: 4px 4px 20px 0px var(--hover-box-shadow-color);
   font-size: 0.875rem;
   text-align: center;
   display: flex;
@@ -455,8 +455,8 @@ const ButtonContainerStyled = styled.button`
     props.theme === "line" &&
     css`
       background: var(--bg-color);
-      color: var(--main-color);
-      border: 1px solid var(--main-color);
+      color: var(--sys-main-color);
+      border: 1px solid var(--sys-main-color);
     `}
   @media (max-height: 745px) {
     margin-bottom: 8px;

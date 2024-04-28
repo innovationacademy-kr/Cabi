@@ -221,8 +221,8 @@ const CapsuleButtonStyled = styled.span`
 
   :hover {
     background: var(--capsule-btn-hover-bg-color);
-    color: var(--main-color);
-    border: 1px solid var(--main-color);
+    color: var(--sys-main-color);
+    border: 1px solid var(--sys-main-color);
   }
 `;
 
@@ -259,7 +259,7 @@ const FormTextareaStyled = styled.textarea`
   resize: none;
   outline: none;
   :focus {
-    border: 1px solid var(--main-color);
+    border: 1px solid var(--sys-main-color);
   }
   text-align: left;
   padding: 10px;
@@ -280,7 +280,7 @@ const FormButtonStyled = styled.button<{ primary?: boolean }>`
   padding: 10px 16px;
   font-size: 0.875rem;
   background-color: ${(props) =>
-    props.primary ? "var(--main-color)" : "var(--card-content-bg-color)"};
+    props.primary ? "var(--sys-main-color)" : "var(--card-content-bg-color)"};
   color: ${(props) =>
     props.primary
       ? "var(--white-text-with-bg-color)"

@@ -90,7 +90,7 @@ const LogoContainerStyled = styled.div<{ domainTitle: string }>`
 
   svg {
     .logo_svg__currentPath {
-      fill: var(--default-main-color);
+      fill: var(--sys-default-main-color);
     }
     width: 14px;
     height: 14px;

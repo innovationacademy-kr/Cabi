@@ -23,7 +23,7 @@ const SectionPagination: React.FC<{
       key={sectionName}
       filledColor={
         sectionName === currentSectionName
-          ? "var(--main-color)"
+          ? "var(--sys-main-color)"
           : "var(--shared-gray-color-300)"
       }
       onClick={() => changeSectionOnClickIndexButton(index)}
@@ -114,7 +114,7 @@ const IndexRectangleStyled = styled.div<{ filledColor: string }>`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       transform: scale(1.3);
-      background-color: var(--sub-color);
+      background-color: var(--sys-sub-color);
     }
   }
 `;

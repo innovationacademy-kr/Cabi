@@ -157,9 +157,9 @@ const ModalWrapper = styled.div<{
   border-radius: 40px 40px 0 0;
   border: ${(props) =>
     props.contentStatus === ContentStatus.PENDING
-      ? "5px double var(--main-color)"
+      ? "5px double var(--sys-main-color)"
       : props.contentStatus === ContentStatus.IN_SESSION
-      ? "5px solid var(--main-color)"
+      ? "5px solid var(--sys-main-color)"
       : "none"};
   box-shadow: ${(props) =>
     props.contentStatus === ContentStatus.PENDING &&
@@ -180,7 +180,7 @@ const ModalContent = styled.div<{
   flex-direction: column;
   color: ${(props) =>
     props.contentStatus === ContentStatus.IN_SESSION
-      ? "var(--main-color)"
+      ? "var(--sys-main-color)"
       : props.contentStatus === ContentStatus.EXTENSION
       ? "var(--normal-text-color)"
       : "var(--white-text-with-bg-color)"};
@@ -202,7 +202,7 @@ const ModalContent = styled.div<{
   .moveButton {
     stroke: ${(props) =>
       props.contentStatus === ContentStatus.IN_SESSION
-        ? "var(--main-color)"
+        ? "var(--sys-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
         : "var(--white-text-with-bg-color)"};
@@ -224,7 +224,7 @@ const CloseButton = styled.div<{
     transform: scaleX(-1);
     stroke: ${(props) =>
       props.contentStatus === ContentStatus.IN_SESSION
-        ? "var(--main-color)"
+        ? "var(--sys-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
         : "var(--bg-color)"};

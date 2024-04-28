@@ -134,7 +134,7 @@ const CabiLogoStyled = styled.div`
   margin-bottom: 10px;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
   }
 `;

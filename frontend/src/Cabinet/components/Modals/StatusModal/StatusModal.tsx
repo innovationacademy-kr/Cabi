@@ -231,7 +231,7 @@ const ContentItemContainerStyled = styled.div<{ mode: string }>`
   text-align: start;
   padding-left: 20px;
   font-size: 1.125rem;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   & > p {
     padding-left: 10px;
   }
@@ -258,7 +258,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-color-200);
+  background: var(--modal-bg-shadow-color);
   z-index: 1000;
 `;
 
@@ -278,7 +278,7 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   background: none;
   cursor: pointer;
   text-decoration: underline;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   &:hover {
     opacity: 0.8;
   }

@@ -97,7 +97,7 @@ const TbodyStyled = styled.tbody`
   }
   & > tr:hover,
   & > tr.selected {
-    background-color: var(--sub-color);
+    background-color: var(--sys-sub-color);
     color: var(--bg-color);
   }
 `;

@@ -46,7 +46,7 @@ const PageButtonStyled = styled.div<{
   type: string;
 }>`
   cursor: pointer;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   position: absolute;
   display: ${({ page, totalPage, type }) => {
     if (type == "prev" && page == 1) return "none";
@@ -64,7 +64,7 @@ const PageButtonStyled = styled.div<{
 `;
 
 const GoBackButtonStyled = styled.div`
-  color: var(--sub-color);
+  color: var(--sys-sub-color);
   font-size: 0.875rem;
   text-decoration: underline;
   cursor: pointer;

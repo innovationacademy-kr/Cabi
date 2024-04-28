@@ -127,7 +127,7 @@ const TitleContainerStyled = styled.div`
 `;
 
 const RegisterButtonStyled = styled.button`
-  background-color: var(--presentation-main-color);
+  background-color: var(--sys-presentation-main-color);
   width: 150px;
   height: 50px;
   @media screen and (max-width: 425px) {
@@ -136,7 +136,7 @@ const RegisterButtonStyled = styled.button`
 `;
 
 const MobileRegisertButtonStyled = styled.button`
-  background-color: var(--presentation-main-color);
+  background-color: var(--sys-presentation-main-color);
   width: 80%;
   height: 50px;
   margin-bottom: 30px;

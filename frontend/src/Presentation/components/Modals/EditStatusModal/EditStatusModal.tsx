@@ -234,7 +234,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-color-300);
+  background: var(--hover-box-shadow-color);
   z-index: 1000;
 `;
 const ModalContainerStyled = styled.div<{ type: string }>`

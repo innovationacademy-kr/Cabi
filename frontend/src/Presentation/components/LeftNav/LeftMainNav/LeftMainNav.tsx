@@ -135,7 +135,7 @@ const TopBtnStyled = styled.li`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       color: var(--white-text-with-bg-color);
-      background-color: var(--presentation-main-color);
+      background-color: var(--sys-presentation-main-color);
     }
   }
 `;
@@ -186,9 +186,9 @@ const BottomBtnStyled = styled.li`
     margin-bottom: 4px;
   }
   &.active {
-    color: var(--presentation-main-color);
+    color: var(--sys-presentation-main-color);
     svg {
-      stroke: var(--presentation-main-color);
+      stroke: var(--sys-presentation-main-color);
     }
   }
   svg {
@@ -196,12 +196,12 @@ const BottomBtnStyled = styled.li`
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--presentation-main-color);
+      color: var(--sys-presentation-main-color);
       svg {
-        stroke: var(--presentation-main-color);
+        stroke: var(--sys-presentation-main-color);
       }
       a {
-        color: var(--presentation-main-color);
+        color: var(--sys-presentation-main-color);
       }
     }
   }

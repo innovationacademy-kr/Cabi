@@ -394,7 +394,7 @@ const RegisterButtonStyled = styled.button`
   font-size: 1rem;
   font-weight: 480;
   margin-top: 1rem;
-  background-color: var(--presentation-main-color);
+  background-color: var(--sys-presentation-main-color);
   @media (max-width: 700px) {
     width: 100%;
   }
@@ -431,7 +431,7 @@ const TooltipBoxDateStyled = styled.div`
   transform: translateX(-50%);
   font-weight: 400;
   color: var(--white-text-with-bg-color);
-  background-color: var(--bg-shadow-color-400);
+  background-color: var(--tooltip-shadow-color);
   width: 240px;
   padding: 10px;
   border-radius: 4px;
@@ -452,7 +452,8 @@ const TooltipBoxDateStyled = styled.div`
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent var(--bg-shadow-color-400) transparent transparent;
+    border-color: transparent var(--tooltip-shadow-color) transparent
+      transparent;
   }
 
   ${SubNameStyled}:hover & {
@@ -467,7 +468,7 @@ const TooltipBoxTimeStyled = styled.div`
   transform: translateX(-50%);
   font-weight: 400;
   color: var(--white-text-with-bg-color);
-  background-color: var(--bg-shadow-color-400);
+  background-color: var(--tooltip-shadow-color);
   width: 220px;
   padding: 10px;
   border-radius: 4px;
@@ -488,7 +489,8 @@ const TooltipBoxTimeStyled = styled.div`
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent var(--bg-shadow-color-400) transparent transparent;
+    border-color: transparent var(--tooltip-shadow-color) transparent
+      transparent;
   }
 
   ${SubNameStyled}:hover & {

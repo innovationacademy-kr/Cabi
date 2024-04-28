@@ -197,12 +197,12 @@ const SubHeaderStyled = styled.div`
   align-items: center;
   text-align: center;
   font-size: 1.2rem;
-  color: var(--sub-color);
+  color: var(--sys-sub-color);
   margin-top: 25px;
   line-height: 1.5;
   word-break: keep-all;
   margin: 25px 10px 0px 10px;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   span {
     font-weight: 700;
     text-decoration: underline;
@@ -213,7 +213,7 @@ const RefreshButtonStyled = styled.button`
   margin-top: 60px;
   width: 280px;
   height: 47px;
-  background-color: var(--main-color);
+  background-color: var(--sys-main-color);
   padding: 0;
   display: flex;
   justify-content: center;

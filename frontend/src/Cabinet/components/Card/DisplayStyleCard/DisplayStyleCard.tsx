@@ -50,7 +50,7 @@ const DisplayStyleCard = ({
                     label: "저장",
                     onClick: handleSave,
                     fontColor: "var(--white-text-with-bg-color)",
-                    backgroundColor: "var(--main-color)",
+                    backgroundColor: "var(--sys-main-color)",
                     isClickable: true,
                   },
                   {
@@ -99,7 +99,7 @@ const BackgroundOverlayStyled = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--bg-shadow-color-200);
+  background: var(--modal-bg-shadow-color);
 `;
 
 const ThemeColorCardWrapper = styled.div`
