@@ -56,14 +56,14 @@ const BottomTrStyled = styled.tr<{
   }
 
   & > td > div {
-    background-color: var(--white);
+    background-color: var(--ref-white);
     border-radius: 10px;
     margin: 24px;
     margin-top: 0;
     line-height: 24px;
     padding: 30px 50px;
     font-size: 18px;
-    color: var(--black);
+    color: var(--ref-black);
     /* black */
   }
 

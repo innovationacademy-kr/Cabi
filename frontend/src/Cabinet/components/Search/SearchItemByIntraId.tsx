@@ -170,7 +170,7 @@ const RectangleStyled = styled.div<{
       ? "var(--white-text-with-bg-color)"
       : props.status
       ? cabinetLabelColorMap[props.status]
-      : "var(--black)"};
+      : "var(--ref-black)"};
   /* black */
   display: flex;
   justify-content: center;

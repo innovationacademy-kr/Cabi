@@ -2,88 +2,88 @@
 
 :root {
   /* white, gray, black color variable */
-  --white: #ffffff;
-  --gray-100: #f5f5f5;
-  --gray-200: #eeeeee;
-  --gray-300: #d9d9d9;
-  --gray-400: #bcbcbc;
-  --gray-450: #8c8c8c;
-  --gray-500: #7b7b7b;
-  --gray-530: #505354;
-  --gray-550: #3d3f40;
-  --gray-600: #3c3c3c;
-  --gray-700: #313233;
-  --gray-800: #262626;
-  --gray-900: #1f1f1f;
-  --black: #181818;
+  --ref-white: #ffffff;
+  --ref-gray-100: #f5f5f5;
+  --ref-gray-200: #eeeeee;
+  --ref-gray-300: #d9d9d9;
+  --ref-gray-400: #bcbcbc;
+  --ref-gray-450: #8c8c8c;
+  --ref-gray-500: #7b7b7b;
+  --ref-gray-530: #505354;
+  --ref-gray-550: #3d3f40;
+  --ref-gray-600: #3c3c3c;
+  --ref-gray-700: #313233;
+  --ref-gray-800: #262626;
+  --ref-gray-900: #1f1f1f;
+  --ref-black: #181818;
 
   /* red color variable */
-  --red-100: #ff4e4e;
-  --red-150: #ff4589;
-  --red-200: #e54646;
+  --ref-red-100: #ff4e4e;
+  --ref-red-150: #ff4589;
+  --ref-red-200: #e54646;
 
   /* orange color variable */
-  --orange-100: #ff8b5b;
-  --orange-200: #ef8172;
+  --ref-orange-100: #ff8b5b;
+  --ref-orange-200: #ef8172;
 
   /* yellow color variable */
-  --yellow: #ffc74c;
+  --ref-yellow: #ffc74c;
 
   /* green color variable */
-  --green-100: #47ffa7;
-  --green-200: #3fe596;
-  --green-300: #00cec9;
-  --green-400: #00c2ab;
+  --ref-green-100: #47ffa7;
+  --ref-green-200: #3fe596;
+  --ref-green-300: #00cec9;
+  --ref-green-400: #00c2ab;
 
   /* blue color variable */
-  --blue-100: #f5f7ff;
-  --blue-150: #dce7fd;
-  --blue-160: #91b5fa;
-  --blue-200: #7ebffb;
-  --blue-210: #74b9ff;
-  --blue-230: #0984e3;
-  --blue-250: #5278fd;
-  --blue-300: #406ee4;
-  --blue-400: #3f69fd;
-  --blue-450: #0d4c92;
-  --blue-500: #252526;
+  --ref-blue-100: #f5f7ff;
+  --ref-blue-150: #dce7fd;
+  --ref-blue-160: #91b5fa;
+  --ref-blue-200: #7ebffb;
+  --ref-blue-210: #74b9ff;
+  --ref-blue-230: #0984e3;
+  --ref-blue-250: #5278fd;
+  --ref-blue-300: #406ee4;
+  --ref-blue-400: #3f69fd;
+  --ref-blue-450: #0d4c92;
+  --ref-blue-500: #252526;
 
   /* purple color variable */
-  --purple-100: #f9f6ff;
-  --purple-200: #dfd0fe;
-  --purple-300: #b18cff;
-  --purple-350: #a29bfe;
-  --purple-400: #a17bf3;
-  --purple-500: #9747ff;
-  --purple-600: #8337e5;
-  --purple-700: #252425;
+  --ref-purple-100: #f9f6ff;
+  --ref-purple-200: #dfd0fe;
+  --ref-purple-300: #b18cff;
+  --ref-purple-350: #a29bfe;
+  --ref-purple-400: #a17bf3;
+  --ref-purple-500: #9747ff;
+  --ref-purple-600: #8337e5;
+  --ref-purple-700: #252425;
 
-  --transparent-purple: #b18cff5f;
+  --ref-transparent-purple: #b18cff5f;
 
   /* pink color variable */
-  --pink-100: #f473b1;
-  --pink-200: #d72766;
-
-  /* cabinet color variable */
-  --broken-color: var(--gray-600);
-  --session-color: var(--gray-200);
+  --ref-pink-100: #f473b1;
+  --ref-pink-200: #d72766;
 
   /* shadow variable */
-  --black-shadow-100: rgba(0, 0, 0, 0.1);
-  --black-shadow-200: rgba(0, 0, 0, 0.25);
-  --black-shadow-300: rgba(0, 0, 0, 0.4);
-  --black-shadow-400: rgba(0, 0, 0, 0.8);
+  --ref-black-shadow-100: rgba(0, 0, 0, 0.1);
+  --ref-black-shadow-200: rgba(0, 0, 0, 0.25);
+  --ref-black-shadow-300: rgba(0, 0, 0, 0.4);
+  --ref-black-shadow-400: rgba(0, 0, 0, 0.8);
+
+  /* cabinet color variable */
+  --broken-color: var(--ref-gray-600);
+  --session-color: var(--ref-gray-200);
 
   /* custom color variable */
-  --custom-blue-100: var(--blue-210);
-  --custom-blue-200: var(--blue-230);
-  --custom-blue-300: var(--blue-450);
-  --custom-pink: var(--red-150);
-  --custom-purple-100: var(--purple-350);
-  --custom-orange: var(--orange-100);
-  --custom-yellow: var(--yellow);
-  --custom-green-100: var(--green-300);
-  --custom-green-200: var(--green-400);
+  --custom-blue-100: var(--ref-blue-210);
+  --custom-blue-200: var(--ref-blue-230);
+  --custom-blue-300: var(--ref-blue-450);
+  --custom-pink: var(--ref-red-150);
+  --custom-purple-100: var(--ref-purple-350);
+  --custom-orange: var(--ref-orange-100);
+  --custom-yellow: var(--ref-yellow);
+  --custom-green-100: var(--ref-green-300);
+  --custom-green-200: var(--ref-green-400);
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;

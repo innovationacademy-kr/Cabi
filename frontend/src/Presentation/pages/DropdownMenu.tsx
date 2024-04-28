@@ -69,12 +69,12 @@ const DropdownOptions = styled.ul`
   top: 52px;
   left: 0;
   width: 310px;
-  border: 1px solid var(--white);
+  border: 1px solid var(--ref-white);
   border-radius: 10px;
   text-align: left;
   padding: 10px;
-  color: var(--black);
-  background-color: var(--white);
+  color: var(--ref-black);
+  background-color: var(--ref-white);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   overflow: hidden;
   @media (max-width: 768px) {
@@ -97,10 +97,10 @@ const RegisterTimeInputStyled = styled.div<{ isFocused: boolean }>`
   height: 46px;
   width: 310px;
   border-radius: 10px;
-  background-color: var(--white);
+  background-color: var(--ref-white);
   border: 2px solid
     ${(props) =>
-      props.isFocused ? "var(--presentation-main-color)" : "var(--white)"};
+      props.isFocused ? "var(--presentation-main-color)" : "var(--ref-white)"};
   resize: none;
   outline: none;
   color: var(--shared-gray-color-500);

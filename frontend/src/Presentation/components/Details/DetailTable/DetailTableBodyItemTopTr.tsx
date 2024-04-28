@@ -168,13 +168,13 @@ const TopTrStyled = styled.tr<{
     border-radius: ${(props) => (props.open ? "0 10px 0 0" : "0 10px 10px 0")};
   }
   & > td > div {
-    color: var(--black);
+    color: var(--ref-black);
     /* black */
   }
   & #desktopTopDate {
     color: ${(props) =>
       !props.itemStatus
-        ? "var(--black)"
+        ? "var(--ref-black)"
         : // black
           "var(--normal-text-color)"};
   }
@@ -222,7 +222,7 @@ const TopTrStyled = styled.tr<{
     & > td > #mobileTopDate {
       color: ${(props) =>
         props.open
-          ? "var(--black)"
+          ? "var(--ref-black)"
           : // black
             "var(--white-text-with-bg-color)"};
       text-align: ${(props) => (props.open ? "center" : "start")};
@@ -232,7 +232,7 @@ const TopTrStyled = styled.tr<{
       cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     }
     & > td > div {
-      color: var(--black);
+      color: var(--ref-black);
       /* black */
     }
   }

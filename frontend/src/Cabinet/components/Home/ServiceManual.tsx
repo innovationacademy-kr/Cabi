@@ -1,8 +1,8 @@
+import { useState } from "react";
+import styled from "styled-components";
 import MaunalContentBox from "@/Cabinet/components/Home/ManualContentBox";
 import ManualModal from "@/Cabinet/components/Modals/ManualModal/ManualModal";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
-import { useState } from "react";
-import styled from "styled-components";
 
 const ServiceManual = ({
   lentStartHandler,
@@ -199,7 +199,7 @@ const InfoSectionStyled = styled.section`
     text-align: center;
   }
   .redColor {
-    color: var(--orange-200);
+    color: var(--ref-orange-200);
     margin-top: 15px;
   }
   .article > p > span {

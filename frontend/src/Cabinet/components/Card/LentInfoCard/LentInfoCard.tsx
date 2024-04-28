@@ -147,7 +147,7 @@ const CabinetRectangleStyled = styled.div<{
       ? "var(--white-text-with-bg-color)"
       : props.status === "IN_SESSION"
       ? "var(--main-color)"
-      : "var(--black)"};
+      : "var(--ref-black)"};
   /* black */
   font-size: 2rem;
   text-align: center;

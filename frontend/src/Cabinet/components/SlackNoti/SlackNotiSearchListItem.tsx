@@ -31,19 +31,19 @@ const LiStyled = styled.li`
 
   &.active {
     background-color: var(--main-color);
-    color: var(--white);
+    color: var(--ref-white);
   }
   &.active strong {
-    color: var(--white);
+    color: var(--ref-white);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--main-color);
-      color: var(--white);
+      color: var(--ref-white);
     }
     &:hover strong {
-      color: var(--white);
+      color: var(--ref-white);
     }
   }
 `;
