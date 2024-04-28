@@ -60,7 +60,8 @@ const lightValues = css`
   --table-even-row-bg-color: var(--ref-purple-100);
 
   --presentation-table-even-row-bg-color: var(--ref-blue-100);
-  --presentation-dropdown-select-color: var(--ref-blue-150);
+  --presentation-detail-available-color: var(--ref-blue-150);
+  --presentation-dropdown-select-color: var(--ref-blue-470);
   --presentation-blue-pagination-btn-color: var(--ref-blue-250);
 
   color: var(--normal-text-color);
@@ -126,7 +127,8 @@ const darkValues = css`
   --table-even-row-bg-color: var(--ref-purple-700);
 
   --presentation-table-even-row-bg-color: var(--ref-blue-500);
-  --presentation-dropdown-select-color: var(--ref-blue-150);
+  --presentation-detail-available-color: var(--ref-blue-150);
+  --presentation-dropdown-select-color: var(--ref-blue-470);
   --presentation-blue-pagination-btn-color: var(--ref-blue-250);
 
   color: var(--normal-text-color);

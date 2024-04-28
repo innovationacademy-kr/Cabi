@@ -162,7 +162,6 @@ const DropdownOption = styled.li<{ invalid: boolean }>`
       invalid
         ? "var(--card-bg-color)"
         : "var(--presentation-dropdown-select-color)"};
-    background-color: var(--presentation-dropdown-select-color);
     cursor: ${({ invalid }) => (invalid ? "not-allowed" : "pointer")};
   }
 
