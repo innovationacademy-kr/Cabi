@@ -99,7 +99,7 @@ const BackgroundOverlayStyled = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--bg-shadow-color-100);
+  background: var(--bg-shadow-color-200);
 `;
 
 const ThemeColorCardWrapper = styled.div`

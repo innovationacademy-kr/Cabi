@@ -1,20 +1,20 @@
-import {
-  axiosCreateClubUser,
-  axiosDeleteClubUser,
-  axiosEditClubUser,
-} from "@/Cabinet/api/axios/axios.custom";
-import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
+import React, { useEffect, useRef, useState } from "react";
+import { useRecoilState } from "recoil";
+import styled from "styled-components";
+import { selectedClubInfoState } from "@/Cabinet/recoil/atoms";
 import Button from "@/Cabinet/components/Common/Button";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
-import { selectedClubInfoState } from "@/Cabinet/recoil/atoms";
+import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
-import React, { useEffect, useRef, useState } from "react";
-import { useRecoilState } from "recoil";
-import styled from "styled-components";
+import {
+  axiosCreateClubUser,
+  axiosDeleteClubUser,
+  axiosEditClubUser,
+} from "@/Cabinet/api/axios/axios.custom";
 
 interface ClubModalContainerInterface {
   type: string;
@@ -292,7 +292,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-color-100);
+  background: var(--bg-shadow-color-200);
   z-index: 1000;
 `;
 

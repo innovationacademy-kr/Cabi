@@ -1,5 +1,5 @@
-import Button from "@/Cabinet/components/Common/Button";
 import styled from "styled-components";
+import Button from "@/Cabinet/components/Common/Button";
 
 const MAX_INPUT_LENGTH = 27;
 
@@ -123,7 +123,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-color-100);
+  background: var(--bg-shadow-color-200);
   z-index: 1000;
 `;
 

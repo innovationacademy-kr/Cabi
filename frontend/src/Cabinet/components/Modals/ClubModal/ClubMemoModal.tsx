@@ -1,9 +1,9 @@
+import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import {
   CLUB_MEMO_MAX_LENGTH,
   ClubMemoModalInterface,
 } from "@/Cabinet/components/Modals/ClubModal/ClubMemoModal.container";
-import styled from "styled-components";
 
 const ClubMemoModal = ({
   clubNotice,
@@ -148,7 +148,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-color-100);
+  background: var(--bg-shadow-color-200);
   z-index: 1000;
 `;
 

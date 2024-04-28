@@ -1,8 +1,8 @@
+import React, { useRef, useState } from "react";
+import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import React, { useRef, useState } from "react";
-import styled from "styled-components";
 
 export interface MemoModalInterface {
   cabinetType: CabinetType;
@@ -193,7 +193,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-shadow-color-100);
+  background: var(--bg-shadow-color-200);
   z-index: 1000;
 `;
 
