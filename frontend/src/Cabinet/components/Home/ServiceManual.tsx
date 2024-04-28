@@ -199,7 +199,7 @@ const InfoSectionStyled = styled.section`
     text-align: center;
   }
   .redColor {
-    color: var(--orange);
+    color: var(--orange-200);
     margin-top: 15px;
   }
   .article > p > span {

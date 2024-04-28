@@ -19,29 +19,40 @@
 
   /* red color variable */
   --red-100: #ff4e4e;
+  --red-150: #ff4589;
   --red-200: #e54646;
 
   /* orange color variable */
-  --orange: #ef8172;
+  --orange-100: #ff8b5b;
+  --orange-200: #ef8172;
+
+  /* yellow color variable */
+  --yellow: #ffc74c;
 
   /* green color variable */
   --green-100: #47ffa7;
   --green-200: #3fe596;
+  --green-300: #00cec9;
+  --green-400: #00c2ab;
 
   /* blue color variable */
   --blue-100: #f5f7ff;
   --blue-150: #dce7fd;
   --blue-160: #91b5fa;
   --blue-200: #7ebffb;
+  --blue-210: #74b9ff;
+  --blue-230: #0984e3;
   --blue-250: #5278fd;
   --blue-300: #406ee4;
   --blue-400: #3f69fd;
+  --blue-450: #0d4c92;
   --blue-500: #252526;
 
   /* purple color variable */
   --purple-100: #f9f6ff;
   --purple-200: #dfd0fe;
   --purple-300: #b18cff;
+  --purple-350: #a29bfe;
   --purple-400: #a17bf3;
   --purple-500: #9747ff;
   --purple-600: #8337e5;
@@ -64,15 +75,15 @@
   --black-shadow-400: rgba(0, 0, 0, 0.8);
 
   /* custom color variable */
-  --custom-blue-100: #74b9ff;
-  --custom-blue-200: #0984e3;
-  --custom-blue-300: #0d4c92;
-  --custom-pink: #ff4589;
-  --custom-purple-100: #a29bfe;
-  --custom-orange: #ff8b5b;
-  --custom-yellow: #ffc74c;
-  --custom-green-100: #00cec9;
-  --custom-green-200: #00c2ab;
+  --custom-blue-100: var(--blue-210);
+  --custom-blue-200: var(--blue-230);
+  --custom-blue-300: var(--blue-450);
+  --custom-pink: var(--red-150);
+  --custom-purple-100: var(--purple-350);
+  --custom-orange: var(--orange-100);
+  --custom-yellow: var(--yellow);
+  --custom-green-100: var(--green-300);
+  --custom-green-200: var(--green-400);
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;
