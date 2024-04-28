@@ -73,6 +73,8 @@ const TopNavButtonStyled = styled.div<{
 
   & > svg > path {
     stroke: var(--shared-gray-color-500);
+    transform: ${(props) =>
+      props.id === "searchButton" ? "scale(0.9)" : "scale(1)"};
   }
 `;
 
