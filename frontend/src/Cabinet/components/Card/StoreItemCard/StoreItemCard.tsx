@@ -23,13 +23,19 @@ const StoreItemCard = ({
       >
         <SectionStyled>
           <BlockStyled>
-            <IconBlockStyled><Item.logo/></IconBlockStyled>
+            <IconBlockStyled>
+              <div>
+                <Item.logo />
+              </div>
+            </IconBlockStyled>
             <PriseBlockStyled>
               <CoinImg />
-              <span>{Item.ItemPrice}</span>
+              <span>
+                {Item.itemTypes[Item.itemTypes.length - 1].ItemPrice * -1}
+              </span>
             </PriseBlockStyled>
           </BlockStyled>
-          <ItemDetailStyled>{Item.ItemType}</ItemDetailStyled>
+          <ItemDetailStyled>{Item.Description}</ItemDetailStyled>
         </SectionStyled>
       </Card>
     </WrapperStyled>
@@ -62,6 +68,13 @@ const IconBlockStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+  }
 `;
 
 const PriseBlockStyled = styled.div`

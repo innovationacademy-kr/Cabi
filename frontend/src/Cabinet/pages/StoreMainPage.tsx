@@ -7,19 +7,103 @@ import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.s
 import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
 import { ReactComponent as MoveImg } from "@/Cabinet/assets/images/storeMove.svg";
 import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
-
-import StorModal from "../components/Modals/StoreModal/StoreBuyItemModal";
 import StoreItemCard from "../components/Card/StoreItemCard/StoreItemCard";
-import StoreModal from "../components/Modals/StoreModal/StoreBuyItemModal";
+import StoreBuyItemModal from "../components/Modals/StoreModal/StoreBuyItemModal";
 
-export interface IStoreItem {
-  ItemId: number;
+export interface IItemType {
+  Sku: string;
   ItemName: string;
   ItemPrice: number;
   ItemType: string;
-  grid: string;
+}
+
+export interface IStoreItem {
+  ItemName: string;
+  Description: string;
+  itemTypes: IItemType[];
   logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 }
+
+const ItemStoreDto = [
+  {
+    ItemName: "연장권",
+    Description:
+      "현재 대여 중인 사물함의 반납 기한을 3일, 15일 또는 30일 연장할 수 있습니다.",
+    itemTypes: [
+      {
+        Sku: "extension_31",
+        ItemName: "연장권",
+        ItemPrice: -2000,
+        ItemType: "31일",
+      },
+      {
+        Sku: "extension_15",
+        ItemName: "연장권",
+        ItemPrice: -1200,
+        ItemType: "15일",
+      },
+      {
+        Sku: "extension_3",
+        ItemName: "연장권",
+        ItemPrice: -300,
+        ItemType: "3일",
+      },
+    ],
+    logo: ExtensionImg,
+  },
+  {
+    ItemName: "이사권",
+    Description: "내용입니다",
+    itemTypes: [
+      {
+        Sku: "move",
+        ItemName: "이사권",
+        ItemPrice: -100,
+        ItemType: "",
+      },
+    ],
+    logo: MoveImg,
+  },
+  {
+    ItemName: "알림등록권",
+    Description: "내용입니다",
+    itemTypes: [
+      {
+        Sku: "alarm",
+        ItemName: "알림등록권",
+        ItemPrice: -100,
+        ItemType: "",
+      },
+    ],
+    logo: AlarmImg,
+  },
+  {
+    ItemName: "패널티삭제권",
+    Description:
+      "현재 대여 중인 사물함의 반납 기한을 3일, 15일 또는 30일 연장할 수 있습니다.",
+    itemTypes: [
+      {
+        Sku: "penalty_31",
+        ItemName: "패널티삭제권",
+        ItemPrice: -6200,
+        ItemType: "31일",
+      },
+      {
+        Sku: "penalty_15",
+        ItemName: "패널티삭제권",
+        ItemPrice: -1400,
+        ItemType: "7일",
+      },
+      {
+        Sku: "penalty_3",
+        ItemName: "패널티삭제권",
+        ItemPrice: -600,
+        ItemType: "3일",
+      },
+    ],
+    logo: PenaltyImg,
+  },
+];
 
 const StoreMainPage = () => {
   const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
@@ -37,54 +121,14 @@ const StoreMainPage = () => {
     setSelectedItem(null);
   };
 
-  const handlePurchase = (selectedOption: string) => {
+  const handlePurchase = (item: IItemType, selectedOption: string) => {
     // 선택한 옵션에 따른 구매 처리 로직 구현
-    console.log(`선택한 옵션: ${selectedOption}`);
+    console.log(`선택한 옵션:`, selectedOption);
+    console.log(`선택한 옵션: `, item);
     // 구매 처리 후 모달 닫기
     setIsModalOpen(false);
     setSelectedItem(null);
   };
-
-  // const StoreMainPage = () => {
-  //   const buttonClick = () => {
-  //     console.log("click");
-  //   };
-
-  const Items = [
-    {
-      ItemId: 1,
-      ItemName: "연장권",
-      ItemPrice: 300,
-      ItemType: "사물함을 연장 할 수 있는 연장권 설명 내용입니다.",
-      grid: "extension",
-      logo: ExtensionImg,
-    },
-    {
-      ItemId: 2,
-      ItemName: "이사권",
-      ItemPrice: 100,
-      ItemType: "이사권 설명 내용입니다.",
-      grid: "move",
-      logo: MoveImg,
-    },
-    {
-      ItemId: 3,
-      ItemName: "알림 등록권",
-      ItemPrice: 100,
-      ItemType: "알림 등록권 설명 내용입니다.",
-      grid: "alarm",
-      logo: AlarmImg,
-    },
-    {
-      ItemId: 4,
-      ItemName: "패널티 축소권",
-      ItemPrice: 600,
-      ItemType: "패널티 축소권 설명 내용입니다.",
-      grid: "penalty",
-      logo: PenaltyImg,
-    },
-  ];
-
 
   return (
     <WrapperStyled>
@@ -94,20 +138,23 @@ const StoreMainPage = () => {
 
       <StoreCoinGridWrapper>
         <StoreCoinPick />
-        {Items.map((item: IStoreItem) => (
+        {ItemStoreDto.map((item: IStoreItem) => (
           <StoreItemCard
-            key={item.grid}
+            key={item.ItemName}
             Item={item}
             button={{
               label: "구매하기",
               onClick: () => buttonClick(item),
-              isClickable: myCoin !== null && myCoin > item.ItemPrice,
+              isClickable:
+                myCoin !== null &&
+                myCoin >
+                  item.itemTypes[item.itemTypes.length - 1].ItemPrice * -1,
             }}
           />
         ))}
       </StoreCoinGridWrapper>
       {isModalOpen && selectedItem && (
-        <StoreModal
+        <StoreBuyItemModal
           onClose={handleCloseModal}
           onPurchase={handlePurchase}
           selectItem={selectedItem}
