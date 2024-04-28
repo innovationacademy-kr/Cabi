@@ -3,14 +3,13 @@ package org.ftclub.cabinet.dto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
-@NoArgsConstructor
 @AllArgsConstructor
-public class CoinHistoryResponseDto {
+public class CoinHistoryPaginationDto {
 
-	private List<CoinHistoryDto> coinHistories;
+	private List<CoinHistoryDto> result;
+	private Long totalLength;
 }
