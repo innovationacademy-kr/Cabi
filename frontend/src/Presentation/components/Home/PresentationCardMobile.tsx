@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import styled from "styled-components";
+import { ReactComponent as CalendarIcon } from "@/Cabinet/assets/images/calendar.svg";
 import { IDate } from "@/Presentation/components/Details/DetailContent.container";
 import { presentationCategoryIconMap } from "@/Presentation/assets/data/maps";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
@@ -80,10 +81,7 @@ const PresentationCardMobile = ({
                       <NameStyled>{p.userName} </NameStyled>
                       <CalendarStyled>
                         <IconStyled>
-                          <img
-                            src="/src/Cabinet/assets/images/calendar.svg"
-                            alt=""
-                          />
+                          <CalendarIcon />
                         </IconStyled>
                         <span>
                           {tmpDate?.month}/{tmpDate?.day}
@@ -202,13 +200,22 @@ const CalendarStyled = styled.div`
   font-size: 1rem;
 
   & > span {
-    color: var(--gray-line-btn-color);
+    color: var(--presentation-card-speaker-name-color);
+  }
+
+  & > svg > path {
+    stroke: var(--presentation-card-speaker-name-color);
   }
 `;
 
 const IconStyled = styled.div`
   height: 15px;
+  width: 15px;
   margin-right: 8px;
+
+  & > svg > path {
+    stroke: var(--presentation-card-speaker-name-color);
+  }
 `;
 
 const PaginationStyled = styled.div`

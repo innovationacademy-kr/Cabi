@@ -91,7 +91,7 @@ const darkValues = css`
   --sys-default-sub-color: var(--ref-purple-300);
   --sys-default-mine-color: var(--ref-green-200);
 
-  --sys-presentation-main-color: var(--ref-blue-400);
+  --sys-presentation-main-color: var(--ref-blue-430);
   --sys-presentation-sub-color: var(--ref-blue-160);
 
   --mine-color: var(--ref-green-200);

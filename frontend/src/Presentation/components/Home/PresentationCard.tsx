@@ -144,7 +144,7 @@ const CalendarStyled = styled.div`
   justify-content: flex-end;
   font-size: 1rem;
   & > span {
-    color: var(--gray-line-btn-color);
+    color: var(--presentation-card-speaker-name-color);
   }
 `;
 
@@ -154,6 +154,6 @@ const IconStyled = styled.div`
   margin-right: 8px;
 
   & > svg > path {
-    stroke: var(--gray-line-btn-color);
+    stroke: var(--presentation-card-speaker-name-color);
   }
 `;
