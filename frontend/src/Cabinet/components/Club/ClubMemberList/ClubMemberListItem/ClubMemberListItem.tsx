@@ -57,8 +57,8 @@ const MemberListItemContainerStyled = styled.div<{
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px var(--border-shadow-color-200),
-        0px 4px 4px var(--border-shadow-color-200);
+      box-shadow: inset 5px 5px 5px var(--color-picker-border-shadow-color),
+        0px 4px 4px var(--color-picker-border-shadow-color);
     `}
 
   @media (hover: hover) and (pointer: fine) {

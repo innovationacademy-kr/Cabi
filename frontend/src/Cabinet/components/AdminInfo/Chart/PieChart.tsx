@@ -62,7 +62,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
           tooltip: {
             container: {
               backgroundColor: "var(--bg-color)",
-              boxShadow: "var(--border-shadow-color-200) 0 1px 2px",
+              boxShadow: "var(--left-nav-border-shadow-color) 0 1px 2px",
               color: "var(--normal-text-color)",
             },
           },

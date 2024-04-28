@@ -153,7 +153,7 @@ const ClubMemberInfoAreaStyled = styled.div`
   flex-direction: column;
   align-items: center;
   background: var(--bg-color);
-  box-shadow: 0 0 40px 0 var(--border-shadow-color-200);
+  box-shadow: 0 0 40px 0 var(--left-nav-border-shadow-color);
   border-left: 1px solid var(--line-color);
   &.on {
     transform: translateX(0%);

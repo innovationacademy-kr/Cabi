@@ -83,6 +83,7 @@ const SubTitleStyled = styled.h2`
   @media screen and (max-width: 768px) {
     font-size: 1.5rem;
   }
+  color: var(--white-text-with-bg-color);
 `;
 
 const ContentStyled = styled.p`
@@ -98,6 +99,7 @@ const ContentStyled = styled.p`
       display: block;
     }
   }
+  color: var(--white-text-with-bg-color);
 `;
 
 const rotate = keyframes`
@@ -122,7 +124,7 @@ const CabiImgStyled = styled.div`
 `;
 
 const ButtonStyled = styled.button`
-  box-shadow: 10px 10px 40px 0px var(--border-shadow-color-200);
+  box-shadow: 10px 10px 40px 0px var(--color-picker-border-shadow-color);
 `;
 
 export default AnnounceTemplate;

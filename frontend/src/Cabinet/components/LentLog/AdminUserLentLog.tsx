@@ -87,7 +87,7 @@ const PageButtonStyled = styled.div<{
   background: linear-gradient(
     to left,
     transparent,
-    var(--border-shadow-color-300)
+    var(--page-btn-shadow-color)
   );
   display: ${({ page, totalPage, type }) => {
     if (type == "prev" && page == 0) return "none";

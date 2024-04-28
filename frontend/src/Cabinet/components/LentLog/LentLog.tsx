@@ -104,7 +104,7 @@ const LentLogStyled = styled.div`
   z-index: 9;
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;
-  box-shadow: 0 0 40px 0 var(--border-shadow-color-200);
+  box-shadow: 0 0 40px 0 var(--color-picker-border-shadow-color);
   display: flex;
   flex-direction: column;
   align-items: center;

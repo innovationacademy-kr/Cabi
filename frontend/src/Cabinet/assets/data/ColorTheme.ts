@@ -44,8 +44,10 @@ const lightValues = css`
   --border-shadow-color-300: var(--black-shadow-300);
   --table-border-shadow-color-100: var(--black-shadow-100);
   --table-border-shadow-color-200: var(--black-shadow-100);
+  --menu-bg-shadow-color: var(--black-shadow-100);
   --color-picker-border-shadow-color: var(--black-shadow-200);
-  /* TODO : table에 다 적용 */
+  --left-nav-border-shadow-color: var(--black-shadow-200);
+  --page-btn-shadow-color: var(--black-shadow-300);
 
   --custom-purple-200: var(--default-main-color);
 
@@ -111,7 +113,10 @@ const darkValues = css`
   --border-shadow-color-300: var(--black-shadow-400);
   --table-border-shadow-color-100: var(--black-shadow-300);
   --table-border-shadow-color-200: var(--black-shadow-400);
+  --menu-bg-shadow-color: var(--black-shadow-300);
   --color-picker-border-shadow-color: var(--black-shadow-200);
+  --left-nav-border-shadow-color: var(--black-shadow-400);
+  --page-btn-shadow-color: var(--black-shadow-400);
 
   --custom-purple-200: var(--purple-600);
 

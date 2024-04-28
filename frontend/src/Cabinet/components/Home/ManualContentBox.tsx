@@ -24,10 +24,6 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
       {contentStatus === ContentStatus.EXTENSION && (
         <ManualPeopleImg className="peopleImg" fill="var(--main-color)" />
       )}
-      {/* {contentStatus !== ContentStatus.PENDING &&
-        contentStatus !== ContentStatus.IN_SESSION && (
-          <img className="contentImg" src={contentData.imagePath} alt="" />
-        )} */}
       {contentStatus === ContentStatus.PRIVATE && (
         <PrivateIcon className="contentImg" />
       )}
@@ -167,10 +163,10 @@ const MaunalContentBoxStyled = styled.div<{
         ? css`
             border: 5px double var(--main-color);
             box-shadow: inset 0px 0px 0px 5px var(--bg-color),
-              10px 10px 25px 0 var(--border-shadow-color-200);
+              10px 10px 25px 0 var(--left-nav-border-shadow-color);
           `
         : css`
-            box-shadow: 10px 10px 25px 0 var(--border-shadow-color-200);
+            box-shadow: 10px 10px 25px 0 var(--left-nav-border-shadow-color);
           `}
     p {
       transition: all 0.3s ease-in-out;

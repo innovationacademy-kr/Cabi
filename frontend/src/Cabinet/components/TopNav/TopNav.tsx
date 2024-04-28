@@ -157,7 +157,7 @@ const BuildingListStyled = styled.ul<{ clicked: boolean }>`
   background: var(--bg-color);
   opacity: 0.9;
   border-radius: 4px;
-  box-shadow: 0 0 10px 0 var(--border-shadow-color-200);
+  box-shadow: 0 0 10px 0 var(--left-nav-border-shadow-color);
   z-index: 100;
   display: ${(props) => (props.clicked ? "block" : "none")};
   user-select: none !important;
