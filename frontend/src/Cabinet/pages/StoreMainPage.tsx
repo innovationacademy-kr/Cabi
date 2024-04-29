@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCoinsState } from "@/Cabinet/recoil/atoms";
@@ -10,6 +10,7 @@ import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenal
 import { axiosBuyItem, axiosItems } from "../api/axios/axios.custom";
 import StoreItemCard from "../components/Card/StoreItemCard/StoreItemCard";
 import { NotificationModal } from "../components/Modals/NotificationModal/NotificationModal";
+import { SuccessResponseModal } from "../components/Modals/ResponseModal/ResponseModal";
 import StoreBuyItemModal from "../components/Modals/StoreModal/StoreBuyItemModal";
 import IconType from "../types/enum/icon.type.enum";
 
@@ -113,6 +114,7 @@ const StoreMainPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<IStoreItem | null>(null);
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
   const [errorDetails, setErrorDetails] = useState("");
 
   const [Item, setItem] = useState([]);
@@ -145,23 +147,19 @@ const StoreMainPage = () => {
   const handlePurchase = (item: IItemType) => {
     // 선택한 옵션에 따른 구매 처리 로직 구현
     console.log("myCoin : ", myCoin);
-    if (myCoin !== null && item.ItemPrice * -1 > myCoin) {
+    if (myCoin !== null && item.ItemPrice * -1 > myCoin) { //  보유 코인이 모자란 경우
       setShowErrorModal(true);
-      setErrorDetails(`${(item.ItemPrice * -1) - myCoin} 까비가 더 필요합니다.`);
+      setErrorDetails(`${item.ItemPrice * -1 - myCoin} 까비가 더 필요합니다.`);
       console.log("코인이 부족합니다.");
     } else {
-      axiosBuyItem(item.Sku);
+      axiosBuyItem(item.Sku); // 아이템 구매 post 요청
       console.log(`선택한 옵션: `, item);
+      setShowSuccessModal(true);
     }
     // 구매 처리 후 모달 닫기
     setIsModalOpen(false);
     setSelectedItem(null);
   };
-
-  // const StoreMainPage = () => {
-  //   const buttonClick = () => {
-  //     console.log("click");
-  //   };
 
   const Items = [
     {
@@ -211,7 +209,12 @@ const StoreMainPage = () => {
             Item={item}
             button={{
               label: "구매하기",
-              onClick: () => buttonClick(item),
+              onClick:
+              myCoin !== null &&
+              myCoin >
+                item.itemTypes[item.itemTypes.length - 1].ItemPrice * -1
+                ? () => buttonClick(item)
+                : () => {},
               isClickable:
                 myCoin !== null &&
                 myCoin >
@@ -231,6 +234,12 @@ const StoreMainPage = () => {
           onClose={handleCloseModal}
           onPurchase={handlePurchase}
           selectItem={selectedItem}
+        />
+      )}
+      {showSuccessModal && (
+        <SuccessResponseModal
+          modalTitle="구매 완료."
+          closeModal={() => setShowSuccessModal(false)}
         />
       )}
       {showErrorModal && (

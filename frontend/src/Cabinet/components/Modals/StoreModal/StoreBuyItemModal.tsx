@@ -67,10 +67,10 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
           <p>
             <span>
               {selectItem.ItemName}
-              {selectedOption && (
+              {selectItem.itemTypes.length > 1 && (
                 <span>
                   {" "}
-                  -{selectItem.itemTypes[Number(selectedOption)].ItemType}
+                  - {selectItem.itemTypes[Number(selectedOption)].ItemType}
                 </span>
               )}
             </span>
