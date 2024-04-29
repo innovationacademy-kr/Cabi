@@ -1,5 +1,10 @@
+import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
+import { ReactComponent as SwapImg } from "@/Cabinet/assets/images/storeMove.svg";
+import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import { ItemType } from "@/Cabinet/types/enum/store.enum";
 
 export enum additionalModalType {
   MODAL_RETURN = "MODAL_RETURN",
@@ -21,6 +26,13 @@ export const cabinetIconSrcMap = {
   [CabinetType.PRIVATE]: "/src/Cabinet/assets/images/privateIcon.svg",
   [CabinetType.SHARE]: "/src/Cabinet/assets/images/shareIcon.svg",
   [CabinetType.CLUB]: "/src/Cabinet/assets/images/clubIcon.svg",
+};
+
+export const ItemIconMap = {
+  [ItemType.EXTENSION]: ExtensionImg,
+  [ItemType.SWAP]: SwapImg,
+  [ItemType.ALERT]: AlarmImg,
+  [ItemType.PENALTY]: PenaltyImg,
 };
 
 export const cabinetLabelColorMap = {
