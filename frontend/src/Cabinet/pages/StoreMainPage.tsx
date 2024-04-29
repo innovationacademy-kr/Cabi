@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCoinsState } from "@/Cabinet/recoil/atoms";
@@ -115,12 +115,12 @@ const StoreMainPage = () => {
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const [errorDetails, setErrorDetails] = useState("");
 
-  const [Items, setItems] = useState([]);
+  const [Item, setItem] = useState([]);
   const getItems = async () => {
     try {
       const response = await axiosItems();
       console.log("response: ", response);
-      setItems(response.data);
+      setItem(response.data);
     } catch (error) {
       throw error;
     }
@@ -131,7 +131,7 @@ const StoreMainPage = () => {
   }, []);
 
   const buttonClick = (item: IStoreItem) => {
-    console.log(Items);
+    console.log(Item);
     console.log(myCoin);
     setSelectedItem(item);
     setIsModalOpen(true);
