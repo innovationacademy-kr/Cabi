@@ -6,7 +6,7 @@ import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
 import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
-import CoinLogToggleType from "@/Cabinet/types/enum/store.enum";
+import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import { axiosCoinLog } from "@/Cabinet/api/axios/axios.custom";
 
 const dateOptions: Intl.DateTimeFormatOptions = {

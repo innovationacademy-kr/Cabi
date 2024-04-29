@@ -2,7 +2,7 @@ import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import CoinLogToggleType from "@/Cabinet/types/enum/store.enum";
+import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 
 const axiosLogoutUrl = "/v4/auth/logout";
@@ -359,6 +359,22 @@ export const axiosCoinLog = async (
   }
 };
 
+const axiosItemHistoryURL = "/v5/Items/history";
+export const axiosGetItemUsageHistory = async (
+  page: number,
+  size: number
+): Promise<any> => {
+  if (page === null || size === null) return;
+  try {
+    const response = await instance.get(
+      `${axiosItemHistoryURL}?page=${page}&size=${size}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosItemsURL = "/v5/items";
 export const axiosItems = async (): Promise<any> => {
   try {
@@ -370,15 +386,9 @@ export const axiosItems = async (): Promise<any> => {
 };
 
 const axiosBuyItemURL = "/v5/Items/";
-export const axiosBuyItem = async (
-  sku: String
-): Promise<any> => {
+export const axiosBuyItem = async (sku: String): Promise<any> => {
   try {
-    const response = await instance.post(
-      axiosBuyItemURL +
-        sku +
-        "/purchase" 
-    );
+    const response = await instance.post(axiosBuyItemURL + sku + "/purchase");
     return response;
   } catch (error) {
     throw error;
