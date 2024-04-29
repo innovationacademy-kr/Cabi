@@ -13,7 +13,7 @@ import { NotificationModal } from "../components/Modals/NotificationModal/Notifi
 import { SuccessResponseModal } from "../components/Modals/ResponseModal/ResponseModal";
 import StoreBuyItemModal from "../components/Modals/StoreModal/StoreBuyItemModal";
 import IconType from "../types/enum/icon.type.enum";
-
+import {ItemIconMap} from "../assets/data/maps";
 export interface IItemType {
   Sku: string;
   ItemName: string;
@@ -35,10 +35,10 @@ const ItemStoreDto = [
       "현재 대여 중인 사물함의 반납 기한을 3일, 15일 또는 30일 연장할 수 있습니다.",
     itemTypes: [
       {
-        Sku: "extension_31",
+        Sku: "extension_3",
         ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "31일",
+        ItemPrice: -300,
+        ItemType: "3일",
       },
       {
         Sku: "extension_15",
@@ -47,13 +47,13 @@ const ItemStoreDto = [
         ItemType: "15일",
       },
       {
-        Sku: "extension_3",
+        Sku: "extension_31",
         ItemName: "연장권",
-        ItemPrice: -300,
-        ItemType: "3일",
+        ItemPrice: -2000,
+        ItemType: "31일",
       },
     ],
-    logo: ExtensionImg,
+    logo: ItemIconMap.EXTENSION,
   },
   {
     ItemName: "이사권",
@@ -66,7 +66,7 @@ const ItemStoreDto = [
         ItemType: "",
       },
     ],
-    logo: MoveImg,
+    logo: ItemIconMap.SWAP,
   },
   {
     ItemName: "알림등록권",
@@ -79,7 +79,7 @@ const ItemStoreDto = [
         ItemType: "",
       },
     ],
-    logo: AlarmImg,
+    logo: ItemIconMap.ALERT,
   },
   {
     ItemName: "패널티삭제권",
@@ -87,10 +87,10 @@ const ItemStoreDto = [
       "현재 대여 중인 사물함의 반납 기한을 3일, 15일 또는 30일 연장할 수 있습니다.",
     itemTypes: [
       {
-        Sku: "penalty_31",
+        Sku: "penalty_3",
         ItemName: "패널티삭제권",
-        ItemPrice: -6200,
-        ItemType: "31일",
+        ItemPrice: -600,
+        ItemType: "3일",
       },
       {
         Sku: "penalty_15",
@@ -99,13 +99,13 @@ const ItemStoreDto = [
         ItemType: "7일",
       },
       {
-        Sku: "penalty_3",
+        Sku: "penalty_31",
         ItemName: "패널티삭제권",
-        ItemPrice: -600,
-        ItemType: "3일",
+        ItemPrice: -6200,
+        ItemType: "31일",
       },
     ],
-    logo: PenaltyImg,
+    logo: ItemIconMap.PENALTY,
   },
 ];
 
@@ -212,17 +212,17 @@ const StoreMainPage = () => {
               onClick:
               myCoin !== null &&
               myCoin >
-                item.itemTypes[item.itemTypes.length - 1].ItemPrice * -1
+                item.itemTypes[0].ItemPrice * -1
                 ? () => buttonClick(item)
                 : () => {},
               isClickable:
                 myCoin !== null &&
                 myCoin >
-                  item.itemTypes[item.itemTypes.length - 1].ItemPrice * -1,
+                  item.itemTypes[0].ItemPrice * -1,
               color:
                 myCoin !== null &&
                 myCoin >
-                  item.itemTypes[item.itemTypes.length - 1].ItemPrice * -1
+                  item.itemTypes[0].ItemPrice * -1
                   ? "var(--main-color)"
                   : "var(--gray-color)",
             }}
@@ -237,10 +237,12 @@ const StoreMainPage = () => {
         />
       )}
       {showSuccessModal && (
-        <SuccessResponseModal
-          modalTitle="구매 완료."
-          closeModal={() => setShowSuccessModal(false)}
-        />
+        <NotificationModal
+        title="구매 완료."
+        detail={""}
+        closeModal={() => setShowSuccessModal(false)}
+        iconType={IconType.CHECKICON}
+      />
       )}
       {showErrorModal && (
         <NotificationModal

@@ -26,7 +26,7 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
   const modalContents: IModalContents = {
     type: "hasProceedBtn",
     iconType: "CHECK",
-    iconScaleEffect: true,
+    iconScaleEffect: false,
     title: "구매 확인",
     detail: "",
     proceedBtnText: "네, 구매할게요",
@@ -38,7 +38,7 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
     renderAdditionalComponent: () => (
       <>
         {selectItem.itemTypes.length > 1 && (
-          <>
+          <ModalContainerStyled>
             <ModalDropdownNameStyled>
               {selectItem.ItemName} 타입
             </ModalDropdownNameStyled>
@@ -60,7 +60,7 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
               defaultValue={selectItem.itemTypes[0].ItemType}
               onChangeValue={handleDropdownChange}
             />{" "}
-          </>
+          </ModalContainerStyled>
         )}
 
         <ModalDetailStyled>
@@ -96,9 +96,13 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
   );
 };
 
+const ModalContainerStyled = styled.div`
+  padding: 10px 20px 0 20px;
+`;
+
 const ModalDropdownNameStyled = styled.div`
   display: flex;
-  margin: 10px 10px 15px 10px;
+  margin: 10px 10px 15px 5px;
   font-size: 18px;
 `;
 const ModalDetailStyled = styled.div`
