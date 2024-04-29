@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCoinsState } from "@/Cabinet/recoil/atoms";
@@ -130,6 +130,45 @@ const StoreMainPage = () => {
     setSelectedItem(null);
   };
 
+  // const StoreMainPage = () => {
+  //   const buttonClick = () => {
+  //     console.log("click");
+  //   };
+
+  const Items = [
+    {
+      ItemId: 1,
+      ItemName: "연장권",
+      ItemPrice: 300,
+      ItemType: "사물함을 연장 할 수 있는 연장권 설명 내용입니다.",
+      grid: "extension",
+      logo: ExtensionImg,
+    },
+    {
+      ItemId: 2,
+      ItemName: "이사권",
+      ItemPrice: 100,
+      ItemType: "이사권 설명 내용입니다.",
+      grid: "move",
+      logo: MoveImg,
+    },
+    {
+      ItemId: 3,
+      ItemName: "알림 등록권",
+      ItemPrice: 100,
+      ItemType: "알림 등록권 설명 내용입니다.",
+      grid: "alarm",
+      logo: AlarmImg,
+    },
+    {
+      ItemId: 4,
+      ItemName: "패널티 축소권",
+      ItemPrice: 600,
+      ItemType: "패널티 축소권 설명 내용입니다.",
+      grid: "penalty",
+      logo: PenaltyImg,
+    },
+  ];
   return (
     <WrapperStyled>
       <HeaderStyled>
@@ -199,7 +238,7 @@ const StoreCoinGridWrapper = styled.div`
 `;
 
 const HeaderStyled = styled.div`
-  width: 80%;
+  width: 90%;
   max-width: 1060px;
   border-bottom: 2px solid #d9d9d9;
   margin-bottom: 25px;

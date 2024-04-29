@@ -27,6 +27,7 @@ const useMenu = () => {
   const openLeftNav = () => {
     closeCabinet();
     closeMap();
+    closeStore();
     closeLent();
     closeClubMember();
     document.getElementById("menuBg")?.classList.add("on");
@@ -53,6 +54,7 @@ const useMenu = () => {
   const openLent = () => {
     closeLeftNav();
     closeMap();
+    closeStore();
     document.getElementById("lentInfo")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
   };
@@ -72,25 +74,34 @@ const useMenu = () => {
   };
 
   const toggleStore = () => {
-    if (
-      document.getElementById("storeInfo")?.classList.contains("on") == true
-    ) {
+    if (document.getElementById("storeInfo")?.classList.contains("on") == true)
       closeStore();
-    } else {
+    else {
       openStore();
     }
   };
 
   const openStore = () => {
+    closeMap();
+    closeLeftNav();
+    closeCabinet();
+    closeLent();
+    closeClubMember();
     document.getElementById("storeInfo")?.classList.add("on");
+    document.getElementById("menuBg")?.classList.add("on");
   };
 
   const closeStore = () => {
-    if (document.getElementById("storeInfo")?.classList.contains("on") == true)
+    if (
+      document.getElementById("storeInfo")?.classList.contains("on") == true
+    ) {
       document.getElementById("storeInfo")?.classList.remove("on");
+      document.getElementById("menuBg")?.classList.remove("on");
+    }
   };
 
   const openMap = () => {
+    closeStore();
     closeLeftNav();
     closeCabinet();
     closeLent();
@@ -121,6 +132,7 @@ const useMenu = () => {
   const openCabinet = () => {
     closeLeftNav();
     closeMap();
+    closeStore();
     closeLent();
     closeClubMember();
     document.getElementById("cabinetDetailArea")?.classList.add("on");
@@ -156,6 +168,7 @@ const useMenu = () => {
   const openClubMember = () => {
     closeLeftNav();
     closeMap();
+    closeStore();
     closeLent();
     closeCabinet();
     document.getElementById("clubMemberInfoArea")?.classList.add("on");
@@ -178,6 +191,7 @@ const useMenu = () => {
     closeCabinet();
     closeLent();
     closeMap();
+    closeStore();
     closeClubMember();
   };
 

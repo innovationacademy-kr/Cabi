@@ -1,23 +1,17 @@
-import { useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as CoinCheckOffImg } from "@/Cabinet/assets/images/storeCoinCheckOff.svg";
 import { ReactComponent as CoinCheckOnImg } from "@/Cabinet/assets/images/storeCoinCheckOn.svg";
 
-const StoreCoinCheckBox = () => {
-  const [selectedIndex, setSelectedIndex] = useState<number>();
-
-  const handleCheckboxClick = (index: number) => {
-    setSelectedIndex(index);
-  };
-
+const StoreCoinCheckBox = ({
+  monthlyCoinCount,
+}: {
+  monthlyCoinCount: number;
+}) => {
   return (
     <WrapperStyled>
       {Array.from({ length: 20 }, (_, index) => (
-        <CoinCheckOffStyled
-          key={index}
-          onClick={() => handleCheckboxClick(index)}
-        >
-          {selectedIndex === index ? (
+        <CoinCheckOffStyled key={index}>
+          {index < monthlyCoinCount ? (
             <CoinCheckOnImg />
           ) : (
             <CoinCheckOffImgStyled>

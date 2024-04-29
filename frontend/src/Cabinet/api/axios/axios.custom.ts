@@ -325,6 +325,24 @@ export const axiosExtendLentPeriod = async (): Promise<any> => {
   }
 };
 
+const axiosCoinCheck = "/v5/items/coin";
+export const axiosCoinCheckGet = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosCoinCheck);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const axiosCoinCheckPost = async (): Promise<any> => {
+  try {
+    const response = await instance.post(axiosCoinCheck);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosCoinLogURL = "/v5/items/coin/history";
 export const axiosCoinLog = async (
   type: CoinLogToggleType,
