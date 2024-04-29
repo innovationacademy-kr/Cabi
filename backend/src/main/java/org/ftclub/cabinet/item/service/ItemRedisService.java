@@ -32,8 +32,8 @@ public class ItemRedisService {
 		itemRedis.saveCoinCount(userId.toString(), String.valueOf(coinCount));
 	}
 
-	public boolean isCoinCollectable(Long userId) {
-		return itemRedis.isCoinCollectable(userId.toString());
+	public boolean isCoinCollected(Long userId) {
+		return itemRedis.isCoinCollected(userId.toString());
 	}
 
 	public void collectCoin(Long userId) {

@@ -73,9 +73,15 @@ public class ItemController {
 	 */
 	@GetMapping("/coin")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public CoinMonthlyCollectionDto getCoinMonthlyCollectionCount(@UserSession UserSessionDto user,
-		@RequestParam Long itemId) {
-		return itemFacadeService.getCoinMonthlyCollectionCount(user.getUserId(), itemId);
+	public CoinMonthlyCollectionDto getCoinMonthlyCollectionCount(
+		@UserSession UserSessionDto user) {
+		return itemFacadeService.getCoinCollectionCountInMonth(user.getUserId());
+	}
+
+	@PostMapping("/coin")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public void collectCoin(@UserSession UserSessionDto user) {
+		itemFacadeService.collectCoin(user.getUserId());
 	}
 
 	@PostMapping("{itemId}/use")

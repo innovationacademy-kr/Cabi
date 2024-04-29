@@ -43,7 +43,7 @@ public class ItemRedis {
 	 * @param userId
 	 * @return
 	 */
-	public boolean isCoinCollectable(String userId) {
+	public boolean isCoinCollected(String userId) {
 		Boolean isCollected = coinTemplate.hasKey(userId + COIN_COLLECT_KEY_SUFFIX);
 		return Objects.nonNull(isCollected) && isCollected;
 	}

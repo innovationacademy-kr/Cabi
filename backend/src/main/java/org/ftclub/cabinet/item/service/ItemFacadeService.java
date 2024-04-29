@@ -126,19 +126,22 @@ public class ItemFacadeService {
 	 * @param itemId
 	 * @return
 	 */
-	public CoinMonthlyCollectionDto getCoinMonthlyCollectionCount(Long userId, Long itemId) {
+	public CoinMonthlyCollectionDto getCoinCollectionCountInMonth(Long userId) {
 		Long coinCollectionCountInMonth =
-			itemRedisService.getCoinCollectionCountInMonth(userId, itemId);
-		boolean isCollectedInToday = itemRedisService.isCoinCollectable(userId);
+			itemRedisService.getCoinCollectionCountInMonth(userId);
+		boolean isCollectedInToday = itemRedisService.isCoinCollected(userId);
 
 		return itemMapper.toCoinMonthlyCollectionDto(coinCollectionCountInMonth,
 			isCollectedInToday);
 	}
 
+	public void collectCoin(Long userId) {
+		itemPolicyService.verifyIsAlreadyCollectedCoin(userId);
+		itemRedisService.collectCoin(userId);
+	}
+
 	/**
 	 * 아이템 사용 기능
-	 * <p>
-	 * Q. interface를 사용할지, itemType 따라 case로 나누게 되는지? -> eventListener
 	 *
 	 * @param userId
 	 * @param itemId
