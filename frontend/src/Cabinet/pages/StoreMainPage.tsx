@@ -7,8 +7,11 @@ import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.s
 import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
 import { ReactComponent as MoveImg } from "@/Cabinet/assets/images/storeMove.svg";
 import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
+import { axiosBuyItem, axiosItems } from "../api/axios/axios.custom";
 import StoreItemCard from "../components/Card/StoreItemCard/StoreItemCard";
+import { NotificationModal } from "../components/Modals/NotificationModal/NotificationModal";
 import StoreBuyItemModal from "../components/Modals/StoreModal/StoreBuyItemModal";
+import IconType from "../types/enum/icon.type.enum";
 
 export interface IItemType {
   Sku: string;
@@ -109,8 +112,26 @@ const StoreMainPage = () => {
   const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<IStoreItem | null>(null);
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+  const [errorDetails, setErrorDetails] = useState("");
+
+  const [Items, setItems] = useState([]);
+  const getItems = async () => {
+    try {
+      const response = await axiosItems();
+      console.log("response: ", response);
+      setItems(response.data);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    getItems();
+  }, []);
 
   const buttonClick = (item: IStoreItem) => {
+    console.log(Items);
     console.log(myCoin);
     setSelectedItem(item);
     setIsModalOpen(true);
@@ -121,10 +142,17 @@ const StoreMainPage = () => {
     setSelectedItem(null);
   };
 
-  const handlePurchase = (item: IItemType, selectedOption: string) => {
+  const handlePurchase = (item: IItemType) => {
     // 선택한 옵션에 따른 구매 처리 로직 구현
-    console.log(`선택한 옵션:`, selectedOption);
-    console.log(`선택한 옵션: `, item);
+    console.log("myCoin : ", myCoin);
+    if (myCoin !== null && item.ItemPrice * -1 > myCoin) {
+      setShowErrorModal(true);
+      setErrorDetails(`${(item.ItemPrice * -1) - myCoin} 까비가 더 필요합니다.`);
+      console.log("코인이 부족합니다.");
+    } else {
+      axiosBuyItem(item.Sku);
+      console.log(`선택한 옵션: `, item);
+    }
     // 구매 처리 후 모달 닫기
     setIsModalOpen(false);
     setSelectedItem(null);
@@ -188,6 +216,12 @@ const StoreMainPage = () => {
                 myCoin !== null &&
                 myCoin >
                   item.itemTypes[item.itemTypes.length - 1].ItemPrice * -1,
+              color:
+                myCoin !== null &&
+                myCoin >
+                  item.itemTypes[item.itemTypes.length - 1].ItemPrice * -1
+                  ? "var(--main-color)"
+                  : "var(--gray-color)",
             }}
           />
         ))}
@@ -197,6 +231,14 @@ const StoreMainPage = () => {
           onClose={handleCloseModal}
           onPurchase={handlePurchase}
           selectItem={selectedItem}
+        />
+      )}
+      {showErrorModal && (
+        <NotificationModal
+          title="코인이 부족합니다."
+          detail={errorDetails}
+          closeModal={() => setShowErrorModal(false)}
+          iconType={IconType.ERRORICON}
         />
       )}
     </WrapperStyled>
@@ -218,7 +260,7 @@ const StoreCoinGridWrapper = styled.div`
   align-items: center;
   width: 100%;
   grid-gap: 20px;
-  grid-template-columns: 350px 350px 350px;
+  grid-template-columns: 340px 340px 340px;
   grid-template-rows: 150px 150px;
   grid-template-areas: "coinPick extension move" // h: 163px h: 366px
     "coinPick alarm penalty"; // h: 183px;

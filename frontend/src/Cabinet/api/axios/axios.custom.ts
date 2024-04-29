@@ -359,6 +359,32 @@ export const axiosCoinLog = async (
   }
 };
 
+const axiosItemsURL = "/v5/items";
+export const axiosItems = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosItemsURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosBuyItemURL = "/v5/Items/";
+export const axiosBuyItem = async (
+  sku: String
+): Promise<any> => {
+  try {
+    const response = await instance.post(
+      axiosBuyItemURL +
+        sku +
+        "/purchase" 
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Admin API
 const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
 export const axiosAdminAuthLogin = async (

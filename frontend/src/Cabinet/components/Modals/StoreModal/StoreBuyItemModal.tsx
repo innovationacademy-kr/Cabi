@@ -8,7 +8,7 @@ import ModalPortal from "../ModalPortal";
 
 interface StorModalProps {
   onClose: () => void;
-  onPurchase: (item:IItemType, selectedOption: string) => void;
+  onPurchase: (item: IItemType) => void;
   selectItem: IStoreItem;
 }
 
@@ -17,7 +17,7 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
   onPurchase,
   selectItem,
 }) => {
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("0");
 
   const handleDropdownChange = (option: string) => {
     setSelectedOption(option);
@@ -33,7 +33,7 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
     cancelBtnText: "취소",
     closeModal: onClose,
     onClickProceed: async () => {
-      onPurchase(selectItem.itemTypes[Number(selectedOption)], selectedOption);
+      onPurchase(selectItem.itemTypes[Number(selectedOption)]);
     },
     renderAdditionalComponent: () => (
       <>
@@ -57,7 +57,7 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
                   value: "2",
                 },
               ]}
-              defaultValue={selectedOption}
+              defaultValue={selectItem.itemTypes[0].ItemType}
               onChangeValue={handleDropdownChange}
             />{" "}
           </>
@@ -67,13 +67,22 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
           <p>
             <span>
               {selectItem.ItemName}
-              {selectedOption && <span> -{selectItem.itemTypes[Number(selectedOption)].ItemType}</span>}
+              {selectedOption && (
+                <span>
+                  {" "}
+                  -{selectItem.itemTypes[Number(selectedOption)].ItemType}
+                </span>
+              )}
             </span>
             을 구매합니다.
           </p>
           <p>
             구매시
-            <span> {selectItem.itemTypes[Number(selectedOption)].ItemPrice * -1} 까비</span>가 소모됩니다.
+            <span>
+              {" "}
+              {selectItem.itemTypes[Number(selectedOption)].ItemPrice * -1} 까비
+            </span>
+            가 소모됩니다.
           </p>
         </ModalDetailStyled>
       </>
