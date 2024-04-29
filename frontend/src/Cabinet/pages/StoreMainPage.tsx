@@ -264,7 +264,6 @@ const StoreTitleStyled = styled.div`
 
 const StoreCoinGridWrapper = styled.div`
   display: grid;
-  // padding: 60px 0;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -275,33 +274,53 @@ const StoreCoinGridWrapper = styled.div`
     "coinPick alarm penalty"; // h: 183px;
   // "theme notification"; // h: 230px h: 230px;
 
+  @media (max-width: 1400px) {
+    grid-template-columns: 340px 340px;
+    grid-template-rows: 150px 150px 150px;
+    grid-template-areas:
+      "coinPick extension "
+      "coinPick move"
+      "alarm penalty";
+  }
+
   // 나중에 고치기
   @media (max-width: 768px) {
-    grid-template-columns: 350px;
-    grid-template-rows: 163px 366px 183px 230px 230px;
+    grid-template-columns: 340px;
+    grid-template-rows: 150px 150px 150px 150px 150px 150px;
     grid-template-areas:
-      "profile"
-      "lentInfo"
+      "coinPick"
+      "coinPick"
       "extension"
-      "theme"
+      "move"
+      "alarm"
       "notification";
   }
 `;
 
 const HeaderStyled = styled.div`
-  width: 90%;
+  // width: 90%;
+  width: 100%;
   max-width: 1060px;
   border-bottom: 2px solid #d9d9d9;
   margin-bottom: 25px;
+
+  @media (max-width: 1400px) {
+    max-width: 700px;
+  }
+
+  @media (max-width: 768px) {
+    max-width: 340px;
+  }
 `;
 
 const WrapperStyled = styled.div`
   padding-top: 80px;
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 80%;
+  width: 100%;
   height: 100%;
 `;
 

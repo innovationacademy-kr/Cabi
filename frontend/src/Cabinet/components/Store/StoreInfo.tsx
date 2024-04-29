@@ -17,7 +17,7 @@ import useMenu from "@/Cabinet/hooks/useMenu";
 // AdminSlackNotiPage.tsx
 
 const dummyDataGet = {
-  monthlyCoinCount: 9,
+  monthlyCoinCount: 10,
   todayCoinCollection: true,
 };
 
@@ -56,6 +56,7 @@ const StoreInfo = () => {
     try {
       // coin 줍기 axios
       // const res = await axiosCoinCheckPost();
+      // console.log("res", res);
       console.log("coin 줍기 axios Post");
       setModalContent(`${dummyDataPost.reward}까비를 획득했습니다.`);
       // axios 끝내고 모달 띄우기
