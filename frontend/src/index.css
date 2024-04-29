@@ -87,6 +87,8 @@
   --custom-green-100: var(--ref-green-300);
   --custom-green-200: var(--ref-green-400);
 
+  --size-base: 14px;
+
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;
   --building-font: "Do Hyeon", sans-serif;

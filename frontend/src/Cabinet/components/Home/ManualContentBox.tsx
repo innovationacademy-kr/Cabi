@@ -132,7 +132,7 @@ const MaunalContentBoxStyled = styled.div<{
     `}
   
     p {
-    margin-top: 120px;
+    margin-top: 90px;
     ${({ contentStatus }) =>
       (contentStatus === ContentStatus.PENDING ||
         contentStatus === ContentStatus.IN_SESSION) &&

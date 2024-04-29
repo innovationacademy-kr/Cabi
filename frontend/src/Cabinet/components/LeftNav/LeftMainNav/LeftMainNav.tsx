@@ -185,6 +185,7 @@ const LeftNavStyled = styled.nav`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  font-size: var(--size-base);
 `;
 
 const TopSectionStyled = styled.section`

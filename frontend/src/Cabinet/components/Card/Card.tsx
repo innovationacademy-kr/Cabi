@@ -112,6 +112,7 @@ const ToolTipIcon = styled.div`
 
 export const CardButtonWrapper = styled.div`
   display: flex;
+  font-size: var(--size-base);
 `;
 
 export const CardButtonStyled = styled.div<{

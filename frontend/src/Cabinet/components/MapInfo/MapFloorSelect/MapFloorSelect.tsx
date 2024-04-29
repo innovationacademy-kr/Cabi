@@ -22,7 +22,7 @@ const MapFloorSelect = ({ floor, setFloor, floorInfo }: IMapFloorSelect) => {
   return (
     <div style={{ position: "relative" }}>
       <MapFloorSelectStyled className="cabiButton" onClick={onClickFloorOption}>
-        {`${floor}층`}
+        <span>{`${floor}층`}</span>
         <SelectIcon />
       </MapFloorSelectStyled>
       <MapFloorSelectOption selectFloor={selectFloor} floorInfo={floorInfo} />
@@ -36,10 +36,13 @@ const MapFloorSelectStyled = styled.div`
   cursor: pointer;
   width: 65px;
   height: 40px;
+  padding: 0 12px;
   line-height: 40px;
-  text-indent: 12px;
   border-radius: 10px;
   margin: 30px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       opacity: 0.9;
