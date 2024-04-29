@@ -2,6 +2,7 @@ package org.ftclub.cabinet.item.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -52,4 +53,6 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 		@Param("itemId") Long itemId,
 		@Param("start") LocalDateTime start,
 		@Param("end") LocalDateTime end);
+
+	Optional<ItemHistory> findFirstByUserIdAndItemIdAndUsedAtIsNull(Long userId, Long itemId);
 }
