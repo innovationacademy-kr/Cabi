@@ -68,6 +68,7 @@ const DropdownContainerStyled = styled.div`
   flex-direction: column;
   width: 100%;
   position: relative;
+  cursor: pointer;
 `;
 
 const DropdownSelectionBoxStyled = styled.div<{ isOpen: boolean }>`

@@ -33,7 +33,8 @@ export const getDefaultCabinetInfo = () => ({
 });
 
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
-  const { toggleCabinet, toggleMap, openCabinet, closeAll } = useMenu();
+  const { toggleCabinet, toggleMap, toggleStore, openCabinet, closeAll } =
+    useMenu();
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
     currentCabinetIdState
   );
@@ -109,12 +110,18 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
         />
       )}
       {!isAdmin && !!myInfo.cabinetId && (
-        <TopNavButton
-          disable={!myInfo.cabinetId}
-          onClick={clickMyCabinet}
-          imgSrc="/src/Cabinet/assets/images/myCabinetIcon.svg"
-        />
+        <>
+          <TopNavButton
+            disable={!myInfo.cabinetId}
+            onClick={clickMyCabinet}
+            imgSrc="/src/Cabinet/assets/images/myCabinetIcon.svg"
+          />
+        </>
       )}
+      <TopNavButton
+        onClick={toggleStore}
+        imgSrc="/src/Cabinet/assets/images/storeCoinNav.svg"
+      />
       <TopNavButton
         onClick={toggleMap}
         imgSrc="/src/Cabinet/assets/images/map.svg"

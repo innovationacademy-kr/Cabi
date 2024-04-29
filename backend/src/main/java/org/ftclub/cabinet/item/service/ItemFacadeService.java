@@ -1,8 +1,9 @@
 package org.ftclub.cabinet.item.service;
 
-import java.time.LocalDateTime;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +11,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
-import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
+import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
-import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
-import org.ftclub.cabinet.dto.ItemResponseDto;
+import org.ftclub.cabinet.dto.ItemHistoryPaginationDto;
+import org.ftclub.cabinet.dto.ItemStoreDto;
+import org.ftclub.cabinet.dto.ItemStoreResponseDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.dto.UserSessionDto;
@@ -22,12 +24,15 @@ import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.domain.ItemType;
+import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +45,7 @@ public class ItemFacadeService {
 	private final ItemQueryService itemQueryService;
 	private final ItemCommandService itemCommandService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
+	private final ItemHistoryCommandService itemHistoryCommandService;
 	private final ItemMapper itemMapper;
 	private final UserQueryService userQueryService;
 	private final ItemRedisService itemRedisService;
@@ -52,12 +58,16 @@ public class ItemFacadeService {
 	 * @return 전체 아이템 리스트
 	 */
 	@Transactional
-	public ItemResponseDto getAllItems() {
+	public ItemStoreResponseDto getAllItems() {
 		List<Item> allItems = itemQueryService.getAllItems();
-		List<ItemDto> itemDtos = allItems.stream()
-				.map(itemMapper::toItemDto)
+		Map<ItemType, List<ItemDto>> itemMap = allItems.stream()
+				.filter(item -> item.getPrice() < 0)
+				.collect(groupingBy(Item::getType,
+						mapping(itemMapper::toItemDto, Collectors.toList())));
+		List<ItemStoreDto> result = itemMap.entrySet().stream()
+				.map(entry -> itemMapper.toItemStoreDto(entry.getKey(), entry.getValue()))
 				.collect(Collectors.toList());
-		return new ItemResponseDto(itemDtos);
+		return new ItemStoreResponseDto(result);
 	}
 
 	@Transactional(readOnly = true)
@@ -67,8 +77,9 @@ public class ItemFacadeService {
 
 		Map<ItemType, List<ItemDto>> itemMap = userItemHistories.stream()
 				.map(ItemHistory::getItem)
-				.collect(Collectors.groupingBy(Item::getType,
-						Collectors.mapping(itemMapper::toItemDto, Collectors.toList())));
+				.filter(item -> item.getPrice() < 0)
+				.collect(groupingBy(Item::getType,
+						mapping(itemMapper::toItemDto, Collectors.toList())));
 
 		List<ItemDto> extensionItems = itemMap.getOrDefault(ItemType.EXTENSION,
 				Collections.emptyList());
@@ -82,21 +93,18 @@ public class ItemFacadeService {
 
 
 	@Transactional(readOnly = true)
-	public ItemHistoryResponseDto getItemHistory(Long userId,
-			LocalDateTime start, LocalDateTime end) {
-		List<ItemHistory> itemHistories =
-				itemHistoryQueryService.getItemHistoryWithItem(userId, start, end);
+	public ItemHistoryPaginationDto getItemHistory(Long userId, Pageable pageable) {
+		Page<ItemHistory> itemHistories =
+				itemHistoryQueryService.getItemHistoryWithItem(userId, pageable);
 		List<ItemHistoryDto> result = itemHistories.stream()
-				.sorted(Comparator.comparing(ItemHistory::getUsedAt))
-				.filter(ih -> ih.getItem().getPrice() < 0)
 				.map(ih -> itemMapper.toItemHistoryDto(ih, itemMapper.toItemDto(ih.getItem())))
 				.collect(Collectors.toList());
-		return new ItemHistoryResponseDto(result);
+		return itemMapper.toItemHistoryPaginationDto(result, itemHistories.getTotalElements());
 	}
 
 	@Transactional(readOnly = true)
-	public CoinHistoryResponseDto getCoinHistory(Long userId, CoinHistoryType type,
-			LocalDateTime start, LocalDateTime end) {
+	public CoinHistoryPaginationDto getCoinHistory(Long userId, CoinHistoryType type,
+			Pageable pageable) {
 
 		Set<Item> items = new HashSet<>();
 		if (type.equals(CoinHistoryType.EARN) || type.equals(CoinHistoryType.ALL)) {
@@ -106,16 +114,15 @@ public class ItemFacadeService {
 			items.addAll(itemQueryService.getUseItemIds());
 		}
 		List<Long> itemIds = items.stream().map(Item::getId).collect(Collectors.toList());
-		List<ItemHistory> coinHistories =
-				itemHistoryQueryService.getCoinHistoryOnItems(userId, start, end, itemIds);
+		Page<ItemHistory> coinHistories =
+				itemHistoryQueryService.getCoinHistory(userId, pageable, itemIds);
 
 		Map<Long, Item> itemMap = items.stream()
 				.collect(Collectors.toMap(Item::getId, item -> item));
 		List<CoinHistoryDto> result = coinHistories.stream()
-				.sorted(Comparator.comparing(ItemHistory::getPurchaseAt))
 				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
 				.collect(Collectors.toList());
-		return new CoinHistoryResponseDto(result);
+		return itemMapper.toCoinHistoryPaginationDto(result, coinHistories.getTotalElements());
 	}
 
 //	/**
@@ -151,25 +158,28 @@ public class ItemFacadeService {
 	 * user가 아이템 구매 요청
 	 *
 	 * @param userId
-	 * @param itemId
+	 * @param sku
 	 */
 	@Transactional
-	public void purchaseItem(Long userId, Long itemId) {
-		User user = userQueryService.getUser(userId);
-
+	public void purchaseItem(Long userId, Sku sku) {
 		// 유저가 블랙홀인지 확인
+		User user = userQueryService.getUser(userId);
 		if (user.isBlackholed()) {
 			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
 		}
-		Item item = itemQueryService.getItemById(itemId);
-		Long userCoin = itemRedisService.getCoinCount(userId);
 
-		itemPolicyService.verifyIsAffordable(userCoin, item.getPrice());
+		Item item = itemQueryService.getItemBySku(sku);
+		long price = item.getPrice();
+		long userCoin = itemRedisService.getCoinCount(userId);
+
+		// 아이템 Policy 검증
+		itemPolicyService.verifyOnSale(price);
+		itemPolicyService.verifyIsAffordable(userCoin, price);
 
 		// 아이템 구매 처리
-		itemCommandService.purchaseItem(user.getId(), itemId);
+		itemHistoryCommandService.purchaseItem(user.getId(), item.getId());
 
 		// 코인 차감
-		itemRedisService.saveCoinCount(userId, userCoin - item.getPrice());
+		itemRedisService.saveCoinCount(userId, userCoin + price);
 	}
 }
