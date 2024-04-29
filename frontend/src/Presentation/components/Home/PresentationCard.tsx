@@ -9,15 +9,21 @@ const PresentationCard = ({
   refinePresentations,
 }: {
   searchCategory: (
-    categoryName?: keyof typeof presentationCategoryIconMap
-  ) => string | undefined;
+    categoryName: keyof typeof presentationCategoryIconMap | null
+  ) => React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   refinePresentations: IPresentationScheduleDetailInfo[] | undefined;
 }) => {
   return (
     <Container>
       {refinePresentations?.map((p, index) => {
-        const tmpDate = p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
-
+        let tmpDate = null;
+        let CategoryIcon = null;
+        if (p.id !== -1) {
+          tmpDate = makeIDateObj(new Date(p.dateTime));
+          CategoryIcon = searchCategory(p.category);
+        } else {
+          CategoryIcon = searchCategory(null);
+        }
         return (
           <PresentationCardStyled key={index}>
             {p.id !== -1 ? (
@@ -25,7 +31,7 @@ const PresentationCard = ({
                 <DetailStyled>
                   <CategoryStyled>
                     <CategoryIconStyled>
-                      {p.category && <img src={searchCategory(p.category)} />}
+                      {p.category && <CategoryIcon />}
                     </CategoryIconStyled>
                   </CategoryStyled>
                   <TitleStyled>{p.subject}</TitleStyled>
@@ -47,7 +53,7 @@ const PresentationCard = ({
               <>
                 <CategoryStyled>
                   <CategoryIconStyled>
-                    <img src={searchCategory()} />
+                    <CategoryIcon />
                   </CategoryIconStyled>
                 </CategoryStyled>
                 <TitleStyled>예정된 일정이 없습니다.</TitleStyled>

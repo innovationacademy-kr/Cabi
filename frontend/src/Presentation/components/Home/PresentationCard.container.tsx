@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import styled from "styled-components";
+import { ReactComponent as EmptyIcon } from "@/Cabinet/assets/images/PresentationEmpty.svg";
 import PresentationCard from "@/Presentation/components/Home/PresentationCard";
 import PresentationCardMobile from "@/Presentation/components/Home/PresentationCardMobile";
 import { presentationCategoryIconMap } from "@/Presentation/assets/data/maps";
@@ -17,11 +18,9 @@ const PresentationCardContainer = ({
   const [slide, setSlide] = useState(0);
 
   const searchCategory = (
-    categoryName?: keyof typeof presentationCategoryIconMap
-  ): string => {
-    return categoryName != undefined
-      ? presentationCategoryIconMap[categoryName]
-      : "/src/Cabinet/assets/images/PresentationEmpty.svg";
+    categoryName: keyof typeof presentationCategoryIconMap | null
+  ): React.FunctionComponent<React.SVGProps<SVGSVGElement>> => {
+    return categoryName ? presentationCategoryIconMap[categoryName] : EmptyIcon;
   };
 
   const onCardClick = (index: number) => {

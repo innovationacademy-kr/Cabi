@@ -16,8 +16,8 @@ const PresentationCardMobile = ({
 }: {
   refinePresentations: IPresentationScheduleDetailInfo[] | undefined;
   searchCategory: (
-    categoryName?: keyof typeof presentationCategoryIconMap
-  ) => string;
+    categoryName: keyof typeof presentationCategoryIconMap | null
+  ) => React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   selectIndex: number;
   slide: number;
   onCardClick: (index: number) => void;
@@ -46,8 +46,14 @@ const PresentationCardMobile = ({
     <>
       <Container select={slide}>
         {refinePresentations?.map((p, index) => {
-          const tmpDate =
-            p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
+          let tmpDate = null;
+          let CategoryIcon = null;
+          if (p.id !== -1) {
+            tmpDate = makeIDateObj(new Date(p.dateTime));
+            CategoryIcon = searchCategory(p.category);
+          } else {
+            CategoryIcon = searchCategory(null);
+          }
 
           return (
             <PresentationCardStyled
@@ -71,7 +77,7 @@ const PresentationCardMobile = ({
                 <>
                   <CategoryStyled>
                     <CategoryIconStyled>
-                      {p.category && <img src={searchCategory(p.category)} />}
+                      {p.category && <CategoryIcon />}
                     </CategoryIconStyled>
                   </CategoryStyled>
                   <DetailStyled>
@@ -94,7 +100,7 @@ const PresentationCardMobile = ({
                 <>
                   <CategoryStyled>
                     <CategoryIconStyled>
-                      <img src={searchCategory()} />
+                      <CategoryIcon />
                     </CategoryIconStyled>
                   </CategoryStyled>
                   <TitleStyled>예정된 일정이 없습니다.</TitleStyled>
