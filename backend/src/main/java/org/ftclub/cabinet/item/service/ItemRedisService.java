@@ -1,8 +1,5 @@
 package org.ftclub.cabinet.item.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.item.repository.ItemHistoryRepository;
 import org.ftclub.cabinet.item.repository.ItemRedis;
@@ -44,21 +41,12 @@ public class ItemRedisService {
 		itemRedis.addCoinCollectionCount(userId.toString());
 	}
 
-	public Long getCoinCollectionCountInMonth(Long userId, Long itemId) {
+	public Long getCoinCollectionCountInMonth(Long userId) {
 		String userIdToString = userId.toString();
 		String coinCollectionCount = itemRedis.getCoinCollectionCount(userIdToString);
 
 		if (coinCollectionCount == null) {
-			LocalDate today = LocalDate.now();
-			LocalDate lastDayOfMonth = today.with(TemporalAdjusters.lastDayOfMonth());
-
-			LocalDateTime startOfMonth = today.withDayOfMonth(1).atStartOfDay();
-			LocalDateTime endOfMonth = lastDayOfMonth.atTime(23, 59, 59);
-			Long coinCollection =
-				itemHistoryRepository.getCountByUserIdAndItemIdBetween(userId, itemId, startOfMonth,
-					endOfMonth);
-			itemRedis.saveCoinCollectionCount(userIdToString, coinCollection.toString());
-			return coinCollection;
+			return 0L;
 		}
 		return Long.parseLong(coinCollectionCount);
 	}
