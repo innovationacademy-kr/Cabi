@@ -18,10 +18,10 @@ public enum Sku {
 
 	COIN_COLLECT("동전 줍기"),
 	COIN_FULL_TIME("42 출석 보상"),
-	COIN_REWARD_200("동전 줍기 20일 보상-200"),
-	COIN_REWARD_500("동전 줍기 20일 보상-500"),
-	COIN_REWARD_1000("동전 줍기 20일 보상-1000"),
-	COIN_REWARD_2000("동전 줍기 20일 보상-2000"),
+	COIN_REWARD_200("동전 줍기 20일 보상"),
+	COIN_REWARD_500("동전 줍기 20일 보상"),
+	COIN_REWARD_1000("동전 줍기 20일 보상"),
+	COIN_REWARD_2000("동전 줍기 20일 보상"),
 	;
 
 
@@ -29,10 +29,6 @@ public enum Sku {
 
 	Sku(String type) {
 		this.type = type;
-	}
-
-	public String getType() {
-		return this.type;
 	}
 
 	public boolean isValid() {
