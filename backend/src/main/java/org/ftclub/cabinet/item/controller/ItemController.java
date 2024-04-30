@@ -8,9 +8,11 @@ import org.ftclub.cabinet.dto.CoinHistoryResponseDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
 import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
 import org.ftclub.cabinet.dto.ItemResponseDto;
+import org.ftclub.cabinet.dto.ItemUseRequestDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
+import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.item.service.ItemFacadeService;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
@@ -18,6 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -84,9 +87,11 @@ public class ItemController {
 		itemFacadeService.collectCoin(user.getUserId());
 	}
 
-	@PostMapping("{itemId}/use")
+	@PostMapping("{sku}/use")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public void useItem(@UserSession UserSessionDto user, @PathVariable Long itemId) {
-		itemFacadeService.useItem(user.getUserId(), itemId);
+	public void useItem(@UserSession UserSessionDto user,
+		@PathVariable("sku") Sku sku,
+		@RequestBody ItemUseRequestDto data) {
+		itemFacadeService.useItem(user.getUserId(), sku, data);
 	}
 }

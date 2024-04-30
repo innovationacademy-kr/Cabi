@@ -16,13 +16,20 @@ import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
 import org.ftclub.cabinet.dto.ItemHistoryResponseDto;
 import org.ftclub.cabinet.dto.ItemResponseDto;
+import org.ftclub.cabinet.dto.ItemUseRequestDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.item.domain.AlarmItem;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
+import org.ftclub.cabinet.item.domain.ExtensionItem;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.domain.ItemType;
+import org.ftclub.cabinet.item.domain.ItemUsage;
+import org.ftclub.cabinet.item.domain.Sku;
+import org.ftclub.cabinet.item.domain.SwapItem;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
@@ -146,12 +153,37 @@ public class ItemFacadeService {
 	 * @param userId
 	 * @param itemId
 	 */
-	public void useItem(Long userId, Long itemId) {
+	public void useItem(Long userId, Sku sku, ItemUseRequestDto data) {
 		User user = userQueryService.getUser(userId);
 		if (user.isBlackholed()) {
 			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
 		}
-		Item item = itemQueryService.getItemById(itemId);
+		Item item = itemQueryService.getBySku(sku);
+		List<ItemHistory> itemInInventory =
+			itemHistoryQueryService.getItemsByItemIdInUserInventory(user.getId(), item.getId());
+		ItemHistory firstItem = itemPolicyService.verifyEmptyItems(itemInInventory);
+
+		ItemUsage itemUsage = getItemUsage(userId, item, data);
+		// 공통 로직
+		eventPublisher.publishEvent(itemUsage);
+		firstItem.updateUsedAt();
+	}
+
+	private ItemUsage getItemUsage(Long userId, Item item, ItemUseRequestDto data) {
+		// 연장권, 이사권, 패널티
+		if (item.getType().equals(ItemType.SWAP)) {
+			return new SwapItem(userId, data.getNewCabinetId());
+		}
+		if (item.getType().equals(ItemType.EXTENSION)) {
+			return new ExtensionItem(userId, item.getSku().getDays());
+		}
+		if (item.getType().equals(ItemType.PENALTY)) {
+			return new ExtensionItem(userId, item.getSku().getDays());
+		}
+		if (item.getType().equals(ItemType.ALARM)) {
+			return new AlarmItem(userId, data.getSection());
+		}
+		throw ExceptionStatus.NOT_FOUND_ITEM.asServiceException();
 	}
 
 	/**
