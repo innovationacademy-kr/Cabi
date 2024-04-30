@@ -3,7 +3,6 @@ package org.ftclub.cabinet.item.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.repository.ItemHistoryRepository;
 import org.ftclub.cabinet.log.LogLevel;
@@ -32,13 +31,7 @@ public class ItemHistoryQueryService {
 			itemIds);
 	}
 
-	public Long getCountByUserIdAndItemIdBetween(Long userId, Long itemId, LocalDateTime start,
-		LocalDateTime end) {
-		return itemHistoryRepository.getCountByUserIdAndItemIdBetween(userId, itemId, start, end);
-	}
-
-	public ItemHistory getFirstItemInInventory(Long userId, Long itemId) {
-		return itemHistoryRepository.findFirstByUserIdAndItemIdAndUsedAtIsNull(userId, itemId)
-			.orElseThrow(ExceptionStatus.NOT_FOUND_ITEM::asServiceException);
+	public List<ItemHistory> getItemsByItemIdInUserInventory(Long userId, Long itemId) {
+		return itemHistoryRepository.findAllByUserIdAndItemIdAndUsedAtIsNull(userId, itemId);
 	}
 }
