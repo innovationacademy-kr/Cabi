@@ -151,7 +151,8 @@ public class ItemFacadeService {
 
 	@Transactional(readOnly = true)
 	public void collectCoin(Long userId) {
-		itemPolicyService.verifyIsAlreadyCollectedCoin(userId);
+		boolean isChecked = itemRedisService.isCoinCollected(userId);
+		itemPolicyService.verifyIsAlreadyCollectedCoin(isChecked);
 		itemRedisService.collectCoin(userId);
 	}
 

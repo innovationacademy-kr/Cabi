@@ -11,16 +11,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ItemPolicyService {
 
-	private final ItemRedisService itemRedisService;
-
 	public void verifyIsAffordable(long userCoin, long itemPrice) {
 		if (userCoin < itemPrice) {
 			throw ExceptionStatus.NOT_ENOUGH_COIN.asServiceException();
 		}
 	}
 
-	public void verifyIsAlreadyCollectedCoin(Long userId) {
-		if (itemRedisService.isCoinCollected(userId)) {
+	public void verifyIsAlreadyCollectedCoin(boolean isChecked) {
+		if (isChecked) {
 			throw ExceptionStatus.COIN_COLLECTION_ALREADY_EXIST.asServiceException();
 		}
 	}
