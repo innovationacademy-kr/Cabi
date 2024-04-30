@@ -23,5 +23,9 @@ public class ItemUsageHandler {
 			PenaltyItem penaltyItem = (PenaltyItem) itemUsage;
 			userFacadeService.reduceBanDays(penaltyItem.getUserId(), penaltyItem.getDays());
 		}
+		if (itemUsage instanceof ExtensionItem) {
+			ExtensionItem extensionItem = (ExtensionItem) itemUsage;
+			lentFacadeService.plusExtensionDays(extensionItem.getUserId(), extensionItem.getDays());
+		}
 	}
 }

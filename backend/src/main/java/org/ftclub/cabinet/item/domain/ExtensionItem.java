@@ -1,7 +1,9 @@
 package org.ftclub.cabinet.item.domain;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public class ExtensionItem implements ItemUsage {
 
