@@ -33,7 +33,7 @@ public enum ExceptionStatus {
 	LENT_ALREADY_EXISTED(HttpStatus.BAD_REQUEST, "이미 대여중인 사물함이 있습니다"),
 	USER_ALREADY_EXISTED(HttpStatus.BAD_REQUEST, "이미 존재하는 유저입니다"),
 	ADMIN_ALREADY_EXISTED(HttpStatus.BAD_REQUEST, "이미 존재하는 어드민입니다"),
-	COIN_COLLECTION_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "오늘은 이미 코인줍기를 수행했습니다."),
+	COIN_COLLECTION_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "오늘은 이미 동전줍기를 수행했습니다."),
 	NOT_CLUB_USER(HttpStatus.BAD_REQUEST, "동아리 유저가 아닙니다"),
 	INVALID_ARGUMENT(HttpStatus.BAD_REQUEST, "유효하지 않은 입력입니다"),
 	INVALID_STATUS(HttpStatus.BAD_REQUEST, "유효하지 않은 상태변경입니다"),
