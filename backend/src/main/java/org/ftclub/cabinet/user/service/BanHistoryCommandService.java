@@ -24,16 +24,16 @@ public class BanHistoryCommandService {
 	private final BanPolicy banPolicy;
 
 	public void banUser(Long userId, LocalDateTime endedAt,
-			LocalDateTime unBannedAt, BanType banType) {
+		LocalDateTime unBannedAt, BanType banType) {
 		BanHistory banHistory = BanHistory.of(endedAt, unBannedAt, banType, userId);
 		banHistoryRepository.save(banHistory);
 	}
 
 	public void banUsers(List<Long> userIds, LocalDateTime endedAt,
-			LocalDateTime unBannedAt, BanType banType) {
+		LocalDateTime unBannedAt, BanType banType) {
 		List<BanHistory> banHistories = userIds.stream()
-				.map(userId -> BanHistory.of(endedAt, unBannedAt, banType, userId))
-				.collect(Collectors.toList());
+			.map(userId -> BanHistory.of(endedAt, unBannedAt, banType, userId))
+			.collect(Collectors.toList());
 		banHistoryRepository.saveAll(banHistories);
 	}
 
@@ -41,5 +41,18 @@ public class BanHistoryCommandService {
 		if (banPolicy.isActiveBanHistory(banHistory.getUnbannedAt(), now)) {
 			banHistoryRepository.delete(banHistory);
 		}
+	}
+
+	@Transactional
+	public void updateBanDate(BanHistory recentBanHistory, LocalDateTime reducedBanDate) {
+		LocalDateTime newUnbannedAt = findMaxUnbannedAt(reducedBanDate, LocalDateTime.now());
+		recentBanHistory.updateUnbannedAt(newUnbannedAt);
+	}
+
+	private LocalDateTime findMaxUnbannedAt(LocalDateTime reducedBanDate, LocalDateTime now) {
+		if (reducedBanDate.isAfter(now)) {
+			return reducedBanDate;
+		}
+		return now;
 	}
 }
