@@ -4,24 +4,24 @@ import styled from "styled-components";
 import { myCoinsState } from "@/Cabinet/recoil/atoms";
 import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
 
+interface IStorePageItem {
+  name: string;
+  route: string;
+}
+
+const storePages: IStorePageItem[] = [
+  { name: "까비상점", route: "store" },
+  { name: "인벤토리", route: "store/inventory" },
+  { name: "아이템 사용내역", route: "store/item-use-log" },
+  { name: "코인 내역", route: "store/coin-log" },
+];
+
 const LeftStoreNav = ({
   onClickRedirectButton,
 }: {
   onClickRedirectButton: (location: string) => void;
 }) => {
-  interface StoreItem {
-    name: string;
-    route: string;
-  }
-
-  const storeList: StoreItem[] = [
-    { name: "까비상점", route: "store" },
-    { name: "인벤토리", route: "store/inventory" },
-    { name: "아이템 사용내역", route: "store/item-use-log" },
-    { name: "코인 내역", route: "store/coin-log" },
-  ];
-  
-  const [currentSection, SetCurrentSection] = useState("까비상점");
+  const [currentPage, SetCurrentPage] = useState(storePages[0].name);
   const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
 
   useEffect(() => {
@@ -35,23 +35,25 @@ const LeftStoreNav = ({
         <CoinCountStyled>
           코인
           <UserCoinsWrapperStyled>
-            <CoinIcon />
+            <CoinIconStyled>
+              <CoinIcon />
+            </CoinIconStyled>
             <CoinTextStyled>
               <span>{myCoin}</span> 까비
             </CoinTextStyled>
           </UserCoinsWrapperStyled>
         </CoinCountStyled>
         <hr />
-        {storeList.map((item: StoreItem) => (
+        {storePages.map((item: IStorePageItem) => (
           <StoreSectionStyled
             key={item.name}
             className={
-              item.name === currentSection
+              item.name === currentPage
                 ? "leftNavButtonActive cabiButton"
                 : "cabiButton"
             }
             onClick={() => {
-              SetCurrentSection(item.name);
+              SetCurrentPage(item.name);
               onClickRedirectButton(item.route);
             }}
           >
@@ -117,6 +119,11 @@ const StoreSectionStyled = styled.div`
       color: var(--white);
     }
   }
+`;
+
+const CoinIconStyled = styled.div`
+  width: 20px;
+  height: 20px;
 `;
 
 export default LeftStoreNav;

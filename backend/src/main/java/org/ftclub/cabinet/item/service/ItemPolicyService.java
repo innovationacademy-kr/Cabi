@@ -30,4 +30,10 @@ public class ItemPolicyService {
 			.min(Comparator.comparing(ItemHistory::getPurchaseAt))
 			.orElseThrow(ExceptionStatus.NOT_FOUND_ITEM::asServiceException);
 	}
+
+	public void verifyOnSale(long price) {
+		if (price >= 0) {
+			throw ExceptionStatus.ITEM_NOT_ON_SALE.asServiceException();
+		}
+	}
 }

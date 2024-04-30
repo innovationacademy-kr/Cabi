@@ -705,6 +705,81 @@ CREATE TABLE `club_registration`
   COLLATE = utf8mb4_general_ci;
 
 
+DROP TABLE IF EXISTS `item`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `item`
+(
+    `id`    bigint(20)  NOT NULL AUTO_INCREMENT,
+    `price` bigint(20)  NOT NULL,
+    `sku`   varchar(64) NOT NULL,
+    `type`  varchar(64) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+
+LOCK TABLES `item` WRITE;
+/*!40000 ALTER TABLE `item`
+    DISABLE KEYS */;
+INSERT INTO `item`
+VALUES (1, -2000, 'EXTENSION_31', 'EXTENSION'),
+       (2, -1200, 'EXTENSION_15', 'EXTENSION'),
+       (3, -300, 'EXTENSION_3', 'EXTENSION'),
+       (4, -6200, 'PENALTY_31', 'PENALTY'),
+       (5, -1400, 'PENALTY_7', 'PENALTY'),
+       (6, -600, 'PENALTY_3', 'PENALTY'),
+       (7, -100, 'SWAP', 'SWAP'),
+       (8, -100, 'ALARM', 'ALARM'),
+       (9, 10, 'COIN_COLLECT', 'COIN_COLLECT'),
+       (10, 2000, 'COIN_FULL_TIME', 'COIN_FULL_TIME'),
+       (11, 200, 'COIN_REWARD_200', 'COIN_REWARD'),
+       (12, 500, 'COIN_REWARD_500', 'COIN_REWARD'),
+       (13, 1000, 'COIN_REWARD_1000', 'COIN_REWARD'),
+       (14, 2000, 'COIN_REWARD_2000', 'COIN_REWARD');
+/*!40000 ALTER TABLE `item`
+    ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+DROP TABLE IF EXISTS `item_history`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `item_history`
+(
+    `id`          bigint(20)  NOT NULL AUTO_INCREMENT,
+    `item_id`     bigint(20)  NOT NULL,
+    `user_id`     bigint(20)  NOT NULL,
+    `purchase_at` datetime(6) NOT NULL,
+    `used_at`     datetime(6) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `item_history_item_id` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`),
+    CONSTRAINT `item_history_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+
+
+DROP TABLE IF EXISTS `section_alarm`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `section_alarm`
+(
+    `id`               bigint(20)  NOT NULL AUTO_INCREMENT,
+    `cabinet_place_id` bigint(20)  NOT NULL,
+    `user_id`          bigint(20)  NOT NULL,
+    `alarm_type`       varchar(64) NOT NULL,
+    `registered_at`    datetime(6) NOT NULL,
+    `alarmed_at`       datetime(6) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `section_alarm_cabinet_place_id`
+        FOREIGN KEY (`cabinet_place_id`) REFERENCES `cabinet_place` (`id`),
+    CONSTRAINT `section_alarm_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+
+
 /*!40103 SET TIME_ZONE = @OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE = @OLD_SQL_MODE */;

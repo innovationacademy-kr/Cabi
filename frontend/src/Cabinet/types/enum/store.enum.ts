@@ -1,7 +1,12 @@
-enum CoinLogToggleType {
+export enum CoinLogToggleType {
   ALL = "ALL",
   EARN = "EARN",
   USE = "USE",
 }
 
-export default CoinLogToggleType;
+export enum ItemType {
+  EXTENSION = "EXTENSION",
+  SWAP = "SWAP",
+  ALERT = "ALERT",
+  PENALTY = "PENALTY",
+}

@@ -12,13 +12,13 @@ import org.springframework.stereotype.Repository;
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
 	@Query("SELECT i "
-		+ "FROM Item i "
-		+ "WHERE i.price >= 0")
+			+ "FROM Item i "
+			+ "WHERE i.price >= 0")
 	List<Item> findAllByPricePositive();
 
 	@Query("SELECT i "
-		+ "FROM Item i "
-		+ "WHERE i.price < 0")
+			+ "FROM Item i "
+			+ "WHERE i.price < 0")
 	List<Item> findAllByPriceNegative();
 
 	/**

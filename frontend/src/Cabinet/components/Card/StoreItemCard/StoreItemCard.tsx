@@ -1,15 +1,16 @@
 import { useState } from "react";
 import styled from "styled-components";
-import type { Item } from "@/Cabinet/pages/StoreMainPage";
+import type { IStoreItem } from "@/Cabinet/pages/StoreMainPage";
 import Card from "@/Cabinet/components/Card/Card";
 import type { IButtonProps } from "@/Cabinet/components/Card/Card";
-import { ReactComponent as CoinImg } from "@/Cabinet/assets/images/dollar-circle.svg";
+// import { ReactComponent as CoinImg } from "@/Cabinet/assets/images/dollar-circle.svg";
+import { ReactComponent as CoinImg } from "@/Cabinet/assets/images/coinIcon.svg";
 
 const StoreItemCard = ({
   Item,
   button,
 }: {
-  Item: Item;
+  Item: IStoreItem;
   button: IButtonProps;
 }) => {
   return (
@@ -23,13 +24,19 @@ const StoreItemCard = ({
       >
         <SectionStyled>
           <BlockStyled>
-            <IconBlockStyled>{"Icon"}</IconBlockStyled>
+            <IconBlockStyled>
+              <div>
+                <Item.logo />
+              </div>
+            </IconBlockStyled>
             <PriseBlockStyled>
-              <CoinImg />
-              <span>{Item.ItemPrice}</span>
+              <CoinImg width={14} height={14} />
+              <span>
+                {Item.itemTypes[0].ItemPrice * -1}
+              </span>
             </PriseBlockStyled>
           </BlockStyled>
-          <ItemDetailStyled>{Item.ItemType}</ItemDetailStyled>
+          <ItemDetailStyled>{Item.Description}</ItemDetailStyled>
         </SectionStyled>
       </Card>
     </WrapperStyled>
@@ -38,15 +45,12 @@ const StoreItemCard = ({
 
 const WrapperStyled = styled.div`
   font-size: var(--size-base);
-
-  /* padding: 15px; */
 `;
 const SectionStyled = styled.div`
   display: flex;
   height: 80px;
   width: 90%;
-  /* margin: 9px 0 9px 0; */
-  padding-left: 5px;
+  padding-left: 10px;
   align-items: center;
 `;
 
@@ -65,6 +69,13 @@ const IconBlockStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+  }
 `;
 
 const PriseBlockStyled = styled.div`
@@ -72,27 +83,28 @@ const PriseBlockStyled = styled.div`
   height: 22px;
   background-color: var(--white);
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--main-color);
   display: flex;
   justify-content: center;
   align-items: center;
   > span {
-    margin-left: 3px;
+    margin-left: 5px;
     font-weight: 600;
   }
 `;
 
 const ItemDetailStyled = styled.div`
-  width: 100%;
+  width: 90%;
   height: 100%;
   background-color: var(--white);
   border-radius: 10px;
   padding: 10px 5px 5px 10px;
   margin: 5px 5px 5px 5px;
-  width: 90%;
   display: flex;
   flex-direction: column;
+  line-height: 18px;
+  word-break: break-all;
 `;
 
 export default StoreItemCard;

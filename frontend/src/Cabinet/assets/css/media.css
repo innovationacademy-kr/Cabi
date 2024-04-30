@@ -51,6 +51,11 @@
   transform: translateX(0%);
 }
 
+/* storeInfo */
+#storeInfo.on {
+  transform: translateX(0%);
+}
+
 /* ClubMemberInfoArea(rightSection) */
 /* #clubMemberInfoArea {
     position: fixed;

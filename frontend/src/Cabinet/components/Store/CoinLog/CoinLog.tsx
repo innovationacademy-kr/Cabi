@@ -5,7 +5,8 @@ import { myCoinsState } from "@/Cabinet/recoil/atoms";
 import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
-import CoinLogToggleType from "@/Cabinet/types/enum/store.enum";
+import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
+import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import { axiosCoinLog } from "@/Cabinet/api/axios/axios.custom";
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -33,7 +34,7 @@ const test: ICoinLog[] = [
       Number(new Date().getMonth()),
       Number(new Date().getDate())
     ),
-    title: "160시간 출석",
+    title: "160시간 출석이다요오오오옹",
     amount: 2000,
   },
   {
@@ -82,11 +83,16 @@ const CoinLog = () => {
 
   return (
     <WrapperStyled>
-      <TitleWrapperStyled>
-        <h1>코인 내역</h1>
-        <div>icon</div>
-      </TitleWrapperStyled>
-      보유 재화 : {myCoin}
+      <TitleStyled>코인 내역</TitleStyled>
+      <MyCoinWrapperStyled>
+        <MyCoinStyled>
+          <CoinIconStyled>
+            <CoinIcon />
+          </CoinIconStyled>
+          <span>{myCoin}</span>
+          까비
+        </MyCoinStyled>
+      </MyCoinWrapperStyled>
       <MultiToggleSwitchStyled>
         <MultiToggleSwitch
           initialState={toggleType}
@@ -102,7 +108,9 @@ const CoinLog = () => {
               <span id="date">
                 {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
               </span>
-              <span id="title">{log.title}</span>
+              <span id="title" title={log.title}>
+                {log.title}
+              </span>
               <span id="amount">
                 {isEarned ? "+" : ""}
                 {log.amount}
@@ -123,20 +131,14 @@ const WrapperStyled = styled.div`
   padding: 60px 0;
 `;
 
-const TitleWrapperStyled = styled.div`
-  width: 80%;
-  border-bottom: 2px solid #d9d9d9;
+const TitleStyled = styled.h1`
   font-weight: 700;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
-
-  & > h1 {
-    font-size: 2rem;
-  }
-
-  & > div {
-  }
+  font-size: 2rem;
+  text-align: right;
+  margin-top: 20px;
 `;
 
 const MultiToggleSwitchStyled = styled.div`
@@ -155,20 +157,82 @@ const LogItemStyled = styled.div<{
   border-radius: 10px;
   height: 70px;
   border: 1px solid #d9d9d9;
-  padding: 0 40px;
+  padding: 0 20px;
   display: flex;
   text-align: center;
+  display: flex;
+  align-items: center;
 
   & > #date {
     color: #595959;
+    width: 16%;
+    text-align: center;
   }
+
   & > #title {
     font-size: 18px;
     color: var(--black);
+    width: 74%;
+    text-align: start;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
+
   & > #amount {
-    color: ${(props) => (props.isEarned ? "#406ee4" : "var(--expired)")};
+    color: ${(props) =>
+      props.isEarned ? "var(--main-color)" : "var(--black)"};
+    font-size: 18px;
+    font-weight: bold;
+    width: 10%;
+    text-align: center;
+    min-width: 54px;
   }
+
+  @media (max-width: 810px) {
+    & > #date {
+      width: 38%;
+      font-size: 14px;
+    }
+    & > #title {
+      width: 42%;
+      font-size: 16px;
+    }
+    & > #amount {
+      width: 20%;
+      font-size: 16px;
+    }
+  }
+`;
+
+const MyCoinWrapperStyled = styled.div`
+  width: 80%;
+  display: flex;
+  justify-content: end;
+
+  @media (max-width: 810px) {
+    margin: 10px 0;
+  }
+`;
+
+const MyCoinStyled = styled.div`
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+
+  & > span {
+    font-weight: bold;
+    margin: 0 4px 0 8px;
+  }
+`;
+
+const CoinIconStyled = styled.div`
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: end;
 `;
 
 export default CoinLog;

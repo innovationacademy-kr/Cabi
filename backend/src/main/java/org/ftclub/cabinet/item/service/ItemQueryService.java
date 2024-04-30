@@ -30,6 +30,11 @@ public class ItemQueryService {
 		return item.orElseThrow(ITEM_NOT_FOUND::asServiceException);
 	}
 
+	public Item getItemBySku(Sku sku) {
+		Optional<Item> item = itemRepository.findBySku(sku);
+		return item.orElseThrow(ITEM_NOT_FOUND::asServiceException);
+	}
+
 	public List<Item> getItemsByIds(List<Long> itemIds) {
 		return Optional.of(itemRepository.findAllById(itemIds))
 			.orElseThrow(ITEM_NOT_FOUND::asServiceException);

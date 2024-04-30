@@ -25,6 +25,7 @@ import { UserDto, UserInfo } from "@/Cabinet/types/dto/user.dto";
 import { axiosMyClubList, axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
+import StoreInfo from "../components/Store/StoreInfo";
 
 const root: HTMLElement = document.documentElement;
 const token = getCookie("access_token");
@@ -143,6 +144,7 @@ const Layout = (): JSX.Element => {
           </DetailInfoContainerStyled>
           <ClubMemberInfoAreaContainer />
           <MapInfoContainer />
+          <StoreInfo />
           {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
             <OverduePenaltyModal
               status={additionalModalType.MODAL_OVERDUE_PENALTY}
