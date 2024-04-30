@@ -153,6 +153,7 @@ public class ItemFacadeService {
 	 * @param userId
 	 * @param itemId
 	 */
+	@Transactional
 	public void useItem(Long userId, Sku sku, ItemUseRequestDto data) {
 		User user = userQueryService.getUser(userId);
 		if (user.isBlackholed()) {

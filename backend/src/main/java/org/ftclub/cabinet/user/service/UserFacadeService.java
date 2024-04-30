@@ -45,6 +45,7 @@ public class UserFacadeService {
 	private final UserMapper userMapper;
 	private final FCMTokenRedisService fcmTokenRedisService;
 	private final FirebaseConfig firebaseConfig;
+	private final BanHistoryCommandService banHistoryCommandService;
 
 	/**
 	 * 유저의 프로필을 가져옵니다.
@@ -56,17 +57,17 @@ public class UserFacadeService {
 	public MyProfileResponseDto getProfile(UserSessionDto user) {
 		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
 		BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(),
-				LocalDateTime.now()).orElse(null);
+			LocalDateTime.now()).orElse(null);
 		LentExtension lentExtension = lentExtensionQueryService.findActiveLentExtension(
-				user.getUserId());
+			user.getUserId());
 		LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(
-				lentExtension);
+			lentExtension);
 		User currentUser = userQueryService.getUser(user.getUserId());
 		AlarmTypeResponseDto userAlarmTypes = currentUser.getAlarmTypes();
 		boolean isDeviceTokenExpired = userAlarmTypes.isPush()
-				&& fcmTokenRedisService.findByUserName(user.getName()).isEmpty();
+			&& fcmTokenRedisService.findByUserName(user.getName()).isEmpty();
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-				lentExtensionResponseDto, userAlarmTypes, isDeviceTokenExpired);
+			lentExtensionResponseDto, userAlarmTypes, isDeviceTokenExpired);
 	}
 
 	/**
@@ -78,10 +79,10 @@ public class UserFacadeService {
 	@Transactional(readOnly = true)
 	public LentExtensionPaginationDto getActiveLentExtensions(UserSessionDto user) {
 		List<LentExtension> lentExtensions =
-				lentExtensionQueryService.findActiveLentExtensions(user.getUserId());
+			lentExtensionQueryService.findActiveLentExtensions(user.getUserId());
 		List<LentExtensionResponseDto> result = lentExtensions.stream()
-				.map(userMapper::toLentExtensionResponseDto)
-				.collect(Collectors.toList());
+			.map(userMapper::toLentExtensionResponseDto)
+			.collect(Collectors.toList());
 
 		return userMapper.toLentExtensionPaginationDto(result, (long) lentExtensions.size());
 	}
@@ -95,11 +96,11 @@ public class UserFacadeService {
 	public void useLentExtension(UserSessionDto user) {
 		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(user.getUserId());
 		List<LentHistory> activeLentHistories = lentQueryService.findCabinetActiveLentHistories(
-				cabinet.getId());
+			cabinet.getId());
 		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
 		LentExtension activeLentExtension = lentExtensionQueryService.findActiveLentExtension(
-				user.getUserId());
+			user.getUserId());
 		if (activeLentExtension == null) {
 			throw ExceptionStatus.EXTENSION_NOT_FOUND.asServiceException();
 		}
@@ -114,7 +115,7 @@ public class UserFacadeService {
 	 */
 	@Transactional
 	public void updateAlarmState(UserSessionDto userSessionDto,
-			UpdateAlarmRequestDto updateAlarmRequestDto) {
+		UpdateAlarmRequestDto updateAlarmRequestDto) {
 		User user = userQueryService.getUser(userSessionDto.getUserId());
 		userCommandService.updateAlarmStatus(user, updateAlarmRequestDto);
 	}
@@ -127,13 +128,27 @@ public class UserFacadeService {
 	 */
 	@Transactional
 	public void updateDeviceToken(UserSessionDto userSessionDto,
-			UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
+		UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
 		User user = userQueryService.getUser(userSessionDto.getUserId());
 		fcmTokenRedisService.saveToken(
-				user.getName(),
-				updateDeviceTokenRequestDto.getDeviceToken(),
-				Duration.ofDays(firebaseConfig.getDeviceTokenExpiryDays())
+			user.getName(),
+			updateDeviceTokenRequestDto.getDeviceToken(),
+			Duration.ofDays(firebaseConfig.getDeviceTokenExpiryDays())
 		);
 	}
+
+	/**
+	 * 가장 최근 밴 당한 날짜에서 일자만큼 차감 후 업데이트
+	 *
+	 * @param userId
+	 * @param days
+	 */
+	@Transactional
+	public void reduceBanDays(Long userId, Integer days) {
+		BanHistory recentBanHistory = banHistoryQueryService.getRecentBanHistory(userId);
+		LocalDateTime reducedBanDate = recentBanHistory.getBannedAt().minusDays(days);
+		banHistoryCommandService.updateBanDate(recentBanHistory, reducedBanDate);
+	}
+
 }
 
