@@ -139,6 +139,7 @@ public class ItemFacadeService {
 	 * @param itemId
 	 * @return
 	 */
+	@Transactional(readOnly = true)
 	public CoinMonthlyCollectionDto getCoinCollectionCountInMonth(Long userId) {
 		Long coinCollectionCountInMonth =
 			itemRedisService.getCoinCollectionCountInMonth(userId);
@@ -148,6 +149,7 @@ public class ItemFacadeService {
 			isCollectedInToday);
 	}
 
+	@Transactional(readOnly = true)
 	public void collectCoin(Long userId) {
 		itemPolicyService.verifyIsAlreadyCollectedCoin(userId);
 		itemRedisService.collectCoin(userId);
