@@ -14,5 +14,5 @@ public class ItemStoreDto {
 
 	private String itemName;
 	private String description;
-	private List<ItemDto> itemTypes;
+	private List<ItemDetailsDto> itemTypes;
 }

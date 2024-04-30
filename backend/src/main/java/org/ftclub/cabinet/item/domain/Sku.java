@@ -25,10 +25,10 @@ public enum Sku {
 	;
 
 
-	private final String type;
+	private final String details;
 
-	Sku(String type) {
-		this.type = type;
+	Sku(String details) {
+		this.details = details;
 	}
 
 	public boolean isValid() {

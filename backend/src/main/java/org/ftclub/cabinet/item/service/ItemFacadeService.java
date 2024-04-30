@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
+import org.ftclub.cabinet.dto.ItemDetailsDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
 import org.ftclub.cabinet.dto.ItemHistoryPaginationDto;
@@ -60,10 +61,10 @@ public class ItemFacadeService {
 	@Transactional
 	public ItemStoreResponseDto getAllItems() {
 		List<Item> allItems = itemQueryService.getAllItems();
-		Map<ItemType, List<ItemDto>> itemMap = allItems.stream()
+		Map<ItemType, List<ItemDetailsDto>> itemMap = allItems.stream()
 				.filter(item -> item.getPrice() < 0)
 				.collect(groupingBy(Item::getType,
-						mapping(itemMapper::toItemDto, Collectors.toList())));
+						mapping(itemMapper::toItemDetailsDto, Collectors.toList())));
 		List<ItemStoreDto> result = itemMap.entrySet().stream()
 				.map(entry -> itemMapper.toItemStoreDto(entry.getKey(), entry.getValue()))
 				.collect(Collectors.toList());
