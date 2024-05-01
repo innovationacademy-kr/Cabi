@@ -8,12 +8,13 @@ import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExt
 import { ReactComponent as MoveImg } from "@/Cabinet/assets/images/storeMove.svg";
 import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
 import { axiosBuyItem, axiosItems } from "../api/axios/axios.custom";
+import { ItemIconMap } from "../assets/data/maps";
 import StoreItemCard from "../components/Card/StoreItemCard/StoreItemCard";
 import { NotificationModal } from "../components/Modals/NotificationModal/NotificationModal";
 import { SuccessResponseModal } from "../components/Modals/ResponseModal/ResponseModal";
 import StoreBuyItemModal from "../components/Modals/StoreModal/StoreBuyItemModal";
 import IconType from "../types/enum/icon.type.enum";
-import {ItemIconMap} from "../assets/data/maps";
+
 export interface IItemType {
   Sku: string;
   ItemName: string;
@@ -147,7 +148,8 @@ const StoreMainPage = () => {
   const handlePurchase = (item: IItemType) => {
     // 선택한 옵션에 따른 구매 처리 로직 구현
     console.log("myCoin : ", myCoin);
-    if (myCoin !== null && item.ItemPrice * -1 > myCoin) { //  보유 코인이 모자란 경우
+    if (myCoin !== null && item.ItemPrice * -1 > myCoin) {
+      //  보유 코인이 모자란 경우
       setShowErrorModal(true);
       setErrorDetails(`${item.ItemPrice * -1 - myCoin} 까비가 더 필요합니다.`);
       console.log("코인이 부족합니다.");
@@ -210,19 +212,13 @@ const StoreMainPage = () => {
             button={{
               label: "구매하기",
               onClick:
-              myCoin !== null &&
-              myCoin >
-                item.itemTypes[0].ItemPrice * -1
-                ? () => buttonClick(item)
-                : () => {},
+                myCoin !== null && myCoin > item.itemTypes[0].ItemPrice * -1
+                  ? () => buttonClick(item)
+                  : () => {},
               isClickable:
-                myCoin !== null &&
-                myCoin >
-                  item.itemTypes[0].ItemPrice * -1,
+                myCoin !== null && myCoin > item.itemTypes[0].ItemPrice * -1,
               color:
-                myCoin !== null &&
-                myCoin >
-                  item.itemTypes[0].ItemPrice * -1
+                myCoin !== null && myCoin > item.itemTypes[0].ItemPrice * -1
                   ? "var(--main-color)"
                   : "var(--gray-color)",
             }}
@@ -238,11 +234,11 @@ const StoreMainPage = () => {
       )}
       {showSuccessModal && (
         <NotificationModal
-        title="구매 완료."
-        detail={""}
-        closeModal={() => setShowSuccessModal(false)}
-        iconType={IconType.CHECKICON}
-      />
+          title="구매 완료."
+          detail={""}
+          closeModal={() => setShowSuccessModal(false)}
+          iconType={IconType.CHECKICON}
+        />
       )}
       {showErrorModal && (
         <NotificationModal
@@ -275,6 +271,8 @@ const StoreCoinGridWrapper = styled.div`
   grid-template-areas: "coinPick extension move" // h: 163px h: 366px
     "coinPick alarm penalty"; // h: 183px;
   // "theme notification"; // h: 230px h: 230px;
+
+  padding-bottom: 30px;
 
   @media (max-width: 1400px) {
     grid-template-columns: 340px 340px;

@@ -79,13 +79,19 @@ const StoreInfo = () => {
       <HeaderStyled>동전줍기</HeaderStyled>
       <StoreCoin />
       <StoreCoinCheckBox monthlyCoinCount={dummyDataGet.monthlyCoinCount} />
-      <ButtonContainer
-        // onClick={() => console.log("성공 or 실패 모달 떠야함")}
-        onClick={() => tryCoinCheckPost()}
-        text="획득하기"
-        theme="fill"
-      />
-      <ButtonContainer onClick={() => closeStore()} text="취소" theme="line" />
+
+      <ButtonContainerStyled>
+        <ButtonContainer
+          onClick={() => tryCoinCheckPost()}
+          text="획득하기"
+          theme="fill"
+        />
+        <ButtonContainer
+          onClick={() => closeStore()}
+          text="취소"
+          theme="line"
+        />
+      </ButtonContainerStyled>
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
@@ -135,4 +141,10 @@ const HeaderStyled = styled.div`
   color: black;
   font-weight: bold;
   font-size: 1.5rem;
+  margin-bottom: 10px;
+`;
+
+const ButtonContainerStyled = styled.div`
+  width: 100%;
+  max-height: 140px;
 `;
