@@ -134,10 +134,9 @@ public class ItemFacadeService {
 	}
 
 	/**
-	 * 한 달 동안 수행한 동전 줍기 횟수와 오늘 동전줍기를 수행 여부를 반환합니다
+	 * itemRedisService 를 통해 동전 줍기 정보 생성
 	 *
-	 * @param userId
-	 * @param itemId
+	 * @param userId redis 의 고유 key 를 만들 userId
 	 * @return
 	 */
 	@Transactional(readOnly = true)
@@ -150,6 +149,13 @@ public class ItemFacadeService {
 			isCollectedInToday);
 	}
 
+	/**
+	 * 당일 중복해서 동전줍기를 요청했는지 검수 후
+	 * <p>
+	 * 당일 동전 줍기 체크 및 한 달 동전줍기 횟수 증가
+	 *
+	 * @param userId redis 의 고유 key 를 만들 userId
+	 */
 	@Transactional(readOnly = true)
 	public void collectCoin(Long userId) {
 		boolean isChecked = itemRedisService.isCoinCollected(userId);
@@ -158,10 +164,9 @@ public class ItemFacadeService {
 	}
 
 	/**
-	 * 아이템 사용 기능
-	 *
 	 * @param userId
-	 * @param itemId
+	 * @param sku
+	 * @param data
 	 */
 	@Transactional
 	public void useItem(Long userId, Sku sku, ItemUseRequestDto data) {
@@ -173,13 +178,20 @@ public class ItemFacadeService {
 		List<ItemHistory> itemInInventory =
 			itemHistoryQueryService.getItemsByItemIdInUserInventory(user.getId(), item.getId());
 		ItemHistory firstItem = itemPolicyService.verifyEmptyItems(itemInInventory);
-
 		ItemUsage itemUsage = getItemUsage(userId, item, data);
-		// 공통 로직
+
 		eventPublisher.publishEvent(itemUsage);
 		firstItem.updateUsedAt();
 	}
 
+	/**
+	 * itemType 에 따른 구현체 반환
+	 *
+	 * @param userId
+	 * @param item
+	 * @param data
+	 * @return
+	 */
 	private ItemUsage getItemUsage(Long userId, Item item, ItemUseRequestDto data) {
 		// 연장권, 이사권, 패널티
 		if (item.getType().equals(ItemType.SWAP)) {

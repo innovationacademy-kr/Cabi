@@ -48,6 +48,12 @@ public class ItemRedis {
 		return Objects.nonNull(isCollected) && isCollected;
 	}
 
+	/**
+	 * 한 달 동안 동전 줍기를 행한 횟수 반환
+	 *
+	 * @param userId
+	 * @return
+	 */
 	public String getCoinCollectionCount(String userId) {
 		String key = userId + COIN_COLLECT_COUNT_KEY_SUFFIX;
 		return coinTemplate.opsForValue().get(key);
@@ -74,6 +80,8 @@ public class ItemRedis {
 
 	/**
 	 * 한 달 동안 유지되는 코인 줍기
+	 * <p>
+	 * 값이 존재한다면 횟수 증가, 없다면 1로 설정 후 당월의 마지막을 expire 로 설정
 	 *
 	 * @param userId
 	 */
