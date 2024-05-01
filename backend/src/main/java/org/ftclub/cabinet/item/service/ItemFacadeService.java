@@ -31,6 +31,7 @@ import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.domain.ItemType;
 import org.ftclub.cabinet.item.domain.ItemUsage;
+import org.ftclub.cabinet.item.domain.PenaltyItem;
 import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.item.domain.SwapItem;
 import org.ftclub.cabinet.log.LogLevel;
@@ -188,7 +189,7 @@ public class ItemFacadeService {
 			return new ExtensionItem(userId, item.getSku().getDays());
 		}
 		if (item.getType().equals(ItemType.PENALTY)) {
-			return new ExtensionItem(userId, item.getSku().getDays());
+			return new PenaltyItem(userId, item.getSku().getDays());
 		}
 		if (item.getType().equals(ItemType.ALARM)) {
 			return new AlarmItem(userId, data.getSection());
