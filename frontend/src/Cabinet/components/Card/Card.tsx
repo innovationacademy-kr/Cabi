@@ -137,7 +137,7 @@ export const CardButtonStyled = styled.div<{
           color: ${props.fontColor
             ? props.fontColor
             : props.isExtensible
-            ? "var(--sys-main-color)"
+            ? "var(--extension-card-active-btn-color)"
             : "var(--gray-line-btn-color)"};
           padding: 5px 15px;
           border: none;

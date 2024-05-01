@@ -227,7 +227,7 @@ const BottomSectionStyled = styled.section`
     margin: 0 auto;
     width: 56px;
     height: 1px;
-    background-color: var(--shared-gray-color-400);
+    background-color: var(--toggle-switch-off-bg-color);
   }
 `;
 
@@ -249,7 +249,7 @@ const BottomBtnStyled = styled.li`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
+
   &:first-child {
     margin-top: 0;
   }

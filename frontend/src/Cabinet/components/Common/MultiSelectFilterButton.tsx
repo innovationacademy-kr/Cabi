@@ -50,7 +50,7 @@ const FilterTextWrapperStyled = styled.div<{ isClicked: boolean }>`
   justify-content: center;
   align-items: center;
   color: ${({ isClicked }) =>
-    isClicked ? "var(--sys-main-color)" : "var(--shared-gray-color-400)"};
+    isClicked ? "var(--sys-main-color)" : "var(--toggle-switch-off-bg-color)"};
   font-size: 1rem;
 `;
 

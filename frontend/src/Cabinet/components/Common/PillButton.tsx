@@ -33,7 +33,7 @@ const PillButtonContainerStyled = styled.button<{
   border: ${({ isSelected }) =>
     isSelected
       ? "1px solid var(--sys-main-color)"
-      : "1px solid var(--line-color)"};
+      : "1px solid var(--light-gray-line-btn-color)"};
   color: ${({ isSelected }) =>
     isSelected ? "var(--bg-color)" : "var(--normal-text-color)"};
   padding: 2px 16px 4px 16px;

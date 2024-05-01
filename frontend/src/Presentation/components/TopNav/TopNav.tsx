@@ -50,7 +50,7 @@ const TopNavWrapperStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--shared-gray-color-400);
+  border-bottom: 1px solid var(--line-color);
   padding: 0 28px;
   color: var(--gray-line-btn-color);
 `;

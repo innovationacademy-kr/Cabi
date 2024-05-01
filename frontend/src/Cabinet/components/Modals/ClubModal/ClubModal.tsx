@@ -271,7 +271,7 @@ const ContentItemTitleStyled = styled.h3`
 `;
 
 const ContentItemInputStyled = styled.input`
-  border: 1px solid var(--line-color);
+  border: 1px solid var(--light-gray-line-btn-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -282,7 +282,7 @@ const ContentItemInputStyled = styled.input`
   color: var(--normal-text-color);
 
   &::placeholder {
-    color: var(--shared-gray-color-400);
+    color: var(--toggle-switch-off-bg-color);
   }
 `;
 

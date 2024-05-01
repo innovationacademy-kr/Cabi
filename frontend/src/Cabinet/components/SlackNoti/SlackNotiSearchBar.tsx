@@ -154,7 +154,7 @@ const FormInputStyled = styled.input`
   text-align: left;
   padding: 0 10px;
   ::placeholder {
-    color: var(--shared-gray-color-400);
+    color: var(--toggle-switch-off-bg-color);
   }
 `;
 

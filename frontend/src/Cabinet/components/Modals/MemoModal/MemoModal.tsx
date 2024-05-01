@@ -171,7 +171,7 @@ const ContentItemTitleStyled = styled.h3`
 const ContentItemInputStyled = styled.input<{
   mode: string;
 }>`
-  border: 1px solid var(--line-color);
+  border: 1px solid var(--light-gray-line-btn-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -185,7 +185,7 @@ const ContentItemInputStyled = styled.input<{
     color: ${({ mode }) =>
       mode === "read"
         ? "var(--sys-main-color)"
-        : "var(--shared-gray-color-400)"};
+        : "var(--toggle-switch-off-bg-color)"};
   }
 `;
 

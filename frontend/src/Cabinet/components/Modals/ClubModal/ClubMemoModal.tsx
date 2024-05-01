@@ -108,7 +108,7 @@ const ContentItemTextAreaStyled = styled.textarea<{
   box-sizing: border-box;
   padding: 15px;
   width: 100%;
-  border: 1px solid var(--line-color);
+  border: 1px solid var(--light-gray-line-btn-color);
   height: 100%;
   border-radius: 10px;
   font-size: 1.125rem;
@@ -126,7 +126,9 @@ const ContentItemTextAreaStyled = styled.textarea<{
     mode === "read" ? "var(--sys-main-color)" : "var(--normal-text-color)"};
   &::placeholder {
     color: ${({ mode }) =>
-      mode === "read" ? "var(--sys-main-color)" : "var(--line-color)"};
+      mode === "read"
+        ? "var(--sys-main-color)"
+        : "var(--light-gray-line-btn-color)"};
   }
   ::-webkit-scrollbar {
     width: 20px;
@@ -134,7 +136,7 @@ const ContentItemTextAreaStyled = styled.textarea<{
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--line-color);
+    background: var(--light-gray-line-btn-color);
     border-radius: 50px;
     border: 6px solid transparent;
     background-clip: padding-box;

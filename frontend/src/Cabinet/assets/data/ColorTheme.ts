@@ -2,7 +2,7 @@ import { createGlobalStyle, css } from "styled-components";
 
 const lightValues = css`
   --bg-color: var(--ref-white);
-  --line-color: var(--shared-gray-color-400);
+  --line-color: var(--ref-gray-400);
   --normal-text-color: var(--ref-black);
   --white-text-with-bg-color: var(--ref-white);
   --card-content-bg-color: var(--ref-white);
@@ -15,6 +15,8 @@ const lightValues = css`
   --color-picker-hash-bg-color: var(--ref-gray-200);
   --color-picker-hash-color: var(--ref-gray-450);
   --color-picker-input-color: var(--ref-gray-500);
+  --extension-card-active-btn-color: var(--sys-main-color);
+  --light-gray-line-btn-color: var(--ref-gray-400);
 
   /* main color variable */
   --sys-main-color: var(--ref-purple-500);
@@ -51,7 +53,7 @@ const lightValues = css`
   --card-bg-color: var(--ref-gray-100);
   --map-floor-color: var(--ref-gray-200);
   --service-man-title-border-btm-color: var(--ref-gray-300);
-  --shared-gray-color-400: var(--ref-gray-400);
+  --toggle-switch-off-bg-color: var(--ref-gray-400);
   --presentation-card-speaker-name-color: var(--ref-gray-450);
   --gray-line-btn-color: var(--ref-gray-500);
   --pie-chart-label-text-color: var(--ref-gray-600);
@@ -71,7 +73,7 @@ const lightValues = css`
 // set up dark theme CSS variables
 const darkValues = css`
   --bg-color: var(--ref-gray-900);
-  --line-color: var(--service-man-title-border-btm-color);
+  --line-color: var(--ref-gray-500);
   --normal-text-color: var(--ref-gray-100);
   --white-text-with-bg-color: var(--ref-gray-100);
   --card-content-bg-color: var(--ref-gray-550);
@@ -84,6 +86,8 @@ const darkValues = css`
   --color-picker-hash-bg-color: var(--ref-gray-550);
   --color-picker-hash-color: var(--ref-gray-450);
   --color-picker-input-color: var(--ref-gray-400);
+  --extension-card-active-btn-color: var(--gray-line-btn-color);
+  --light-gray-line-btn-color: var(--service-man-title-border-btm-color);
 
   --sys-main-color: var(--ref-purple-600);
   --sys-sub-color: var(--ref-purple-300);
@@ -119,7 +123,7 @@ const darkValues = css`
   --map-floor-color: var(--ref-gray-700);
   --service-man-title-border-btm-color: var(--ref-gray-600);
   --presentation-card-speaker-name-color: var(--ref-gray-450);
-  --shared-gray-color-400: var(--ref-gray-500);
+  --toggle-switch-off-bg-color: var(--ref-gray-500);
   --gray-line-btn-color: var(--ref-gray-400);
   --pie-chart-label-text-color: var(--ref-gray-300);
   --notion-btn-text-color: var(--ref-gray-200);

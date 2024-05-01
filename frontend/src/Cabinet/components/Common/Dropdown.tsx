@@ -81,7 +81,7 @@ const DropdownSelectionBoxStyled = styled.div<{ isOpen: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid var(--shared-gray-color-400);
+  border: 1px solid var(--toggle-switch-off-bg-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -124,7 +124,7 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
   align-items: center;
   background-color: ${({ isSelected }) =>
     isSelected ? "var(--map-floor-color)" : "var(--bg-color)"};
-  border: 1px solid var(--shared-gray-color-400);
+  border: 1px solid var(--toggle-switch-off-bg-color);
   border-width: 0px 1px 1px 1px;
   width: 100%;
   height: 60px;

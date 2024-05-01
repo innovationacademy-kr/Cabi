@@ -114,7 +114,7 @@ const CharacterCountStyled = styled.div`
   margin-left: auto;
   margin-top: 0.5rem;
   font-size: 0.75rem;
-  color: var(--shared-gray-color-400);
+  color: var(--toggle-switch-off-bg-color);
 `;
 
 export default InputField;

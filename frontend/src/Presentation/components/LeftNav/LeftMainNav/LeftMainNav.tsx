@@ -103,7 +103,7 @@ const LeftNavStyled = styled.nav`
   min-width: 90px;
   position: relative;
   height: 100%;
-  border-right: 1px solid var(--shared-gray-color-400);
+  border-right: 1px solid var(--line-color);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -153,7 +153,7 @@ const BottomSectionStyled = styled.section`
     margin: 0 auto;
     width: 56px;
     height: 1px;
-    background-color: var(--shared-gray-color-400);
+    background-color: var(--toggle-switch-off-bg-color);
   }
 `;
 const BottomBtnsStyled = styled.ul`
