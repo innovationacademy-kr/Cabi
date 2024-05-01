@@ -1,30 +1,30 @@
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { darkModeState } from "@/Cabinet/recoil/atoms";
-import { colorThemeToggleIconComponentMap } from "@/Cabinet/assets/data/maps";
+import { ReactComponent as MonitorMobileIcon } from "@/Cabinet/assets/images/monitorMobile.svg";
+import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moon.svg";
+import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sun.svg";
 import { ColorThemeToggleType } from "@/Cabinet/types/enum/colorTheme.type.enum";
 
-interface toggleItemSeparated {
+interface ItoggleItemSeparated {
   name: string;
   key: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
-const toggleList: toggleItemSeparated[] = [
+const toggleList: ItoggleItemSeparated[] = [
   {
     name: "라이트",
     key: ColorThemeToggleType.LIGHT,
-    icon: colorThemeToggleIconComponentMap[ColorThemeToggleType.LIGHT],
+    icon: SunIcon,
   },
   {
     name: "다크",
     key: ColorThemeToggleType.DARK,
-    icon: colorThemeToggleIconComponentMap[ColorThemeToggleType.DARK],
+    icon: MoonIcon,
   },
   {
     name: "기기설정",
     key: ColorThemeToggleType.DEVICE,
-    icon: colorThemeToggleIconComponentMap[ColorThemeToggleType.DEVICE],
+    icon: MonitorMobileIcon,
   },
 ];
 

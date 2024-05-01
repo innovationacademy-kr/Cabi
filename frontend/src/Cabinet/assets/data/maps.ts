@@ -1,12 +1,8 @@
 import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
-import { ReactComponent as MonitorMobileIcon } from "@/Cabinet/assets/images/monitorMobile.svg";
-import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moon.svg";
 import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
 import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
-import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sun.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import { ColorThemeToggleType } from "@/Cabinet/types/enum/colorTheme.type.enum";
 
 export enum additionalModalType {
   MODAL_RETURN = "MODAL_RETURN",
@@ -228,16 +224,3 @@ export const cabinetTypeLabelMap = {
   [CabinetType.PRIVATE]: "개인 사물함",
   [CabinetType.SHARE]: "공유 사물함",
 };
-
-type colorThemeToggleIconComponentMap = {
-  [key in ColorThemeToggleType]: React.ComponentType<
-    React.SVGProps<SVGSVGElement>
-  >;
-};
-
-export const colorThemeToggleIconComponentMap: colorThemeToggleIconComponentMap =
-  {
-    [ColorThemeToggleType.LIGHT]: SunIcon,
-    [ColorThemeToggleType.DARK]: MoonIcon,
-    [ColorThemeToggleType.DEVICE]: MonitorMobileIcon,
-  };

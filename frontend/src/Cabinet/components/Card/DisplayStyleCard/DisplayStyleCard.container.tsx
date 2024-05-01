@@ -152,7 +152,6 @@ const DisplayStyleCardContainer = () => {
   const [darkMode, setDarkMode] = useState<ColorThemeType>(
     initialColorTheme as ColorThemeType
   );
-
   const [toggleType, setToggleType] = useState<ColorThemeToggleType>(
     savedColorThemeToggle
   );
