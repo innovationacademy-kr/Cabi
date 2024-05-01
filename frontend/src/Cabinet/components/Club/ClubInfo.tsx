@@ -80,7 +80,6 @@ const SadCcabiStyled = styled.div`
 
   & > svg > path {
     fill: var(--gray-line-btn-color);
-    transform: scale(0.6);
   }
 `;
 

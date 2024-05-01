@@ -38,7 +38,10 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
           <DomainContainerStyled
             onClick={() => navigator(isAdmin ? domain.adminPath : domain.path)}
           >
-            <LogoContainerStyled domainTitle={domain.title}>
+            <LogoContainerStyled
+              domainTitle={domain.title}
+              isCabi={!pathname.includes("presentation")}
+            >
               <domain.logo
                 viewBox={
                   domain.title === "수요지식회" ? "0.8 0.8 16 16" : "0 0 37 37"
@@ -81,7 +84,10 @@ const DomainContainerStyled = styled.div`
   align-items: center;
 `;
 
-const LogoContainerStyled = styled.div<{ domainTitle: string }>`
+const LogoContainerStyled = styled.div<{
+  domainTitle: string;
+  isCabi: boolean;
+}>`
   display: flex;
   align-items: center;
   width: 14px;
@@ -90,7 +96,10 @@ const LogoContainerStyled = styled.div<{ domainTitle: string }>`
 
   svg {
     .logo_svg__currentPath {
-      fill: var(--sys-default-main-color);
+      fill: ${(props) =>
+        props.isCabi
+          ? "var(--sys-main-color);"
+          : " var(--sys-default-main-color);"};
     }
     width: 14px;
     height: 14px;
