@@ -170,6 +170,7 @@ public class ItemFacadeService {
 	 */
 	@Transactional
 	public void useItem(Long userId, Sku sku, ItemUseRequestDto data) {
+		itemPolicyService.verifyDataFieldBySky(sku, data);
 		User user = userQueryService.getUser(userId);
 		if (user.isBlackholed()) {
 			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));

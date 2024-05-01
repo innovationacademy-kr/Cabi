@@ -78,6 +78,7 @@ public enum ExceptionStatus {
 	NOT_FOUND_FORM(HttpStatus.NOT_FOUND, "신청서가 존재하지 않습니다."),
 	INVALID_FORM_ID(HttpStatus.BAD_REQUEST, "잘못된 신청번호입니다."),
 	INVALID_LOCATION(HttpStatus.BAD_REQUEST, "잘못된 장소입니다."),
+	INVALID_ITEM_USE_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 아이템 사용 요청입니다."),
 	ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "아이템이 존재하지 않습니다."),
 	ITEM_NOT_ON_SALE(HttpStatus.BAD_REQUEST, "구매할 수 없는 아이템입니다."),
 	NOT_ENOUGH_COIN(HttpStatus.BAD_REQUEST, "보유한 코인이 아이템 가격보다 적습니다.");
