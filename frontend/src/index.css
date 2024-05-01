@@ -60,7 +60,8 @@
   --ref-purple-600: #8337e5;
   --ref-purple-700: #252425;
 
-  --ref-transparent-purple: #b18cff5f;
+  --ref-transparent-purple-100: #b18cff5f;
+  --ref-transparent-purple-200: #b08cffe1;
 
   /* pink color variable */
   --ref-pink-100: #f473b1;

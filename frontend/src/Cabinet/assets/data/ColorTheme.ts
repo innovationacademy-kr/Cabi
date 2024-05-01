@@ -8,7 +8,7 @@ const lightValues = css`
   --card-content-bg-color: var(--ref-white);
   --button-line-color: var(--sys-main-color);
   --capsule-btn-border-color: var(--ref-gray-200);
-  --capsule-btn-hover-bg-color: var(--ref-transparent-purple);
+  --capsule-btn-hover-bg-color: var(--ref-transparent-purple-100);
   --presentation-no-event-past-color: var(--ref-gray-200);
   --presentation-no-event-cur-color: var(--bg-color);
   --color-picker-bg-color: var(--bg-color);
@@ -77,7 +77,7 @@ const darkValues = css`
   --card-content-bg-color: var(--ref-gray-550);
   --button-line-color: var(--sys-main-color);
   --capsule-btn-border-color: var(--ref-gray-600);
-  --capsule-btn-hover-bg-color: var(--ref-transparent-purple);
+  --capsule-btn-hover-bg-color: var(--ref-transparent-purple-200);
   --presentation-no-event-past-color: var(--bg-color);
   --presentation-no-event-cur-color: var(--ref-gray-600);
   --color-picker-bg-color: var(--ref-gray-530);
