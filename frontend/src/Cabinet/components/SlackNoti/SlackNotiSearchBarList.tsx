@@ -58,7 +58,7 @@ const UlStyled = styled.ul`
   padding: 10px;
   color: var(--ref-black);
   background-color: var(--ref-white);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px 0 var(--left-nav-border-shadow-color);
   opacity: 0.9;
   overflow: hidden;
   @media (max-width: 768px) {

@@ -160,11 +160,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickProfileButton}
               >
-                <ProfileImg
-                  stroke="var(--gray-line-btn-color)"
-                  width={32}
-                  height={32}
-                />
+                <ProfileImg stroke="var(--gray-line-btn-color)" />
                 Profile
               </BottomBtnStyled>
             </>
@@ -234,6 +230,7 @@ const BottomSectionStyled = styled.section`
     background-color: var(--shared-gray-color-400);
   }
 `;
+
 const BottomBtnsStyled = styled.ul`
   padding: 30px 10px;
   text-align: center;
@@ -251,6 +248,8 @@ const BottomBtnStyled = styled.li`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  
   &:first-child {
     margin-top: 0;
   }

@@ -198,7 +198,7 @@ const BackgroundStyled = styled.div`
       opacity: 0;
     }
     100% {
-      opacity: 0.4;
+      opacity: 1;
     }
   }
   z-index: 1000;

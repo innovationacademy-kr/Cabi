@@ -49,10 +49,6 @@ const MapFloorSelectStyled = styled.div`
     }
   }
 
-  & > svg {
-    margin-left: 6px;
-  }
-
   & > svg > path {
     stroke: var(--white-text-with-bg-color);
     stroke-width: 1.5;
