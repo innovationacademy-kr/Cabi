@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
-import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
-import { ReactComponent as MoveImg } from "@/Cabinet/assets/images/storeMove.svg";
-import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
+import { ItemIconMap } from "@/Cabinet/assets/data/maps";
+import { ItemType } from "@/Cabinet/types/enum/store.enum";
 
 interface IItemUsageLog {
   date: Date;
@@ -15,83 +13,56 @@ const dummyData = {
   itemHistories: [
     {
       date: "2024-04-01T10:00:00",
-      itemDto: {
-        Sku: "extension_31",
+      ItemDetailsDto: {
+        sku: "extension_31",
         ItemName: "페널티 축소권",
-        ItemPrice: -2000,
-        ItemType: "3일",
+        itemPrice: -2000,
+        itemDetails: "3일",
       },
     },
     {
       date: "2024-04-02T11:00:00",
-      itemDto: {
-        Sku: "extension_31",
+      ItemDetailsDto: {
+        sku: "extension_31",
         ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
-      },
-    },
-    {
-      date: "2024-04-03T12:00:00",
-      itemDto: {
-        Sku: "extension_31",
-        ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
+        itemPrice: -2000,
+        itemDetails: "3일",
       },
     },
     {
       date: "2024-04-04T13:00:00",
-      itemDto: {
-        Sku: "extension_31",
+      ItemDetailsDto: {
+        sku: "extension_31",
         ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
+        itemPrice: -2000,
+        itemDetails: "3일",
       },
     },
     {
       date: "2024-04-05T14:00:00",
-      itemDto: {
-        Sku: "extension_31",
+      ItemDetailsDto: {
+        sku: "extension_31",
         ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
-      },
-    },
-    {
-      date: "2024-04-06T15:00:00",
-      itemDto: {
-        Sku: "extension_31",
-        ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
-      },
-    },
-    {
-      date: "2024-04-07T16:00:00",
-      itemDto: {
-        Sku: "extension_31",
-        ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
+        itemPrice: -2000,
+        itemDetails: "3일",
       },
     },
   ],
   totalLength: 10,
 };
 
-function getLogo(ItemName: string) {
-  switch (ItemName) {
+function mapItemNameToType(itemName: string): ItemType {
+  switch (itemName) {
     case "연장권":
-      return ExtensionImg;
+      return ItemType.EXTENSION;
     case "이사권":
-      return MoveImg;
+      return ItemType.SWAP;
     case "알림 등록권":
-      return AlarmImg;
+      return ItemType.ALERT;
     case "페널티 축소권":
-      return PenaltyImg;
+      return ItemType.PENALTY;
     default:
-      return ExtensionImg;
+      return ItemType.EXTENSION;
   }
 }
 
@@ -104,9 +75,8 @@ const ItemUsageLogPage = () => {
   useEffect(() => {
     const formattedLogs = dummyData.itemHistories.map((item) => ({
       date: new Date(item.date),
-      title: `${item.itemDto.ItemName} - ${item.itemDto.ItemType}`,
-      logo: getLogo(item.itemDto.ItemName),
-      // TODO: getLogo 함수가 아닌 maps.ts에 있는 ItemIconMap을 사용하도록 수정
+      title: `${item.ItemDetailsDto.ItemName} - ${item.ItemDetailsDto.itemDetails}`,
+      logo: ItemIconMap[mapItemNameToType(item.ItemDetailsDto.ItemName)],
     }));
 
     setItemUsageLogs(formattedLogs);
