@@ -28,6 +28,7 @@ import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
 const body: HTMLElement = document.body;
+const root: HTMLElement = document.documentElement;
 const token = getCookie("access_token");
 
 const Layout = (): JSX.Element => {
@@ -120,6 +121,9 @@ const Layout = (): JSX.Element => {
     localStorage.getItem("mine-color") || "var(--sys-default-mine-color)";
 
   useEffect(() => {
+    root.style.setProperty("--sys-main-color", savedMainColor);
+    root.style.setProperty("--sys-sub-color", savedSubColor);
+    root.style.setProperty("--mine-color", savedMineColor);
     body.style.setProperty("--sys-main-color", savedMainColor);
     body.style.setProperty("--sys-sub-color", savedSubColor);
     body.style.setProperty("--mine-color", savedMineColor);

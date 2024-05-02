@@ -9,6 +9,7 @@ import AdminTopNavContainer from "@/Presentation/components/TopNav/AdminTopNav.c
 
 const token = getCookie("admin_access_token");
 const body: HTMLElement = document.body;
+const root: HTMLElement = document.documentElement;
 
 const Layout = (): JSX.Element => {
   const navigate = useNavigate();
@@ -32,6 +33,14 @@ const Layout = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
+    root.style.setProperty(
+      "--sys-main-color",
+      "var(--sys-presentation-main-color)"
+    );
+    root.style.setProperty(
+      "--sys-sub-color",
+      "var(--sys-presentation-sub-color)"
+    );
     body.style.setProperty(
       "--sys-main-color",
       "var(--sys-presentation-main-color)"
