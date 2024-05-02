@@ -55,7 +55,7 @@ public interface ItemMapper {
 	@Mapping(target = "itemName", source = "itemType.name")
 	@Mapping(target = "itemType", source = "itemType")
 	@Mapping(target = "description", source = "itemType.description")
-	ItemStoreDto toItemStoreDto(ItemType itemType, List<ItemDetailsDto> itemTypes);
+	ItemStoreDto toItemStoreDto(ItemType itemType, List<ItemDetailsDto> items);
 
 	ItemHistoryPaginationDto toItemHistoryPaginationDto(List<ItemHistoryDto> result,
 			Long totalLength);
