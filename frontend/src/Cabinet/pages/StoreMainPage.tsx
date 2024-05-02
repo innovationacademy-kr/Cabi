@@ -79,18 +79,15 @@ const StoreMainPage = () => {
               label: "구매하기",
               onClick:
                 myCoin !== null &&
-                myCoin >
-                  item.items[item.items.length - 1].itemPrice * -1
+                myCoin > item.items[item.items.length - 1].itemPrice * -1
                   ? () => buttonClick(item)
                   : () => {},
               isClickable:
                 myCoin !== null &&
-                myCoin >
-                  item.items[item.items.length - 1].itemPrice * -1,
+                myCoin > item.items[item.items.length - 1].itemPrice * -1,
               color:
                 myCoin !== null &&
-                myCoin >
-                  item.items[item.items.length - 1].itemPrice * -1
+                myCoin > item.items[item.items.length - 1].itemPrice * -1
                   ? "var(--main-color)"
                   : "var(--gray-color)",
             }}

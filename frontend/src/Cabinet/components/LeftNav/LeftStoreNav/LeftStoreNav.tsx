@@ -124,6 +124,10 @@ const StoreSectionStyled = styled.div`
 const CoinIconStyled = styled.div`
   width: 20px;
   height: 20px;
+
+  & > svg > path {
+    stroke: var(--main-color);
+  }
 `;
 
 export default LeftStoreNav;

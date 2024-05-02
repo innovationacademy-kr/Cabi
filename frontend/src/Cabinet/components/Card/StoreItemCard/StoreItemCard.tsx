@@ -27,17 +27,17 @@ const StoreItemCard = ({
           <BlockStyled>
             <IconBlockStyled>
               <div>
-                {item.itemType === "EXTENSION" ? <ItemIconMap.EXTENSION/> : (null) }
-                {item.itemType === "SWAP" ? <ItemIconMap.SWAP/> : (null) }
-                {item.itemType === "ALARM" ? <ItemIconMap.ALERT/> : (null) }
-                {item.itemType === "PENALTY" ? <ItemIconMap.PENALTY/> : (null) }
+                {item.itemType === "EXTENSION" ? (
+                  <ItemIconMap.EXTENSION />
+                ) : null}
+                {item.itemType === "SWAP" ? <ItemIconMap.SWAP /> : null}
+                {item.itemType === "ALARM" ? <ItemIconMap.ALERT /> : null}
+                {item.itemType === "PENALTY" ? <ItemIconMap.PENALTY /> : null}
               </div>
             </IconBlockStyled>
             <PriseBlockStyled>
               <CoinImg width={14} height={14} />
-              <span>
-                {item.items[item.items.length - 1].itemPrice * -1}
-              </span>
+              <span>{item.items[item.items.length - 1].itemPrice * -1}</span>
             </PriseBlockStyled>
           </BlockStyled>
           <ItemDetailStyled>{item.description}</ItemDetailStyled>
@@ -95,6 +95,10 @@ const PriseBlockStyled = styled.div`
   > span {
     margin-left: 5px;
     font-weight: 600;
+  }
+
+  & > svg > path {
+    stroke: var(--main-color);
   }
 `;
 

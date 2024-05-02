@@ -294,7 +294,6 @@ const SelectIconWrapperStyled = styled.div`
   & > svg {
     width: 13px;
     height: 9px;
-    stroke: var(--main-color);
   }
 `;
 
