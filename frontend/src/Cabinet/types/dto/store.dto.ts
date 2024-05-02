@@ -1,10 +1,10 @@
-import { StoreItemType } from "../enum/store.enum";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
-export interface IItem {
-  Sku: string;
-  ItemName: string;
-  ItemPrice: number;
-  StoreItemType: string;
+export interface IStoreItem {
+  itemSku: string;
+  itemType: StoreItemType;
+  itemPrice: number;
+  itemDetails: string;
   // ex) "3일"
 }
 
