@@ -39,7 +39,7 @@ const StoreInfo = () => {
   const tryCoinCheckGet = async () => {
     // setIsLoading(true);
     try {
-      // const res = await axiosCoinCheckGet();
+      const res = await axiosCoinCheckGet();
       // console.log("res", res);
       console.log("coin 줍기 axios Get");
       // setShowResponseModal(true);

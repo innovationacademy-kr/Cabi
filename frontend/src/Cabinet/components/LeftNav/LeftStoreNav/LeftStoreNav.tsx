@@ -25,7 +25,7 @@ const LeftStoreNav = ({
   const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
 
   useEffect(() => {
-    setMyCoin(420);
+    setMyCoin(720);
   }, []);
   // TODO : 지울 예정.
 
