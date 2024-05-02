@@ -1,10 +1,10 @@
-import { ItemType } from "../enum/store.enum";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
-export interface IItem {
-  Sku: string;
-  ItemName: string;
-  ItemPrice: number;
-  StoreItemType: string;
+export interface IStoreItem {
+  itemSku: string;
+  itemType: StoreItemType;
+  itemPrice: number;
+  itemDetails: string;
   // ex) "3일"
 }
 
@@ -21,7 +21,7 @@ export interface IItemDetail {
   description: string;
   // ex) "현재 대여 중인 사물함의 반납 기한을 3일, 15일 또는 30일 연장할 수 있습니다."
   // itemName: string;
-  itemName: ItemType;
+  itemName: StoreItemType;
   // ex) "연장권"
   itemTypes: IItemStore[];
   // List<ItemDetailsDto>

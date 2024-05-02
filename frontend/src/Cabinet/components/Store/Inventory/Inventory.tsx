@@ -1,62 +1,24 @@
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { userState } from "@/Cabinet/recoil/atoms";
-import { ItemIconMap, ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
-import { IItem, IItemDetail } from "@/Cabinet/types/dto/store.dto";
+import InventoryItem from "@/Cabinet/components/Store/Inventory/InventoryItem";
+import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import { axiosMyItems } from "@/Cabinet/api/axios/axios.custom";
-import Test from "./InventoryItem";
 
-interface IInventory {
-  연장권: IItem[];
-  이사권: IItem[];
-  "알림 등록권": IItem[];
-  "페널티 축소권": IItem[];
+interface IInventoryInfo {
+  extensionItems: IStoreItem[];
+  swapItems: IStoreItem[];
+  alarmItems: IStoreItem[];
+  penaltyItems: IStoreItem[];
 }
 
-const dummyData: IInventory = {
-  연장권: [
-    {
-      Sku: "EXTENSTION_31",
-      ItemPrice: -2000,
-      ItemName: "연장권",
-      StoreItemType: "31일",
-    },
-    {
-      Sku: "EXTENSION_15",
-      ItemPrice: -1200,
-      ItemName: "연장권",
-      StoreItemType: "15일",
-    },
-  ],
-  이사권: [
-    {
-      Sku: "SWAP",
-      ItemPrice: -100,
-      ItemName: "이사권",
-      StoreItemType: "이사권",
-    },
-  ],
-  "알림 등록권": [
-    {
-      Sku: "ALARM",
-      ItemPrice: -100,
-      ItemName: "알림 등록권",
-      StoreItemType: "알림 등록권",
-    },
-  ],
-  "페널티 축소권": [],
-};
-
 const Inventory = () => {
-  const [myInfo] = useRecoilState(userState);
-  const [myItems, setMyItems] = useState<IInventory | null>(null);
+  const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
+
   const getMyItems = async () => {
     try {
-      //   const response = axiosMyItems(myInfo.userId);
-      //   console.log(response);
-      setMyItems(dummyData);
+      const response = await axiosMyItems();
+      setMyItems(response.data);
     } catch (error: any) {
       console.error("Error getting inventory:", error);
     }
@@ -72,7 +34,7 @@ const Inventory = () => {
       <ItemsWrapperStyled>
         {myItems &&
           Object.entries(myItems).map(([key, value]) => (
-            <Test itemName={key as StoreItemType} items={value} />
+            <InventoryItem itemType={key as StoreItemType} items={value} />
           ))}
       </ItemsWrapperStyled>
     </WrapperStyled>

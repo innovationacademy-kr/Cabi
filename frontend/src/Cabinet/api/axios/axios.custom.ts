@@ -359,26 +359,26 @@ export const axiosCoinLog = async (
   }
 };
 
-const axiosMyItemsURL = "/v5/items/me/";
-export const axiosMyItems = async (userId: number | null): Promise<any> => {
+const axiosMyItemsURL = "/v5/items/me";
+export const axiosMyItems = async (): Promise<any> => {
   try {
-    const response = await instance.get(axiosMyItemsURL + userId);
+    const response = await instance.get(axiosMyItemsURL);
     return response;
   } catch (error) {
     throw error;
   }
 };
 
-const axiosItemHistoryURL = "/v5/Items/history";
+const axiosItemHistoryURL = "/v5/items/history";
 export const axiosGetItemUsageHistory = async (
   page: number,
   size: number
 ): Promise<any> => {
   if (page === null || size === null) return;
   try {
-    const response = await instance.get(
-      `${axiosItemHistoryURL}?page=${page}&size=${size}`
-    );
+    const response = await instance.get(axiosItemHistoryURL, {
+      params: { page: page, size: size },
+    });
     return response.data;
   } catch (error) {
     throw error;

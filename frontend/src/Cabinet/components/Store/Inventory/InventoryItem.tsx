@@ -1,28 +1,57 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { ItemIconMap } from "@/Cabinet/assets/data/maps";
+import { ItemIconMap, ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as SadCcabiIcon } from "@/Cabinet/assets/images/sadCcabi.svg";
 import { ReactComponent as SelectIcon } from "@/Cabinet/assets/images/select.svg";
-import { IItem } from "@/Cabinet/types/dto/store.dto";
+import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
+const convertToItemTypeLabel = (itemType: string) => {
+  switch (itemType) {
+    case "extensionItems":
+      return ItemTypeLabelMap[StoreItemType.EXTENSION];
+    case "swapItems":
+      return ItemTypeLabelMap[StoreItemType.SWAP];
+    case "alarmItems":
+      return ItemTypeLabelMap[StoreItemType.ALERT];
+    case "penaltyItems":
+      return ItemTypeLabelMap[StoreItemType.PENALTY];
+  }
+};
+
+const convertToItemType = (itemType: string) => {
+  switch (itemType) {
+    case "extensionItems":
+      return StoreItemType.EXTENSION;
+    case "swapItems":
+      return StoreItemType.SWAP;
+    case "alarmItems":
+      return StoreItemType.ALERT;
+    case "penaltyItems":
+      return StoreItemType.PENALTY;
+    default:
+      return StoreItemType.EXTENSION;
+  }
+};
+
 const InventoryItem = ({
-  itemName,
+  itemType,
   items,
 }: {
-  itemName: StoreItemType;
-  items: IItem[];
+  itemType: StoreItemType;
+  items: IStoreItem[];
 }) => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const onClickToggleBtn = () => {
     setIsToggled((prev) => !prev);
   };
+  const ItemIcon = ItemIconMap[convertToItemType(itemType)];
 
   return (
     <>
       <ItemWrapperStyled>
         <ItemTitleStyled isToggled={isToggled} onClick={onClickToggleBtn}>
-          <h2>{itemName}</h2>
+          <h2>{convertToItemTypeLabel(itemType)}</h2>
           <button>
             <SelectIcon />
           </button>
@@ -30,26 +59,19 @@ const InventoryItem = ({
         <ItemCardSectionStyled isToggled={isToggled}>
           {items.length ? (
             <>
-              <ItemCardStyled>
-                <ItemIconStyled></ItemIconStyled>
-                <CardTextStyled>
-                  <span id="title">{itemName}</span>
-                  <span id="type">3일</span>
-                </CardTextStyled>
-              </ItemCardStyled>
-              <ItemCardStyled>
-                <ItemIconStyled>
-                  <ItemIconMap.EXTENSION />
-                  {/* <ItemIconMap.SWAP />
-                  <ItemIconMap.ALERT />
-                  <ItemIconMap.PENALTY /> */}
-                  {/* <ItemIconMap.itemName /> */}
-                </ItemIconStyled>
-                <CardTextStyled>
-                  <span id="title">{itemName}</span>
-                  <span id="type">3일</span>
-                </CardTextStyled>
-              </ItemCardStyled>
+              {items.map((item) => {
+                return (
+                  <ItemCardStyled>
+                    <ItemIconStyled>
+                      <ItemIcon />
+                    </ItemIconStyled>
+                    <CardTextStyled>
+                      <span id="title">{convertToItemTypeLabel(itemType)}</span>
+                      <span id="type">{item.itemDetails}</span>
+                    </CardTextStyled>
+                  </ItemCardStyled>
+                );
+              })}
             </>
           ) : (
             <UnavailableItemMsgStyled isToggled={isToggled}>
@@ -59,7 +81,6 @@ const InventoryItem = ({
               </UnavailableIconStyled>
             </UnavailableItemMsgStyled>
           )}
-          {/* 없을때 */}
         </ItemCardSectionStyled>
       </ItemWrapperStyled>
     </>
@@ -156,6 +177,10 @@ const UnavailableIconStyled = styled.div`
   & > svg {
     width: 24px;
     height: 24px;
+  }
+
+  @media (max-width: 412px) {
+    display: none;
   }
 `;
 

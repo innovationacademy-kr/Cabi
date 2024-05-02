@@ -3,64 +3,14 @@ import styled from "styled-components";
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
+import { axiosGetItemUsageHistory } from "@/Cabinet/api/axios/axios.custom";
 
 interface IItemUsageLog {
-  dateStr: any;
+  dateStr: string;
   date: Date;
   title: string;
   logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 }
-
-const dummyData = {
-  itemHistories: [
-    {
-      date: "2024-05-02T14:00:00",
-      ItemDetailsDto: {
-        sku: "extension_31",
-        ItemName: "연장권",
-        itemPrice: -2000,
-        itemDetails: "3일",
-      },
-    },
-    {
-      date: "2024-04-05T10:00:00",
-      ItemDetailsDto: {
-        sku: "extension_31",
-        ItemName: "페널티 축소권",
-        itemPrice: -2000,
-        itemDetails: "3일",
-      },
-    },
-    {
-      date: "2024-04-04T11:00:00",
-      ItemDetailsDto: {
-        sku: "extension_31",
-        ItemName: "연장권",
-        itemPrice: -2000,
-        itemDetails: "3일",
-      },
-    },
-    {
-      date: "2024-04-03T13:00:00",
-      ItemDetailsDto: {
-        sku: "extension_31",
-        ItemName: "연장권",
-        itemPrice: -2000,
-        itemDetails: "3일",
-      },
-    },
-    {
-      date: "2024-04-02T14:00:00",
-      ItemDetailsDto: {
-        sku: "extension_31",
-        ItemName: "연장권",
-        itemPrice: -2000,
-        itemDetails: "3일",
-      },
-    },
-  ],
-  totalLength: 10,
-};
 
 function mapItemNameToType(itemName: string): StoreItemType {
   switch (itemName) {
@@ -87,17 +37,31 @@ const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
 
   useEffect(() => {
-    const formattedLogs = dummyData.itemHistories.map((item) => ({
-      date: new Date(item.date),
-      title: `${item.ItemDetailsDto.ItemName} - ${item.ItemDetailsDto.itemDetails}`,
-      logo: ItemIconMap[mapItemNameToType(item.ItemDetailsDto.ItemName)],
-      dateStr: `${new Date(item.date).getFullYear()}년 ${
-        new Date(item.date).getMonth() + 1
-      }월`,
-    }));
-
-    setItemUsageLogs(formattedLogs);
+    getItemUsageLog(0, 10);
   }, []);
+
+  const getItemUsageLog = async (page: number, size: number) => {
+    try {
+      const data = await axiosGetItemUsageHistory(page, size);
+      console.log("data", data);
+      const formattedLogs = data.map(
+        (item: {
+          date: string | number | Date;
+          ItemDetailsDto: { ItemName: string; itemDetails: any };
+        }) => ({
+          date: new Date(item.date),
+          title: `${item.ItemDetailsDto.ItemName} - ${item.ItemDetailsDto.itemDetails}`,
+          logo: ItemIconMap[mapItemNameToType(item.ItemDetailsDto.ItemName)],
+          dateStr: `${new Date(item.date).getFullYear()}년 ${
+            new Date(item.date).getMonth() + 1
+          }월`,
+        })
+      );
+      setItemUsageLogs(formattedLogs);
+    } catch (error) {
+      console.error("Failed to fetch item usage history:", error);
+    }
+  };
 
   return (
     <WrapperStyled>
@@ -107,10 +71,10 @@ const ItemUsageLogPage = () => {
           const isNewMonth =
             index === 0 || log.dateStr !== itemUsageLogsArr[index - 1].dateStr;
           return (
-            <LogItem key={index}>
+            <LogItemStyled key={index}>
               {isNewMonth && <DateSection dateStr={log.dateStr} />}
               <ItemLogBlock log={log} />
-            </LogItem>
+            </LogItemStyled>
           );
         })}
       </ItemUsageLogWrapperStyled>
@@ -138,7 +102,7 @@ const ItemUsageLogWrapperStyled = styled.div`
   width: 80%;
 `;
 
-const LogItem = styled.div`
+const LogItemStyled = styled.div`
   margin-top: 20px;
 `;
 
