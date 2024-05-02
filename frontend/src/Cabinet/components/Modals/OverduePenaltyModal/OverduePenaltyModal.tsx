@@ -12,13 +12,25 @@ const OverduePenaltyModal: React.FC<{
   closeModal: React.MouseEventHandler;
   unbannedAt: Date | null;
 }> = (props) => {
+  const [hasPenaltyTicket, setHasPenaltyTicket] = useState<boolean>(false);
   const unbannedAtDate = props.unbannedAt ? new Date(props.unbannedAt) : null;
 
-  const penaltyDateDetail = `패널티 기간은 <strong> ${formatDate(
+  const penaltyDateDetailStore = `패널티 기간은 <strong> ${formatDate(
     unbannedAtDate,
     "/"
   )} 23:59</strong> 까지 입니다.
-    해당 기간까지 대여를 하실 수 없습니다.`;
+    해당 기간까지 대여를 하실 수 없습니다.
+    <strong>패널티 축소권</strong>은
+    <strong>까비 상점</strong>
+    에서 구매하실 수 있습니다.`;
+  const penaltyDateDetailProfile = `패널티 기간은 <strong> ${formatDate(
+    unbannedAtDate,
+    "/"
+  )} 23:59</strong> 까지 입니다.
+    해당 기간까지 대여를 하실 수 없습니다.
+    <strong>패널티 축소권</strong>은
+    <strong>프로필 페이지 - 대여정보</strong>
+    에서 사용하실 수 있습니다.`;
   const localStorageKey = "hideOverdueModalForOneDay";
 
   const showModal = (): React.ReactNode => {
@@ -50,7 +62,7 @@ const OverduePenaltyModal: React.FC<{
   const modalContents: IModalContents = {
     type: "penaltyBtn",
     title: modalPropsMap[additionalModalType.MODAL_OVERDUE_PENALTY].title,
-    detail: penaltyDateDetail,
+    detail: penaltyDateDetailStore,
     proceedBtnText:
       modalPropsMap[additionalModalType.MODAL_OVERDUE_PENALTY].confirmMessage,
     onClickProceed: hideForOneDay,

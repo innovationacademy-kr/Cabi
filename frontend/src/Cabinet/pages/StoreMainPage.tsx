@@ -80,17 +80,17 @@ const StoreMainPage = () => {
               onClick:
                 myCoin !== null &&
                 myCoin >
-                  item.itemTypes[item.itemTypes.length - 1].itemPrice * -1
+                  item.items[item.items.length - 1].itemPrice * -1
                   ? () => buttonClick(item)
                   : () => {},
               isClickable:
                 myCoin !== null &&
                 myCoin >
-                  item.itemTypes[item.itemTypes.length - 1].itemPrice * -1,
+                  item.items[item.items.length - 1].itemPrice * -1,
               color:
                 myCoin !== null &&
                 myCoin >
-                  item.itemTypes[item.itemTypes.length - 1].itemPrice * -1
+                  item.items[item.items.length - 1].itemPrice * -1
                   ? "var(--main-color)"
                   : "var(--gray-color)",
             }}

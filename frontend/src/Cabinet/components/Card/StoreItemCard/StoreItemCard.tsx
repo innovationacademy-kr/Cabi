@@ -27,14 +27,16 @@ const StoreItemCard = ({
           <BlockStyled>
             <IconBlockStyled>
               <div>
-                {/* 임시 */}
-                <ItemIconMap.EXTENSION />
+                {item.itemType === "EXTENSION" ? <ItemIconMap.EXTENSION/> : (null) }
+                {item.itemType === "SWAP" ? <ItemIconMap.SWAP/> : (null) }
+                {item.itemType === "ALARM" ? <ItemIconMap.ALERT/> : (null) }
+                {item.itemType === "PENALTY" ? <ItemIconMap.PENALTY/> : (null) }
               </div>
             </IconBlockStyled>
             <PriseBlockStyled>
               <CoinImg width={14} height={14} />
               <span>
-                {item.itemTypes[item.itemTypes.length - 1].itemPrice * -1}
+                {item.items[item.items.length - 1].itemPrice * -1}
               </span>
             </PriseBlockStyled>
           </BlockStyled>

@@ -23,7 +23,9 @@ export interface IItemDetail {
   // itemName: string;
   itemName: StoreItemType;
   // ex) "연장권"
-  itemTypes: IItemStore[];
+  itemType: string;
+  // ex) "EXTENSION"
+  items: IItemStore[];
   // List<ItemDetailsDto>
   // TODO : 받는 데이터 형태 확인해서 필요시 description type 변경
 }
