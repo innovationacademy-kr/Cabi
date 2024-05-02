@@ -346,12 +346,12 @@ export const axiosCoinCheckPost = async (): Promise<any> => {
 const axiosCoinLogURL = "/v5/items/coin/history";
 export const axiosCoinLog = async (
   type: CoinLogToggleType,
-  start: Date,
-  end: Date
+  page: number,
+  size: number
 ): Promise<any> => {
   try {
     const response = await instance.get(axiosCoinLogURL, {
-      params: { type: type, start: start, end: end },
+      params: { type: type, page: page, size: size },
     });
     return response;
   } catch (error) {
@@ -359,16 +359,26 @@ export const axiosCoinLog = async (
   }
 };
 
-const axiosItemHistoryURL = "/v5/Items/history";
+const axiosMyItemsURL = "/v5/items/me";
+export const axiosMyItems = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosMyItemsURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosItemHistoryURL = "/v5/items/history";
 export const axiosGetItemUsageHistory = async (
   page: number,
   size: number
 ): Promise<any> => {
   if (page === null || size === null) return;
   try {
-    const response = await instance.get(
-      `${axiosItemHistoryURL}?page=${page}&size=${size}`
-    );
+    const response = await instance.get(axiosItemHistoryURL, {
+      params: { page: page, size: size },
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -385,7 +395,7 @@ export const axiosItems = async (): Promise<any> => {
   }
 };
 
-const axiosBuyItemURL = "/v5/Items/";
+const axiosBuyItemURL = "/v5/items/";
 export const axiosBuyItem = async (sku: String): Promise<any> => {
   try {
     const response = await instance.post(axiosBuyItemURL + sku + "/purchase");

@@ -1,159 +1,82 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
-import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
-import { ReactComponent as MoveImg } from "@/Cabinet/assets/images/storeMove.svg";
-import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
+import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
+import { ItemIconMap } from "@/Cabinet/assets/data/maps";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
+import { axiosGetItemUsageHistory } from "@/Cabinet/api/axios/axios.custom";
 
 interface IItemUsageLog {
+  dateStr: string;
   date: Date;
   title: string;
   logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 }
 
-const dummyData = {
-  itemHistories: [
-    {
-      date: "2024-04-01T10:00:00",
-      itemDto: {
-        Sku: "extension_31",
-        ItemName: "페널티 축소권",
-        ItemPrice: -2000,
-        ItemType: "3일",
-      },
-    },
-    {
-      date: "2024-04-02T11:00:00",
-      itemDto: {
-        Sku: "extension_31",
-        ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
-      },
-    },
-    {
-      date: "2024-04-03T12:00:00",
-      itemDto: {
-        Sku: "extension_31",
-        ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
-      },
-    },
-    {
-      date: "2024-04-04T13:00:00",
-      itemDto: {
-        Sku: "extension_31",
-        ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
-      },
-    },
-    {
-      date: "2024-04-05T14:00:00",
-      itemDto: {
-        Sku: "extension_31",
-        ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
-      },
-    },
-    {
-      date: "2024-04-06T15:00:00",
-      itemDto: {
-        Sku: "extension_31",
-        ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
-      },
-    },
-    {
-      date: "2024-04-07T16:00:00",
-      itemDto: {
-        Sku: "extension_31",
-        ItemName: "연장권",
-        ItemPrice: -2000,
-        ItemType: "3일",
-      },
-    },
-  ],
-  totalLength: 10,
-};
-
-function getLogo(ItemName: string) {
-  switch (ItemName) {
+function mapItemNameToType(itemName: string): StoreItemType {
+  switch (itemName) {
     case "연장권":
-      return ExtensionImg;
+      return StoreItemType.EXTENSION;
     case "이사권":
-      return MoveImg;
+      return StoreItemType.SWAP;
     case "알림 등록권":
-      return AlarmImg;
+      return StoreItemType.ALERT;
     case "페널티 축소권":
-      return PenaltyImg;
+      return StoreItemType.PENALTY;
     default:
-      return ExtensionImg;
+      return StoreItemType.EXTENSION;
   }
 }
 
+const DateSection = ({ dateStr }: { dateStr: string }) => (
+  <DateSectionStyled>
+    <DateTitleStyled>{dateStr}</DateTitleStyled>
+  </DateSectionStyled>
+);
+
 const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
-  const [groupedLogs, setGroupedLogs] = useState<{
-    [key: string]: IItemUsageLog[];
-  }>({});
 
   useEffect(() => {
-    const formattedLogs = dummyData.itemHistories.map((item) => ({
-      date: new Date(item.date),
-      title: `${item.itemDto.ItemName} - ${item.itemDto.ItemType}`,
-      logo: getLogo(item.itemDto.ItemName),
-      // TODO: getLogo 함수가 아닌 maps.ts에 있는 ItemIconMap을 사용하도록 수정
-    }));
-
-    setItemUsageLogs(formattedLogs);
-
-    // TODO: 날짜를 날짜 기준이 아니라 달 기준으로 띄워주도록 수정
-    const grouped = formattedLogs.reduce((acc, item) => {
-      const dateKey = item.date.toISOString().split("T")[0];
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
-      acc[dateKey].push(item);
-      return acc;
-    }, {} as { [key: string]: IItemUsageLog[] });
-    setGroupedLogs(grouped);
+    getItemUsageLog(0, 10);
   }, []);
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }).format(date);
+  const getItemUsageLog = async (page: number, size: number) => {
+    try {
+      const data = await axiosGetItemUsageHistory(page, size);
+      console.log("data", data);
+      const formattedLogs = data.map(
+        (item: {
+          date: string | number | Date;
+          ItemDetailsDto: { ItemName: string; itemDetails: any };
+        }) => ({
+          date: new Date(item.date),
+          title: `${item.ItemDetailsDto.ItemName} - ${item.ItemDetailsDto.itemDetails}`,
+          logo: ItemIconMap[mapItemNameToType(item.ItemDetailsDto.ItemName)],
+          dateStr: `${new Date(item.date).getFullYear()}년 ${
+            new Date(item.date).getMonth() + 1
+          }월`,
+        })
+      );
+      setItemUsageLogs(formattedLogs);
+    } catch (error) {
+      console.error("Failed to fetch item usage history:", error);
+    }
   };
 
   return (
     <WrapperStyled>
       <TitleWrapperStyled>아이템 사용 내역</TitleWrapperStyled>
       <ItemUsageLogWrapperStyled>
-        {Object.entries(groupedLogs).map(([date, logs]) => (
-          <DateSectionStyled key={date}>
-            <DateTitleStyled>{date.replace(/-/g, ". ")}</DateTitleStyled>
-            {logs.map((log, index) => (
-              <ItemUsageLogStyled key={index}>
-                <IconBlockStyled>
-                  <log.logo />
-                </IconBlockStyled>
-                <ItemUsageInfoStyled>
-                  <ItemDateStyled>{formatDate(log.date)}</ItemDateStyled>
-                  <ItemTitleStyled>{log.title}</ItemTitleStyled>
-                </ItemUsageInfoStyled>
-              </ItemUsageLogStyled>
-            ))}
-          </DateSectionStyled>
-        ))}
+        {itemUsageLogs.map((log, index, itemUsageLogsArr) => {
+          const isNewMonth =
+            index === 0 || log.dateStr !== itemUsageLogsArr[index - 1].dateStr;
+          return (
+            <LogItemStyled key={index}>
+              {isNewMonth && <DateSection dateStr={log.dateStr} />}
+              <ItemLogBlock log={log} />
+            </LogItemStyled>
+          );
+        })}
       </ItemUsageLogWrapperStyled>
     </WrapperStyled>
   );
@@ -179,6 +102,10 @@ const ItemUsageLogWrapperStyled = styled.div`
   width: 80%;
 `;
 
+const LogItemStyled = styled.div`
+  margin-top: 20px;
+`;
+
 const DateSectionStyled = styled.div`
   margin-top: 30px;
 `;
@@ -188,49 +115,6 @@ const DateTitleStyled = styled.h2`
   font-weight: bold;
   margin-top: 20px;
   margin-bottom: 20px;
-`;
-
-const ItemUsageLogStyled = styled.div`
-  margin-top: 10px;
-  border-radius: 10px;
-  height: 90px;
-  border: 1px solid #d9d9d9;
-  display: flex;
-  align-items: center;
-`;
-
-const IconBlockStyled = styled.div`
-  display: flex;
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  background-color: var(--main-color);
-  justify-content: center;
-  align-items: center;
-  margin-left: 30px;
-  margin-right: 20px;
-  svg {
-    width: 40px;
-    height: 40px;
-  }
-`;
-
-const ItemUsageInfoStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-`;
-
-const ItemDateStyled = styled.div`
-  font-size: 16px;
-  word-spacing: -2px;
-  color: var(--gray-color);
-`;
-
-const ItemTitleStyled = styled.div`
-  font-size: 16px;
-  font-weight: 800;
 `;
 
 export default ItemUsageLogPage;

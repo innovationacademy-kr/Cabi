@@ -15,6 +15,7 @@ public class ItemDto {
 
 	private Sku itemSku;
 	private String itemName;
-	private Integer itemPrice;
 	private ItemType itemType;
+	private Integer itemPrice;
+	private String itemDetails;
 }

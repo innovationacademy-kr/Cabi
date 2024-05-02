@@ -1,4 +1,7 @@
+import Inventory from "@/Cabinet/components/Store/Inventory/Inventory";
+
 const InventoryPage = () => {
-  return <div>인벤토리</div>;
+  return <Inventory />;
 };
+
 export default InventoryPage;

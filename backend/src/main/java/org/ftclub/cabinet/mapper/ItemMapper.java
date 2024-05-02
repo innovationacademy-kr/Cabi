@@ -29,15 +29,16 @@ public interface ItemMapper {
 
 	ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
 
-	@Mapping(target = "date", source = "itemHistory.usedAt")
+	@Mapping(target = "date", source = "itemHistory.purchaseAt")
 	@Mapping(target = "amount", source = "item.price")
 	@Mapping(target = "history", source = "item.type.name")
 	CoinHistoryDto toCoinHistoryDto(ItemHistory itemHistory, Item item);
 
 	@Mapping(target = "itemSku", source = "item.sku")
 	@Mapping(target = "itemName", source = "item.type.name")
-	@Mapping(target = "itemPrice", source = "item.price")
 	@Mapping(target = "itemType", source = "item.type")
+	@Mapping(target = "itemPrice", source = "item.price")
+	@Mapping(target = "itemDetails", source = "item.sku.details")
 	ItemDto toItemDto(Item item);
 
 	@Mapping(target = "itemSku", source = "item.sku")
@@ -53,8 +54,9 @@ public interface ItemMapper {
 			List<ItemDto> alarmItems, List<ItemDto> penaltyItems);
 
 	@Mapping(target = "itemName", source = "itemType.name")
+	@Mapping(target = "itemType", source = "itemType")
 	@Mapping(target = "description", source = "itemType.description")
-	ItemStoreDto toItemStoreDto(ItemType itemType, List<ItemDetailsDto> itemTypes);
+	ItemStoreDto toItemStoreDto(ItemType itemType, List<ItemDetailsDto> items);
 
 	ItemHistoryPaginationDto toItemHistoryPaginationDto(List<ItemHistoryDto> result,
 			Long totalLength);
