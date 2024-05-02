@@ -28,13 +28,6 @@ export const cabinetIconSrcMap = {
   [CabinetType.CLUB]: "/src/Cabinet/assets/images/clubIcon.svg",
 };
 
-export const ItemIconMap = {
-  [ItemType.EXTENSION]: ExtensionImg,
-  [ItemType.SWAP]: SwapImg,
-  [ItemType.ALERT]: AlarmImg,
-  [ItemType.PENALTY]: PenaltyImg,
-};
-
 export const cabinetLabelColorMap = {
   [CabinetStatus.AVAILABLE]: "var(--white)",
   [CabinetStatus.FULL]: "var(--black)",
@@ -219,4 +212,18 @@ export const cabinetTypeLabelMap = {
   [CabinetType.CLUB]: "동아리 사물함",
   [CabinetType.PRIVATE]: "개인 사물함",
   [CabinetType.SHARE]: "공유 사물함",
+};
+
+export const ItemIconMap = {
+  [ItemType.EXTENSION]: ExtensionImg,
+  [ItemType.SWAP]: SwapImg,
+  [ItemType.ALERT]: AlarmImg,
+  [ItemType.PENALTY]: PenaltyImg,
+};
+
+export const ItemTypeLabelMap = {
+  [ItemType.EXTENSION]: "연장권",
+  [ItemType.SWAP]: "이사권",
+  [ItemType.ALERT]: "알림 등록권",
+  [ItemType.PENALTY]: "패널티 축소권",
 };
