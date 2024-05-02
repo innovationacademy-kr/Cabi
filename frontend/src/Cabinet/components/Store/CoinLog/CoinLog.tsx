@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCoinsState } from "@/Cabinet/recoil/atoms";
+import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
 import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
+import { ReactComponent as Select } from "@/Cabinet/assets/images/selectMaincolor.svg";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import { axiosCoinLog } from "@/Cabinet/api/axios/axios.custom";
 
@@ -23,63 +25,54 @@ const toggleList: toggleItem[] = [
 
 interface ICoinLog {
   date: Date;
-  title: string;
+  history: string;
   amount: number;
 }
-
-const test: ICoinLog[] = [
-  {
-    date: new Date(
-      Number(new Date().getFullYear()),
-      Number(new Date().getMonth()),
-      Number(new Date().getDate())
-    ),
-    title: "160시간 출석이다요오오오옹",
-    amount: 2000,
-  },
-  {
-    date: new Date(
-      Number(new Date().getFullYear()),
-      Number(new Date().getMonth()),
-      Number(new Date().getDate() + 1)
-    ),
-    title: "160시간 출석",
-    amount: -2000,
-  },
-];
 
 const CoinLog = () => {
   const [toggleType, setToggleType] = useState<CoinLogToggleType>(
     CoinLogToggleType.ALL
   );
   const [coinLogs, setCoinLogs] = useState<ICoinLog[] | null>(null);
-  const inquiryPeriod = 3;
-  // 조회기간
   const [myCoin] = useRecoilState(myCoinsState);
+  const size = 5;
+  const [logsLength, setLogsLength] = useState(0);
+  const [page, setPage] = useState(0);
+  const [moreButton, setMoreButton] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getCoinLog = async (type: CoinLogToggleType) => {
     try {
-      // const response = await axiosCoinLog(
-      //   type,
-      //   new Date(
-      //   Number(new Date().getFullYear()),
-      //   Number(month) - inquiryPeriod,
-      //   Number(day)
-      // ),
-      //   new Date()
-      // );
-      // TODO : 필요시 NOTE: Date 객체의 시간은 UTC 기준이므로 한국 시간 (GMT + 9) 으로 변환, 이후 발표 시작 시간인 14시를 더해줌
-      // data.setHours(9 + 14);
-      // TODO : setCoinLogs(response.date.coinHistories);
-      setCoinLogs(test);
+      const response = await axiosCoinLog(type, page, size);
+      page
+        ? setCoinLogs((prev) => [...prev!, ...response.data.result])
+        : setCoinLogs(response.data.result);
+      setLogsLength(response.data.totalLength);
+      // TODO : if (!response.data.result)
     } catch (error: any) {
       console.error("Error getting coin log:", error);
     }
   };
 
+  const clickMoreButton = () => {
+    setTimeout(() => {
+      setPage((prev) => prev + 1);
+    }, 100);
+  };
+
   useEffect(() => {
+    // 다른 토글버튼을 누르면 page 0
+    setPage(0);
     getCoinLog(toggleType);
   }, [toggleType]);
+
+  useEffect(() => {
+    getCoinLog(toggleType);
+  }, [page]);
+
+  useEffect(() => {
+    if (coinLogs?.length) setMoreButton(coinLogs.length < logsLength);
+  }, [coinLogs]);
 
   return (
     <WrapperStyled>
@@ -108,8 +101,8 @@ const CoinLog = () => {
               <span id="date">
                 {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
               </span>
-              <span id="title" title={log.title}>
-                {log.title}
+              <span id="history" title={log.history}>
+                {log.history}
               </span>
               <span id="amount">
                 {isEarned ? "+" : ""}
@@ -119,6 +112,22 @@ const CoinLog = () => {
           );
         })}
       </LogItemWrapperStyled>
+      {moreButton && (
+        <ButtonContainerStyled>
+          <MoreButtonStyled onClick={clickMoreButton} isLoading={isLoading}>
+            {isLoading ? (
+              <LoadingAnimation />
+            ) : (
+              <ButtonContentWrapperStyled>
+                <ButtonTextWrapperStyled>더보기</ButtonTextWrapperStyled>
+                <SelectIconWrapperStyled>
+                  <Select />
+                </SelectIconWrapperStyled>
+              </ButtonContentWrapperStyled>
+            )}
+          </MoreButtonStyled>
+        </ButtonContainerStyled>
+      )}
     </WrapperStyled>
   );
 };
@@ -128,7 +137,7 @@ const WrapperStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px 0;
+  padding: 60px 0 100px 0;
 `;
 
 const TitleStyled = styled.h1`
@@ -169,7 +178,7 @@ const LogItemStyled = styled.div<{
     text-align: center;
   }
 
-  & > #title {
+  & > #history {
     font-size: 18px;
     color: var(--black);
     width: 74%;
@@ -194,7 +203,7 @@ const LogItemStyled = styled.div<{
       width: 38%;
       font-size: 14px;
     }
-    & > #title {
+    & > #history {
       width: 42%;
       font-size: 16px;
     }
@@ -233,6 +242,60 @@ const CoinIconStyled = styled.div`
   height: 24px;
   display: flex;
   justify-content: end;
+
+  & > svg > path {
+    stroke: var(--main-color);
+  }
+`;
+
+const ButtonContainerStyled = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const MoreButtonStyled = styled.button<{
+  isLoading: boolean;
+}>`
+  width: 200px;
+  height: 50px;
+  margin: 20px auto;
+  border: 1px solid var(--main-color);
+  border-radius: 30px;
+  background-color: var(--white);
+  color: var(--main-color);
+  position: relative;
+`;
+
+const ButtonContentWrapperStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
+
+const ButtonTextWrapperStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
+
+const SelectIconWrapperStyled = styled.div`
+  width: 20px;
+  height: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 3px;
+
+  & > svg {
+    width: 13px;
+    height: 9px;
+    stroke: var(--main-color);
+  }
 `;
 
 export default CoinLog;
