@@ -359,10 +359,10 @@ export const axiosCoinLog = async (
   }
 };
 
-const axiosMyItemsURL = "/v5/items/me/";
-export const axiosMyItems = async (userId: number | null): Promise<any> => {
+const axiosMyItemsURL = "/v5/items/me";
+export const axiosMyItems = async (): Promise<any> => {
   try {
-    const response = await instance.get(axiosMyItemsURL + userId);
+    const response = await instance.get(axiosMyItemsURL);
     return response;
   } catch (error) {
     throw error;
