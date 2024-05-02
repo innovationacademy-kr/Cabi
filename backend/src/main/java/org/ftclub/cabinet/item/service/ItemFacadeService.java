@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -122,6 +123,7 @@ public class ItemFacadeService {
 				.collect(Collectors.toMap(Item::getId, item -> item));
 		List<CoinHistoryDto> result = coinHistories.stream()
 				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
+				.sorted(Comparator.comparing(CoinHistoryDto::getDate, Comparator.reverseOrder()))
 				.collect(Collectors.toList());
 		return itemMapper.toCoinHistoryPaginationDto(result, coinHistories.getTotalElements());
 	}
