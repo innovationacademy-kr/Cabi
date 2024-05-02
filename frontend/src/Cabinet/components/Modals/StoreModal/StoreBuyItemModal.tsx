@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { IItemType, IStoreItem } from "@/Cabinet/pages/StoreMainPage";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
-import Modal, { IModalContents } from "../Modal";
-import ModalPortal from "../ModalPortal";
+import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
+import { IItemStore } from "@/Cabinet/types/dto/store.dto";
 
 interface StorModalProps {
   onClose: () => void;
-  onPurchase: (item: IItemType) => void;
-  selectItem: IStoreItem;
+  onPurchase: (item: IItemStore) => void;
+  selectItem: IItemDetail;
 }
 
 const StoreBuyItemModal: React.FC<StorModalProps> = ({
@@ -40,24 +41,24 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
         {selectItem.itemTypes.length > 1 && (
           <ModalContainerStyled>
             <ModalDropdownNameStyled>
-              {selectItem.ItemName} 타입
+              {selectItem.itemName} 타입
             </ModalDropdownNameStyled>
             <Dropdown
               options={[
                 {
-                  name: selectItem.itemTypes[0].StoreItemType,
+                  name: selectItem.itemTypes[2].itemDetails,
                   value: "0",
                 },
                 {
-                  name: selectItem.itemTypes[1].StoreItemType,
+                  name: selectItem.itemTypes[1].itemDetails,
                   value: "1",
                 },
                 {
-                  name: selectItem.itemTypes[2].StoreItemType,
+                  name: selectItem.itemTypes[0].itemDetails,
                   value: "2",
                 },
               ]}
-              defaultValue={selectItem.itemTypes[0].StoreItemType}
+              defaultValue={selectItem.itemTypes[2].itemDetails}
               onChangeValue={handleDropdownChange}
             />{" "}
           </ModalContainerStyled>
@@ -66,11 +67,11 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
         <ModalDetailStyled>
           <p>
             <span>
-              {selectItem.ItemName}
+              {selectItem.itemName}
               {selectItem.itemTypes.length > 1 && (
                 <span>
                   {" "}
-                  - {selectItem.itemTypes[Number(selectedOption)].StoreItemType}
+                  - {selectItem.itemTypes[Number(selectedOption)].itemDetails}
                 </span>
               )}
             </span>
@@ -80,7 +81,7 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
             구매시
             <span>
               {" "}
-              {selectItem.itemTypes[Number(selectedOption)].ItemPrice * -1} 까비
+              {selectItem.itemTypes[Number(selectedOption)].itemPrice * -1} 까비
             </span>
             가 소모됩니다.
           </p>
