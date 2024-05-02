@@ -157,6 +157,10 @@ const UnavailableIconStyled = styled.div`
     width: 24px;
     height: 24px;
   }
+
+  @media (max-width: 412px) {
+    display: none;
+  }
 `;
 
 const ItemWrapperStyled = styled.div`
