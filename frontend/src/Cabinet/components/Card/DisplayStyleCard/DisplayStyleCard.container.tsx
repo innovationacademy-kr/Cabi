@@ -7,6 +7,7 @@ import {
 } from "@/Cabinet/types/enum/colorTheme.type.enum";
 
 // TODO : 토글말고 버튼으루
+// 로컬스토리지의 color-theme-toggle 값에 따라 ColorThemeType 반환
 export const getInitialColorTheme = (
   savedColorThemeToggle: ColorThemeToggleType,
   darkModeQuery: MediaQueryList

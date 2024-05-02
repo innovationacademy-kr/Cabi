@@ -10,6 +10,7 @@ import {
     const savedColorThemeToggle =
       (localStorage.getItem("color-theme-toggle") as ColorThemeToggleType) ||
       ColorThemeToggleType.DEVICE;
+      
     const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const colorMode = getInitialColorTheme(
