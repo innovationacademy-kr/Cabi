@@ -1,22 +1,24 @@
-import { useState } from "react";
 import styled from "styled-components";
-import type { IStoreItem } from "@/Cabinet/pages/StoreMainPage";
 import Card from "@/Cabinet/components/Card/Card";
 import type { IButtonProps } from "@/Cabinet/components/Card/Card";
-// import { ReactComponent as CoinImg } from "@/Cabinet/assets/images/dollar-circle.svg";
+import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as CoinImg } from "@/Cabinet/assets/images/coinIcon.svg";
+import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
+import { ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
+import { ItemType } from "@/Cabinet/types/enum/store.enum";
 
 const StoreItemCard = ({
-  Item,
+  item,
   button,
 }: {
-  Item: IStoreItem;
+  item: IItemDetail;
   button: IButtonProps;
 }) => {
+
   return (
     <WrapperStyled>
       <Card
-        title={Item.ItemName}
+        title={item.itemName}
         gridArea={"Extension"}
         width={"340px"}
         height={"150px"}
@@ -26,17 +28,18 @@ const StoreItemCard = ({
           <BlockStyled>
             <IconBlockStyled>
               <div>
-                <Item.logo />
+                {/* 임시 */}
+                <ItemIconMap.EXTENSION /> 
               </div>
             </IconBlockStyled>
             <PriseBlockStyled>
               <CoinImg width={14} height={14} />
               <span>
-                {Item.itemTypes[0].ItemPrice * -1}
+                {item.itemTypes[item.itemTypes.length - 1].itemPrice * -1}
               </span>
             </PriseBlockStyled>
           </BlockStyled>
-          <ItemDetailStyled>{Item.Description}</ItemDetailStyled>
+          <ItemDetailStyled>{item.description}</ItemDetailStyled>
         </SectionStyled>
       </Card>
     </WrapperStyled>
@@ -57,7 +60,7 @@ const SectionStyled = styled.div`
 const BlockStyled = styled.div`
   display: flex;
   flex-direction: column;
-  margin-right: 10px;
+  margin-right: 15px;
   justify-content: center;
 `;
 const IconBlockStyled = styled.div`
@@ -95,16 +98,17 @@ const PriseBlockStyled = styled.div`
 `;
 
 const ItemDetailStyled = styled.div`
-  width: 90%;
+  width: 100%;
   height: 100%;
   background-color: var(--white);
   border-radius: 10px;
-  padding: 10px 5px 5px 10px;
-  margin: 5px 5px 5px 5px;
+  padding: 8px 5px 5px 8px;
+  /* margin: 5px 5px 5px 5px; */
   display: flex;
   flex-direction: column;
-  line-height: 18px;
-  word-break: break-all;
+  line-height: 17px;
+  /* word-break: break-word; */
+  word-wrap: normal;
 `;
 
 export default StoreItemCard;

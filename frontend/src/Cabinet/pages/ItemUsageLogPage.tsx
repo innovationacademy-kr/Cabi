@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
-import { ItemType } from "@/Cabinet/types/enum/store.enum";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
 interface IItemUsageLog {
   dateStr: any;
@@ -62,18 +62,18 @@ const dummyData = {
   totalLength: 10,
 };
 
-function mapItemNameToType(itemName: string): ItemType {
+function mapItemNameToType(itemName: string): StoreItemType {
   switch (itemName) {
     case "연장권":
-      return ItemType.EXTENSION;
+      return StoreItemType.EXTENSION;
     case "이사권":
-      return ItemType.SWAP;
+      return StoreItemType.SWAP;
     case "알림 등록권":
-      return ItemType.ALERT;
+      return StoreItemType.ALERT;
     case "페널티 축소권":
-      return ItemType.PENALTY;
+      return StoreItemType.PENALTY;
     default:
-      return ItemType.EXTENSION;
+      return StoreItemType.EXTENSION;
   }
 }
 
