@@ -2,10 +2,10 @@ import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import type { IButtonProps } from "@/Cabinet/components/Card/Card";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
+import { ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as CoinImg } from "@/Cabinet/assets/images/coinIcon.svg";
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
-import { ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
-import { ItemType } from "@/Cabinet/types/enum/store.enum";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
 const StoreItemCard = ({
   item,
@@ -14,7 +14,6 @@ const StoreItemCard = ({
   item: IItemDetail;
   button: IButtonProps;
 }) => {
-
   return (
     <WrapperStyled>
       <Card
@@ -29,7 +28,7 @@ const StoreItemCard = ({
             <IconBlockStyled>
               <div>
                 {/* 임시 */}
-                <ItemIconMap.EXTENSION /> 
+                <ItemIconMap.EXTENSION />
               </div>
             </IconBlockStyled>
             <PriseBlockStyled>

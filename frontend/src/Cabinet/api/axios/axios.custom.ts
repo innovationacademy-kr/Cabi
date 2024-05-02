@@ -369,16 +369,16 @@ export const axiosMyItems = async (userId: number | null): Promise<any> => {
   }
 };
 
-const axiosItemHistoryURL = "/v5/Items/history";
+const axiosItemHistoryURL = "/v5/items/history";
 export const axiosGetItemUsageHistory = async (
   page: number,
   size: number
 ): Promise<any> => {
   if (page === null || size === null) return;
   try {
-    const response = await instance.get(
-      `${axiosItemHistoryURL}?page=${page}&size=${size}`
-    );
+    const response = await instance.get(axiosItemHistoryURL, {
+      params: { page: page, size: size },
+    });
     return response.data;
   } catch (error) {
     throw error;
