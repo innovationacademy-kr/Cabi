@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.ftclub.cabinet.item.domain.ItemType;
 
 @Getter
 @Setter
@@ -13,6 +14,7 @@ import lombok.ToString;
 public class ItemStoreDto {
 
 	private String itemName;
+	private ItemType itemType;
 	private String description;
 	private List<ItemDetailsDto> itemTypes;
 }

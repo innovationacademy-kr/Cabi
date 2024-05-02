@@ -34,6 +34,7 @@ public interface ItemMapper {
 	CoinHistoryDto toCoinHistoryDto(ItemHistory itemHistory, Item item);
 
 	@Mapping(target = "itemSku", source = "item.sku")
+	@Mapping(target = "itemName", source = "item.type.name")
 	@Mapping(target = "itemType", source = "item.type")
 	@Mapping(target = "itemPrice", source = "item.price")
 	@Mapping(target = "itemDetails", source = "item.sku.details")
@@ -52,6 +53,7 @@ public interface ItemMapper {
 			List<ItemDto> alarmItems, List<ItemDto> penaltyItems);
 
 	@Mapping(target = "itemName", source = "itemType.name")
+	@Mapping(target = "itemType", source = "itemType")
 	@Mapping(target = "description", source = "itemType.description")
 	ItemStoreDto toItemStoreDto(ItemType itemType, List<ItemDetailsDto> itemTypes);
 
