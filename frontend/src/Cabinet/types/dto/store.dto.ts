@@ -2,7 +2,7 @@ export interface IItem {
   Sku: string;
   ItemName: string;
   ItemPrice: number;
-  ItemType: string;
+  StoreItemType: string;
   // ex) "3일"
 }
 

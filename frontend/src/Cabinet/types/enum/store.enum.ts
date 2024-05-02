@@ -4,7 +4,7 @@ export enum CoinLogToggleType {
   USE = "USE",
 }
 
-export enum ItemType {
+export enum StoreItemType {
   EXTENSION = "EXTENSION",
   SWAP = "SWAP",
   ALERT = "ALERT",

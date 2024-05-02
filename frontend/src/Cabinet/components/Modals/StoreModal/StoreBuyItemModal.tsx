@@ -45,19 +45,19 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
             <Dropdown
               options={[
                 {
-                  name: selectItem.itemTypes[0].ItemType,
+                  name: selectItem.itemTypes[0].StoreItemType,
                   value: "0",
                 },
                 {
-                  name: selectItem.itemTypes[1].ItemType,
+                  name: selectItem.itemTypes[1].StoreItemType,
                   value: "1",
                 },
                 {
-                  name: selectItem.itemTypes[2].ItemType,
+                  name: selectItem.itemTypes[2].StoreItemType,
                   value: "2",
                 },
               ]}
-              defaultValue={selectItem.itemTypes[0].ItemType}
+              defaultValue={selectItem.itemTypes[0].StoreItemType}
               onChangeValue={handleDropdownChange}
             />{" "}
           </ModalContainerStyled>
@@ -70,7 +70,7 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
               {selectItem.itemTypes.length > 1 && (
                 <span>
                   {" "}
-                  - {selectItem.itemTypes[Number(selectedOption)].ItemType}
+                  - {selectItem.itemTypes[Number(selectedOption)].StoreItemType}
                 </span>
               )}
             </span>

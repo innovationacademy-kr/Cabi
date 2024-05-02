@@ -8,17 +8,18 @@ import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExt
 import { ReactComponent as MoveImg } from "@/Cabinet/assets/images/storeMove.svg";
 import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
 import { axiosBuyItem, axiosItems } from "../api/axios/axios.custom";
+import { ItemIconMap } from "../assets/data/maps";
 import StoreItemCard from "../components/Card/StoreItemCard/StoreItemCard";
 import { NotificationModal } from "../components/Modals/NotificationModal/NotificationModal";
 import { SuccessResponseModal } from "../components/Modals/ResponseModal/ResponseModal";
 import StoreBuyItemModal from "../components/Modals/StoreModal/StoreBuyItemModal";
 import IconType from "../types/enum/icon.type.enum";
-import {ItemIconMap} from "../assets/data/maps";
+
 export interface IItemType {
   Sku: string;
   ItemName: string;
   ItemPrice: number;
-  ItemType: string;
+  StoreItemType: string;
 }
 
 export interface IStoreItem {
@@ -38,19 +39,19 @@ const ItemStoreDto = [
         Sku: "extension_3",
         ItemName: "연장권",
         ItemPrice: -300,
-        ItemType: "3일",
+        StoreItemType: "3일",
       },
       {
         Sku: "extension_15",
         ItemName: "연장권",
         ItemPrice: -1200,
-        ItemType: "15일",
+        StoreItemType: "15일",
       },
       {
         Sku: "extension_31",
         ItemName: "연장권",
         ItemPrice: -2000,
-        ItemType: "31일",
+        StoreItemType: "31일",
       },
     ],
     logo: ItemIconMap.EXTENSION,
@@ -63,7 +64,7 @@ const ItemStoreDto = [
         Sku: "move",
         ItemName: "이사권",
         ItemPrice: -100,
-        ItemType: "",
+        StoreItemType: "",
       },
     ],
     logo: ItemIconMap.SWAP,
@@ -76,7 +77,7 @@ const ItemStoreDto = [
         Sku: "alarm",
         ItemName: "알림등록권",
         ItemPrice: -100,
-        ItemType: "",
+        StoreItemType: "",
       },
     ],
     logo: ItemIconMap.ALERT,
@@ -90,19 +91,19 @@ const ItemStoreDto = [
         Sku: "penalty_3",
         ItemName: "패널티삭제권",
         ItemPrice: -600,
-        ItemType: "3일",
+        StoreItemType: "3일",
       },
       {
         Sku: "penalty_15",
         ItemName: "패널티삭제권",
         ItemPrice: -1400,
-        ItemType: "7일",
+        StoreItemType: "7일",
       },
       {
         Sku: "penalty_31",
         ItemName: "패널티삭제권",
         ItemPrice: -6200,
-        ItemType: "31일",
+        StoreItemType: "31일",
       },
     ],
     logo: ItemIconMap.PENALTY,
@@ -147,7 +148,8 @@ const StoreMainPage = () => {
   const handlePurchase = (item: IItemType) => {
     // 선택한 옵션에 따른 구매 처리 로직 구현
     console.log("myCoin : ", myCoin);
-    if (myCoin !== null && item.ItemPrice * -1 > myCoin) { //  보유 코인이 모자란 경우
+    if (myCoin !== null && item.ItemPrice * -1 > myCoin) {
+      //  보유 코인이 모자란 경우
       setShowErrorModal(true);
       setErrorDetails(`${item.ItemPrice * -1 - myCoin} 까비가 더 필요합니다.`);
       console.log("코인이 부족합니다.");
@@ -166,7 +168,7 @@ const StoreMainPage = () => {
       ItemId: 1,
       ItemName: "연장권",
       ItemPrice: 300,
-      ItemType: "사물함을 연장 할 수 있는 연장권 설명 내용입니다.",
+      StoreItemType: "사물함을 연장 할 수 있는 연장권 설명 내용입니다.",
       grid: "extension",
       logo: ExtensionImg,
     },
@@ -174,7 +176,7 @@ const StoreMainPage = () => {
       ItemId: 2,
       ItemName: "이사권",
       ItemPrice: 100,
-      ItemType: "이사권 설명 내용입니다.",
+      StoreItemType: "이사권 설명 내용입니다.",
       grid: "move",
       logo: MoveImg,
     },
@@ -182,7 +184,7 @@ const StoreMainPage = () => {
       ItemId: 3,
       ItemName: "알림 등록권",
       ItemPrice: 100,
-      ItemType: "알림 등록권 설명 내용입니다.",
+      StoreItemType: "알림 등록권 설명 내용입니다.",
       grid: "alarm",
       logo: AlarmImg,
     },
@@ -190,7 +192,7 @@ const StoreMainPage = () => {
       ItemId: 4,
       ItemName: "패널티 축소권",
       ItemPrice: 600,
-      ItemType: "패널티 축소권 설명 내용입니다.",
+      StoreItemType: "패널티 축소권 설명 내용입니다.",
       grid: "penalty",
       logo: PenaltyImg,
     },
@@ -210,19 +212,13 @@ const StoreMainPage = () => {
             button={{
               label: "구매하기",
               onClick:
-              myCoin !== null &&
-              myCoin >
-                item.itemTypes[0].ItemPrice * -1
-                ? () => buttonClick(item)
-                : () => {},
+                myCoin !== null && myCoin > item.itemTypes[0].ItemPrice * -1
+                  ? () => buttonClick(item)
+                  : () => {},
               isClickable:
-                myCoin !== null &&
-                myCoin >
-                  item.itemTypes[0].ItemPrice * -1,
+                myCoin !== null && myCoin > item.itemTypes[0].ItemPrice * -1,
               color:
-                myCoin !== null &&
-                myCoin >
-                  item.itemTypes[0].ItemPrice * -1
+                myCoin !== null && myCoin > item.itemTypes[0].ItemPrice * -1
                   ? "var(--main-color)"
                   : "var(--gray-color)",
             }}
@@ -238,11 +234,11 @@ const StoreMainPage = () => {
       )}
       {showSuccessModal && (
         <NotificationModal
-        title="구매 완료."
-        detail={""}
-        closeModal={() => setShowSuccessModal(false)}
-        iconType={IconType.CHECKICON}
-      />
+          title="구매 완료."
+          detail={""}
+          closeModal={() => setShowSuccessModal(false)}
+          iconType={IconType.CHECKICON}
+        />
       )}
       {showErrorModal && (
         <NotificationModal
