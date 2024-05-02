@@ -346,13 +346,23 @@ export const axiosCoinCheckPost = async (): Promise<any> => {
 const axiosCoinLogURL = "/v5/items/coin/history";
 export const axiosCoinLog = async (
   type: CoinLogToggleType,
-  start: Date,
-  end: Date
+  page: number,
+  size: number
 ): Promise<any> => {
   try {
     const response = await instance.get(axiosCoinLogURL, {
-      params: { type: type, start: start, end: end },
+      params: { type: type, page: page, size: size },
     });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosMyItemsURL = "/v5/items/me/";
+export const axiosMyItems = async (userId: number | null): Promise<any> => {
+  try {
+    const response = await instance.get(axiosMyItemsURL + userId);
     return response;
   } catch (error) {
     throw error;
