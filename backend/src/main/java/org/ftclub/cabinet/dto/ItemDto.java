@@ -14,6 +14,7 @@ import org.ftclub.cabinet.item.domain.Sku;
 public class ItemDto {
 
 	private Sku itemSku;
+	private String itemName;
 	private ItemType itemType;
 	private Integer itemPrice;
 	private String itemDetails;

@@ -395,7 +395,7 @@ export const axiosItems = async (): Promise<any> => {
   }
 };
 
-const axiosBuyItemURL = "/v5/Items/";
+const axiosBuyItemURL = "/v5/items/";
 export const axiosBuyItem = async (sku: String): Promise<any> => {
   try {
     const response = await instance.post(axiosBuyItemURL + sku + "/purchase");
