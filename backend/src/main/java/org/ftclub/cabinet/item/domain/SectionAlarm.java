@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,9 +40,16 @@ public class SectionAlarm {
 	/**
 	 * 알람 상태
 	 */
-	@Column(name = "ALARM_STATUS")
+	@Column(name = "ALARM_STATUS", nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private AlarmStatus alarmStatus;
+
+	/**
+	 * 알람 종류
+	 */
+	@Column(name = "SECTION_ALARM_TYPE", nullable = false)
+	@Enumerated(value = EnumType.STRING)
+	private SectionAlarmType sectionAlarmType;
 
 	/**
 	 * 알람 등록 시간
@@ -57,13 +63,6 @@ public class SectionAlarm {
 	 */
 	@Column(name = "ALARMED_AT")
 	private LocalDateTime alarmedAt;
-
-	/**
-	 * 알람 종류
-	 */
-	@Column(name = "ALARM_TYPE")
-	@Enumerated(value = EnumType.STRING)
-	private AlarmType alarmType;
 
 	/**
 	 * 대여하는 유저
@@ -86,22 +85,22 @@ public class SectionAlarm {
 	private CabinetPlace cabinetPlace;
 
 	protected SectionAlarm(Long userId, Long cabinetPlaceId,
-			AlarmType alarmType) {
+			SectionAlarmType sectionAlarmType) {
 		this.userId = userId;
 		this.cabinetPlaceId = cabinetPlaceId;
-		this.alarmType = alarmType;
+		this.sectionAlarmType = sectionAlarmType;
+		this.alarmStatus = AlarmStatus.ACTIVE;
 	}
 
 	/**
-	 * @param userId         알람 발생 유저
-	 * @param cabinetPlaceId 알람 발생 사물함 영역
-	 * @param alarmType      알람 종류
+	 * @param userId           알람 발생 유저
+	 * @param cabinetPlaceId   알람 발생 사물함 영역
+	 * @param sectionAlarmType 알람 종류
 	 * @return 인자 정보를 담고있는 {@link SectionAlarm}
 	 */
 	public static SectionAlarm of(Long userId, Long cabinetPlaceId,
-			AlarmType alarmType) {
-		SectionAlarm sectionAlarm = new SectionAlarm(userId, cabinetPlaceId,
-				alarmType);
+			SectionAlarmType sectionAlarmType) {
+		SectionAlarm sectionAlarm = new SectionAlarm(userId, cabinetPlaceId, sectionAlarmType);
 		if (!sectionAlarm.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
@@ -115,7 +114,7 @@ public class SectionAlarm {
 	 */
 	private boolean isValid() {
 		return this.registeredAt != null && this.userId != null && this.cabinetPlaceId != null
-				&& alarmType.isValid();
+				&& sectionAlarmType.isValid();
 	}
 
 	@Override

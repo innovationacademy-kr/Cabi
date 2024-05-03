@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.item.domain;
 
-public enum AlarmType {
+public enum SectionAlarmType {
 	SHARE, PRIVATE, ALL;
 
 

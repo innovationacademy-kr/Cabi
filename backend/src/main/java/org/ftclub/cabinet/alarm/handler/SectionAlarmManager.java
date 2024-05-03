@@ -1,8 +1,13 @@
 package org.ftclub.cabinet.alarm.handler;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +15,12 @@ import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.AvailableSectionAlarm;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
+import org.ftclub.cabinet.item.domain.AlarmStatus;
 import org.ftclub.cabinet.item.domain.SectionAlarm;
+import org.ftclub.cabinet.item.domain.SectionAlarmType;
 import org.ftclub.cabinet.item.service.SectionAlarmCommandService;
 import org.ftclub.cabinet.item.service.SectionAlarmQueryService;
 import org.ftclub.cabinet.lent.service.LentRedisService;
@@ -36,26 +44,47 @@ public class SectionAlarmManager {
 
 	@Transactional
 	public void sendSectionAlarm() {
+		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime from = LocalDate.now().atStartOfDay();
+
 		List<Cabinet> allPendingCabinets =
 				cabinetQueryService.findAllPendingCabinets(CabinetStatus.PENDING);
-		Set<Location> availableLocations = allPendingCabinets.stream()
+		Map<Location, List<Cabinet>> locationCabinetMap = allPendingCabinets.stream()
 				.filter(cabinet ->
 						lentRedisService.getPreviousEndedAt(cabinet.getId()).isBefore(from))
-				.map(cabinet -> cabinet.getCabinetPlace().getLocation())
-				.collect(Collectors.toSet());
+				.collect(groupingBy(cabinet -> cabinet.getCabinetPlace().getLocation(),
+						mapping(cabinet -> cabinet, Collectors.toList())));
 
-		List<SectionAlarm> unsentAlarms = sectionAlarmQueryService.getUnsentAlarms();
-		unsentAlarms.forEach(alarm -> {
+		List<Long> alarmIds = new ArrayList<>();
+		sectionAlarmQueryService.getUnsentAlarms().forEach(alarm -> {
 			Location location = alarm.getCabinetPlace().getLocation();
-			if (availableLocations.contains(location)) {
-				AvailableSectionAlarm sectionAlarm = new AvailableSectionAlarm(location);
-				eventPublisher.publishEvent(AlarmEvent.of(alarm.getUserId(), sectionAlarm));
+			if (locationCabinetMap.containsKey(location)) {
+				Set<LentType> cabinetTypes = locationCabinetMap.get(location).stream()
+						.map(Cabinet::getLentType)
+						.collect(Collectors.toSet());
+				if (hasAlarmType(cabinetTypes, alarm)) {
+					alarmIds.add(alarm.getId());
+					AvailableSectionAlarm sectionAlarm = new AvailableSectionAlarm(location);
+					eventPublisher.publishEvent(AlarmEvent.of(alarm.getUserId(), sectionAlarm));
+				}
 			}
 		});
+		if (!alarmIds.isEmpty()) {
+			sectionAlarmCommandService.updateAlarmSend(alarmIds, now, AlarmStatus.ALARMED);
+		}
+	}
 
-		List<Long> alarmIds = unsentAlarms.stream()
-				.map(SectionAlarm::getId).collect(Collectors.toList());
-		sectionAlarmCommandService.updateAlarmSend(alarmIds, LocalDateTime.now());
+	private boolean hasAlarmType(Set<LentType> cabinetTypes, SectionAlarm alarm) {
+		SectionAlarmType alarmType = alarm.getSectionAlarmType();
+		if (alarmType.equals(SectionAlarmType.ALL)) {
+			return cabinetTypes.contains(LentType.PRIVATE) || cabinetTypes.contains(LentType.SHARE);
+		}
+		if (alarmType.equals(SectionAlarmType.PRIVATE)) {
+			return cabinetTypes.contains(LentType.PRIVATE);
+		}
+		if (alarmType.equals(SectionAlarmType.SHARE)) {
+			return cabinetTypes.contains(LentType.SHARE);
+		}
+		return false;
 	}
 }

@@ -33,6 +33,7 @@ import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.domain.ItemType;
 import org.ftclub.cabinet.item.domain.ItemUsage;
 import org.ftclub.cabinet.item.domain.PenaltyItem;
+import org.ftclub.cabinet.item.domain.SectionAlarmType;
 import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.item.domain.SwapItem;
 import org.ftclub.cabinet.log.LogLevel;
@@ -55,11 +56,13 @@ public class ItemFacadeService {
 	private final ItemQueryService itemQueryService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
 	private final ItemHistoryCommandService itemHistoryCommandService;
-	private final ItemMapper itemMapper;
-	private final UserQueryService userQueryService;
 	private final ItemRedisService itemRedisService;
-	private final ApplicationEventPublisher eventPublisher;
+	private final UserQueryService userQueryService;
+	private final SectionAlarmCommandService sectionAlarmCommandService;
+
+	private final ItemMapper itemMapper;
 	private final ItemPolicyService itemPolicyService;
+	private final ApplicationEventPublisher eventPublisher;
 
 	/**
 	 * 모든 아이템 리스트 반환
@@ -207,7 +210,7 @@ public class ItemFacadeService {
 			return new PenaltyItem(userId, item.getSku().getDays());
 		}
 		if (item.getType().equals(ItemType.ALARM)) {
-			return new AlarmItem(userId, data.getSection());
+			return new AlarmItem(userId, data.getCabinetPlaceId(), data.getSectionAlarmType());
 		}
 		throw ExceptionStatus.NOT_FOUND_ITEM.asServiceException();
 	}
@@ -239,5 +242,10 @@ public class ItemFacadeService {
 
 		// 코인 차감
 		itemRedisService.saveCoinCount(userId, userCoin + price);
+	}
+
+	@Transactional
+	public void addSectionAlarm(Long userId, Long cabinetPlaceId, SectionAlarmType alarmType) {
+		sectionAlarmCommandService.addSectionAlarm(userId, cabinetPlaceId, alarmType);
 	}
 }
