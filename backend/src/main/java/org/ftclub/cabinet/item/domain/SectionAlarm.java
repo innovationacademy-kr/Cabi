@@ -38,13 +38,6 @@ public class SectionAlarm {
 	private Long id;
 
 	/**
-	 * 알람 상태
-	 */
-	@Column(name = "ALARM_STATUS", nullable = false)
-	@Enumerated(value = EnumType.STRING)
-	private AlarmStatus alarmStatus;
-
-	/**
 	 * 알람 종류
 	 */
 	@Column(name = "SECTION_ALARM_TYPE", nullable = false)
@@ -89,7 +82,6 @@ public class SectionAlarm {
 		this.userId = userId;
 		this.cabinetPlaceId = cabinetPlaceId;
 		this.sectionAlarmType = sectionAlarmType;
-		this.alarmStatus = AlarmStatus.ACTIVE;
 	}
 
 	/**

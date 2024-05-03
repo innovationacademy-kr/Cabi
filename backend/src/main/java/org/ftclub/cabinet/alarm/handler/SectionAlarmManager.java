@@ -18,7 +18,6 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
-import org.ftclub.cabinet.item.domain.AlarmStatus;
 import org.ftclub.cabinet.item.domain.SectionAlarm;
 import org.ftclub.cabinet.item.domain.SectionAlarmType;
 import org.ftclub.cabinet.item.service.SectionAlarmCommandService;
@@ -70,7 +69,7 @@ public class SectionAlarmManager {
 			}
 		});
 		if (!alarmIds.isEmpty()) {
-			sectionAlarmCommandService.updateAlarmSend(alarmIds, now, AlarmStatus.ALARMED);
+			sectionAlarmCommandService.updateAlarmSend(alarmIds, now);
 		}
 	}
 

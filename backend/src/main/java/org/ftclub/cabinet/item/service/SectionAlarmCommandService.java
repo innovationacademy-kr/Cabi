@@ -3,7 +3,6 @@ package org.ftclub.cabinet.item.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.item.domain.AlarmStatus;
 import org.ftclub.cabinet.item.domain.SectionAlarm;
 import org.ftclub.cabinet.item.domain.SectionAlarmType;
 import org.ftclub.cabinet.item.repository.SectionAlarmRepository;
@@ -24,9 +23,7 @@ public class SectionAlarmCommandService {
 		sectionAlarmRepository.save(sectionAlarm);
 	}
 
-	public void updateAlarmSend(List<Long> sectionAlarmIds, LocalDateTime sentDate,
-			AlarmStatus alarmStatus) {
+	public void updateAlarmSend(List<Long> sectionAlarmIds, LocalDateTime sentDate) {
 		sectionAlarmRepository.updateAlarmedAtBulk(sectionAlarmIds, sentDate);
-		sectionAlarmRepository.updateAlarmStatusBulk(sectionAlarmIds, alarmStatus);
 	}
 }
