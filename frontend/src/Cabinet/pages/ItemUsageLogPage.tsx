@@ -44,14 +44,14 @@ const ItemUsageLogPage = () => {
     try {
       const data = await axiosGetItemUsageHistory(page, size);
       console.log("data", data);
-      const formattedLogs = data.map(
+      const formattedLogs = data.result.map(
         (item: {
           date: string | number | Date;
-          ItemDetailsDto: { ItemName: string; itemDetails: any };
+          itemDto: { itemName: string; itemDetails: any };
         }) => ({
           date: new Date(item.date),
-          title: `${item.ItemDetailsDto.ItemName} - ${item.ItemDetailsDto.itemDetails}`,
-          logo: ItemIconMap[mapItemNameToType(item.ItemDetailsDto.ItemName)],
+          title: `${item.itemDto.itemName} - ${item.itemDto.itemDetails}`,
+          logo: ItemIconMap[mapItemNameToType(item.itemDto.itemName)],
           dateStr: `${new Date(item.date).getFullYear()}년 ${
             new Date(item.date).getMonth() + 1
           }월`,
