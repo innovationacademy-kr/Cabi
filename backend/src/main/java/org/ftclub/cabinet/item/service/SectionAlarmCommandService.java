@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.item.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.item.repository.SectionAlarmRepository;
 import org.ftclub.cabinet.log.LogLevel;
@@ -13,4 +15,8 @@ public class SectionAlarmCommandService {
 
 	private final SectionAlarmRepository sectionAlarmRepository;
 
+
+	public void updateAlarmSend(List<Long> sectionAlarmIds, LocalDateTime sentDate) {
+		sectionAlarmRepository.updateAlarmedAtBulk(sectionAlarmIds, sentDate);
+	}
 }
