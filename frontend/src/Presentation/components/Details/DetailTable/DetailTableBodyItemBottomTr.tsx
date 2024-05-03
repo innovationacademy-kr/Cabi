@@ -56,15 +56,14 @@ const BottomTrStyled = styled.tr<{
   }
 
   & > td > div {
-    background-color: var(--ref-white);
+    background-color: var(--white-text-with-bg-color);
     border-radius: 10px;
     margin: 24px;
     margin-top: 0;
     line-height: 24px;
     padding: 30px 50px;
     font-size: 18px;
-    color: var(--ref-black);
-    /* black */
+    color: var(--mine-text-color);
   }
 
   &:hover {

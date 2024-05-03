@@ -33,6 +33,7 @@ const lightValues = css`
   --notion-btn-text-color: var(--ref-gray-800);
   --table-even-row-bg-color: var(--ref-purple-100);
   --presentation-table-even-row-bg-color: var(--ref-blue-100);
+  --presentation-dropdown-select-color: var(--ref-blue-150);
 
   /* cabinet */
   --mine-color: var(--ref-green-100);
@@ -81,6 +82,7 @@ const darkValues = css`
   --notion-btn-text-color: var(--ref-gray-200);
   --table-even-row-bg-color: var(--ref-purple-700);
   --presentation-table-even-row-bg-color: var(--ref-blue-500);
+  --presentation-dropdown-select-color: var(--ref-blue-470);
 
   --sys-main-color: var(--ref-purple-600);
   --sys-default-main-color: var(--ref-purple-600);

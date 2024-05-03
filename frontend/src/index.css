@@ -99,8 +99,8 @@
   --tooltip-shadow-color: var(--ref-black-shadow-400);
   --color-picker-border-shadow-color: var(--ref-black-shadow-200);
   --presentation-detail-available-color: var(--ref-blue-150);
-  --presentation-dropdown-select-color: var(--ref-blue-470);
   --presentation-blue-pagination-btn-color: var(--ref-blue-250);
+  --mine-text-color: var(--ref-black);
 
   --size-base: 14px;
 

@@ -168,15 +168,13 @@ const TopTrStyled = styled.tr<{
     border-radius: ${(props) => (props.open ? "0 10px 0 0" : "0 10px 10px 0")};
   }
   & > td > div {
-    color: var(--ref-black);
-    /* black */
+    color: var(--mine-text-color);
   }
   & #desktopTopDate {
     color: ${(props) =>
       !props.itemStatus
-        ? "var(--ref-black)"
-        : // black
-          "var(--normal-text-color)"};
+        ? "var(--mine-text-color)"
+        : "var(--normal-text-color)"};
   }
 
   @media (min-width: 1150px) {
@@ -222,9 +220,8 @@ const TopTrStyled = styled.tr<{
     & > td > #mobileTopDate {
       color: ${(props) =>
         props.open
-          ? "var(--ref-black)"
-          : // black
-            "var(--white-text-with-bg-color)"};
+          ? "var(--mine-text-color)"
+          : "var(--white-text-with-bg-color)"};
       text-align: ${(props) => (props.open ? "center" : "start")};
       padding-left: 10px;
     }
@@ -232,8 +229,7 @@ const TopTrStyled = styled.tr<{
       cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     }
     & > td > div {
-      color: var(--ref-black);
-      /* black */
+      color: var(--mine-text-color);
     }
   }
 `;

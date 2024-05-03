@@ -69,13 +69,13 @@ const DropdownOptions = styled.ul`
   top: 52px;
   left: 0;
   width: 310px;
-  border: 1px solid var(--ref-white);
+  border: 1px solid var(--white-text-with-bg-color);
   border-radius: 10px;
   text-align: left;
   padding: 10px;
-  color: var(--ref-black);
-  background-color: var(--ref-white);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  color: var(--mine-text-color);
+  background-color: var(--white-text-with-bg-color);
+  box-shadow: 0 0 10px 0 var(--login-card-border-shadow-color);
   overflow: hidden;
   @media (max-width: 768px) {
     width: 100%;
@@ -88,7 +88,7 @@ const DropdownOption = styled.li`
   padding: 10px;
   cursor: pointer;
   &:hover {
-    background-color: #f0f0f0;
+    background-color: var(--card-bg-color);
     color: var(--sys-presentation-main-color);
   }
 `;
@@ -97,12 +97,12 @@ const RegisterTimeInputStyled = styled.div<{ isFocused: boolean }>`
   height: 46px;
   width: 310px;
   border-radius: 10px;
-  background-color: var(--ref-white);
+  background-color: var(--white-text-with-bg-color);
   border: 2px solid
     ${(props) =>
       props.isFocused
         ? "var(--sys-presentation-main-color)"
-        : "var(--ref-white)"};
+        : "var(--white-text-with-bg-color)"};
   resize: none;
   outline: none;
   color: var(--gray-line-btn-color);

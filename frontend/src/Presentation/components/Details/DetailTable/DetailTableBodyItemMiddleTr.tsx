@@ -90,8 +90,7 @@ const MobileMiddleTrStysled = styled.tr<{
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    color: var(--ref-black);
-    /* black */
+    color: var(--mine-text-color);
   }
 
   @media (min-width: 1150px) {

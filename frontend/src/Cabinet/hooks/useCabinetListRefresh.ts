@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   currentFloorCabinetState,
@@ -66,11 +67,16 @@ const useCabinetListRefresh = (
   const refreshCabinetList = async () => {
     setIsLoading(true);
     try {
+      const { pathname } = useLocation();
+      const isAdmin = pathname.includes("admin");
+
       if (
-        myInfo.cabinetId !== myCabinetInfo.cabinetId &&
-        myCabinetInfo.cabinetId
+        isAdmin ||
+        (myInfo.cabinetId !== myCabinetInfo.cabinetId &&
+          myCabinetInfo.cabinetId)
       ) {
         const { data: myLentInfo } = await axiosMyLentInfo();
+        console.log(myLentInfo);
         setMyLentInfo(myLentInfo);
         setMyInfo({ ...myInfo, cabinetId: myLentInfo.cabinetId });
       }

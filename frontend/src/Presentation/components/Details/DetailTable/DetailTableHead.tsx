@@ -33,7 +33,7 @@ const TableHeadStyled = styled.thead<{ isAdmin: boolean }>`
   height: 40px;
   line-height: 40px;
   background-color: var(--sys-presentation-main-color);
-  color: var(--ref-white);
+  color: var(--white-text-with-bg-color);
   width: 100%;
 
   & > td {

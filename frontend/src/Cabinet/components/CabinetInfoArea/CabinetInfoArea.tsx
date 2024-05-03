@@ -337,9 +337,8 @@ const CabinetRectangleStyled = styled.div<{
   font-size: 2rem;
   color: ${(props) =>
     props.isMine
-      ? "var(--ref-black)"
+      ? "var(--mine-text-color)"
       : cabinetLabelColorMap[props.cabinetStatus]};
-  /* black */
   text-align: center;
 
   ${({ cabinetStatus }) =>
