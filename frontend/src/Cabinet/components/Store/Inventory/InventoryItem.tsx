@@ -61,11 +61,6 @@ const InventoryItem = ({
               {items.map((item, idx) => {
                 const hasTypes =
                   item.itemDetails !== convertToItemTypeLabel(itemType);
-                console.log(
-                  item.itemDetails,
-                  convertToItemTypeLabel(itemType),
-                  item.itemDetails === convertToItemTypeLabel(itemType)
-                );
                 return (
                   <ItemCardStyled key={idx} hasTypes={hasTypes}>
                     <ItemIconStyled>

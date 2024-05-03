@@ -295,6 +295,10 @@ const SelectIconWrapperStyled = styled.div`
     width: 13px;
     height: 9px;
   }
+
+  & > svg > path {
+    stroke: var(--main-color);
+  }
 `;
 
 export default CoinLog;
