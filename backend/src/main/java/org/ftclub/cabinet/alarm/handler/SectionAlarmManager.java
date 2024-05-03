@@ -49,10 +49,7 @@ public class SectionAlarmManager {
 		unsentAlarms.forEach(alarm -> {
 			Location location = alarm.getCabinetPlace().getLocation();
 			if (availableLocations.contains(location)) {
-				AvailableSectionAlarm sectionAlarm =
-						new AvailableSectionAlarm(location.getBuilding(),
-								location.getFloor(),
-								location.getSection());
+				AvailableSectionAlarm sectionAlarm = new AvailableSectionAlarm(location);
 				eventPublisher.publishEvent(AlarmEvent.of(alarm.getUserId(), sectionAlarm));
 			}
 		});
