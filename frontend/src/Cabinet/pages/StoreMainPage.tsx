@@ -141,6 +141,8 @@ const StoreCoinGridWrapper = styled.div`
     "coinPick alarm penalty"; // h: 183px;
   // "theme notification"; // h: 230px h: 230px;
 
+  padding-bottom: 30px;
+
   @media (max-width: 1400px) {
     grid-template-columns: 340px 340px;
     grid-template-rows: 150px 150px 150px;

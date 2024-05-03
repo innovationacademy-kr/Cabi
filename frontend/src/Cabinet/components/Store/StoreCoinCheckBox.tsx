@@ -29,7 +29,7 @@ export default StoreCoinCheckBox;
 
 const CoinCheckOffStyled = styled.div`
   position: relative;
-  cursor: pointer;
+  // cursor: pointer;
 `;
 
 const CoinCheckOffImgStyled = styled.div`
@@ -45,9 +45,10 @@ const IndexStyled = styled.span`
 `;
 
 const WrapperStyled = styled.div`
-  // width: 80%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 1fr);
   grid-gap: 5px;
+  margin-bottom: 20px;
+  margin-top: 10px;
 `;

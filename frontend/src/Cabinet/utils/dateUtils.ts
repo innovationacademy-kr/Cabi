@@ -97,6 +97,24 @@ export const getExtendedDateString = (
 };
 
 /**
+ * @description 주어진 날짜를 기준으로 주어진 일자만큼 만료일을 축소하여 "YYYY/MM/DD" 형식으로 반환
+ *
+ * @param existExpireDate 예정된 만료일
+ * @param dateToExtend 축소할 일자
+ *
+ * @returns "YYYY/MM/DD" 형식의 연장된 대여 만료일
+ */
+export const getReduceDateString = (
+  existExpireDate: Date | undefined | null,
+  dateToExtend: number | undefined
+) => {
+  if (!existExpireDate || dateToExtend === undefined) return;
+  let expireDate = new Date(existExpireDate);
+  expireDate.setDate(expireDate.getDate() - dateToExtend);
+  return formatDate(expireDate, "/");
+};
+
+/**
  * @description 주어진 대여 만료일을 기준으로 남은 대여일 수를 계산하여 반환. 만료일이 지났다면 음수로 반환
  *
  * @param expireTime 대여 만료일
@@ -115,7 +133,7 @@ export const calExpiredTime = (expireTime: Date) =>
  *
  * @returns 남은 대여일 수
  */
-export const getRemainingTime = (expireTime: Date | undefined) => {
+export const getRemainingTime = (expireTime: Date | undefined | null) => {
   if (!expireTime) return 0;
   const remainTime = calExpiredTime(new Date(expireTime));
   return remainTime < 0 ? -remainTime : remainTime;

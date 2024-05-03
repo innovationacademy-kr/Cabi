@@ -21,7 +21,7 @@ const CoinAnimation = () => {
       src="https://lottie.host/b2c94e66-b898-4572-988a-b35b0c484274/INuEpKkXRD.json"
       background="transparent"
       speed="1"
-      style={{ width: "150px", height: "150px" }}
+      style={{ width: "140px", height: "140px" }}
       loop
       autoplay
     ></dotlottie-player>

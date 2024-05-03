@@ -1,16 +1,18 @@
+import React from "react";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
-import React from "react";
 
 export const SuccessResponseModal: React.FC<{
   modalTitle?: string;
+  modalContents?: string;
   closeModal: React.MouseEventHandler;
 }> = (props) => {
   const modalContents: IModalContents = {
     type: "noBtn",
     iconScaleEffect: true,
     title: props.modalTitle ?? "처리되었습니다",
+    detail: props.modalContents ?? "",
     closeModal: props.closeModal,
     iconType: IconType.CHECKICON,
   };

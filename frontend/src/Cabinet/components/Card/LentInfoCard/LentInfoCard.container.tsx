@@ -1,12 +1,15 @@
+import { useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { myCabinetInfoState, userState } from "@/Cabinet/recoil/atoms";
 import LentInfoCard from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard";
 import { getDefaultCabinetInfo } from "@/Cabinet/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
-import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import { LentDto } from "@/Cabinet/types/dto/lent.dto";
+import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import { getRemainingTime } from "@/Cabinet/utils/dateUtils";
-import { useRecoilValue } from "recoil";
+import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
+import { calExpiredTime, getRemainingTime } from "@/Cabinet/utils/dateUtils";
 
 export interface MyCabinetInfo {
   name: string | null;
@@ -102,7 +105,29 @@ const LentInfoCardContainer = ({
     status: myCabinetInfo.status || "",
   };
 
-  return <LentInfoCard cabinetInfo={cabinetLentInfo} unbannedAt={unbannedAt} />;
+  const onCLickPenaltyButton = () => {
+    setIsModalOpen(true);
+    console.log("패널티 축소 버튼 클릭");
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  return (
+    <LentInfoCard
+      cabinetInfo={cabinetLentInfo}
+      unbannedAt={unbannedAt}
+      button={{
+        label: "패널티 축소",
+        onClick: onCLickPenaltyButton,
+        isClickable: true,
+      }}
+      isModalOpen={isModalOpen}
+      onClose={handleCloseModal}
+    />
+  );
 };
 
 export default LentInfoCardContainer;

@@ -405,6 +405,15 @@ export const axiosBuyItem = async (sku: String): Promise<any> => {
   }
 };
 
+export const axiosUseItem = async (sku: String): Promise<any> => {
+  try {
+    const response = await instance.post(axiosBuyItemURL + sku + "/use");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Admin API
 const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
 export const axiosAdminAuthLogin = async (
