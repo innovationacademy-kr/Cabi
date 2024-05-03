@@ -25,7 +25,7 @@ public class SectionAlarmManager {
 	private final ApplicationEventPublisher eventPublisher;
 
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public void sendSectionAlarm() {
 		List<SectionAlarm> unsentAlarms = sectionAlarmQueryService.getUnsentAlarms();
 		unsentAlarms.forEach(alarm -> {
