@@ -47,7 +47,7 @@ export default DetailTableBodyItemBottomTr;
 const BottomTrStyled = styled.tr<{
   itemStatus: itemType;
 }>`
-  background-color: var(--sys-presentation-sub-color);
+  background-color: var(--sys-sub-color);
   width: 100%;
 
   & > td {
@@ -69,6 +69,6 @@ const BottomTrStyled = styled.tr<{
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
     background-color: ${(props) =>
-      props.itemStatus ? "" : "var(--sys-presentation-sub-color)"};
+      props.itemStatus ? "" : "var(--sys-sub-color)"};
   }
 `;

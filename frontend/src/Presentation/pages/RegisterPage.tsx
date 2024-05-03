@@ -394,7 +394,7 @@ const RegisterButtonStyled = styled.button`
   font-size: 1rem;
   font-weight: 480;
   margin-top: 1rem;
-  background-color: var(--sys-presentation-main-color);
+  background-color: var(--sys-main-color);
   @media (max-width: 700px) {
     width: 100%;
   }

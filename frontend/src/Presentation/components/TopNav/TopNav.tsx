@@ -66,7 +66,7 @@ const LogoDivStyled = styled.div`
   cursor: pointer;
   svg {
     .logo_svg__currentPath {
-      fill: var(--sys-presentation-main-color);
+      fill: var(--sys-main-color);
     }
     width: 35px;
     height: 35px;

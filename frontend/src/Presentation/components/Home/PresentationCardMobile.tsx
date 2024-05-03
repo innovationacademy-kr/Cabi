@@ -144,7 +144,7 @@ const CategoryStyled = styled.div`
   height: 300px;
   margin-bottom: 16px;
   border-radius: 30px;
-  background-color: var(--sys-presentation-main-color);
+  background-color: var(--sys-main-color);
   display: flex;
   justify-content: center;
   align-items: center;

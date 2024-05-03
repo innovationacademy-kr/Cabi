@@ -98,7 +98,6 @@ const WrapperStyled = styled.div<{
   button.selected {
     color: var(--white-text-with-bg-color);
     background-color: var(--sys-main-color);
-    /* background-color: var(--sys-presentation-main-color); */
   }
 `;
 

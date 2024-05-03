@@ -65,7 +65,7 @@ const SubTitleStyled = styled.div`
   font-size: 1.2rem;
   letter-spacing: -0.02rem;
   margin-bottom: 25px;
-  color: var(--sys-presentation-sub-color);
+  color: var(--sys-sub-color);
 `;
 
 export default PresentationLogPage;

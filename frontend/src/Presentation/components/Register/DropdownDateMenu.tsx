@@ -186,7 +186,7 @@ const RegisterTimeInputStyled = styled.div<{
   border: 2px solid
     ${(props) =>
       props.isFocused
-        ? "var(--sys-presentation-sub-color)"
+        ? "var(--sys-sub-color)"
         : "var(--card-content-bg-color)"};
   resize: none;
   outline: none;

@@ -84,9 +84,7 @@ const InputAreaStyled = styled.input<{ isFocused: boolean }>`
   outline: none;
   border: 2px solid
     ${(props) =>
-      props.isFocused
-        ? "var(--sys-presentation-sub-color)"
-        : "var(--card-bg-color)"};
+      props.isFocused ? "var(--sys-sub-color)" : "var(--card-bg-color)"};
   color: var(--normal-text-color);
 `;
 
@@ -104,9 +102,7 @@ const DetailTextareaStyled = styled.textarea<{ isFocused: boolean }>`
   outline: none;
   border: 2px solid
     ${(props) =>
-      props.isFocused
-        ? "var(--sys-presentation-sub-color)"
-        : "var(--card-bg-color)"};
+      props.isFocused ? "var(--sys-sub-color)" : "var(--card-bg-color)"};
   color: var(--normal-text-color);
 `;
 

@@ -67,7 +67,7 @@ const TableBodyStyled = styled.tbody`
   width: 100%;
 
   & #selected {
-    background-color: var(--sys-presentation-sub-color);
+    background-color: var(--sys-sub-color);
   }
 `;
 
