@@ -1,9 +1,11 @@
 package org.ftclub.cabinet.lent.service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.CabinetProperties;
@@ -222,6 +224,39 @@ public class LentRedisService {
 	 */
 	public void setPreviousUserName(Long cabinetId, String userName) {
 		lentRedis.setPreviousUserName(cabinetId.toString(), userName);
+	}
+
+	/**
+	 * 사물함의 이전 대여 종료 시간을 가져옵니다.
+	 *
+	 * @param cabinetId 사물함 id
+	 * @return 이전 대여 종료 시간
+	 */
+	public LocalDateTime getPreviousEndedAt(Long cabinetId) {
+		LocalDateTime previousEndedAt;
+		String previousEndedAtString = lentRedis.getPreviousEndedAt(cabinetId.toString());
+		if (Objects.isNull(previousEndedAtString)) {
+			Optional<LentHistory> cabinetLastLentHistory =
+					lentRepository.findFirstByCabinetIdOrderByEndedAtDesc(cabinetId);
+			previousEndedAt = cabinetLastLentHistory.map(LentHistory::getEndedAt).orElse(null);
+			if (Objects.nonNull(previousEndedAt)) {
+				lentRedis.setPreviousEndedAt(cabinetId.toString(), previousEndedAt.toString());
+			}
+		} else {
+			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+			previousEndedAt = LocalDateTime.parse(previousEndedAtString, dateFormatter);
+		}
+		return previousEndedAt;
+	}
+
+	/**
+	 * 사물함의 이전 대여 종료 시간을 설정합니다.
+	 *
+	 * @param cabinetId 사물함 id
+	 * @param endedAt   이전 대여 종료 시간
+	 */
+	public void setPreviousEndedAt(Long cabinetId, LocalDateTime endedAt) {
+		lentRedis.setPreviousEndedAt(cabinetId.toString(), endedAt.toString());
 	}
 
 	/**

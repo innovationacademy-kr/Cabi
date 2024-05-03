@@ -7,7 +7,8 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class AvailableCabinetSectionAlarm implements Alarm {
+public class AvailableSectionAlarm implements Alarm {
 
+	private final Integer floor;
 	private final String section;
 }
