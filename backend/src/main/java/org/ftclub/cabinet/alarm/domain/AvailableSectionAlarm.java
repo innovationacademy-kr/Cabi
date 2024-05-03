@@ -9,6 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class AvailableSectionAlarm implements Alarm {
 
+	private final String building;
 	private final Integer floor;
 	private final String section;
 }

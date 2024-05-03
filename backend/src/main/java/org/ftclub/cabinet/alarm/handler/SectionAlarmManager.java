@@ -50,7 +50,9 @@ public class SectionAlarmManager {
 			Location location = alarm.getCabinetPlace().getLocation();
 			if (availableLocations.contains(location)) {
 				AvailableSectionAlarm sectionAlarm =
-						new AvailableSectionAlarm(location.getFloor(), location.getSection());
+						new AvailableSectionAlarm(location.getBuilding(),
+								location.getFloor(),
+								location.getSection());
 				eventPublisher.publishEvent(AlarmEvent.of(alarm.getUserId(), sectionAlarm));
 			}
 		});
