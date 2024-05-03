@@ -117,36 +117,6 @@ const DisplayStyleCardContainer = () => {
     setShowColorPicker(true);
   };
 
-  useEffect(() => {
-    body.style.setProperty("--sys-main-color", mainColor);
-    body.style.setProperty("--sys-sub-color", subColor);
-    body.style.setProperty("--mine-color", mineColor);
-    root.style.setProperty("--sys-main-color", mainColor);
-    root.style.setProperty("--sys-sub-color", subColor);
-    root.style.setProperty("--mine-color", mineColor);
-    const confirmBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (
-        mainColor !== savedMainColor ||
-        subColor !== savedSubColor ||
-        mineColor !== savedMineColor
-      ) {
-        e.returnValue =
-          "변경된 색상이 저장되지 않을 수 있습니다. 페이지를 나가시겠습니까?";
-      }
-    };
-    window.addEventListener("beforeunload", confirmBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", confirmBeforeUnload);
-    };
-  }, [
-    mainColor,
-    mineColor,
-    savedMainColor,
-    savedMineColor,
-    subColor,
-    savedSubColor,
-  ]);
-
   const savedColorThemeToggle =
     (localStorage.getItem("color-theme-toggle") as ColorThemeToggleType) ||
     ColorThemeToggleType.DEVICE;
@@ -183,6 +153,38 @@ const DisplayStyleCardContainer = () => {
       );
     }
   }, [toggleType]);
+
+  useEffect(() => {
+    body.style.setProperty("--sys-main-color", mainColor);
+    body.style.setProperty("--sys-sub-color", subColor);
+    body.style.setProperty("--mine-color", mineColor);
+    root.style.setProperty("--sys-main-color", mainColor);
+    root.style.setProperty("--sys-sub-color", subColor);
+    root.style.setProperty("--mine-color", mineColor);
+    const confirmBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (
+        mainColor !== savedMainColor ||
+        subColor !== savedSubColor ||
+        mineColor !== savedMineColor ||
+        toggleType !== savedColorThemeToggle
+      ) {
+        e.returnValue =
+          "변경된 색상이 저장되지 않을 수 있습니다. 페이지를 나가시겠습니까?";
+      }
+    };
+    window.addEventListener("beforeunload", confirmBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", confirmBeforeUnload);
+    };
+  }, [
+    mainColor,
+    mineColor,
+    savedMainColor,
+    savedMineColor,
+    subColor,
+    savedSubColor,
+    toggleType,
+  ]);
 
   return (
     <DisplayStyleCard
