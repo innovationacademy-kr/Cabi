@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
@@ -35,15 +36,20 @@ const DateSection = ({ dateStr }: { dateStr: string }) => (
 
 const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const size = 5;
 
   useEffect(() => {
-    getItemUsageLog(0, 10);
-  }, []);
+    getItemUsageLog(page, size);
+  }, [page]);
 
   const getItemUsageLog = async (page: number, size: number) => {
+    setIsLoading(true);
     try {
       const data = await axiosGetItemUsageHistory(page, size);
-      const formattedLogs = data.result.map(
+      const newLogs = data.result.map(
         (item: {
           date: string | number | Date;
           itemDto: { itemName: string; itemDetails: any };
@@ -59,10 +65,16 @@ const ItemUsageLogPage = () => {
           }월`,
         })
       );
-      setItemUsageLogs(formattedLogs);
+      setItemUsageLogs((prevLogs) => [...prevLogs, ...newLogs]);
+      setHasMore(data.result.length === size);
     } catch (error) {
       console.error("Failed to fetch item usage history:", error);
     }
+    setIsLoading(false);
+  };
+
+  const handleMoreClick = () => {
+    setPage((prev) => prev + 1);
   };
 
   return (
@@ -79,6 +91,17 @@ const ItemUsageLogPage = () => {
             </LogItemStyled>
           );
         })}
+        {hasMore && (
+          <ButtonContainerStyled>
+            <MoreButtonStyled
+              onClick={handleMoreClick}
+              disabled={isLoading}
+              isLoading={isLoading}
+            >
+              {isLoading ? <LoadingAnimation /> : "더보기"}
+            </MoreButtonStyled>
+          </ButtonContainerStyled>
+        )}
       </ItemUsageLogWrapperStyled>
     </WrapperStyled>
   );
@@ -117,6 +140,27 @@ const DateTitleStyled = styled.h2`
   font-weight: bold;
   margin-top: 20px;
   margin-bottom: 20px;
+`;
+
+const ButtonContainerStyled = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const MoreButtonStyled = styled.button<{
+  isLoading: boolean;
+}>`
+  width: 200px;
+  height: 50px;
+  margin: 20px auto;
+  border: 1px solid var(--main-color);
+  border-radius: 30px;
+  background-color: var(--white);
+  color: var(--main-color);
+  position: relative;
 `;
 
 export default ItemUsageLogPage;
