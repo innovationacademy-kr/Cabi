@@ -29,7 +29,7 @@ public class ItemHistoryQueryService {
 		return itemHistoryRepository.findAllByUserIdAndItemIdIn(userId, pageable, itemIds);
 	}
 
-	public List<ItemHistory> getItemsByItemIdInUserInventory(Long userId, Long itemId) {
+	public List<ItemHistory> getUnusedItemsInUserInventory(Long userId, Long itemId) {
 		return itemHistoryRepository.findAllByUserIdAndItemIdAndUsedAtIsNull(userId, itemId);
 	}
 }

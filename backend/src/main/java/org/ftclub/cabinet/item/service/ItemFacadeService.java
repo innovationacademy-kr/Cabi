@@ -70,32 +70,32 @@ public class ItemFacadeService {
 	public ItemStoreResponseDto getAllItems() {
 		List<Item> allItems = itemQueryService.getAllItems();
 		Map<ItemType, List<ItemDetailsDto>> itemMap = allItems.stream()
-			.filter(item -> item.getPrice() < 0)
-			.collect(groupingBy(Item::getType,
-				mapping(itemMapper::toItemDetailsDto, Collectors.toList())));
+				.filter(item -> item.getPrice() < 0)
+				.collect(groupingBy(Item::getType,
+						mapping(itemMapper::toItemDetailsDto, Collectors.toList())));
 		List<ItemStoreDto> result = itemMap.entrySet().stream()
-			.map(entry -> itemMapper.toItemStoreDto(entry.getKey(), entry.getValue()))
-			.collect(Collectors.toList());
+				.map(entry -> itemMapper.toItemStoreDto(entry.getKey(), entry.getValue()))
+				.collect(Collectors.toList());
 		return new ItemStoreResponseDto(result);
 	}
 
 	@Transactional(readOnly = true)
 	public MyItemResponseDto getMyItems(UserSessionDto user) {
 		List<ItemHistory> userItemHistories = itemHistoryQueryService.findAllItemHistoryByUser(
-			user.getUserId());
+				user.getUserId());
 
 		Map<ItemType, List<ItemDto>> itemMap = userItemHistories.stream()
-			.map(ItemHistory::getItem)
-			.filter(item -> item.getPrice() < 0)
-			.collect(groupingBy(Item::getType,
-				mapping(itemMapper::toItemDto, Collectors.toList())));
+				.map(ItemHistory::getItem)
+				.filter(item -> item.getPrice() < 0)
+				.collect(groupingBy(Item::getType,
+						mapping(itemMapper::toItemDto, Collectors.toList())));
 
 		List<ItemDto> extensionItems = itemMap.getOrDefault(ItemType.EXTENSION,
-			Collections.emptyList());
+				Collections.emptyList());
 		List<ItemDto> swapItems = itemMap.getOrDefault(ItemType.SWAP, Collections.emptyList());
 		List<ItemDto> alarmItems = itemMap.getOrDefault(ItemType.ALARM, Collections.emptyList());
 		List<ItemDto> penaltyItems = itemMap.getOrDefault(ItemType.PENALTY,
-			Collections.emptyList());
+				Collections.emptyList());
 
 		return itemMapper.toMyItemResponseDto(extensionItems, swapItems, alarmItems, penaltyItems);
 	}
@@ -104,16 +104,16 @@ public class ItemFacadeService {
 	@Transactional(readOnly = true)
 	public ItemHistoryPaginationDto getItemHistory(Long userId, Pageable pageable) {
 		Page<ItemHistory> itemHistories =
-			itemHistoryQueryService.getItemHistoryWithItem(userId, pageable);
+				itemHistoryQueryService.getItemHistoryWithItem(userId, pageable);
 		List<ItemHistoryDto> result = itemHistories.stream()
-			.map(ih -> itemMapper.toItemHistoryDto(ih, itemMapper.toItemDto(ih.getItem())))
-			.collect(Collectors.toList());
+				.map(ih -> itemMapper.toItemHistoryDto(ih, itemMapper.toItemDto(ih.getItem())))
+				.collect(Collectors.toList());
 		return itemMapper.toItemHistoryPaginationDto(result, itemHistories.getTotalElements());
 	}
 
 	@Transactional(readOnly = true)
 	public CoinHistoryPaginationDto getCoinHistory(Long userId, CoinHistoryType type,
-		Pageable pageable) {
+			Pageable pageable) {
 
 		Set<Item> items = new HashSet<>();
 		if (type.equals(CoinHistoryType.EARN) || type.equals(CoinHistoryType.ALL)) {
@@ -124,10 +124,10 @@ public class ItemFacadeService {
 		}
 		List<Long> itemIds = items.stream().map(Item::getId).collect(Collectors.toList());
 		Page<ItemHistory> coinHistories =
-			itemHistoryQueryService.getCoinHistory(userId, pageable, itemIds);
+				itemHistoryQueryService.getCoinHistory(userId, pageable, itemIds);
 
 		Map<Long, Item> itemMap = items.stream()
-			.collect(Collectors.toMap(Item::getId, item -> item));
+				.collect(Collectors.toMap(Item::getId, item -> item));
 		List<CoinHistoryDto> result = coinHistories.stream()
 				.map(ih -> itemMapper.toCoinHistoryDto(ih, itemMap.get(ih.getItemId())))
 				.sorted(Comparator.comparing(CoinHistoryDto::getDate, Comparator.reverseOrder()))
@@ -144,11 +144,11 @@ public class ItemFacadeService {
 	@Transactional(readOnly = true)
 	public CoinMonthlyCollectionDto getCoinCollectionCountInMonth(Long userId) {
 		Long coinCollectionCountInMonth =
-			itemRedisService.getCoinCollectionCountInMonth(userId);
+				itemRedisService.getCoinCollectionCountInMonth(userId);
 		boolean isCollectedInToday = itemRedisService.isCoinCollected(userId);
 
 		return itemMapper.toCoinMonthlyCollectionDto(coinCollectionCountInMonth,
-			isCollectedInToday);
+				isCollectedInToday);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class ItemFacadeService {
 		}
 		Item item = itemQueryService.getBySku(sku);
 		List<ItemHistory> itemInInventory =
-			itemHistoryQueryService.getItemsByItemIdInUserInventory(user.getId(), item.getId());
+				itemHistoryQueryService.getUnusedItemsInUserInventory(user.getId(), item.getId());
 		ItemHistory firstItem = itemPolicyService.verifyEmptyItems(itemInInventory);
 		ItemUsage itemUsage = getItemUsage(userId, item, data);
 
@@ -226,7 +226,7 @@ public class ItemFacadeService {
 			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
 		}
 
-		Item item = itemQueryService.getItemBySku(sku);
+		Item item = itemQueryService.getBySku(sku);
 		long price = item.getPrice();
 		long userCoin = itemRedisService.getCoinCount(userId);
 
