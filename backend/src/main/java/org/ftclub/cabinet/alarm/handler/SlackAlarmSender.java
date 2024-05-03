@@ -7,6 +7,7 @@ import org.ftclub.cabinet.alarm.config.AlarmProperties;
 import org.ftclub.cabinet.alarm.domain.Alarm;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.AnnouncementAlarm;
+import org.ftclub.cabinet.alarm.domain.AvailableSectionAlarm;
 import org.ftclub.cabinet.alarm.domain.ExtensionExpirationImminentAlarm;
 import org.ftclub.cabinet.alarm.domain.ExtensionIssuanceAlarm;
 import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
@@ -58,6 +59,8 @@ public class SlackAlarmSender {
 			return generateExtensionExpirationImminent((ExtensionExpirationImminentAlarm) alarm);
 		} else if (alarm instanceof AnnouncementAlarm) {
 			return generateAnnouncementAlarm();
+		} else if (alarm instanceof AvailableSectionAlarm) {
+			return generateAvailableSectionAlarm((AvailableSectionAlarm) alarm);
 		} else {
 			throw ExceptionStatus.NOT_FOUND_ALARM.asServiceException();
 		}
@@ -113,5 +116,12 @@ public class SlackAlarmSender {
 		return new SlackDto(body);
 	}
 
-
+	private SlackDto generateAvailableSectionAlarm(AvailableSectionAlarm alarm) {
+		String building = alarm.getLocation().getBuilding();
+		Integer floor = alarm.getLocation().getFloor();
+		String section = alarm.getLocation().getSection();
+		String body = String.format(alarmProperties.getSectionAlarmSlackTemplate(),
+				building + " " + floor + "층 " + section + "구역");
+		return new SlackDto(body);
+	}
 }

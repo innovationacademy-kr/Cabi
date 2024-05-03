@@ -130,9 +130,9 @@ public class EmailAlarmSender {
 
 	@NotNull
 	private MailDto generateSectionAlarm(AvailableSectionAlarm alarm, Context context) {
-		String building = alarm.getBuilding();
-		Integer floor = alarm.getFloor();
-		String section = alarm.getSection();
+		String building = alarm.getLocation().getBuilding();
+		Integer floor = alarm.getLocation().getFloor();
+		String section = alarm.getLocation().getSection();
 		context.setVariable("location", building + " " + floor + "층 " + section + "구역");
 		return new MailDto(alarmProperties.getSectionAlarmSubject(),
 				alarmProperties.getSectionAlarmMailTemplateUrl(), context);
