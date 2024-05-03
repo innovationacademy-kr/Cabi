@@ -20,7 +20,7 @@ function mapItemNameToType(itemName: string): StoreItemType {
       return StoreItemType.SWAP;
     case "알림 등록권":
       return StoreItemType.ALERT;
-    case "페널티 축소권":
+    case "패널티 감면권":
       return StoreItemType.PENALTY;
     default:
       return StoreItemType.EXTENSION;
@@ -43,14 +43,16 @@ const ItemUsageLogPage = () => {
   const getItemUsageLog = async (page: number, size: number) => {
     try {
       const data = await axiosGetItemUsageHistory(page, size);
-      console.log("data", data);
       const formattedLogs = data.result.map(
         (item: {
           date: string | number | Date;
           itemDto: { itemName: string; itemDetails: any };
         }) => ({
           date: new Date(item.date),
-          title: `${item.itemDto.itemName} - ${item.itemDto.itemDetails}`,
+          title:
+            item.itemDto.itemName === item.itemDto.itemDetails
+              ? item.itemDto.itemName
+              : `${item.itemDto.itemName} - ${item.itemDto.itemDetails}`,
           logo: ItemIconMap[mapItemNameToType(item.itemDto.itemName)],
           dateStr: `${new Date(item.date).getFullYear()}년 ${
             new Date(item.date).getMonth() + 1
