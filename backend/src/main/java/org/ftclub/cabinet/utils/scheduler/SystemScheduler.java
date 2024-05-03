@@ -124,7 +124,7 @@ public class SystemScheduler {
 //		userService.updateUserExtensible(userMonthDataDtos);
 //	}
 
-	@Scheduled(cron = "${cabinet.schedule.corn.section-alarm-time}")
+	@Scheduled(cron = "${cabinet.schedule.cron.section-alarm-time}")
 	public void sectionAlarm() {
 		log.info("called sectionAlarm");
 		sectionAlarmManager.sendSectionAlarm();

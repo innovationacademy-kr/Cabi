@@ -17,6 +17,7 @@ import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.dto.UpdateDeviceTokenRequestDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.item.service.ItemRedisService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.log.LogLevel;
@@ -46,6 +47,8 @@ public class UserFacadeService {
 	private final FCMTokenRedisService fcmTokenRedisService;
 	private final FirebaseConfig firebaseConfig;
 	private final BanHistoryCommandService banHistoryCommandService;
+	private final ItemRedisService itemRedisService;
+
 
 	/**
 	 * 유저의 프로필을 가져옵니다.
@@ -55,19 +58,21 @@ public class UserFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public MyProfileResponseDto getProfile(UserSessionDto user) {
-		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
-		BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(),
-			LocalDateTime.now()).orElse(null);
+		Long userId = user.getUserId();
+		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(userId);
+		BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(userId,
+				LocalDateTime.now()).orElse(null);
 		LentExtension lentExtension = lentExtensionQueryService.findActiveLentExtension(
-			user.getUserId());
+				userId);
 		LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(
-			lentExtension);
-		User currentUser = userQueryService.getUser(user.getUserId());
+				lentExtension);
+		User currentUser = userQueryService.getUser(userId);
 		AlarmTypeResponseDto userAlarmTypes = currentUser.getAlarmTypes();
 		boolean isDeviceTokenExpired = userAlarmTypes.isPush()
-			&& fcmTokenRedisService.findByUserName(user.getName()).isEmpty();
+				&& fcmTokenRedisService.findByUserName(user.getName()).isEmpty();
+		Long coins = itemRedisService.getCoinCount(userId);
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-			lentExtensionResponseDto, userAlarmTypes, isDeviceTokenExpired);
+				lentExtensionResponseDto, userAlarmTypes, isDeviceTokenExpired, coins);
 	}
 
 	/**
@@ -79,10 +84,10 @@ public class UserFacadeService {
 	@Transactional(readOnly = true)
 	public LentExtensionPaginationDto getActiveLentExtensions(UserSessionDto user) {
 		List<LentExtension> lentExtensions =
-			lentExtensionQueryService.findActiveLentExtensions(user.getUserId());
+				lentExtensionQueryService.findActiveLentExtensions(user.getUserId());
 		List<LentExtensionResponseDto> result = lentExtensions.stream()
-			.map(userMapper::toLentExtensionResponseDto)
-			.collect(Collectors.toList());
+				.map(userMapper::toLentExtensionResponseDto)
+				.collect(Collectors.toList());
 
 		return userMapper.toLentExtensionPaginationDto(result, (long) lentExtensions.size());
 	}
@@ -96,11 +101,11 @@ public class UserFacadeService {
 	public void useLentExtension(UserSessionDto user) {
 		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(user.getUserId());
 		List<LentHistory> activeLentHistories = lentQueryService.findCabinetActiveLentHistories(
-			cabinet.getId());
+				cabinet.getId());
 		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
 		LentExtension activeLentExtension = lentExtensionQueryService.findActiveLentExtension(
-			user.getUserId());
+				user.getUserId());
 		if (activeLentExtension == null) {
 			throw ExceptionStatus.EXTENSION_NOT_FOUND.asServiceException();
 		}
@@ -115,7 +120,7 @@ public class UserFacadeService {
 	 */
 	@Transactional
 	public void updateAlarmState(UserSessionDto userSessionDto,
-		UpdateAlarmRequestDto updateAlarmRequestDto) {
+			UpdateAlarmRequestDto updateAlarmRequestDto) {
 		User user = userQueryService.getUser(userSessionDto.getUserId());
 		userCommandService.updateAlarmStatus(user, updateAlarmRequestDto);
 	}
@@ -128,12 +133,12 @@ public class UserFacadeService {
 	 */
 	@Transactional
 	public void updateDeviceToken(UserSessionDto userSessionDto,
-		UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
+			UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
 		User user = userQueryService.getUser(userSessionDto.getUserId());
 		fcmTokenRedisService.saveToken(
-			user.getName(),
-			updateDeviceTokenRequestDto.getDeviceToken(),
-			Duration.ofDays(firebaseConfig.getDeviceTokenExpiryDays())
+				user.getName(),
+				updateDeviceTokenRequestDto.getDeviceToken(),
+				Duration.ofDays(firebaseConfig.getDeviceTokenExpiryDays())
 		);
 	}
 
