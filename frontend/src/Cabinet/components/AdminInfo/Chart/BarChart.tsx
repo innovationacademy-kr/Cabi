@@ -68,7 +68,6 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
         "var(--full-color)",
         "var(--sys-main-color)",
       ]}
-      // 사용불가와 사용 중은 헷갈릴 수 있으니 색 그대로
       borderColor={{
         from: "color",
         modifiers: [["darker", 1.6]],

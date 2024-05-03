@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 import {
-  darkModeState,
   myClubListState,
   serverTimeState,
   targetClubInfoState,

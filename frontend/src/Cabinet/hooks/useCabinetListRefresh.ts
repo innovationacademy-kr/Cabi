@@ -76,7 +76,7 @@ const useCabinetListRefresh = (
           myCabinetInfo.cabinetId)
       ) {
         const { data: myLentInfo } = await axiosMyLentInfo();
-        console.log(myLentInfo);
+        // console.log(myLentInfo);
         setMyLentInfo(myLentInfo);
         setMyInfo({ ...myInfo, cabinetId: myLentInfo.cabinetId });
       }
