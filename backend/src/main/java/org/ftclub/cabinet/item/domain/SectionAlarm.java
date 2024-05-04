@@ -48,7 +48,7 @@ public class SectionAlarm {
 	 * 알람 등록 시간
 	 */
 	@CreatedDate
-	@Column(name = "REGISTERED_AT", nullable = false)
+	@Column(name = "REGISTERED_AT", nullable = false, updatable = false)
 	private LocalDateTime registeredAt;
 
 	/**
@@ -105,8 +105,7 @@ public class SectionAlarm {
 	 * @return 유효한 인스턴스 여부
 	 */
 	private boolean isValid() {
-		return this.registeredAt != null && this.userId != null && this.cabinetPlaceId != null
-				&& sectionAlarmType.isValid();
+		return this.userId != null && this.cabinetPlaceId != null && sectionAlarmType.isValid();
 	}
 
 	@Override

@@ -243,7 +243,8 @@ public class LentRedisService {
 				lentRedis.setPreviousEndedAt(cabinetId.toString(), previousEndedAt.toString());
 			}
 		} else {
-			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+			DateTimeFormatter dateFormatter =
+					DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
 			previousEndedAt = LocalDateTime.parse(previousEndedAtString, dateFormatter);
 		}
 		return previousEndedAt;

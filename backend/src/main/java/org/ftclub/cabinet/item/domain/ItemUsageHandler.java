@@ -6,6 +6,7 @@ import org.ftclub.cabinet.item.service.ItemFacadeService;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
@@ -16,7 +17,7 @@ public class ItemUsageHandler {
 	private final UserFacadeService userFacadeService;
 	private final ItemFacadeService itemFacadeService;
 
-	@TransactionalEventListener
+	@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
 	public void handleItemUsage(ItemUsage itemUsage) {
 		if (itemUsage instanceof SwapItem) {
 			SwapItem swapItem = (SwapItem) itemUsage;
