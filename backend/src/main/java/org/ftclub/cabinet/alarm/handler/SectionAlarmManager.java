@@ -63,8 +63,8 @@ public class SectionAlarmManager {
 						.collect(Collectors.toSet());
 				if (hasAlarmType(cabinetTypes, alarm)) {
 					alarmIds.add(alarm.getId());
-					AvailableSectionAlarm sectionAlarm = new AvailableSectionAlarm(location);
-					eventPublisher.publishEvent(AlarmEvent.of(alarm.getUserId(), sectionAlarm));
+					eventPublisher.publishEvent(
+							AlarmEvent.of(alarm.getUserId(), new AvailableSectionAlarm(location)));
 				}
 			}
 		});

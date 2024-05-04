@@ -39,10 +39,6 @@ public class EmailAlarmSender {
 	@Async
 	public void send(User user, AlarmEvent alarmEvent) {
 		log.info("Email Alarm Event : user = {}, alarmEvent = {}", user, alarmEvent);
-		if (!gmailProperties.getIsProduction()) {
-			log.debug("개발 환경이므로 메일을 보내지 않습니다.");
-			return;
-		}
 		MailDto mailDto = parseMessageToMailDto(user.getName(), alarmEvent.getAlarm());
 
 		try {
