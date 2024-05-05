@@ -34,14 +34,15 @@ const CoinLog = () => {
     CoinLogToggleType.ALL
   );
   const [coinLogs, setCoinLogs] = useState<ICoinLog[] | null>(null);
-  const size = 5;
   const [logsLength, setLogsLength] = useState(0);
   const [page, setPage] = useState(0);
   const [moreButton, setMoreButton] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // TODO : const [userInfo] = useRecoilState(userState);
+  const size = 5;
 
   const getCoinLog = async (type: CoinLogToggleType) => {
+    setIsLoading(true);
     try {
       const response = await axiosCoinLog(type, page, size);
       page
@@ -50,6 +51,8 @@ const CoinLog = () => {
       setLogsLength(response.data.totalLength);
     } catch (error: any) {
       console.error("Error getting coin log:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -46,6 +46,7 @@ const InventoryItem = ({
     setIsToggled((prev) => !prev);
   };
   const ItemIcon = ItemIconMap[convertToItemType(itemType)];
+
   return (
     <>
       <ItemWrapperStyled>
@@ -91,7 +92,6 @@ const InventoryItem = ({
 const ItemCardStyled = styled.div<{ hasTypes: boolean }>`
   width: 106px;
   height: 106px;
-  /* background-color: green; */
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -141,8 +141,10 @@ const ItemTitleStyled = styled.div<{ isToggled: boolean }>`
   padding-right: 5px;
   border-bottom: 1.5px solid #d9d9d9;
   margin-bottom: 10px;
+  margin-top: 40px;
   cursor: pointer;
-  button {
+
+  & > button {
     all: initial;
     cursor: inherit;
     z-index: 2;
@@ -150,10 +152,10 @@ const ItemTitleStyled = styled.div<{ isToggled: boolean }>`
     transform: ${(props) =>
       props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
   }
+
   & > button > svg > path {
     stroke: var(--gray-color);
   }
-  margin-top: 40px;
 `;
 
 const ItemCardSectionStyled = styled.div<{ isToggled: boolean }>`
@@ -166,7 +168,8 @@ const UnavailableItemMsgStyled = styled.div<{ isToggled: boolean }>`
   display: ${(props) => (props.isToggled ? "none" : "flex")};
   transition: all 0.3s ease-in-out;
   flex-wrap: wrap;
-  p {
+
+  & > p {
     color: var(--gray-color);
     line-height: 1.5;
     word-break: keep-all;
