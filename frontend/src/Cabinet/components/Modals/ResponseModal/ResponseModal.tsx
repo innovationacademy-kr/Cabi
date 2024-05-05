@@ -27,6 +27,8 @@ export const SuccessResponseModal: React.FC<{
 export const FailResponseModal: React.FC<{
   modalTitle?: string;
   modalContents?: string;
+  urlTitle?: string;
+  url?: string;
   closeModal: React.MouseEventHandler;
 }> = (props) => {
   const modalContents: IModalContents = {
@@ -35,6 +37,8 @@ export const FailResponseModal: React.FC<{
     detail: props.modalContents ?? "",
     closeModal: props.closeModal,
     iconType: IconType.ERRORICON,
+    urlTitle: props.urlTitle,
+    url: props.url,
   };
 
   return (
