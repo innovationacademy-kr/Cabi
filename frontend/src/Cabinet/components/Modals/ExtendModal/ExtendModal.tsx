@@ -1,15 +1,6 @@
-import {
-  axiosCabinetById,
-  axiosMyLentInfo,
-  axiosUseExtension, // axiosExtend, // TODO: 연장권 api 생성 후 연결해야 함
-} from "@/Cabinet/api/axios/axios.custom";
-import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
-import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
-import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import React, { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import styled from "styled-components";
 import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
@@ -17,11 +8,25 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/Cabinet/recoil/atoms";
+import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import {
+  axiosCabinetById,
+  axiosMyItems,
+  axiosMyLentInfo,
+  axiosUseExtension,
+  axiosUseItem, // axiosExtend, // TODO: 연장권 api 생성 후 연결해야 함
+} from "@/Cabinet/api/axios/axios.custom";
 import { getExtendedDateString } from "@/Cabinet/utils/dateUtils";
-import React, { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import Dropdown from "../../Common/Dropdown";
+import { IInventoryInfo } from "../../Store/Inventory/Inventory";
 
 const ExtendModal: React.FC<{
   onClose: () => void;
@@ -38,9 +43,12 @@ const ExtendModal: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
+  const [extensionDate, setExtensionDate] = useState<number>(3);
   const formattedExtendedDate = getExtendedDateString(
     myLentInfo.lents[0].expiredAt,
-    myInfo.lentExtensionResponseDto?.extensionPeriod
+    // myInfo.lentExtensionResponseDto?.extensionPeriod
+    extensionDate
+    //내가 선택한 옵션의 연장 기간을 number 로 넘겨주기
   );
   const extensionExpiredDate = getExtendedDateString(
     myInfo.lentExtensionResponseDto?.expiredAt,
@@ -74,7 +82,8 @@ const ExtendModal: React.FC<{
       return;
     }
     try {
-      await axiosUseExtension();
+      // await axiosUseExtension();
+      // await axiosUseItem(selected.itemSku);
       setMyInfo({
         ...myInfo,
         cabinetId: currentCabinetId,
@@ -104,6 +113,78 @@ const ExtendModal: React.FC<{
     }
   };
 
+  const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
+
+  const getMyItems = async () => {
+    try {
+      const response = await axiosMyItems();
+      setMyItems(response.data);
+
+      console.log("myItems : ", myItems);
+      console.log("response : ", response);
+    } catch (error: any) {
+      console.error("Error getting inventory:", error);
+    }
+  };
+
+  useEffect(() => {
+    getMyItems();
+  }, []);
+
+  useEffect(() => {
+    console.log("myItems : ", myItems);
+  }, [myItems]);
+
+  const extensionItemUse = async (item: string) => {
+    // 아이템 사용
+    console.log("itemUse : ", item);
+    if (currentCabinetId === 0 || myInfo.cabinetId === null) {
+      setHasErrorOnResponse(true);
+      setModalTitle("현재 대여중인 사물함이 없습니다.");
+      setShowResponseModal(true);
+      return;}
+      try {
+        await axiosUseItem(item);
+        setMyInfo({
+          ...myInfo,
+          cabinetId: currentCabinetId,
+          lentExtensionResponseDto: null,
+        });
+        setIsCurrentSectionRender(true);
+        setModalTitle("연장되었습니다");
+        try {
+          const { data } = await axiosCabinetById(currentCabinetId);
+          setTargetCabinetInfo(data);
+        } catch (error) {
+          throw error;
+        }
+        try {
+          const { data: myLentInfo } = await axiosMyLentInfo();
+          setMyLentInfo(myLentInfo);
+        } catch (error) {
+          throw error;
+        }
+      } catch (error: any) {
+        setHasErrorOnResponse(true);
+        error.response
+          ? setModalTitle(error.response.data.message)
+          : setModalTitle(error.data.message);
+      } finally {
+        setShowResponseModal(true);
+      }
+  };
+  const [selectedOption, setSelectedOption] = useState("0");
+
+  const extensionPeriod = [
+    { sku: "extension_3", period: "3일", day: 3 },
+    { sku: "extension_15", period: "15일", day: 15 },
+    { sku: "extension_31", period: "31일", day: 31 },
+  ];
+
+  const handleDropdownChange = (option: string) => {
+    setSelectedOption(option);
+    setExtensionDate(extensionPeriod[Number(option)].day);
+  };
   const extendModalContents: IModalContents = {
     type: myInfo.cabinetId === null ? "penaltyBtn" : "hasProceedBtn",
     title: getModalTitle(myInfo.cabinetId),
@@ -114,9 +195,38 @@ const ExtendModal: React.FC<{
         ? async (e: React.MouseEvent) => {
             props.onClose();
           }
-        : tryExtendRequest,
+        : async () => {
+            extensionItemUse(extensionPeriod[Number(selectedOption)].sku);
+          },
     closeModal: props.onClose,
     iconType: IconType.CHECKICON,
+    renderAdditionalComponent: () => (
+      <>
+        <ModalContainerStyled>
+          <ModalDropdownNameStyled>연장권 타입</ModalDropdownNameStyled>
+          <Dropdown
+            options={[
+              {
+                name: extensionPeriod[0].period,
+                value: "0",
+              },
+              {
+                name: extensionPeriod[1].period,
+                value: "1",
+              },
+              {
+                name: extensionPeriod[2].period,
+                value: "2",
+              },
+            ]}
+            defaultValue={extensionPeriod[0].period}
+            onChangeValue={handleDropdownChange}
+          />
+        </ModalContainerStyled>
+
+        <ModalDetailStyled></ModalDetailStyled>
+      </>
+    ),
   };
 
   return (
@@ -137,5 +247,27 @@ const ExtendModal: React.FC<{
     </ModalPortal>
   );
 };
+
+const ModalContainerStyled = styled.div`
+  padding: 10px 20px 0 20px;
+`;
+
+const ModalDropdownNameStyled = styled.div`
+  display: flex;
+  margin: 10px 10px 15px 5px;
+  font-size: 18px;
+`;
+
+const ModalDetailStyled = styled.div`
+  width: 100%;
+  height: 100%;
+  margin-top: 30px;
+  > p {
+    margin: 10px;
+    > span {
+      font-weight: 600;
+    }
+  }
+`;
 
 export default ExtendModal;

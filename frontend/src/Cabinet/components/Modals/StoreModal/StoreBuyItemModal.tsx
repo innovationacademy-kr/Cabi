@@ -18,7 +18,7 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
   onPurchase,
   selectItem,
 }) => {
-  const [selectedOption, setSelectedOption] = useState("2");
+  const [selectedOption, setSelectedOption] = useState(String(selectItem.items.length - 1));
 
   const handleDropdownChange = (option: string) => {
     setSelectedOption(option);
@@ -81,7 +81,10 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
             구매시
             <span>
               {" "}
-              {selectItem.items[Number(selectedOption)].itemPrice * -1} 까비
+              {selectItem.items[Number(selectedOption)].itemPrice
+                ? selectItem.items[Number(selectedOption)].itemPrice * -1
+                : selectItem.items[0].itemPrice * -1}{" "}
+              까비
             </span>
             가 소모됩니다.
           </p>

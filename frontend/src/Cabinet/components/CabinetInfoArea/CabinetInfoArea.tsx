@@ -51,11 +51,12 @@ const CabinetInfoArea: React.FC<{
   closeModal,
   isSwappable,
 }) => {
-  const isExtensionVisible =
-    isMine &&
-    isExtensible &&
-    selectedCabinetInfo &&
-    selectedCabinetInfo.status !== "IN_SESSION";
+  // const isExtensionVisible =
+  //   isMine &&
+  //   isExtensible &&
+  //   selectedCabinetInfo &&
+  //   selectedCabinetInfo.status !== "IN_SESSION";
+  const isExtensionVisible = true;
   const isHoverBoxVisible =
     selectedCabinetInfo &&
     selectedCabinetInfo.lentsLength <= 1 &&
