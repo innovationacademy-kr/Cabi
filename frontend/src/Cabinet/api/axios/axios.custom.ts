@@ -334,6 +334,7 @@ export const axiosCoinCheckGet = async (): Promise<any> => {
     throw error;
   }
 };
+
 export const axiosCoinCheckPost = async (): Promise<any> => {
   try {
     const response = await instance.post(axiosCoinCheck);

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
@@ -18,7 +17,9 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
   onPurchase,
   selectItem,
 }) => {
-  const [selectedOption, setSelectedOption] = useState(String(selectItem.items.length - 1));
+  const [selectedOption, setSelectedOption] = useState(
+    String(selectItem.items.length - 1)
+  );
 
   const handleDropdownChange = (option: string) => {
     setSelectedOption(option);

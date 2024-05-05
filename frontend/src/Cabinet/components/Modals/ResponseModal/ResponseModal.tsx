@@ -5,7 +5,7 @@ import IconType from "@/Cabinet/types/enum/icon.type.enum";
 
 export const SuccessResponseModal: React.FC<{
   modalTitle?: string;
-  modalContents?: string;
+  modalContents?: string | null;
   closeModal: React.MouseEventHandler;
 }> = (props) => {
   const modalContents: IModalContents = {
@@ -26,9 +26,9 @@ export const SuccessResponseModal: React.FC<{
 
 export const FailResponseModal: React.FC<{
   modalTitle?: string;
-  modalContents?: string;
-  urlTitle?: string;
-  url?: string;
+  modalContents?: string | null;
+  urlTitle?: string | null;
+  url?: string | null;
   closeModal: React.MouseEventHandler;
 }> = (props) => {
   const modalContents: IModalContents = {

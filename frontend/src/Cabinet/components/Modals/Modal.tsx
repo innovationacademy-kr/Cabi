@@ -40,8 +40,8 @@ export interface IModalContents {
   isClubLentModal?: boolean;
   isLoading?: boolean;
   iconType?: string;
-  urlTitle?: string;
-  url?: string;
+  urlTitle?: string | null;
+  url?: string | null;
 }
 
 const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
