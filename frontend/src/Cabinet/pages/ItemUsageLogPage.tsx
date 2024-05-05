@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
@@ -20,7 +21,7 @@ function mapItemNameToType(itemName: string): StoreItemType {
       return StoreItemType.SWAP;
     case "알림 등록권":
       return StoreItemType.ALERT;
-    case "페널티 축소권":
+    case "패널티 감면권":
       return StoreItemType.PENALTY;
     default:
       return StoreItemType.EXTENSION;
@@ -35,32 +36,45 @@ const DateSection = ({ dateStr }: { dateStr: string }) => (
 
 const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const size = 5;
 
   useEffect(() => {
-    getItemUsageLog(0, 10);
-  }, []);
+    getItemUsageLog(page, size);
+  }, [page]);
 
   const getItemUsageLog = async (page: number, size: number) => {
+    setIsLoading(true);
     try {
       const data = await axiosGetItemUsageHistory(page, size);
-      console.log("data", data);
-      const formattedLogs = data.map(
+      const newLogs = data.result.map(
         (item: {
           date: string | number | Date;
-          ItemDetailsDto: { ItemName: string; itemDetails: any };
+          itemDto: { itemName: string; itemDetails: any };
         }) => ({
           date: new Date(item.date),
-          title: `${item.ItemDetailsDto.ItemName} - ${item.ItemDetailsDto.itemDetails}`,
-          logo: ItemIconMap[mapItemNameToType(item.ItemDetailsDto.ItemName)],
+          title:
+            item.itemDto.itemName === item.itemDto.itemDetails
+              ? item.itemDto.itemName
+              : `${item.itemDto.itemName} - ${item.itemDto.itemDetails}`,
+          logo: ItemIconMap[mapItemNameToType(item.itemDto.itemName)],
           dateStr: `${new Date(item.date).getFullYear()}년 ${
             new Date(item.date).getMonth() + 1
           }월`,
         })
       );
-      setItemUsageLogs(formattedLogs);
+      setItemUsageLogs((prevLogs) => [...prevLogs, ...newLogs]);
+      setHasMore(data.result.length === size);
     } catch (error) {
       console.error("Failed to fetch item usage history:", error);
     }
+    setIsLoading(false);
+  };
+
+  const handleMoreClick = () => {
+    setPage((prev) => prev + 1);
   };
 
   return (
@@ -77,6 +91,17 @@ const ItemUsageLogPage = () => {
             </LogItemStyled>
           );
         })}
+        {hasMore && (
+          <ButtonContainerStyled>
+            <MoreButtonStyled
+              onClick={handleMoreClick}
+              disabled={isLoading}
+              isLoading={isLoading}
+            >
+              {isLoading ? <LoadingAnimation /> : "더보기"}
+            </MoreButtonStyled>
+          </ButtonContainerStyled>
+        )}
       </ItemUsageLogWrapperStyled>
     </WrapperStyled>
   );
@@ -115,6 +140,27 @@ const DateTitleStyled = styled.h2`
   font-weight: bold;
   margin-top: 20px;
   margin-bottom: 20px;
+`;
+
+const ButtonContainerStyled = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const MoreButtonStyled = styled.button<{
+  isLoading: boolean;
+}>`
+  width: 200px;
+  height: 50px;
+  margin: 20px auto;
+  border: 1px solid var(--main-color);
+  border-radius: 30px;
+  background-color: var(--white);
+  color: var(--main-color);
+  position: relative;
 `;
 
 export default ItemUsageLogPage;

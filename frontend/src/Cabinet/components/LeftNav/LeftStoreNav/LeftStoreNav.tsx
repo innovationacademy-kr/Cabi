@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { myCoinsState } from "@/Cabinet/recoil/atoms";
 import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
 
 interface IStorePageItem {
@@ -22,12 +20,7 @@ const LeftStoreNav = ({
   onClickRedirectButton: (location: string) => void;
 }) => {
   const [currentPage, SetCurrentPage] = useState(storePages[0].name);
-  const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
-
-  useEffect(() => {
-    setMyCoin(420);
-  }, []);
-  // TODO : 지울 예정.
+  // TODO : const [userInfo] = useRecoilState(userState);
 
   return (
     <>
@@ -39,7 +32,7 @@ const LeftStoreNav = ({
               <CoinIcon />
             </CoinIconStyled>
             <CoinTextStyled>
-              <span>{myCoin}</span> 까비
+              {/* TODO : <span>{userInfo.coins}</span> 까비 */}
             </CoinTextStyled>
           </UserCoinsWrapperStyled>
         </CoinCountStyled>
@@ -124,6 +117,10 @@ const StoreSectionStyled = styled.div`
 const CoinIconStyled = styled.div`
   width: 20px;
   height: 20px;
+
+  & > svg > path {
+    stroke: var(--main-color);
+  }
 `;
 
 export default LeftStoreNav;

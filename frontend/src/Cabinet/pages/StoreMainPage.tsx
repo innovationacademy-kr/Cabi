@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { myCoinsState } from "@/Cabinet/recoil/atoms";
 import StoreItemCard from "@/Cabinet/components/Card/StoreItemCard/StoreItemCard";
 import { NotificationModal } from "@/Cabinet/components/Modals/NotificationModal/NotificationModal";
 import StoreBuyItemModal from "@/Cabinet/components/Modals/StoreModal/StoreBuyItemModal";
@@ -12,13 +10,14 @@ import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import { axiosBuyItem, axiosItems } from "@/Cabinet/api/axios/axios.custom";
 
 const StoreMainPage = () => {
-  const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
+  const [myCoin, setMyCoin] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<IItemDetail | null>(null);
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
   const [errorDetails, setErrorDetails] = useState("");
   const [items, setItem] = useState([] as IItemDetail[]);
+  // TODO : const [userInfo] = useRecoilState(userState);
 
   const getItems = async () => {
     try {
@@ -32,6 +31,9 @@ const StoreMainPage = () => {
 
   useEffect(() => {
     getItems();
+    setMyCoin(720);
+    // TODO : 실제 데이터 들어오면 지우기
+    // TODO : setMyCoin(userInfo.coins);
   }, []);
 
   const buttonClick = (item: IItemDetail) => {
@@ -79,18 +81,15 @@ const StoreMainPage = () => {
               label: "구매하기",
               onClick:
                 myCoin !== null &&
-                myCoin >
-                  item.itemTypes[item.itemTypes.length - 1].itemPrice * -1
+                myCoin > item.items[item.items.length - 1].itemPrice * -1
                   ? () => buttonClick(item)
                   : () => {},
               isClickable:
                 myCoin !== null &&
-                myCoin >
-                  item.itemTypes[item.itemTypes.length - 1].itemPrice * -1,
+                myCoin > item.items[item.items.length - 1].itemPrice * -1,
               color:
                 myCoin !== null &&
-                myCoin >
-                  item.itemTypes[item.itemTypes.length - 1].itemPrice * -1
+                myCoin > item.items[item.items.length - 1].itemPrice * -1
                   ? "var(--main-color)"
                   : "var(--gray-color)",
             }}
@@ -143,6 +142,8 @@ const StoreCoinGridWrapper = styled.div`
   grid-template-areas: "coinPick extension move" // h: 163px h: 366px
     "coinPick alarm penalty"; // h: 183px;
   // "theme notification"; // h: 230px h: 230px;
+
+  padding-bottom: 30px;
 
   @media (max-width: 1400px) {
     grid-template-columns: 340px 340px;

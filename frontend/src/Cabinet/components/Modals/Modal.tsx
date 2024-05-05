@@ -24,6 +24,8 @@ import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
  * @property {boolean} isClubLentModal : 동아리 (CLUB) 대여 모달인지 여부
  * @property {boolean} isLoading : 로딩중 요청 버튼 비활성화 감지를 위한 변수
  * @property {boolean} isCheckIcon : checkIcon인지 errorIcon인지 감지를 위한 변수
+ * @property {string} urlTitle : 모달에서 링크로 이동할 url의 제목
+ * @property {string} url : 모달에서 링크로 이동할 url 값
  */
 export interface IModalContents {
   type: string;
@@ -38,6 +40,8 @@ export interface IModalContents {
   isClubLentModal?: boolean;
   isLoading?: boolean;
   iconType?: string;
+  urlTitle?: string | null;
+  url?: string | null;
 }
 
 const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
@@ -54,6 +58,8 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
     isClubLentModal,
     isLoading,
     iconType,
+    urlTitle,
+    url,
   } = props.modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
 
@@ -116,6 +122,9 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
               theme="smallGrayLine"
             />
           </ButtonWrapperStyled>
+        )}
+        {url && urlTitle && (
+          <UrlSectionStyled href={url}>{urlTitle}</UrlSectionStyled>
         )}
       </ModalStyled>
     </>
@@ -220,6 +229,14 @@ const DropdownStyled = styled.select`
 
 const Option = styled.option`
   background-color: red;
+`;
+
+const UrlSectionStyled = styled.a`
+  display: inline-block;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  color: var(--main-color);
+  margin-top: 20px;
 `;
 
 export default Modal;

@@ -5,7 +5,7 @@ import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import { axiosMyItems } from "@/Cabinet/api/axios/axios.custom";
 
-interface IInventoryInfo {
+export interface IInventoryInfo {
   extensionItems: IStoreItem[];
   swapItems: IStoreItem[];
   alarmItems: IStoreItem[];
@@ -34,7 +34,11 @@ const Inventory = () => {
       <ItemsWrapperStyled>
         {myItems &&
           Object.entries(myItems).map(([key, value]) => (
-            <InventoryItem itemType={key as StoreItemType} items={value} />
+            <InventoryItem
+              key={key}
+              itemType={key as StoreItemType}
+              items={value}
+            />
           ))}
       </ItemsWrapperStyled>
     </WrapperStyled>

@@ -46,7 +46,6 @@ const InventoryItem = ({
     setIsToggled((prev) => !prev);
   };
   const ItemIcon = ItemIconMap[convertToItemType(itemType)];
-
   return (
     <>
       <ItemWrapperStyled>
@@ -59,15 +58,17 @@ const InventoryItem = ({
         <ItemCardSectionStyled isToggled={isToggled}>
           {items.length ? (
             <>
-              {items.map((item) => {
+              {items.map((item, idx) => {
+                const hasTypes =
+                  item.itemDetails !== convertToItemTypeLabel(itemType);
                 return (
-                  <ItemCardStyled>
+                  <ItemCardStyled key={idx} hasTypes={hasTypes}>
                     <ItemIconStyled>
                       <ItemIcon />
                     </ItemIconStyled>
-                    <CardTextStyled>
+                    <CardTextStyled hasTypes={hasTypes}>
                       <span id="title">{convertToItemTypeLabel(itemType)}</span>
-                      <span id="type">{item.itemDetails}</span>
+                      {hasTypes && <span id="type">{item.itemDetails}</span>}
                     </CardTextStyled>
                   </ItemCardStyled>
                 );
@@ -87,7 +88,7 @@ const InventoryItem = ({
   );
 };
 
-const ItemCardStyled = styled.div`
+const ItemCardStyled = styled.div<{ hasTypes: boolean }>`
   width: 106px;
   height: 106px;
   /* background-color: green; */
@@ -96,7 +97,7 @@ const ItemCardStyled = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 16px 0;
-  justify-content: space-between;
+  justify-content: ${(props) => (props.hasTypes ? "space-between" : "")};
   border: 1px solid var(--session);
   margin: 10px;
 `;
@@ -105,13 +106,16 @@ const ItemIconStyled = styled.div`
   width: 32px;
   height: 32px;
 
+  & > svg {
+    height: 32px;
+  }
+
   & > svg > path {
     stroke: var(--main-color);
   }
 `;
 
-const CardTextStyled = styled.div`
-  background-color: var(--sub-color);
+const CardTextStyled = styled.div<{ hasTypes: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,7 +123,7 @@ const CardTextStyled = styled.div`
   & > #title {
     font-size: 14px;
     font-weight: bold;
-    margin-bottom: 0.5rem;
+    margin: ${(props) => (props.hasTypes ? "0.5rem 0 6px 0" : "16px 0 0 0")};
   }
 
   & > #type {
@@ -177,6 +181,10 @@ const UnavailableIconStyled = styled.div`
   & > svg {
     width: 24px;
     height: 24px;
+  }
+
+  & > svg > path {
+    fill: var(--gray-color);
   }
 
   @media (max-width: 412px) {

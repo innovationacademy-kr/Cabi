@@ -334,6 +334,7 @@ export const axiosCoinCheckGet = async (): Promise<any> => {
     throw error;
   }
 };
+
 export const axiosCoinCheckPost = async (): Promise<any> => {
   try {
     const response = await instance.post(axiosCoinCheck);
@@ -399,6 +400,15 @@ const axiosBuyItemURL = "/v5/items/";
 export const axiosBuyItem = async (sku: String): Promise<any> => {
   try {
     const response = await instance.post(axiosBuyItemURL + sku + "/purchase");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosUseItem = async (sku: String): Promise<any> => {
+  try {
+    const response = await instance.post(axiosBuyItemURL + sku + "/use");
     return response;
   } catch (error) {
     throw error;

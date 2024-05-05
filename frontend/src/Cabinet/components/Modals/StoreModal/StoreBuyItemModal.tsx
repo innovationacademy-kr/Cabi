@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
@@ -18,7 +17,9 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
   onPurchase,
   selectItem,
 }) => {
-  const [selectedOption, setSelectedOption] = useState("0");
+  const [selectedOption, setSelectedOption] = useState(
+    String(selectItem.items.length - 1)
+  );
 
   const handleDropdownChange = (option: string) => {
     setSelectedOption(option);
@@ -34,11 +35,11 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
     cancelBtnText: "취소",
     closeModal: onClose,
     onClickProceed: async () => {
-      onPurchase(selectItem.itemTypes[Number(selectedOption)]);
+      onPurchase(selectItem.items[Number(selectedOption)]);
     },
     renderAdditionalComponent: () => (
       <>
-        {selectItem.itemTypes.length > 1 && (
+        {selectItem.items.length > 1 && (
           <ModalContainerStyled>
             <ModalDropdownNameStyled>
               {selectItem.itemName} 타입
@@ -46,19 +47,19 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
             <Dropdown
               options={[
                 {
-                  name: selectItem.itemTypes[2].itemDetails,
-                  value: "0",
+                  name: selectItem.items[2].itemDetails,
+                  value: "2",
                 },
                 {
-                  name: selectItem.itemTypes[1].itemDetails,
+                  name: selectItem.items[1].itemDetails,
                   value: "1",
                 },
                 {
-                  name: selectItem.itemTypes[0].itemDetails,
-                  value: "2",
+                  name: selectItem.items[0].itemDetails,
+                  value: "0",
                 },
               ]}
-              defaultValue={selectItem.itemTypes[2].itemDetails}
+              defaultValue={selectItem.items[2].itemDetails}
               onChangeValue={handleDropdownChange}
             />{" "}
           </ModalContainerStyled>
@@ -68,10 +69,10 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
           <p>
             <span>
               {selectItem.itemName}
-              {selectItem.itemTypes.length > 1 && (
+              {selectItem.items.length > 1 && (
                 <span>
                   {" "}
-                  - {selectItem.itemTypes[Number(selectedOption)].itemDetails}
+                  - {selectItem.items[Number(selectedOption)].itemDetails}
                 </span>
               )}
             </span>
@@ -81,7 +82,10 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
             구매시
             <span>
               {" "}
-              {selectItem.itemTypes[Number(selectedOption)].itemPrice * -1} 까비
+              {selectItem.items[Number(selectedOption)].itemPrice
+                ? selectItem.items[Number(selectedOption)].itemPrice * -1
+                : selectItem.items[0].itemPrice * -1}{" "}
+              까비
             </span>
             가 소모됩니다.
           </p>

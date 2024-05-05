@@ -6,9 +6,6 @@ import useMenu from "@/Cabinet/hooks/useMenu";
 const StoreCoinPick = () => {
   // const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
   const { toggleStore } = useMenu();
-  const onClickCoinNav = () => {
-    console.log("onClickCoinNav");
-  };
 
   return (
     <Card
@@ -25,7 +22,7 @@ const StoreCoinPick = () => {
           <p> 매일 동전이 쏟아집니다💰</p>
         </CoinSummary>
         <CoinCheckButton onClick={() => toggleStore()}>
-          동전 확인하기
+          동전 주우러가기
         </CoinCheckButton>
       </>
     </Card>
@@ -66,8 +63,10 @@ const CoinSummary = styled.div`
 `;
 
 const CoinCheckButton = styled.button`
+  font-weight 500;
   width: 90%;
-  margin: 10px;
+  margin: 14px;
+  font-size: 1rem;
 `;
 
 const WrapperStyled = styled.div`

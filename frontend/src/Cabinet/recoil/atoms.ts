@@ -31,6 +31,7 @@ export const userState = atom<UserDto>({
     unbannedAt: null,
     alarmTypes: null,
     isDeviceTokenExpired: null,
+    // TODO : coins: null,
   },
 });
 
@@ -205,10 +206,4 @@ export const targetClubUserInfoState = atom<ClubUserResponseDto>({
     userId: 0,
     userName: "",
   },
-});
-
-/* store */
-export const myCoinsState = atom<number | null>({
-  key: "myCoins",
-  default: null,
 });
