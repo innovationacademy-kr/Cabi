@@ -4,7 +4,6 @@ import CoinAnimation from "@/Cabinet/components/Store/CoinAnimation";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
 const StoreCoinPick = () => {
-  // const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
   const { toggleStore } = useMenu();
 
   return (
@@ -29,29 +28,6 @@ const StoreCoinPick = () => {
   );
 };
 
-const HeaderStyled = styled.div`
-  width: 80%;
-  max-width: 1000px;
-  border-bottom: 2px solid #d9d9d9;
-  margin-bottom: 25px;
-`;
-
-const StoreTitleStyled = styled.div`
-  margin-bottom: 20px;
-  line-height: 1.1;
-  // font-size: 3rem;
-  font-size: 2.5rem;
-  font-weight: 600;
-`;
-
-const CoinPickStyled = styled.div`
-  width: 320px;
-  height: 350px;
-  background-color: var(--lightgray-color);
-  border-radius: 10px;
-  // background-color: var(--white);
-`;
-
 const CoinSummary = styled.div`
   background-color: var(--white);
   font-size: 1rem;
@@ -67,16 +43,6 @@ const CoinCheckButton = styled.button`
   width: 90%;
   margin: 14px;
   font-size: 1rem;
-`;
-
-const WrapperStyled = styled.div`
-  padding-top: 80px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  height: 100%;
 `;
 
 export default StoreCoinPick;

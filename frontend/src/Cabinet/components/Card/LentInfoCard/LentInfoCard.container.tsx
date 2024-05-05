@@ -76,6 +76,10 @@ const LentInfoCardContainer = ({
   unbannedAt: Date | null | undefined;
 }) => {
   const myCabinetInfo = useRecoilValue(myCabinetInfoState);
+  const userInfo = useRecoilValue<UserDto>(userState);
+  const [isPenaltyUser, setIsPenaltyUser] = useState(true);
+  const remainPenaltyPeriod = getRemainingTime(userInfo.unbannedAt);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   let dateUsed, dateLeft, expireDate;
   if (name && myCabinetInfo.lents) {
@@ -105,7 +109,6 @@ const LentInfoCardContainer = ({
     status: myCabinetInfo.status || "",
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const onCLickPenaltyButton = () => {
     setIsModalOpen(true);
     console.log("패널티 축소 버튼 클릭");
@@ -114,12 +117,8 @@ const LentInfoCardContainer = ({
     setIsModalOpen(false);
   };
 
-  const userInfo = useRecoilValue<UserDto>(userState);
-  const [isPenaltyUser, setIsPenaltyUser] = useState(true);
-  const remainPenaltyPeriod = getRemainingTime(userInfo.unbannedAt);
   useEffect(() => {
     if (remainPenaltyPeriod == 0) {
-      console.log("remainPenaltyPeriod", remainPenaltyPeriod);
       setIsPenaltyUser(false);
     }
   }, [userInfo.unbannedAt]);

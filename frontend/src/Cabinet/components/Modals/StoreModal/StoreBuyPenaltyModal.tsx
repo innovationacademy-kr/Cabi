@@ -33,8 +33,6 @@ const StoreBuyPenalty: React.FC<StorModalProps> = ({
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const userInfo = useRecoilValue<UserDto>(userState);
@@ -45,7 +43,7 @@ const StoreBuyPenalty: React.FC<StorModalProps> = ({
     { sku: "penalty_31", period: "31일" },
   ];
 
-  const tryPenaltyItem = async () => {
+  const tryGetPenaltyItem = async () => {
     try {
       const { data } = await axiosMyItems();
       // 내가 사용하려는 아이템이 있는지 확인
@@ -88,7 +86,7 @@ const StoreBuyPenalty: React.FC<StorModalProps> = ({
       penaltyPeriod[Number(selectedOption)].period
     );
     try {
-      const hasPenaltyItem = await tryPenaltyItem(); // 패널티 아이템 존재 여부를 받음
+      const hasPenaltyItem = await tryGetPenaltyItem(); // 패널티 아이템 존재 여부를 받음
       if (hasPenaltyItem === false) {
         setModalTitle("패널티 축소권이 없습니다");
         setModalContent("패널티 축소권은 까비상점에서 구매하실 수 있습니다.");

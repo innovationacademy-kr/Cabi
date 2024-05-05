@@ -5,32 +5,31 @@ import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import { axiosMyItems } from "@/Cabinet/api/axios/axios.custom";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
 
 const OverduePenaltyModal: React.FC<{
   status: CabinetStatus | additionalModalType;
   closeModal: React.MouseEventHandler;
   unbannedAt: Date | null;
+  hasPenaltyItem: boolean;
 }> = (props) => {
-  const [hasPenaltyTicket, setHasPenaltyTicket] = useState<boolean>(false);
   const unbannedAtDate = props.unbannedAt ? new Date(props.unbannedAt) : null;
+  const hasPenaltyItem = props.hasPenaltyItem;
 
-  const penaltyDateDetailStore = `패널티 기간은 <strong> ${formatDate(
-    unbannedAtDate,
-    "/"
-  )} 23:59</strong> 까지 입니다.
-    해당 기간까지 대여를 하실 수 없습니다.
-    <strong>패널티 축소권</strong>은
-    <strong>까비 상점</strong>
-    에서 구매하실 수 있습니다.`;
-  const penaltyDateDetailProfile = `패널티 기간은 <strong> ${formatDate(
-    unbannedAtDate,
-    "/"
-  )} 23:59</strong> 까지 입니다.
-    해당 기간까지 대여를 하실 수 없습니다.
-    <strong>패널티 축소권</strong>은
-    <strong>프로필 페이지 - 대여정보</strong>
-    에서 사용하실 수 있습니다.`;
+  const penaltyDateDetailStore = hasPenaltyItem
+    ? `패널티 기간은 <strong>${formatDate(
+        unbannedAtDate,
+        "/"
+      )} 23:59</strong> 까지 입니다.해당 기간까지 대여를 하실 수 없습니다.
+      <strong>패널티 축소권</strong>은 <strong>프로필 페이지 - 대여정보</strong> 에서
+      사용하실 수 있습니다`
+    : `패널티 기간은 <strong>${formatDate(
+        unbannedAtDate,
+        "/"
+      )} 23:59</strong> 까지 입니다.
+       해당 기간까지 대여를 하실 수 없습니다.
+       <strong>패널티 축소권</strong>은 <strong>까비 상점</strong> 에서 구매하실 수 있습니다`;
   const localStorageKey = "hideOverdueModalForOneDay";
 
   const showModal = (): React.ReactNode => {
@@ -68,6 +67,8 @@ const OverduePenaltyModal: React.FC<{
     onClickProceed: hideForOneDay,
     closeModal: props.closeModal,
     iconType: IconType.ERRORICON,
+    urlTitle: hasPenaltyItem ? "프로필로 이동" : "까비상점으로 이동 ",
+    url: hasPenaltyItem ? "/profile" : "/store",
   };
 
   return (
