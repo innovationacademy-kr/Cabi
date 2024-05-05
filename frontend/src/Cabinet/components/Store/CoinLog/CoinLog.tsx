@@ -25,6 +25,8 @@ interface ICoinLog {
   date: Date;
   history: string;
   amount: number;
+  itemDetails?: string;
+  // TODO : itemDetails 들어오면 ? 지우기
 }
 
 const CoinLog = () => {
@@ -93,13 +95,14 @@ const CoinLog = () => {
       <LogItemWrapperStyled>
         {coinLogs?.map((log, idx) => {
           const isEarned = log.amount > 0;
+          const hasTypes = log.itemDetails !== log.history;
           return (
             <LogItemStyled isEarned={isEarned} key={idx}>
               <span id="date">
                 {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
               </span>
               <span id="history" title={log.history}>
-                {log.history}
+                {log.history} {hasTypes && "- " + log.itemDetails}
               </span>
               <span id="amount">
                 {isEarned ? "+" : ""}

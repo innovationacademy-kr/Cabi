@@ -116,7 +116,6 @@ const ItemIconStyled = styled.div`
 `;
 
 const CardTextStyled = styled.div<{ hasTypes: boolean }>`
-  background-color: var(--sub-color);
   display: flex;
   flex-direction: column;
   align-items: center;
