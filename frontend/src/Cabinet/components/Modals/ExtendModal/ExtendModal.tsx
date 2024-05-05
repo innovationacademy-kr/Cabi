@@ -57,8 +57,7 @@ const ExtendModal: React.FC<{
   const extendDetail = `사물함 연장권 사용 시,
   대여 기간이 <strong>${formattedExtendedDate} 23:59</strong>으로
   연장됩니다.
-  연장권 사용은 취소할 수 없습니다.
-  연장권을 사용하시겠습니까?`;
+  연장권 사용은 취소할 수 없습니다.`;
   const extendInfoDetail = `사물함을 대여하시면 연장권 사용이 가능합니다.
 연장권은 <strong>${extensionExpiredDate} 23:59</strong> 이후 만료됩니다.`;
   const getModalTitle = (cabinetId: number | null) => {
@@ -74,45 +73,44 @@ const ExtendModal: React.FC<{
       ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].confirmMessage
       : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].confirmMessage;
   };
-  const tryExtendRequest = async (e: React.MouseEvent) => {
-    if (currentCabinetId === 0 || myInfo.cabinetId === null) {
-      setHasErrorOnResponse(true);
-      setModalTitle("현재 대여중인 사물함이 없습니다.");
-      setShowResponseModal(true);
-      return;
-    }
-    try {
-      // await axiosUseExtension();
-      // await axiosUseItem(selected.itemSku);
-      setMyInfo({
-        ...myInfo,
-        cabinetId: currentCabinetId,
-        lentExtensionResponseDto: null,
-      });
-      setIsCurrentSectionRender(true);
-      setModalTitle("연장되었습니다");
-      try {
-        const { data } = await axiosCabinetById(currentCabinetId);
-        setTargetCabinetInfo(data);
-      } catch (error) {
-        throw error;
-      }
-      try {
-        const { data: myLentInfo } = await axiosMyLentInfo();
-        setMyLentInfo(myLentInfo);
-      } catch (error) {
-        throw error;
-      }
-    } catch (error: any) {
-      setHasErrorOnResponse(true);
-      error.response
-        ? setModalTitle(error.response.data.message)
-        : setModalTitle(error.data.message);
-    } finally {
-      setShowResponseModal(true);
-    }
-  };
-
+  // const tryExtendRequest = async (e: React.MouseEvent) => {
+  //   if (currentCabinetId === 0 || myInfo.cabinetId === null) {
+  //     setHasErrorOnResponse(true);
+  //     setModalTitle("현재 대여중인 사물함이 없습니다.");
+  //     setShowResponseModal(true);
+  //     return;
+  //   }
+  //   try {
+  //     // await axiosUseExtension();
+  //     // await axiosUseItem(selected.itemSku);
+  //     setMyInfo({
+  //       ...myInfo,
+  //       cabinetId: currentCabinetId,
+  //       lentExtensionResponseDto: null,
+  //     });
+  //     setIsCurrentSectionRender(true);
+  //     setModalTitle("연장되었습니다");
+  //     try {
+  //       const { data } = await axiosCabinetById(currentCabinetId);
+  //       setTargetCabinetInfo(data);
+  //     } catch (error) {
+  //       throw error;
+  //     }
+  //     try {
+  //       const { data: myLentInfo } = await axiosMyLentInfo();
+  //       setMyLentInfo(myLentInfo);
+  //     } catch (error) {
+  //       throw error;
+  //     }
+  //   } catch (error: any) {
+  //     setHasErrorOnResponse(true);
+  //     error.response
+  //       ? setModalTitle(error.response.data.message)
+  //       : setModalTitle(error.data.message);
+  //   } finally {
+  //     setShowResponseModal(true);
+  //   }
+  // };
   const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
 
   const getMyItems = async () => {

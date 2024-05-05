@@ -7,6 +7,21 @@ import { ReactComponent as CoinImg } from "@/Cabinet/assets/images/coinIcon.svg"
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
+const convertToItemType = (itemType: string) => {
+  switch (itemType) {
+    case "EXTENSION":
+      return StoreItemType.EXTENSION;
+    case "SWAP":
+      return StoreItemType.SWAP;
+    case "ALERT":
+      return StoreItemType.ALERT;
+    case "PENALTY":
+      return StoreItemType.PENALTY;
+    default:
+      return StoreItemType.EXTENSION;
+  }
+};
+
 const StoreItemCard = ({
   item,
   button,
@@ -14,6 +29,7 @@ const StoreItemCard = ({
   item: IItemDetail;
   button: IButtonProps;
 }) => {
+  const ItemIcon = ItemIconMap[convertToItemType(item.itemType)];
   return (
     <WrapperStyled>
       <Card
@@ -27,16 +43,11 @@ const StoreItemCard = ({
           <BlockStyled>
             <IconBlockStyled>
               <div>
-                {item.itemType === "EXTENSION" ? (
-                  <ItemIconMap.EXTENSION />
-                ) : null}
-                {item.itemType === "SWAP" ? <ItemIconMap.SWAP /> : null}
-                {item.itemType === "ALARM" ? <ItemIconMap.ALERT /> : null}
-                {item.itemType === "PENALTY" ? <ItemIconMap.PENALTY /> : null}
+                <ItemIcon />
               </div>
             </IconBlockStyled>
             <PriseBlockStyled>
-              <CoinImg width={14} height={14} />
+              <CoinImg />
               <span>{item.items[item.items.length - 1].itemPrice * -1}</span>
             </PriseBlockStyled>
           </BlockStyled>
@@ -93,12 +104,17 @@ const PriseBlockStyled = styled.div`
   justify-content: center;
   align-items: center;
   > span {
-    margin-left: 5px;
+    margin-left: 3px;
     font-weight: 600;
   }
 
+  & > svg {
+    width: 14px;
+    height: 14px;
+  }
   & > svg > path {
     stroke: var(--main-color);
+    stroke-width: 2px;
   }
 `;
 
@@ -107,13 +123,15 @@ const ItemDetailStyled = styled.div`
   height: 100%;
   background-color: var(--white);
   border-radius: 10px;
-  padding: 8px 5px 5px 8px;
-  /* margin: 5px 5px 5px 5px; */
+  padding: 8px 8px 8px 10px;
   display: flex;
   flex-direction: column;
   line-height: 17px;
   /* word-break: break-word; */
   word-wrap: normal;
+  > div {
+    padding: 0;
+  }
 `;
 
 export default StoreItemCard;
