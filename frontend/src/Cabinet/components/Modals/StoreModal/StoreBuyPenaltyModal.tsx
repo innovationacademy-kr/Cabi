@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
-import { IItemType, IStoreItem } from "@/Cabinet/pages/StoreMainPage";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
+import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
 import {
