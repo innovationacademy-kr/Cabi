@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
+// import { IItemType, IStoreItem } from "@/Cabinet/pages/StoreMainPage";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
 import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
-import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
+import { axiosMyItems, axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
 import {
   formatDate,
   getExtendedDateString,
@@ -21,19 +22,16 @@ import {
 
 interface StorModalProps {
   onClose: () => void;
-  //   onPurchase: (item: string) => void;
-  //   selectItem: IStoreItem;
+  remainPenaltyPeriod: number;
 }
 
 const StoreBuyPenalty: React.FC<StorModalProps> = ({
   onClose,
-  //   onPurchase,
-  //   selectItem,
+  remainPenaltyPeriod,
 }) => {
   const [selectedOption, setSelectedOption] = useState("0");
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
-  const [errorDetails, setErrorDetails] = useState("");
   const [modalTitle, setModalTitle] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
@@ -42,50 +40,68 @@ const StoreBuyPenalty: React.FC<StorModalProps> = ({
   const userInfo = useRecoilValue<UserDto>(userState);
 
   const penaltyPeriod = [
-    { sku: "penalty_3", period: "3일", day: 3 },
-    { sku: "penalty_15", period: "15일", day: 15 },
-    { sku: "penalty_31", period: "31일", day: 31 },
+    { sku: "penalty_3", period: "3일" },
+    { sku: "penalty_15", period: "7일" },
+    { sku: "penalty_31", period: "31일" },
   ];
 
-  console.log("userInfo : ", userInfo.unbannedAt);
-  console.log("calExpiredTime", getRemainingTime(userInfo.unbannedAt));
+  const tryPenaltyItem = async () => {
+    try {
+      const { data } = await axiosMyItems();
+      // 내가 사용하려는 아이템이 있는지 확인
+      const foundItem = data.penaltyItems.find(
+        (item: IStoreItem) =>
+          item.itemDetails === penaltyPeriod[Number(selectedOption)].period
+      );
+      if (foundItem) return true;
+      else return false;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-  const tryPenaltyItemUse = async (item: string) => {
-    const remainPenaltyPeriod = getRemainingTime(userInfo.unbannedAt);
-
-    if (userInfo.unbannedAt == undefined) {
-      console.log("패널티 사용자 아님");
-      setHasErrorOnResponse(true);
-      setModalTitle("패널티 축소권이 없습니다");
-      setModalContent("패널티 축소권은 까비상점에서 구매하실 수 있습니다.");
-    } else {
-      try {
-        // await axiosUseItem(item);
-        setIsLoading(true);
-        setModalTitle("패널티 축소권 사용 완료");
-        console.log("item : ", item);
-        // 패널티 기간이 남은 경우
-        // 패널티권을 이용해 패널티기간이 사라진 경우
-        if (userInfo && remainPenaltyPeriod < 0) {
-          setModalContent("남은 패널티 기간이 없습니다");
-        } else {
-          setModalContent(
-            `해제 날짜 : <strong> ${getReduceDateString(
-              userInfo.unbannedAt,
-              penaltyPeriod[Number(selectedOption)].day
-            )} 23:59 </strong> `
-          );
-          setShowSuccessModal(true);
-        }
-        // 구매 처리 후 모달 닫기
-        setIsModalOpen(false);
-      } catch (e) {
-        // axios 실패시 예외처리
-        console.log(e);
-      } finally {
-        setIsLoading(false);
-        setShowResponseModal(true);
+  const tryPenaltyItemUse = async (
+    item: string,
+    usePenaltyItemDays: number
+  ) => {
+    try {
+      // await axiosUseItem(item);
+      setModalTitle("패널티 축소권 사용 완료");
+      if (remainPenaltyPeriod <= usePenaltyItemDays) {
+        setModalContent("남은 패널티 기간이 모두 소멸되었습니다");
+      } else {
+        setModalContent(
+          `해제 날짜 : <strong> ${getReduceDateString(
+            userInfo.unbannedAt,
+            usePenaltyItemDays
+          )} 23:59 </strong> `
+        );
       }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const HandlePenaltyItemUse = async (item: string) => {
+    setIsLoading(true);
+    const usePenaltyItemDays = parseInt(
+      penaltyPeriod[Number(selectedOption)].period
+    );
+    try {
+      const hasPenaltyItem = await tryPenaltyItem(); // 패널티 아이템 존재 여부를 받음
+      if (hasPenaltyItem === false) {
+        setModalTitle("패널티 축소권이 없습니다");
+        setModalContent("패널티 축소권은 까비상점에서 구매하실 수 있습니다.");
+      } else {
+        await tryPenaltyItemUse(item, usePenaltyItemDays);
+      }
+    } catch (error: any) {
+      setModalTitle(error.response.data.message);
+      setHasErrorOnResponse(true);
+    } finally {
+      setIsLoading(false);
+      setShowResponseModal(true);
+      console.log("hasErrorOnResponse : ", hasErrorOnResponse);
     }
   };
   const handleDropdownChange = (option: string) => {
@@ -103,7 +119,7 @@ const StoreBuyPenalty: React.FC<StorModalProps> = ({
     closeModal: onClose,
     isLoading: isLoading,
     onClickProceed: async () => {
-      tryPenaltyItemUse(penaltyPeriod[Number(selectedOption)].sku);
+      HandlePenaltyItemUse(penaltyPeriod[Number(selectedOption)].sku);
     },
     renderAdditionalComponent: () => (
       <>

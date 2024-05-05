@@ -22,7 +22,7 @@ const StoreCoinPick = () => {
           <p> 매일 동전이 쏟아집니다💰</p>
         </CoinSummary>
         <CoinCheckButton onClick={() => toggleStore()}>
-          동전 확인하기
+          동전 주우러가기
         </CoinCheckButton>
       </>
     </Card>
