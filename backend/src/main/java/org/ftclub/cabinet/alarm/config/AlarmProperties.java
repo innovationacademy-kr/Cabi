@@ -95,6 +95,19 @@ public class AlarmProperties {
 	@Value("${cabinet.alarm.slack.announcement.template}")
 	private String announcementSlackTemplate;
 
+	/*==================== section alarm ========================*/
+	@Value("${cabinet.alarm.mail.sectionAlarm.subject}")
+	private String sectionAlarmSubject;
+
+	@Value("${cabinet.alarm.mail.sectionAlarm.template}")
+	private String sectionAlarmMailTemplateUrl;
+
+	@Value("${cabinet.alarm.fcm.sectionAlarm.template}")
+	private String sectionAlarmFcmTemplate;
+
+	@Value("${cabinet.alarm.slack.sectionAlarm.template}")
+	private String sectionAlarmSlackTemplate;
+
 	/*======================== term =============================*/
 	@Value("${cabinet.alarm.overdue-term.week-before}")
 	private Long overdueTermWeekBefore;

@@ -765,12 +765,12 @@ DROP TABLE IF EXISTS `section_alarm`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `section_alarm`
 (
-    `id`               bigint(20)  NOT NULL AUTO_INCREMENT,
-    `cabinet_place_id` bigint(20)  NOT NULL,
-    `user_id`          bigint(20)  NOT NULL,
-    `alarm_type`       varchar(64) NOT NULL,
-    `registered_at`    datetime(6) NOT NULL,
-    `alarmed_at`       datetime(6) DEFAULT NULL,
+    `id`                 bigint(20)  NOT NULL AUTO_INCREMENT,
+    `cabinet_place_id`   bigint(20)  NOT NULL,
+    `user_id`            bigint(20)  NOT NULL,
+    `section_alarm_type` varchar(64) NOT NULL,
+    `registered_at`      datetime(6) NOT NULL,
+    `alarmed_at`         datetime(6) DEFAULT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `section_alarm_cabinet_place_id`
         FOREIGN KEY (`cabinet_place_id`) REFERENCES `cabinet_place` (`id`),

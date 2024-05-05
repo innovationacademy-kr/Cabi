@@ -21,9 +21,9 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring",
-	nullValueMappingStrategy = RETURN_DEFAULT,
-	nullValueMapMappingStrategy = RETURN_DEFAULT,
-	nullValueIterableMappingStrategy = RETURN_DEFAULT)
+		nullValueMappingStrategy = RETURN_DEFAULT,
+		nullValueMapMappingStrategy = RETURN_DEFAULT,
+		nullValueIterableMappingStrategy = RETURN_DEFAULT)
 @Component
 public interface ItemMapper {
 
@@ -32,6 +32,7 @@ public interface ItemMapper {
 	@Mapping(target = "date", source = "itemHistory.purchaseAt")
 	@Mapping(target = "amount", source = "item.price")
 	@Mapping(target = "history", source = "item.type.name")
+	@Mapping(target = "itemDetails", source = "item.sku.details")
 	CoinHistoryDto toCoinHistoryDto(ItemHistory itemHistory, Item item);
 
 	@Mapping(target = "itemSku", source = "item.sku")
@@ -65,5 +66,5 @@ public interface ItemMapper {
 			Long totalLength);
 
 	CoinMonthlyCollectionDto toCoinMonthlyCollectionDto(Long monthlyCoinCount,
-		boolean todayCoinCollection);
+			boolean todayCoinCollection);
 }

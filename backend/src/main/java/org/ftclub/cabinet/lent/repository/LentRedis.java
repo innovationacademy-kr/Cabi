@@ -28,14 +28,18 @@ public class LentRedis {
 	private static final String SHADOW_KEY_SUFFIX = ":shadow";
 	private static final String CABINET_KEY_SUFFIX = ":cabinetSession";
 	private static final String VALUE_KEY_SUFFIX = ":userSession";
+
 	private static final String PREVIOUS_USER_SUFFIX = ":previousUser";
+	private static final String PREVIOUS_ENDED_AT_SUFFIX = ":previousEndedAt";
 
 	private static final String SWAP_KEY_SUFFIX = ":swap";
 
 	private final HashOperations<String, String, String> shareCabinetTemplate;
 	private final ValueOperations<String, String> userCabinetTemplate;
 	private final RedisTemplate<String, String> shadowKeyTemplate; //조금 더 많은 기능을 지원
-	private final ValueOperations<String, String> previousUserTemplate; // 조회랑 생성 한정 기능
+
+	private final ValueOperations<String, String> previousTemplate; // 조회랑 생성 한정 기능
+
 
 	private final RedisTemplate<String, String> swapTemplate;
 	private final CabinetProperties cabinetProperties;
@@ -44,13 +48,13 @@ public class LentRedis {
 	public LentRedis(RedisTemplate<String, Object> valueHashRedisTemplate,
 			RedisTemplate<String, String> valueRedisTemplate,
 			RedisTemplate<String, String> shadowKeyTemplate,
-			RedisTemplate<String, String> previousUserTemplate,
+			RedisTemplate<String, String> previousTemplate,
 			RedisTemplate<String, String> swapTemplate,
 			CabinetProperties cabinetProperties) {
 		this.userCabinetTemplate = valueRedisTemplate.opsForValue();
 		this.shareCabinetTemplate = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyTemplate = shadowKeyTemplate;
-		this.previousUserTemplate = previousUserTemplate.opsForValue();
+		this.previousTemplate = previousTemplate.opsForValue();
 		this.swapTemplate = swapTemplate;
 		this.cabinetProperties = cabinetProperties;
 	}
@@ -238,7 +242,7 @@ public class LentRedis {
 	 * @param userName  유저 이름
 	 */
 	public void setPreviousUserName(String cabinetId, String userName) {
-		previousUserTemplate.set(cabinetId + PREVIOUS_USER_SUFFIX, userName);
+		previousTemplate.set(cabinetId + PREVIOUS_USER_SUFFIX, userName);
 	}
 
 	/**
@@ -248,7 +252,27 @@ public class LentRedis {
 	 * @return 유저 이름
 	 */
 	public String getPreviousUserName(String cabinetId) {
-		return previousUserTemplate.get(cabinetId + PREVIOUS_USER_SUFFIX);
+		return previousTemplate.get(cabinetId + PREVIOUS_USER_SUFFIX);
+	}
+
+	/**
+	 * 특정 사물함에 대한 이전 대여 종료 시각을 설정합니다.
+	 *
+	 * @param cabinetId 사물함 id
+	 * @param endedAt   종료 시각
+	 */
+	public void setPreviousEndedAt(String cabinetId, String endedAt) {
+		previousTemplate.set(cabinetId + PREVIOUS_ENDED_AT_SUFFIX, endedAt);
+	}
+
+	/**
+	 * 특정 사물함에 대한 이전 대여 종료 시각을 가져옵니다.
+	 *
+	 * @param cabinetId 사물함 id
+	 * @return 종료 시각
+	 */
+	public String getPreviousEndedAt(String cabinetId) {
+		return previousTemplate.get(cabinetId + PREVIOUS_ENDED_AT_SUFFIX);
 	}
 
 	/*----------------------------------------  Swap  -----------------------------------------*/
