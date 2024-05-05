@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
@@ -15,15 +15,12 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
-import { IInventoryInfo } from "@/Cabinet/components/Store/Inventory/Inventory";
 import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
-  axiosMyItems,
   axiosMyLentInfo,
-  axiosUseExtension,
   axiosUseItem, // axiosExtend, // TODO: 연장권 api 생성 후 연결해야 함
 } from "@/Cabinet/api/axios/axios.custom";
 import { getExtendedDateString } from "@/Cabinet/utils/dateUtils";
@@ -42,6 +39,9 @@ const ExtendModal: React.FC<{
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContents, setModalContents] = useState<string | null>(null);
+  const [extensionDate, setExtensionDate] = useState<number>(3);
+  const [url, setUrl] = useState<string | null>(null);
+  const [urlTitle, setUrlTitle] = useState<string | null>(null);
   const [currentCabinetId] = useRecoilState(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myLentInfo, setMyLentInfo] =
@@ -50,7 +50,6 @@ const ExtendModal: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-  const [extensionDate, setExtensionDate] = useState<number>(3);
   const formattedExtendedDate = getExtendedDateString(
     myLentInfo.lents[0].expiredAt,
     // myInfo.lentExtensionResponseDto?.extensionPeriod
@@ -67,74 +66,22 @@ const ExtendModal: React.FC<{
   연장권 사용은 취소할 수 없습니다.`;
   const extendInfoDetail = `사물함을 대여하시면 연장권 사용이 가능합니다.
 연장권은 <strong>${extensionExpiredDate} 23:59</strong> 이후 만료됩니다.`;
-  const [url, setUrl] = useState<string | null>(null);
-  const [urlTitle, setUrlTitle] = useState<string | null>(null);
 
   const getModalTitle = (cabinetId: number | null) => {
     return cabinetId === null
       ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].title
       : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].title;
   };
+
   const getModalDetail = (cabinetId: number | null) => {
     return cabinetId === null ? extendInfoDetail : extendDetail;
   };
+
   const getModalProceedBtnText = (cabinetId: number | null) => {
     return cabinetId === null
       ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].confirmMessage
       : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].confirmMessage;
   };
-  // const tryExtendRequest = async (e: React.MouseEvent) => {
-  //   if (currentCabinetId === 0 || myInfo.cabinetId === null) {
-  //     setHasErrorOnResponse(true);
-  //     setModalTitle("현재 대여중인 사물함이 없습니다.");
-  //     setShowResponseModal(true);
-  //     return;
-  //   }
-  //   try {
-  //     // await axiosUseExtension();
-  //     // await axiosUseItem(selected.itemSku);
-  //     setMyInfo({
-  //       ...myInfo,
-  //       cabinetId: currentCabinetId,
-  //       lentExtensionResponseDto: null,
-  //     });
-  //     setIsCurrentSectionRender(true);
-  //     setModalTitle("연장되었습니다");
-  //     try {
-  //       const { data } = await axiosCabinetById(currentCabinetId);
-  //       setTargetCabinetInfo(data);
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //     try {
-  //       const { data: myLentInfo } = await axiosMyLentInfo();
-  //       setMyLentInfo(myLentInfo);
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //   } catch (error: any) {
-  //     setHasErrorOnResponse(true);
-  //     error.response
-  //       ? setModalTitle(error.response.data.message)
-  //       : setModalTitle(error.data.message);
-  //   } finally {
-  //     setShowResponseModal(true);
-  //   }
-  // };
-  const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
-
-  const getMyItems = async () => {
-    try {
-      const response = await axiosMyItems();
-      setMyItems(response.data);
-    } catch (error: any) {
-      console.error("Error getting inventory:", error);
-    }
-  };
-
-  useEffect(() => {
-    getMyItems();
-  }, []);
 
   const extensionItemUse = async (item: string) => {
     // 아이템 사용
@@ -187,11 +134,12 @@ const ExtendModal: React.FC<{
       setShowResponseModal(true);
     }
   };
-  const [selectedOption, setSelectedOption] = useState("0");
 
-  const handleDropdownChange = (option: string) => {
+  const [selectedOption, setSelectedOption] = useState(0);
+
+  const handleDropdownChange = (option: number) => {
     setSelectedOption(option);
-    setExtensionDate(extensionPeriod[Number(option)].day);
+    setExtensionDate(extensionPeriod[option].day);
   };
 
   const extendModalContents: IModalContents = {
@@ -205,7 +153,7 @@ const ExtendModal: React.FC<{
             props.onClose();
           }
         : async () => {
-            extensionItemUse(extensionPeriod[Number(selectedOption)].sku);
+            extensionItemUse(extensionPeriod[selectedOption].sku);
           },
     closeModal: props.onClose,
     iconType: IconType.CHECKICON,
@@ -217,15 +165,15 @@ const ExtendModal: React.FC<{
             options={[
               {
                 name: extensionPeriod[0].period,
-                value: "0",
+                value: 0,
               },
               {
                 name: extensionPeriod[1].period,
-                value: "1",
+                value: 1,
               },
               {
                 name: extensionPeriod[2].period,
-                value: "2",
+                value: 2,
               },
             ]}
             defaultValue={extensionPeriod[0].period}
