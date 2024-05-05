@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { myCoinsState } from "@/Cabinet/recoil/atoms";
 import StoreItemCard from "@/Cabinet/components/Card/StoreItemCard/StoreItemCard";
 import { NotificationModal } from "@/Cabinet/components/Modals/NotificationModal/NotificationModal";
 import StoreBuyItemModal from "@/Cabinet/components/Modals/StoreModal/StoreBuyItemModal";
@@ -12,13 +10,14 @@ import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import { axiosBuyItem, axiosItems } from "@/Cabinet/api/axios/axios.custom";
 
 const StoreMainPage = () => {
-  const [myCoin, setMyCoin] = useRecoilState(myCoinsState);
+  const [myCoin, setMyCoin] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<IItemDetail | null>(null);
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
   const [errorDetails, setErrorDetails] = useState("");
   const [items, setItem] = useState([] as IItemDetail[]);
+  // TODO : const [userInfo] = useRecoilState(userState);
 
   const getItems = async () => {
     try {
@@ -32,6 +31,9 @@ const StoreMainPage = () => {
 
   useEffect(() => {
     getItems();
+    setMyCoin(720);
+    // TODO : 실제 데이터 들어오면 지우기
+    // TODO : setMyCoin(userInfo.coins);
   }, []);
 
   const buttonClick = (item: IItemDetail) => {

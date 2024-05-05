@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { myCoinsState } from "@/Cabinet/recoil/atoms";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import MultiToggleSwitch, {
   toggleItem,
@@ -34,12 +32,12 @@ const CoinLog = () => {
     CoinLogToggleType.ALL
   );
   const [coinLogs, setCoinLogs] = useState<ICoinLog[] | null>(null);
-  const [myCoin] = useRecoilState(myCoinsState);
   const size = 5;
   const [logsLength, setLogsLength] = useState(0);
   const [page, setPage] = useState(0);
   const [moreButton, setMoreButton] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  // TODO : const [userInfo] = useRecoilState(userState);
 
   const getCoinLog = async (type: CoinLogToggleType) => {
     try {
@@ -48,7 +46,6 @@ const CoinLog = () => {
         ? setCoinLogs((prev) => [...prev!, ...response.data.result])
         : setCoinLogs(response.data.result);
       setLogsLength(response.data.totalLength);
-      // TODO : if (!response.data.result)
     } catch (error: any) {
       console.error("Error getting coin log:", error);
     }
@@ -82,7 +79,7 @@ const CoinLog = () => {
           <CoinIconStyled>
             <CoinIcon />
           </CoinIconStyled>
-          <span>{myCoin}</span>
+          {/* TODO : <span>{userInfo.coins}</span> */}
           까비
         </MyCoinStyled>
       </MyCoinWrapperStyled>
