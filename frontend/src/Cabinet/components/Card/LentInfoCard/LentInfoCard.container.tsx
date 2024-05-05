@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { myCabinetInfoState, userState } from "@/Cabinet/recoil/atoms";
 import LentInfoCard from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard";
@@ -105,6 +105,7 @@ const LentInfoCardContainer = ({
     status: myCabinetInfo.status || "",
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const onCLickPenaltyButton = () => {
     setIsModalOpen(true);
     console.log("패널티 축소 버튼 클릭");
@@ -113,18 +114,31 @@ const LentInfoCardContainer = ({
     setIsModalOpen(false);
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const userInfo = useRecoilValue<UserDto>(userState);
+  const [isPenaltyUser, setIsPenaltyUser] = useState(true);
+  const remainPenaltyPeriod = getRemainingTime(userInfo.unbannedAt);
+  useEffect(() => {
+    if (remainPenaltyPeriod == 0) {
+      console.log("remainPenaltyPeriod", remainPenaltyPeriod);
+      setIsPenaltyUser(false);
+    }
+  }, [userInfo.unbannedAt]);
 
   return (
     <LentInfoCard
       cabinetInfo={cabinetLentInfo}
       unbannedAt={unbannedAt}
-      button={{
-        label: "패널티 축소",
-        onClick: onCLickPenaltyButton,
-        isClickable: true,
-      }}
+      button={
+        isPenaltyUser
+          ? {
+              label: "패널티 축소",
+              onClick: onCLickPenaltyButton,
+              isClickable: true,
+            }
+          : undefined
+      }
       isModalOpen={isModalOpen}
+      remainPenaltyPeriod={remainPenaltyPeriod}
       onClose={handleCloseModal}
     />
   );

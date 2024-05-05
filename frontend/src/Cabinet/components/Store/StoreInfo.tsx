@@ -83,7 +83,7 @@ const StoreInfo = () => {
       <ButtonContainerStyled>
         <ButtonContainer
           onClick={() => tryCoinCheckPost()}
-          text="획득하기"
+          text="줍기"
           theme="fill"
         />
         <ButtonContainer

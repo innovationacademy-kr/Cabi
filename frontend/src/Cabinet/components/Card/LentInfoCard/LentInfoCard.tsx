@@ -25,22 +25,19 @@ const calculateFontSize = (userCount: number): string => {
   return `${calculatedSize}rem`;
 };
 
-// type LentInfoProps = {
-//   name: string | null;
-//   button: IButtonProps;
-// };
-
 const LentInfoCard = ({
   cabinetInfo,
   unbannedAt,
   button,
   isModalOpen,
+  remainPenaltyPeriod,
   onClose,
 }: {
   cabinetInfo: MyCabinetInfo;
   unbannedAt: Date | null | undefined;
-  button: IButtonProps;
+  button: IButtonProps | undefined;
   isModalOpen: boolean;
+  remainPenaltyPeriod: number;
   onClose: () => void;
 }) => {
   return (
@@ -50,7 +47,7 @@ const LentInfoCard = ({
         gridArea={"lentInfo"}
         width={"350px"}
         height={"366px"}
-        buttons={[button]}
+        buttons={button ? [button] : []}
       >
         <>
           <CabinetInfoWrapper>
@@ -129,7 +126,12 @@ const LentInfoCard = ({
           </CardContentWrapper>
         </>
       </Card>
-      {isModalOpen && <StoreBuyPenalty onClose={onClose} />}
+      {isModalOpen && (
+        <StoreBuyPenalty
+          onClose={onClose}
+          remainPenaltyPeriod={remainPenaltyPeriod}
+        />
+      )}
     </>
   );
 };
