@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.item.domain;
 
 import lombok.Getter;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 
 @Getter
 public enum Sku {
@@ -24,7 +25,6 @@ public enum Sku {
 	COIN_REWARD_2000("동전 줍기 20일 보상"),
 	;
 
-
 	private final String details;
 
 	Sku(String details) {
@@ -39,4 +39,21 @@ public enum Sku {
 				|| this.equals(COIN_REWARD_500) || this.equals(COIN_REWARD_1000)
 				|| this.equals(COIN_REWARD_2000);
 	}
+
+	public Integer getDays() {
+		if (this.equals(EXTENSION_3) || this.equals(PENALTY_3)) {
+			return 3;
+		}
+		if (this.equals(EXTENSION_31) || this.equals(PENALTY_31)) {
+			return 31;
+		}
+		if (this.equals(EXTENSION_15)) {
+			return 15;
+		}
+		if (this.equals(PENALTY_7)) {
+			return 7;
+		}
+		throw ExceptionStatus.NOT_FOUND_ITEM.asDomainException();
+	}
+
 }

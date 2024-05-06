@@ -28,4 +28,8 @@ public class ItemHistoryQueryService {
 	public Page<ItemHistory> getCoinHistory(Long userId, Pageable pageable, List<Long> itemIds) {
 		return itemHistoryRepository.findAllByUserIdAndItemIdIn(userId, pageable, itemIds);
 	}
+
+	public List<ItemHistory> getUnusedItemsInUserInventory(Long userId, Long itemId) {
+		return itemHistoryRepository.findAllByUserIdAndItemIdAndUsedAtIsNull(userId, itemId);
+	}
 }

@@ -1,6 +1,12 @@
 package org.ftclub.cabinet.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.dto.ItemAssignDto;
+import org.ftclub.cabinet.dto.ItemCreateDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.item.domain.Item;
+import org.ftclub.cabinet.item.domain.ItemHistory;
+import org.ftclub.cabinet.item.repository.ItemHistoryRepository;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemType;
 import org.ftclub.cabinet.item.domain.Sku;

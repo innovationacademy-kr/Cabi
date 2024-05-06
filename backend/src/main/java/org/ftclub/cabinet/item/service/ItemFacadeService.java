@@ -13,20 +13,29 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
+import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
 import org.ftclub.cabinet.dto.ItemDetailsDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
 import org.ftclub.cabinet.dto.ItemHistoryPaginationDto;
 import org.ftclub.cabinet.dto.ItemStoreDto;
 import org.ftclub.cabinet.dto.ItemStoreResponseDto;
+import org.ftclub.cabinet.dto.ItemUseRequestDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.item.domain.AlarmItem;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
+import org.ftclub.cabinet.item.domain.ExtensionItem;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.domain.ItemType;
+import org.ftclub.cabinet.item.domain.ItemUsage;
+import org.ftclub.cabinet.item.domain.PenaltyItem;
+import org.ftclub.cabinet.item.domain.SectionAlarmType;
 import org.ftclub.cabinet.item.domain.Sku;
+import org.ftclub.cabinet.item.domain.SwapItem;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
@@ -45,14 +54,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class ItemFacadeService {
 
 	private final ItemQueryService itemQueryService;
-	private final ItemCommandService itemCommandService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
 	private final ItemHistoryCommandService itemHistoryCommandService;
-	private final ItemMapper itemMapper;
-	private final UserQueryService userQueryService;
 	private final ItemRedisService itemRedisService;
-	private final ApplicationEventPublisher eventPublisher;
+	private final UserQueryService userQueryService;
+	private final SectionAlarmCommandService sectionAlarmCommandService;
+
+	private final ItemMapper itemMapper;
 	private final ItemPolicyService itemPolicyService;
+	private final ApplicationEventPublisher eventPublisher;
 
 	/**
 	 * 모든 아이템 리스트 반환
@@ -128,34 +138,82 @@ public class ItemFacadeService {
 		return itemMapper.toCoinHistoryPaginationDto(result, coinHistories.getTotalElements());
 	}
 
-//	/**
-//	 * 유저가 보유한 point와 비교한 후 아이템을 사용합니다.
-//	 *
-//	 * @param userId
-//	 * @param itemId
-//	 */
-//	@Transactional
-//	public void useItem(Long userId, Long itemId) {
-//		Item item = itemQueryService.getById(itemId);
-//		Long price = item.getPrice();
-//
-//		Long userPoint = itemHistoryQueryService.getUserPoint(userId);
-//		if (price > userPoint) {
-//
-//		}
-//	}
-
 	/**
-	 * 해당 월의 총 Coin 아이템을 획득한 횟수, 요청일의 출석체크 해당 여부를 반환
+	 * itemRedisService 를 통해 동전 줍기 정보 생성
 	 *
-	 * @param userId
-	 * @param itemId
+	 * @param userId redis 의 고유 key 를 만들 userId
 	 * @return
 	 */
-//	public CoinInformationDto getCoinInformation(Long userId, Long itemId) {
-//		LocalDateTime now = LocalDateTime.now();
-//		itemHistoryQueryService.get
-//	}
+	@Transactional(readOnly = true)
+	public CoinMonthlyCollectionDto getCoinCollectionCountInMonth(Long userId) {
+		Long coinCollectionCountInMonth =
+				itemRedisService.getCoinCollectionCountInMonth(userId);
+		boolean isCollectedInToday = itemRedisService.isCoinCollected(userId);
+
+		return itemMapper.toCoinMonthlyCollectionDto(coinCollectionCountInMonth,
+				isCollectedInToday);
+	}
+
+	/**
+	 * 당일 중복해서 동전줍기를 요청했는지 검수 후
+	 * <p>
+	 * 당일 동전 줍기 체크 및 한 달 동전줍기 횟수 증가
+	 *
+	 * @param userId redis 의 고유 key 를 만들 userId
+	 */
+	@Transactional(readOnly = true)
+	public void collectCoin(Long userId) {
+		boolean isChecked = itemRedisService.isCoinCollected(userId);
+		itemPolicyService.verifyIsAlreadyCollectedCoin(isChecked);
+		itemRedisService.collectCoin(userId);
+	}
+
+	/**
+	 * @param userId
+	 * @param sku
+	 * @param data
+	 */
+	@Transactional
+	public void useItem(Long userId, Sku sku, ItemUseRequestDto data) {
+		itemPolicyService.verifyDataFieldBySky(sku, data);
+		User user = userQueryService.getUser(userId);
+		if (user.isBlackholed()) {
+			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
+		}
+		Item item = itemQueryService.getBySku(sku);
+		List<ItemHistory> itemInInventory =
+				itemHistoryQueryService.getUnusedItemsInUserInventory(user.getId(), item.getId());
+		ItemHistory firstItem = itemPolicyService.verifyEmptyItems(itemInInventory);
+		ItemUsage itemUsage = getItemUsage(userId, item, data);
+
+		eventPublisher.publishEvent(itemUsage);
+		firstItem.updateUsedAt();
+	}
+
+	/**
+	 * itemType 에 따른 구현체 반환
+	 *
+	 * @param userId
+	 * @param item
+	 * @param data
+	 * @return
+	 */
+	private ItemUsage getItemUsage(Long userId, Item item, ItemUseRequestDto data) {
+		// 연장권, 이사권, 패널티
+		if (item.getType().equals(ItemType.SWAP)) {
+			return new SwapItem(userId, data.getNewCabinetId());
+		}
+		if (item.getType().equals(ItemType.EXTENSION)) {
+			return new ExtensionItem(userId, item.getSku().getDays());
+		}
+		if (item.getType().equals(ItemType.PENALTY)) {
+			return new PenaltyItem(userId, item.getSku().getDays());
+		}
+		if (item.getType().equals(ItemType.ALARM)) {
+			return new AlarmItem(userId, data.getCabinetPlaceId(), data.getSectionAlarmType());
+		}
+		throw ExceptionStatus.NOT_FOUND_ITEM.asServiceException();
+	}
 
 	/**
 	 * user가 아이템 구매 요청
@@ -171,7 +229,7 @@ public class ItemFacadeService {
 			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
 		}
 
-		Item item = itemQueryService.getItemBySku(sku);
+		Item item = itemQueryService.getBySku(sku);
 		long price = item.getPrice();
 		long userCoin = itemRedisService.getCoinCount(userId);
 
@@ -184,5 +242,10 @@ public class ItemFacadeService {
 
 		// 코인 차감
 		itemRedisService.saveCoinCount(userId, userCoin + price);
+	}
+
+	@Transactional
+	public void addSectionAlarm(Long userId, Long cabinetPlaceId, SectionAlarmType alarmType) {
+		sectionAlarmCommandService.addSectionAlarm(userId, cabinetPlaceId, alarmType);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.handler.SectionAlarmManager;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
@@ -33,6 +34,7 @@ public class SystemScheduler {
 	private final LentFacadeService lentFacadeService;
 	private final BlackholeManager blackholeManager;
 	private final ReleaseManager releaseManager;
+	private final SectionAlarmManager sectionAlarmManager;
 
 	/**
 	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거
@@ -121,4 +123,10 @@ public class SystemScheduler {
 //		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.metLimitTimeUser(occupiedTimeManager.getUserLastMonthOccupiedTime());
 //		userService.updateUserExtensible(userMonthDataDtos);
 //	}
+
+	@Scheduled(cron = "${cabinet.schedule.cron.section-alarm-time}")
+	public void sectionAlarm() {
+		log.info("called sectionAlarm");
+		sectionAlarmManager.sendSectionAlarm();
+	}
 }

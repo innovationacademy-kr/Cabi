@@ -15,4 +15,5 @@ public class CoinHistoryDto {
 	private LocalDateTime date;
 	private Integer amount;
 	private String history;
+	private String itemDetails;
 }

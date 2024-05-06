@@ -17,6 +17,7 @@ import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.dto.UpdateDeviceTokenRequestDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.item.service.ItemRedisService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.log.LogLevel;
@@ -45,6 +46,9 @@ public class UserFacadeService {
 	private final UserMapper userMapper;
 	private final FCMTokenRedisService fcmTokenRedisService;
 	private final FirebaseConfig firebaseConfig;
+	private final BanHistoryCommandService banHistoryCommandService;
+	private final ItemRedisService itemRedisService;
+
 
 	/**
 	 * 유저의 프로필을 가져옵니다.
@@ -54,19 +58,21 @@ public class UserFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public MyProfileResponseDto getProfile(UserSessionDto user) {
-		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
-		BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(),
+		Long userId = user.getUserId();
+		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(userId);
+		BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(userId,
 				LocalDateTime.now()).orElse(null);
 		LentExtension lentExtension = lentExtensionQueryService.findActiveLentExtension(
-				user.getUserId());
+				userId);
 		LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(
 				lentExtension);
-		User currentUser = userQueryService.getUser(user.getUserId());
+		User currentUser = userQueryService.getUser(userId);
 		AlarmTypeResponseDto userAlarmTypes = currentUser.getAlarmTypes();
 		boolean isDeviceTokenExpired = userAlarmTypes.isPush()
 				&& fcmTokenRedisService.findByUserName(user.getName()).isEmpty();
+		Long coins = itemRedisService.getCoinCount(userId);
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-				lentExtensionResponseDto, userAlarmTypes, isDeviceTokenExpired);
+				lentExtensionResponseDto, userAlarmTypes, isDeviceTokenExpired, coins);
 	}
 
 	/**
@@ -135,5 +141,19 @@ public class UserFacadeService {
 				Duration.ofDays(firebaseConfig.getDeviceTokenExpiryDays())
 		);
 	}
+
+	/**
+	 * 가장 최근 밴 당한 날짜에서 일자만큼 차감 후 업데이트
+	 *
+	 * @param userId
+	 * @param days
+	 */
+	@Transactional
+	public void reduceBanDays(Long userId, Integer days) {
+		BanHistory recentBanHistory = banHistoryQueryService.getRecentBanHistory(userId);
+		LocalDateTime reducedUnbannedAt = recentBanHistory.getUnbannedAt().minusDays(days);
+		banHistoryCommandService.updateBanDate(recentBanHistory, reducedUnbannedAt);
+	}
+
 }
 

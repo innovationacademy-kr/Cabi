@@ -5,6 +5,7 @@ import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 import java.util.List;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
+import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
 import org.ftclub.cabinet.dto.ItemDetailsDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
@@ -31,6 +32,7 @@ public interface ItemMapper {
 	@Mapping(target = "date", source = "itemHistory.purchaseAt")
 	@Mapping(target = "amount", source = "item.price")
 	@Mapping(target = "history", source = "item.type.name")
+	@Mapping(target = "itemDetails", source = "item.sku.details")
 	CoinHistoryDto toCoinHistoryDto(ItemHistory itemHistory, Item item);
 
 	@Mapping(target = "itemSku", source = "item.sku")
@@ -62,4 +64,7 @@ public interface ItemMapper {
 
 	CoinHistoryPaginationDto toCoinHistoryPaginationDto(List<CoinHistoryDto> result,
 			Long totalLength);
+
+	CoinMonthlyCollectionDto toCoinMonthlyCollectionDto(Long monthlyCoinCount,
+			boolean todayCoinCollection);
 }

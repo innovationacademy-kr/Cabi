@@ -103,4 +103,7 @@ public class ItemHistory {
 		return this.userId != null && this.itemId != null;
 	}
 
+	public void updateUsedAt() {
+		this.usedAt = LocalDateTime.now();
+	}
 }

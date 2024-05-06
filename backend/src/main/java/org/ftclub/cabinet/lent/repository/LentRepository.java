@@ -265,6 +265,8 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "WHERE lh.userId = :userId AND lh.endedAt IS NULL")
 	Optional<LentHistory> findByUserIdAndEndedAtIsNullJoinCabinet(@Param("userId") Long userId);
 
+	Optional<LentHistory> findFirstByCabinetIdOrderByEndedAtDesc(Long cabinetId);
+
 	/**
 	 * 특정 유저들의 아직 반납하지 않은 대여 기록을 가져옵니다.
 	 * <p>

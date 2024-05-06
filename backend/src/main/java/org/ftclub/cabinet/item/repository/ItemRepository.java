@@ -11,17 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-	/**
-	 * SKU (상품고유번호)로 상품 조회
-	 *
-	 * @param sku
-	 * @return
-	 */
-	@Query("SELECT i "
-			+ "FROM Item i "
-			+ "WHERE i.sku = :sku")
-	Optional<Item> findBySku(Sku sku);
-
 	@Query("SELECT i "
 			+ "FROM Item i "
 			+ "WHERE i.price >= 0")
@@ -31,4 +20,15 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 			+ "FROM Item i "
 			+ "WHERE i.price < 0")
 	List<Item> findAllByPriceNegative();
+
+	/**
+	 * SKU (상품고유번호)로 상품 조회
+	 *
+	 * @param sku
+	 * @return
+	 */
+	@Query("SELECT i "
+		+ "FROM Item i "
+		+ "WHERE i.sku = :sku")
+	Optional<Item> findBySku(Sku sku);
 }

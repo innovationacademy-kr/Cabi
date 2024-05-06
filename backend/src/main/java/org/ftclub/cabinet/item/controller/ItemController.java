@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
+import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
 import org.ftclub.cabinet.dto.ItemHistoryPaginationDto;
 import org.ftclub.cabinet.dto.ItemStoreResponseDto;
+import org.ftclub.cabinet.dto.ItemUseRequestDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,19 +65,43 @@ public class ItemController {
 		return itemFacadeService.getCoinHistory(user.getUserId(), type, pageable);
 	}
 
-//	/**
-//	 * @param user
-//	 * @param itemId
-//	 */
-//	@PostMapping("/{itemId}/user")
-//	@AuthGuard(level = AuthLevel.USER_ONLY)
-//	public void useItem(@UserSession UserSessionDto user, @PathVariable Long itemId) {
-//		itemFacadeService.useItem(user.getUserId(), itemId);
-//	}
 
-//	@GetMapping("/coin")
-//	@AuthGuard(level = AuthLevel.USER_ONLY)
-//	public CoinInformationDto getCoinInformation(@UserSession UserSessionDto user, Long itemId) {
-//		return itemFacadeService.getCoinInformation(user.getUserId(), itemId);
-//	}
+	/**
+	 * 한달 간 동전 줍기 횟수, 당일 동전줍기 요청 유무
+	 *
+	 * @param user 유저 세션
+	 * @return
+	 */
+	@GetMapping("/coin")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public CoinMonthlyCollectionDto getCoinMonthlyCollectionCount(
+			@UserSession UserSessionDto user) {
+		return itemFacadeService.getCoinCollectionCountInMonth(user.getUserId());
+	}
+
+	/**
+	 * 동전 줍기 요청
+	 *
+	 * @param user 유저 세션
+	 */
+	@PostMapping("/coin")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public void collectCoin(@UserSession UserSessionDto user) {
+		itemFacadeService.collectCoin(user.getUserId());
+	}
+
+	/**
+	 * 아이템 사용 요청
+	 *
+	 * @param user 유저 세션
+	 * @param sku  아이템 고유 식별 값
+	 * @param data sku 에 따라 다르게 필요한 정보
+	 */
+	@PostMapping("{sku}/use")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public void useItem(@UserSession UserSessionDto user,
+			@PathVariable("sku") Sku sku,
+			@RequestBody ItemUseRequestDto data) {
+		itemFacadeService.useItem(user.getUserId(), sku, data);
+	}
 }

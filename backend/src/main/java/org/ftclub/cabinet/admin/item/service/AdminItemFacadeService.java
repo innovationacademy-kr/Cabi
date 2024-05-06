@@ -22,7 +22,7 @@ public class AdminItemFacadeService {
 	}
 
 	public void assignItem(Long userId, Sku sku) {
-		Item item = itemQueryService.getItemBySku(sku);
+		Item item = itemQueryService.getBySku(sku);
 		itemHistoryCommandService.purchaseItem(userId, item.getId());
 	}
 }

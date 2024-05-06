@@ -14,7 +14,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 @RequiredArgsConstructor
 @Log4j2
-public class AlarmEventHandler {
+public class AlarmEventListener {
 
 	private final UserQueryService userQueryService;
 	private final SlackAlarmSender slackAlarmSender;
