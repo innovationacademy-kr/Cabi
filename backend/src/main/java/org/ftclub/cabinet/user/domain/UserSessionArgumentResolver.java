@@ -4,7 +4,9 @@ import io.netty.util.internal.StringUtil;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.service.TokenValidator;
+import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -23,6 +25,8 @@ public class UserSessionArgumentResolver implements HandlerMethodArgumentResolve
 
 	private final TokenValidator tokenValidator;
 	private final UserQueryService userQueryService;
+	private final CookieManager cookieManager;
+	private final JwtProperties jwtProperties;
 
 
 	@Override
@@ -42,11 +46,7 @@ public class UserSessionArgumentResolver implements HandlerMethodArgumentResolve
 
 		HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-		String authorization = request.getHeader("Authorization");
-		if (StringUtil.isNullOrEmpty(authorization) || !authorization.startsWith("Bearer ")) {
-			throw ExceptionStatus.INVALID_JWT_TOKEN.asControllerException();
-		}
-		String token = authorization.substring(7);
+		String token = cookieManager.getCookieValue(request, jwtProperties.getMainTokenName());
 		if (StringUtil.isNullOrEmpty(token)) {
 			throw ExceptionStatus.INVALID_JWT_TOKEN.asControllerException();
 		}
