@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class ItemPolicyService {
 
 	public void verifyIsAffordable(long userCoin, long itemPrice) {
-		if (userCoin < itemPrice) {
+		if (userCoin <= 0 || userCoin < -itemPrice) {
 			throw ExceptionStatus.NOT_ENOUGH_COIN.asServiceException();
 		}
 	}
