@@ -15,7 +15,8 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 	@Query("SELECT ih "
 			+ "FROM ItemHistory ih "
 			+ "WHERE ih.userId = :userId "
-			+ "AND ih.itemId IN (:itemIds)")
+			+ "AND ih.itemId IN (:itemIds) "
+			+ "ORDER BY ih.purchaseAt DESC")
 	Page<ItemHistory> findAllByUserIdAndItemIdIn(@Param("userId") Long userId,
 			Pageable pageable, @Param("itemIds") List<Long> itemIds);
 
@@ -39,17 +40,17 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 			@Param("userId") Long userId, Pageable pageable);
 
 	@Query("SELECT ih "
-		+ "FROM ItemHistory ih "
-		+ "JOIN FETCH ih.item "
-		+ "WHERE ih.userId = :userId")
+			+ "FROM ItemHistory ih "
+			+ "JOIN FETCH ih.item "
+			+ "WHERE ih.userId = :userId")
 	List<ItemHistory> findAllByUserId(@Param("userId") Long userId);
 
 
 	@Query("SELECT ih "
-		+ "FROM ItemHistory ih "
-		+ "JOIN FETCH ih.item "
-		+ "WHERE ih.userId = :userId "
-		+ "AND ih.usedAt IS NULL "
+			+ "FROM ItemHistory ih "
+			+ "JOIN FETCH ih.item "
+			+ "WHERE ih.userId = :userId "
+			+ "AND ih.usedAt IS NULL "
 	)
 	List<ItemHistory> getAllUnusedItemHistoryByUser(@Param("userId") Long userId);
 
