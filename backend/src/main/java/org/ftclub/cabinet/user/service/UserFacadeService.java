@@ -151,8 +151,8 @@ public class UserFacadeService {
 	@Transactional
 	public void reduceBanDays(Long userId, Integer days) {
 		BanHistory recentBanHistory = banHistoryQueryService.getRecentBanHistory(userId);
-		LocalDateTime reducedBanDate = recentBanHistory.getBannedAt().minusDays(days);
-		banHistoryCommandService.updateBanDate(recentBanHistory, reducedBanDate);
+		LocalDateTime reducedUnbannedAt = recentBanHistory.getUnbannedAt().minusDays(days);
+		banHistoryCommandService.updateBanDate(recentBanHistory, reducedUnbannedAt);
 	}
 
 }

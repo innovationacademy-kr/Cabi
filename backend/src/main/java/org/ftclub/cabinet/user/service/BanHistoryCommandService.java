@@ -24,16 +24,16 @@ public class BanHistoryCommandService {
 	private final BanPolicy banPolicy;
 
 	public void banUser(Long userId, LocalDateTime endedAt,
-		LocalDateTime unBannedAt, BanType banType) {
+			LocalDateTime unBannedAt, BanType banType) {
 		BanHistory banHistory = BanHistory.of(endedAt, unBannedAt, banType, userId);
 		banHistoryRepository.save(banHistory);
 	}
 
 	public void banUsers(List<Long> userIds, LocalDateTime endedAt,
-		LocalDateTime unBannedAt, BanType banType) {
+			LocalDateTime unBannedAt, BanType banType) {
 		List<BanHistory> banHistories = userIds.stream()
-			.map(userId -> BanHistory.of(endedAt, unBannedAt, banType, userId))
-			.collect(Collectors.toList());
+				.map(userId -> BanHistory.of(endedAt, unBannedAt, banType, userId))
+				.collect(Collectors.toList());
 		banHistoryRepository.saveAll(banHistories);
 	}
 
