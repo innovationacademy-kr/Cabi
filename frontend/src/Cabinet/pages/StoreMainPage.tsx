@@ -20,10 +20,16 @@ const StoreMainPage = () => {
       userInfo.coins >= item.items[item.items.length - 1].itemPrice * -1
     );
   };
+
+  const sortItems = (items: IItemDetail[]) => {
+    [items[0], items[1], items[2], items[3]] = [items[3], items[2], items[0], items[1]]
+  };
+
   const getItems = async () => {
     try {
       const response = await axiosItems();
       setItem(response.data.items);
+      sortItems(response.data.items);
     } catch (error) {
       throw error;
     }
@@ -50,7 +56,7 @@ const StoreMainPage = () => {
       </HeaderStyled>
       <StoreCoinGridWrapper>
         <StoreCoinPick />
-        {items.map((item: IItemDetail) => (
+        {items.map((item: IItemDetail, index) => (
           <StoreItemCard
             key={item.itemName}
             item={item}
@@ -91,8 +97,8 @@ const StoreCoinGridWrapper = styled.div`
   grid-template-columns: 340px 340px 340px;
   grid-template-rows: 150px 150px;
   grid-template-areas:
-    "coinPick extension move"
-    "coinPick alarm penalty";
+    "coinPick EXTENSION SWAP"
+    "coinPick ALERT PENALTY";
 
   padding-bottom: 30px;
 
@@ -100,9 +106,9 @@ const StoreCoinGridWrapper = styled.div`
     grid-template-columns: 340px 340px;
     grid-template-rows: 150px 150px 150px;
     grid-template-areas:
-      "coinPick extension "
-      "coinPick move"
-      "alarm penalty";
+      "coinPick EXTENSION "
+      "coinPick SWAP"
+      "ALERT PENALTY";
   }
 
   // 나중에 고치기
@@ -112,10 +118,10 @@ const StoreCoinGridWrapper = styled.div`
     grid-template-areas:
       "coinPick"
       "coinPick"
-      "extension"
-      "move"
-      "alarm"
-      "notification";
+      "EXTENSION"
+      "SWAP"
+      "ALERT"
+      "PENALTY";
   }
 `;
 
