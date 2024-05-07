@@ -32,8 +32,8 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   const userInfo = useRecoilValue<UserDto>(userState);
 
   const penaltyPeriod = [
-    { sku: "penalty_3", period: "3일" },
-    { sku: "penalty_15", period: "7일" },
+    { sku: "PENALTY_3", period: "3일" },
+    { sku: "PENALTY_15", period: "7일" },
     { sku: "penalty_31", period: "31일" },
   ];
 
@@ -56,7 +56,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     usePenaltyItemDays: number
   ) => {
     try {
-      // await axiosUseItem(item);
+      await axiosUseItem(item, null, null, null);
       setModalTitle("패널티 축소권 사용 완료");
       if (remainPenaltyPeriod <= usePenaltyItemDays) {
         setModalContent("남은 패널티 기간이 모두 소멸되었습니다");
