@@ -12,6 +12,7 @@ import {
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import CabinetListContainer from "@/Cabinet/components/CabinetList/CabinetList.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import SectionAlertModal from "@/Cabinet/components/Modals/SectionAlertModal/SectionAlertModal";
 import SectionPaginationContainer from "@/Cabinet/components/SectionPagination/SectionPagination.container";
 import { ReactComponent as HeartIcon } from "@/Cabinet/assets/images/lineHeart.svg";
 import SectionType from "@/Cabinet/types/enum/map.type.enum";
@@ -42,6 +43,8 @@ const MainPage = () => {
     currentFloor
   );
   const [isClubSection, setIsClubSection] = useState(false);
+  const [showSectionAlertModal, setShowSectionAlertModal] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (!currentFloor) {
@@ -58,6 +61,15 @@ const MainPage = () => {
       resetCurrentCabinetId();
     };
   }, []);
+
+  useEffect(() => {
+    const clubSection = clubSections.find((section) => {
+      return section === currentSectionName;
+    })
+      ? true
+      : false;
+    setIsClubSection(clubSection);
+  }, [currentSectionName]);
 
   const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
     const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
@@ -95,14 +107,10 @@ const MainPage = () => {
     mainWrapperRef.current?.scrollTo(0, 0);
   };
 
-  useEffect(() => {
-    const clubSection = clubSections.find((section) => {
-      return section === currentSectionName;
-    })
-      ? true
-      : false;
-    setIsClubSection(clubSection);
-  }, [currentSectionName]);
+  const openModal = () => {
+    console.log("openModal");
+    setShowSectionAlertModal(true);
+  };
 
   return (
     <>
@@ -122,7 +130,10 @@ const MainPage = () => {
       >
         {!isClubSection && (
           <AlertStyled>
-            <IconWrapperStyled>
+            <IconWrapperStyled
+              onClick={openModal}
+              // TODO : 알림 등록권 사용하면 disabled
+            >
               <HeartIcon />
             </IconWrapperStyled>
           </AlertStyled>
@@ -142,6 +153,12 @@ const MainPage = () => {
               </RefreshButtonStyled>
             )}
         </CabinetListWrapperStyled>
+        {showSectionAlertModal && (
+          <SectionAlertModal
+            currentSectionName={currentSectionName}
+            setShowSectionAlertModal={setShowSectionAlertModal}
+          />
+        )}
       </WrapperStyled>
     </>
   );
@@ -182,6 +199,10 @@ const RefreshButtonStyled = styled.button`
 const IconWrapperStyled = styled.div`
   height: 16px;
   width: 16px;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const AlertStyled = styled.div`
