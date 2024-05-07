@@ -109,6 +109,10 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
           disable={true}
         />
       )}
+      <TopNavButton
+        onClick={toggleStore}
+        imgSrc="/src/Cabinet/assets/images/storeCoinNav.svg"
+      />
       {!isAdmin && !!myInfo.cabinetId && (
         <>
           <TopNavButton
@@ -118,10 +122,6 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
           />
         </>
       )}
-      <TopNavButton
-        onClick={toggleStore}
-        imgSrc="/src/Cabinet/assets/images/storeCoinNav.svg"
-      />
       <TopNavButton
         onClick={toggleMap}
         imgSrc="/src/Cabinet/assets/images/map.svg"

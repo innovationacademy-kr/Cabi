@@ -76,9 +76,8 @@ const Layout = (): JSX.Element => {
         data: myInfo,
         data: { date: serverTime },
       } = await axiosMyInfo();
-
+      console.log("myInfo", myInfo);
       const { data } = await axiosMyItems();
-      console.log("data", data);
 
       const formattedServerTime = serverTime.split(" KST")[0];
       setServerTime(new Date(formattedServerTime)); // 접속 후 최초 서버 시간을 가져옴
