@@ -28,6 +28,20 @@ function mapItemNameToType(itemName: string): StoreItemType {
   }
 }
 
+function createLogEntries(data: { result: any[] }) {
+  return data.result.map((item) => ({
+    date: new Date(item.date),
+    title:
+      item.itemDto.itemName === item.itemDto.itemDetails
+        ? item.itemDto.itemName
+        : `${item.itemDto.itemName} - ${item.itemDto.itemDetails}`,
+    logo: ItemIconMap[mapItemNameToType(item.itemDto.itemName)],
+    dateStr: `${new Date(item.date).getFullYear()}년 ${
+      new Date(item.date).getMonth() + 1
+    }월`,
+  }));
+}
+
 const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
   const [page, setPage] = useState(0);
@@ -43,22 +57,7 @@ const ItemUsageLogPage = () => {
     setIsLoading(true);
     try {
       const data = await axiosGetItemUsageHistory(page, size);
-      const newLogs = data.result.map(
-        (item: {
-          date: string | number | Date;
-          itemDto: { itemName: string; itemDetails: any };
-        }) => ({
-          date: new Date(item.date),
-          title:
-            item.itemDto.itemName === item.itemDto.itemDetails
-              ? item.itemDto.itemName
-              : `${item.itemDto.itemName} - ${item.itemDto.itemDetails}`,
-          logo: ItemIconMap[mapItemNameToType(item.itemDto.itemName)],
-          dateStr: `${new Date(item.date).getFullYear()}년 ${
-            new Date(item.date).getMonth() + 1
-          }월`,
-        })
-      );
+      const newLogs = createLogEntries(data);
       setItemUsageLogs((prevLogs) => [...prevLogs, ...newLogs]);
       setHasMore(data.result.length === size);
     } catch (error) {
