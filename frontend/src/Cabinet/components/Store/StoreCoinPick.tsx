@@ -12,7 +12,6 @@ const StoreCoinPick = () => {
       gridArea={"coinPick"}
       width={"340px"}
       height={"320px"}
-      // buttons={[button]}
     >
       <>
         <CoinAnimation />

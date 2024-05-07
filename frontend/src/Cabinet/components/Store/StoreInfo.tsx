@@ -13,58 +13,49 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
-// mapinfo.container, mapinfo.tsx
-// AdminSlackNotiPage.tsx
-
-const dummyDataGet = {
-  monthlyCoinCount: 10,
-  todayCoinCollection: true,
-};
-
-const dummyDataPost = {
-  reward: 20,
-};
-
 const StoreInfo = () => {
   // 처음 날개 열었을 때 get요청 로딩 함수
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { closeStore } = useMenu();
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>("");
+  const [monthlyCoinCount, setmonthlyCoinCount] = useState<number>(0);
+  const [todayCoinCollection, setTodayCoinCollection] =
+    useState<boolean>(false);
 
   // /v5/items/coin 으로 get ->
   // 왼족 날개 열기  == /v5/items/coin 으로 GET => 성공시 현재 코인개수, 오늘 클릭할수 있는지 반환
   // 동전줍기 클릭시 == /v5/items/coin 으로 POST  => 성공시 reward 반환
   const tryCoinCheckGet = async () => {
-    // setIsLoading(true);
     try {
       const res = await axiosCoinCheckGet();
-      // console.log("res", res);
-      console.log("coin 줍기 axios Get");
-      // setShowResponseModal(true);
+      setTodayCoinCollection(res.data.todayCoinCollection);
+      setmonthlyCoinCount(res.data.monthlyCoinCount);
+      console.log("res Get", res);
     } catch (error) {
-      setHasErrorOnResponse(true);
-      // setShowResponseModal(false);
-      //   setHasErrorOnResponse(true);
       throw error;
     }
   };
 
   const tryCoinCheckPost = async () => {
-    // setIsLoading(true);
+    setIsLoading(true);
     try {
       // coin 줍기 axios
-      // const res = await axiosCoinCheckPost();
-      // console.log("res", res);
-      console.log("coin 줍기 axios Post");
-      setModalContent(`${dummyDataPost.reward}까비를 획득했습니다.`);
-      // axios 끝내고 모달 띄우기
-      setShowResponseModal(true);
+      if (todayCoinCollection === false) {
+        setHasErrorOnResponse(true);
+      } else {
+        const res = await axiosCoinCheckPost();
+        console.log("coin 줍기 axios Post", res);
+        setModalContent(`${res.data.reward}까비를 획득했습니다.`);
+        setTodayCoinCollection(false);
+      }
     } catch (error) {
-      // setShowResponseModal(false);
-      //   setHasErrorOnResponse(true);
+      setHasErrorOnResponse(true);
       throw error;
+    } finally {
+      setShowResponseModal(true);
+      setIsLoading(false);
     }
   };
 
@@ -72,19 +63,20 @@ const StoreInfo = () => {
     // 날개 열때마다 get요청 안함 -> 처음 랜더링 될때 한번에 다 불러옴
     // 그리고 post되서 성공될때마다 get요청해서 정보 최신화 시키기
     tryCoinCheckGet();
-  }, []);
+  }, [todayCoinCollection]);
 
   return (
     <WrapperStyled id="storeInfo">
       <HeaderStyled>동전줍기</HeaderStyled>
       <StoreCoin />
-      <StoreCoinCheckBox monthlyCoinCount={dummyDataGet.monthlyCoinCount} />
+      <StoreCoinCheckBox monthlyCoinCount={monthlyCoinCount} />
 
       <ButtonContainerStyled>
         <ButtonContainer
           onClick={() => tryCoinCheckPost()}
           text="줍기"
           theme="fill"
+          disabled={isLoading}
         />
         <ButtonContainer
           onClick={() => closeStore()}
@@ -104,7 +96,7 @@ const StoreInfo = () => {
         ) : (
           <SuccessResponseModal
             modalTitle="동전을 획득했습니다."
-            // modalContents={modalContent}
+            modalContents={modalContent}
             closeModal={() => setShowResponseModal(false)}
           />
         ))}

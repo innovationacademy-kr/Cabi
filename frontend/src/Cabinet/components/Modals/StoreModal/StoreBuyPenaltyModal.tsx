@@ -1,18 +1,12 @@
 import { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
-// import { IItemType, IStoreItem } from "@/Cabinet/pages/StoreMainPage";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
 import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { axiosMyItems, axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
-import {
-  formatDate,
-  getExtendedDateString,
-  getReduceDateString,
-  getRemainingTime,
-} from "@/Cabinet/utils/dateUtils";
+import { getReduceDateString } from "@/Cabinet/utils/dateUtils";
 import Modal, { IModalContents } from "../Modal";
 import ModalPortal from "../ModalPortal";
 import {
@@ -20,12 +14,12 @@ import {
   SuccessResponseModal,
 } from "../ResponseModal/ResponseModal";
 
-interface StorModalProps {
+interface PenaltyModalProps {
   onClose: () => void;
   remainPenaltyPeriod: number;
 }
 
-const StoreBuyPenalty: React.FC<StorModalProps> = ({
+const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   onClose,
   remainPenaltyPeriod,
 }) => {
@@ -46,7 +40,6 @@ const StoreBuyPenalty: React.FC<StorModalProps> = ({
   const tryGetPenaltyItem = async () => {
     try {
       const { data } = await axiosMyItems();
-      // 내가 사용하려는 아이템이 있는지 확인
       const foundItem = data.penaltyItems.find(
         (item: IStoreItem) =>
           item.itemDetails === penaltyPeriod[Number(selectedOption)].period
@@ -86,7 +79,7 @@ const StoreBuyPenalty: React.FC<StorModalProps> = ({
       penaltyPeriod[Number(selectedOption)].period
     );
     try {
-      const hasPenaltyItem = await tryGetPenaltyItem(); // 패널티 아이템 존재 여부를 받음
+      const hasPenaltyItem = await tryGetPenaltyItem();
       if (hasPenaltyItem === false) {
         setModalTitle("패널티 축소권이 없습니다");
         setModalContent("패널티 축소권은 까비상점에서 구매하실 수 있습니다.");
@@ -111,7 +104,6 @@ const StoreBuyPenalty: React.FC<StorModalProps> = ({
     iconType: "CHECK",
     iconScaleEffect: false,
     title: "패널티 축소권 사용 안내",
-    // detail: "현재 남아있는 패널티 일수는 7일입니다.",
     proceedBtnText: "네, 사용할게요",
     cancelBtnText: "취소",
     closeModal: onClose,
@@ -188,9 +180,9 @@ const ModalDetailStyled = styled.div`
   width: 100%;
   height: 100%;
   margin-top: 30px;
-  > p {
+  & > p {
     margin: 10px;
-    > span {
+    & > span {
       font-weight: 600;
     }
   }
