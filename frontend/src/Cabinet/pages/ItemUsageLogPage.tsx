@@ -4,6 +4,7 @@ import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { IItemUsageLog } from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
+import { ReactComponent as DropdownChevron } from "@/Cabinet/assets/images/dropdownChevron.svg";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import { axiosGetItemUsageHistory } from "@/Cabinet/api/axios/axios.custom";
 
@@ -90,6 +91,7 @@ const ItemUsageLogPage = () => {
               isLoading={isLoading}
             >
               {isLoading ? <LoadingAnimation /> : "더보기"}
+              <DropdownChevron />
             </MoreButtonStyled>
           </ButtonContainerStyled>
         )}
@@ -144,6 +146,9 @@ const ButtonContainerStyled = styled.div`
 const MoreButtonStyled = styled.button<{
   isLoading: boolean;
 }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 200px;
   height: 50px;
   margin: 20px auto;
@@ -152,6 +157,14 @@ const MoreButtonStyled = styled.button<{
   background-color: var(--white);
   color: var(--main-color);
   position: relative;
+  padding: 0 15px;
+
+  svg {
+    margin-left: 18px;
+    margin-bottom: -2px;
+    width: 13px;
+    height: 9px;
+  }
 `;
 
 export default ItemUsageLogPage;
