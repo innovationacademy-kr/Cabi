@@ -1,25 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
 import { IItemStore } from "@/Cabinet/types/dto/store.dto";
+import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import { axiosBuyItem } from "@/Cabinet/api/axios/axios.custom";
+import { NotificationModal } from "../NotificationModal/NotificationModal";
 
-interface StorModalProps {
+const StoreBuyItemModal: React.FC<{
   onClose: () => void;
-  onPurchase: (item: IItemStore) => void;
   selectItem: IItemDetail;
-}
-
-const StoreBuyItemModal: React.FC<StorModalProps> = ({
-  onClose,
-  onPurchase,
-  selectItem,
-}) => {
+}> = (props) => {
+  const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
+  const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState(
-    String(selectItem.items.length - 1)
+    String(props.selectItem.items.length - 1)
   );
+  const [errorDetails, setErrorDetails] = useState("");
+  const [myCoin, setMyCoin] = useState<number | null>(null); // TODO : 실제 데이터 들어오면 지우기
+
+  const handlePurchase = (item: IItemStore) => {
+    if (myCoin !== null && item.itemPrice * -1 > myCoin) {
+      setShowResponseModal(true);
+      setHasErrorOnResponse(true);
+      setErrorDetails(`${item.itemPrice * -1 - myCoin} 까비가 더 필요합니다.`);
+    } else {
+      try {
+        axiosBuyItem(item.itemSku);
+        setHasErrorOnResponse(false);
+      } catch (error) {
+        throw error;
+      } finally {
+        setShowResponseModal(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    setMyCoin(400);
+    // TODO : 실제 데이터 들어오면 지우기
+    // TODO : setMyCoin(userInfo.coins);
+  }, []);
 
   const handleDropdownChange = (option: string) => {
     setSelectedOption(option);
@@ -33,33 +56,33 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
     detail: "",
     proceedBtnText: "네, 구매할게요",
     cancelBtnText: "취소",
-    closeModal: onClose,
+    closeModal: props.onClose,
     onClickProceed: async () => {
-      onPurchase(selectItem.items[Number(selectedOption)]);
+      handlePurchase(props.selectItem.items[Number(selectedOption)]);
     },
     renderAdditionalComponent: () => (
       <>
-        {selectItem.items.length > 1 && (
+        {props.selectItem.items.length > 1 && (
           <ModalContainerStyled>
             <ModalDropdownNameStyled>
-              {selectItem.itemName} 타입
+              {props.selectItem.itemName} 타입
             </ModalDropdownNameStyled>
             <Dropdown
               options={[
                 {
-                  name: selectItem.items[2].itemDetails,
+                  name: props.selectItem.items[2].itemDetails,
                   value: "2",
                 },
                 {
-                  name: selectItem.items[1].itemDetails,
+                  name: props.selectItem.items[1].itemDetails,
                   value: "1",
                 },
                 {
-                  name: selectItem.items[0].itemDetails,
+                  name: props.selectItem.items[0].itemDetails,
                   value: "0",
                 },
               ]}
-              defaultValue={selectItem.items[2].itemDetails}
+              defaultValue={props.selectItem.items[2].itemDetails}
               onChangeValue={handleDropdownChange}
             />{" "}
           </ModalContainerStyled>
@@ -68,11 +91,11 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
         <ModalDetailStyled>
           <p>
             <span>
-              {selectItem.itemName}
-              {selectItem.items.length > 1 && (
+              {props.selectItem.itemName}
+              {props.selectItem.items.length > 1 && (
                 <span>
                   {" "}
-                  - {selectItem.items[Number(selectedOption)].itemDetails}
+                  - {props.selectItem.items[Number(selectedOption)].itemDetails}
                 </span>
               )}
             </span>
@@ -82,9 +105,9 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
             구매시
             <span>
               {" "}
-              {selectItem.items[Number(selectedOption)].itemPrice
-                ? selectItem.items[Number(selectedOption)].itemPrice * -1
-                : selectItem.items[0].itemPrice * -1}{" "}
+              {props.selectItem.items[Number(selectedOption)].itemPrice
+                ? props.selectItem.items[Number(selectedOption)].itemPrice * -1
+                : props.selectItem.items[0].itemPrice * -1}{" "}
               까비
             </span>
             가 소모됩니다.
@@ -96,7 +119,23 @@ const StoreBuyItemModal: React.FC<StorModalProps> = ({
 
   return (
     <ModalPortal>
-      <Modal modalContents={modalContents} />
+      {!showResponseModal && <Modal modalContents={modalContents} />}
+      {showResponseModal &&
+        (hasErrorOnResponse ? (
+          <NotificationModal
+            title="코인이 부족합니다."
+            detail={errorDetails}
+            closeModal={props.onClose}
+            iconType={IconType.ERRORICON}
+          />
+        ) : (
+          <NotificationModal
+            title="구매 완료."
+            detail={""}
+            closeModal={props.onClose}
+            iconType={IconType.CHECKICON}
+          />
+        ))}
     </ModalPortal>
   );
 };
@@ -114,9 +153,9 @@ const ModalDetailStyled = styled.div`
   width: 100%;
   height: 100%;
   margin-top: 30px;
-  > p {
+  & p {
     margin: 10px;
-    > span {
+    & span {
       font-weight: 600;
     }
   }
