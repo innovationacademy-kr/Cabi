@@ -28,12 +28,6 @@ function mapItemNameToType(itemName: string): StoreItemType {
   }
 }
 
-const DateSection = ({ dateStr }: { dateStr: string }) => (
-  <DateSectionStyled>
-    <DateTitleStyled>{dateStr}</DateTitleStyled>
-  </DateSectionStyled>
-);
-
 const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
   const [page, setPage] = useState(0);
@@ -86,7 +80,11 @@ const ItemUsageLogPage = () => {
             index === 0 || log.dateStr !== itemUsageLogsArr[index - 1].dateStr;
           return (
             <LogItemStyled key={index}>
-              {isNewMonth && <DateSection dateStr={log.dateStr} />}
+              {isNewMonth && (
+                <DateSectionStyled>
+                  <DateTitleStyled>{log.dateStr}</DateTitleStyled>
+                </DateSectionStyled>
+              )}
               <ItemLogBlock log={log} />
             </LogItemStyled>
           );
