@@ -52,7 +52,6 @@ const SectionPagination: React.FC<{
 
 const SectionPaginationStyled = styled.div`
   min-width: 360px;
-  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;

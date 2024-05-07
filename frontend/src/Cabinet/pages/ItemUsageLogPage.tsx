@@ -2,16 +2,11 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
+import { IItemUsageLog } from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
+import { ReactComponent as DropdownChevron } from "@/Cabinet/assets/images/dropdownChevron.svg";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import { axiosGetItemUsageHistory } from "@/Cabinet/api/axios/axios.custom";
-
-interface IItemUsageLog {
-  dateStr: string;
-  date: Date;
-  title: string;
-  logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-}
 
 function mapItemNameToType(itemName: string): StoreItemType {
   switch (itemName) {
@@ -28,16 +23,24 @@ function mapItemNameToType(itemName: string): StoreItemType {
   }
 }
 
-const DateSection = ({ dateStr }: { dateStr: string }) => (
-  <DateSectionStyled>
-    <DateTitleStyled>{dateStr}</DateTitleStyled>
-  </DateSectionStyled>
-);
+function createLogEntries(data: { result: any[] }) {
+  return data.result.map((item) => ({
+    date: new Date(item.date),
+    title:
+      item.itemDto.itemName === item.itemDto.itemDetails
+        ? item.itemDto.itemName
+        : `${item.itemDto.itemName} - ${item.itemDto.itemDetails}`,
+    logo: ItemIconMap[mapItemNameToType(item.itemDto.itemName)],
+    dateStr: `${new Date(item.date).getFullYear()}년 ${
+      new Date(item.date).getMonth() + 1
+    }월`,
+  }));
+}
 
 const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
   const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasAdditionalLogs, sethasAdditionalLogs] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const size = 5;
 
@@ -49,24 +52,9 @@ const ItemUsageLogPage = () => {
     setIsLoading(true);
     try {
       const data = await axiosGetItemUsageHistory(page, size);
-      const newLogs = data.result.map(
-        (item: {
-          date: string | number | Date;
-          itemDto: { itemName: string; itemDetails: any };
-        }) => ({
-          date: new Date(item.date),
-          title:
-            item.itemDto.itemName === item.itemDto.itemDetails
-              ? item.itemDto.itemName
-              : `${item.itemDto.itemName} - ${item.itemDto.itemDetails}`,
-          logo: ItemIconMap[mapItemNameToType(item.itemDto.itemName)],
-          dateStr: `${new Date(item.date).getFullYear()}년 ${
-            new Date(item.date).getMonth() + 1
-          }월`,
-        })
-      );
+      const newLogs = createLogEntries(data);
       setItemUsageLogs((prevLogs) => [...prevLogs, ...newLogs]);
-      setHasMore(data.result.length === size);
+      sethasAdditionalLogs(data.result.length === size);
     } catch (error) {
       console.error("Failed to fetch item usage history:", error);
     }
@@ -86,12 +74,16 @@ const ItemUsageLogPage = () => {
             index === 0 || log.dateStr !== itemUsageLogsArr[index - 1].dateStr;
           return (
             <LogItemStyled key={index}>
-              {isNewMonth && <DateSection dateStr={log.dateStr} />}
+              {isNewMonth && (
+                <DateSectionStyled>
+                  <DateTitleStyled>{log.dateStr}</DateTitleStyled>
+                </DateSectionStyled>
+              )}
               <ItemLogBlock log={log} />
             </LogItemStyled>
           );
         })}
-        {hasMore && (
+        {hasAdditionalLogs && (
           <ButtonContainerStyled>
             <MoreButtonStyled
               onClick={handleMoreClick}
@@ -99,6 +91,7 @@ const ItemUsageLogPage = () => {
               isLoading={isLoading}
             >
               {isLoading ? <LoadingAnimation /> : "더보기"}
+              <DropdownChevron />
             </MoreButtonStyled>
           </ButtonContainerStyled>
         )}
@@ -153,6 +146,9 @@ const ButtonContainerStyled = styled.div`
 const MoreButtonStyled = styled.button<{
   isLoading: boolean;
 }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 200px;
   height: 50px;
   margin: 20px auto;
@@ -161,6 +157,14 @@ const MoreButtonStyled = styled.button<{
   background-color: var(--white);
   color: var(--main-color);
   position: relative;
+  padding: 0 15px;
+
+  svg {
+    margin-left: 18px;
+    margin-bottom: -2px;
+    width: 13px;
+    height: 9px;
+  }
 `;
 
 export default ItemUsageLogPage;

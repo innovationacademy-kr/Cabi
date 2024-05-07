@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
-interface IItemUsageLog {
+export interface IItemUsageLog {
+  dateStr?: string;
   date: Date;
   title: string;
   logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;

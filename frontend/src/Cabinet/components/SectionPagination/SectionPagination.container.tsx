@@ -1,11 +1,11 @@
-import SectionPagination from "@/Cabinet/components/SectionPagination/SectionPagination";
+import React from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   currentFloorNumberState,
   currentSectionNameState,
 } from "@/Cabinet/recoil/atoms";
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
-import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import SectionPagination from "@/Cabinet/components/SectionPagination/SectionPagination";
 
 const SectionPaginationContainer = (): JSX.Element => {
   const floor = useRecoilValue<number>(currentFloorNumberState);
