@@ -22,7 +22,7 @@ export interface UserDto {
   unbannedAt?: Date | null;
   alarmTypes: AlarmInfo | null;
   isDeviceTokenExpired: boolean | null;
-  // TODO : coins : number | null; // 보유 코인
+  coins: number | null; // 보유 코인
 }
 
 export interface UserInfo {

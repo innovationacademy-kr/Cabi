@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { userState } from "@/Cabinet/recoil/atoms";
 import StoreItemCard from "@/Cabinet/components/Card/StoreItemCard/StoreItemCard";
 import StoreBuyItemModal from "@/Cabinet/components/Modals/StoreModal/StoreBuyItemModal";
 import StoreCoinPick from "@/Cabinet/components/Store/StoreCoinPick";
@@ -10,12 +12,12 @@ const StoreMainPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<IItemDetail | null>(null);
   const [items, setItem] = useState([] as IItemDetail[]);
-  const [myCoin, setMyCoin] = useState<number | null>(null); // TODO : 실제 데이터 들어오면 지우기
-  // TODO : const [userInfo] = useRecoilState(userState);
+  const [userInfo] = useRecoilState(userState);
+
   const checkMyCoin = (item: IItemDetail) => {
     return (
-      myCoin !== null &&
-      myCoin > item.items[item.items.length - 1].itemPrice * -1
+      userInfo.coins !== null &&
+      userInfo.coins > item.items[item.items.length - 1].itemPrice * -1
     );
   };
   const getItems = async () => {
@@ -29,9 +31,6 @@ const StoreMainPage = () => {
 
   useEffect(() => {
     getItems();
-    setMyCoin(400);
-    // TODO : 실제 데이터 들어오면 지우기
-    // TODO : setMyCoin(userInfo.coins);
   }, []);
 
   const buttonClick = (item: IItemDetail) => {
