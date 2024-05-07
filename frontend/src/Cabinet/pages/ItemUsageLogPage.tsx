@@ -2,16 +2,10 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
+import { IItemUsageLog } from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import { axiosGetItemUsageHistory } from "@/Cabinet/api/axios/axios.custom";
-
-interface IItemUsageLog {
-  dateStr: string;
-  date: Date;
-  title: string;
-  logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-}
 
 function mapItemNameToType(itemName: string): StoreItemType {
   switch (itemName) {
