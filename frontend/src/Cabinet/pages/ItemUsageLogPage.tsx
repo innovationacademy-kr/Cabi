@@ -45,7 +45,7 @@ function createLogEntries(data: { result: any[] }) {
 const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
   const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasAdditionalLogs, sethasAdditionalLogs] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const size = 5;
 
@@ -59,7 +59,7 @@ const ItemUsageLogPage = () => {
       const data = await axiosGetItemUsageHistory(page, size);
       const newLogs = createLogEntries(data);
       setItemUsageLogs((prevLogs) => [...prevLogs, ...newLogs]);
-      setHasMore(data.result.length === size);
+      sethasAdditionalLogs(data.result.length === size);
     } catch (error) {
       console.error("Failed to fetch item usage history:", error);
     }
@@ -88,7 +88,7 @@ const ItemUsageLogPage = () => {
             </LogItemStyled>
           );
         })}
-        {hasMore && (
+        {hasAdditionalLogs && (
           <ButtonContainerStyled>
             <MoreButtonStyled
               onClick={handleMoreClick}
