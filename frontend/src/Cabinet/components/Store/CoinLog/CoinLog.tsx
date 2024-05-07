@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { userState } from "@/Cabinet/recoil/atoms";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import MultiToggleSwitch, {
   toggleItem,
@@ -38,7 +40,7 @@ const CoinLog = () => {
   const [page, setPage] = useState(0);
   const [moreButton, setMoreButton] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // TODO : const [userInfo] = useRecoilState(userState);
+  const [userInfo] = useRecoilState(userState);
   const size = 5;
 
   const getCoinLog = async (type: CoinLogToggleType) => {
@@ -84,7 +86,7 @@ const CoinLog = () => {
           <CoinIconStyled>
             <CoinIcon />
           </CoinIconStyled>
-          {/* TODO : <span>{userInfo.coins}</span> */}
+          <span>{userInfo.coins}</span>
           까비
         </MyCoinStyled>
       </MyCoinWrapperStyled>

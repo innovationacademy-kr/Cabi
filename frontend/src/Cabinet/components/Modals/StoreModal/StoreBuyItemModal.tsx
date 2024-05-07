@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { userState } from "@/Cabinet/recoil/atoms";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
@@ -19,13 +21,15 @@ const StoreBuyItemModal: React.FC<{
     String(props.selectItem.items.length - 1)
   );
   const [errorDetails, setErrorDetails] = useState("");
-  const [myCoin, setMyCoin] = useState<number | null>(null); // TODO : 실제 데이터 들어오면 지우기
+  const [userInfo] = useRecoilState(userState);
 
   const handlePurchase = (item: IItemStore) => {
-    if (myCoin !== null && item.itemPrice * -1 > myCoin) {
+    if (userInfo.coins !== null && item.itemPrice * -1 > userInfo.coins) {
       setShowResponseModal(true);
       setHasErrorOnResponse(true);
-      setErrorDetails(`${item.itemPrice * -1 - myCoin} 까비가 더 필요합니다.`);
+      setErrorDetails(
+        `${item.itemPrice * -1 - userInfo.coins} 까비가 더 필요합니다.`
+      );
     } else {
       try {
         axiosBuyItem(item.itemSku);
@@ -37,12 +41,6 @@ const StoreBuyItemModal: React.FC<{
       }
     }
   };
-
-  useEffect(() => {
-    setMyCoin(400);
-    // TODO : 실제 데이터 들어오면 지우기
-    // TODO : setMyCoin(userInfo.coins);
-  }, []);
 
   const handleDropdownChange = (option: string) => {
     setSelectedOption(option);

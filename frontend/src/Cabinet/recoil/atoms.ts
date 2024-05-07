@@ -31,7 +31,7 @@ export const userState = atom<UserDto>({
     unbannedAt: null,
     alarmTypes: null,
     isDeviceTokenExpired: null,
-    // TODO : coins: null,
+    coins: null,
   },
 });
 
