@@ -406,9 +406,18 @@ export const axiosBuyItem = async (sku: String): Promise<any> => {
   }
 };
 
-export const axiosUseItem = async (sku: String): Promise<any> => {
+export const axiosUseItem = async (
+  sku: String,
+  newCabinetId: number | null,
+  cabinetPlaceId: number | null,
+  sectionAlarmType: string | null
+): Promise<any> => {
   try {
-    const response = await instance.post(axiosBuyItemURL + sku + "/use");
+    const response = await instance.post(axiosBuyItemURL + sku + "/use", {
+      newCabinetId: newCabinetId,
+      cabinetPlaceId: cabinetPlaceId,
+      sectionAlarmType: sectionAlarmType,
+    });
     return response;
   } catch (error) {
     throw error;
