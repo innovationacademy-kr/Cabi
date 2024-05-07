@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { useRecoilState } from "recoil";
+import { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
 import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
+import { UserDto } from "@/Cabinet/types/dto/user.dto";
 
 interface IStorePageItem {
   name: string;
@@ -23,7 +24,11 @@ const LeftStoreNav = ({
 }) => {
   const [currentPage, SetCurrentPage] = useState(storePages[0].name);
   const [userInfo] = useRecoilState(userState);
+  // const setUser = useSetRecoilState<UserDto>(userState);
 
+  // useEffect(() => {
+
+  // }, []);
   return (
     <>
       <StoreLeftNavOptionStyled>

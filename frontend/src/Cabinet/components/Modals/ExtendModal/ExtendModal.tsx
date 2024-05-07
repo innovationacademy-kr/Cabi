@@ -101,7 +101,7 @@ const ExtendModal: React.FC<{
       setIsCurrentSectionRender(true);
       setModalTitle("연장권 사용완료");
       setModalContents(
-        `대여 기간이 <strong>${formattedExtendedDate}</strong>으로 <strong>15일</strong> 연장되었습니다.`
+        `대여 기간이 <strong>${formattedExtendedDate}</strong>으로 연장되었습니다.`
       );
       try {
         const { data } = await axiosCabinetById(currentCabinetId);

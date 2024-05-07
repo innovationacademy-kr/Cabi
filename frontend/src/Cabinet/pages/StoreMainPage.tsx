@@ -17,7 +17,7 @@ const StoreMainPage = () => {
   const checkMyCoin = (item: IItemDetail) => {
     return (
       userInfo.coins !== null &&
-      userInfo.coins > item.items[item.items.length - 1].itemPrice * -1
+      userInfo.coins >= item.items[item.items.length - 1].itemPrice * -1
     );
   };
   const getItems = async () => {
