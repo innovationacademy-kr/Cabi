@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.domain;
+package org.ftclub.cabinet.club.domain;
 
 
 public enum UserRole {

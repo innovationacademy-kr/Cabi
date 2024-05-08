@@ -4,7 +4,7 @@ import io.lettuce.core.dynamic.annotation.Param;
 import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.club.domain.ClubRegistration;
-import org.ftclub.cabinet.user.domain.UserRole;
+import org.ftclub.cabinet.club.domain.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
