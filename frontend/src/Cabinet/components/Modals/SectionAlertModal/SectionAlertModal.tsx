@@ -3,6 +3,7 @@ import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import { modalPropsMap } from "@/Cabinet/assets/data/maps";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
 
 const SectionAlertModal = ({
   currentSectionName,
@@ -18,6 +19,9 @@ const SectionAlertModal = ({
     setIsLoading(true);
     try {
       console.log("hi");
+      // axiosUseItem(ALARM, null, cabinetPlaceId, null);
+      // TODO : 아이템별 sku map으로
+
       //   await axiosSwapId(currentCabinetId);
       //   //userCabinetId 세팅
       //   setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
