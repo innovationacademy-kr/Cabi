@@ -12,7 +12,7 @@ import javax.validation.Payload;
 @Constraint(validatedBy = ItemUseValidator.class)
 public @interface ValidItemUse {
 
-	String message() default "Invalid item usage";
+	String message() default "잘못된 아이템 사용 요청입니다";
 
 	Class<?>[] groups() default {};
 

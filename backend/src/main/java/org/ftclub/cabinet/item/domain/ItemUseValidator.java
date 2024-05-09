@@ -37,10 +37,8 @@ public class ItemUseValidator implements ConstraintValidator<ValidItemUse, ItemU
 	}
 
 	private boolean isValidAlarmData(ItemUseRequestDto dto) {
-		if (dto.getBuilding() == null || dto.getFloor() == null || dto.getSection() == null) {
-			return false;
-		}
-		if (dto.getBuilding().isBlank() || dto.getSection().isBlank()) {
+		if (dto.getBuilding() == null
+			|| dto.getSection().isBlank() || dto.getBuilding().isBlank()) {
 			return false;
 		}
 		if (dto.getFloor() < 1 || dto.getFloor() > 5) {
