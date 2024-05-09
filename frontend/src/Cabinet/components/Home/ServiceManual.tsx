@@ -1,8 +1,8 @@
+import { useState } from "react";
+import styled from "styled-components";
 import MaunalContentBox from "@/Cabinet/components/Home/ManualContentBox";
 import ManualModal from "@/Cabinet/components/Modals/ManualModal/ManualModal";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
-import { useState } from "react";
-import styled from "styled-components";
 
 const ServiceManual = ({
   lentStartHandler,
@@ -121,9 +121,9 @@ const TitleContainerStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #d9d9d9;
+  border-bottom: 2px solid var(--service-man-title-border-btm-color);
   margin-bottom: 70px;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   font-weight: 700;
   .logo {
     width: 35px;
@@ -136,7 +136,7 @@ const TitleContainerStyled = styled.div`
     margin-bottom: 20px;
   }
   .title > span {
-    color: black;
+    color: var(--normal-text-color);
   }
 `;
 
@@ -145,11 +145,11 @@ const NotionBtn = styled.button`
   height: 40px;
   border-radius: 8px;
   font-size: 0.875rem;
-  color: #333333;
-  background: white;
-  border: 1px solid #d9d9d9;
+  color: var(--notion-btn-text-color);
+  background: var(--bg-color);
+  border: 1px solid var(--toggle-switch-off-bg-color);
   :hover {
-    color: black;
+    color: var(--normal-text-color);
     font-weight: 400;
   }
 `;
@@ -162,6 +162,7 @@ const WrapSectionStyled = styled.div`
     line-height: 1.4;
     text-align: left;
     font-weight: bold;
+    color: var(--normal-text-color);
   }
 `;
 
@@ -198,7 +199,7 @@ const InfoSectionStyled = styled.section`
     text-align: center;
   }
   .redColor {
-    color: #ef8172;
+    color: var(--ref-orange-200);
     margin-top: 15px;
   }
   .article > p > span {

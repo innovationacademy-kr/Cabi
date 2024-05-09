@@ -13,6 +13,7 @@ import LeftNav from "@/Presentation/components/LeftNav/LeftNav";
 import TopNavContainer from "@/Presentation/components/TopNav/TopNav.container";
 
 const token = getCookie("access_token");
+const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
 
 const Layout = (): JSX.Element => {
@@ -50,8 +51,22 @@ const Layout = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    root.style.setProperty("--main-color", "var(--presentation-main-color)");
-    root.style.setProperty("--sub-color", "var(--presentation-sub-color)");
+    root.style.setProperty(
+      "--sys-main-color",
+      "var(--sys-presentation-main-color)"
+    );
+    root.style.setProperty(
+      "--sys-sub-color",
+      "var(--sys-presentation-sub-color)"
+    );
+    body.style.setProperty(
+      "--sys-main-color",
+      "var(--sys-presentation-main-color)"
+    );
+    body.style.setProperty(
+      "--sys-sub-color",
+      "var(--sys-presentation-sub-color)"
+    );
   }, []);
 
   return isLoginPage ? (

@@ -1,20 +1,20 @@
-import {
-  axiosCreateClubUser,
-  axiosDeleteClubUser,
-  axiosEditClubUser,
-} from "@/Cabinet/api/axios/axios.custom";
-import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
+import React, { useEffect, useRef, useState } from "react";
+import { useRecoilState } from "recoil";
+import styled from "styled-components";
+import { selectedClubInfoState } from "@/Cabinet/recoil/atoms";
 import Button from "@/Cabinet/components/Common/Button";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
-import { selectedClubInfoState } from "@/Cabinet/recoil/atoms";
+import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
-import React, { useEffect, useRef, useState } from "react";
-import { useRecoilState } from "recoil";
-import styled from "styled-components";
+import {
+  axiosCreateClubUser,
+  axiosDeleteClubUser,
+  axiosEditClubUser,
+} from "@/Cabinet/api/axios/axios.custom";
 
 interface ClubModalContainerInterface {
   type: string;
@@ -220,7 +220,7 @@ const ModalContainerStyled = styled.div`
   top: 50%;
   left: 50%;
   width: 460px;
-  background: white;
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -271,7 +271,7 @@ const ContentItemTitleStyled = styled.h3`
 `;
 
 const ContentItemInputStyled = styled.input`
-  border: 1px solid var(--line-color);
+  border: 1px solid var(--light-gray-line-btn-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -279,10 +279,10 @@ const ContentItemInputStyled = styled.input`
   text-indent: 20px;
   font-size: 1.125rem;
   /* cursor: input; */
-  color: black;
+  color: var(--normal-text-color);
 
   &::placeholder {
-    color: var(--line-color);
+    color: var(--toggle-switch-off-bg-color);
   }
 `;
 
@@ -292,7 +292,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--modal-bg-shadow-color);
   z-index: 1000;
 `;
 

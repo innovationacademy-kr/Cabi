@@ -58,10 +58,10 @@ const MobileMiddleTrStysled = styled.tr<{
 }>`
   background-color: ${(props) =>
     !props.itemStatus
-      ? "#dce7fd"
+      ? "var(--presentation-detail-available-color)"
       : props.itemStatus === itemType.NO_EVENT_CURRENT
-      ? "var(--white)"
-      : "var(--full)"};
+      ? "var(--presentation-no-event-cur-color)"
+      : "var(--presentation-no-event-past-color)"};
   width: 100%;
   height: 50px;
   font-size: 14px;
@@ -76,7 +76,7 @@ const MobileMiddleTrStysled = styled.tr<{
   & button {
     width: 100px;
     height: 36px;
-    background-color: #3f69fd;
+    background-color: var(--sys-main-color);
     font-weight: bold;
     font-size: 1rem;
   }
@@ -90,6 +90,7 @@ const MobileMiddleTrStysled = styled.tr<{
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    color: var(--mine-text-color);
   }
 
   @media (min-width: 1150px) {

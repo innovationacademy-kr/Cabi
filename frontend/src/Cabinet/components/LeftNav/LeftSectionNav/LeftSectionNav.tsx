@@ -76,14 +76,14 @@ const LeftSectionNav = ({
           title="슬랙 캐비닛 채널 새창으로 열기"
         >
           문의하기
-          <LinkImg id="linknImg" stroke="var(--gray-color)" />
+          <LinkImg id="linknImg" stroke="var(--gray-line-btn-color)" />
         </SectionLinkStyled>
         <SectionLinkStyled
           onClick={() => onClickClubForm()}
           title="동아리 사물함 사용 신청서 새창으로 열기"
         >
           동아리 신청서
-          <LinkImg id="linknImg" stroke="var(--gray-color)" />
+          <LinkImg id="linknImg" stroke="var(--gray-line-btn-color)" />
         </SectionLinkStyled>
       </ProfileLeftNavOptionStyled>
       {isClub && <LeftSectionNavClubs />}
@@ -118,7 +118,7 @@ const ProfileLeftNavOptionStyled = styled.div<{
   & hr {
     width: 80%;
     height: 1px;
-    background-color: #d9d9d9;
+    background-color: var(--service-man-title-border-btm-color);
     border: 0;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -131,13 +131,13 @@ export const FloorSectionStyled = styled.div`
   line-height: 40px;
   border-radius: 10px;
   text-indent: 20px;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
   margin: 2px 0;
   cursor: pointer;
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--main-color);
-      color: var(--white);
+      background-color: var(--sys-main-color);
+      color: var(--white-text-with-bg-color);
     }
   }
 `;
@@ -152,7 +152,7 @@ const SectionLinkStyled = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 
   #linknImg {
     width: 15px;
@@ -162,11 +162,11 @@ const SectionLinkStyled = styled.div`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--main-color);
-    }
-    &:hover img {
-      filter: invert(33%) sepia(55%) saturate(3554%) hue-rotate(230deg)
-        brightness(99%) contrast(107%);
+      color: var(--button-line-color);
+
+      svg {
+        stroke: var(--button-line-color);
+      }
     }
   }
 `;

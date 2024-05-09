@@ -1,6 +1,6 @@
-import { IMonthlyData } from "@/Cabinet/types/dto/admin.dto";
 import { ResponsiveLine } from "@nivo/line";
 import styled from "styled-components";
+import { IMonthlyData } from "@/Cabinet/types/dto/admin.dto";
 
 interface IChartInfo {
   x: string;
@@ -47,6 +47,16 @@ const convertData = (data: IMonthlyData[]) =>
 const LineChart = ({ data }: { data: IMonthlyData[] }) => (
   <LineChartStyled>
     <ResponsiveLine
+      theme={{
+        textColor: "var(--normal-text-color)",
+        tooltip: {
+          container: {
+            backgroundColor: "var(--bg-color)",
+            boxShadow: "var(--left-nav-border-shadow-color) 0 1px 2px",
+            color: "var(--normal-text-color)",
+          },
+        },
+      }}
       data={convertData(data)}
       margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
       xScale={{ type: "point" }}
@@ -92,12 +102,10 @@ const LineChart = ({ data }: { data: IMonthlyData[] }) => (
           itemOpacity: 0.75,
           symbolSize: 12,
           symbolShape: "circle",
-          symbolBorderColor: "rgba(0, 0, 0, .5)",
           effects: [
             {
               on: "hover",
               style: {
-                itemBackground: "rgba(0, 0, 0, .03)",
                 itemOpacity: 1,
               },
             },

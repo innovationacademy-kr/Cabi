@@ -33,15 +33,15 @@ const Pagination = ({
 const PageButtonStyled = styled.div`
   width: 10px;
   height: 10px;
-  border: 2px solid var(--line-color);
+  border: 2px solid var(--light-gray-line-btn-color);
   border-radius: 100%;
   margin: 0 5px;
   cursor: pointer;
 `;
 
 const ActivaPageButtonStyled = styled(PageButtonStyled)`
-  background: var(--gray-color);
-  border: 2px solid var(--gray-color);
+  background: var(--gray-line-btn-color);
+  border: 2px solid var(--gray-line-btn-color);
 `;
 
 const ButtonContainerStyled = styled.div`

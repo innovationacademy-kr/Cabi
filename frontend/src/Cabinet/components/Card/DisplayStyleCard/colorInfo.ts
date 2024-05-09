@@ -10,7 +10,7 @@ interface ColorData {
   }) => string;
 }
 
-export const themeColorData: ColorData[] = [
+export const pointColorData: ColorData[] = [
   {
     title: "메인 컬러",
     type: ColorType.MAIN,
@@ -29,14 +29,21 @@ export const themeColorData: ColorData[] = [
 ];
 
 export const customColors = [
-  "#FF4589",
-  "#FF8B5B",
-  "#FFC74C",
-  "#00cec9",
-  "#00C2AB",
-  "#74b9ff",
-  "#0984e3",
-  "#0D4C92",
-  "#a29bfe",
-  "#9747FF",
+  "--custom-pink",
+  "--custom-orange",
+  "--custom-yellow",
+  "--custom-green-100",
+  "--custom-green-200",
+  "--custom-blue-100",
+  "--custom-blue-200",
+  "--custom-blue-300",
+  "--custom-purple-100",
+  "--custom-purple-200",
 ];
+
+export const GetCustomColorsValues = () => {
+  return customColors.map((color) => {
+    // NOTE : var(--custom-*)의 값 구하기
+    return getComputedStyle(document.body).getPropertyValue(color);
+  });
+};

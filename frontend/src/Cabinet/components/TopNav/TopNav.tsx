@@ -5,6 +5,7 @@ import SearchBar from "@/Cabinet/components/TopNav/SearchBar/SearchBar";
 import TopNavButtonGroup from "@/Cabinet/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import TopNavDomainGroup from "@/Cabinet/components/TopNav/TopNavDomainGroup/TopNavDomainGroup";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
+import { ReactComponent as SelectIcon } from "@/Cabinet/assets/images/select.svg";
 import useOutsideClick from "@/Cabinet/hooks/useOutsideClick";
 
 interface IBuildingListItem {
@@ -107,9 +108,10 @@ const TopNavWrapperStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: var(--bg-color);
   border-bottom: 1px solid var(--line-color);
   padding: 0 28px;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 `;
 
 const LogoStyled = styled.div`
@@ -123,7 +125,7 @@ const LogoDivStyled = styled.div`
   cursor: pointer;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
   }
 `;
@@ -145,16 +147,6 @@ const BuildingSelectBoxStyled = styled.span`
       opacity: 0.9;
     }
   }
-  & > div::after {
-    content: "";
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    background: url(/src/Cabinet/assets/images/select.svg) no-repeat 100%;
-  }
 `;
 
 const BuildingListStyled = styled.ul<{ clicked: boolean }>`
@@ -162,10 +154,10 @@ const BuildingListStyled = styled.ul<{ clicked: boolean }>`
   top: 30px;
   left: -15px;
   padding: 5px 10px;
-  background: var(--white);
+  background: var(--bg-color);
   opacity: 0.9;
   border-radius: 4px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px 0 var(--left-nav-border-shadow-color);
   z-index: 100;
   display: ${(props) => (props.clicked ? "block" : "none")};
   user-select: none !important;
@@ -174,7 +166,7 @@ const BuildingListStyled = styled.ul<{ clicked: boolean }>`
 const BuildingListItemStyled = styled.li`
   width: 80px;
   height: 40px;
-  color: var(--black);
+  color: var(--normal-text-color);
   font-size: 1.25rem;
   font-family: var(--main-font);
   line-height: 40px;
@@ -183,6 +175,22 @@ const BuildingListItemStyled = styled.li`
     &:hover {
       opacity: 0.8;
     }
+  }
+`;
+
+const SelectIconStyled = styled.div`
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > svg > path {
+    stroke: var(--gray-line-btn-color);
   }
 `;
 

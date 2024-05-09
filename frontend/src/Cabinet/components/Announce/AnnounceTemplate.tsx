@@ -25,9 +25,9 @@ const AnnounceTemplate = (props: Itext) => {
 
   useEffect(() => {
     if (type === "LOADING") {
-      setBackgroundColor("var(--sub-color)");
+      setBackgroundColor("var(--sys-sub-color)");
     } else if (type === "ERROR") {
-      setBackgroundColor("var(--main-color)");
+      setBackgroundColor("var(--sys-main-color)");
     }
   }, []);
 
@@ -61,14 +61,14 @@ const AnnounceTemplateStyled = styled.div<{ backgroundColor: string }>`
   align-items: center;
   flex-direction: column;
   background-color: ${(props) => props.backgroundColor};
-  color: var(--white);
+  color: var(--bg-color);
 `;
 
 const TitleStyled = styled.h1`
   font-size: 5rem;
-  color: var(--mine);
+  color: var(--mine-color);
   font-family: "Do Hyeon", sans-serif;
-  filter: drop-shadow(0 0 0.75rem var(--mine));
+  filter: drop-shadow(0 0 0.75rem var(--mine-color));
   text-align: center;
   @media screen and (max-width: 768px) {
     font-size: 3.25rem;
@@ -83,6 +83,7 @@ const SubTitleStyled = styled.h2`
   @media screen and (max-width: 768px) {
     font-size: 1.5rem;
   }
+  color: var(--white-text-with-bg-color);
 `;
 
 const ContentStyled = styled.p`
@@ -98,6 +99,7 @@ const ContentStyled = styled.p`
       display: block;
     }
   }
+  color: var(--white-text-with-bg-color);
 `;
 
 const rotate = keyframes`
@@ -122,7 +124,7 @@ const CabiImgStyled = styled.div`
 `;
 
 const ButtonStyled = styled.button`
-  box-shadow: 10px 10px 40px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 10px 10px 40px 0px var(--color-picker-border-shadow-color);
 `;
 
 export default AnnounceTemplate;

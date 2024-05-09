@@ -1,8 +1,9 @@
-import { serverTimeState } from "@/Cabinet/recoil/atoms";
-import Time from "@/Cabinet/types/enum/time.enum";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { serverTimeState } from "@/Cabinet/recoil/atoms";
+import { ReactComponent as AlarmIcon } from "@/Cabinet/assets/images/alarm.svg";
+import Time from "@/Cabinet/types/enum/time.enum";
 
 const openTime = new Date();
 openTime.setHours(13, 0, 0, 0); // 오픈 시간인 13:00:00(오후 1시)로 설정
@@ -51,6 +52,12 @@ const AvailableCountdown = ({
     </>
   );
 };
+
+const AvailableCountdownIconStyled = styled.div`
+  height: 25px;
+  width: 25px;
+  margin-top: 50px;
+`;
 
 const AvailableCountdownStyled = styled.div`
   color: white;

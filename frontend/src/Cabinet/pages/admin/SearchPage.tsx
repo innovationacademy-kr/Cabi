@@ -174,11 +174,11 @@ const MoreButtonStyled = styled.button`
   width: 240px;
   height: 60px;
   margin: 20px auto;
-  border: 1px solid var(--main-color);
+  border: 1px solid var(--sys-main-color);
   border-radius: 30px;
   text-indent: -20px;
-  background-color: var(--white);
-  color: var(--main-color);
+  background-color: var(--bg-color);
+  color: var(--sys-main-color);
   position: relative;
 
   &::after {

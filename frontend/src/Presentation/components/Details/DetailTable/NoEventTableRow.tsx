@@ -65,6 +65,7 @@ const NoEventPhraseStyled = styled.div<{ hasNoUpcomingEvent: boolean }>`
   display: flex;
   align-items: center;
   padding: 0 10px;
+  color: var(--normal-text-color);
 
   & > div {
     text-overflow: ellipsis;
@@ -85,7 +86,11 @@ const CcabiStyled = styled.div<{ hasNoUpcomingEvent: boolean }>`
   }
 
   & svg > path {
-    fill: var(--black);
+    fill: var(--normal-text-color);
+  }
+
+  & svg > g {
+    fill: var(--normal-text-color);
   }
 
   @media (max-width: 1220px) {

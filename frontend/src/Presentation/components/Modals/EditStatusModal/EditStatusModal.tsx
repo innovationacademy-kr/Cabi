@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import Dropdown, {
@@ -234,7 +234,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--hover-box-shadow-color);
   z-index: 1000;
 `;
 const ModalContainerStyled = styled.div<{ type: string }>`
@@ -242,7 +242,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);

@@ -8,6 +8,7 @@ import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
+import { ReactComponent as RotateRightIcon } from "@/Cabinet/assets/images/rotateRight.svg";
 import {
   AvailableCabinetsInfo,
   CabinetPreviewInfo,
@@ -132,15 +133,15 @@ const AvailablePage = () => {
         <h2>
           <span>매일 오후 1시</span> 사용 가능한 사물함이 업데이트됩니다.
         </h2>
-        <RefreshButtonStyled onClick={refreshAvailableCabinets}>
+        <RefreshButtonStyled
+          onClick={refreshAvailableCabinets}
+          title="새로고침"
+        >
           {isRefreshing ? (
             <LoadingAnimation />
           ) : (
             <>
-              <img
-                src="/src/Cabinet/assets/images/rotateRight.svg"
-                alt="새로고침"
-              />
+              <RotateRightIcon />
               <AvailableCountdown observeOpenTime={() => setIsOpenTime(true)} />
             </>
           )}
@@ -196,12 +197,12 @@ const SubHeaderStyled = styled.div`
   align-items: center;
   text-align: center;
   font-size: 1.2rem;
-  color: var(--sub-color);
+  color: var(--sys-sub-color);
   margin-top: 25px;
   line-height: 1.5;
   word-break: keep-all;
   margin: 25px 10px 0px 10px;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   span {
     font-weight: 700;
     text-decoration: underline;
@@ -212,22 +213,30 @@ const RefreshButtonStyled = styled.button`
   margin-top: 60px;
   width: 280px;
   height: 47px;
-  background-color: var(--main-color);
+  background-color: var(--sys-main-color);
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  img {
+
+  & > svg {
     width: 24px;
     height: 24px;
     margin-right: 8px;
   }
+
+  & > svg > path {
+    stroke: var(--white-text-with-bg-color);
+  }
+
   &:hover {
     opacity: 0.7;
   }
+
   &:active {
     transform: scale(0.8);
   }
+
   transition: all 0.3s ease;
 `;
 

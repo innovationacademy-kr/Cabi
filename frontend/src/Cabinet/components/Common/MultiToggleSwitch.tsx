@@ -18,14 +18,13 @@ const MultiToggleSwitch = <T,>({
   toggleList,
 }: MultiToggleSwitchProps<T>) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
       if (button.className === initialState) {
-        button.style.color = "white";
-        button.style.backgroundColor = "var(--main-color)";
+        button.style.color = "var(--white-text-with-bg-color)";
+        button.style.backgroundColor = "var(--sys-main-color)";
       }
     });
   }, [initialState]);
@@ -38,12 +37,12 @@ const MultiToggleSwitch = <T,>({
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
-      button.style.color = "black";
+      button.style.color = "var(--normal-text-color)";
       button.style.backgroundColor = "transparent";
     });
 
-    target.style.color = "white";
-    target.style.backgroundColor = "var(--main-color)";
+    target.style.color = "var(--bg-color)";
+    target.style.backgroundColor = "var(--sys-main-color)";
 
     setState(target.className as React.SetStateAction<T>);
   }
@@ -63,8 +62,7 @@ const WrapperStyled = styled.div`
   width: fit-content;
   display: flex;
   align-items: center;
-  background-color: var(--lightgray-color);
-
+  background-color: var(--card-bg-color);
   border-radius: 10px;
   button {
     display: flex;
@@ -77,7 +75,7 @@ const WrapperStyled = styled.div`
     height: 30px;
     font-weight: 500;
     background-color: transparent;
-    color: black;
+    color: var(--normal-text-color);
     padding: 4px 12px;
   }
 `;

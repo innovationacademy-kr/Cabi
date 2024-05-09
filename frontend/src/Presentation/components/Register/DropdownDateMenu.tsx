@@ -127,13 +127,13 @@ const AnimatedDropdownOptions = styled.ul<{
   left: 0;
   width: 100%;
   z-index: 1;
-  border: 1px solid var(--white);
+  border: 1px solid var(--card-content-bg-color);
   border-radius: 10px;
   text-align: left;
   padding: 10px;
-  color: var(--black);
-  background-color: var(--white);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  color: var(--normal-text-color);
+  background-color: var(--card-content-bg-color);
+  box-shadow: 0 0 10px 0 var(--table-border-shadow-color-200);
   overflow-y: auto;
   scrollbar-width: thin;
   opacity: ${(props) => (props.isVisible ? 1 : 0)};
@@ -153,10 +153,15 @@ const AnimatedDropdownOptions = styled.ul<{
 const DropdownOption = styled.li<{ invalid: boolean }>`
   font-size: 0.875rem;
   padding: 10px;
-  color: ${({ invalid }) => (invalid ? "var(--gray-color)" : "black")};
-  background-color: ${({ invalid }) => (invalid ? "#f0f0f0" : "transparent")};
+  color: ${({ invalid }) =>
+    invalid ? "var(--gray-line-btn-color)" : "var(--normal-text-color)"};
+  background-color: ${({ invalid }) =>
+    invalid ? "var(--card-bg-color)" : "transparent"};
   &:hover {
-    background-color: ${({ invalid }) => (invalid ? "#f0f0f0" : "#DCE7FD")};
+    background-color: ${({ invalid }) =>
+      invalid
+        ? "var(--card-bg-color)"
+        : "var(--presentation-dropdown-select-color)"};
     cursor: ${({ invalid }) => (invalid ? "not-allowed" : "pointer")};
   }
 
@@ -177,10 +182,12 @@ const RegisterTimeInputStyled = styled.div<{
   padding-right: 10px;
   width: 100%;
   border-radius: 10px;
-  background-color: var(--white);
-  border: 2px solid ${(props) => (props.isFocused ? "#91B5FA" : "var(--white)")};
-  color: ${(props) =>
-    props.hasSelectedOption ? "var(--black)" : "var(--gray-color)"};
+  background-color: var(--card-content-bg-color);
+  border: 2px solid
+    ${(props) =>
+      props.isFocused
+        ? "var(--sys-sub-color)"
+        : "var(--card-content-bg-color)"};
   resize: none;
   outline: none;
   cursor: pointer;
@@ -190,8 +197,8 @@ const RegisterTimeInputStyled = styled.div<{
   padding-left: 10px;
   color: ${(props) =>
     props.isFocused || !props.hasSelectedOption
-      ? "var(--gray-color)"
-      : "var(--black)"};
+      ? "var(--gray-line-btn-color)"
+      : "var(--normal-text-color)"};
 `;
 
 const DropdownIcon = styled.img<{ rotated: boolean }>`

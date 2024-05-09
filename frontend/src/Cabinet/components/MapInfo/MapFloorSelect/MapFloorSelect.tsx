@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import MapFloorSelectOption from "@/Cabinet/components/MapInfo/MapFloorSelectOption/MapFloorSelectOption";
-import { ReactComponent as SelectImg } from "@/Cabinet/assets/images/select.svg";
+import { ReactComponent as SelectIcon } from "@/Cabinet/assets/images/select.svg";
 
 interface IMapFloorSelect {
   floor: number;
@@ -23,7 +23,7 @@ const MapFloorSelect = ({ floor, setFloor, floorInfo }: IMapFloorSelect) => {
     <div style={{ position: "relative" }}>
       <MapFloorSelectStyled className="cabiButton" onClick={onClickFloorOption}>
         <span>{`${floor}층`}</span>
-        <SelectImg stroke="var(--white)" />
+        <SelectIcon />
       </MapFloorSelectStyled>
       <MapFloorSelectOption selectFloor={selectFloor} floorInfo={floorInfo} />
     </div>
@@ -31,8 +31,8 @@ const MapFloorSelect = ({ floor, setFloor, floorInfo }: IMapFloorSelect) => {
 };
 
 const MapFloorSelectStyled = styled.div`
-  background: var(--main-color);
-  color: white;
+  background-color: var(--sys-main-color);
+  color: var(--white-text-with-bg-color);
   cursor: pointer;
   width: 65px;
   height: 40px;
@@ -47,6 +47,11 @@ const MapFloorSelectStyled = styled.div`
     &:hover {
       opacity: 0.9;
     }
+  }
+
+  & > svg > path {
+    stroke: var(--white-text-with-bg-color);
+    stroke-width: 1.5;
   }
 `;
 
