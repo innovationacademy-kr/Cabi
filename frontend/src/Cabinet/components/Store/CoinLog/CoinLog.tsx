@@ -7,6 +7,7 @@ import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
 import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
+import { ReactComponent as SadCabiIcon } from "@/Cabinet/assets/images/sadCcabi.svg";
 import { ReactComponent as Select } from "@/Cabinet/assets/images/selectMaincolor.svg";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import { axiosCoinLog } from "@/Cabinet/api/axios/axios.custom";
@@ -80,65 +81,74 @@ const CoinLog = () => {
 
   return (
     <WrapperStyled>
-      <TitleStyled>코인 내역</TitleStyled>
-      <MyCoinWrapperStyled>
-        <MyCoinStyled>
-          <CoinIconStyled>
-            <CoinIcon />
-          </CoinIconStyled>
-          <span>{userInfo.coins}</span>
-          까비
-        </MyCoinStyled>
-      </MyCoinWrapperStyled>
-      <MultiToggleSwitchStyled>
-        <MultiToggleSwitch
-          initialState={toggleType}
-          setState={setToggleType}
-          toggleList={toggleList}
-        ></MultiToggleSwitch>
-      </MultiToggleSwitchStyled>
-      <LogItemWrapperStyled>
-        {coinLogs?.map((log, idx) => {
-          const isEarned = log.amount > 0;
-          const hasTypes = log.itemDetails !== log.history;
-          return (
-            <LogItemStyled isEarned={isEarned} key={idx}>
-              <span id="date">
-                {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
-              </span>
-              <span id="history" title={log.history}>
-                {log.history} {hasTypes && "- " + log.itemDetails}
-              </span>
-              <span id="amount">
-                {isEarned ? "+" : ""}
-                {log.amount}
-              </span>
-            </LogItemStyled>
-          );
-        })}
-      </LogItemWrapperStyled>
-      {moreButton && (
-        <ButtonContainerStyled>
-          <MoreButtonStyled onClick={clickMoreButton} isLoading={isLoading}>
-            {isLoading ? (
-              <LoadingAnimation />
-            ) : (
-              <ButtonContentWrapperStyled>
-                <ButtonTextWrapperStyled>더보기</ButtonTextWrapperStyled>
-                <SelectIconWrapperStyled>
-                  <Select />
-                </SelectIconWrapperStyled>
-              </ButtonContentWrapperStyled>
-            )}
-          </MoreButtonStyled>
-        </ButtonContainerStyled>
+      {coinLogs?.length === 0 ? (
+        <EmptyCoinLogTextStyled>
+          코인 내역이 없습니다.
+          <SadCabiIcon />
+        </EmptyCoinLogTextStyled>
+      ) : (
+        <>
+          <TitleStyled>코인 내역</TitleStyled>
+          <MyCoinWrapperStyled>
+            <MyCoinStyled>
+              <CoinIconStyled>
+                <CoinIcon />
+              </CoinIconStyled>
+              <span>{userInfo.coins}</span>
+              까비
+            </MyCoinStyled>
+          </MyCoinWrapperStyled>
+          <MultiToggleSwitchStyled>
+            <MultiToggleSwitch
+              initialState={toggleType}
+              setState={setToggleType}
+              toggleList={toggleList}
+            ></MultiToggleSwitch>
+          </MultiToggleSwitchStyled>
+          <LogItemWrapperStyled>
+            {coinLogs?.map((log, idx) => {
+              const isEarned = log.amount > 0;
+              const hasTypes = log.itemDetails !== log.history;
+              return (
+                <LogItemStyled isEarned={isEarned} key={idx}>
+                  <span id="date">
+                    {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
+                  </span>
+                  <span id="history" title={log.history}>
+                    {log.history} {hasTypes && "- " + log.itemDetails}
+                  </span>
+                  <span id="amount">
+                    {isEarned ? "+" : ""}
+                    {log.amount}
+                  </span>
+                </LogItemStyled>
+              );
+            })}
+          </LogItemWrapperStyled>
+          {moreButton && (
+            <ButtonContainerStyled>
+              <MoreButtonStyled onClick={clickMoreButton} isLoading={isLoading}>
+                {isLoading ? (
+                  <LoadingAnimation />
+                ) : (
+                  <ButtonContentWrapperStyled>
+                    <ButtonTextWrapperStyled>더보기</ButtonTextWrapperStyled>
+                    <SelectIconWrapperStyled>
+                      <Select />
+                    </SelectIconWrapperStyled>
+                  </ButtonContentWrapperStyled>
+                )}
+              </MoreButtonStyled>
+            </ButtonContainerStyled>
+          )}
+        </>
       )}
     </WrapperStyled>
   );
 };
 
 const WrapperStyled = styled.div`
-  /* height: 100%; */
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -303,6 +313,23 @@ const SelectIconWrapperStyled = styled.div`
 
   & > svg > path {
     stroke: var(--main-color);
+  }
+`;
+
+const EmptyCoinLogTextStyled = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: var(--gray-color);
+
+  & > svg {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
   }
 `;
 
