@@ -87,16 +87,18 @@ const CoinLog = () => {
   }, [coinLogs]);
 
   return (
-    <WrapperStyled>
+    <>
       {isLoading ? (
         <LoadingAnimation />
       ) : toggleType === CoinLogToggleType.ALL && !coinLogs?.length ? (
-        <EmptyCoinLogTextStyled>
-          {unavailableCoinLogMsgMap[toggleType]} 내역이 없습니다.
-          <SadCabiIcon />
-        </EmptyCoinLogTextStyled>
+        <EmptyWrapperStyled>
+          <EmptyCoinLogTextStyled>
+            {unavailableCoinLogMsgMap[toggleType]} 내역이 없습니다.
+            <SadCabiIcon />
+          </EmptyCoinLogTextStyled>
+        </EmptyWrapperStyled>
       ) : (
-        <>
+        <WrapperStyled>
           <TitleStyled>코인 내역</TitleStyled>
           <MyCoinWrapperStyled>
             <MyCoinStyled>
@@ -160,9 +162,9 @@ const CoinLog = () => {
               </MoreButtonStyled>
             </ButtonContainerStyled>
           )}
-        </>
+        </WrapperStyled>
       )}
-    </WrapperStyled>
+    </>
   );
 };
 
@@ -171,6 +173,13 @@ const WrapperStyled = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 60px 0 100px 0;
+`;
+
+const EmptyWrapperStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `;
 
 const TitleStyled = styled.h1`
