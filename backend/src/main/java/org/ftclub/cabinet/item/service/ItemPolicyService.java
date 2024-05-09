@@ -28,7 +28,7 @@ public class ItemPolicyService {
 	public ItemHistory verifyEmptyItems(List<ItemHistory> itemInInventory) {
 		return itemInInventory.stream()
 				.min(Comparator.comparing(ItemHistory::getPurchaseAt))
-				.orElseThrow(ExceptionStatus.NOT_FOUND_ITEM::asServiceException);
+				.orElseThrow(ExceptionStatus.ITEM_NOT_OWNED::asServiceException);
 	}
 
 	public void verifyOnSale(long price) {
