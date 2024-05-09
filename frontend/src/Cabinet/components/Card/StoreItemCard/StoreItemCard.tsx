@@ -34,7 +34,7 @@ const StoreItemCard = ({
     <WrapperStyled>
       <Card
         title={item.itemName}
-        gridArea={"Extension"}
+        gridArea={item.itemType}
         width={"340px"}
         height={"150px"}
         buttons={[button]}

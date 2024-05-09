@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { userState } from "@/Cabinet/recoil/atoms";
+import { myCabinetInfoState, userState } from "@/Cabinet/recoil/atoms";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
 import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
@@ -32,9 +32,9 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   const userInfo = useRecoilValue<UserDto>(userState);
 
   const penaltyPeriod = [
-    { sku: "penalty_3", period: "3일" },
-    { sku: "penalty_15", period: "7일" },
-    { sku: "penalty_31", period: "31일" },
+    { sku: "PENALTY_3", period: "3일" },
+    { sku: "PENALTY_7", period: "7일" },
+    { sku: "PENALTY_31", period: "31일" },
   ];
 
   const tryGetPenaltyItem = async () => {
@@ -50,13 +50,14 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
       throw error;
     }
   };
-
+  // const myCabinetInfo = useSetRecoilState(myCabinetInfoState);
   const tryPenaltyItemUse = async (
     item: string,
     usePenaltyItemDays: number
   ) => {
     try {
-      // await axiosUseItem(item);
+      await axiosUseItem(item, null, null, null);
+      // await
       setModalTitle("패널티 축소권 사용 완료");
       if (remainPenaltyPeriod <= usePenaltyItemDays) {
         setModalContent("남은 패널티 기간이 모두 소멸되었습니다");

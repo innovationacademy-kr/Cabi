@@ -42,12 +42,13 @@ const StoreInfo = () => {
     setIsLoading(true);
     try {
       // coin 줍기 axios
-      if (todayCoinCollection === false) {
+      if (todayCoinCollection === true) {
         setHasErrorOnResponse(true);
       } else {
         const res = await axiosCoinCheckPost();
         console.log("coin 줍기 axios Post", res);
         setModalContent(`${res.data.reward}까비를 획득했습니다.`);
+        setmonthlyCoinCount(monthlyCoinCount + 1);
         setTodayCoinCollection(false);
       }
     } catch (error) {

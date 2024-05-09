@@ -20,7 +20,6 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.ExceptionUtil;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
@@ -7,8 +7,9 @@ import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
 import { IItemStore } from "@/Cabinet/types/dto/store.dto";
+import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
-import { axiosBuyItem } from "@/Cabinet/api/axios/axios.custom";
+import { axiosBuyItem, axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 import { NotificationModal } from "../NotificationModal/NotificationModal";
 
 const StoreBuyItemModal: React.FC<{
@@ -22,8 +23,11 @@ const StoreBuyItemModal: React.FC<{
   );
   const [errorDetails, setErrorDetails] = useState("");
   const [userInfo] = useRecoilState(userState);
+  // const [userInfo, setMyInfo] = useRecoilState(userState);
 
-  const handlePurchase = (item: IItemStore) => {
+  const setUser = useSetRecoilState<UserDto>(userState);
+
+  const handlePurchase = async (item: IItemStore) => {
     if (userInfo.coins !== null && item.itemPrice * -1 > userInfo.coins) {
       setShowResponseModal(true);
       setHasErrorOnResponse(true);
@@ -32,8 +36,10 @@ const StoreBuyItemModal: React.FC<{
       );
     } else {
       try {
-        axiosBuyItem(item.itemSku);
+        await axiosBuyItem(item.itemSku);
+        const { data: myInfo } = await axiosMyInfo();
         setHasErrorOnResponse(false);
+        setUser(myInfo);
       } catch (error) {
         throw error;
       } finally {

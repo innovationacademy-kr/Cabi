@@ -1,9 +1,20 @@
 import styled from "styled-components";
+import { IItemUsageLog } from "@/Cabinet/pages/ItemUsageLogPage";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
-interface IItemUsageLog {
-  date: Date;
-  title: string;
-  logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+export function mapItemNameToType(itemName: string): StoreItemType {
+  switch (itemName) {
+    case "연장권":
+      return StoreItemType.EXTENSION;
+    case "이사권":
+      return StoreItemType.SWAP;
+    case "알림 등록권":
+      return StoreItemType.ALERT;
+    case "패널티 감면권":
+      return StoreItemType.PENALTY;
+    default:
+      return StoreItemType.EXTENSION;
+  }
 }
 
 const formatDate = (date: Date) => {

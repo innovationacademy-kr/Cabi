@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -12,10 +12,14 @@ import {
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import CabinetListContainer from "@/Cabinet/components/CabinetList/CabinetList.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import SectionAlertModal from "@/Cabinet/components/Modals/SectionAlertModal/SectionAlertModal";
 import SectionPaginationContainer from "@/Cabinet/components/SectionPagination/SectionPagination.container";
+import { ReactComponent as HeartIcon } from "@/Cabinet/assets/images/lineHeart.svg";
 import SectionType from "@/Cabinet/types/enum/map.type.enum";
 import useCabinetListRefresh from "@/Cabinet/hooks/useCabinetListRefresh";
 import useMenu from "@/Cabinet/hooks/useMenu";
+
+const clubSections = ["Cluster X - 1", "Cluster X - 2", "Cluster X - 3"];
 
 const MainPage = () => {
   const touchStartPosX = useRef(0);
@@ -38,6 +42,9 @@ const MainPage = () => {
     currentBuilding,
     currentFloor
   );
+  const [isClubSection, setIsClubSection] = useState(false);
+  const [showSectionAlertModal, setShowSectionAlertModal] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (!currentFloor) {
@@ -54,6 +61,15 @@ const MainPage = () => {
       resetCurrentCabinetId();
     };
   }, []);
+
+  useEffect(() => {
+    const clubSection = clubSections.find((section) => {
+      return section === currentSectionName;
+    })
+      ? true
+      : false;
+    setIsClubSection(clubSection);
+  }, [currentSectionName]);
 
   const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
     const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
@@ -91,6 +107,11 @@ const MainPage = () => {
     mainWrapperRef.current?.scrollTo(0, 0);
   };
 
+  const openModal = () => {
+    console.log("openModal");
+    setShowSectionAlertModal(true);
+  };
+
   return (
     <>
       {isLoading && <LoadingAnimation />}
@@ -107,6 +128,16 @@ const MainPage = () => {
           );
         }}
       >
+        {!isClubSection && (
+          <AlertStyled>
+            <IconWrapperStyled
+              onClick={openModal}
+              // TODO : 알림 등록권 사용하면 disabled
+            >
+              <HeartIcon />
+            </IconWrapperStyled>
+          </AlertStyled>
+        )}
         <SectionPaginationContainer />
         <CabinetListWrapperStyled>
           <CabinetListContainer isAdmin={false} />
@@ -122,6 +153,12 @@ const MainPage = () => {
               </RefreshButtonStyled>
             )}
         </CabinetListWrapperStyled>
+        {showSectionAlertModal && (
+          <SectionAlertModal
+            currentSectionName={currentSectionName}
+            setShowSectionAlertModal={setShowSectionAlertModal}
+          />
+        )}
       </WrapperStyled>
     </>
   );
@@ -157,6 +194,23 @@ const RefreshButtonStyled = styled.button`
   @media (max-height: 745px) {
     margin-bottom: 8px;
   }
+`;
+
+const IconWrapperStyled = styled.div`
+  height: 16px;
+  width: 16px;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+const AlertStyled = styled.div`
+  height: 30px;
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  padding-right: 14px;
 `;
 
 export default MainPage;

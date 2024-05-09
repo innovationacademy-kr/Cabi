@@ -161,11 +161,6 @@ export const modalPropsMap = {
     title: "이사하기",
     confirmMessage: "네, 이사할게요",
   },
-  MODAL_STORE_SWAP: {
-    type: "confirm",
-    title: "이사권 사용 안내",
-    confirmMessage: "네, 사용할게요",
-  },
 
   MODAL_CLUB_ADD_MEM: {
     type: "confirm",
@@ -191,6 +186,16 @@ export const modalPropsMap = {
     type: "confirm",
     title: "비밀번호 수적",
     confirmMessage: "입력",
+  },
+  MODAL_STORE_SWAP: {
+    type: "confirm",
+    title: "이사권 사용 안내",
+    confirmMessage: "네, 사용할게요",
+  },
+  MODAL_SECTION_ALERT: {
+    type: "confirm",
+    title: "알림 등록권 사용 안내",
+    confirmMessage: "네, 사용할게요",
   },
 };
 
