@@ -36,7 +36,6 @@ import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.domain.ItemType;
-import org.ftclub.cabinet.item.domain.SectionAlarmType;
 import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
@@ -214,7 +213,7 @@ public class ItemFacadeService {
 		if (item.getType().equals(ItemType.ALARM)) {
 			CabinetPlace cabinetPlaceInfo = cabinetQueryService.getCabinetPlaceInfoByLocation(
 					data.getBuilding(), data.getFloor(), data.getSection());
-			return new AlarmItem(userId, cabinetPlaceInfo.getId(), data.getSectionAlarmType());
+			return new AlarmItem(userId, cabinetPlaceInfo.getId());
 		}
 		throw ExceptionStatus.NOT_FOUND_ITEM.asServiceException();
 	}
@@ -249,7 +248,7 @@ public class ItemFacadeService {
 	}
 
 	@Transactional
-	public void addSectionAlarm(Long userId, Long cabinetPlaceId, SectionAlarmType alarmType) {
-		sectionAlarmCommandService.addSectionAlarm(userId, cabinetPlaceId, alarmType);
+	public void addSectionAlarm(Long userId, Long cabinetPlaceId) {
+		sectionAlarmCommandService.addSectionAlarm(userId, cabinetPlaceId);
 	}
 }

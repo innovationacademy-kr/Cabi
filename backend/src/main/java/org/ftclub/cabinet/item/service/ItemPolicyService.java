@@ -38,8 +38,7 @@ public class ItemPolicyService {
 	}
 
 	public void verifyDataFieldBySku(Sku sku, ItemUseRequestDto data) {
-		if (sku.equals(Sku.ALARM) && (data.getSectionAlarmType() == null
-				|| data.getBuilding() == null || data.getFloor() == null
+		if (sku.equals(Sku.ALARM) && (data.getBuilding() == null || data.getFloor() == null
 				|| data.getSection() == null)) {
 			throw ExceptionStatus.INVALID_ITEM_USE_REQUEST.asServiceException();
 		}

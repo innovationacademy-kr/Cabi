@@ -37,8 +37,8 @@ public class ItemUseValidator implements ConstraintValidator<ItemUseValidation, 
 		Sku sku = Sku.valueOf(pathVariables.get("sku"));
 
 		if (sku.equals(Sku.ALARM)) {
-			return itemUseRequestDto.getSectionAlarmType() != null
-					&& itemUseRequestDto.getCabinetPlaceId() != null;
+			return itemUseRequestDto.getBuilding() != null && itemUseRequestDto.getFloor() != null
+					&& itemUseRequestDto.getSection() != null;
 		} else if (sku.equals(Sku.SWAP)) {
 			return itemUseRequestDto.getNewCabinetId() != null;
 		}
