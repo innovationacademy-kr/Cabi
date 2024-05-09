@@ -14,7 +14,8 @@ import CabinetListContainer from "@/Cabinet/components/CabinetList/CabinetList.c
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import SectionAlertModal from "@/Cabinet/components/Modals/SectionAlertModal/SectionAlertModal";
 import SectionPaginationContainer from "@/Cabinet/components/SectionPagination/SectionPagination.container";
-import { ReactComponent as HeartIcon } from "@/Cabinet/assets/images/lineHeart.svg";
+import { ReactComponent as FilledHeartIcon } from "@/Cabinet/assets/images/filledHeart.svg";
+import { ReactComponent as LineHeartIcon } from "@/Cabinet/assets/images/lineHeart.svg";
 import SectionType from "@/Cabinet/types/enum/map.type.enum";
 import useCabinetListRefresh from "@/Cabinet/hooks/useCabinetListRefresh";
 import useMenu from "@/Cabinet/hooks/useMenu";
@@ -43,6 +44,7 @@ const MainPage = () => {
     currentFloor
   );
   const [isClubSection, setIsClubSection] = useState(false);
+  const [alertIsRegistered, setAlertIsRegistered] = useState(false);
   const [showSectionAlertModal, setShowSectionAlertModal] =
     useState<boolean>(false);
 
@@ -134,7 +136,7 @@ const MainPage = () => {
               onClick={openModal}
               // TODO : 알림 등록권 사용하면 disabled
             >
-              <HeartIcon />
+              {alertIsRegistered ? <LineHeartIcon /> : <FilledHeartIcon />}
             </IconWrapperStyled>
           </AlertStyled>
         )}

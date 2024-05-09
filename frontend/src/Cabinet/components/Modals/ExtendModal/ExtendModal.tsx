@@ -40,8 +40,6 @@ const ExtendModal: React.FC<{
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContents, setModalContents] = useState<string | null>(null);
   const [extensionDate, setExtensionDate] = useState<number>(3);
-  const [url, setUrl] = useState<string | null>(null);
-  const [urlTitle, setUrlTitle] = useState<string | null>(null);
   const [currentCabinetId] = useRecoilState(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myLentInfo, setMyLentInfo] =
@@ -117,19 +115,16 @@ const ExtendModal: React.FC<{
       }
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      setModalTitle("연장권 사용 실패");
-      // if (연장권 없는 경우)
-      setModalContents(
-        `현재 연장권을 보유하고 있지 않습니다.
-연장권은 까비 상점에서 구매하실 수 있습니다.`
-      );
-      setUrl("store");
-      setUrlTitle("까비 상점으로 이동");
-
-      // else
-      // error.response
-      //   ? setModalTitle(error.response.data.message)
-      //   : setModalTitle(error.data.message);
+      if (error.response.status === 404) {
+        setModalTitle("연장권 사용실패");
+        setModalContents(
+          `현재 연장권을 보유하고 있지 않습니다.
+  연장권은 까비 상점에서 구매하실 수 있습니다.`
+        );
+      } else
+        error.response
+          ? setModalTitle(error.response.data.message)
+          : setModalTitle(error.data.message);
     } finally {
       setShowResponseModal(true);
     }
@@ -195,8 +190,8 @@ const ExtendModal: React.FC<{
             modalTitle={modalTitle}
             modalContents={modalContents}
             closeModal={props.onClose}
-            url={url}
-            urlTitle={urlTitle}
+            url={"store"}
+            urlTitle={"까비상점으로 이동"}
           />
         ) : (
           <SuccessResponseModal

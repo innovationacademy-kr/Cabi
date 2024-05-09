@@ -21,15 +21,18 @@ const StoreMainPage = () => {
     );
   };
 
-  const sortItems = (items: IItemDetail[]) => {
-    [items[0], items[1], items[2], items[3]] = [items[3], items[2], items[0], items[1]]
-  };
+  const sortedItems = items.sort((a, b) => {
+    const order = ["연장권", "이사권", "알림 등록권", "패널티 감면권"];
+    const indexA = order.indexOf(a.itemName);
+    const indexB = order.indexOf(b.itemName);
+    return indexA - indexB;
+  });
+
 
   const getItems = async () => {
     try {
       const response = await axiosItems();
       setItem(response.data.items);
-      sortItems(response.data.items);
     } catch (error) {
       throw error;
     }
@@ -56,7 +59,7 @@ const StoreMainPage = () => {
       </HeaderStyled>
       <StoreCoinGridWrapper>
         <StoreCoinPick />
-        {items.map((item: IItemDetail, index) => (
+        {sortedItems.map((item: IItemDetail, index) => (
           <StoreItemCard
             key={item.itemName}
             item={item}

@@ -10,6 +10,7 @@ import {
 import { modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
 import {
   axiosCabinetById,
   axiosMyLentInfo,
@@ -50,7 +51,9 @@ const SwapModal: React.FC<{
   const trySwapRequest = async () => {
     setIsLoading(true);
     try {
-      await axiosSwapId(currentCabinetId);
+      // await axiosSwapId(currentCabinetId);
+      await axiosUseItem("SWAP", currentCabinetId, null, null);
+
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
@@ -103,10 +106,10 @@ const SwapModal: React.FC<{
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
-            modalTitle="이사권 사용 실패"
+            modalTitle="이사권 사용실패"
             modalContents={modalContent}
             closeModal={props.closeModal}
-            url={"https://cabi.42seoul.io/store"} // TODO: navigator 사용하는 방식으로 수정
+            url={"store"}
             urlTitle={"까비상점으로 이동"}
           />
         ) : (

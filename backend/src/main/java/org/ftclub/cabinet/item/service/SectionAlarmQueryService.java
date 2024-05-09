@@ -19,4 +19,9 @@ public class SectionAlarmQueryService {
 	public List<SectionAlarm> getUnsentAlarms() {
 		return sectionAlarmRepository.findAllByAlarmedAtIsNull();
 	}
+
+	public List<SectionAlarm> getUnsetAlarm(Long userId, String building, Integer floor) {
+		return sectionAlarmRepository.findAllByUserIdAndCabinetPlaceAndAlarmedAtIsNull(
+				userId, building, floor);
+	}
 }
