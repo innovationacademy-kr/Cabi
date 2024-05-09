@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.item.controller;
 
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
@@ -65,7 +64,7 @@ public class ItemController {
 			@RequestParam CoinHistoryType type, Pageable pageable) {
 		return itemFacadeService.getCoinHistory(user.getUserId(), type, pageable);
 	}
-	
+
 	/**
 	 * 한달 간 동전 줍기 횟수, 당일 동전줍기 요청 유무
 	 *
@@ -101,7 +100,7 @@ public class ItemController {
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void useItem(@UserSession UserSessionDto user,
 			@PathVariable("sku") Sku sku,
-			@Valid @RequestBody ItemUseRequestDto data) {
+			@RequestBody ItemUseRequestDto data) {
 		itemFacadeService.useItem(user.getUserId(), sku, data);
 	}
 }
