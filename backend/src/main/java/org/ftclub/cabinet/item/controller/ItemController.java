@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.item.controller;
 
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
@@ -41,14 +42,14 @@ public class ItemController {
 	@PostMapping("/{sku}/purchase")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void purchaseItem(@UserSession UserSessionDto user,
-			@PathVariable Sku sku) {
+		@PathVariable Sku sku) {
 		itemFacadeService.purchaseItem(user.getUserId(), sku);
 	}
 
 	@GetMapping("/history")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public ItemHistoryPaginationDto getItemHistory(@UserSession UserSessionDto user,
-			Pageable pageable) {
+		Pageable pageable) {
 		return itemFacadeService.getItemHistory(user.getUserId(), pageable);
 	}
 
@@ -61,7 +62,7 @@ public class ItemController {
 	@GetMapping("/coin/history")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public CoinHistoryPaginationDto getCoinHistory(@UserSession UserSessionDto user,
-			@RequestParam CoinHistoryType type, Pageable pageable) {
+		@RequestParam CoinHistoryType type, Pageable pageable) {
 		return itemFacadeService.getCoinHistory(user.getUserId(), type, pageable);
 	}
 
@@ -75,7 +76,7 @@ public class ItemController {
 	@GetMapping("/coin")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public CoinMonthlyCollectionDto getCoinMonthlyCollectionCount(
-			@UserSession UserSessionDto user) {
+		@UserSession UserSessionDto user) {
 		return itemFacadeService.getCoinCollectionCountInMonth(user.getUserId());
 	}
 
@@ -100,8 +101,8 @@ public class ItemController {
 	@PostMapping("{sku}/use")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void useItem(@UserSession UserSessionDto user,
-			@PathVariable("sku") Sku sku,
-			@RequestBody ItemUseRequestDto data) {
+		@PathVariable("sku") Sku sku,
+		@Valid @RequestBody ItemUseRequestDto data) {
 		itemFacadeService.useItem(user.getUserId(), sku, data);
 	}
 }
