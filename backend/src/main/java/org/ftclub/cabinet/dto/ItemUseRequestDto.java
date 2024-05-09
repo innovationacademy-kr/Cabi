@@ -9,6 +9,10 @@ import org.ftclub.cabinet.item.domain.SectionAlarmType;
 public class ItemUseRequestDto {
 
 	private Long newCabinetId; // 이사권 사용 시
-	private Long cabinetPlaceId; // 알림권 사용 시
 	private SectionAlarmType sectionAlarmType; // 알림권 사용 시
+
+	// 알림권 사용시 사물함 구역 정보
+	private String building;
+	private String floor;
+	private String section;
 }

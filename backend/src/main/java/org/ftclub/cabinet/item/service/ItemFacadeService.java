@@ -16,6 +16,8 @@ import org.ftclub.cabinet.alarm.domain.ExtensionItem;
 import org.ftclub.cabinet.alarm.domain.ItemUsage;
 import org.ftclub.cabinet.alarm.domain.PenaltyItem;
 import org.ftclub.cabinet.alarm.domain.SwapItem;
+import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
+import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
@@ -59,7 +61,7 @@ public class ItemFacadeService {
 	private final ItemRedisService itemRedisService;
 	private final UserQueryService userQueryService;
 	private final SectionAlarmCommandService sectionAlarmCommandService;
-
+	private final CabinetQueryService cabinetQueryService;
 	private final ItemMapper itemMapper;
 	private final ItemPolicyService itemPolicyService;
 	private final ApplicationEventPublisher eventPublisher;
@@ -210,7 +212,9 @@ public class ItemFacadeService {
 			return new PenaltyItem(userId, item.getSku().getDays());
 		}
 		if (item.getType().equals(ItemType.ALARM)) {
-			return new AlarmItem(userId, data.getCabinetPlaceId(), data.getSectionAlarmType());
+			CabinetPlace cabinetPlaceInfo = cabinetQueryService.getCabinetPlaceInfoByLocation(
+					data.getBuilding(), data.getFloor(), data.getSection());
+			return new AlarmItem(userId, cabinetPlaceInfo.getId(), data.getSectionAlarmType());
 		}
 		throw ExceptionStatus.NOT_FOUND_ITEM.asServiceException();
 	}

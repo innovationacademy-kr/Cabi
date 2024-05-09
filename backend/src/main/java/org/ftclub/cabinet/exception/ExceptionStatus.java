@@ -82,7 +82,8 @@ public enum ExceptionStatus {
 	ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "아이템이 존재하지 않습니다."),
 	ITEM_NOT_ON_SALE(HttpStatus.BAD_REQUEST, "구매할 수 없는 아이템입니다."),
 	NOT_ENOUGH_COIN(HttpStatus.BAD_REQUEST, "보유한 코인이 아이템 가격보다 적습니다."),
-	INVALID_JWT_TOKEN(HttpStatus.BAD_REQUEST, "토큰이 없거나, 유효하지 않은 JWT 토큰입니다.");
+	INVALID_JWT_TOKEN(HttpStatus.BAD_REQUEST, "토큰이 없거나, 유효하지 않은 JWT 토큰입니다."),
+	NOT_FOUND_SECTION(HttpStatus.BAD_REQUEST, "사물함 구역 정보를 찾을 수 없습니다.");
 
 	final private int statusCode;
 	final private String message;
