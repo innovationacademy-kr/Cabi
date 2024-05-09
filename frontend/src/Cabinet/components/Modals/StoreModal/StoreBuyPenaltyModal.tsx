@@ -56,7 +56,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     usePenaltyItemDays: number
   ) => {
     try {
-      await axiosUseItem(item, null, null, null);
+      await axiosUseItem(item, null, null, null, null);
       // await
       setModalTitle("패널티 축소권 사용 완료");
       if (remainPenaltyPeriod <= usePenaltyItemDays) {

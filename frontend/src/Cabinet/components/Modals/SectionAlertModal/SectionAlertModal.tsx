@@ -12,9 +12,13 @@ import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
 const SectionAlertModal = ({
   currentSectionName,
   setShowSectionAlertModal,
+  currentBuilding,
+  currentFloor,
 }: {
   currentSectionName: string;
   setShowSectionAlertModal: React.Dispatch<React.SetStateAction<boolean>>;
+  currentBuilding: string;
+  currentFloor: number;
 }) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -31,7 +35,13 @@ const SectionAlertModal = ({
   const registerSectionAlert = async () => {
     setIsLoading(true);
     try {
-      // axiosUseItem(ALARM, null, cabinetPlaceId, null);
+      await axiosUseItem(
+        "ALARM",
+        null,
+        currentBuilding,
+        currentFloor,
+        currentSectionName
+      );
       // TODO : 아이템별 sku map으로
       setModalTitle("알림 등록권 사용완료");
     } catch (error: any) {
@@ -39,7 +49,7 @@ const SectionAlertModal = ({
       if (error.response.status === 404) {
         setModalTitle("알림 등록권 사용실패");
         setModalContent(`현재 알림 등록권을 보유하고 있지 않습니다.
-          알림 등록권은 까비 상점에서 구매하실 수 있습니다.`);
+알림 등록권은 까비 상점에서 구매하실 수 있습니다.`);
       } else {
         if (error.response) {
           setModalTitle(error.response.data.message);

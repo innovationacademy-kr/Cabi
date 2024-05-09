@@ -90,7 +90,7 @@ const ExtendModal: React.FC<{
       return;
     }
     try {
-      await axiosUseItem(item, null, null, null);
+      await axiosUseItem(item, null, null, null, null);
       setMyInfo({
         ...myInfo,
         cabinetId: currentCabinetId,

@@ -16,6 +16,7 @@ import SectionAlertModal from "@/Cabinet/components/Modals/SectionAlertModal/Sec
 import SectionPaginationContainer from "@/Cabinet/components/SectionPagination/SectionPagination.container";
 import { ReactComponent as FilledHeartIcon } from "@/Cabinet/assets/images/filledHeart.svg";
 import { ReactComponent as LineHeartIcon } from "@/Cabinet/assets/images/lineHeart.svg";
+import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import SectionType from "@/Cabinet/types/enum/map.type.enum";
 import useCabinetListRefresh from "@/Cabinet/hooks/useCabinetListRefresh";
 import useMenu from "@/Cabinet/hooks/useMenu";
@@ -30,12 +31,14 @@ const MainPage = () => {
   const navigator = useNavigate();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
-  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
+  const sectionList = useRecoilValue<Array<ICurrentSectionInfo>>(
+    currentFloorSectionState
+  );
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
   );
   const currentSectionIndex = sectionList.findIndex(
-    (sectionName) => sectionName === currentSectionName
+    (section) => section.sectionName === currentSectionName
   );
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
   const currentFloor = useRecoilValue<number>(currentFloorNumberState);
@@ -44,7 +47,6 @@ const MainPage = () => {
     currentFloor
   );
   const [isClubSection, setIsClubSection] = useState(false);
-  const [alertIsRegistered, setAlertIsRegistered] = useState(false);
   const [showSectionAlertModal, setShowSectionAlertModal] =
     useState<boolean>(false);
 
@@ -95,14 +97,14 @@ const MainPage = () => {
     if (direction === "left") {
       setCurrentSectionName(
         currentSectionIndex <= 0
-          ? sectionList[sectionList.length - 1]
-          : sectionList[currentSectionIndex - 1]
+          ? sectionList[sectionList.length - 1].sectionName
+          : sectionList[currentSectionIndex - 1].sectionName
       );
     } else if (direction === "right") {
       setCurrentSectionName(
         currentSectionIndex >= sectionList.length - 1
-          ? sectionList[0]
-          : sectionList[currentSectionIndex + 1]
+          ? sectionList[0].sectionName
+          : sectionList[currentSectionIndex + 1].sectionName
       );
     }
 
@@ -134,9 +136,14 @@ const MainPage = () => {
           <AlertStyled>
             <IconWrapperStyled
               onClick={openModal}
+              disabled={sectionList[currentSectionIndex].alarmRegistered}
               // TODO : 알림 등록권 사용하면 disabled
             >
-              {alertIsRegistered ? <LineHeartIcon /> : <FilledHeartIcon />}
+              {sectionList[currentSectionIndex].alarmRegistered === true ? (
+                <FilledHeartIcon />
+              ) : (
+                <LineHeartIcon />
+              )}
             </IconWrapperStyled>
           </AlertStyled>
         )}
@@ -159,6 +166,8 @@ const MainPage = () => {
           <SectionAlertModal
             currentSectionName={currentSectionName}
             setShowSectionAlertModal={setShowSectionAlertModal}
+            currentBuilding={currentBuilding}
+            currentFloor={currentFloor}
           />
         )}
       </WrapperStyled>
@@ -198,12 +207,15 @@ const RefreshButtonStyled = styled.button`
   }
 `;
 
-const IconWrapperStyled = styled.div`
+const IconWrapperStyled = styled.div<{ disabled: boolean }>`
   height: 16px;
   width: 16px;
 
-  :hover {
+  &:hover {
     cursor: pointer;
+  }
+  &:disabled {
+    cursor: ${(props) => props.disabled && "not-allowed"};
   }
 `;
 

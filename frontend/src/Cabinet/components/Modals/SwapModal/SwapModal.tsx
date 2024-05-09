@@ -52,7 +52,7 @@ const SwapModal: React.FC<{
     setIsLoading(true);
     try {
       // await axiosSwapId(currentCabinetId);
-      await axiosUseItem("SWAP", currentCabinetId, null, null);
+      await axiosUseItem("SWAP", currentCabinetId, null, null, null);
 
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });

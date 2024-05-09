@@ -57,8 +57,14 @@ export interface CabinetPreviewInfo {
 export interface CabinetInfoByBuildingFloorDto {
   section: string; // swagger의 CabinetPerSectionDto에 맞추어 object -> string으로 수정했습니다.
   cabinets: CabinetPreviewInfo[];
+  alarmRegistered: boolean;
 }
 
 export interface AvailableCabinetsInfo {
   [key: string]: CabinetPreviewInfo[];
+}
+
+export interface ICurrentSectionInfo {
+  sectionName: string;
+  alarmRegistered: boolean;
 }

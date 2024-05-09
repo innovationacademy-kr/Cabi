@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
+import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
 const SectionPagination: React.FC<{
   currentSectionName: string;
   currentPositionName: string;
-  sectionList: Array<string>;
+  sectionList: Array<ICurrentSectionInfo>;
   changeSectionOnClickIndexButton: (index: number) => void;
   moveToLeftSection: React.MouseEventHandler;
   moveToRightSection: React.MouseEventHandler;
@@ -18,11 +19,13 @@ const SectionPagination: React.FC<{
     moveToRightSection,
   } = props;
 
-  const paginationIndexBar = sectionList.map((sectionName, index) => (
+  const paginationIndexBar = sectionList.map((section, index) => (
     <IndexRectangleStyled
-      key={sectionName}
+      key={section.sectionName}
       filledColor={
-        sectionName === currentSectionName ? "var(--main-color)" : "#D9D9D9"
+        section.sectionName === currentSectionName
+          ? "var(--main-color)"
+          : "#D9D9D9"
       }
       onClick={() => changeSectionOnClickIndexButton(index)}
       className="cabiButton"
