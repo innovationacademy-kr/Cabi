@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SectionAlarmRepository extends JpaRepository<SectionAlarm, Long> {
 
-	List<SectionAlarm> findAllByUserIdAndAlarmedAtIsNull(Long userId);
 
 	@EntityGraph(attributePaths = {"cabinetPlace"})
 	List<SectionAlarm> findAllByAlarmedAtIsNull();
@@ -23,4 +22,18 @@ public interface SectionAlarmRepository extends JpaRepository<SectionAlarm, Long
 			+ "SET s.alarmedAt = :date "
 			+ "WHERE s.id IN (:ids)")
 	void updateAlarmedAtBulk(@Param("ids") List<Long> ids, @Param("date") LocalDateTime date);
+
+	@Query("SELECT s "
+			+ "FROM SectionAlarm s "
+			+ "JOIN FETCH s.cabinetPlace "
+			+ "WHERE s.userId = :userId "
+			+ "AND s.alarmedAt IS NULL "
+			+ "AND s.cabinetPlaceId in ("
+			+ "     SELECT cp FROM CabinetPlace cp "
+			+ "     WHERE cp.location.building = :building "
+			+ "     AND cp.location.floor = :floor)")
+	List<SectionAlarm> findAllByUserIdAndCabinetPlaceAndAlarmedAtIsNull(
+			@Param("userId") Long userId,
+			@Param("building") String building,
+			@Param("floor") Integer floor);
 }
