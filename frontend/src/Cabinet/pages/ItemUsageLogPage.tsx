@@ -5,6 +5,7 @@ import { mapItemNameToType } from "@/Cabinet/components/Store/ItemUsageLog/ItemL
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as DropdownChevron } from "@/Cabinet/assets/images/dropdownChevron.svg";
+import { ReactComponent as SadCabiIcon } from "@/Cabinet/assets/images/sadCcabi.svg";
 import { axiosGetItemUsageHistory } from "@/Cabinet/api/axios/axios.custom";
 
 export interface IItemUsageLog {
@@ -59,43 +60,54 @@ const ItemUsageLogPage = () => {
 
   return (
     <WrapperStyled>
-      <TitleWrapperStyled>아이템 사용 내역</TitleWrapperStyled>
-      <ItemUsageLogWrapperStyled>
-        {itemUsageLogs.map((log, idx, logs) => {
-          const isNewMonth = idx === 0 || log.dateStr !== logs[idx - 1].dateStr;
-          return (
-            <LogItemStyled key={idx}>
-              {isNewMonth && (
-                <DateSectionStyled>
-                  <DateTitleStyled>{log.dateStr}</DateTitleStyled>
-                </DateSectionStyled>
-              )}
-              <ItemLogBlock log={log} />
-            </LogItemStyled>
-          );
-        })}
-        {hasAdditionalLogs && (
-          <ButtonContainerStyled>
-            <MoreButtonStyled
-              onClick={handleMoreClick}
-              disabled={isLoading}
-              isLoading={isLoading}
-            >
-              {isLoading ? <LoadingAnimation /> : "더보기"}
-              <DropdownChevron />
-            </MoreButtonStyled>
-          </ButtonContainerStyled>
-        )}
-      </ItemUsageLogWrapperStyled>
+      {itemUsageLogs.length === 0 ? (
+        <EmptyItemUsageLogTextStyled>
+          아이템 사용 내역이 없습니다.
+          <SadCabiIcon />
+        </EmptyItemUsageLogTextStyled>
+      ) : (
+        <>
+          <TitleWrapperStyled>아이템 사용 내역</TitleWrapperStyled>
+          <ItemUsageLogWrapperStyled>
+            {itemUsageLogs.map((log, idx, logs) => {
+              const isNewMonth =
+                idx === 0 || log.dateStr !== logs[idx - 1].dateStr;
+              return (
+                <LogItemStyled key={idx}>
+                  {isNewMonth && (
+                    <DateSectionStyled>
+                      <DateTitleStyled>{log.dateStr}</DateTitleStyled>
+                    </DateSectionStyled>
+                  )}
+                  <ItemLogBlock log={log} />
+                </LogItemStyled>
+              );
+            })}
+            {hasAdditionalLogs && (
+              <ButtonContainerStyled>
+                <MoreButtonStyled
+                  onClick={handleMoreClick}
+                  disabled={isLoading}
+                  isLoading={isLoading}
+                >
+                  {isLoading ? <LoadingAnimation /> : "더보기"}
+                  <DropdownChevron />
+                </MoreButtonStyled>
+              </ButtonContainerStyled>
+            )}
+          </ItemUsageLogWrapperStyled>
+        </>
+      )}
     </WrapperStyled>
   );
 };
 
 const WrapperStyled = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px 0;
+  padding: 60px 0 100px 0;
 `;
 
 const TitleWrapperStyled = styled.div`
@@ -155,6 +167,23 @@ const MoreButtonStyled = styled.button<{
     margin-bottom: -2px;
     width: 13px;
     height: 9px;
+  }
+`;
+
+const EmptyItemUsageLogTextStyled = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: var(--gray-color);
+
+  & > svg {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
   }
 `;
 
