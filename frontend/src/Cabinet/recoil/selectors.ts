@@ -14,6 +14,7 @@ import {
 import {
   CabinetInfo,
   CabinetPreviewInfo,
+  ICurrentSectionInfo,
 } from "@/Cabinet/types/dto/cabinet.dto";
 
 export const buildingsState = selector<Array<string>>({
@@ -40,12 +41,17 @@ export const currentBuildingFloorState = selector<Array<number>>({
   },
 });
 
-export const currentFloorSectionState = selector<Array<string>>({
+export const currentFloorSectionState = selector<Array<ICurrentSectionInfo>>({
   key: "CurrentFloorSection",
   get: ({ get }) => {
     const currentFloorData = get(currentFloorCabinetState);
 
-    return currentFloorData.map((floor) => floor.section);
+    return currentFloorData.map((floor) => {
+      return {
+        sectionName: floor.section,
+        alarmRegistered: floor.alarmRegistered,
+      };
+    });
   },
 });
 

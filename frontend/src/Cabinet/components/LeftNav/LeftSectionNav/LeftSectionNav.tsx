@@ -5,40 +5,35 @@ import { currentSectionNameState } from "@/Cabinet/recoil/atoms";
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import CabinetColorTable from "@/Cabinet/components/LeftNav/CabinetColorTable/CabinetColorTable";
 import { ReactComponent as FilledHeartIcon } from "@/Cabinet/assets/images/filledHeart.svg";
+import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
 const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
-  const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
+  const floorSection = useRecoilValue<Array<ICurrentSectionInfo>>(
+    currentFloorSectionState
+  );
   const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
     currentSectionNameState
   );
 
-  console.log(
-    "floorSection, currentFloorSection",
-    floorSection,
-    currentFloorSection
-  );
-  // TODO : 다 되면 삭제
   return (
     <LeftNavOptionStyled>
-      {floorSection.map((section: string, index: number) => {
-        console.log("section : ", section);
+      {floorSection.map((section: ICurrentSectionInfo, index: number) => {
         return (
           <FloorSectionStyled
             className={
-              currentFloorSection === section
+              currentFloorSection === section.sectionName
                 ? "leftNavButtonActive cabiButton"
                 : "cabiButton"
             }
             key={index}
             onClick={() => {
               closeLeftNav();
-              setCurrentFloorSection(section);
+              setCurrentFloorSection(section.sectionName);
             }}
           >
-            {section}
-            {/* TODO : 알림 등록권 사용된 섹션이면 FilledHeartIcon */}
+            {section.sectionName}
             <IconWrapperStyled>
-              <FilledHeartIcon />
+              {section.alarmRegistered && <FilledHeartIcon />}
             </IconWrapperStyled>
           </FloorSectionStyled>
         );

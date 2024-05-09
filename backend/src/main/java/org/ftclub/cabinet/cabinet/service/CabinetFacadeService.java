@@ -143,7 +143,8 @@ public class CabinetFacadeService {
 						.collect(groupingBy(ClubLentHistory::getCabinetId));
 
 		Set<String> unsetAlarmSection =
-				sectionAlarmQueryService.getUnsetAlarm(userId, building, floor).stream()
+				sectionAlarmQueryService.getUnsetAlarm(userId, building, floor)
+						.stream()
 						.map(alarm -> alarm.getCabinetPlace().getLocation().getSection())
 						.collect(Collectors.toSet());
 

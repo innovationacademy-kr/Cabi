@@ -7,8 +7,6 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,13 +34,6 @@ public class SectionAlarm {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
-	/**
-	 * 알람 종류
-	 */
-	@Column(name = "SECTION_ALARM_TYPE", nullable = false)
-	@Enumerated(value = EnumType.STRING)
-	private SectionAlarmType sectionAlarmType;
 
 	/**
 	 * 알람 등록 시간
@@ -77,22 +68,18 @@ public class SectionAlarm {
 	@ManyToOne(fetch = LAZY)
 	private CabinetPlace cabinetPlace;
 
-	protected SectionAlarm(Long userId, Long cabinetPlaceId,
-			SectionAlarmType sectionAlarmType) {
+	protected SectionAlarm(Long userId, Long cabinetPlaceId) {
 		this.userId = userId;
 		this.cabinetPlaceId = cabinetPlaceId;
-		this.sectionAlarmType = sectionAlarmType;
 	}
 
 	/**
-	 * @param userId           알람 발생 유저
-	 * @param cabinetPlaceId   알람 발생 사물함 영역
-	 * @param sectionAlarmType 알람 종류
+	 * @param userId         알람 발생 유저
+	 * @param cabinetPlaceId 알람 발생 사물함 영역
 	 * @return 인자 정보를 담고있는 {@link SectionAlarm}
 	 */
-	public static SectionAlarm of(Long userId, Long cabinetPlaceId,
-			SectionAlarmType sectionAlarmType) {
-		SectionAlarm sectionAlarm = new SectionAlarm(userId, cabinetPlaceId, sectionAlarmType);
+	public static SectionAlarm of(Long userId, Long cabinetPlaceId) {
+		SectionAlarm sectionAlarm = new SectionAlarm(userId, cabinetPlaceId);
 		if (!sectionAlarm.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
@@ -105,7 +92,7 @@ public class SectionAlarm {
 	 * @return 유효한 인스턴스 여부
 	 */
 	private boolean isValid() {
-		return this.userId != null && this.cabinetPlaceId != null && sectionAlarmType.isValid();
+		return this.userId != null && this.cabinetPlaceId != null;
 	}
 
 	@Override

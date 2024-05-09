@@ -35,8 +35,7 @@ public class ItemUsageHandler {
 			lentFacadeService.plusExtensionDays(extensionItem.getUserId(), extensionItem.getDays());
 		} else if (itemUsage instanceof AlarmItem) {
 			AlarmItem alarmItem = (AlarmItem) itemUsage;
-			itemFacadeService.addSectionAlarm(alarmItem.getUserId(),
-					alarmItem.getCabinetPlaceId(), alarmItem.getSectionAlarmType());
+			itemFacadeService.addSectionAlarm(alarmItem.getUserId(), alarmItem.getCabinetPlaceId());
 		} else {
 			throw ExceptionStatus.NOT_FOUND_ITEM.asServiceException();
 		}

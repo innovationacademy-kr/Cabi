@@ -52,12 +52,12 @@ const SwapModal: React.FC<{
     setIsLoading(true);
     try {
       // await axiosSwapId(currentCabinetId);
-      await axiosUseItem("SWAP", currentCabinetId, null, null);
+      await axiosUseItem("SWAP", currentCabinetId, null, null, null);
 
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
-      setModalTitle("이사권 사용에 성공했습니다");
+      setModalTitle("이사권 사용완료");
       // 캐비닛 상세정보 바꾸는 곳
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
