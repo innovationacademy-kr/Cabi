@@ -106,7 +106,7 @@ const SwapModal: React.FC<{
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
-            modalTitle="이사권 사용 실패"
+            modalTitle="이사권 사용실패"
             modalContents={modalContent}
             closeModal={props.closeModal}
             url={"store"}

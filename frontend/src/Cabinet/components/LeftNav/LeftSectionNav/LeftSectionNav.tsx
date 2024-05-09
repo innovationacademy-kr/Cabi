@@ -36,6 +36,7 @@ const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
             }}
           >
             {section}
+            {/* TODO : 알림 등록권 사용된 섹션이면 FilledHeartIcon */}
             <IconWrapperStyled>
               <FilledHeartIcon />
             </IconWrapperStyled>

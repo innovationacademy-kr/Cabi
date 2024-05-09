@@ -22,7 +22,12 @@ const StoreMainPage = () => {
   };
 
   const sortItems = (items: IItemDetail[]) => {
-    [items[0], items[1], items[2], items[3]] = [items[3], items[2], items[0], items[1]]
+    [items[0], items[1], items[2], items[3]] = [
+      items[3],
+      items[2],
+      items[0],
+      items[1],
+    ];
   };
 
   const getItems = async () => {

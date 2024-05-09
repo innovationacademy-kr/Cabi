@@ -32,6 +32,12 @@ interface ICoinLog {
   // TODO : itemDetails 들어오면 ? 지우기
 }
 
+const unavailableCoinLogMsgMap = {
+  [CoinLogToggleType.ALL]: "코인",
+  [CoinLogToggleType.EARN]: "적립",
+  [CoinLogToggleType.USE]: "사용",
+};
+
 const CoinLog = () => {
   const [toggleType, setToggleType] = useState<CoinLogToggleType>(
     CoinLogToggleType.ALL
@@ -39,8 +45,9 @@ const CoinLog = () => {
   const [coinLogs, setCoinLogs] = useState<ICoinLog[] | null>(null);
   const [logsLength, setLogsLength] = useState(0);
   const [page, setPage] = useState(0);
-  const [moreButton, setMoreButton] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [moreButton, setMoreButton] = useState<boolean>(false);
+  const [moreBtnIsLoading, setMoreBtnIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userInfo] = useRecoilState(userState);
   const size = 5;
 
@@ -81,9 +88,11 @@ const CoinLog = () => {
 
   return (
     <WrapperStyled>
-      {coinLogs?.length === 0 ? (
+      {isLoading ? (
+        <LoadingAnimation />
+      ) : toggleType === CoinLogToggleType.ALL && !coinLogs?.length ? (
         <EmptyCoinLogTextStyled>
-          코인 내역이 없습니다.
+          {unavailableCoinLogMsgMap[toggleType]} 내역이 없습니다.
           <SadCabiIcon />
         </EmptyCoinLogTextStyled>
       ) : (
@@ -106,29 +115,39 @@ const CoinLog = () => {
             ></MultiToggleSwitch>
           </MultiToggleSwitchStyled>
           <LogItemWrapperStyled>
-            {coinLogs?.map((log, idx) => {
-              const isEarned = log.amount > 0;
-              const hasTypes = log.itemDetails !== log.history;
-              return (
-                <LogItemStyled isEarned={isEarned} key={idx}>
-                  <span id="date">
-                    {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
-                  </span>
-                  <span id="history" title={log.history}>
-                    {log.history} {hasTypes && "- " + log.itemDetails}
-                  </span>
-                  <span id="amount">
-                    {isEarned ? "+" : ""}
-                    {log.amount}
-                  </span>
-                </LogItemStyled>
-              );
-            })}
+            {!coinLogs?.length ? (
+              <EmptyCoinLogTextStyled>
+                {unavailableCoinLogMsgMap[toggleType]} 내역이 없습니다.
+                <SadCabiIcon />
+              </EmptyCoinLogTextStyled>
+            ) : (
+              coinLogs.map((log, idx) => {
+                const isEarned = log.amount > 0;
+                const hasTypes = log.itemDetails !== log.history;
+                return (
+                  <LogItemStyled isEarned={isEarned} key={idx}>
+                    <span id="date">
+                      {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
+                    </span>
+                    <span id="history" title={log.history}>
+                      {log.history} {hasTypes && "- " + log.itemDetails}
+                    </span>
+                    <span id="amount">
+                      {isEarned ? "+" : ""}
+                      {log.amount}
+                    </span>
+                  </LogItemStyled>
+                );
+              })
+            )}
           </LogItemWrapperStyled>
           {moreButton && (
             <ButtonContainerStyled>
-              <MoreButtonStyled onClick={clickMoreButton} isLoading={isLoading}>
-                {isLoading ? (
+              <MoreButtonStyled
+                onClick={clickMoreButton}
+                moreBtnIsLoading={moreBtnIsLoading}
+              >
+                {moreBtnIsLoading ? (
                   <LoadingAnimation />
                 ) : (
                   <ButtonContentWrapperStyled>
@@ -272,7 +291,7 @@ const ButtonContainerStyled = styled.div`
 `;
 
 const MoreButtonStyled = styled.button<{
-  isLoading: boolean;
+  moreBtnIsLoading: boolean;
 }>`
   width: 200px;
   height: 50px;
