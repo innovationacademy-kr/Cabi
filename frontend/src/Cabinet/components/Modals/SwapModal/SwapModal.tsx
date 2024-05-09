@@ -106,7 +106,7 @@ const SwapModal: React.FC<{
             modalTitle="이사권 사용 실패"
             modalContents={modalContent}
             closeModal={props.closeModal}
-            url={"https://cabi.42seoul.io/store"} // TODO: navigator 사용하는 방식으로 수정
+            url={"store"}
             urlTitle={"까비상점으로 이동"}
           />
         ) : (
