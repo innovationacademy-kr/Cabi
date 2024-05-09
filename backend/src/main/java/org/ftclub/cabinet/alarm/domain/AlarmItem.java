@@ -1,8 +1,9 @@
-package org.ftclub.cabinet.item.domain;
+package org.ftclub.cabinet.alarm.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.ftclub.cabinet.item.domain.SectionAlarmType;
 
 @Getter
 @ToString

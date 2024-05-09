@@ -1,6 +1,11 @@
-package org.ftclub.cabinet.item.domain;
+package org.ftclub.cabinet.alarm.handler;
 
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.alarm.domain.AlarmItem;
+import org.ftclub.cabinet.alarm.domain.ExtensionItem;
+import org.ftclub.cabinet.alarm.domain.ItemUsage;
+import org.ftclub.cabinet.alarm.domain.PenaltyItem;
+import org.ftclub.cabinet.alarm.domain.SwapItem;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.item.service.ItemFacadeService;
 import org.ftclub.cabinet.lent.service.LentFacadeService;

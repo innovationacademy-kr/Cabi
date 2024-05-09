@@ -1,12 +1,13 @@
-package org.ftclub.cabinet.item.domain;
+package org.ftclub.cabinet.alarm.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class PenaltyItem implements ItemUsage {
+public class SwapItem implements ItemUsage {
 
 	private final Long userId;
-	private final Integer days;
+	private final Long newCabinetId;
+
 }
