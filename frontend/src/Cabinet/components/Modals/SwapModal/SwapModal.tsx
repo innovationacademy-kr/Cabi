@@ -48,11 +48,11 @@ const SwapModal: React.FC<{
   대여 기간은 그대로 유지되며,
   이사권 사용은 취소할 수 없습니다.`;
 
-  const trySwapRequest = async (item: string) => {
+  const trySwapRequest = async () => {
     setIsLoading(true);
     try {
       // await axiosSwapId(currentCabinetId);
-      await axiosUseItem("SWAP", targetCabinetInfo.cabinetId, null, null);
+      await axiosUseItem("SWAP", currentCabinetId, null, null);
 
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
