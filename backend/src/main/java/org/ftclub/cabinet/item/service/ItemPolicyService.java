@@ -37,9 +37,10 @@ public class ItemPolicyService {
 		}
 	}
 
-	public void verifyDataFieldBySky(Sku sku, ItemUseRequestDto data) {
-		if (sku.equals(Sku.ALARM) && (data.getCabinetPlaceId() == null
-				|| data.getSectionAlarmType() == null)) {
+	public void verifyDataFieldBySku(Sku sku, ItemUseRequestDto data) {
+		if (sku.equals(Sku.ALARM) && (data.getSectionAlarmType() == null
+				|| data.getBuilding() == null || data.getFloor() == null
+				|| data.getSection() == null)) {
 			throw ExceptionStatus.INVALID_ITEM_USE_REQUEST.asServiceException();
 		}
 		if (sku.equals(Sku.SWAP) && data.getNewCabinetId() == null) {
