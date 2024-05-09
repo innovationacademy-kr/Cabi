@@ -13,6 +13,6 @@ public class ItemUseRequestDto {
 
 	// 알림권 사용시 사물함 구역 정보
 	private String building;
-	private String floor;
+	private Integer floor;
 	private String section;
 }

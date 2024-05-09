@@ -220,7 +220,7 @@ public class CabinetQueryService {
 	 * @param section
 	 * @return
 	 */
-	public CabinetPlace getCabinetPlaceInfoByLocation(String building, String floor,
+	public CabinetPlace getCabinetPlaceInfoByLocation(String building, Integer floor,
 			String section) {
 		return cabinetRepository.findCabinetPlaceInfoByLocation(building, floor, section)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_SECTION::asServiceException);

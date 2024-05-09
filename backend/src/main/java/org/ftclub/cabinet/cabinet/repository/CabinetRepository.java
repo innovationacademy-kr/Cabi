@@ -212,9 +212,9 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 
 	List<Cabinet> findAllByStatus(CabinetStatus cabinetStatus);
 
-	@Query("SELECT p.id "
+	@Query("SELECT p "
 			+ "FROM CabinetPlace p "
 			+ "WHERE p.location.building = :building AND p.location.floor = :floor AND p.location.section = :section ")
 	Optional<CabinetPlace> findCabinetPlaceInfoByLocation(@Param("building") String building,
-			@Param("floor") String floor, @Param("section") String section);
+			@Param("floor") Integer floor, @Param("section") String section);
 }
