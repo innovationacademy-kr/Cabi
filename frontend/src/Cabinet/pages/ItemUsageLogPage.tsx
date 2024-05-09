@@ -58,47 +58,44 @@ const ItemUsageLogPage = () => {
     setPage((prev) => prev + 1);
   };
 
-  return (
+  return itemUsageLogs.length > 0 ? (
     <WrapperStyled>
-      {itemUsageLogs.length === 0 ? (
-        <EmptyItemUsageLogTextStyled>
-          아이템 사용 내역이 없습니다.
-          <SadCabiIcon />
-        </EmptyItemUsageLogTextStyled>
-      ) : (
-        <>
-          <TitleWrapperStyled>아이템 사용 내역</TitleWrapperStyled>
-          <ItemUsageLogWrapperStyled>
-            {itemUsageLogs.map((log, idx, logs) => {
-              const isNewMonth =
-                idx === 0 || log.dateStr !== logs[idx - 1].dateStr;
-              return (
-                <LogItemStyled key={idx}>
-                  {isNewMonth && (
-                    <DateSectionStyled>
-                      <DateTitleStyled>{log.dateStr}</DateTitleStyled>
-                    </DateSectionStyled>
-                  )}
-                  <ItemLogBlock log={log} />
-                </LogItemStyled>
-              );
-            })}
-            {hasAdditionalLogs && (
-              <ButtonContainerStyled>
-                <MoreButtonStyled
-                  onClick={handleMoreClick}
-                  disabled={isLoading}
-                  isLoading={isLoading}
-                >
-                  {isLoading ? <LoadingAnimation /> : "더보기"}
-                  <DropdownChevron />
-                </MoreButtonStyled>
-              </ButtonContainerStyled>
-            )}
-          </ItemUsageLogWrapperStyled>
-        </>
-      )}
+      <TitleWrapperStyled>아이템 사용 내역</TitleWrapperStyled>
+      <ItemUsageLogWrapperStyled>
+        {itemUsageLogs.map((log, idx, logs) => {
+          const isNewMonth = idx === 0 || log.dateStr !== logs[idx - 1].dateStr;
+          return (
+            <LogItemStyled key={idx}>
+              {isNewMonth && (
+                <DateSectionStyled>
+                  <DateTitleStyled>{log.dateStr}</DateTitleStyled>
+                </DateSectionStyled>
+              )}
+              <ItemLogBlock log={log} />
+            </LogItemStyled>
+          );
+        })}
+        {hasAdditionalLogs && (
+          <ButtonContainerStyled>
+            <MoreButtonStyled
+              onClick={handleMoreClick}
+              disabled={isLoading}
+              isLoading={isLoading}
+            >
+              {isLoading ? <LoadingAnimation /> : "더보기"}
+              <DropdownChevron />
+            </MoreButtonStyled>
+          </ButtonContainerStyled>
+        )}
+      </ItemUsageLogWrapperStyled>
     </WrapperStyled>
+  ) : (
+    <EmptyWrapperStyled>
+      <EmptyItemUsageLogTextStyled>
+        아이템 사용 내역이 없습니다.
+        <SadCabiIcon />
+      </EmptyItemUsageLogTextStyled>
+    </EmptyWrapperStyled>
   );
 };
 
@@ -169,12 +166,18 @@ const MoreButtonStyled = styled.button<{
   }
 `;
 
+const EmptyWrapperStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
+
 const EmptyItemUsageLogTextStyled = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  /* height: 100%; */
   font-size: 1.125rem;
   line-height: 1.75rem;
   color: var(--gray-color);
