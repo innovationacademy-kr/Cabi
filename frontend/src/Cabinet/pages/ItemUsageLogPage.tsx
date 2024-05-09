@@ -103,7 +103,6 @@ const ItemUsageLogPage = () => {
 };
 
 const WrapperStyled = styled.div`
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -175,7 +174,7 @@ const EmptyItemUsageLogTextStyled = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  /* height: 100%; */
   font-size: 1.125rem;
   line-height: 1.75rem;
   color: var(--gray-color);
