@@ -74,19 +74,28 @@ const StoreBuyItemModal: React.FC<{
             <Dropdown
               options={[
                 {
-                  name: props.selectItem.items[2].itemDetails,
-                  value: "2",
+                  name: props.selectItem.items[
+                    props.selectItem.items.length - 1
+                  ].itemDetails,
+                  value: String(props.selectItem.items.length - 1),
                 },
                 {
-                  name: props.selectItem.items[1].itemDetails,
-                  value: "1",
+                  name: props.selectItem.items[
+                    props.selectItem.items.length - 2
+                  ].itemDetails,
+                  value: String(props.selectItem.items.length - 2),
                 },
                 {
-                  name: props.selectItem.items[0].itemDetails,
-                  value: "0",
+                  name: props.selectItem.items[
+                    props.selectItem.items.length - 3
+                  ].itemDetails,
+                  value: String(props.selectItem.items.length - 3),
                 },
               ]}
-              defaultValue={props.selectItem.items[2].itemDetails}
+              defaultValue={
+                props.selectItem.items[props.selectItem.items.length - 1]
+                  .itemDetails
+              }
               onChangeValue={handleDropdownChange}
             />{" "}
           </ModalContainerStyled>
