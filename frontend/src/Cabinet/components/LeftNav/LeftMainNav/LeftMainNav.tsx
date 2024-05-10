@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { ReactComponent as LogoutImg } from "@/Cabinet/assets/images/close-square.svg";
-import { ReactComponent as CulbImg } from "@/Cabinet/assets/images/clubIconGray.svg";
+import { ReactComponent as ClubImg } from "@/Cabinet/assets/images/clubIconGray.svg";
 import { ReactComponent as ProfileImg } from "@/Cabinet/assets/images/profile-circle.svg";
 import { ReactComponent as SearchImg } from "@/Cabinet/assets/images/search.svg";
 import { ReactComponent as SlackNotiImg } from "@/Cabinet/assets/images/slack-notification.svg";
@@ -98,7 +98,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickSlackNotiButton}
               >
-                <SlackNotiImg stroke="var(--gray-line-btn-color)" />
+                <SlackNotiImg />
                 Noti
               </BottomBtnStyled>
               <BottomBtnStyled
@@ -109,7 +109,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickSearchButton}
               >
-                <SearchImg stroke="var(--gray-line-btn-color)" />
+                <SearchImg />
                 Search
               </BottomBtnStyled>
               <BottomBtnStyled className="cabiButton">
@@ -130,14 +130,14 @@ const LeftMainNav = ({
                 }
                 onClick={onClickAdminClubButton}
               >
-                <CulbImg stroke="var(--gray-line-btn-color)" />
+                <ClubImg />
                 Club
               </BottomBtnStyled>
               <BottomBtnStyled
                 className="cabiButton"
                 onClick={onClickLogoutButton}
               >
-                <LogoutImg stroke="var(--gray-line-btn-color)" />
+                <LogoutImg />
                 Logout
               </BottomBtnStyled>
             </>
@@ -152,7 +152,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickStoreButton}
               >
-                <StoreImg stroke="var(--gray-color)" width={24} height={24} />
+                <StoreImg />
                 Store
               </BottomBtnStyled>
               <BottomBtnStyled
@@ -163,7 +163,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickMainClubButton}
               >
-                <CulbImg stroke="var(--gray-line-btn-color)" />
+                <ClubImg />
                 Clubs
               </BottomBtnStyled>
               <BottomBtnStyled
@@ -174,7 +174,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickProfileButton}
               >
-                <ProfileImg stroke="var(--gray-line-btn-color)" />
+                <ProfileImg />
                 Profile
               </BottomBtnStyled>
             </>
@@ -285,8 +285,11 @@ const BottomBtnStyled = styled.li`
       stroke: var(--button-line-color);
     }
   }
-  svg {
+  & > svg {
     margin: 0 auto;
+    width: 24px;
+    height: 24px;
+    stroke: var(--gray-line-btn-color);
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
