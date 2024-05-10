@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSetRecoilState } from "recoil";
+import { isCurrentSectionRenderState } from "@/Cabinet/recoil/atoms";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
@@ -25,6 +27,9 @@ const SectionAlertModal = ({
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>("");
   const [modalTitle, setModalTitle] = useState<string>("");
+  const setIsCurrentSectionRender = useSetRecoilState(
+    isCurrentSectionRenderState
+  );
   const sectionAlertDetail = `알림등록권을 사용해 
   <strong>${currentSectionName}</strong>에 알림을 등록합니다.
   이 섹션에서 <strong>개인 사물함</strong>이 반납되면
@@ -42,11 +47,12 @@ const SectionAlertModal = ({
         currentFloor,
         currentSectionName
       );
+      setIsCurrentSectionRender(true);
       // TODO : 아이템별 sku map으로
       setModalTitle("알림 등록권 사용완료");
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      if (error.response.status === 404) {
+      if (error.response.status === 400) {
         setModalTitle("알림 등록권 사용실패");
         setModalContent(`현재 알림 등록권을 보유하고 있지 않습니다.
 알림 등록권은 까비 상점에서 구매하실 수 있습니다.`);

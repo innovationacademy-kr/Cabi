@@ -115,7 +115,7 @@ const ExtendModal: React.FC<{
       }
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      if (error.response.status === 404) {
+      if (error.response.status === 400) {
         setModalTitle("연장권 사용실패");
         setModalContents(
           `현재 연장권을 보유하고 있지 않습니다.
