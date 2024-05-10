@@ -82,7 +82,7 @@ const CardGridWrapper = styled.div`
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
-    grid-template-rows: 163px 366px 183px 230px 230px;
+    grid-template-rows: 163px 366px 183px 230px 348px;
     grid-template-areas:
       "profile"
       "lentInfo"
