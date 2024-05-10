@@ -14,6 +14,8 @@ import org.springframework.web.servlet.HandlerMapping;
 public class ItemUseValidator implements ConstraintValidator<ValidItemUse, ItemUseRequestDto> {
 
 	private static final String PATH_VARIABLE_NAME = "sku";
+	private static final String SKU_SWAP_NAME = "SWAP";
+	private static final String SKU_ALARM_NAME = "ALARM";
 
 	@Override
 	public boolean isValid(ItemUseRequestDto itemUseRequestDto,
@@ -27,10 +29,10 @@ public class ItemUseValidator implements ConstraintValidator<ValidItemUse, ItemU
 				HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
 		String sku = pathVariables.get(PATH_VARIABLE_NAME);
-		if (sku.equals("SWAP") && itemUseRequestDto.getNewCabinetId() == null) {
+		if (sku.equals(SKU_SWAP_NAME) && itemUseRequestDto.getNewCabinetId() == null) {
 			return false;
 		}
-		if (sku.equals("ALARM") && !isValidAlarmData(itemUseRequestDto)) {
+		if (sku.equals(SKU_ALARM_NAME) && !isValidAlarmData(itemUseRequestDto)) {
 			return false;
 		}
 		return true;
@@ -39,9 +41,6 @@ public class ItemUseValidator implements ConstraintValidator<ValidItemUse, ItemU
 	private boolean isValidAlarmData(ItemUseRequestDto dto) {
 		if (dto.getBuilding() == null
 			|| dto.getSection().isBlank() || dto.getBuilding().isBlank()) {
-			return false;
-		}
-		if (dto.getFloor() < 1 || dto.getFloor() > 5) {
 			return false;
 		}
 		return true;
