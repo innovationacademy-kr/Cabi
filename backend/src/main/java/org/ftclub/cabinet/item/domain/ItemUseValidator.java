@@ -4,13 +4,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.ItemUseRequestDto;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.HandlerMapping;
 
-@Slf4j
 public class ItemUseValidator implements ConstraintValidator<ValidItemUse, ItemUseRequestDto> {
 
 	private static final String PATH_VARIABLE_NAME = "sku";
@@ -39,7 +37,7 @@ public class ItemUseValidator implements ConstraintValidator<ValidItemUse, ItemU
 	}
 
 	private boolean isValidAlarmData(ItemUseRequestDto dto) {
-		if (dto.getBuilding() == null
+		if (dto.getFloor() == null
 			|| dto.getSection().isBlank() || dto.getBuilding().isBlank()) {
 			return false;
 		}
