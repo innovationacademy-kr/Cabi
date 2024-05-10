@@ -75,13 +75,15 @@ const SwapModal: React.FC<{
         throw error;
       }
     } catch (error: any) {
-      // setModalTitle(error.response.data.message);
+      setModalTitle("이사권 사용실패");
+      if (error.response.ststus === 400) {
+        setModalContent(
+          "현재 이사권을 보유하고 있지 않습니다.\n이사권은 까비상점에서 구매하실 수 있습니다."
+        );
+      } else {
+        setModalContent(error.response.data.message);
+      }
 
-      // setModalContent(error.response.data.message);
-      // error.response.data.message 로 받아올 내용 임시로 작성
-      setModalContent(
-        "현재 이사권을 보유하고 있지 않습니다.\n이사권은 까비상점에서 구매하실 수 있습니다."
-      );
       setHasErrorOnResponse(true);
     } finally {
       setIsLoading(false);
@@ -106,7 +108,7 @@ const SwapModal: React.FC<{
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
-            modalTitle="이사권 사용실패"
+            modalTitle={modalTitle}
             modalContents={modalContent}
             closeModal={props.closeModal}
             url={"store"}
