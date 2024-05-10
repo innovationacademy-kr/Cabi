@@ -243,7 +243,7 @@ const BottomSectionStyled = styled.section`
     margin: 0 auto;
     width: 56px;
     height: 1px;
-    background-color: var(--toggle-switch-off-bg-color);
+    background-color: var(--line-color);
   }
 `;
 

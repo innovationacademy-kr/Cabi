@@ -24,7 +24,7 @@ const ColorPicker = ({ color, onChange }: ColorPickerProps) => {
             input: {
               boxShadow:
                 "var(--color-picker-hash-bg-color) 0px 0px 0px 1px inset",
-              color: "var(--color-picker-input-color)",
+              color: "var(--gray-line-btn-color)",
             },
             hash: {
               background: "var(--color-picker-hash-bg-color)",

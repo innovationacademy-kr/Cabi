@@ -81,7 +81,7 @@ const ClubNoticeTextStyled = styled.div`
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--toggle-switch-off-bg-color);
+    background: var(--line-color);
     border-radius: 50px;
     border: 6px solid transparent;
     background-clip: padding-box;

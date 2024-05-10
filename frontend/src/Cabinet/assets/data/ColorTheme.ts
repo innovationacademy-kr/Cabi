@@ -8,19 +8,17 @@ const lightValues = css`
   --sys-presentation-main-color: var(--ref-blue-400);
 
   /* component variable */
-  --bg-color: var(--ref-white);
   --white-text-with-bg-color: var(--ref-white);
   --card-content-bg-color: var(--ref-white);
+  --bg-color: var(--ref-white);
   --card-bg-color: var(--ref-gray-100);
-  --capsule-btn-border-color: var(--ref-gray-200);
-  --presentation-no-event-past-color: var(--ref-gray-200);
   --color-picker-hash-bg-color: var(--ref-gray-200);
+  --capsule-btn-border-color: var(--ref-gray-200);
   --map-floor-color: var(--ref-gray-200);
+  --presentation-no-event-past-color: var(--ref-gray-200);
   --service-man-title-border-btm-color: var(--ref-gray-300);
   --line-color: var(--ref-gray-400);
   --light-gray-line-btn-color: var(--ref-gray-400);
-  --toggle-switch-off-bg-color: var(--ref-gray-400);
-  --color-picker-input-color: var(--ref-gray-500);
   --gray-line-btn-color: var(--ref-gray-500);
   --pie-chart-label-text-color: var(--ref-gray-600);
   --notion-btn-text-color: var(--ref-gray-800);
@@ -65,21 +63,18 @@ const darkValues = css`
   --sys-presentation-main-color: var(--ref-blue-430);
 
   /* component variable */
-  --bg-color: var(--ref-gray-900);
   --white-text-with-bg-color: var(--ref-gray-100);
   --card-content-bg-color: var(--ref-gray-550);
+  --bg-color: var(--ref-gray-900);
   --card-bg-color: var(--ref-gray-700);
-  --capsule-btn-border-color: var(--ref-gray-600);
-  --presentation-no-event-past-color: var(--bg-color);
   --color-picker-hash-bg-color: var(--ref-gray-550);
+  --capsule-btn-border-color: var(--ref-gray-600);
   --map-floor-color: var(--ref-gray-700);
+  --presentation-no-event-past-color: var(--ref-gray-900);
   --service-man-title-border-btm-color: var(--ref-gray-600);
   --line-color: var(--ref-gray-500);
-  --light-gray-line-btn-color: var(--service-man-title-border-btm-color);
-  --toggle-switch-off-bg-color: var(--ref-gray-500);
-  --color-picker-input-color: var(--ref-gray-400);
+  --light-gray-line-btn-color: var(--ref-gray-600);
   --gray-line-btn-color: var(--ref-gray-400);
-  /* TODO : --color-picker-input-color랑 합치기 */
   --pie-chart-label-text-color: var(--ref-gray-300);
   --notion-btn-text-color: var(--ref-gray-200);
   --normal-text-color: var(--ref-gray-100);

@@ -113,7 +113,7 @@ const ContentItemInputStyled = styled.input`
   cursor: "input";
   color: "var(--normal-text-color)";
   &::placeholder {
-    color: "var(--toggle-switch-off-bg-color)";
+    color: "var(--line-color)";
   }
 `;
 

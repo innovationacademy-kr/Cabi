@@ -224,7 +224,7 @@ const ContentItemContainerStyled = styled.div<{ mode: string }>`
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid var(--toggle-switch-off-bg-color);
+  border: 1px solid var(--line-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;

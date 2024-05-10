@@ -99,7 +99,7 @@ const ItemCardStyled = styled.div<{ hasTypes: boolean }>`
   align-items: center;
   padding: 16px 0;
   justify-content: ${(props) => (props.hasTypes ? "space-between" : "")};
-  border: 1.5px solid var(--session);
+  border: 1.5px solid var(--capsule-btn-border-color);
   margin: 10px 20px 10px 0;
 `;
 
