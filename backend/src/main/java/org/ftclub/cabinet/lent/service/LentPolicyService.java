@@ -63,11 +63,6 @@ public class LentPolicyService {
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 				throw new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED,
 						unbannedAtString).asCustomServiceException();
-			case SWAP_LIMIT_EXCEEDED:
-				unbannedAtString = policyDate.format(
-						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				throw new CustomExceptionStatus(ExceptionStatus.SWAP_LIMIT_EXCEEDED,
-						unbannedAtString).asCustomServiceException();
 			case BLACKHOLED_USER:
 				throw ExceptionStatus.BLACKHOLED_USER.asServiceException();
 			case PENDING_CABINET:
@@ -303,11 +298,5 @@ public class LentPolicyService {
 			status = LentPolicyStatus.SWAP_SAME_CABINET;
 		}
 		handlePolicyStatus(status, null);
-	}
-
-	public void verifySwappable(boolean existSwapRecord, LocalDateTime swapExpiredAt) {
-		if (existSwapRecord) {
-			handlePolicyStatus(LentPolicyStatus.SWAP_LIMIT_EXCEEDED, swapExpiredAt);
-		}
 	}
 }

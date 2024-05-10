@@ -29,7 +29,8 @@ const StoreCoinPick = () => {
 
 const CoinSummary = styled.div`
   background-color: var(--white);
-  font-size: 1rem;
+  font-size: var(--size-base);
+  word-wrap: normal;
   width: 90%;
   margin: 5px;
   padding: 10px 20px;
@@ -38,10 +39,10 @@ const CoinSummary = styled.div`
 `;
 
 const CoinCheckButton = styled.button`
-  font-weight 500;
+  font-weight: 500;
   width: 90%;
   margin: 14px;
-  font-size: 1rem;
+  font-size: 0.9rem;
 `;
 
 export default StoreCoinPick;

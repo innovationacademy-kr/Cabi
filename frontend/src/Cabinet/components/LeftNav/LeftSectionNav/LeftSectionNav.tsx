@@ -4,31 +4,40 @@ import styled from "styled-components";
 import { currentSectionNameState } from "@/Cabinet/recoil/atoms";
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import CabinetColorTable from "@/Cabinet/components/LeftNav/CabinetColorTable/CabinetColorTable";
+import { ReactComponent as FilledHeartIcon } from "@/Cabinet/assets/images/filledHeart.svg";
+import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
 const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
-  const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
+  const floorSection = useRecoilValue<Array<ICurrentSectionInfo>>(
+    currentFloorSectionState
+  );
   const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
     currentSectionNameState
   );
 
   return (
     <LeftNavOptionStyled>
-      {floorSection.map((section: string, index: number) => (
-        <FloorSectionStyled
-          className={
-            currentFloorSection === section
-              ? "leftNavButtonActive cabiButton"
-              : "cabiButton"
-          }
-          key={index}
-          onClick={() => {
-            closeLeftNav();
-            setCurrentFloorSection(section);
-          }}
-        >
-          {section}
-        </FloorSectionStyled>
-      ))}
+      {floorSection.map((section: ICurrentSectionInfo, index: number) => {
+        return (
+          <FloorSectionStyled
+            className={
+              currentFloorSection === section.sectionName
+                ? "leftNavButtonActive cabiButton"
+                : "cabiButton"
+            }
+            key={index}
+            onClick={() => {
+              closeLeftNav();
+              setCurrentFloorSection(section.sectionName);
+            }}
+          >
+            {section.sectionName}
+            <IconWrapperStyled>
+              {section.alarmRegistered && <FilledHeartIcon />}
+            </IconWrapperStyled>
+          </FloorSectionStyled>
+        );
+      })}
       <CabinetColorTable />
     </LeftNavOptionStyled>
   );
@@ -54,11 +63,26 @@ export const FloorSectionStyled = styled.div`
   color: var(--gray-color);
   margin: 2px 0;
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--main-color);
       color: var(--white);
     }
+  }
+`;
+
+const IconWrapperStyled = styled.div`
+  height: 14px;
+  width: 14px;
+  margin-right: 12px;
+  display: flex;
+
+  & > svg {
+    height: 14px;
+    width: 14px;
   }
 `;
 

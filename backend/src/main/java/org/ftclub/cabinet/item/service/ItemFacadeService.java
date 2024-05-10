@@ -11,6 +11,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.alarm.domain.AlarmItem;
+import org.ftclub.cabinet.alarm.domain.ExtensionItem;
+import org.ftclub.cabinet.alarm.domain.ItemUsage;
+import org.ftclub.cabinet.alarm.domain.PenaltyItem;
+import org.ftclub.cabinet.alarm.domain.SwapItem;
+import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
+import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
@@ -25,17 +32,11 @@ import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.item.domain.AlarmItem;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
-import org.ftclub.cabinet.item.domain.ExtensionItem;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.domain.ItemType;
-import org.ftclub.cabinet.item.domain.ItemUsage;
-import org.ftclub.cabinet.item.domain.PenaltyItem;
-import org.ftclub.cabinet.item.domain.SectionAlarmType;
 import org.ftclub.cabinet.item.domain.Sku;
-import org.ftclub.cabinet.item.domain.SwapItem;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
@@ -59,7 +60,7 @@ public class ItemFacadeService {
 	private final ItemRedisService itemRedisService;
 	private final UserQueryService userQueryService;
 	private final SectionAlarmCommandService sectionAlarmCommandService;
-
+	private final CabinetQueryService cabinetQueryService;
 	private final ItemMapper itemMapper;
 	private final ItemPolicyService itemPolicyService;
 	private final ApplicationEventPublisher eventPublisher;
@@ -175,7 +176,7 @@ public class ItemFacadeService {
 	 */
 	@Transactional
 	public void useItem(Long userId, Sku sku, ItemUseRequestDto data) {
-		itemPolicyService.verifyDataFieldBySky(sku, data);
+		itemPolicyService.verifyDataFieldBySku(sku, data);
 		User user = userQueryService.getUser(userId);
 		if (user.isBlackholed()) {
 			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
@@ -210,7 +211,9 @@ public class ItemFacadeService {
 			return new PenaltyItem(userId, item.getSku().getDays());
 		}
 		if (item.getType().equals(ItemType.ALARM)) {
-			return new AlarmItem(userId, data.getCabinetPlaceId(), data.getSectionAlarmType());
+			CabinetPlace cabinetPlaceInfo = cabinetQueryService.getCabinetPlaceInfoByLocation(
+					data.getBuilding(), data.getFloor(), data.getSection());
+			return new AlarmItem(userId, cabinetPlaceInfo.getId());
 		}
 		throw ExceptionStatus.NOT_FOUND_ITEM.asServiceException();
 	}
@@ -245,7 +248,7 @@ public class ItemFacadeService {
 	}
 
 	@Transactional
-	public void addSectionAlarm(Long userId, Long cabinetPlaceId, SectionAlarmType alarmType) {
-		sectionAlarmCommandService.addSectionAlarm(userId, cabinetPlaceId, alarmType);
+	public void addSectionAlarm(Long userId, Long cabinetPlaceId) {
+		sectionAlarmCommandService.addSectionAlarm(userId, cabinetPlaceId);
 	}
 }

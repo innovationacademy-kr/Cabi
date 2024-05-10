@@ -32,7 +32,7 @@ const StoreInfo = () => {
       const res = await axiosCoinCheckGet();
       setTodayCoinCollection(res.data.todayCoinCollection);
       setmonthlyCoinCount(res.data.monthlyCoinCount);
-      console.log("res Get", res);
+      // console.log("res Get", res);
     } catch (error) {
       throw error;
     }

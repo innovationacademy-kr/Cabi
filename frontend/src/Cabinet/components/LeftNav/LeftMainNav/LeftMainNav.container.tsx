@@ -12,6 +12,7 @@ import {
   currentFloorNumberState,
   currentMapFloorState,
   currentSectionNameState,
+  isCurrentSectionRenderState,
   myCabinetInfoState,
   numberOfAdminWorkState,
 } from "@/Cabinet/recoil/atoms";
@@ -45,6 +46,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const numberOfAdminWork = useRecoilValue<number>(numberOfAdminWorkState);
   const navigator = useNavigate();
   const { pathname } = useLocation();
+  const [isCurrentSectionRender] = useRecoilState(isCurrentSectionRenderState);
 
   useEffect(() => {
     if (currentFloor === undefined) {
@@ -79,6 +81,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     myCabinetInfo?.cabinetId,
     numberOfAdminWork,
     myCabinetInfo?.status,
+    isCurrentSectionRender,
   ]);
 
   const onClickFloorButton = (floor: number) => {

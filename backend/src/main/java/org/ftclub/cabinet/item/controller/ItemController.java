@@ -66,7 +66,6 @@ public class ItemController {
 		return itemFacadeService.getCoinHistory(user.getUserId(), type, pageable);
 	}
 
-
 	/**
 	 * 한달 간 동전 줍기 횟수, 당일 동전줍기 요청 유무
 	 *

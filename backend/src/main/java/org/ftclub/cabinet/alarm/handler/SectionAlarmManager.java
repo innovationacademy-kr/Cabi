@@ -8,18 +8,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.AvailableSectionAlarm;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
-import org.ftclub.cabinet.item.domain.SectionAlarm;
-import org.ftclub.cabinet.item.domain.SectionAlarmType;
 import org.ftclub.cabinet.item.service.SectionAlarmCommandService;
 import org.ftclub.cabinet.item.service.SectionAlarmQueryService;
 import org.ftclub.cabinet.lent.service.LentRedisService;
@@ -58,32 +54,13 @@ public class SectionAlarmManager {
 		sectionAlarmQueryService.getUnsentAlarms().forEach(alarm -> {
 			Location location = alarm.getCabinetPlace().getLocation();
 			if (locationCabinetMap.containsKey(location)) {
-				Set<LentType> cabinetTypes = locationCabinetMap.get(location).stream()
-						.map(Cabinet::getLentType)
-						.collect(Collectors.toSet());
-				if (hasAlarmType(cabinetTypes, alarm)) {
-					alarmIds.add(alarm.getId());
-					eventPublisher.publishEvent(
-							AlarmEvent.of(alarm.getUserId(), new AvailableSectionAlarm(location)));
-				}
+				alarmIds.add(alarm.getId());
+				eventPublisher.publishEvent(
+						AlarmEvent.of(alarm.getUserId(), new AvailableSectionAlarm(location)));
 			}
 		});
 		if (!alarmIds.isEmpty()) {
 			sectionAlarmCommandService.updateAlarmSend(alarmIds, now);
 		}
-	}
-
-	private boolean hasAlarmType(Set<LentType> cabinetTypes, SectionAlarm alarm) {
-		SectionAlarmType alarmType = alarm.getSectionAlarmType();
-		if (alarmType.equals(SectionAlarmType.ALL)) {
-			return cabinetTypes.contains(LentType.PRIVATE) || cabinetTypes.contains(LentType.SHARE);
-		}
-		if (alarmType.equals(SectionAlarmType.PRIVATE)) {
-			return cabinetTypes.contains(LentType.PRIVATE);
-		}
-		if (alarmType.equals(SectionAlarmType.SHARE)) {
-			return cabinetTypes.contains(LentType.SHARE);
-		}
-		return false;
 	}
 }

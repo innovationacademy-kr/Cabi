@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.LockModeType;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.springframework.data.domain.Page;
@@ -210,4 +211,10 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 
 
 	List<Cabinet> findAllByStatus(CabinetStatus cabinetStatus);
+
+	@Query("SELECT p "
+			+ "FROM CabinetPlace p "
+			+ "WHERE p.location.building = :building AND p.location.floor = :floor AND p.location.section = :section ")
+	Optional<CabinetPlace> findCabinetPlaceInfoByLocation(@Param("building") String building,
+			@Param("floor") Integer floor, @Param("section") String section);
 }
