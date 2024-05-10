@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.item.domain;
 
+import io.netty.util.internal.StringUtil;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintValidator;
@@ -38,7 +39,8 @@ public class ItemUseValidator implements ConstraintValidator<ValidItemUse, ItemU
 
 	private boolean isValidAlarmData(ItemUseRequestDto dto) {
 		if (dto.getFloor() == null
-			|| dto.getSection().isBlank() || dto.getBuilding().isBlank()) {
+			|| StringUtil.isNullOrEmpty(dto.getSection())
+			|| StringUtil.isNullOrEmpty(dto.getBuilding())) {
 			return false;
 		}
 		return true;
