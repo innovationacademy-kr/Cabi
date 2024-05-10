@@ -42,10 +42,11 @@ const InventoryItem = ({
   items: IStoreItem[];
 }) => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
+  const ItemIcon = ItemIconMap[convertToItemType(itemType)];
+
   const onClickToggleBtn = () => {
     setIsToggled((prev) => !prev);
   };
-  const ItemIcon = ItemIconMap[convertToItemType(itemType)];
 
   return (
     <>
