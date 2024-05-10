@@ -173,6 +173,7 @@ const UnavailableItemMsgStyled = styled.div<{ isToggled: boolean }>`
     color: var(--gray-color);
     line-height: 1.5;
     word-break: keep-all;
+    margin-left: 10px;
   }
 `;
 
