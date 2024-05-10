@@ -98,8 +98,8 @@ const ItemCardStyled = styled.div<{ hasTypes: boolean }>`
   align-items: center;
   padding: 16px 0;
   justify-content: ${(props) => (props.hasTypes ? "space-between" : "")};
-  border: 1px solid var(--session);
-  margin: 10px;
+  border: 1.5px solid var(--session);
+  margin: 10px 20px 10px 0;
 `;
 
 const ItemIconStyled = styled.div`
@@ -141,7 +141,7 @@ const ItemTitleStyled = styled.div<{ isToggled: boolean }>`
   padding-right: 5px;
   border-bottom: 1.5px solid #d9d9d9;
   margin-bottom: 10px;
-  margin-top: 40px;
+  margin-top: 50px;
   cursor: pointer;
 
   & > button {
@@ -155,6 +155,10 @@ const ItemTitleStyled = styled.div<{ isToggled: boolean }>`
 
   & > button > svg > path {
     stroke: var(--gray-color);
+  }
+
+  & > h2 {
+    font-weight: bold;
   }
 `;
 
@@ -198,7 +202,7 @@ const UnavailableIconStyled = styled.div`
 
 const ItemWrapperStyled = styled.div`
   width: 70%;
-  margin-top: 30px;
+  /* margin-top: 30px; */
 `;
 
 export default InventoryItem;
