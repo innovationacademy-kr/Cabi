@@ -99,6 +99,7 @@ const Layout = (): JSX.Element => {
   };
 
   useEffect(() => {
+    deleteOldPointColors();
     if (!token && !isLoginPage) navigate("/login");
     else if (token) {
       getMyInfo();
@@ -111,6 +112,15 @@ const Layout = (): JSX.Element => {
       return () => clearInterval(serverTimer);
     }
   }, []);
+
+  const deleteOldPointColors = () => {
+    localStorage.getItem("main-color") === "var(--default-main-color)" &&
+      localStorage.removeItem("main-color");
+    localStorage.getItem("sub-color") === "var(--default-sub-color)" &&
+      localStorage.removeItem("sub-color");
+    localStorage.getItem("mine-color") === "var(--default-mine-color)" &&
+      localStorage.removeItem("mine-color");
+  };
 
   const savedMainColor =
     localStorage.getItem("main-color") || "var(--sys-default-main-color)";
