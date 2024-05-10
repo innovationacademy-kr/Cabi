@@ -138,7 +138,7 @@ const MainPage = () => {
             <IconWrapperStyled
               onClick={openModal}
               disabled={
-                sectionList[currentSectionIndex].alarmRegistered ? true : false
+                sectionList[currentSectionIndex]?.alarmRegistered ? true : false
               }
             >
               {sectionList[currentSectionIndex]?.alarmRegistered === true ? (
