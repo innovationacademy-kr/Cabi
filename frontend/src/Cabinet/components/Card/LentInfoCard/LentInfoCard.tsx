@@ -72,65 +72,66 @@ const LentInfoCard = ({
                   : "대여 중이 아닌 사용자"}
               </CabinetInfoTextStyled>
 
-            <CabinetUserListWrapper>
-              <CabinetIconStyled title={cabinetInfo.lentType}>
-                <CabinetIcon />
-              </CabinetIconStyled>
-              <CabinetInfoTextStyled
-                fontSize={calculateFontSize(cabinetInfo.userCount)}
-                fontColor="var(--normal-text-color)"
-              >
-                {cabinetInfo.userNameList}
-              </CabinetInfoTextStyled>
-            </CabinetUserListWrapper>
-          </CabinetInfoDetailStyled>
-        </CabinetInfoWrapper>
-        <CardContentWrapper>
-          <CardContentStyled>
-            <ContentInfoStyled>사용 기간</ContentInfoStyled>
-            <ContentDetailStyled>
-              {cabinetInfo?.isLented && cabinetInfo.status != "IN_SESSION"
-                ? `${cabinetInfo.dateUsed}일`
-                : "-"}
-            </ContentDetailStyled>
-          </CardContentStyled>
-          <CardContentStyled>
-            <ContentInfoStyled>
-              {cabinetInfo?.status === "OVERDUE" ? "연체 기간" : "남은 기간"}
-            </ContentInfoStyled>
-            <ContentDetailStyled status={cabinetInfo.status as CabinetStatus}>
-              {cabinetInfo?.expireDate ? `${cabinetInfo.dateLeft}일` : "-"}
-            </ContentDetailStyled>
-          </CardContentStyled>
-          <CardContentStyled>
-            <ContentInfoStyled>
-              {!!unbannedAt ? "패널티 종료 일자" : "종료 일자"}
-            </ContentInfoStyled>
-            <ContentDetailStyled>
-              {!!unbannedAt
-                ? formatDate(new Date(unbannedAt), ".")
-                : cabinetInfo?.expireDate
-                ? formatDate(new Date(cabinetInfo?.expireDate), ".")
-                : "-"}
-            </ContentDetailStyled>
-          </CardContentStyled>
-        </CardContentWrapper>
-        <CardContentWrapper>
-          <CardContentStyled>
-            <ContentInfoStyled>이전 대여자</ContentInfoStyled>
-            <ContentDetailStyled>
-              {cabinetInfo?.previousUserName || "-"}
-            </ContentDetailStyled>
-          </CardContentStyled>
-        </CardContentWrapper>
-    </Card>
-    {isModalOpen && (
-      <StoreBuyPenalty
-      onClose={onClose}
-      remainPenaltyPeriod={remainPenaltyPeriod}
-      />
+              <CabinetUserListWrapper>
+                <CabinetIconStyled title={cabinetInfo.lentType}>
+                  <CabinetIcon />
+                </CabinetIconStyled>
+                <CabinetInfoTextStyled
+                  fontSize={calculateFontSize(cabinetInfo.userCount)}
+                  fontColor="var(--normal-text-color)"
+                >
+                  {cabinetInfo.userNameList}
+                </CabinetInfoTextStyled>
+              </CabinetUserListWrapper>
+            </CabinetInfoDetailStyled>
+          </CabinetInfoWrapper>
+          <CardContentWrapper>
+            <CardContentStyled>
+              <ContentInfoStyled>사용 기간</ContentInfoStyled>
+              <ContentDetailStyled>
+                {cabinetInfo?.isLented && cabinetInfo.status != "IN_SESSION"
+                  ? `${cabinetInfo.dateUsed}일`
+                  : "-"}
+              </ContentDetailStyled>
+            </CardContentStyled>
+            <CardContentStyled>
+              <ContentInfoStyled>
+                {cabinetInfo?.status === "OVERDUE" ? "연체 기간" : "남은 기간"}
+              </ContentInfoStyled>
+              <ContentDetailStyled status={cabinetInfo.status as CabinetStatus}>
+                {cabinetInfo?.expireDate ? `${cabinetInfo.dateLeft}일` : "-"}
+              </ContentDetailStyled>
+            </CardContentStyled>
+            <CardContentStyled>
+              <ContentInfoStyled>
+                {!!unbannedAt ? "패널티 종료 일자" : "종료 일자"}
+              </ContentInfoStyled>
+              <ContentDetailStyled>
+                {!!unbannedAt
+                  ? formatDate(new Date(unbannedAt), ".")
+                  : cabinetInfo?.expireDate
+                  ? formatDate(new Date(cabinetInfo?.expireDate), ".")
+                  : "-"}
+              </ContentDetailStyled>
+            </CardContentStyled>
+          </CardContentWrapper>
+          <CardContentWrapper>
+            <CardContentStyled>
+              <ContentInfoStyled>이전 대여자</ContentInfoStyled>
+              <ContentDetailStyled>
+                {cabinetInfo?.previousUserName || "-"}
+              </ContentDetailStyled>
+            </CardContentStyled>
+          </CardContentWrapper>
+        </>
+      </Card>
+      {isModalOpen && (
+        <StoreBuyPenalty
+          onClose={onClose}
+          remainPenaltyPeriod={remainPenaltyPeriod}
+        />
       )}
-      </>
+    </>
   );
 };
 

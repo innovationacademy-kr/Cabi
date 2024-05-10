@@ -67,7 +67,7 @@ const StoreMainPage = () => {
               onClick: checkMyCoin(item) ? () => buttonClick(item) : () => {},
               isClickable: checkMyCoin(item),
               color: checkMyCoin(item)
-                ? "var(--main-color)"
+                ? "var(--sys-main-color)"
                 : "var(--gray-color)",
             }}
           />

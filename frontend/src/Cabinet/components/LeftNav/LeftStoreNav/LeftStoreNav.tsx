@@ -115,7 +115,7 @@ const StoreSectionStyled = styled.div`
   cursor: pointer;
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--main-color);
+      background-color: var(--sys-main-color);
       color: var(--white);
     }
   }
@@ -126,7 +126,7 @@ const CoinIconStyled = styled.div`
   height: 20px;
 
   & > svg > path {
-    stroke: var(--main-color);
+    stroke: var(--sys-main-color);
   }
 `;
 

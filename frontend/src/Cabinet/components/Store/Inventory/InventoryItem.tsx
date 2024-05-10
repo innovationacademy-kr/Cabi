@@ -112,7 +112,7 @@ const ItemIconStyled = styled.div`
   }
 
   & > svg > path {
-    stroke: var(--main-color);
+    stroke: var(--sys-main-color);
   }
 `;
 

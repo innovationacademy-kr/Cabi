@@ -106,7 +106,7 @@ const SectionLinkStyled = styled.div`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--main-color);
+      color: var(--sys-main-color);
     }
     &:hover img {
       filter: invert(33%) sepia(55%) saturate(3554%) hue-rotate(230deg)

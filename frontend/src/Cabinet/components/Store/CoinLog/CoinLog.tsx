@@ -235,7 +235,7 @@ const LogItemStyled = styled.div<{
 
   & > #amount {
     color: ${(props) =>
-      props.isEarned ? "var(--main-color)" : "var(--black)"};
+      props.isEarned ? "var(--sys-main-color)" : "var(--black)"};
     font-size: 18px;
     font-weight: bold;
     width: 10%;
@@ -289,7 +289,7 @@ const CoinIconStyled = styled.div`
   justify-content: end;
 
   & > svg > path {
-    stroke: var(--main-color);
+    stroke: var(--sys-main-color);
   }
 `;
 
@@ -308,10 +308,10 @@ const MoreButtonStyled = styled.button<{
   width: 200px;
   height: 50px;
   margin: 20px auto;
-  border: 1px solid var(--main-color);
+  border: 1px solid var(--sys-main-color);
   border-radius: 30px;
   background-color: var(--white);
-  color: var(--main-color);
+  color: var(--sys-main-color);
   position: relative;
 `;
 
@@ -343,7 +343,7 @@ const SelectIconWrapperStyled = styled.div`
   }
 
   & > svg > path {
-    stroke: var(--main-color);
+    stroke: var(--sys-main-color);
   }
 `;
 

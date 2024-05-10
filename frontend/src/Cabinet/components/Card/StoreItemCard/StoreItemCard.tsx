@@ -81,7 +81,7 @@ const IconBlockStyled = styled.div`
   width: 53px;
   height: 53px;
   border-radius: 10px;
-  background-color: var(--main-color);
+  background-color: var(--sys-main-color);
   margin-bottom: 5px;
   display: flex;
   justify-content: center;
@@ -101,7 +101,7 @@ const PriseBlockStyled = styled.div`
   background-color: var(--white);
   border-radius: 5px;
   font-size: 12px;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -115,7 +115,7 @@ const PriseBlockStyled = styled.div`
     height: 14px;
   }
   & > svg > path {
-    stroke: var(--main-color);
+    stroke: var(--sys-main-color);
     stroke-width: 2px;
   }
 `;

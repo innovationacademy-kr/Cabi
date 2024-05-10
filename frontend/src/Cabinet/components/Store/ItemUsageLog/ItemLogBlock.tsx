@@ -56,7 +56,7 @@ const IconBlockStyled = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 10px;
-  background-color: var(--main-color);
+  background-color: var(--sys-main-color);
   justify-content: center;
   align-items: center;
   margin-left: 30px;
