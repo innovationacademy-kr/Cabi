@@ -76,7 +76,7 @@ const StoreLeftNavOptionStyled = styled.div`
   & hr {
     width: 80%;
     height: 1px;
-    background-color: #d9d9d9;
+    background-color: var(--inventory-item-title-border-btm-color);
     border: 0;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -89,7 +89,7 @@ const CoinCountStyled = styled.div`
   padding: 0px 20px 0px 20px;
   align-items: center;
   justify-content: space-between;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 `;
 
 const UserCoinsWrapperStyled = styled.div`
@@ -110,13 +110,13 @@ const StoreSectionStyled = styled.div`
   line-height: 40px;
   border-radius: 10px;
   text-indent: 20px;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
   margin: 2px 0;
   cursor: pointer;
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--sys-main-color);
-      color: var(--white);
+      color: var(--white-text-with-bg-color);
     }
   }
 `;

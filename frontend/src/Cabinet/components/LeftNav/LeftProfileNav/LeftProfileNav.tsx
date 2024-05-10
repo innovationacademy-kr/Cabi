@@ -54,14 +54,14 @@ const LeftProfileNav = ({
         title="슬랙 캐비닛 채널 새창으로 열기"
       >
         문의하기
-        <LinkImg id="linknImg" stroke="var(--gray-color)" />
+        <LinkImg id="linknImg" stroke="var(--gray-line-btn-color)" />
       </SectionLinkStyled>
       <SectionLinkStyled
         onClick={() => onClickClubForm()}
         title="동아리 사물함 사용 신청서 새창으로 열기"
       >
         동아리 신청서
-        <LinkImg id="linknImg" stroke="var(--gray-color)" />
+        <LinkImg id="linknImg" stroke="var(--gray-line-btn-color)" />
       </SectionLinkStyled>
     </ProfileLeftNavOptionStyled>
   );
@@ -79,7 +79,7 @@ const ProfileLeftNavOptionStyled = styled.div`
   & hr {
     width: 80%;
     height: 1px;
-    background-color: #d9d9d9;
+    background-color: var(--inventory-item-title-border-btm-color);
     border: 0;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -96,7 +96,7 @@ const SectionLinkStyled = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 
   #linknImg {
     width: 15px;
