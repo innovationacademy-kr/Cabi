@@ -6,6 +6,7 @@ import WarningNotification, {
   WarningNotificationProps,
 } from "@/Cabinet/components/Common/WarningNotification";
 import {
+  cabinetIconComponentMap,
   cabinetIconSrcMap,
   cabinetStatusLabelMap,
   cabinetTypeLabelMap,
@@ -65,6 +66,7 @@ const StatusModal = ({
   const handleClickWriteMode = (e: any) => {
     setMode("write");
   };
+  const CabinetIcon = cabinetIconComponentMap[cabinetType];
 
   const handleDropdownChangeValue = (val: CabinetType | CabinetStatus) => {
     if (Object.values(CabinetType).includes(val as CabinetType)) {
@@ -112,9 +114,9 @@ const StatusModal = ({
               <ContentItemTitleStyled>사물함 타입</ContentItemTitleStyled>
               {mode === "read" ? (
                 <ContentItemContainerStyled mode={mode}>
-                  <div style={{ width: "18px", height: "18px" }}>
-                    <img src={cabinetIconSrcMap[cabinetType]} />
-                  </div>
+                  <ContentItemIconStyled>
+                    <CabinetIcon />
+                  </ContentItemIconStyled>
                   <p>{cabinetTypeLabelMap[newCabinetType]}</p>
                 </ContentItemContainerStyled>
               ) : (
@@ -153,7 +155,7 @@ const StatusModal = ({
                   }
             }
             text={mode === "read" ? "닫기" : "취소"}
-            theme={mode === "read" ? "lightGrayLine" : "line"}
+            theme={mode === "read" ? "light-grayLine" : "line"}
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>
@@ -166,7 +168,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -222,16 +224,31 @@ const ContentItemContainerStyled = styled.div<{ mode: string }>`
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid var(--line-color);
+  border: 1px solid var(--toggle-switch-off-bg-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
   text-align: start;
   padding-left: 20px;
   font-size: 1.125rem;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   & > p {
     padding-left: 10px;
+  }
+`;
+
+const ContentItemIconStyled = styled.div`
+  width: 18px;
+  height: 18px;
+
+  & > svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  & > svg path {
+    transform: scale(0.8);
+    stroke: var(--normal-text-color);
   }
 `;
 
@@ -241,7 +258,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--modal-bg-shadow-color);
   z-index: 1000;
 `;
 
@@ -261,7 +278,7 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   background: none;
   cursor: pointer;
   text-decoration: underline;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   &:hover {
     opacity: 0.8;
   }

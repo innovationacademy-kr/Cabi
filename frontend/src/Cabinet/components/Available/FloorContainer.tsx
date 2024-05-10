@@ -5,6 +5,7 @@ import AdminCabinetListItem from "@/Cabinet/components/CabinetList/CabinetListIt
 import CabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/CabinetListItem";
 import { ReactComponent as SelectImg } from "@/Cabinet/assets/images/select.svg";
 import { CabinetPreviewInfo } from "@/Cabinet/types/dto/cabinet.dto";
+import { ReactComponent as SelectImg } from "@/Cabinet/assets/images/select.svg";
 
 // 하나의 층에 대한 타이틀과 캐비넷 리스트를 담고 있는 컴포넌트
 const FloorContainer = ({
@@ -31,7 +32,7 @@ const FloorContainer = ({
         </button>
       </FloorTitleStyled>
       {pendingCabinetsList.length !== 0 ? (
-        <FlootCabinetsContainerStyled isToggled={isToggled}>
+        <FloorCabinetsContainerStyled isToggled={isToggled}>
           {pendingCabinetsList.map((cabinet: CabinetPreviewInfo) =>
             isAdmin ? (
               <AdminCabinetListItem key={cabinet.cabinetId} {...cabinet} />
@@ -39,7 +40,7 @@ const FloorContainer = ({
               <CabinetListItem key={cabinet.cabinetId} {...cabinet} />
             )
           )}
-        </FlootCabinetsContainerStyled>
+        </FloorCabinetsContainerStyled>
       ) : (
         <NoAvailableCabinetMessageStyled isToggled={isToggled}>
           <p>해당 층에는 사용 가능한 사물함이 없습니다 </p>
@@ -62,10 +63,10 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   display: flex;
   justify-content: space-between;
   font-size: 1.1rem;
-  color: var(--black);
+  color: var(--normal-text-color);
   padding-left: 5px;
   padding-right: 5px;
-  border-bottom: 1.5px solid #d9d9d9;
+  border-bottom: 1.5px solid var(--service-man-title-border-btm-color);
   cursor: pointer;
 
   button {
@@ -82,7 +83,7 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   }
 `;
 
-const FlootCabinetsContainerStyled = styled.div<{ isToggled: boolean }>`
+const FloorCabinetsContainerStyled = styled.div<{ isToggled: boolean }>`
   display: ${(props) => (props.isToggled ? "none" : "flex")};
   transition: all 0.3s ease-in-out;
   flex-wrap: wrap;
@@ -100,7 +101,7 @@ const NoAvailableCabinetMessageStyled = styled.div<{ isToggled: boolean }>`
   margin-top: 20px;
   margin-left: 5px;
   p {
-    color: var(--gray-color);
+    color: var(--gray-line-btn-color);
     line-height: 1.5;
     word-break: keep-all;
   }

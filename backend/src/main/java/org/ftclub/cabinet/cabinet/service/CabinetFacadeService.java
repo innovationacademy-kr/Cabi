@@ -202,7 +202,7 @@ public class CabinetFacadeService {
 	 * @param building 건물 이름
 	 * @return 빌딩에 있는 모든 PENDING 상태의 사물함
 	 */
-	@Transactional
+	@Transactional(readOnly = true)
 	public CabinetPendingResponseDto getAvailableCabinets(String building) {
 		final LocalDateTime now = LocalDateTime.now();
 		final LocalDateTime yesterday = now.minusDays(1).withHour(13).withMinute(0).withSecond(0);
@@ -246,6 +246,7 @@ public class CabinetFacadeService {
 	 * @param pageable 페이징 정보
 	 * @return 캐비넷 정보
 	 */
+	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status,
 			Pageable pageable) {
 		Page<Cabinet> cabinets = cabinetQueryService.findAllByStatus(status, pageable);

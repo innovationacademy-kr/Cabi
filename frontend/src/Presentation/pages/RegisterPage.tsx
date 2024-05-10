@@ -310,7 +310,7 @@ const RegisterPageStyled = styled.div`
     right: 0;
   }
   @media (max-width: 700px) {
-    background-color: var(--lightgray-color);
+    background-color: var(--card-bg-color);
   }
 `;
 
@@ -331,7 +331,7 @@ const BackgroundStyled = styled.div`
   width: 100%;
   max-width: 700px;
   border-radius: 10px;
-  background-color: var(--lightgray-color);
+  background-color: var(--card-bg-color);
   margin-top: 20px;
   padding: 20px;
   margin-bottom: 20px;
@@ -381,7 +381,7 @@ const DropdownStyled = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 10px;
-  background-color: var(--white);
+  background-color: var(--bg-color);
   border: none;
   resize: none;
   outline: none;
@@ -394,7 +394,7 @@ const RegisterButtonStyled = styled.button`
   font-size: 1rem;
   font-weight: 480;
   margin-top: 1rem;
-  background-color: #3f69fd;
+  background-color: var(--sys-main-color);
   @media (max-width: 700px) {
     width: 100%;
   }
@@ -430,8 +430,8 @@ const TooltipBoxDateStyled = styled.div`
   left: 340%;
   transform: translateX(-50%);
   font-weight: 400;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.8);
+  color: var(--white-text-with-bg-color);
+  background-color: var(--tooltip-shadow-color);
   width: 240px;
   padding: 10px;
   border-radius: 4px;
@@ -452,7 +452,8 @@ const TooltipBoxDateStyled = styled.div`
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent rgba(0, 0, 0, 0.8) transparent transparent;
+    border-color: transparent var(--tooltip-shadow-color) transparent
+      transparent;
   }
 
   ${SubNameStyled}:hover & {
@@ -466,8 +467,8 @@ const TooltipBoxTimeStyled = styled.div`
   left: 320%;
   transform: translateX(-50%);
   font-weight: 400;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.8);
+  color: var(--white-text-with-bg-color);
+  background-color: var(--tooltip-shadow-color);
   width: 220px;
   padding: 10px;
   border-radius: 4px;
@@ -488,7 +489,8 @@ const TooltipBoxTimeStyled = styled.div`
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent rgba(0, 0, 0, 0.8) transparent transparent;
+    border-color: transparent var(--tooltip-shadow-color) transparent
+      transparent;
   }
 
   ${SubNameStyled}:hover & {

@@ -1,3 +1,6 @@
+import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
+import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
+import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
 import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
 import { ReactComponent as SwapImg } from "@/Cabinet/assets/images/storeMove.svg";
@@ -22,6 +25,16 @@ export enum additionalModalType {
   MODAL_CANCEL = "MODAL_CANCEL",
 }
 
+type CabinetIconComponentMap = {
+  [key in CabinetType]: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+};
+
+export const cabinetIconComponentMap: CabinetIconComponentMap = {
+  [CabinetType.PRIVATE]: PrivateIcon,
+  [CabinetType.SHARE]: ShareIcon,
+  [CabinetType.CLUB]: ClubIcon,
+};
+
 export const cabinetIconSrcMap = {
   [CabinetType.PRIVATE]: "/src/Cabinet/assets/images/privateIcon.svg",
   [CabinetType.SHARE]: "/src/Cabinet/assets/images/shareIcon.svg",
@@ -29,25 +42,25 @@ export const cabinetIconSrcMap = {
 };
 
 export const cabinetLabelColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--white)",
-  [CabinetStatus.FULL]: "var(--black)",
-  [CabinetStatus.OVERDUE]: "var(--white)",
-  [CabinetStatus.BROKEN]: "var(--white)",
-  [CabinetStatus.BANNED]: "var(--white)",
-  [CabinetStatus.IN_SESSION]: "var(--main-color)",
-  [CabinetStatus.PENDING]: "var(--white)",
-  MINE: "var(--black)",
+  [CabinetStatus.AVAILABLE]: "var(--white-text-with-bg-color)",
+  [CabinetStatus.FULL]: "var(--mine-text-color)",
+  [CabinetStatus.OVERDUE]: "var(--white-text-with-bg-color)",
+  [CabinetStatus.BROKEN]: "var(--white-text-with-bg-color)",
+  [CabinetStatus.BANNED]: "var(--white-text-with-bg-color)",
+  [CabinetStatus.IN_SESSION]: "var(--sys-main-color)",
+  [CabinetStatus.PENDING]: "var(--white-text-with-bg-color)",
+  MINE: "var(--mine-text-color)",
 };
 
 export const cabinetStatusColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--available)",
-  [CabinetStatus.FULL]: "var(--full)",
-  [CabinetStatus.OVERDUE]: "var(--expired)",
-  [CabinetStatus.BROKEN]: "var(--broken)",
-  [CabinetStatus.BANNED]: "var(--banned)",
-  [CabinetStatus.IN_SESSION]: "var(--session)",
-  [CabinetStatus.PENDING]: "var(--pending)",
-  MINE: "var(--mine)",
+  [CabinetStatus.AVAILABLE]: "var(--available-color)",
+  [CabinetStatus.FULL]: "var(--full-color)",
+  [CabinetStatus.OVERDUE]: "var(--expired-color)",
+  [CabinetStatus.BROKEN]: "var(--broken-color)",
+  [CabinetStatus.BANNED]: "var(--banned-color)",
+  [CabinetStatus.IN_SESSION]: "var(--session-color)",
+  [CabinetStatus.PENDING]: "var(--pending-color)",
+  MINE: "var(--mine-color)",
 };
 
 export const modalPropsMap = {
@@ -200,13 +213,13 @@ export const modalPropsMap = {
 };
 
 export const cabinetFilterMap = {
-  [CabinetStatus.AVAILABLE]: "brightness(100)",
-  [CabinetStatus.FULL]: "none",
-  [CabinetStatus.OVERDUE]: "brightness(100)",
-  [CabinetStatus.BROKEN]: "brightness(100)",
-  [CabinetStatus.BANNED]: "brightness(100)",
-  [CabinetStatus.IN_SESSION]: "none",
-  [CabinetStatus.PENDING]: "brightness(100)",
+  [CabinetStatus.AVAILABLE]: "var(--white-text-with-bg-color)",
+  [CabinetStatus.FULL]: "var(--mine-text-color)",
+  [CabinetStatus.OVERDUE]: "var(--white-text-with-bg-color)",
+  [CabinetStatus.BROKEN]: "var(--white-text-with-bg-color)",
+  [CabinetStatus.BANNED]: "var(--white-text-with-bg-color)",
+  [CabinetStatus.IN_SESSION]: "var(--normal-text-color)",
+  [CabinetStatus.PENDING]: "var(--white-text-with-bg-color)",
 };
 
 export const cabinetStatusLabelMap = {

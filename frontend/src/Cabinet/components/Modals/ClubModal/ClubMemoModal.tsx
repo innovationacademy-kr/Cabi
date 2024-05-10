@@ -1,9 +1,9 @@
+import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import {
   CLUB_MEMO_MAX_LENGTH,
   ClubMemoModalInterface,
 } from "@/Cabinet/components/Modals/ClubModal/ClubMemoModal.container";
-import styled from "styled-components";
 
 const ClubMemoModal = ({
   clubNotice,
@@ -68,7 +68,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -108,23 +108,27 @@ const ContentItemTextAreaStyled = styled.textarea<{
   box-sizing: border-box;
   padding: 15px;
   width: 100%;
-  border: 1px solid var(--line-color);
+  border: 1px solid var(--light-gray-line-btn-color);
   height: 100%;
   border-radius: 10px;
   font-size: 1.125rem;
-  color: black;
+  color: var(--normal-text-color);
   overflow-y: auto;
   word-break: break-all;
   white-space: pre-wrap;
   line-height: 1.2rem;
   /* letter-spacing: 0.8px; */
   resize: none;
+  background-color: var(--bg-color);
 
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
-  color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "black")};
+  color: ${({ mode }) =>
+    mode === "read" ? "var(--sys-main-color)" : "var(--normal-text-color)"};
   &::placeholder {
     color: ${({ mode }) =>
-      mode === "read" ? "var(--main-color)" : "var(--line-color)"};
+      mode === "read"
+        ? "var(--sys-main-color)"
+        : "var(--light-gray-line-btn-color)"};
   }
   ::-webkit-scrollbar {
     width: 20px;
@@ -132,7 +136,7 @@ const ContentItemTextAreaStyled = styled.textarea<{
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--line-color);
+    background: var(--light-gray-line-btn-color);
     border-radius: 50px;
     border: 6px solid transparent;
     background-clip: padding-box;
@@ -146,7 +150,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--modal-bg-shadow-color);
   z-index: 1000;
 `;
 
@@ -166,7 +170,7 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   background: none;
   cursor: pointer;
   text-decoration: underline;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   &:hover {
     opacity: 0.8;
   }

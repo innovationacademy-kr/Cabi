@@ -46,6 +46,14 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
         legends: { text: { fontSize: "14px" } },
         axis: { ticks: { text: { fontSize: "14px" } } },
         labels: { text: { fontSize: "14px" } },
+        textColor: "var(--normal-text-color)",
+        tooltip: {
+          container: {
+            backgroundColor: "var(--bg-color)",
+            boxShadow: "var(--left-nav-border-shadow-color) 0 1px 2px",
+            color: "var(--normal-text-color)",
+          },
+        },
       }}
       data={convert(data)}
       keys={["사용불가", "반납지연", "사용 중", "사용가능"]}
@@ -54,7 +62,12 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
       padding={0.3}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
-      colors={["#595959", "#ff4e4e", "#e2e4e3", "var(--main-color)"]}
+      colors={[
+        "var(--banned-color)",
+        "var(--expired-color)",
+        "var(--full-color)",
+        "var(--sys-main-color)",
+      ]}
       borderColor={{
         from: "color",
         modifiers: [["darker", 1.6]],

@@ -5,6 +5,7 @@ import BanModal from "@/Cabinet/components/Modals/BanModal/BanModal";
 import AdminReturnModal from "@/Cabinet/components/Modals/ReturnModal/AdminReturnModal";
 import ChangeToHTML from "@/Cabinet/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 import {
+  cabinetIconComponentMap,
   cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
@@ -27,6 +28,7 @@ const UserInfoArea: React.FC<{
 }> = (props) => {
   const { selectedUserInfo, closeCabinet, openLent } = props;
   const [showBanModal, setShowBanModal] = useState<boolean>(false);
+  const CabinetTypeIcon = cabinetIconComponentMap[CabinetType.PRIVATE];
 
   const handleOpenBanModal = () => {
     setShowBanModal(true);
@@ -39,7 +41,7 @@ const UserInfoArea: React.FC<{
     return (
       <NotSelectedStyled>
         <CabiLogoStyled src={cabiLogo} />
-        <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
+        <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
           사물함/유저를 <br />
           선택해주세요
         </TextStyled>
@@ -49,7 +51,7 @@ const UserInfoArea: React.FC<{
   return (
     <CabinetDetailAreaStyled>
       <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
+      <TextStyled fontSize="1rem" fontColor="var(--gray-line-btn-color)">
         대여 중이 아닌 사용자
       </TextStyled>
       <CabinetRectangleStyled
@@ -59,8 +61,10 @@ const UserInfoArea: React.FC<{
       >
         {selectedUserInfo.isBanned ? "!" : "-"}
       </CabinetRectangleStyled>
-      <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
-      <TextStyled fontSize="1rem" fontColor="black">
+      <CabinetTypeIconStyled>
+        <CabinetTypeIcon />
+      </CabinetTypeIconStyled>
+      <TextStyled fontSize="1rem" fontColor="var(--normal-text-color))">
         {selectedUserInfo.name}
       </TextStyled>
 
@@ -74,7 +78,7 @@ const UserInfoArea: React.FC<{
         <ButtonContainer onClick={closeCabinet} text="닫기" theme="grayLine" />
       </CabinetInfoButtonsContainerStyled>
       {selectedUserInfo.isBanned && (
-        <CabinetLentDateInfoStyled textColor="var(--expired)">
+        <CabinetLentDateInfoStyled textColor="var(--expired-color)">
           {selectedUserInfo.bannedInfo!}
         </CabinetLentDateInfoStyled>
       )}
@@ -110,15 +114,21 @@ const CabiLogoStyled = styled.img`
   margin-bottom: 10px;
 `;
 
-const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
+const CabinetTypeIconStyled = styled.div`
   width: 24px;
   height: 24px;
   min-width: 24px;
   min-height: 24px;
   margin-bottom: 10px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
-  background-size: contain;
-  background-repeat: no-repeat;
+
+  & > svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  & > svg > path {
+    stroke: var(--normal-text-color);
+  }
 `;
 
 const LinkTextStyled = styled.div`
@@ -128,7 +138,7 @@ const LinkTextStyled = styled.div`
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 0.875rem;
-  color: var(--sub-color);
+  color: var(--sys-sub-color);
   text-decoration: underline;
   :hover {
     cursor: pointer;
@@ -143,7 +153,7 @@ const TextStyled = styled.p<{ fontSize: string; fontColor: string }>`
   text-align: center;
   white-space: pre-line;
   & strong {
-    color: var(--main-color);
+    color: var(--sys-main-color);
   }
 `;
 

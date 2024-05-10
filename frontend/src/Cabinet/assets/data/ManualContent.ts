@@ -14,7 +14,8 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.PRIVATE]: {
     contentTitle: "개인 사물함",
     imagePath: "/src/Cabinet/assets/images/privateIcon.svg",
-    background: "linear-gradient(to bottom, #A17BF3, #8337E5)",
+    background:
+      "linear-gradient(to bottom, var(--ref-purple-400), var(--ref-purple-600))",
     rentalPeriod: `${import.meta.env.VITE_PRIVATE_LENT_PERIOD}일`,
     capacity: "1인",
     contentText: `<span>◦ 이용 방법</span><br/>
@@ -30,12 +31,13 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연체 페널티는 누적됩니다.
     </div>
   `,
-    pointColor: "white",
+    pointColor: "var(--white-text-with-bg-color)",
   },
   [ContentStatus.SHARE]: {
     contentTitle: "공유 사물함",
     imagePath: "/src/Cabinet/assets/images/shareIcon.svg",
-    background: "linear-gradient(to bottom, #7EBFFB, #406EE4)",
+    background:
+      "linear-gradient(to bottom, var(--ref-blue-200), var(--ref-blue-300))",
     rentalPeriod: `${import.meta.env.VITE_SHARE_LENT_PERIOD}일 + n * ${
       import.meta.env.VITE_SHARE_BONUS_PER_PERSON
     }`,
@@ -59,12 +61,13 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연체 페널티는 누적됩니다.
     </div>
   `,
-    pointColor: "#white",
+    pointColor: "var(--white-text-with-bg-color)",
   },
   [ContentStatus.CLUB]: {
     contentTitle: "동아리 사물함",
     imagePath: "/src/Cabinet/assets/images/clubIcon.svg",
-    background: "linear-gradient(to bottom, #F473B1, #D72766)",
+    background:
+      "linear-gradient(to bottom, var(--ref-pink-100), var(--ref-pink-200))",
     rentalPeriod: "상세내용 참조",
     capacity: "동아리",
     contentText: `<span>◦ 이용 방법</span><br/>
@@ -86,12 +89,12 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     상세 페이지가 제공되지 않습니다.
     <br />
     비밀번호는 동아리 내에서 공유하여 이용하세요.</div>`,
-    pointColor: "white",
+    pointColor: "var(--white-text-with-bg-color)",
   },
   [ContentStatus.PENDING]: {
     contentTitle: "오픈예정",
     imagePath: "",
-    background: "var(--main-color)",
+    background: "var(--sys-main-color)",
     contentText: `<span>◦ 상세 내용</span><br/>
     <div>사물함 반납 시, 해당 사물함은 오픈예정 상태로 변경됩니다.<br />
     오픈예정 상태의 사물함은 대여가 불가능합니다.<br />
@@ -102,12 +105,12 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     title="슬랙 캐비닛 채널 새창으로 열기"
   >
     슬랙 캐비닛 채널</a>에서 확인하세요.</div>`,
-    pointColor: "var(--white)",
+    pointColor: "var(--white-text-with-bg-color)",
   },
   [ContentStatus.IN_SESSION]: {
     contentTitle: "대기중",
     imagePath: "/src/Cabinet/assets/images/clock.svg",
-    background: "#F5F5F7",
+    background: "var(--card-bg-color)",
     contentText: `<span>◦ 상세 내용</span><br/>
     <div>공유 사물함 대여 시 <strong>10분</strong>간의 대기 시간이 발생합니다.<br/>
     대여 과정에서 생성된 <strong>초대 코드</strong>를 통해 공유 사물함에 입장할 수 있습니다.<br/>
@@ -122,12 +125,12 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     <span>◦ 주의 사항</span><br/>
     <div>초대 코드를 <strong>3번 이상</strong> 잘못 입력하면 <strong>입장이 제한</strong>됩니다.</div>
     `,
-    pointColor: "var(--main-color)",
+    pointColor: "var(--sys-main-color)",
   },
   [ContentStatus.EXTENSION]: {
     contentTitle: "연장권 이용방법 안내서",
     imagePath: "/src/Cabinet/assets/images/extension.svg",
-    background: "#F5F5F7",
+    background: "var(--card-bg-color)",
     contentText: `<span>◦ 연장권 취득 조건</span><br/>
     <div>
     월 출석 시간이 <strong>기준 시간</strong> 이상일 시 연장권이 부여됩니다.<br/>
@@ -143,6 +146,6 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연장권은 <strong>해당 월의 마지막 날</strong>까지 사용 가능합니다.<br/>
     공유 사물함에 한 명만 남거나 연체된 상태라면 연장권 사용이 불가합니다.
     </div>`,
-    pointColor: "black",
+    pointColor: "var(--normal-text-color)",
   },
 };

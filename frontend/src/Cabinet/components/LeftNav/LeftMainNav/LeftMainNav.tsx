@@ -98,7 +98,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickSlackNotiButton}
               >
-                <SlackNotiImg stroke="var(--gray-color)" />
+                <SlackNotiImg stroke="var(--gray-line-btn-color)" />
                 Noti
               </BottomBtnStyled>
               <BottomBtnStyled
@@ -109,7 +109,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickSearchButton}
               >
-                <SearchImg stroke="var(--gray-color)" />
+                <SearchImg stroke="var(--gray-line-btn-color)" />
                 Search
               </BottomBtnStyled>
               <BottomBtnStyled className="cabiButton">
@@ -118,7 +118,7 @@ const LeftMainNav = ({
                   target="_blank"
                   title="슬랙 캐비닛 채널 새창으로 열기"
                 >
-                  <SlackImg stroke="var(--gray-color)" />
+                  <SlackImg stroke="var(--gray-line-btn-color)" />
                   Contact
                 </a>
               </BottomBtnStyled>
@@ -130,14 +130,14 @@ const LeftMainNav = ({
                 }
                 onClick={onClickAdminClubButton}
               >
-                <CulbImg stroke="var(--gray-color)" />
+                <CulbImg stroke="var(--gray-line-btn-color)" />
                 Club
               </BottomBtnStyled>
               <BottomBtnStyled
                 className="cabiButton"
                 onClick={onClickLogoutButton}
               >
-                <LogoutImg stroke="var(--gray-color)" />
+                <LogoutImg stroke="var(--gray-line-btn-color)" />
                 Logout
               </BottomBtnStyled>
             </>
@@ -163,7 +163,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickMainClubButton}
               >
-                <CulbImg stroke="var(--gray-color)" width={24} height={24} />
+                <CulbImg stroke="var(--gray-line-btn-color)" />
                 Clubs
               </BottomBtnStyled>
               <BottomBtnStyled
@@ -174,7 +174,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickProfileButton}
               >
-                <ProfileImg stroke="var(--gray-color)" width={24} height={24} />
+                <ProfileImg stroke="var(--gray-line-btn-color)" />
                 Profile
               </BottomBtnStyled>
             </>
@@ -195,6 +195,7 @@ const LeftNavStyled = styled.nav`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  font-size: var(--size-base);
 `;
 
 const TopSectionStyled = styled.section`
@@ -216,15 +217,15 @@ const TopBtnStyled = styled.li`
   font-weight: 300;
   margin-bottom: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
   cursor: pointer;
   &:last-child {
     margin-bottom: 0;
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--white);
-      background-color: var(--main-color);
+      color: var(--white-text-with-bg-color);
+      background-color: var(--sys-main-color);
     }
   }
 `;
@@ -242,9 +243,10 @@ const BottomSectionStyled = styled.section`
     margin: 0 auto;
     width: 56px;
     height: 1px;
-    background-color: var(--line-color);
+    background-color: var(--toggle-switch-off-bg-color);
   }
 `;
+
 const BottomBtnsStyled = styled.ul`
   padding: 30px 10px;
   text-align: center;
@@ -258,17 +260,18 @@ const BottomBtnStyled = styled.li`
   font-weight: 300;
   margin-top: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 
   &:first-child {
     margin-top: 0;
   }
   & a {
-    color: var(--gray-color);
+    color: var(--gray-line-btn-color);
   }
   & div {
     width: 24px;
@@ -277,9 +280,9 @@ const BottomBtnStyled = styled.li`
     margin-bottom: 4px;
   }
   &.active {
-    color: var(--main-color);
+    color: var(--button-line-color);
     svg {
-      stroke: var(--main-color);
+      stroke: var(--button-line-color);
     }
   }
   svg {
@@ -287,12 +290,12 @@ const BottomBtnStyled = styled.li`
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--main-color);
+      color: var(--button-line-color);
       svg {
-        stroke: var(--main-color);
+        stroke: var(--button-line-color);
       }
       a {
-        color: var(--main-color);
+        color: var(--button-line-color);
       }
     }
   }

@@ -1,6 +1,6 @@
-import { ISlackChannel } from "@/Cabinet/assets/data/SlackAlarm";
 import styled from "styled-components";
 import SlackNotiSearchListItem from "@/Cabinet/components/SlackNoti/SlackNotiSearchListItem";
+import { ISlackChannel } from "@/Cabinet/assets/data/SlackAlarm";
 
 interface ISearchListByIntraId {
   name: string;
@@ -52,13 +52,13 @@ const UlStyled = styled.ul`
   position: absolute;
   top: 50px;
   width: 100%;
-  border: 1px solid var(--white);
+  border: 1px solid var(--white-text-with-bg-color);
   border-radius: 10px;
   text-align: left;
   padding: 10px;
-  color: var(--black);
-  background-color: var(--white);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  color: var(--mine-text-color);
+  background-color: var(--white-text-with-bg-color);
+  box-shadow: 0 0 10px 0 var(--left-nav-border-shadow-color);
   opacity: 0.9;
   overflow: hidden;
   @media (max-width: 768px) {

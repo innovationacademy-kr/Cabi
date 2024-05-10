@@ -83,8 +83,8 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
                 {
                   label: "저장",
                   onClick: handleSave,
-                  color: "var(--white)",
-                  backgroundColor: "var(--main-color)",
+                  fontColor: "var(--white-text-with-bg-color)",
+                  backgroundColor: "var(--sys-main-color)",
                   isClickable: true,
                 },
                 {
@@ -98,8 +98,8 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
                 {
                   label: "-",
                   isClickable: false,
-                  color: "var(--lightgray-color)",
-                  backgroundColor: "var(--lightgray-color)",
+                  fontColor: "var(--card-bg-color)",
+                  backgroundColor: "var(--card-bg-color)",
                 },
               ]
         }

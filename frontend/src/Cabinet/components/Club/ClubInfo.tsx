@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
 import ClubCabinetInfoCard from "@/Cabinet/components/Card/ClubCabinetInfoCard/ClubCabinetInfoCard";
 import ClubNoticeCard from "@/Cabinet/components/Card/ClubNoticeCard/ClubNoticeCard";
 import ClubMemberListContainer from "@/Cabinet/components/Club/ClubMemberList/ClubMemberList.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import { ReactComponent as SadCcabi } from "@/Cabinet/assets/images/sadCcabi.svg";
 import { ClubInfoResponseDto } from "@/Cabinet/types/dto/club.dto";
 import useClubInfo from "@/Cabinet/hooks/useClubInfo";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const ClubInfo = () => {
-  const myInfo = useRecoilValue(userState);
+  const [myInfo] = useRecoilState(userState);
   const { clubState, clubInfo, setPage } = useClubInfo();
   const [isMaster, setIsMaster] = useState<boolean>(false);
   const { closeAll } = useMenu();
@@ -23,7 +24,6 @@ const ClubInfo = () => {
       let clubInfoTest = clubInfo as ClubInfoResponseDto;
       if (clubInfoTest.clubMaster.userName === myInfo.name) setIsMaster(true);
     }
-    // console.log(clubInfo);
   }, [clubInfo]);
 
   return (
@@ -34,7 +34,7 @@ const ClubInfo = () => {
         <EmptyClubCabinetTextStyled>
           동아리 사물함이 없어요
           <SadCcabiStyled>
-            <img src="/src/Cabinet/assets/images/sadCcabi.png" />
+            <SadCcabi />
           </SadCcabiStyled>
         </EmptyClubCabinetTextStyled>
       ) : (
@@ -62,19 +62,24 @@ const EmptyClubCabinetTextStyled = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 1.125rem;
-  color: var(--gray-color);
-  /* margin-top: 20px; */
+  color: var(--gray-line-btn-color);
 `;
 
 const SadCcabiStyled = styled.div`
   display: flex;
-  align-items: center;
   margin-left: 5px;
+  width: 30px;
+  height: 30px;
+  margin-left: 8px;
+  padding-top: 3px;
 
-  img {
+  & > svg {
     width: 30px;
-    aspect-ratio: 1 / 1;
-    margin-left: 8px;
+    height: 30px;
+  }
+
+  & > svg > path {
+    fill: var(--gray-line-btn-color);
   }
 `;
 

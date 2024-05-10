@@ -3,6 +3,7 @@ package org.ftclub.cabinet.mapper;
 import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
 import java.util.List;
+import javax.annotation.Nullable;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;

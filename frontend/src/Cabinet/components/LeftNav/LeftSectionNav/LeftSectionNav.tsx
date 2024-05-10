@@ -52,6 +52,7 @@ const LeftNavOptionStyled = styled.div`
   border-right: 1px solid var(--line-color);
   font-weight: 300;
   position: relative;
+  font-size: var(--size-base);
 `;
 
 export const FloorSectionStyled = styled.div`
@@ -60,7 +61,7 @@ export const FloorSectionStyled = styled.div`
   line-height: 40px;
   border-radius: 10px;
   text-indent: 20px;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
   margin: 2px 0;
   cursor: pointer;
   display: flex;
@@ -68,8 +69,8 @@ export const FloorSectionStyled = styled.div`
   align-items: center;
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--main-color);
-      color: var(--white);
+      background-color: var(--sys-main-color);
+      color: var(--white-text-with-bg-color);
     }
   }
 `;

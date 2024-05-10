@@ -69,12 +69,12 @@ const LogTableWrapperstyled = styled.div`
   border-radius: 10px;
   overflow: hidden;
   margin: 0 auto;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px 0 var(--table-border-shadow-color-200);
 `;
 
 const LogTableStyled = styled.table`
   width: 100%;
-  background: var(--white);
+  background: var(--bg-color);
   overflow: scroll;
 `;
 
@@ -82,8 +82,8 @@ const TheadStyled = styled.thead`
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background-color: var(--main-color);
-  color: var(--white);
+  background-color: var(--sys-main-color);
+  color: var(--white-text-with-bg-color);
   & > tr > th:first-child {
     padding-left: 0px;
   }
@@ -106,7 +106,8 @@ const TbodyStyled = styled.tbody`
     padding-bottom: 10px;
   }
   & > tr:nth-child(2n) {
-    background-color: hsl(228, 100%, 98%);
+    background-color: var(--presentation-table-even-row-bg-color);
+    color: var(--normal-text-color);
   }
   & > tr > td:first-child {
     padding-left: 20px;

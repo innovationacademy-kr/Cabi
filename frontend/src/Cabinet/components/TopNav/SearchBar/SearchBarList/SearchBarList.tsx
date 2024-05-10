@@ -1,6 +1,6 @@
+import styled from "styled-components";
 import SearchListItem from "@/Cabinet/components/TopNav/SearchBar/SearchListItem/SearchListItem";
 import { CabinetSimple } from "@/Cabinet/types/dto/cabinet.dto";
-import styled from "styled-components";
 
 interface ISearchListByIntraId {
   name: string;
@@ -58,13 +58,13 @@ const UlStyled = styled.ul`
   top: 50px;
   left: 0;
   width: 300px;
-  border: 1px solid var(--white);
+  border: 1px solid var(--bg-color);
   border-radius: 10px;
   text-align: left;
   padding: 10px;
-  color: var(--black);
-  background-color: var(--white);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  color: var(--normal-text-color);
+  background-color: var(--bg-color);
+  box-shadow: 0 0 10px 0 var(--left-nav-border-shadow-color);
   opacity: 0.9;
   overflow: hidden;
   @media (max-width: 768px) {
@@ -74,7 +74,7 @@ const UlStyled = styled.ul`
 
 const TotalStyled = styled.li`
   font-size: 0.875rem;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
   text-align: right;
   padding: 10px;
 `;

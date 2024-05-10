@@ -3,6 +3,7 @@ package org.ftclub.cabinet.lent.domain;
 import static javax.persistence.FetchType.LAZY;
 
 import java.time.LocalDateTime;
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -159,18 +160,19 @@ public class LentHistory {
 				new DomainException(ExceptionStatus.INVALID_STATUS));
 	}
 
-	/**
-	 * 만료일이 설정 되어있는 지 확인합니다. 만료일이 {@link DateUtil}의 infinityDate와 같으면 만료일이 설정되어 있지 않다고 판단합니다.
-	 *
-	 * @return 설정이 되어있으면 true 아니면 false
-	 */
-	public boolean isSetExpiredAt() {
-		LocalDateTime expiredAt = getExpiredAt();
-		if (expiredAt == null) {
-			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asDomainException();
-		}
-		return !expiredAt.isEqual(DateUtil.getInfinityDate());
-	}
+//	NOTE: 2024-04-20 기준 정책상 만료일이 설정되어 있지 않은 경우는 없으므로 삭제
+//	/**
+//	 * 만료일이 설정 되어있는 지 확인합니다. 만료일이 {@link DateUtil}의 infinityDate와 같으면 만료일이 설정되어 있지 않다고 판단합니다.
+//	 *
+//	 * @return 설정이 되어있으면 true 아니면 false
+//	 */
+//	public boolean isSetExpiredAt() {
+//		LocalDateTime expiredAt = getExpiredAt();
+//		if (expiredAt == null) {
+//			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asDomainException();
+//		}
+//		return !expiredAt.isEqual(DateUtil.getInfinityDate());
+//	}
 
 	/**
 	 * 반납일이 설정 되어있는 지 확인합니다. 반납일이 {@link DateUtil}의 infinityDate와 같으면 만료일이 설정되어 있지 않다고 판단합니다.
@@ -191,10 +193,14 @@ public class LentHistory {
 	 * @return endedAt - expiredAt의 값을(일 기준)
 	 */
 	public Long getDaysDiffEndedAndExpired() {
-		if (isSetExpiredAt() && isSetEndedAt()) {
+//		if (isSetExpiredAt() && isSetEndedAt()) {
+//			return DateUtil.calculateTwoDateDiff(endedAt, expiredAt) + 1;
+//		}
+//		return null;
+		if (isSetEndedAt()) {
 			return DateUtil.calculateTwoDateDiff(endedAt, expiredAt) + 1;
 		}
-		return null;
+		throw ExceptionStatus.INTERNAL_SERVER_ERROR.asDomainException();
 	}
 
 	/**
@@ -203,22 +209,25 @@ public class LentHistory {
 	 * @return 만료일이 지났으면 true 아니면 false, 만료일이 설정되어 있지 않으면 false
 	 */
 	public Boolean isExpired(LocalDateTime now) {
-		if (isSetExpiredAt()) {
-			return DateUtil.calculateTwoDateDiffCeil(expiredAt, now) > 0;
-		}
-		return false;
+//		if (isSetExpiredAt()) {
+//			return DateUtil.calculateTwoDateDiffCeil(expiredAt, now) > 0;
+//		}
+//		return false;
+		return DateUtil.calculateTwoDateDiffCeil(expiredAt, now) > 0;
 	}
 
 	/**
-	 * 만료일까지 남은 일수를 계산합니다. 만료시간이 설정되지 않았으면 null을 반환합니다.
+	 * 만료일까지 남은 일수를 계산합니다.
 	 *
-	 * @return 만료일까지 남은 일수 (만료일 - 현재시간) (일 기준, 올림)
+	 * @param now 현재 시간을 나타내는 {@code LocalDateTime} 객체
+	 * @return 만료일까지 남은 일수를 일 단위로 반환합니다.
 	 */
 	public Long getDaysUntilExpiration(LocalDateTime now) {
-		if (isSetExpiredAt()) {
-			return DateUtil.calculateTwoDateDiffCeil(expiredAt, now);
-		}
-		return null;
+//		if (isSetExpiredAt()) {
+//			return DateUtil.calculateTwoDateDiffCeil(expiredAt, now);
+//		}
+//		return null;
+		return DateUtil.calculateTwoDateDiffCeil(expiredAt, now);
 	}
 
 

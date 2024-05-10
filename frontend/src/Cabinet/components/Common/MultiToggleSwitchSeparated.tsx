@@ -35,10 +35,13 @@ const MultiToggleSwitchSeparated = <T,>({
 
   function switchToggle(e: any) {
     const target = e.target as HTMLButtonElement;
+
     if (target === e.currentTarget) return;
+
     // setPage(0);
     const selectedKey = target.className.split(" ")[0];
     const buttons = wrapperRef.current?.querySelectorAll("button");
+
     buttons?.forEach((button) => {
       button.classList.remove("selected");
     });
@@ -77,8 +80,6 @@ const WrapperStyled = styled.div<{
     border-radius: 10px;
     font-size: ${(props) => props.fontSize};
     font-weight: 500;
-    background-color: var(--lightgray-color);
-    color: gray;
     padding: 4px 12px;
     box-sizing: border-box;
   }
@@ -90,13 +91,13 @@ const WrapperStyled = styled.div<{
   }
 
   button.categoryButton {
-    color: black;
-    background-color: var(--white);
+    color: var(--normal-text-color);
+    background-color: var(--card-content-bg-color);
   }
 
   button.selected {
-    color: white;
-    background-color: #3f69fd;
+    color: var(--white-text-with-bg-color);
+    background-color: var(--sys-main-color);
   }
 `;
 

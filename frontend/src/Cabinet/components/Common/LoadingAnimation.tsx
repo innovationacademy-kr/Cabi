@@ -19,7 +19,7 @@ const LoadingAnimationWrapperStyled = styled.div`
 
 const pulse = keyframes`
   50% {
-    background: var(--main-color);
+    background: var(--sys-main-color);
   }
 `;
 
@@ -27,7 +27,7 @@ const LoadingAnimationStyled = styled.div`
   position: relative;
   width: 6px;
   height: 24px;
-  background: var(--sub-color);
+  background: var(--sys-sub-color);
   animation: ${pulse} 0.75s infinite;
   animation-delay: 0.25s;
   &:before,
@@ -37,7 +37,7 @@ const LoadingAnimationStyled = styled.div`
     display: block;
     width: 6px;
     height: 16px;
-    background: var(--sub-color);
+    background: var(--sys-sub-color);
     top: 50%;
     transform: translateY(-50%);
     animation: ${pulse} 0.75s infinite;

@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.utils.overdue.manager;
 
+import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.alarm.config.AlarmProperties;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
@@ -9,12 +9,13 @@ import org.ftclub.cabinet.alarm.domain.LentExpirationImminentAlarm;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Log4j2
+@Logging
 /**
  * 연체 관리자 클래스
  *
@@ -33,15 +34,16 @@ public class OverdueManager {
 	 * 반환한다.
 	 *
 	 * @param isExpired              연체 기간이 지났는지 여부 (true: 연체 기간이 지남, false: 연체 기간이 지나지 않음)
-	 * @param daysLeftFromExpireDate 만료일까지 남은 일수
+	 * @param daysLeftFromExpireDate 만료일로부터 남은 일수 (null: 만료일이 없음)
 	 * @return 연체 타입
 	 */
-	public OverdueType getOverdueType(Boolean isExpired, Long daysLeftFromExpireDate) {
-		log.info("called getOverdueType with {}, {}", isExpired, daysLeftFromExpireDate);
+	private OverdueType getOverdueType(Boolean isExpired, @Nullable Long daysLeftFromExpireDate) {
 		if (isExpired) {
 			return OverdueType.OVERDUE;
 		}
-
+		if (daysLeftFromExpireDate == null) {
+			return OverdueType.NONE;
+		}
 		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermWeekBefore())) {
 			return OverdueType.SOON_OVERDUE;
 		}
@@ -60,7 +62,6 @@ public class OverdueManager {
 	public void handleOverdue(ActiveLentHistoryDto activeLent) {
 		OverdueType overdueType =
 				getOverdueType(activeLent.getIsExpired(), activeLent.getDaysFromExpireDate());
-		log.info("called handleOverdue: activeLent={}, overdueType={}", activeLent, overdueType);
 		switch (overdueType) {
 			case NONE:
 				return;

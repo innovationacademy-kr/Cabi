@@ -91,7 +91,7 @@ const DetailTableBodyItemTopTr = ({
           className={!isMobile || isItemOpen ? "leftEnd" : ""}
           colSpan={!isMobile || isItemOpen ? 0 : mobileColSpanSize}
         >
-          <div id={!isMobile ? "" : "mobileTopDate"}>
+          <div id={!isMobile ? "desktopTopDate" : "mobileTopDate"}>
             {itemInfo.itemDateInIDate?.month}월 {itemInfo.itemDateInIDate?.day}
             일
           </div>
@@ -167,14 +167,24 @@ const TopTrStyled = styled.tr<{
   & .rightEnd {
     border-radius: ${(props) => (props.open ? "0 10px 0 0" : "0 10px 10px 0")};
   }
+  & > td > div {
+    color: var(--mine-text-color);
+  }
+  & #desktopTopDate {
+    color: ${(props) =>
+      !props.itemStatus
+        ? "var(--mine-text-color)"
+        : "var(--normal-text-color)"};
+  }
+
   @media (min-width: 1150px) {
     font-size: 18px;
     background-color: ${(props) =>
       !props.itemStatus
-        ? "#dce7fd"
+        ? "var(--presentation-detail-available-color)"
         : props.itemStatus === itemType.NO_EVENT_CURRENT
-        ? "var(--white)"
-        : "var(--full)"};
+        ? "var(--presentation-no-event-cur-color)"
+        : "var(--presentation-no-event-past-color)"};
     height: 70px;
     line-height: 70px;
     & > td {
@@ -188,7 +198,7 @@ const TopTrStyled = styled.tr<{
     & button {
       width: 120px;
       height: 36px;
-      background-color: #3f69fd;
+      background-color: var(--sys-main-color);
       font-weight: bold;
       font-size: 1rem;
     }
@@ -202,17 +212,24 @@ const TopTrStyled = styled.tr<{
     height: 40px;
     line-height: 40px;
     width: 100%;
-    background-color: ${(props) => (props.open ? "#91B5FB" : "#3f69fd")};
+    background-color: ${(props) =>
+      props.open ? "#91B5FB" : "var(--sys-main-color)"};
     & > td {
       border-radius: ${(props) => (props.open ? "" : "10px 10px 0 0")};
     }
     & > td > #mobileTopDate {
-      color: ${(props) => (props.open ? "var(--black)" : "var(--white)")};
+      color: ${(props) =>
+        props.open
+          ? "var(--mine-text-color)"
+          : "var(--white-text-with-bg-color)"};
       text-align: ${(props) => (props.open ? "center" : "start")};
       padding-left: 10px;
     }
     &:hover {
       cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
+    }
+    & > td > div {
+      color: var(--mine-text-color);
     }
   }
 `;

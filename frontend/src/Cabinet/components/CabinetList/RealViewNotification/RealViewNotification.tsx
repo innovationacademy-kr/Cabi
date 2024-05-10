@@ -71,11 +71,11 @@ const TooltipCard = styled.div<{ hasEnoughWidth: boolean }>`
   justify-content: center;
   & ${ToolTipIcon}:hover + ${TooltipBox} {
     visibility: visible;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.8);
+    color: var(--white-text-with-bg-color);
+    background-color: var(--tooltip-shadow-color);
     &:before {
-      border-color: transparent transparent rgba(0, 0, 0, 0.8)
-        rgba(0, 0, 0, 0.8);
+      border-color: transparent transparent var(--tooltip-shadow-color)
+        var(--tooltip-shadow-color);
     }
   }
 `;

@@ -9,23 +9,23 @@ package org.ftclub.cabinet.exception;
  *
  * @see org.ftclub.cabinet.exception.ExceptionStatus
  */
-public class ServiceException extends RuntimeException {
+public class ServiceException extends RuntimeException implements FtClubCabinetException {
 
-    final ExceptionStatus status;
+	final ExceptionStatus status;
 
-    /**
-     * @param status exception에 대한 정보에 대한 enum
-     */
-    public ServiceException(ExceptionStatus status) {
-        this.status = status;
-    }
+	/**
+	 * @param status exception에 대한 정보에 대한 enum
+	 */
+	public ServiceException(ExceptionStatus status) {
+		this.status = status;
+	}
 
-    public ExceptionStatus getStatus() {
-        return status;
-    }
+	public ExceptionStatus getStatus() {
+		return status;
+	}
 
-    @Override
-    public String getMessage() {
-        return status.getMessage();
-    }
+	@Override
+	public String getMessage() {
+		return status.getMessage();
+	}
 }

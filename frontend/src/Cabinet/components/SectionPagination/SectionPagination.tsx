@@ -24,8 +24,8 @@ const SectionPagination: React.FC<{
       key={section.sectionName}
       filledColor={
         section.sectionName === currentSectionName
-          ? "var(--main-color)"
-          : "#D9D9D9"
+          ? "var(--sys-main-color)"
+          : "var(--service-man-title-border-btm-color)"
       }
       onClick={() => changeSectionOnClickIndexButton(index)}
       className="cabiButton"
@@ -61,7 +61,7 @@ const SectionPaginationStyled = styled.div`
   padding: 10px 0;
   position: sticky;
   top: 0;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-color);
   z-index: 1;
 `;
 
@@ -94,7 +94,7 @@ const SectionNameTextStyled = styled.div`
   min-width: 220px;
   font-size: 1rem;
   text-align: center;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 `;
 
 const SectionIndexStyled = styled.div`
@@ -114,7 +114,7 @@ const IndexRectangleStyled = styled.div<{ filledColor: string }>`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       transform: scale(1.3);
-      background-color: var(--sub-color);
+      background-color: var(--sys-sub-color);
     }
   }
 `;

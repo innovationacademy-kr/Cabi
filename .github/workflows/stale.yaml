@@ -1,0 +1,47 @@
+name: Close Stale Issues/PRs
+
+permissions:
+  issues: write
+  pull-requests: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *" # Every day at 00:00 UTC (KST 09:00)
+
+env:
+  OPERATIONS_PER_RUN: 128
+  DAYS_BEFORE_ISSUE_STALE: 30
+  DAYS_BEFORE_ISSUE_CLOSE: 3
+  DAYS_BEFORE_PR_STALE: 30
+  DAYS_BEFORE_PR_CLOSE: 3
+
+jobs:
+  close-stale-issues-and-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v8
+        with:
+          operations-per-run: ${{ env.OPERATIONS_PER_RUN }}
+          days-before-issue-stale: ${{ env.DAYS_BEFORE_ISSUE_STALE }}
+          days-before-issue-close: ${{ env.DAYS_BEFORE_ISSUE_CLOSE }}
+          exempt-issue-labels: "no stale"
+          stale-issue-label: "stale"
+          stale-issue-message: >
+            해당 이슈는 지난 ${{ env.DAYS_BEFORE_ISSUE_STALE }}일 동안 활동이 없어서 "stale" 상태로 표시되었어요.
+            ${{ env.DAYS_BEFORE_ISSUE_CLOSE }}일 이내에 "no stale"으로 태그가 지정되거나 다른 활동이 발생하지 않으면 자동으로 닫힐 예정입니다.
+          close-issue-message: >
+            해당 이슈는 "stale" 상태로 표시된 후 ${{ env.DAYS_BEFORE_ISSUE_CLOSE }}일 동안 활동이 없어서 자동으로 닫혔어요.
+          remove-issue-stale-when-updated: true
+          days-before-pr-stale: ${{ env.DAYS_BEFORE_PR_STALE }}
+          days-before-pr-close: ${{ env.DAYS_BEFORE_PR_CLOSE }}
+          exempt-pr-labels: "no stale"
+          stale-pr-label: "stale"
+          stale-pr-message: >
+            해당 PR은 지난 ${{ env.DAYS_BEFORE_PR_STALE }}일 동안 활동이 없어서 "stale" 상태로 표시되었어요.
+            ${{ env.DAYS_BEFORE_PR_CLOSE }}일 이내에 "no stale"으로 태그가 지정되거나 다른 활동이 발생하지 않으면 자동으로 닫힐 예정입니다.
+            해당 PR이 "stale" 상태로 표시되지 않기를 원하면 이 PR에 코멘트를 남겨주세요.
+          close-pr-message: >
+            해당 PR은 "stale" 상태로 표시된 후 ${{ env.DAYS_BEFORE_PR_CLOSE }}일 동안 활동이 없어서 자동으로 닫혔어요.
+          remove-pr-stale-when-updated: true
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

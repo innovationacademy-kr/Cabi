@@ -77,17 +77,17 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
         {iconType === "CHECK" && (
           <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
-            <CheckIcon stroke="var(--main-color)" />
+            <CheckIcon stroke="var(--sys-main-color)" />
           </ModalIconImgStyled>
         )}
         {iconType === "ERROR" && !isClubLentModal && (
           <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
-            <ErrorIcon stroke="var(--main-color)" />
+            <ErrorIcon stroke="var(--sys-main-color)" />
           </ModalIconImgStyled>
         )}
         {iconType === "NOTIFICATION" && (
           <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
-            <NotificationIcon stroke="var(--main-color)" />
+            <NotificationIcon stroke="var(--sys-main-color)" />
           </ModalIconImgStyled>
         )}
         <H2Styled>{title}</H2Styled>
@@ -133,7 +133,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
             {urlTitle}
           </UrlSectionStyled>
         )}
-      </ModalStyled>
+sys-      </ModalStyled>
     </>
   );
 };
@@ -143,7 +143,7 @@ const ModalStyled = styled.div`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -161,6 +161,7 @@ const ModalStyled = styled.div`
   align-items: center;
   text-align: center;
   padding: 40px 20px;
+  color: var(--normal-text-color);
 `;
 
 const ModalIconImgStyled = styled.div<{ iconScaleEffect: boolean | undefined }>`
@@ -206,15 +207,14 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgb(0, 0, 0);
-  opacity: 0.4;
+  background: var(--modal-bg-shadow-color);
   animation: fadeInBg 0.5s;
   @keyframes fadeInBg {
     0% {
       opacity: 0;
     }
     100% {
-      opacity: 0.4;
+      opacity: 1;
     }
   }
   z-index: 1000;
@@ -238,7 +238,7 @@ const UrlSectionStyled = styled.div`
   display: inline-block;
   font-size: 0.875rem;
   text-decoration: underline;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   margin-top: 20px;
 
   &:hover {

@@ -26,24 +26,24 @@ const LiStyled = styled.li`
   border-radius: 10px;
   cursor: pointer;
   & strong {
-    color: var(--main-color);
+    color: var(--sys-main-color);
   }
 
   &.active {
-    background-color: var(--main-color);
-    color: var(--white);
+    background-color: var(--sys-main-color);
+    color: var(--white-text-with-bg-color);
   }
   &.active strong {
-    color: var(--white);
+    color: var(--white-text-with-bg-color);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--main-color);
-      color: var(--white);
+      background-color: var(--sys-main-color);
+      color: var(--white-text-with-bg-color);
     }
     &:hover strong {
-      color: var(--white);
+      color: var(--white-text-with-bg-color);
     }
   }
 `;
