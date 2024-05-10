@@ -54,7 +54,7 @@ const AdminTopNavContainer: React.FC<{
   useEffect(() => {
     if (currentBuildingName === undefined) return;
     else if (currentBuildingName === "새롬관") {
-      navigator("/admin/main");
+      navigator("/admin/home");
     }
   }, [currentBuildingName]);
 
