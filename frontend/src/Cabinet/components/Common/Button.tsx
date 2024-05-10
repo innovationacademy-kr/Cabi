@@ -32,7 +32,7 @@ const ButtonContainerStyled = styled.button`
   border-radius: 10px;
   margin-bottom: 15px;
   &:disabled {
-    opacity: 0.3;
+    opacity: 0.4;
     cursor: not-allowed;
   }
   &:last-child {
@@ -41,39 +41,39 @@ const ButtonContainerStyled = styled.button`
   ${(props) =>
     props.theme === "fill" &&
     css`
-      background: var(--main-color);
-      color: var(--white);
+      background: var(--sys-main-color);
+      color: var(--white-text-with-bg-color);
     `}
   ${(props) =>
     props.theme === "line" &&
     css`
-      background: var(--white);
-      color: var(--main-color);
-      border: 1px solid var(--main-color);
+      background: var(--bg-color);
+      color: var(--button-line-color);
+      border: 1px solid var(--button-line-color);
     `}
   ${(props) =>
-    props.theme === "lightGrayLine" &&
+    props.theme === "light-grayLine" &&
     css`
-      background: var(--white);
-      color: var(--line-color);
-      border: 1px solid var(--line-color);
+      background: var(--bg-color);
+      color: var(--light-gray-line-btn-color);
+      border: 1px solid var(--light-gray-line-btn-color);
     `}
   ${(props) =>
     props.theme === "grayLine" &&
     css`
-      background: var(--white);
-      color: var(--gray-color);
-      border: 1px solid var(--gray-color);
+      background: var(--bg-color);
+      color: var(--gray-line-btn-color);
+      border: 1px solid var(--gray-line-btn-color);
     `}
   ${(props) =>
     props.theme === "smallGrayLine" &&
     css`
       max-width: 200px;
       height: 40px;
-      background: var(--white);
-      color: var(--gray-color);
+      background: var(--bg-color);
+      color: var(--gray-line-btn-color);
       font-size: 0.875rem;
-      border: 1px solid var(--gray-color);
+      border: 1px solid var(--gray-line-btn-color);
     `}
 
   @media (max-height: 745px) {

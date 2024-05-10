@@ -18,7 +18,11 @@ const TopNav = ({
       <TopNavWrapperStyled id="topNavWrap">
         <LogoStyled id="topNavLogo" className="cabiButton">
           <LogoDivStyled>
-            <LogoImg className="cabiButton" onClick={onClickLogo} />
+            <LogoImg
+              className="cabiButton"
+              onClick={onClickLogo}
+              viewBox="0.8 0.8 16 16"
+            />
           </LogoDivStyled>
           <BuildingSelectBoxStyled className="cabiButton">
             <div className="cabiButton">수요지식회</div>
@@ -35,7 +39,7 @@ const TopNavContainerStyled = styled.nav`
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: var(--bg-color);
   z-index: 10;
 `;
 
@@ -46,9 +50,9 @@ const TopNavWrapperStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #bcbcbc;
+  border-bottom: 1px solid var(--line-color);
   padding: 0 28px;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 `;
 
 const LogoStyled = styled.div`
@@ -62,8 +66,14 @@ const LogoDivStyled = styled.div`
   cursor: pointer;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
+    width: 35px;
+    height: 35px;
+  }
+
+  & > svg > path {
+    transform: scale(1.08);
   }
 `;
 

@@ -20,12 +20,24 @@ const ColorTableItemContainer = ({
 const CabinetColorTable = () => {
   return (
     <ColorTableStyled>
-      <ColorTableItemContainer color={"var(--mine)"} text={"내 사물함"} />
-      <ColorTableItemContainer color={"var(--available)"} text={"사용가능"} />
-      <ColorTableItemContainer color={"var(--pending)"} text={"오픈예정"} />
-      <ColorTableItemContainer color={"var(--full)"} text={"사용 중"} />
-      <ColorTableItemContainer color={"var(--expired)"} text={"반납지연"} />
-      <ColorTableItemContainer color={"var(--banned)"} text={"사용불가"} />
+      <ColorTableItemContainer color={"var(--mine-color)"} text={"내 사물함"} />
+      <ColorTableItemContainer
+        color={"var(--available-color)"}
+        text={"사용가능"}
+      />
+      <ColorTableItemContainer
+        color={"var(--pending-color)"}
+        text={"오픈예정"}
+      />
+      <ColorTableItemContainer color={"var(--full-color)"} text={"사용 중"} />
+      <ColorTableItemContainer
+        color={"var(--expired-color)"}
+        text={"반납지연"}
+      />
+      <ColorTableItemContainer
+        color={"var(--banned-color)"}
+        text={"사용불가"}
+      />
     </ColorTableStyled>
   );
 };
@@ -36,7 +48,7 @@ const ColorTableStyled = styled.div`
   left: 30px;
   width: auto;
   overflow: hidden;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 `;
 
 const ColorTableItemStyled = styled.div<{ color: string }>`
@@ -52,10 +64,10 @@ const ColorTableItemStyled = styled.div<{ color: string }>`
     margin-right: 5px;
     background-color: ${({ color }) => color};
     ${({ color }) =>
-      color === "var(--pending)" &&
+      color === "var(--pending-color)" &&
       css`
-        border: 1px double var(--main-color);
-        box-shadow: inset 0px 0px 0px 1px var(--white);
+        border: 1px double var(--sys-main-color);
+        box-shadow: inset 0px 0px 0px 1px var(--bg-color);
       `}
   }
 `;

@@ -195,14 +195,13 @@ const SearchBarStyled = styled.div`
 const SearchBarInputStyled = styled.input`
   width: 300px;
   height: 40px;
-  border: 1px solid #7b7b7b;
+  border: 1px solid var(--gray-line-btn-color);
   border-radius: 10px;
   text-align: left;
   padding: 0 20px;
-  color: #7b7b7b;
-  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--gray-line-btn-color);
   &::placeholder {
-    color: #7b7b7b;
+    color: var(--gray-line-btn-color);
   }
 `;
 

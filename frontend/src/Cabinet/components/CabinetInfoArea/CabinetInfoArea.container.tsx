@@ -170,17 +170,17 @@ export const getDetailMessageColor = (
   const { status, lentType, lents } = selectedCabinetInfo;
   // 밴, 고장 사물함
   if (status === CabinetStatus.BANNED || status === CabinetStatus.BROKEN)
-    return "var(--expired)";
+    return "var(--expired-color)";
   // 사용 중 사물함
   else if (
     (status === CabinetStatus.FULL && lentType !== "CLUB") ||
     status === CabinetStatus.OVERDUE
   )
     return calExpiredTime(new Date(lents[0].expiredAt)) < 0
-      ? "var(--expired)"
-      : "var(--black)";
+      ? "var(--expired-color)"
+      : "var(--normal-text-color)";
   // 빈 사물함
-  else return "var(--black)";
+  else return "var(--normal-text-color)";
 };
 
 const CabinetInfoAreaContainer = (): JSX.Element => {

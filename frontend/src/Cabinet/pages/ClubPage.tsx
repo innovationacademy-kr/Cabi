@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { myClubListState } from "@/Cabinet/recoil/atoms";
 import ClubInfo from "@/Cabinet/components/Club/ClubInfo";
@@ -8,7 +8,7 @@ import { ClubPaginationResponseDto } from "@/Cabinet/types/dto/club.dto";
 import { deleteRecoilPersistFloorSection } from "@/Cabinet/utils/recoilPersistUtils";
 
 const ClubPage = () => {
-  const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
+  const [clubList] = useRecoilState<ClubPaginationResponseDto>(myClubListState);
 
   useEffect(() => {
     deleteRecoilPersistFloorSection();
@@ -52,7 +52,7 @@ const EmptyClubListTextStyled = styled.div`
   height: 100%;
   font-size: 1.125rem;
   line-height: 1.75rem;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 `;
 
 const CabiLogoStyled = styled.div`
@@ -61,7 +61,7 @@ const CabiLogoStyled = styled.div`
   margin-bottom: 10px;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
   }
 `;

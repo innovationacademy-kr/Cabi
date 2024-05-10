@@ -6,6 +6,8 @@ import {
   ContentDetailStyled,
 } from "@/Cabinet/components/Card/CardStyles";
 import ClubPasswordModalContainer from "@/Cabinet/components/Modals/ClubModal/ClubPasswordModal.container";
+import { ReactComponent as LeaderIcon } from "@/Cabinet/assets/images/leader.svg";
+import { ReactComponent as LockIcon } from "@/Cabinet/assets/images/lock.svg";
 import { ClubInfoResponseDto } from "@/Cabinet/types/dto/club.dto";
 
 const ClubCabinetInfoCard = ({
@@ -35,16 +37,16 @@ const ClubCabinetInfoCard = ({
             ? [
                 {
                   onClick: handleLockLogoClick,
-                  icon: "/src/Cabinet/assets/images/lock.svg",
+                  icon: LockIcon,
                   isClickable: true,
                 },
               ]
             : [
                 // NOTE: 이 부분은 레이아웃을 유지하기 위한 placeholder 버튼입니다.
                 {
-                  backgroundColor: "var(--lightgray-color)",
+                  backgroundColor: "var(--card-bg-color)",
                   onClick: () => {},
-                  icon: "",
+                  icon: null,
                   isClickable: false,
                 },
               ]
@@ -59,13 +61,18 @@ const ClubCabinetInfoCard = ({
               <ClubNameTextStyled>{clubInfo.clubName}</ClubNameTextStyled>
               <CabinetInfoTextStyled
                 fontSize={"1rem"}
-                fontColor="var(--gray-color)"
+                fontColor="var(--gray-line-btn-color)"
               >
                 {clubInfo.floor + "층 - " + clubInfo.section}
               </CabinetInfoTextStyled>
               <CabinetUserListWrapper>
-                <CabinetIconStyled />
-                <CabinetInfoTextStyled fontSize={"1rem"} fontColor="black">
+                <CabinetIconStyled>
+                  <LeaderIcon />
+                </CabinetIconStyled>
+                <CabinetInfoTextStyled
+                  fontSize={"1rem"}
+                  fontColor="var(--normal-text-color)"
+                >
                   {clubInfo.clubMaster.userName}
                 </CabinetInfoTextStyled>
               </CabinetUserListWrapper>
@@ -108,8 +115,8 @@ const CabinetRectangleStyled = styled.div`
   line-height: 90px;
   border-radius: 10px;
   margin-right: 20px;
-  background-color: var(--full);
-  color: var(--black);
+  background-color: var(--full-color);
+  color: var(--mine-text-color);
   font-size: 2rem;
   text-align: center;
 `;
@@ -150,9 +157,16 @@ const CabinetIconStyled = styled.div`
   width: 22px;
   height: 18px;
   margin-right: 0.5rem;
-  background-image: url("/src/Cabinet/assets/images/leader.svg");
-  background-size: contain;
-  background-repeat: no-repeat;
+
+  & > svg {
+    width: 22px;
+    height: 18px;
+  }
+
+  & > svg > path {
+    stroke: var(--normal-text-color);
+    transform: scale(1.1);
+  }
 `;
 
 const ContentInfoStyled = styled.div<{
@@ -166,13 +180,13 @@ const ContentInfoStyled = styled.div<{
     props.isSelected &&
     `
     background-color: ${props.selectedColor};
-    color: white;
+    color: var(--bg-color);
     border-radius: 8px;
   `}
 `;
 
 const CardContentWrapper = styled.div`
-  background-color: var(--white);
+  background-color: var(--card-content-bg-color);
   border-radius: 10px;
   padding: 10px 0;
   margin: 5px 5px 5px 5px;

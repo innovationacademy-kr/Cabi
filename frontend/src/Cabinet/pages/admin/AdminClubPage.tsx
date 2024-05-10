@@ -1,12 +1,12 @@
-import AdminClubLogContainer from "@/Cabinet/components/Club/AdminClubLog.container";
-import Button from "@/Cabinet/components/Common/Button";
-import ClubModal from "@/Cabinet/components/Modals/ClubModal/ClubModal";
-import { selectedClubInfoState } from "@/Cabinet/recoil/atoms";
-import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
-import { deleteRecoilPersistFloorSection } from "@/Cabinet/utils/recoilPersistUtils";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { selectedClubInfoState } from "@/Cabinet/recoil/atoms";
+import AdminClubLogContainer from "@/Cabinet/components/Club/AdminClubLog.container";
+import Button from "@/Cabinet/components/Common/Button";
+import ClubModal from "@/Cabinet/components/Modals/ClubModal/ClubModal";
+import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
+import { deleteRecoilPersistFloorSection } from "@/Cabinet/utils/recoilPersistUtils";
 
 const AdminClubPage = () => {
   const [shouldFetchData, setShouldFetchData] = useState(false);
@@ -52,13 +52,13 @@ const AdminClubPage = () => {
         <Button
           text={"수정"}
           onClick={() => handleOpenModal("EDIT", selectedClubInfo)}
-          theme={!selectedClubInfo ? "lightGrayLine" : "line"}
+          theme={!selectedClubInfo ? "light-grayLine" : "line"}
           disabled={!selectedClubInfo}
         />
         <Button
           text={"삭제"}
           onClick={() => handleOpenModal("DELETE", selectedClubInfo)}
-          theme={!selectedClubInfo ? "lightGrayLine" : "line"}
+          theme={!selectedClubInfo ? "light-grayLine" : "line"}
           disabled={!selectedClubInfo}
         />
       </ButtonWrapperStyled>
@@ -96,7 +96,7 @@ const SubTitleStyled = styled.div`
   font-size: 1.2rem;
   letter-spacing: -0.02rem;
   margin-bottom: 5px;
-  color: var(--sub-color);
+  color: var(--sys-sub-color);
 `;
 
 const ButtonWrapperStyled = styled.div`

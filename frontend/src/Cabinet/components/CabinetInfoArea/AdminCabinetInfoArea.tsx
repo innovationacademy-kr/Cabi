@@ -16,7 +16,7 @@ import ClubLentModal from "@/Cabinet/components/Modals/LentModal/ClubLentModal";
 import AdminReturnModal from "@/Cabinet/components/Modals/ReturnModal/AdminReturnModal";
 import StatusModalContainer from "@/Cabinet/components/Modals/StatusModal/StatusModal.container";
 import {
-  cabinetIconSrcMap,
+  cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
@@ -54,6 +54,9 @@ const AdminCabinetInfoArea: React.FC<{
   const currentSection = useRecoilValue(currentSectionNameState);
   const { targetCabinetInfoList, typeCounts } = multiSelectTargetInfo ?? {};
   const { resetMultiSelectMode } = useMultiSelect();
+  const CabinetIcon = selectedCabinetInfo
+    ? cabinetIconComponentMap[selectedCabinetInfo.lentType]
+    : null;
 
   const isLented: boolean = selectedCabinetInfo?.userNameList.at(0) !== "-";
 
@@ -67,7 +70,7 @@ const AdminCabinetInfoArea: React.FC<{
         <CabiLogoStyled>
           <LogoImg />
         </CabiLogoStyled>
-        <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
+        <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
           사물함/유저를 <br />
           선택해주세요
         </TextStyled>
@@ -77,7 +80,7 @@ const AdminCabinetInfoArea: React.FC<{
   if (multiSelectTargetInfo) {
     return (
       <CabinetDetailAreaStyled>
-        <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
+        <TextStyled fontSize="1rem" fontColor="var(--gray-line-btn-color)">
           {currentFloor + "F - " + currentSection}
         </TextStyled>
         <MultiCabinetIconWrapperStyled>
@@ -129,7 +132,7 @@ const AdminCabinetInfoArea: React.FC<{
   return (
     <CabinetDetailAreaStyled>
       <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
+      <TextStyled fontSize="1rem" fontColor="var(--gray-line-btn-color)">
         {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
       </TextStyled>
       <CabinetRectangleStyled
@@ -138,11 +141,10 @@ const AdminCabinetInfoArea: React.FC<{
       >
         {selectedCabinetInfo!.visibleNum}
       </CabinetRectangleStyled>
-      <CabinetTypeIconStyled
-        title={selectedCabinetInfo!.lentType}
-        cabinetType={selectedCabinetInfo!.lentType}
-      />
-      <TextStyled fontSize="1rem" fontColor="black">
+      <CabinetTypeIconStyled title={selectedCabinetInfo!.lentType}>
+        {CabinetIcon && <CabinetIcon />}
+      </CabinetTypeIconStyled>
+      <TextStyled fontSize="1rem" fontColor="var(--normal-text-color)">
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
@@ -172,7 +174,7 @@ const AdminCabinetInfoArea: React.FC<{
       >
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
-      <CabinetLentDateInfoStyled textColor="var(--black)">
+      <CabinetLentDateInfoStyled textColor="var(--normal-text-color)">
         {expireDate}
       </CabinetLentDateInfoStyled>
       {adminModal.returnModal && (
@@ -216,20 +218,21 @@ const CabiLogoStyled = styled.div`
   margin-bottom: 10px;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
   }
 `;
 
-const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
+const CabinetTypeIconStyled = styled.div`
   width: 24px;
   height: 24px;
   min-width: 24px;
   min-height: 24px;
   margin-bottom: 10px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
-  background-size: contain;
-  background-repeat: no-repeat;
+
+  & path {
+    stroke: var(--normal-text-color);
+  }
 `;
 
 const LinkTextStyled = styled.div`
@@ -239,7 +242,7 @@ const LinkTextStyled = styled.div`
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 0.875rem;
-  color: var(--sub-color);
+  color: var(--sys-sub-color);
   text-decoration: underline;
   :hover {
     cursor: pointer;
@@ -269,7 +272,7 @@ const CabinetRectangleStyled = styled.div<{
   ${(props) =>
     props.isMine &&
     css`
-      background-color: var(--mine);
+      background-color: var(--mine-color);
     `};
   font-size: 2rem;
   color: ${(props) =>
@@ -279,13 +282,14 @@ const CabinetRectangleStyled = styled.div<{
   text-align: center;
   ${({ cabinetStatus }) => css`
     border: ${cabinetStatus === "IN_SESSION"
-      ? "2px solid var(--main-color)"
+      ? "2px solid var(--sys-main-color)"
       : cabinetStatus === "PENDING"
-      ? "2px double var(--main-color)"
+      ? "2px double var(--sys-main-color)"
       : "none"};
   `}
   ${({ cabinetStatus }) => css`
-    box-shadow: ${cabinetStatus === "PENDING" && "inset 0px 0px 0px 2px white"};
+    box-shadow: ${cabinetStatus === "PENDING" &&
+    "inset 0px 0px 0px 2px var(--bg-color)"};
   `}
 `;
 
@@ -322,8 +326,8 @@ const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
   justify-content: center;
   align-items: center;
   background-color: ${({ status }) => cabinetStatusColorMap[status]};
+  color: ${({ status }) => cabinetLabelColorMap[status]};
   border-radius: 5px;
-  color: ${({ status }) => (status === CabinetStatus.FULL ? "black" : "white")};
 `;
 
 export default AdminCabinetInfoArea;

@@ -53,6 +53,9 @@ const ClubMemberInfoAreaContainer = () => {
       clubModal={clubModal}
       openModal={openModal}
       closeModal={closeModal}
+      isMasterSelected={
+        targetClubUserInfo!.userName === targetClubInfo.clubMaster
+      }
     />
   );
 };

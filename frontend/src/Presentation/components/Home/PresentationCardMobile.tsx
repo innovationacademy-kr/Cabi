@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import styled from "styled-components";
+import { ReactComponent as CalendarIcon } from "@/Cabinet/assets/images/calendar.svg";
 import { IDate } from "@/Presentation/components/Details/DetailContent.container";
 import { presentationCategoryIconMap } from "@/Presentation/assets/data/maps";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
@@ -15,8 +16,8 @@ const PresentationCardMobile = ({
 }: {
   refinePresentations: IPresentationScheduleDetailInfo[] | undefined;
   searchCategory: (
-    categoryName?: keyof typeof presentationCategoryIconMap
-  ) => string;
+    categoryName: keyof typeof presentationCategoryIconMap | null
+  ) => React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   selectIndex: number;
   slide: number;
   onCardClick: (index: number) => void;
@@ -45,8 +46,14 @@ const PresentationCardMobile = ({
     <>
       <Container select={slide}>
         {refinePresentations?.map((p, index) => {
-          const tmpDate =
-            p.id !== -1 ? makeIDateObj(new Date(p.dateTime)) : null;
+          let tmpDate = null;
+          let CategoryIcon = null;
+          if (p.id !== -1) {
+            tmpDate = makeIDateObj(new Date(p.dateTime));
+            CategoryIcon = searchCategory(p.category);
+          } else {
+            CategoryIcon = searchCategory(null);
+          }
 
           return (
             <PresentationCardStyled
@@ -70,7 +77,7 @@ const PresentationCardMobile = ({
                 <>
                   <CategoryStyled>
                     <CategoryIconStyled>
-                      {p.category && <img src={searchCategory(p.category)} />}
+                      {p.category && <CategoryIcon />}
                     </CategoryIconStyled>
                   </CategoryStyled>
                   <DetailStyled>
@@ -80,10 +87,7 @@ const PresentationCardMobile = ({
                       <NameStyled>{p.userName} </NameStyled>
                       <CalendarStyled>
                         <IconStyled>
-                          <img
-                            src="/src/Cabinet/assets/images/calendar.svg"
-                            alt=""
-                          />
+                          <CalendarIcon />
                         </IconStyled>
                         <span>
                           {tmpDate?.month}/{tmpDate?.day}
@@ -96,7 +100,7 @@ const PresentationCardMobile = ({
                 <>
                   <CategoryStyled>
                     <CategoryIconStyled>
-                      <img src={searchCategory()} />
+                      <CategoryIcon />
                     </CategoryIconStyled>
                   </CategoryStyled>
                   <TitleStyled>예정된 일정이 없습니다.</TitleStyled>
@@ -140,7 +144,7 @@ const CategoryStyled = styled.div`
   height: 300px;
   margin-bottom: 16px;
   border-radius: 30px;
-  background-color: #3f69fd;
+  background-color: var(--sys-main-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -176,7 +180,7 @@ const SubTitleStyled = styled.div`
   word-break: break-all;
   line-height: 1.5;
   margin-bottom: 12px;
-  color: #797979;
+  color: var(--gray-line-btn-color);
 `;
 
 const DetailFooterStyled = styled.div`
@@ -187,7 +191,7 @@ const DetailFooterStyled = styled.div`
 const NameStyled = styled.div`
   white-space: nowrap;
   margin-right: 5px;
-  color: #9d9d9d;
+  color: var(--presentation-card-speaker-name-color);
   font-weight: 500;
 
   ::after {
@@ -202,13 +206,22 @@ const CalendarStyled = styled.div`
   font-size: 1rem;
 
   & > span {
-    color: #797979;
+    color: var(--presentation-card-speaker-name-color);
+  }
+
+  & > svg > path {
+    stroke: var(--presentation-card-speaker-name-color);
   }
 `;
 
 const IconStyled = styled.div`
   height: 15px;
+  width: 15px;
   margin-right: 8px;
+
+  & > svg > path {
+    stroke: var(--presentation-card-speaker-name-color);
+  }
 `;
 
 const PaginationStyled = styled.div`
@@ -219,7 +232,10 @@ const PaginationStyled = styled.div`
 const Paginations = styled.div<{ current: boolean }>`
   width: 30px;
   height: 10px;
-  background-color: ${(props) => (props.current ? "#5378fd" : "gray")};
+  background-color: ${(props) =>
+    props.current
+      ? "var(--presentation-blue-pagination-btn-color)"
+      : "var(--gray-line-btn-color)"};
   border-radius: 12px;
   margin: 0 5px;
 `;

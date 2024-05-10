@@ -17,15 +17,15 @@ const LoginTemplate = (props: {
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">
         <TopContentsStyled>
-          <LoginTitleStyled color="var(--black)">
+          <LoginTitleStyled color="var(--normal-text-color)">
             42서울 캐비닛 서비스
           </LoginTitleStyled>
-          <LoginTitleStyled color="var(--sub-color)">
+          <LoginTitleStyled color="var(--sys-sub-color)">
             여러분의 일상을 가볍게
           </LoginTitleStyled>
         </TopContentsStyled>
         <LoginImgStyled>
-          <LoginImg fill="var(--main-color)" />
+          <LoginImg fill="var(--sys-main-color)" />
         </LoginImgStyled>
         <BottomContentsStyled>
           <p>
@@ -103,7 +103,7 @@ const BottomContentsStyled = styled.div`
 `;
 
 const CabiStyled = styled.span`
-  color: var(--main-color);
+  color: var(--sys-main-color);
 `;
 
 const RightSectionStyled = styled.section`
@@ -112,7 +112,7 @@ const RightSectionStyled = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--main-color);
+  background-color: var(--sys-main-color);
 `;
 
 const LoginCardStyled = styled.div`
@@ -123,7 +123,7 @@ const LoginCardStyled = styled.div`
   align-items: center;
   flex-direction: column;
   padding: 85px 0;
-  background-color: var(--white);
+  background-color: var(--bg-color);
 `;
 
 const CardLogoStyled = styled.div`
@@ -131,7 +131,7 @@ const CardLogoStyled = styled.div`
   height: 70px;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
   }
 `;
@@ -147,7 +147,7 @@ const CardTitleStyled = styled.h1`
 `;
 
 const CardSubTitleStyled = styled.p`
-  color: var(--main-color);
+  color: var(--sys-main-color);
 `;
 
 export default LoginTemplate;

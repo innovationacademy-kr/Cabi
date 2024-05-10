@@ -47,6 +47,10 @@ const ClubMemberListContainer = ({
   const selectClubMemberOnClick = (member: ClubUserResponseDto) => {
     if (targetClubUser.userId === member.userId) {
       closeClubMember();
+      setTargetClubUser({
+        userId: 0,
+        userName: "",
+      });
       return;
     }
     setTargetClubUser(member);

@@ -10,6 +10,8 @@ services:
     image: "ccabi/cabi-dev"
     ports:
       - "${APP_PORT:-8085}:4242"
+      # port for actuator
+      - "4243:4243"
     volumes:
       - data-volume:/pinpoint-agent
       - $HOME/logs/:/logs/

@@ -33,7 +33,7 @@ const ClubPasswordModal: React.FC<ClubPasswordModalInterface> = ({
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
         {iconType === "CHECK" && (
           <ModalIconImgStyled>
-            <CheckIcon stroke="var(--main-color)" />
+            <CheckIcon stroke="var(--sys-main-color)" />
           </ModalIconImgStyled>
         )}
         <H2Styled>{title}</H2Styled>
@@ -83,14 +83,14 @@ const PasswordNumberStyled = styled.div<{ val: string }>`
   height: 100%;
   border-radius: 10px;
   border: ${({ val }) =>
-    val ? "2px solid var(--main-color)" : "1px solid var(--sub-color)"};
+    val ? "2px solid var(--sys-main-color)" : "1px solid var(--sys-sub-color)"};
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2rem;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   &.active {
-    border: 2px solid var(--main-color);
+    border: 2px solid var(--sys-main-color);
   }
 `;
 
@@ -109,7 +109,7 @@ const ModalStyled = styled.div`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -166,15 +166,14 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgb(0, 0, 0);
-  opacity: 0.4;
+  background: var(--modal-bg-shadow-color);
   animation: fadeInBg 0.5s;
   @keyframes fadeInBg {
     0% {
       opacity: 0;
     }
     100% {
-      opacity: 0.4;
+      opacity: 1;
     }
   }
   z-index: 1000;

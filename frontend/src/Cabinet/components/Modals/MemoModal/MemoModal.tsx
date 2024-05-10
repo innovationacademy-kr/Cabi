@@ -1,8 +1,8 @@
+import React, { useRef, useState } from "react";
+import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import React, { useRef, useState } from "react";
-import styled from "styled-components";
 
 export interface MemoModalInterface {
   cabinetType: CabinetType;
@@ -105,7 +105,7 @@ const MemoModal = ({
                   }
             }
             text={mode === "read" ? "닫기" : "취소"}
-            theme={mode === "read" ? "lightGrayLine" : "line"}
+            theme={mode === "read" ? "light-grayLine" : "line"}
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>
@@ -118,7 +118,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -171,7 +171,7 @@ const ContentItemTitleStyled = styled.h3`
 const ContentItemInputStyled = styled.input<{
   mode: string;
 }>`
-  border: 1px solid var(--line-color);
+  border: 1px solid var(--light-gray-line-btn-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -179,10 +179,13 @@ const ContentItemInputStyled = styled.input<{
   text-indent: 20px;
   font-size: 1.125rem;
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
-  color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "black")};
+  color: ${({ mode }) =>
+    mode === "read" ? "var(--sys-main-color)" : "var(--normal-text-color)"};
   &::placeholder {
     color: ${({ mode }) =>
-      mode === "read" ? "var(--main-color)" : "var(--line-color)"};
+      mode === "read"
+        ? "var(--sys-main-color)"
+        : "var(--toggle-switch-off-bg-color)"};
   }
 `;
 
@@ -192,7 +195,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--modal-bg-shadow-color);
   z-index: 1000;
 `;
 
@@ -212,7 +215,7 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   background: none;
   cursor: pointer;
   text-decoration: underline;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   &:hover {
     opacity: 0.8;
   }

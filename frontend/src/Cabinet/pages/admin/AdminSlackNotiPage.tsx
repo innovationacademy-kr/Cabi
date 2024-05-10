@@ -178,7 +178,7 @@ const TitleContainerStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #d9d9d9;
+  border-bottom: 2px solid var(--service-man-title-border-btm-color);
   margin-bottom: 70px;
   font-weight: 700;
 
@@ -214,15 +214,15 @@ const CapsuleButtonStyled = styled.span`
   justify-content: center;
   align-items: center;
   padding: 8px 20px;
-  background: var(--lightgray-color);
-  border: 1px solid var(--full);
+  background: var(--card-bg-color);
+  border: 1px solid var(--capsule-btn-border-color);
   border-radius: 22px;
   cursor: pointer;
 
   :hover {
-    background: #b08cff5f;
-    color: var(--main-color);
-    border: 1px solid var(--main-color);
+    background: var(--capsule-btn-hover-bg-color);
+    color: var(--sys-main-color);
+    border: 1px solid var(--sys-main-color);
   }
 `;
 
@@ -231,9 +231,7 @@ const FormWappingStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  /* width: 80%; */
-  /* max-width: 1000px; */
-  background-color: var(--lightgray-color);
+  background-color: var(--card-bg-color);
   border-radius: 10px;
   padding: 30px 20px;
   gap: 20px;
@@ -244,10 +242,10 @@ const FormContainerStyled = styled.div`
 `;
 const FormSubTitleStyled = styled.h3`
   font-size: 0.875rem;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
   margin-bottom: 10px;
   span {
-    color: var(--expired);
+    color: var(--expired-color);
   }
 `;
 
@@ -255,18 +253,18 @@ const FormTextareaStyled = styled.textarea`
   box-sizing: border-box;
   width: 100%;
   min-height: 200px;
-  background-color: var(--white);
+  background-color: var(--card-content-bg-color);
   border-radius: 8px;
-  border: 1px solid var(--full);
+  border: 1px solid var(--capsule-btn-border-color);
   resize: none;
   outline: none;
   :focus {
-    border: 1px solid var(--main-color);
+    border: 1px solid var(--sys-main-color);
   }
   text-align: left;
   padding: 10px;
   ::placeholder {
-    color: var(--line-color);
+    color: var(--toggle-switch-off-bg-color);
   }
 `;
 
@@ -282,10 +280,13 @@ const FormButtonStyled = styled.button<{ primary?: boolean }>`
   padding: 10px 16px;
   font-size: 0.875rem;
   background-color: ${(props) =>
-    props.primary ? "var(--main-color)" : "var(--white)"};
-  color: ${(props) => (props.primary ? "var(--white)" : "var(--black)")};
+    props.primary ? "var(--sys-main-color)" : "var(--card-content-bg-color)"};
+  color: ${(props) =>
+    props.primary
+      ? "var(--white-text-with-bg-color)"
+      : "var(--normal-text-color)"};
   font-weight: 700;
-  border: 1px solid var(--full);
+  border: 1px solid var(--capsule-btn-border-color);
   border-radius: 4px;
   cursor: pointer;
   :hover {

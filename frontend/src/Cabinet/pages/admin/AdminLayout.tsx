@@ -32,6 +32,7 @@ const Layout = (): JSX.Element => {
   const isSearchPage: boolean = location.pathname === "/admin/search";
 
   useEffect(() => {
+    deleteOldPointColors();
     if (!token && !isLoginPage) navigate("/admin/login");
     else if (token) {
       setIsLoading(true);
@@ -39,14 +40,32 @@ const Layout = (): JSX.Element => {
     }
   }, []);
 
-  const savedMainColor = localStorage.getItem("main-color");
-  const savedSubColor = localStorage.getItem("sub-color");
-  const savedMineColor = localStorage.getItem("mine-color");
+  const deleteOldPointColors = () => {
+    localStorage.getItem("main-color") === "var(--default-main-color)" &&
+      localStorage.removeItem("main-color");
+    localStorage.getItem("sub-color") === "var(--default-sub-color)" &&
+      localStorage.removeItem("sub-color");
+    localStorage.getItem("mine-color") === "var(--default-mine-color)" &&
+      localStorage.removeItem("mine-color");
+  };
+
+  const savedMainColor =
+    localStorage.getItem("main-color") || "var(--sys-default-main-color)";
+  const savedSubColor =
+    localStorage.getItem("sub-color") || "var(--sys-default-sub-color)";
+  const savedMineColor =
+    localStorage.getItem("mine-color") || "var(--sys-default-mine-color)";
+
+  const body: HTMLElement = document.body;
   const root: HTMLElement = document.documentElement;
+
   useEffect(() => {
-    root.style.setProperty("--main-color", savedMainColor);
-    root.style.setProperty("--sub-color", savedSubColor);
-    root.style.setProperty("--mine", savedMineColor);
+    root.style.setProperty("--sys-main-color", savedMainColor);
+    root.style.setProperty("--sys-sub-color", savedSubColor);
+    root.style.setProperty("--mine-color", savedMineColor);
+    body.style.setProperty("--sys-main-color", savedMainColor);
+    body.style.setProperty("--sys-sub-color", savedSubColor);
+    body.style.setProperty("--mine-color", savedMineColor);
   }, [savedMainColor, savedSubColor, savedMineColor]);
 
   const { closeAll } = useMenu();
@@ -107,7 +126,7 @@ const DetailInfoContainerStyled = styled.div<{ isFloat: boolean }>`
   padding: 45px 40px 20px;
   position: relative;
   border-left: 1px solid var(--line-color);
-  background-color: var(--white);
+  background-color: var(--bg-color);
   overflow-x: hidden;
   height: 100%;
   ${(props) =>
@@ -120,7 +139,7 @@ const DetailInfoContainerStyled = styled.div<{ isFloat: boolean }>`
       z-index: 9;
       transform: translateX(120%);
       transition: transform 0.3s ease-in-out;
-      box-shadow: 0 0 40px 0 var(--bg-shadow);
+      box-shadow: 0 0 40px 0 var(--page-btn-shadow-color);
       &.on {
         transform: translateX(0%);
       }

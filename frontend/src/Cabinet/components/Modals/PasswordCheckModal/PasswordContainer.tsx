@@ -68,14 +68,14 @@ const PasswordNumber = styled.div<{ val: string }>`
   height: 100%;
   border-radius: 10px;
   border: ${({ val }) =>
-    val ? "2px solid var(--main-color)" : "1px solid var(--sub-color)"};
+    val ? "2px solid var(--sys-main-color)" : "1px solid var(--sys-sub-color)"};
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2rem;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   &.active {
-    border: 2px solid var(--main-color);
+    border: 2px solid var(--sys-main-color);
   }
 `;
 

@@ -145,16 +145,16 @@ const SearchBarWrapStyled = styled.div`
 const FormInputStyled = styled.input`
   width: 100%;
   height: 40px;
-  background-color: var(--white);
+  background-color: var(--card-content-bg-color);
   border-radius: 8px;
-  border: 1px solid var(--full);
+  border: 1px solid var(--capsule-btn-border-color);
   :focus {
-    border: 1px solid var(--main-color);
+    border: 1px solid var(--sys-main-color);
   }
   text-align: left;
   padding: 0 10px;
   ::placeholder {
-    color: var(--line-color);
+    color: var(--toggle-switch-off-bg-color);
   }
 `;
 
