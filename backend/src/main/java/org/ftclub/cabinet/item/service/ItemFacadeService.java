@@ -56,6 +56,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Logging(level = LogLevel.DEBUG)
 public class ItemFacadeService {
 
+	private static final int DAILY_REWARD = 10;
 	private final ItemQueryService itemQueryService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
 	private final ItemHistoryCommandService itemHistoryCommandService;
@@ -66,7 +67,6 @@ public class ItemFacadeService {
 	private final ItemMapper itemMapper;
 	private final ItemPolicyService itemPolicyService;
 	private final ApplicationEventPublisher eventPublisher;
-	private static final int DAILY_REWARD = 10;
 
 	/**
 	 * 모든 아이템 리스트 반환
@@ -181,16 +181,7 @@ public class ItemFacadeService {
 		if (itemPolicyService.isRewardable(coinCollectionCountInMonth)) {
 			Random random = new Random();
 			int randomPercentage = random.nextInt(100);
-
-			if (randomPercentage < 75) {
-				reward = 200;
-			} else if (randomPercentage < 95) {
-				reward = 500;
-			} else if (randomPercentage < 99) {
-				reward = 1000;
-			} else {
-				reward = 2000;
-			}
+			reward += itemPolicyService.getReward(randomPercentage);
 		}
 
 		// Redis에 리워드 저장

@@ -20,9 +20,7 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.club.domain.ClubLentHistory;
-import org.ftclub.cabinet.club.service.ClubQueryService;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
@@ -61,7 +59,6 @@ public class CabinetFacadeService {
 	private final LentQueryService lentQueryService;
 	private final LentRedisService lentRedisService;
 	private final UserQueryService userQueryService;
-	private final ClubQueryService clubQueryService;
 	private final ClubLentQueryService clubLentQueryService;
 	private final SectionAlarmQueryService sectionAlarmQueryService;
 
@@ -351,19 +348,6 @@ public class CabinetFacadeService {
 	}
 
 	/**
-	 * [ADMIN] 사물함에 동아리 유저를 대여 시킵니다. {inheritDoc}
-	 *
-	 * @param clubId     대여할 유저 ID
-	 * @param cabinetId  대여할 사물함 ID
-	 * @param statusNote 상태 메모
-	 */
-	@Transactional
-	public void updateClub(Long clubId, Long cabinetId, String statusNote) {
-		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(cabinetId);
-		Club club = clubQueryService.getClub(clubId);
-	}
-
-	/**
 	 * [ADMIN] 사물함id 로 사물함을 찾아서, 상태를 변경시킵니다
 	 *
 	 * @param cabinetId 사물함 ID
@@ -376,10 +360,5 @@ public class CabinetFacadeService {
 		}
 		Cabinet cabinet = cabinetQueryService.getCabinetForUpdate(cabinetId);
 		cabinet.specifyStatus(status);
-	}
-
-
-	public void updateStatus(List<Long> cabinetId, CabinetStatus status) {
-		cabinetCommandService.updateStatusBulk(cabinetId, status);
 	}
 }

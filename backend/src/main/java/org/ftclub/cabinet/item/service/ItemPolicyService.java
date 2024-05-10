@@ -50,6 +50,18 @@ public class ItemPolicyService {
 	}
 
 	public boolean isRewardable(Long monthlyCoinCount) {
-		return monthlyCoinCount == REWARD_COUNT;
+		return monthlyCoinCount.equals(REWARD_COUNT);
+	}
+
+	public int getReward(int randomPercentage) {
+		if (randomPercentage < 50) {
+			return 200;
+		} else if (randomPercentage < 80) {
+			return 500;
+		} else if (randomPercentage < 95) {
+			return 1000;
+		} else {
+			return 2000;
+		}
 	}
 }
