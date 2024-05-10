@@ -5,7 +5,6 @@ import AdminCabinetListItem from "@/Cabinet/components/CabinetList/CabinetListIt
 import CabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/CabinetListItem";
 import { ReactComponent as SelectImg } from "@/Cabinet/assets/images/select.svg";
 import { CabinetPreviewInfo } from "@/Cabinet/types/dto/cabinet.dto";
-import { ReactComponent as SelectImg } from "@/Cabinet/assets/images/select.svg";
 
 // 하나의 층에 대한 타이틀과 캐비넷 리스트를 담고 있는 컴포넌트
 const FloorContainer = ({
@@ -79,7 +78,7 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   }
 
   & > button > svg > path {
-    stroke: var(--gray-color);
+    stroke: var(--gray-line-btn-color);
   }
 `;
 
