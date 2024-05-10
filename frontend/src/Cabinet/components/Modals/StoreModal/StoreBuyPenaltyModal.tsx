@@ -50,7 +50,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
       throw error;
     }
   };
-  // const myCabinetInfo = useSetRecoilState(myCabinetInfoState);
+
   const tryPenaltyItemUse = async (
     item: string,
     usePenaltyItemDays: number
@@ -137,11 +137,13 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
         </ModalContainerStyled>
 
         <ModalDetailStyled>
-          <p>
-            현재 남아있는 패널티 일수는 7일 입니다. 선택한 패널티 축소권에
-            해당하는 일수만큼 패널티가 감소합니다. 패널티 축소권 사용은 취소할
-            수 없습니다.
-          </p>
+          <ModalDetailContentStyled>
+            현재 남아있는 패널티 일수는 <strong>{remainPenaltyPeriod}</strong>{" "}
+            입니다. <br />
+            선택한 패널티 축소권에 해당하는 일수만큼 <br />
+            패널티가 감소합니다. <br />
+            패널티 축소권 사용은 취소할수 없습니다.
+          </ModalDetailContentStyled>
         </ModalDetailStyled>
       </>
     ),
@@ -188,4 +190,9 @@ const ModalDetailStyled = styled.div`
     }
   }
 `;
+
+const ModalDetailContentStyled = styled.div`
+  line-height: 1.5;
+`;
+
 export default StoreBuyPenalty;

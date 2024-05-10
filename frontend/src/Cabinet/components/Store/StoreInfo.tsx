@@ -43,20 +43,20 @@ const StoreInfo = () => {
   const tryCoinCheckPost = async () => {
     setIsLoading(true);
     try {
-      // coin 줍기 axios
       if (todayCoinCollection === true) {
         throw { data: { message: "오늘은 동전을 이미 주웠습니다" } };
       } else {
         const res = await axiosCoinCheckPost();
-        setModalTitle("동전을 획득했습니다.");
-        console.log("coin 줍기 axios Post", res);
-        setModalContent(`${res.data.reward}까비를 획득했습니다.`);
+        setModalTitle("동전 줍기 성공");
+        setModalContent(
+          `<strong>${res.data.reward}까비</strong>를 획득했습니다.`
+        );
         setmonthlyCoinCount(monthlyCoinCount + 1);
         setTodayCoinCollection(false);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
-        setModalTitle("동전 획득에 실패했습니다.");
+        setModalTitle("동전 줍기 실패");
       } else {
         setModalTitle(error.data.message || error.response.data.message);
       }

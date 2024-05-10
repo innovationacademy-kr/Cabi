@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { ReactComponent as CoinCheckOnFinImg } from "@/Cabinet/assets/images/storeCoinCheckFin.svg";
 import { ReactComponent as CoinCheckOffImg } from "@/Cabinet/assets/images/storeCoinCheckOff.svg";
 import { ReactComponent as CoinCheckOnImg } from "@/Cabinet/assets/images/storeCoinCheckOn.svg";
 
@@ -7,12 +8,15 @@ const StoreCoinCheckBox = ({
 }: {
   monthlyCoinCount: number;
 }) => {
+  console.log("monthlyCoinCount", monthlyCoinCount);
   return (
     <WrapperStyled>
       {Array.from({ length: 20 }, (_, index) => (
         <CoinCheckOffStyled key={index}>
-          {index < monthlyCoinCount ? (
+          {index < monthlyCoinCount && index !== 19 ? (
             <CoinCheckOnImg />
+          ) : index === 19 && monthlyCoinCount === 20 ? (
+            <CoinCheckOnFinImg />
           ) : (
             <CoinCheckOffImgStyled>
               <CoinCheckOffImg />

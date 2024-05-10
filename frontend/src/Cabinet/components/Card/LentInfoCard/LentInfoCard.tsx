@@ -40,6 +40,7 @@ const LentInfoCard = ({
   remainPenaltyPeriod: number;
   onClose: () => void;
 }) => {
+  console.log("unbannedAt", unbannedAt);
   return (
     <>
       <Card
