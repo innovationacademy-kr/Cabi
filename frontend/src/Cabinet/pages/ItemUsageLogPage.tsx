@@ -124,7 +124,7 @@ const LogItemStyled = styled.div`
 `;
 
 const DateSectionStyled = styled.div`
-  margin-top: 30px;
+  margin-top: 40px;
 `;
 
 const DateTitleStyled = styled.h2`
@@ -137,6 +137,7 @@ const DateTitleStyled = styled.h2`
 const ButtonContainerStyled = styled.div`
   width: 100%;
   height: 100%;
+  margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;

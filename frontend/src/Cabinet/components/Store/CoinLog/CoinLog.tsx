@@ -28,8 +28,7 @@ interface ICoinLog {
   date: Date;
   history: string;
   amount: number;
-  itemDetails?: string;
-  // TODO : itemDetails 들어오면 ? 지우기
+  itemDetails: string;
 }
 
 const unavailableCoinLogMsgMap = {
@@ -63,19 +62,23 @@ const CoinLog = () => {
       console.error("Error getting coin log:", error);
     } finally {
       setIsLoading(false);
+      setMoreBtnIsLoading(false);
     }
   };
 
   const clickMoreButton = () => {
+    setMoreBtnIsLoading(true);
     setTimeout(() => {
-      setPage((prev) => prev + 1);
+      setPage(page + 1);
     }, 100);
   };
 
   useEffect(() => {
     // 다른 토글버튼을 누르면 page 0
-    setPage(0);
-    getCoinLog(toggleType);
+    setTimeout(() => {
+      setPage(0);
+      getCoinLog(toggleType);
+    }, 100);
   }, [toggleType]);
 
   useEffect(() => {
@@ -296,6 +299,7 @@ const ButtonContainerStyled = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 20px;
 `;
 
 const MoreButtonStyled = styled.button<{

@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.item.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.repository.ItemHistoryRepository;
@@ -17,5 +20,13 @@ public class ItemHistoryCommandService {
 	public void purchaseItem(Long userId, Long itemId) {
 		ItemHistory itemHistory = ItemHistory.of(userId, itemId, null);
 		itemHistoryRepository.save(itemHistory);
+	}
+
+	public void purchaseItem(List<Long> userIds, Long itemId, LocalDateTime usedAt) {
+		List<ItemHistory> itemHistories =
+				userIds.stream()
+						.map(userId -> ItemHistory.of(userId, itemId, usedAt))
+						.collect(Collectors.toList());
+		itemHistoryRepository.saveAll(itemHistories);
 	}
 }

@@ -5,12 +5,14 @@ import { userState } from "@/Cabinet/recoil/atoms";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
 import { IItemStore } from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
-import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import { axiosBuyItem, axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
-import { NotificationModal } from "../NotificationModal/NotificationModal";
 
 const StoreBuyItemModal: React.FC<{
   onClose: () => void;
@@ -135,18 +137,16 @@ const StoreBuyItemModal: React.FC<{
       {!showResponseModal && <Modal modalContents={modalContents} />}
       {showResponseModal &&
         (hasErrorOnResponse ? (
-          <NotificationModal
-            title="코인이 부족합니다."
-            detail={errorDetails}
+          <FailResponseModal
+            modalTitle="코인이 부족합니다"
+            modalContents={errorDetails}
             closeModal={props.onClose}
-            iconType={IconType.ERRORICON}
           />
         ) : (
-          <NotificationModal
-            title="구매 완료."
-            detail={""}
+          <SuccessResponseModal
+            modalTitle="구매 완료"
+            modalContents={""}
             closeModal={props.onClose}
-            iconType={IconType.CHECKICON}
           />
         ))}
     </ModalPortal>
