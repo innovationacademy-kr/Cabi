@@ -16,11 +16,12 @@ const lightValues = css`
   --capsule-btn-border-color: var(--ref-gray-200);
   --map-floor-color: var(--ref-gray-200);
   --presentation-no-event-past-color: var(--ref-gray-200);
-  --service-man-title-border-btm-color: var(--ref-gray-300);
   --inventory-item-title-border-btm-color: var(--ref-gray-300);
+  --service-man-title-border-btm-color: var(--ref-gray-300);
   --line-color: var(--ref-gray-400);
   --light-gray-line-btn-color: var(--ref-gray-400);
   --gray-line-btn-color: var(--ref-gray-500);
+  --coin-log-date-color: var(--ref-gray-530);
   --pie-chart-label-text-color: var(--ref-gray-600);
   --notion-btn-text-color: var(--ref-gray-800);
   --normal-text-color: var(--ref-black);
@@ -73,10 +74,11 @@ const darkValues = css`
   --map-floor-color: var(--ref-gray-700);
   --presentation-no-event-past-color: var(--ref-gray-900);
   --inventory-item-title-border-btm-color: var(--ref-gray-500);
-  --service-man-title-border-btm-color: var(--ref-gray-600);
   --line-color: var(--ref-gray-500);
+  --service-man-title-border-btm-color: var(--ref-gray-600);
   --light-gray-line-btn-color: var(--ref-gray-600);
   --gray-line-btn-color: var(--ref-gray-400);
+  --coin-log-date-color: var(--ref-gray-400);
   --pie-chart-label-text-color: var(--ref-gray-300);
   --notion-btn-text-color: var(--ref-gray-200);
   --normal-text-color: var(--ref-gray-100);

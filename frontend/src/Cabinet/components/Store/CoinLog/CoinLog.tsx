@@ -210,7 +210,7 @@ const LogItemStyled = styled.div<{
   margin-top: 10px;
   border-radius: 10px;
   height: 70px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--inventory-item-title-border-btm-color);
   padding: 0 20px;
   display: flex;
   text-align: center;
@@ -218,14 +218,14 @@ const LogItemStyled = styled.div<{
   align-items: center;
 
   & > #date {
-    color: #595959;
+    color: var(--coin-log-date-color);
     width: 16%;
     text-align: center;
   }
 
   & > #history {
     font-size: 18px;
-    color: var(--black);
+    color: var(--normal-text-color);
     width: 74%;
     text-align: start;
     white-space: nowrap;
@@ -235,7 +235,7 @@ const LogItemStyled = styled.div<{
 
   & > #amount {
     color: ${(props) =>
-      props.isEarned ? "var(--sys-main-color)" : "var(--black)"};
+      props.isEarned ? "var(--sys-main-color)" : "var(--normal-text-color)"};
     font-size: 18px;
     font-weight: bold;
     width: 10%;
@@ -310,7 +310,7 @@ const MoreButtonStyled = styled.button<{
   margin: 20px auto;
   border: 1px solid var(--sys-main-color);
   border-radius: 30px;
-  background-color: var(--white);
+  background-color: var(--bg-color);
   color: var(--sys-main-color);
   position: relative;
 `;
@@ -355,12 +355,16 @@ const EmptyCoinLogTextStyled = styled.div`
   height: 100%;
   font-size: 1.125rem;
   line-height: 1.75rem;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 
   & > svg {
     width: 30px;
     height: 30px;
     margin-left: 10px;
+  }
+
+  & > svg > path {
+    fill: var(--normal-text-color);
   }
 `;
 
