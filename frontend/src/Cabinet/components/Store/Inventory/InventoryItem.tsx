@@ -129,7 +129,7 @@ const CardTextStyled = styled.div<{ hasTypes: boolean }>`
 
   & > #type {
     font-size: 12px;
-    color: var(--gray-color);
+    color: var(--gray-line-btn-color);
   }
 `;
 
@@ -137,10 +137,10 @@ const ItemTitleStyled = styled.div<{ isToggled: boolean }>`
   display: flex;
   justify-content: space-between;
   font-size: 1.1rem;
-  color: var(--black);
+  color: var(--normal-text-color);
   padding-left: 5px;
   padding-right: 5px;
-  border-bottom: 1.5px solid #d9d9d9;
+  border-bottom: 1.5px solid var(--inventory-item-title-border-btm-color);
   margin-bottom: 10px;
   margin-top: 50px;
   cursor: pointer;
@@ -155,7 +155,7 @@ const ItemTitleStyled = styled.div<{ isToggled: boolean }>`
   }
 
   & > button > svg > path {
-    stroke: var(--gray-color);
+    stroke: var(--gray-line-btn-color);
   }
 
   & > h2 {
@@ -193,7 +193,7 @@ const UnavailableIconStyled = styled.div`
   }
 
   & > svg > path {
-    fill: var(--black);
+    fill: var(--normal-text-color);
   }
 
   @media (max-width: 412px) {

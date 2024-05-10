@@ -17,6 +17,7 @@ const lightValues = css`
   --map-floor-color: var(--ref-gray-200);
   --presentation-no-event-past-color: var(--ref-gray-200);
   --service-man-title-border-btm-color: var(--ref-gray-300);
+  --inventory-item-title-border-btm-color: var(--ref-gray-300);
   --line-color: var(--ref-gray-400);
   --light-gray-line-btn-color: var(--ref-gray-400);
   --gray-line-btn-color: var(--ref-gray-500);
@@ -71,6 +72,7 @@ const darkValues = css`
   --capsule-btn-border-color: var(--ref-gray-600);
   --map-floor-color: var(--ref-gray-700);
   --presentation-no-event-past-color: var(--ref-gray-900);
+  --inventory-item-title-border-btm-color: var(--ref-gray-500);
   --service-man-title-border-btm-color: var(--ref-gray-600);
   --line-color: var(--ref-gray-500);
   --light-gray-line-btn-color: var(--ref-gray-600);
