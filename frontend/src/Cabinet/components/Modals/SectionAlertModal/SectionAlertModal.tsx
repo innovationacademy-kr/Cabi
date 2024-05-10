@@ -82,7 +82,7 @@ const SectionAlertModal = ({
     closeModal: closeModal,
     isLoading: isLoading,
     iconType: IconType.CHECKICON,
-    url: "profile",
+    url: "/profile",
     urlTitle: "프로필으로 이동",
   };
 
@@ -97,7 +97,7 @@ const SectionAlertModal = ({
             modalTitle={modalTitle}
             modalContents={modalContent}
             closeModal={closeModal}
-            url={"store"}
+            url={"/store"}
             urlTitle={"까비상점으로 이동"}
           />
         ) : (

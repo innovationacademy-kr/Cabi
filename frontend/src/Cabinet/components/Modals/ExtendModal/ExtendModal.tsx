@@ -190,7 +190,7 @@ const ExtendModal: React.FC<{
             modalTitle={modalTitle}
             modalContents={modalContents}
             closeModal={props.onClose}
-            url={"store"}
+            url={"/store"}
             urlTitle={"까비상점으로 이동"}
           />
         ) : (

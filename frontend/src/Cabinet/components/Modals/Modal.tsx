@@ -6,7 +6,6 @@ import Button from "@/Cabinet/components/Common/Button";
 import { ReactComponent as CheckIcon } from "@/Cabinet/assets/images/checkIcon.svg";
 import { ReactComponent as ErrorIcon } from "@/Cabinet/assets/images/errorIcon.svg";
 import { ReactComponent as NotificationIcon } from "@/Cabinet/assets/images/notificationSign.svg";
-import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
 
 /**

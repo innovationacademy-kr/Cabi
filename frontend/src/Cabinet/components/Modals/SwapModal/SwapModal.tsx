@@ -111,7 +111,7 @@ const SwapModal: React.FC<{
             modalTitle={modalTitle}
             modalContents={modalContent}
             closeModal={props.closeModal}
-            url={"store"}
+            url={"/store"}
             urlTitle={"까비상점으로 이동"}
           />
         ) : (

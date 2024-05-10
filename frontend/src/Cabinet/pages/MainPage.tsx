@@ -22,6 +22,7 @@ import useCabinetListRefresh from "@/Cabinet/hooks/useCabinetListRefresh";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
 const clubSections = ["Cluster X - 1", "Cluster X - 2", "Cluster X - 3"];
+// TODO : asset에 넣기
 
 const MainPage = () => {
   const touchStartPosX = useRef(0);
@@ -31,9 +32,9 @@ const MainPage = () => {
   const navigator = useNavigate();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
-  const sectionList = useRecoilValue<Array<ICurrentSectionInfo>>(
-    currentFloorSectionState
-  );
+  const sectionList: Array<ICurrentSectionInfo> = useRecoilValue<
+    Array<ICurrentSectionInfo>
+  >(currentFloorSectionState);
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
   );
@@ -136,7 +137,9 @@ const MainPage = () => {
           <AlertStyled>
             <IconWrapperStyled
               onClick={openModal}
-              disabled={sectionList[currentSectionIndex].alarmRegistered}
+              disabled={
+                sectionList[currentSectionIndex].alarmRegistered ? true : false
+              }
               // TODO : 알림 등록권 사용하면 disabled
             >
               {sectionList[currentSectionIndex].alarmRegistered === true ? (
