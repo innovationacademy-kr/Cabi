@@ -40,4 +40,29 @@ public class DiscordWebHookMessenger {
 				.bodyToMono(String.class)
 				.block();
 	}
+
+	public void sendMessage(DiscordScheduleAlarmMessage message) {
+		Map<String, String> body = new HashMap<>();
+		body.put(DISCORD_WEBHOOK_MESSAGE_KEY, message.toString());
+
+		WebClient.create().post()
+				.uri(discordWebHookUrl)
+				.bodyValue(body)
+				.retrieve()
+				.bodyToMono(String.class)
+				.block();
+	}
+
+	public void sendMessage(String title, String message) {
+		Map<String, String> body = new HashMap<>();
+		body.put(DISCORD_WEBHOOK_MESSAGE_KEY,
+				"```title: " + title + "\nmessage: " + message + "```");
+
+		WebClient.create().post()
+				.uri(discordWebHookUrl)
+				.bodyValue(body)
+				.retrieve()
+				.bodyToMono(String.class)
+				.block();
+	}
 }
