@@ -19,6 +19,7 @@ const StoreInfo = () => {
   const { closeStore } = useMenu();
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
   const [monthlyCoinCount, setmonthlyCoinCount] = useState<number>(0);
   const [todayCoinCollection, setTodayCoinCollection] =
@@ -30,10 +31,11 @@ const StoreInfo = () => {
   const tryCoinCheckGet = async () => {
     try {
       const res = await axiosCoinCheckGet();
+      console.log("오늘 코인 주음  ?", res.data.todayCoinCollection);
       setTodayCoinCollection(res.data.todayCoinCollection);
       setmonthlyCoinCount(res.data.monthlyCoinCount);
-      // console.log("res Get", res);
-    } catch (error) {
+      console.log("res Get", res);
+    } catch (error: any) {
       throw error;
     }
   };
@@ -43,17 +45,22 @@ const StoreInfo = () => {
     try {
       // coin 줍기 axios
       if (todayCoinCollection === true) {
-        setHasErrorOnResponse(true);
+        throw { data: { message: "오늘은 동전을 이미 주웠습니다" } };
       } else {
         const res = await axiosCoinCheckPost();
+        setModalTitle("동전을 획득했습니다.");
         console.log("coin 줍기 axios Post", res);
         setModalContent(`${res.data.reward}까비를 획득했습니다.`);
         setmonthlyCoinCount(monthlyCoinCount + 1);
         setTodayCoinCollection(false);
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        setModalTitle("동전 획득에 실패했습니다.");
+      } else {
+        setModalTitle(error.data.message || error.response.data.message);
+      }
       setHasErrorOnResponse(true);
-      throw error;
     } finally {
       setShowResponseModal(true);
       setIsLoading(false);
@@ -88,7 +95,7 @@ const StoreInfo = () => {
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
-            modalTitle="동전 획득에 실패했습니다."
+            modalTitle={modalTitle}
             closeModal={() => {
               setShowResponseModal(false);
               setHasErrorOnResponse(false);
@@ -96,7 +103,7 @@ const StoreInfo = () => {
           />
         ) : (
           <SuccessResponseModal
-            modalTitle="동전을 획득했습니다."
+            modalTitle={modalTitle}
             modalContents={modalContent}
             closeModal={() => setShowResponseModal(false)}
           />
@@ -138,6 +145,10 @@ const HeaderStyled = styled.div`
 `;
 
 const ButtonContainerStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   max-height: 140px;
 `;
