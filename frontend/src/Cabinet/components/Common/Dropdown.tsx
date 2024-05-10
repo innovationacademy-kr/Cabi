@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
+import { ReactComponent as DropdownChevronIcon } from "@/Cabinet/assets/images/dropdownChevron.svg";
 import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
 import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 
@@ -28,7 +29,6 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
         onClick={() => {
           setIsOpen(!isOpen);
         }}
-        isOpen={isOpen}
       >
         {options[selectedIdx].imageSrc?.length && (
           <OptionsImgStyled>
@@ -38,7 +38,9 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
           </OptionsImgStyled>
         )}
         <p style={{ paddingLeft: "10px" }}>{currentName}</p>
-        <img src="/src/Cabinet/assets/images/dropdownChevron.svg" />
+        <DropdownSelectionBoxIconStyled isOpen={isOpen}>
+          <DropdownChevronIcon />
+        </DropdownSelectionBoxIconStyled>
       </DropdownSelectionBoxStyled>
       <DropdownItemContainerStyled isVisible={isOpen}>
         {options?.map((option) => {
@@ -78,7 +80,7 @@ const DropdownContainerStyled = styled.div`
   cursor: pointer;
 `;
 
-const DropdownSelectionBoxStyled = styled.div<{ isOpen: boolean }>`
+const DropdownSelectionBoxStyled = styled.div`
   position: relative;
   display: flex;
   align-items: center;
@@ -90,19 +92,6 @@ const DropdownSelectionBoxStyled = styled.div<{ isOpen: boolean }>`
   padding-left: 20px;
   font-size: 1.125rem;
   color: var(--sys-main-color);
-  & > img {
-    filter: contrast(0.6);
-    width: 14px;
-    height: 8px;
-    position: absolute;
-    top: 45%;
-    left: 85%;
-    ${({ isOpen }) =>
-      isOpen === true &&
-      css`
-        transform: scaleY(-1);
-      `}
-  }
 `;
 
 const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
@@ -160,4 +149,23 @@ const OptionsImgStyled = styled.div<{ isSelected?: boolean }>`
     transform: scale(0.8);
   }
 `;
+
+const DropdownSelectionBoxIconStyled = styled.div<{ isOpen: boolean }>`
+  width: 14px;
+  height: 8px;
+  display: flex;
+  position: absolute;
+  top: 45%;
+  left: 85%;
+  ${({ isOpen }) =>
+    isOpen === true &&
+    css`
+      transform: scaleY(-1);
+    `}
+
+  & > svg > path {
+    stroke: var(--line-color);
+  }
+`;
+
 export default Dropdown;

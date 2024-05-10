@@ -133,7 +133,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
             {urlTitle}
           </UrlSectionStyled>
         )}
-sys-      </ModalStyled>
+      </ModalStyled>
     </>
   );
 };
