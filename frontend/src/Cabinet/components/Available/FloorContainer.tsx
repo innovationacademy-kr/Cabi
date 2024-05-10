@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import AdminCabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/AdminCabinetListItem";
 import CabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/CabinetListItem";
+import { ReactComponent as SelectImg } from "@/Cabinet/assets/images/select.svg";
 import { CabinetPreviewInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
 // 하나의 층에 대한 타이틀과 캐비넷 리스트를 담고 있는 컴포넌트
@@ -25,7 +26,9 @@ const FloorContainer = ({
     <FloorContainerStyled>
       <FloorTitleStyled isToggled={isToggled} onClick={toggle}>
         <h2>{floorNumber}층</h2>
-        <button></button>
+        <button>
+          <SelectImg />
+        </button>
       </FloorTitleStyled>
       {pendingCabinetsList.length !== 0 ? (
         <FlootCabinetsContainerStyled isToggled={isToggled}>
@@ -64,16 +67,18 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   padding-right: 5px;
   border-bottom: 1.5px solid #d9d9d9;
   cursor: pointer;
+
   button {
     all: initial;
     cursor: inherit;
     z-index: 2;
     height: 30px;
-    width: 20px;
-    background: url(/src/Cabinet/assets/images/select.svg) no-repeat center
-      center;
     transform: ${(props) =>
       props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
+  }
+
+  & > button > svg > path {
+    stroke: var(--gray-color);
   }
 `;
 
