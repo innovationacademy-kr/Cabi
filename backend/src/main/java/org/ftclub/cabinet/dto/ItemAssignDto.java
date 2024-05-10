@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,5 +14,5 @@ import org.ftclub.cabinet.item.domain.Sku;
 public class ItemAssignDto {
 
 	private Sku itemSku;
-	private Long userId;
+	private List<Long> userIds;
 }

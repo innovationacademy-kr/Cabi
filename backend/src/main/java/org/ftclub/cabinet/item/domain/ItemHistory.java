@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -27,6 +28,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString(exclude = {"user", "item"})
 @EntityListeners(AuditingEntityListener.class)
 @Getter
+@BatchSize(size = 25)
 public class ItemHistory {
 
 	@Id

@@ -25,12 +25,12 @@ public class AdminItemController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void createItem(@RequestBody ItemCreateDto itemCreateDto) {
 		adminItemFacadeService.createItem(itemCreateDto.getPrice(),
-				itemCreateDto.getSku(), itemCreateDto.getType());
+			itemCreateDto.getSku(), itemCreateDto.getType());
 	}
 
 	@PostMapping("/assign")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void assignItem(@RequestBody ItemAssignDto itemAssignDto) {
-		adminItemFacadeService.assignItem(itemAssignDto.getUserId(), itemAssignDto.getItemSku());
+		adminItemFacadeService.assignItem(itemAssignDto.getUserIds(), itemAssignDto.getItemSku());
 	}
 }
