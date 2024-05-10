@@ -5,11 +5,9 @@ import LentInfoCard from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard";
 import { getDefaultCabinetInfo } from "@/Cabinet/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import { LentDto } from "@/Cabinet/types/dto/lent.dto";
-import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
-import { calExpiredTime, getRemainingTime } from "@/Cabinet/utils/dateUtils";
+import { getRemainingTime } from "@/Cabinet/utils/dateUtils";
 
 export interface MyCabinetInfo {
   name: string | null;
@@ -76,9 +74,9 @@ const LentInfoCardContainer = ({
   unbannedAt: Date | null | undefined;
 }) => {
   const myCabinetInfo = useRecoilValue(myCabinetInfoState);
-  const userInfo = useRecoilValue<UserDto>(userState);
   const [isPenaltyUser, setIsPenaltyUser] = useState(true);
-  const remainPenaltyPeriod = getRemainingTime(userInfo.unbannedAt);
+  let tempPenaltyPeriod = getRemainingTime(unbannedAt);
+  const [penaltyPeriod, setPenaltyPeriod] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   let dateUsed, dateLeft, expireDate;
@@ -118,10 +116,17 @@ const LentInfoCardContainer = ({
   };
 
   useEffect(() => {
-    if (remainPenaltyPeriod == 0) {
+    if (tempPenaltyPeriod <= 0) {
       setIsPenaltyUser(false);
+    } else {
+      // 만료일을 버림 -> 시간 기준으로 평가하기 위함
+      tempPenaltyPeriod = tempPenaltyPeriod + 1;
     }
-  }, [userInfo.unbannedAt]);
+  }, [unbannedAt]);
+
+  useEffect(() => {
+    setPenaltyPeriod(tempPenaltyPeriod);
+  }, [tempPenaltyPeriod]);
 
   return (
     <LentInfoCard
@@ -137,7 +142,7 @@ const LentInfoCardContainer = ({
           : undefined
       }
       isModalOpen={isModalOpen}
-      remainPenaltyPeriod={remainPenaltyPeriod}
+      remainPenaltyPeriod={penaltyPeriod}
       onClose={handleCloseModal}
     />
   );

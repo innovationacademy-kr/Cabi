@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState, userState } from "@/Cabinet/recoil/atoms";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
 import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
-import { axiosMyItems, axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
+import {
+  axiosMyInfo,
+  axiosMyItems,
+  axiosUseItem,
+} from "@/Cabinet/api/axios/axios.custom";
 import { getReduceDateString } from "@/Cabinet/utils/dateUtils";
 import Modal, { IModalContents } from "../Modal";
 import ModalPortal from "../ModalPortal";
@@ -29,7 +33,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const userInfo = useRecoilValue<UserDto>(userState);
+  const setMyInfo = useSetRecoilState<UserDto>(userState);
 
   const penaltyPeriod = [
     { sku: "PENALTY_3", period: "3일" },
@@ -57,14 +61,15 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   ) => {
     try {
       await axiosUseItem(item, null, null, null, null);
-      // await
+      const { data: myInfo } = await axiosMyInfo();
+      setMyInfo(myInfo);
       setModalTitle("패널티 축소권 사용 완료");
       if (remainPenaltyPeriod <= usePenaltyItemDays) {
         setModalContent("남은 패널티 기간이 모두 소멸되었습니다");
       } else {
         setModalContent(
           `해제 날짜 : <strong> ${getReduceDateString(
-            userInfo.unbannedAt,
+            myInfo.unbannedAt,
             usePenaltyItemDays
           )} 23:59 </strong> `
         );
@@ -93,9 +98,9 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     } finally {
       setIsLoading(false);
       setShowResponseModal(true);
-      console.log("hasErrorOnResponse : ", hasErrorOnResponse);
     }
   };
+
   const handleDropdownChange = (option: string) => {
     setSelectedOption(option);
   };

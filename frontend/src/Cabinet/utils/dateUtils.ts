@@ -110,6 +110,7 @@ export const getReduceDateString = (
 ) => {
   if (!existExpireDate || dateToExtend === undefined) return;
   let expireDate = new Date(existExpireDate);
+  console.log("expireDate", expireDate);
   expireDate.setDate(expireDate.getDate() - dateToExtend);
   return formatDate(expireDate, "/");
 };
