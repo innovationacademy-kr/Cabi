@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.ftclub.cabinet.alarm.domain.PenaltyItem;
 import org.ftclub.cabinet.alarm.domain.SwapItem;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
+import org.ftclub.cabinet.dto.CoinCollectionRewardResponseDto;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
@@ -64,6 +66,7 @@ public class ItemFacadeService {
 	private final ItemMapper itemMapper;
 	private final ItemPolicyService itemPolicyService;
 	private final ApplicationEventPublisher eventPublisher;
+	private static final int DAILY_REWARD = 10;
 
 	/**
 	 * 모든 아이템 리스트 반환
@@ -159,15 +162,43 @@ public class ItemFacadeService {
 	 * 당일 중복해서 동전줍기를 요청했는지 검수 후
 	 * <p>
 	 * 당일 동전 줍기 체크 및 한 달 동전줍기 횟수 증가
+	 * <p>
+	 * 당일 동전 줍기 리워드 지급 및 지정된 출석 일수 달성 시 랜덤 리워드 지급
 	 *
 	 * @param userId redis 의 고유 key 를 만들 userId
 	 */
 	@Transactional(readOnly = true)
-	public void collectCoin(Long userId) {
+	public CoinCollectionRewardResponseDto collectCoinAndIssueReward(Long userId) {
+
+		// 코인 줍기 횟수 (당일, 한 달) 갱신
 		boolean isChecked = itemRedisService.isCoinCollected(userId);
 		itemPolicyService.verifyIsAlreadyCollectedCoin(isChecked);
 		itemRedisService.collectCoin(userId);
+
+		// 출석 일자에 따른 랜덤 리워드 지급
+		Long coinCollectionCountInMonth = itemRedisService.getCoinCollectionCountInMonth(userId);
+		int reward = DAILY_REWARD;
+		if (itemPolicyService.isRewardable(coinCollectionCountInMonth)) {
+			Random random = new Random();
+			int randomPercentage = random.nextInt(100);
+
+			if (randomPercentage < 75) {
+				reward = 200;
+			} else if (randomPercentage < 95) {
+				reward = 500;
+			} else if (randomPercentage < 99) {
+				reward = 1000;
+			} else {
+				reward = 2000;
+			}
+		}
+
+		// Redis에 리워드 저장
+		long coins = itemRedisService.getCoinCount(userId);
+		itemRedisService.saveCoinCount(userId, coins + reward);
+		return new CoinCollectionRewardResponseDto(reward);
 	}
+
 
 	/**
 	 * @param userId

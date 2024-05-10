@@ -3,6 +3,7 @@ package org.ftclub.cabinet.item.controller;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.dto.CoinCollectionRewardResponseDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
 import org.ftclub.cabinet.dto.ItemHistoryPaginationDto;
@@ -85,8 +86,8 @@ public class ItemController {
 	 */
 	@PostMapping("/coin")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public void collectCoin(@UserSession UserSessionDto user) {
-		itemFacadeService.collectCoin(user.getUserId());
+	public CoinCollectionRewardResponseDto collectCoin(@UserSession UserSessionDto user) {
+		return itemFacadeService.collectCoinAndIssueReward(user.getUserId());
 	}
 
 	/**

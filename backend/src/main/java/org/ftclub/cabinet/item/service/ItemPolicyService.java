@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ItemPolicyService {
 
+	private static final Long REWARD_COUNT = 20L;
+
 	public void verifyIsAffordable(long userCoin, long itemPrice) {
 		if (userCoin <= 0 || userCoin < -itemPrice) {
 			throw ExceptionStatus.NOT_ENOUGH_COIN.asServiceException();
@@ -45,5 +47,9 @@ public class ItemPolicyService {
 		if (sku.equals(Sku.SWAP) && data.getNewCabinetId() == null) {
 			throw ExceptionStatus.INVALID_ITEM_USE_REQUEST.asServiceException();
 		}
+	}
+
+	public boolean isRewardable(Long monthlyCoinCount) {
+		return monthlyCoinCount == REWARD_COUNT;
 	}
 }
