@@ -28,7 +28,6 @@ const StoreMainPage = () => {
     return indexA - indexB;
   });
 
-
   const getItems = async () => {
     try {
       const response = await axiosItems();
@@ -59,7 +58,7 @@ const StoreMainPage = () => {
       </HeaderStyled>
       <StoreCoinGridWrapper>
         <StoreCoinPick />
-        {sortedItems.map((item: IItemDetail, index) => (
+        {sortedItems.map((item: IItemDetail) => (
           <StoreItemCard
             key={item.itemName}
             item={item}
