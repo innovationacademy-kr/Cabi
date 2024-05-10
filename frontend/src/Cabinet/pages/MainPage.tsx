@@ -140,9 +140,8 @@ const MainPage = () => {
               disabled={
                 sectionList[currentSectionIndex].alarmRegistered ? true : false
               }
-              // TODO : 알림 등록권 사용하면 disabled
             >
-              {sectionList[currentSectionIndex].alarmRegistered === true ? (
+              {sectionList[currentSectionIndex]?.alarmRegistered === true ? (
                 <FilledHeartIcon />
               ) : (
                 <LineHeartIcon />
@@ -213,12 +212,10 @@ const RefreshButtonStyled = styled.button`
 const IconWrapperStyled = styled.div<{ disabled: boolean }>`
   height: 16px;
   width: 16px;
+  pointer-events: ${(props) => (props.disabled ? "none" : "inherit")};
 
   &:hover {
     cursor: pointer;
-  }
-  &:disabled {
-    cursor: ${(props) => props.disabled && "not-allowed"};
   }
 `;
 

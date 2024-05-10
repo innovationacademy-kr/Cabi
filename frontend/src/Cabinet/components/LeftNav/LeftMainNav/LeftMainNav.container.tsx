@@ -47,7 +47,6 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const navigator = useNavigate();
   const { pathname } = useLocation();
   const [isCurrentSectionRender] = useRecoilState(isCurrentSectionRenderState);
-
   useEffect(() => {
     if (currentFloor === undefined) {
       setCurrentMapFloor(floors[0]);
