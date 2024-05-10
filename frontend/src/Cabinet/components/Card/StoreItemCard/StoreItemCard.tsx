@@ -61,6 +61,7 @@ const StoreItemCard = ({
 const WrapperStyled = styled.div`
   font-size: var(--size-base);
 `;
+
 const SectionStyled = styled.div`
   display: flex;
   height: 80px;
@@ -75,6 +76,7 @@ const BlockStyled = styled.div`
   margin-right: 15px;
   justify-content: center;
 `;
+
 const IconBlockStyled = styled.div`
   width: 53px;
   height: 53px;
@@ -122,13 +124,13 @@ const ItemDetailStyled = styled.div`
   width: 100%;
   height: 100%;
   background-color: var(--white);
-  border-radius: 10px;
-  padding: 8px 8px 8px 10px;
-  display: flex;
-  flex-direction: column;
-  line-height: 17px;
-  /* word-break: break-word; */
+  font-size: var(--size-base);
   word-wrap: normal;
+  width: 90%;
+  padding: 10px 16px;
+  line-height: 1.4;
+  border-radius: 10px;
+
   > div {
     padding: 0;
   }

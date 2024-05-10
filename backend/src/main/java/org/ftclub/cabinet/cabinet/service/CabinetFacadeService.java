@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -34,6 +35,7 @@ import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.item.service.SectionAlarmQueryService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.ClubLentQueryService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
@@ -61,6 +63,7 @@ public class CabinetFacadeService {
 	private final UserQueryService userQueryService;
 	private final ClubQueryService clubQueryService;
 	private final ClubLentQueryService clubLentQueryService;
+	private final SectionAlarmQueryService sectionAlarmQueryService;
 
 	private final CabinetMapper cabinetMapper;
 	private final LentMapper lentMapper;
@@ -127,7 +130,7 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
-			Integer floor) {
+			Integer floor, Long userId) {
 		List<ActiveCabinetInfoEntities> activeCabinetInfos =
 				cabinetQueryService.findActiveCabinetInfoEntities(building, floor);
 		Map<Cabinet, List<LentHistory>> cabinetLentHistories = activeCabinetInfos.stream().
@@ -138,6 +141,12 @@ public class CabinetFacadeService {
 		Map<Long, List<ClubLentHistory>> clubLentMap =
 				clubLentQueryService.findAllActiveLentHistoriesWithClub().stream()
 						.collect(groupingBy(ClubLentHistory::getCabinetId));
+
+		Set<String> unsetAlarmSection =
+				sectionAlarmQueryService.getUnsetAlarm(userId, building, floor)
+						.stream()
+						.map(alarm -> alarm.getCabinetPlace().getLocation().getSection())
+						.collect(Collectors.toSet());
 
 		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new LinkedHashMap<>();
 		allCabinetsOnSection.stream()
@@ -167,9 +176,11 @@ public class CabinetFacadeService {
 				});
 
 		return cabinetPreviewsBySection.entrySet().stream()
-				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(),
-						entry.getValue()))
-				.collect(Collectors.toList());
+				.map(entry -> {
+					String section = entry.getKey();
+					return cabinetMapper.toCabinetsPerSectionResponseDto(section, entry.getValue(),
+							unsetAlarmSection.contains(section));
+				}).collect(Collectors.toList());
 	}
 
 	/**

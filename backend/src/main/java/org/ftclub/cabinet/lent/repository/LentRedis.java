@@ -274,44 +274,4 @@ public class LentRedis {
 	public String getPreviousEndedAt(String cabinetId) {
 		return previousTemplate.get(cabinetId + PREVIOUS_ENDED_AT_SUFFIX);
 	}
-
-	/*----------------------------------------  Swap  -----------------------------------------*/
-
-	/**
-	 * swap 하려는 유저가 이전에 swap 한 이력의 여부를 조회합니다.
-	 *
-	 * @param userId 유저 ID
-	 * @return true or false
-	 */
-	public boolean isExistPreviousSwap(String userId) {
-		Boolean isExist = swapTemplate.hasKey(userId + SWAP_KEY_SUFFIX);
-		return Objects.nonNull(isExist) && isExist;
-	}
-
-	/**
-	 * 유저가 swap 가능한 시각을 조회합니다.
-	 *
-	 * @param userId 유저 ID
-	 * @return swap 가능한 시각
-	 */
-	public LocalDateTime getSwapExpiredTime(String userId) {
-		if (!this.isExistPreviousSwap(userId)) {
-			return null;
-		}
-		String swapKey = userId + SWAP_KEY_SUFFIX;
-		@SuppressWarnings("ConstantConditions")
-		long expire = swapTemplate.getExpire(swapKey, TimeUnit.SECONDS);
-		return LocalDateTime.now().plusSeconds(expire);
-	}
-
-	/**
-	 * swap 하는 유저의 swap 이력을 저장합니다. 기한을 설정합니다
-	 *
-	 * @param userId 유저 ID
-	 */
-	public void setSwap(String userId) {
-		final String swapKey = userId + SWAP_KEY_SUFFIX;
-		swapTemplate.opsForValue().set(swapKey, USER_SWAPPED);
-		swapTemplate.expire(swapKey, cabinetProperties.getSwapTermPrivateDays(), TimeUnit.DAYS);
-	}
 }

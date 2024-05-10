@@ -14,12 +14,15 @@ import CabinetListContainer from "@/Cabinet/components/CabinetList/CabinetList.c
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import SectionAlertModal from "@/Cabinet/components/Modals/SectionAlertModal/SectionAlertModal";
 import SectionPaginationContainer from "@/Cabinet/components/SectionPagination/SectionPagination.container";
-import { ReactComponent as HeartIcon } from "@/Cabinet/assets/images/lineHeart.svg";
+import { ReactComponent as FilledHeartIcon } from "@/Cabinet/assets/images/filledHeart.svg";
+import { ReactComponent as LineHeartIcon } from "@/Cabinet/assets/images/lineHeart.svg";
+import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import SectionType from "@/Cabinet/types/enum/map.type.enum";
 import useCabinetListRefresh from "@/Cabinet/hooks/useCabinetListRefresh";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
 const clubSections = ["Cluster X - 1", "Cluster X - 2", "Cluster X - 3"];
+// TODO : asset에 넣기
 
 const MainPage = () => {
   const touchStartPosX = useRef(0);
@@ -29,12 +32,14 @@ const MainPage = () => {
   const navigator = useNavigate();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
-  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
+  const sectionList: Array<ICurrentSectionInfo> = useRecoilValue<
+    Array<ICurrentSectionInfo>
+  >(currentFloorSectionState);
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
   );
   const currentSectionIndex = sectionList.findIndex(
-    (sectionName) => sectionName === currentSectionName
+    (section) => section.sectionName === currentSectionName
   );
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
   const currentFloor = useRecoilValue<number>(currentFloorNumberState);
@@ -93,14 +98,14 @@ const MainPage = () => {
     if (direction === "left") {
       setCurrentSectionName(
         currentSectionIndex <= 0
-          ? sectionList[sectionList.length - 1]
-          : sectionList[currentSectionIndex - 1]
+          ? sectionList[sectionList.length - 1].sectionName
+          : sectionList[currentSectionIndex - 1].sectionName
       );
     } else if (direction === "right") {
       setCurrentSectionName(
         currentSectionIndex >= sectionList.length - 1
-          ? sectionList[0]
-          : sectionList[currentSectionIndex + 1]
+          ? sectionList[0].sectionName
+          : sectionList[currentSectionIndex + 1].sectionName
       );
     }
 
@@ -132,9 +137,16 @@ const MainPage = () => {
           <AlertStyled>
             <IconWrapperStyled
               onClick={openModal}
+              disabled={
+                sectionList[currentSectionIndex].alarmRegistered ? true : false
+              }
               // TODO : 알림 등록권 사용하면 disabled
             >
-              <HeartIcon />
+              {sectionList[currentSectionIndex].alarmRegistered === true ? (
+                <FilledHeartIcon />
+              ) : (
+                <LineHeartIcon />
+              )}
             </IconWrapperStyled>
           </AlertStyled>
         )}
@@ -157,6 +169,8 @@ const MainPage = () => {
           <SectionAlertModal
             currentSectionName={currentSectionName}
             setShowSectionAlertModal={setShowSectionAlertModal}
+            currentBuilding={currentBuilding}
+            currentFloor={currentFloor}
           />
         )}
       </WrapperStyled>
@@ -196,12 +210,15 @@ const RefreshButtonStyled = styled.button`
   }
 `;
 
-const IconWrapperStyled = styled.div`
+const IconWrapperStyled = styled.div<{ disabled: boolean }>`
   height: 16px;
   width: 16px;
 
-  :hover {
+  &:hover {
     cursor: pointer;
+  }
+  &:disabled {
+    cursor: ${(props) => props.disabled && "not-allowed"};
   }
 `;
 

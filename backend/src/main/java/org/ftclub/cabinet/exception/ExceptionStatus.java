@@ -65,7 +65,6 @@ public enum ExceptionStatus {
 	INVALID_LENT_TYPE(HttpStatus.BAD_REQUEST, "사물함의 대여 타입이 유효하지 않습니다."),
 	NOT_FOUND_BUILDING(HttpStatus.NOT_FOUND, "빌딩이 존재하지 않습니다."),
 	SWAP_EXPIRE_IMMINENT(HttpStatus.I_AM_A_TEAPOT, "현재 사물함의 대여 기간의 만료가 임박해 사물함을 이동 할 수 없습니다."),
-	SWAP_LIMIT_EXCEEDED(HttpStatus.I_AM_A_TEAPOT, "사물함 이사 횟수 제한을 초과했습니다.\n 일주일에 1회만 이사할 수 있습니다."),
 	SWAP_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "이사하기 기능을 사용한 기록이 없습니다."),
 	SWAP_SAME_CABINET(HttpStatus.BAD_REQUEST, "같은 사물함으로 이사할 수 없습니다."),
 	INVALID_CLUB(HttpStatus.BAD_REQUEST, "동아리가 맞지 않습니다."),
@@ -79,10 +78,11 @@ public enum ExceptionStatus {
 	INVALID_FORM_ID(HttpStatus.BAD_REQUEST, "잘못된 신청번호입니다."),
 	INVALID_LOCATION(HttpStatus.BAD_REQUEST, "잘못된 장소입니다."),
 	INVALID_ITEM_USE_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 아이템 사용 요청입니다."),
-	ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "아이템이 존재하지 않습니다."),
 	ITEM_NOT_ON_SALE(HttpStatus.BAD_REQUEST, "구매할 수 없는 아이템입니다."),
 	NOT_ENOUGH_COIN(HttpStatus.BAD_REQUEST, "보유한 코인이 아이템 가격보다 적습니다."),
-	INVALID_JWT_TOKEN(HttpStatus.BAD_REQUEST, "토큰이 없거나, 유효하지 않은 JWT 토큰입니다.");
+	INVALID_JWT_TOKEN(HttpStatus.BAD_REQUEST, "토큰이 없거나, 유효하지 않은 JWT 토큰입니다."),
+	NOT_FOUND_SECTION(HttpStatus.BAD_REQUEST, "사물함 구역 정보를 찾을 수 없습니다."),
+	ITEM_NOT_OWNED(HttpStatus.BAD_REQUEST, "해당 아이템을 보유하고 있지 않습니다");
 
 	final private int statusCode;
 	final private String message;

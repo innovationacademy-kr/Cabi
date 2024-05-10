@@ -10,6 +10,7 @@ import {
 import { modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
 import {
   axiosCabinetById,
   axiosMyLentInfo,
@@ -50,11 +51,13 @@ const SwapModal: React.FC<{
   const trySwapRequest = async () => {
     setIsLoading(true);
     try {
-      await axiosSwapId(currentCabinetId);
+      // await axiosSwapId(currentCabinetId);
+      await axiosUseItem("SWAP", currentCabinetId, null, null, null);
+
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
-      setModalTitle("이사권 사용에 성공했습니다");
+      setModalTitle("이사권 사용완료");
       // 캐비닛 상세정보 바꾸는 곳
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
@@ -72,13 +75,15 @@ const SwapModal: React.FC<{
         throw error;
       }
     } catch (error: any) {
-      // setModalTitle(error.response.data.message);
+      setModalTitle("이사권 사용실패");
+      if (error.response.ststus === 400) {
+        setModalContent(
+          "현재 이사권을 보유하고 있지 않습니다.\n이사권은 까비상점에서 구매하실 수 있습니다."
+        );
+      } else {
+        setModalContent(error.response.data.message);
+      }
 
-      // setModalContent(error.response.data.message);
-      // error.response.data.message 로 받아올 내용 임시로 작성
-      setModalContent(
-        "현재 이사권을 보유하고 있지 않습니다.\n이사권은 까비상점에서 구매하실 수 있습니다."
-      );
       setHasErrorOnResponse(true);
     } finally {
       setIsLoading(false);
@@ -103,10 +108,10 @@ const SwapModal: React.FC<{
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
-            modalTitle="이사권 사용 실패"
+            modalTitle={modalTitle}
             modalContents={modalContent}
             closeModal={props.closeModal}
-            url={"https://cabi.42seoul.io/store"} // TODO: navigator 사용하는 방식으로 수정
+            url={"/store"}
             urlTitle={"까비상점으로 이동"}
           />
         ) : (

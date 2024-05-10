@@ -187,7 +187,7 @@ const UnavailableIconStyled = styled.div`
   }
 
   & > svg > path {
-    fill: var(--gray-color);
+    fill: var(--black);
   }
 
   @media (max-width: 412px) {

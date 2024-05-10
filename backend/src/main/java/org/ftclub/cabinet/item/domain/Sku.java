@@ -6,6 +6,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 @Getter
 public enum Sku {
 
+	EXTENSION_PREV("출석 연장권 보상"),
 	EXTENSION_3("3일"),
 	EXTENSION_15("15일"),
 	EXTENSION_31("31일"),

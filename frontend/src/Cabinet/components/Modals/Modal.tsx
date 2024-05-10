@@ -1,11 +1,11 @@
 import React, { ReactElement } from "react";
+import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import AdminClubLogContainer from "@/Cabinet/components/Club/AdminClubLog.container";
 import Button from "@/Cabinet/components/Common/Button";
 import { ReactComponent as CheckIcon } from "@/Cabinet/assets/images/checkIcon.svg";
 import { ReactComponent as ErrorIcon } from "@/Cabinet/assets/images/errorIcon.svg";
 import { ReactComponent as NotificationIcon } from "@/Cabinet/assets/images/notificationSign.svg";
-import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
 
 /**
@@ -62,6 +62,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
     url,
   } = props.modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
+  const navigator = useNavigate();
 
   return (
     <>
@@ -124,7 +125,13 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
           </ButtonWrapperStyled>
         )}
         {url && urlTitle && (
-          <UrlSectionStyled href={url}>{urlTitle}</UrlSectionStyled>
+          <UrlSectionStyled
+            onClick={() => {
+              navigator(url);
+            }}
+          >
+            {urlTitle}
+          </UrlSectionStyled>
         )}
       </ModalStyled>
     </>
@@ -227,16 +234,16 @@ const DropdownStyled = styled.select`
   height: 40px;
 `;
 
-const Option = styled.option`
-  background-color: red;
-`;
-
-const UrlSectionStyled = styled.a`
+const UrlSectionStyled = styled.div`
   display: inline-block;
   font-size: 0.875rem;
   text-decoration: underline;
   color: var(--main-color);
   margin-top: 20px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export default Modal;

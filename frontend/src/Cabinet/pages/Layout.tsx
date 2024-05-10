@@ -76,7 +76,7 @@ const Layout = (): JSX.Element => {
         data: myInfo,
         data: { date: serverTime },
       } = await axiosMyInfo();
-      console.log("myInfo", myInfo);
+      // console.log("myInfo", myInfo);
       const { data } = await axiosMyItems();
 
       const formattedServerTime = serverTime.split(" KST")[0];

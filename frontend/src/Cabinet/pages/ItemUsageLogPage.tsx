@@ -5,6 +5,7 @@ import { mapItemNameToType } from "@/Cabinet/components/Store/ItemUsageLog/ItemL
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as DropdownChevron } from "@/Cabinet/assets/images/dropdownChevron.svg";
+import { ReactComponent as SadCabiIcon } from "@/Cabinet/assets/images/sadCcabi.svg";
 import { axiosGetItemUsageHistory } from "@/Cabinet/api/axios/axios.custom";
 
 export interface IItemUsageLog {
@@ -57,7 +58,7 @@ const ItemUsageLogPage = () => {
     setPage((prev) => prev + 1);
   };
 
-  return (
+  return itemUsageLogs.length > 0 ? (
     <WrapperStyled>
       <TitleWrapperStyled>아이템 사용 내역</TitleWrapperStyled>
       <ItemUsageLogWrapperStyled>
@@ -88,6 +89,13 @@ const ItemUsageLogPage = () => {
         )}
       </ItemUsageLogWrapperStyled>
     </WrapperStyled>
+  ) : (
+    <EmptyWrapperStyled>
+      <EmptyItemUsageLogTextStyled>
+        아이템 사용 내역이 없습니다.
+        <SadCabiIcon />
+      </EmptyItemUsageLogTextStyled>
+    </EmptyWrapperStyled>
   );
 };
 
@@ -95,7 +103,7 @@ const WrapperStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px 0;
+  padding: 60px 0 100px 0;
 `;
 
 const TitleWrapperStyled = styled.div`
@@ -155,6 +163,29 @@ const MoreButtonStyled = styled.button<{
     margin-bottom: -2px;
     width: 13px;
     height: 9px;
+  }
+`;
+
+const EmptyWrapperStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
+
+const EmptyItemUsageLogTextStyled = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: var(--gray-color);
+
+  & > svg {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
   }
 `;
 

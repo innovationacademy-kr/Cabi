@@ -15,6 +15,7 @@ import CabinetListContainer from "@/Cabinet/components/CabinetList/CabinetList.c
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import MultiSelectButton from "@/Cabinet/components/Common/MultiSelectButton";
 import SectionPaginationContainer from "@/Cabinet/components/SectionPagination/SectionPagination.container";
+import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import useCabinetListRefresh from "@/Cabinet/hooks/useCabinetListRefresh";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
@@ -41,7 +42,9 @@ const AdminMainPage = () => {
     };
   }, []);
 
-  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
+  const sectionList = useRecoilValue<Array<ICurrentSectionInfo>>(
+    currentFloorSectionState
+  );
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
   );
@@ -53,7 +56,7 @@ const AdminMainPage = () => {
   );
 
   const currentSectionIndex = sectionList.findIndex(
-    (sectionName) => sectionName === currentSectionName
+    (section) => section.sectionName === currentSectionName
   );
 
   useEffect(() => {
@@ -62,18 +65,18 @@ const AdminMainPage = () => {
 
   const moveToLeftSection = () => {
     if (currentSectionIndex <= 0) {
-      setCurrentSectionName(sectionList[sectionList.length - 1]);
+      setCurrentSectionName(sectionList[sectionList.length - 1].sectionName);
     } else {
-      setCurrentSectionName(sectionList[currentSectionIndex - 1]);
+      setCurrentSectionName(sectionList[currentSectionIndex - 1].sectionName);
     }
     mainWrapperRef.current?.scrollTo(0, 0);
   };
 
   const moveToRightSection = () => {
     if (currentSectionIndex >= sectionList.length - 1) {
-      setCurrentSectionName(sectionList[0]);
+      setCurrentSectionName(sectionList[0].sectionName);
     } else {
-      setCurrentSectionName(sectionList[currentSectionIndex + 1]);
+      setCurrentSectionName(sectionList[currentSectionIndex + 1].sectionName);
     }
     mainWrapperRef.current?.scrollTo(0, 0);
   };
