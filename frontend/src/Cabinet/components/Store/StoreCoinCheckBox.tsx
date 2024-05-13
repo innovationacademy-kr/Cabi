@@ -53,6 +53,6 @@ const WrapperStyled = styled.div`
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 1fr);
   grid-gap: 5px;
-  margin-bottom: 20px;
-  margin-top: 10px;
+  margin-top: 15px;
+  margin-bottom: 30px;
 `;

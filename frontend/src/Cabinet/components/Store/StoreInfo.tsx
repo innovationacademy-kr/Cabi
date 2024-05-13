@@ -6,6 +6,7 @@ import {
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import StoreCoinCheckBox from "@/Cabinet/components/Store/StoreCoinCheckBox";
+import { ReactComponent as CloseIcon } from "@/Cabinet/assets/images/exitButton.svg";
 import { ReactComponent as StoreCoin } from "@/Cabinet/assets/images/storeCoin.svg";
 import {
   axiosCoinCheckGet,
@@ -75,7 +76,13 @@ const StoreInfo = () => {
 
   return (
     <WrapperStyled id="storeInfo">
-      <HeaderStyled>동전 줍기</HeaderStyled>
+      <HeaderStyled>
+        동전 줍기
+        <CloseIcon
+          onClick={closeStore}
+          style={{ width: "24px", cursor: "pointer", marginLeft: "auto" }}
+        />
+      </HeaderStyled>
       <StoreCoin />
       <StoreCoinCheckBox monthlyCoinCount={monthlyCoinCount} />
 
@@ -135,13 +142,12 @@ const WrapperStyled = styled.div`
 
 const HeaderStyled = styled.div`
   display: flex;
-  justify-content: center;
   width: 100%;
   align-items: center;
   color: black;
   font-weight: bold;
   font-size: 1.5rem;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 `;
 
 const ButtonContainerStyled = styled.div`
