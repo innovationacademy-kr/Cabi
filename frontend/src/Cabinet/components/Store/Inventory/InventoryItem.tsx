@@ -109,7 +109,6 @@ const ItemCardStyled = styled.div<{ hasTypes: boolean }>`
   padding: 16px 0;
   justify-content: ${(props) => (props.hasTypes ? "space-between" : "")};
   border: 1.5px solid var(--session);
-  margin: 10px 20px 10px 0;
 `;
 
 const ItemIconStyled = styled.div`
@@ -150,7 +149,7 @@ const ItemTitleStyled = styled.div<{ isToggled: boolean }>`
   padding-left: 5px;
   padding-right: 5px;
   border-bottom: 1.5px solid #d9d9d9;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   margin-top: 50px;
   cursor: pointer;
 
@@ -176,6 +175,7 @@ const ItemCardSectionStyled = styled.div<{ isToggled: boolean }>`
   display: ${(props) => (props.isToggled ? "none" : "flex")};
   transition: all 0.3s ease-in-out;
   flex-wrap: wrap;
+  gap: 20px;
 `;
 
 const UnavailableItemMsgStyled = styled.div<{ isToggled: boolean }>`
