@@ -19,6 +19,7 @@ interface CardProps {
   gridArea: string;
   width?: string;
   height?: string;
+  cardType?: string;
 }
 
 const Card = ({
@@ -29,11 +30,12 @@ const Card = ({
   height = "163px",
   buttons = ([] = []),
   children,
+  cardType,
 }: CardProps) => {
   return (
     <CardStyled gridArea={gridArea} width={width} height={height}>
       {(title || buttons.length > 0) && (
-        <CardHeaderStyled>
+        <CardHeaderStyled cardType={cardType}>
           <CardTitleWrapperStyled>
             {title && <CardTitleStyled>{title}</CardTitleStyled>}
             {onClickToolTip && <ToolTipIcon onClick={onClickToolTip} />}
@@ -77,12 +79,13 @@ export const CardStyled = styled.div<{
   grid-area: ${(props) => props.gridArea};
 `;
 
-export const CardHeaderStyled = styled.div`
+export const CardHeaderStyled = styled.div<{ cardType?: string }>`
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 20px 10px 30px;
+  padding: ${(props) =>
+    props.cardType === "store" ? "16px 18px 12px 18px" : "20px 20px 10px 30px"};
 `;
 
 const CardTitleWrapperStyled = styled.div`
