@@ -149,8 +149,7 @@ const ItemTitleStyled = styled.div<{ isToggled: boolean }>`
   padding-left: 5px;
   padding-right: 5px;
   border-bottom: 1.5px solid #d9d9d9;
-  margin-bottom: 20px;
-  margin-top: 50px;
+  margin: 50px 0 14px;
   cursor: pointer;
 
   & > button {
