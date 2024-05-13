@@ -92,51 +92,48 @@ const CoinLog = () => {
       {isLoading ? (
         <LoadingAnimation />
       ) : (
-        <>
-          <WrapperStyled>
-            <TitleStyled>코인 내역</TitleStyled>
-            <MyCoinWrapperStyled>
-              <MyCoinStyled>
-                <CoinIconStyled>
-                  <CoinIcon />
-                </CoinIconStyled>
-                <span>{userInfo.coins}</span>
-                까비
-              </MyCoinStyled>
-            </MyCoinWrapperStyled>
-            <MultiToggleSwitchStyled>
-              <MultiToggleSwitch
-                initialState={toggleType}
-                setState={setToggleType}
-                toggleList={toggleList}
-              />
-            </MultiToggleSwitchStyled>
-            {coinLogs?.length ? (
-              <LogItemWrapperStyled>
-                {coinLogs.map((log, idx) => (
-                  <LogItemStyled isEarned={log.amount > 0} key={idx}>
-                    <span id="date">
-                      {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
-                    </span>
-                    <span id="history" title={log.history}>
-                      {log.history}{" "}
-                      {log.itemDetails !== log.history &&
-                        "- " + log.itemDetails}
-                    </span>
-                    <span id="amount">
-                      {log.amount > 0 ? "+" : ""}
-                      {log.amount}
-                    </span>
-                  </LogItemStyled>
-                ))}
-              </LogItemWrapperStyled>
-            ) : (
-              <EmptyCoinLogTextStyled>
-                {unavailableCoinLogMsgMap[toggleType]} 내역이 없습니다.
-                <SadCabiIcon />
-              </EmptyCoinLogTextStyled>
-            )}
-          </WrapperStyled>
+        <WrapperStyled>
+          <TitleStyled>코인 내역</TitleStyled>
+          <MyCoinWrapperStyled>
+            <MyCoinStyled>
+              <CoinIconStyled>
+                <CoinIcon />
+              </CoinIconStyled>
+              <span>{userInfo.coins}</span>
+              까비
+            </MyCoinStyled>
+          </MyCoinWrapperStyled>
+          <MultiToggleSwitchStyled>
+            <MultiToggleSwitch
+              initialState={toggleType}
+              setState={setToggleType}
+              toggleList={toggleList}
+            />
+          </MultiToggleSwitchStyled>
+          {coinLogs?.length ? (
+            <LogItemWrapperStyled>
+              {coinLogs.map((log, idx) => (
+                <LogItemStyled isEarned={log.amount > 0} key={idx}>
+                  <span id="date">
+                    {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
+                  </span>
+                  <span id="history" title={log.history}>
+                    {log.history}{" "}
+                    {log.itemDetails !== log.history && "- " + log.itemDetails}
+                  </span>
+                  <span id="amount">
+                    {log.amount > 0 ? "+" : ""}
+                    {log.amount}
+                  </span>
+                </LogItemStyled>
+              ))}
+            </LogItemWrapperStyled>
+          ) : (
+            <EmptyCoinLogTextStyled>
+              {unavailableCoinLogMsgMap[toggleType]} 내역이 없습니다.
+              <SadCabiIcon />
+            </EmptyCoinLogTextStyled>
+          )}
           {moreButton && (
             <ButtonContainerStyled>
               <MoreButtonStyled
@@ -156,7 +153,7 @@ const CoinLog = () => {
               </MoreButtonStyled>
             </ButtonContainerStyled>
           )}
-        </>
+        </WrapperStyled>
       )}
     </>
   );
@@ -201,7 +198,7 @@ const LogItemStyled = styled.div<{
 }>`
   margin-top: 10px;
   border-radius: 10px;
-  height: 70px;
+  height: 76px;
   border: 1px solid #d9d9d9;
   padding: 0 20px;
   display: flex;
@@ -218,7 +215,7 @@ const LogItemStyled = styled.div<{
   & > #history {
     margin-left: 6px;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 18px;
     color: var(--black);
     width: 74%;
     text-align: start;
