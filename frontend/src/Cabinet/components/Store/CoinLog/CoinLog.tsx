@@ -54,12 +54,18 @@ const CoinLog = () => {
     setIsLoading(true);
     try {
       const response = await axiosCoinLog(type, page, size);
-      page
-        ? setCoinLogs((prev) => [...prev!, ...response.data.result])
-        : setCoinLogs(response.data.result);
+      if (page === 0) {
+        setCoinLogs(response.data.result);
+      } else {
+        setCoinLogs((prev) =>
+          prev ? [...prev, ...response.data.result] : response.data.result
+        );
+      }
       setLogsLength(response.data.totalLength);
-    } catch (error: any) {
+      setMoreButton(response.data.result.length === size);
+    } catch (error) {
       console.error("Error getting coin log:", error);
+      setMoreButton(false);
     } finally {
       setIsLoading(false);
       setMoreBtnIsLoading(false);
@@ -68,84 +74,69 @@ const CoinLog = () => {
 
   const clickMoreButton = () => {
     setMoreBtnIsLoading(true);
-    setTimeout(() => {
-      setPage(page + 1);
-    }, 100);
+    setPage((prev) => prev + 1);
   };
 
   useEffect(() => {
-    // 다른 토글버튼을 누르면 page 0
-    setTimeout(() => {
-      setPage(0);
-      getCoinLog(toggleType);
-    }, 100);
-  }, [toggleType]);
-
-  useEffect(() => {
     getCoinLog(toggleType);
-  }, [page]);
+  }, [page, toggleType]);
 
   useEffect(() => {
-    if (coinLogs?.length) setMoreButton(coinLogs.length < logsLength);
-  }, [coinLogs]);
+    setPage(0);
+    setCoinLogs(null);
+    setIsLoading(true);
+  }, [toggleType]);
 
   return (
     <>
       {isLoading ? (
         <LoadingAnimation />
-      ) : toggleType === CoinLogToggleType.ALL && !coinLogs?.length ? (
-        <EmptyWrapperStyled>
-          <EmptyCoinLogTextStyled>
-            {unavailableCoinLogMsgMap[toggleType]} 내역이 없습니다.
-            <SadCabiIcon />
-          </EmptyCoinLogTextStyled>
-        </EmptyWrapperStyled>
       ) : (
-        <WrapperStyled>
-          <TitleStyled>코인 내역</TitleStyled>
-          <MyCoinWrapperStyled>
-            <MyCoinStyled>
-              <CoinIconStyled>
-                <CoinIcon />
-              </CoinIconStyled>
-              <span>{userInfo.coins}</span>
-              까비
-            </MyCoinStyled>
-          </MyCoinWrapperStyled>
-          <MultiToggleSwitchStyled>
-            <MultiToggleSwitch
-              initialState={toggleType}
-              setState={setToggleType}
-              toggleList={toggleList}
-            ></MultiToggleSwitch>
-          </MultiToggleSwitchStyled>
-          <LogItemWrapperStyled>
-            {!coinLogs?.length ? (
-              <EmptyCoinLogTextStyled>
-                {unavailableCoinLogMsgMap[toggleType]} 내역이 없습니다.
-                <SadCabiIcon />
-              </EmptyCoinLogTextStyled>
-            ) : (
-              coinLogs.map((log, idx) => {
-                const isEarned = log.amount > 0;
-                const hasTypes = log.itemDetails !== log.history;
-                return (
-                  <LogItemStyled isEarned={isEarned} key={idx}>
+        <>
+          <WrapperStyled>
+            <TitleStyled>코인 내역</TitleStyled>
+            <MyCoinWrapperStyled>
+              <MyCoinStyled>
+                <CoinIconStyled>
+                  <CoinIcon />
+                </CoinIconStyled>
+                <span>{userInfo.coins}</span>
+                까비
+              </MyCoinStyled>
+            </MyCoinWrapperStyled>
+            <MultiToggleSwitchStyled>
+              <MultiToggleSwitch
+                initialState={toggleType}
+                setState={setToggleType}
+                toggleList={toggleList}
+              />
+            </MultiToggleSwitchStyled>
+            {coinLogs?.length ? (
+              <LogItemWrapperStyled>
+                {coinLogs.map((log, idx) => (
+                  <LogItemStyled isEarned={log.amount > 0} key={idx}>
                     <span id="date">
                       {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
                     </span>
                     <span id="history" title={log.history}>
-                      {log.history} {hasTypes && "- " + log.itemDetails}
+                      {log.history}{" "}
+                      {log.itemDetails !== log.history &&
+                        "- " + log.itemDetails}
                     </span>
                     <span id="amount">
-                      {isEarned ? "+" : ""}
+                      {log.amount > 0 ? "+" : ""}
                       {log.amount}
                     </span>
                   </LogItemStyled>
-                );
-              })
+                ))}
+              </LogItemWrapperStyled>
+            ) : (
+              <EmptyCoinLogTextStyled>
+                {unavailableCoinLogMsgMap[toggleType]} 내역이 없습니다.
+                <SadCabiIcon />
+              </EmptyCoinLogTextStyled>
             )}
-          </LogItemWrapperStyled>
+          </WrapperStyled>
           {moreButton && (
             <ButtonContainerStyled>
               <MoreButtonStyled
@@ -165,7 +156,7 @@ const CoinLog = () => {
               </MoreButtonStyled>
             </ButtonContainerStyled>
           )}
-        </WrapperStyled>
+        </>
       )}
     </>
   );
@@ -176,13 +167,6 @@ const WrapperStyled = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 60px 0 100px 0;
-`;
-
-const EmptyWrapperStyled = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
 `;
 
 const TitleStyled = styled.h1`
@@ -360,11 +344,11 @@ const SelectIconWrapperStyled = styled.div`
 
 const EmptyCoinLogTextStyled = styled.div`
   display: flex;
+  height: 390px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  font-size: 1.125rem;
+  font-size: 18px;
   line-height: 1.75rem;
   color: var(--gray-color);
 
