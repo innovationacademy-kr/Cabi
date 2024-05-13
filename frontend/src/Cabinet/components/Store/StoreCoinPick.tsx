@@ -16,7 +16,7 @@ const StoreCoinPick = () => {
       <>
         <CoinAnimation />
         <CoinSummary>
-          <p>상점에 흘린 동점을 주워보세요!</p>
+          <p>상점에 흘린 동전을 주워보세요!</p>
           <p> 매일 동전이 쏟아집니다💰</p>
         </CoinSummary>
         <CoinCheckButton onClick={() => toggleStore()}>
@@ -41,7 +41,7 @@ const CoinSummary = styled.div`
 const CoinCheckButton = styled.button`
   font-weight: 500;
   width: 90%;
-  margin: 14px;
+  margin: 8px 0 16px;
   font-size: 0.9rem;
 `;
 
