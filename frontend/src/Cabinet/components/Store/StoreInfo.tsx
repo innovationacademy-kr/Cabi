@@ -75,7 +75,7 @@ const StoreInfo = () => {
 
   return (
     <WrapperStyled id="storeInfo">
-      <HeaderStyled>동전줍기</HeaderStyled>
+      <HeaderStyled>동전 줍기</HeaderStyled>
       <StoreCoin />
       <StoreCoinCheckBox monthlyCoinCount={monthlyCoinCount} />
 
