@@ -196,12 +196,20 @@ const TitleStyled = styled.h1`
 `;
 
 const MultiToggleSwitchStyled = styled.div`
-  width: 80%;
+  width: 70%;
   margin-bottom: 1rem;
+
+  @media (max-width: 1040px) {
+    width: 80%;
+  }
 `;
 
 const LogItemWrapperStyled = styled.div`
-  width: 80%;
+  width: 70%;
+
+  @media (max-width: 1040px) {
+    width: 80%;
+  }
 `;
 
 const LogItemStyled = styled.div<{
@@ -218,13 +226,15 @@ const LogItemStyled = styled.div<{
   align-items: center;
 
   & > #date {
-    color: #595959;
+    color: #7b7b7b;
     width: 16%;
     text-align: center;
   }
 
   & > #history {
-    font-size: 18px;
+    margin-left: 6px;
+    font-weight: bold;
+    font-size: 16px;
     color: var(--black);
     width: 74%;
     text-align: start;
@@ -260,11 +270,12 @@ const LogItemStyled = styled.div<{
 `;
 
 const MyCoinWrapperStyled = styled.div`
-  width: 80%;
+  width: 70%;
   display: flex;
   justify-content: end;
 
-  @media (max-width: 810px) {
+  @media (max-width: 1040px) {
+    width: 80%;
     margin: 10px 0;
   }
 `;
@@ -274,7 +285,7 @@ const MyCoinStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: 18px;
 
   & > span {
     font-weight: bold;
