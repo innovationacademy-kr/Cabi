@@ -38,6 +38,7 @@ const StoreItemCard = ({
         width={"340px"}
         height={"150px"}
         buttons={[button]}
+        cardType="store"
       >
         <SectionStyled>
           <BlockStyled>
@@ -59,14 +60,13 @@ const StoreItemCard = ({
 };
 
 const WrapperStyled = styled.div`
-  font-size: var(--size-base);
+  font-size: 15px;
 `;
 
 const SectionStyled = styled.div`
   display: flex;
   height: 80px;
   width: 90%;
-  padding-left: 10px;
   align-items: center;
 `;
 
@@ -126,14 +126,9 @@ const ItemDetailStyled = styled.div`
   background-color: var(--white);
   font-size: var(--size-base);
   word-wrap: normal;
-  width: 90%;
   padding: 10px 16px;
   line-height: 1.4;
   border-radius: 10px;
-
-  > div {
-    padding: 0;
-  }
 `;
 
 export default StoreItemCard;
