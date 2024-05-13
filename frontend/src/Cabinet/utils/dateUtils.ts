@@ -137,5 +137,6 @@ export const calExpiredTime = (expireTime: Date) =>
 export const getRemainingTime = (expireTime: Date | undefined | null) => {
   if (!expireTime) return 0;
   const remainTime = calExpiredTime(new Date(expireTime));
+  console.log("remainTime", remainTime);
   return remainTime < 0 ? -remainTime : remainTime;
 };
