@@ -34,6 +34,11 @@ const convertToItemType = (itemType: string) => {
   }
 };
 
+const extractNumber = (str: string) => {
+  const result = str.match(/\d+/g);
+  return result ? parseInt(result.join(""), 10) : 0;
+};
+
 const InventoryItem = ({
   itemType,
   items,
@@ -48,6 +53,10 @@ const InventoryItem = ({
     setIsToggled((prev) => !prev);
   };
 
+  const sortedItems = items.sort((a, b) => {
+    return extractNumber(a.itemDetails) - extractNumber(b.itemDetails);
+  });
+
   return (
     <>
       <ItemWrapperStyled>
@@ -58,9 +67,9 @@ const InventoryItem = ({
           </button>
         </ItemTitleStyled>
         <ItemCardSectionStyled isToggled={isToggled}>
-          {items.length ? (
+          {sortedItems.length ? (
             <>
-              {items.map((item, idx) => {
+              {sortedItems.map((item, idx) => {
                 const hasTypes =
                   item.itemDetails !== convertToItemTypeLabel(itemType);
                 return (
