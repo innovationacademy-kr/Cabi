@@ -33,7 +33,7 @@ const CoinSummary = styled.div`
   word-wrap: normal;
   width: 90%;
   margin: 5px;
-  padding: 10px 20px;
+  padding: 12px 20px;
   line-height: 1.4;
   border-radius: 10px;
 `;
