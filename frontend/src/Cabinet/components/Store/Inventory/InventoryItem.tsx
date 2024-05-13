@@ -212,7 +212,10 @@ const UnavailableIconStyled = styled.div`
 
 const ItemWrapperStyled = styled.div`
   width: 70%;
-  /* margin-top: 30px; */
+
+  @media (max-width: 1040px) {
+    width: 80%;
+  }
 `;
 
 export default InventoryItem;
