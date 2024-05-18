@@ -8,7 +8,6 @@ const StoreCoinCheckBox = ({
 }: {
   monthlyCoinCount: number;
 }) => {
-  console.log("monthlyCoinCount", monthlyCoinCount);
   return (
     <WrapperStyled>
       {Array.from({ length: 20 }, (_, index) => (

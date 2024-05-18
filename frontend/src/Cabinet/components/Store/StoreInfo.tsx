@@ -139,6 +139,7 @@ const WrapperStyled = styled.div`
   background: var(--bg-color);
   border-left: 1px solid var(--line-color);
   overflow-y: auto;
+  border-left: 1px solid var(--line-color); ;
 `;
 
 const HeaderStyled = styled.div`

@@ -14,15 +14,13 @@ import CabinetListContainer from "@/Cabinet/components/CabinetList/CabinetList.c
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import SectionAlertModal from "@/Cabinet/components/Modals/SectionAlertModal/SectionAlertModal";
 import SectionPaginationContainer from "@/Cabinet/components/SectionPagination/SectionPagination.container";
+import { clubSectionsData } from "@/Cabinet/assets/data/mapPositionData";
 import { ReactComponent as FilledHeartIcon } from "@/Cabinet/assets/images/filledHeart.svg";
 import { ReactComponent as LineHeartIcon } from "@/Cabinet/assets/images/lineHeart.svg";
 import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import SectionType from "@/Cabinet/types/enum/map.type.enum";
 import useCabinetListRefresh from "@/Cabinet/hooks/useCabinetListRefresh";
 import useMenu from "@/Cabinet/hooks/useMenu";
-
-const clubSections = ["Cluster X - 1", "Cluster X - 2", "Cluster X - 3"];
-// TODO : asset에 넣기
 
 const MainPage = () => {
   const touchStartPosX = useRef(0);
@@ -68,7 +66,7 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    const clubSection = clubSections.find((section) => {
+    const clubSection = clubSectionsData.find((section) => {
       return section === currentSectionName;
     })
       ? true

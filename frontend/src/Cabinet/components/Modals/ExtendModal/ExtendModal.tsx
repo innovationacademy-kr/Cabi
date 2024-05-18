@@ -21,7 +21,7 @@ import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
   axiosMyLentInfo,
-  axiosUseItem, // axiosExtend, // TODO: 연장권 api 생성 후 연결해야 함
+  axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
 import { getExtendedDateString } from "@/Cabinet/utils/dateUtils";
 
