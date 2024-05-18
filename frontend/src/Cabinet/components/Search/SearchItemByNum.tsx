@@ -13,7 +13,6 @@ import {
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import { LentDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
-import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 import { axiosAdminCabinetInfoByCabinetId } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -153,6 +152,10 @@ const IconWrapperStyled = styled.div`
   width: 18px;
   height: 28px;
   display: flex;
+
+  & > svg > path {
+    stroke: var(--normal-text-color);
+  }
 `;
 
 export default SearchItemByNum;

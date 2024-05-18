@@ -206,7 +206,6 @@ const CabinetIconStyled = styled.div`
 
   & > svg > path {
     stroke: var(--normal-text-color);
-    transform: scale(0.8);
   }
 `;
 

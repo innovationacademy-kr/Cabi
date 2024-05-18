@@ -51,6 +51,7 @@ const STATUS_OPTIONS = [
   { name: "오픈 예정", value: CabinetStatus.PENDING },
   { name: "대기중", value: CabinetStatus.IN_SESSION },
 ];
+// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
 
 const StatusModal = ({
   statusModalObj,
@@ -247,7 +248,6 @@ const ContentItemIconStyled = styled.div`
   }
 
   & > svg path {
-    transform: scale(0.8);
     stroke: var(--normal-text-color);
   }
 `;

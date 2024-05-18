@@ -102,9 +102,9 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
           {`${cabinetInfo.floor}층 - ${cabinetInfo.section}`}
         </LocationStyled>
         <NameWrapperStyled>
-          <IconStyled>
+          <IconWrapperStyled>
             <CabinetIcon />
-          </IconStyled>
+          </IconWrapperStyled>
           <NameStyled>
             <ChangeToHTML origin={name} replace={searchValue} />
           </NameStyled>
@@ -123,7 +123,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       <TextWrapper>
         <LocationStyled>대여 중이 아닌 사용자</LocationStyled>
         <NameWrapperStyled>
-          <IconStyled />
+          <IconWrapperStyled />
           <NameStyled>
             <ChangeToHTML origin={name} replace={searchValue} />
           </NameStyled>
@@ -216,10 +216,14 @@ const NameStyled = styled.span`
   }
 `;
 
-const IconStyled = styled.div`
+const IconWrapperStyled = styled.div`
   width: 18px;
   height: 28px;
   display: flex;
+
+  & > svg > path {
+    stroke: var(--normal-text-color);
+  }
 `;
 
 export default SearchItemByIntraId;

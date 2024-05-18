@@ -2,11 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import BanModal from "@/Cabinet/components/Modals/BanModal/BanModal";
-import AdminReturnModal from "@/Cabinet/components/Modals/ReturnModal/AdminReturnModal";
-import ChangeToHTML from "@/Cabinet/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 import {
   cabinetIconComponentMap,
-  cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
@@ -14,6 +11,7 @@ import cabiLogo from "@/Cabinet/assets/images/logo.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 
+// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
 export interface ISelectedUserInfo {
   name: string;
   userId: number | null;

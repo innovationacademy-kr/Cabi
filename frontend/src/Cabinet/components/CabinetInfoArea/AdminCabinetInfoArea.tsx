@@ -26,6 +26,8 @@ import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
 
+// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
+
 const AdminCabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
   myCabinetId?: number;
