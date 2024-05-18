@@ -136,7 +136,7 @@ const WrapperStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--white);
+  background: var(--bg-color);
   overflow-y: auto;
 `;
 
@@ -144,7 +144,7 @@ const HeaderStyled = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
-  color: black;
+  color: var(--normal-text-color);
   font-weight: bold;
   font-size: 1.5rem;
   margin-bottom: 30px;
