@@ -133,8 +133,8 @@ const MainPage = () => {
           );
         }}
       >
-        {!isClubSection && (
-          <AlertStyled>
+        <AlertStyled>
+          {!isClubSection && (
             <IconWrapperStyled
               onClick={openModal}
               disabled={
@@ -147,8 +147,8 @@ const MainPage = () => {
                 <LineHeartIcon />
               )}
             </IconWrapperStyled>
-          </AlertStyled>
-        )}
+          )}
+        </AlertStyled>
         <SectionPaginationContainer />
         <CabinetListWrapperStyled>
           <CabinetListContainer isAdmin={false} />
