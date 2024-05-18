@@ -6,7 +6,7 @@ import {
   targetCabinetInfoState,
 } from "@/Cabinet/recoil/atoms";
 import {
-  cabinetIconSrcMap,
+  cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
@@ -38,6 +38,7 @@ const SearchItemByNum = (props: CabinetInfo) => {
 
   const { floor, section, cabinetId, visibleNum, status, lentType, lents } =
     props;
+  const CabinetIcon = cabinetIconComponentMap[lentType];
 
   const clickSearchItem = () => {
     if (currentCabinetId === cabinetId) {
@@ -68,7 +69,9 @@ const SearchItemByNum = (props: CabinetInfo) => {
       <TextWrapper>
         <LocationStyled>{`${floor}층 - ${section}`}</LocationStyled>
         <NameWrapperStyled>
-          <IconStyled lentType={lentType} />
+          <IconWrapperStyled>
+            <CabinetIcon />
+          </IconWrapperStyled>
           <NameStyled>{reformIntraId(lents)}</NameStyled>
         </NameWrapperStyled>
       </TextWrapper>
@@ -140,17 +143,16 @@ const NameWrapperStyled = styled.div`
   overflow: hidden;
 `;
 
-const IconStyled = styled.div<{ lentType: CabinetType }>`
-  width: 18px;
-  height: 28px;
-  background: url(${(props) => cabinetIconSrcMap[props.lentType]}) no-repeat
-    center center / contain;
-`;
-
 const NameStyled = styled.span`
   line-height: 28px;
   font-size: 0.875rem;
   margin-left: 4px;
+`;
+
+const IconWrapperStyled = styled.div`
+  width: 18px;
+  height: 28px;
+  display: flex;
 `;
 
 export default SearchItemByNum;

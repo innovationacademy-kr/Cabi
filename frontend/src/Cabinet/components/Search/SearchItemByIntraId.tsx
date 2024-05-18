@@ -9,7 +9,7 @@ import {
 } from "@/Cabinet/recoil/atoms";
 import ChangeToHTML from "@/Cabinet/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 import {
-  cabinetIconSrcMap,
+  cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
@@ -44,6 +44,10 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
   const { openCabinet, closeCabinet } = useMenu();
+  const CabinetIcon =
+    cabinetIconComponentMap[
+      cabinetInfo ? cabinetInfo.lentType : CabinetType.PRIVATE
+    ];
 
   const clickSearchItem = () => {
     if (currentIntraId === name) {
@@ -94,9 +98,13 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
         {cabinetInfo.visibleNum}
       </RectangleStyled>
       <TextWrapper>
-        <LocationStyled>{`${cabinetInfo.floor}층 - ${cabinetInfo.section}`}</LocationStyled>
+        <LocationStyled>
+          {`${cabinetInfo.floor}층 - ${cabinetInfo.section}`}
+        </LocationStyled>
         <NameWrapperStyled>
-          <IconStyled lentType={cabinetInfo.lentType} />
+          <IconStyled>
+            <CabinetIcon />
+          </IconStyled>
           <NameStyled>
             <ChangeToHTML origin={name} replace={searchValue} />
           </NameStyled>
@@ -199,16 +207,6 @@ const NameWrapperStyled = styled.div`
   overflow: hidden;
 `;
 
-const IconStyled = styled.div<{ lentType?: CabinetType }>`
-  width: 18px;
-  height: 28px;
-  background-image: url((${(props) =>
-      props.lentType
-        ? cabinetIconSrcMap[props.lentType]
-        : cabinetIconSrcMap[CabinetType.PRIVATE]}))
-    no-repeat center center / contain;
-`;
-
 const NameStyled = styled.span`
   line-height: 28px;
   font-size: 0.875rem;
@@ -216,6 +214,12 @@ const NameStyled = styled.span`
   & strong {
     color: var(--sys-main-color);
   }
+`;
+
+const IconStyled = styled.div`
+  width: 18px;
+  height: 28px;
+  display: flex;
 `;
 
 export default SearchItemByIntraId;
