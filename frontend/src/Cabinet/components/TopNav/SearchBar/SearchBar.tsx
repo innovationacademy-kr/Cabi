@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import SearchBarList from "@/Cabinet/components/TopNav/SearchBar/SearchBarList/SearchBarList";
+import { ReactComponent as SearchIcon } from "@/Cabinet/assets/images/searchWhite.svg";
 import { CabinetSimple } from "@/Cabinet/types/dto/cabinet.dto";
 import {
   axiosSearchByCabinetNumSimple,
@@ -164,7 +165,9 @@ const SearchBar = () => {
           onChange={() => debounce("topNavSearch", typeSearchInput, 300)}
           onKeyDown={handleInputKey}
         ></SearchBarInputStyled>
-        <SearchButtonStyled onClick={clickSearchButton} />
+        <IconWrapperStyled>
+          <SearchIcon onClick={clickSearchButton} />
+        </IconWrapperStyled>
       </SearchBarStyled>
       <CancelButtonStyled onClick={clickCancelButton}>취소</CancelButtonStyled>
       {isFocus && searchInput.current?.value && totalLength > 0 && (
@@ -205,16 +208,6 @@ const SearchBarInputStyled = styled.input`
   }
 `;
 
-const SearchButtonStyled = styled.button`
-  background: url("/src/Cabinet/assets/images/searchWhite.svg") no-repeat 50%
-    50%;
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  top: 4px;
-  right: 14px;
-`;
-
 const CancelButtonStyled = styled.button`
   min-width: 60px;
   width: 60px;
@@ -224,6 +217,14 @@ const CancelButtonStyled = styled.button`
   @media screen and (max-width: 768px) {
     display: block;
   }
+`;
+
+const IconWrapperStyled = styled.div`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 8px;
+  right: 14px;
 `;
 
 export default SearchBar;

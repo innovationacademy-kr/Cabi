@@ -43,6 +43,9 @@ const TopNavButtonStyled = styled.div<{
   height: 32px;
   margin-right: 10px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   /* display: ${({ disable }) => (disable ? "none" : "block")}; */
   /* visibility: ${({ disable }) => (disable ? "hidden" : "visible")}; */
   @media (hover: hover) and (pointer: fine) {
@@ -55,10 +58,13 @@ const TopNavButtonStyled = styled.div<{
     fill: var(--bg-color);
   }
 
+  & > svg {
+    width: ${(props) => (props.id === "searchButton" ? "26px" : "32px")};
+    height: ${(props) => (props.id === "searchButton" ? "26px" : "32px")};
+  }
+
   & > svg > path {
     stroke: var(--gray-line-btn-color);
-    transform: ${(props) =>
-      props.id === "searchButton" ? "scale(0.9)" : "scale(1)"};
   }
 `;
 
