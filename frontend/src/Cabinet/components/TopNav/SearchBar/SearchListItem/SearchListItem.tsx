@@ -92,7 +92,6 @@ const ContentIconStyled = styled.div<{ isNum?: boolean }>`
 
   & path {
     stroke: var(--normal-text-color);
-    transform: ${(props) => (props.isNum ? "scale(1)" : "scale(0.8)")};
   }
 `;
 

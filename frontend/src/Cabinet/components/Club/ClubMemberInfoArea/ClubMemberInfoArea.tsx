@@ -7,7 +7,6 @@ import Button from "@/Cabinet/components/Common/Button";
 import DeleteClubMemberModal from "@/Cabinet/components/Modals/ClubModal/DeleteClubMemberModal";
 import MandateClubMemberModal from "@/Cabinet/components/Modals/ClubModal/MandateClubMemberModal";
 import {
-  cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
@@ -21,6 +20,8 @@ import {
 } from "@/Cabinet/types/dto/club.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+
+// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
 
 interface ClubMemberInfoAreaProps {
   selectedClubInfo: ClubResponseDto;
@@ -220,8 +221,6 @@ const ClubMemberIconStyled = styled.div<{ isMasterSelected: boolean }>`
 
   & > svg > path {
     stroke: var(--normal-text-color);
-    transform: ${(props) =>
-      props.isMasterSelected ? "scale(1.3)" : "scale(1.0)"};
   }
 `;
 

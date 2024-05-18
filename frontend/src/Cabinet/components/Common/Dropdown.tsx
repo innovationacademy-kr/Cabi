@@ -1,9 +1,10 @@
 import { useState } from "react";
 import styled, { css } from "styled-components";
-import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
+import { cabinetIconComponentMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as DropdownChevronIcon } from "@/Cabinet/assets/images/dropdownChevron.svg";
-import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
-import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
+import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+
+// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
 
 export interface IDropdownOptions {
   name: string;
@@ -22,6 +23,8 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
   const [currentName, setCurrentName] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const selectedIdx = options.findIndex((op) => op.name === currentName) ?? 0;
+  const DefaultOptionIcon =
+    cabinetIconComponentMap[options[selectedIdx].value as CabinetType];
 
   return (
     <DropdownContainerStyled>
@@ -32,9 +35,7 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
       >
         {options[selectedIdx].imageSrc?.length && (
           <OptionsImgStyled>
-            {options[selectedIdx].value === "PRIVATE" && <PrivateIcon />}
-            {options[selectedIdx].value === "CLUB" && <ClubIcon />}
-            {options[selectedIdx].value === "SHARE" && <ShareIcon />}
+            <DefaultOptionIcon />
           </OptionsImgStyled>
         )}
         <p style={{ paddingLeft: "10px" }}>{currentName}</p>
@@ -44,6 +45,8 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
       </DropdownSelectionBoxStyled>
       <DropdownItemContainerStyled isVisible={isOpen}>
         {options?.map((option) => {
+          const OptionIcon =
+            cabinetIconComponentMap[option.value as CabinetType];
           return (
             <DropdownItemStyled
               key={option.value}
@@ -58,9 +61,7 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
             >
               {option.imageSrc && (
                 <OptionsImgStyled isSelected={option.name === currentName}>
-                  {option.value === "PRIVATE" && <PrivateIcon />}
-                  {option.value === "CLUB" && <ClubIcon />}
-                  {option.value === "SHARE" && <ShareIcon />}
+                  <OptionIcon />
                 </OptionsImgStyled>
               )}
               <p style={{ paddingLeft: "10px" }}>{option.name}</p>
@@ -144,9 +145,9 @@ const OptionsImgStyled = styled.div<{ isSelected?: boolean }>`
     width: 18px;
     height: 18px;
   }
+
   & > svg > path {
     stroke: var(--normal-text-color);
-    transform: scale(0.8);
   }
 `;
 
