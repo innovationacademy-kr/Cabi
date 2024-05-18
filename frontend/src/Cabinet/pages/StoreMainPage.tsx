@@ -131,7 +131,7 @@ const HeaderStyled = styled.div`
   // width: 90%;
   width: 100%;
   max-width: 1060px;
-  border-bottom: 2px solid #d9d9d9;
+  border-bottom: 2px solid var(--service-man-title-border-btm-color);
   margin-bottom: 25px;
 
   @media (max-width: 1400px) {
