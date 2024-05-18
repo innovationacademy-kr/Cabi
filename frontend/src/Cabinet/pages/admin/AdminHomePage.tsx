@@ -141,7 +141,7 @@ const AdminHomePage = () => {
         <AdminTable
           data={bannedUserList}
           handleClick={(e) => onClick(e, "banned")}
-          thInfo={["Intra ID", "사용정지 일", "기간"]}
+          thInfo={["Intra ID", "사용정지일", "기간"]}
           ratio={["33%", "33%", "33%"]}
           ROW_COUNT={5}
         />
@@ -151,7 +151,7 @@ const AdminHomePage = () => {
         <AdminTable
           data={brokenCabinetList}
           handleClick={(e) => onClick(e, "broken")}
-          thInfo={["위치", "섹  션", ""]}
+          thInfo={["위치", "섹션", ""]}
           ratio={["50%", "50%", "0%"]}
           fontSize={["1rem", "0.8rem", "1rem"]}
           ROW_COUNT={5}

@@ -104,7 +104,7 @@ const TheadStyled = styled.thead`
   height: 45px;
   line-height: 45px;
   background-color: var(--sys-main-color);
-  color: var(--bg-color);
+  color: var(--white-text-with-bg-color);
 `;
 
 const TbodyStyled = styled.tbody`

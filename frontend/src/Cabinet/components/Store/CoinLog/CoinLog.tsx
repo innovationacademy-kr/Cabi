@@ -207,8 +207,7 @@ const LogItemStyled = styled.div<{
   align-items: center;
 
   & > #date {
-    color: var(--coin-log-date-color);
-    /* TODO : 7b7b7b */
+    color: var(--gray-line-btn-color);
     width: 16%;
     text-align: center;
   }
