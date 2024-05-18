@@ -109,24 +109,19 @@ const LentInfoCardContainer = ({
 
   const onCLickPenaltyButton = () => {
     setIsModalOpen(true);
-    console.log("페널티 축소 버튼 클릭");
   };
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
   useEffect(() => {
-    if (unbannedAt && tempPenaltyPeriod < 0) {
+    if (unbannedAt == null) {
       setIsPenaltyUser(false);
     } else {
       // 만료일을 버림 -> 시간 기준으로 평가하기 위함
-      tempPenaltyPeriod = tempPenaltyPeriod + 1;
+      tempPenaltyPeriod = tempPenaltyPeriod;
     }
   }, [unbannedAt]);
-
-  useEffect(() => {
-    setPenaltyPeriod(tempPenaltyPeriod);
-  }, [tempPenaltyPeriod]);
 
   return (
     <LentInfoCard
@@ -135,7 +130,7 @@ const LentInfoCardContainer = ({
       button={
         isPenaltyUser
           ? {
-              label: "페널티 축소",
+              label: "페널티 감면",
               onClick: onCLickPenaltyButton,
               isClickable: true,
             }

@@ -63,7 +63,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
       await axiosUseItem(item, null, null, null, null);
       const { data: myInfo } = await axiosMyInfo();
       setMyInfo(myInfo);
-      setModalTitle("페널티 축소권 사용 완료");
+      setModalTitle("페널티 감면권 사용 완료");
       if (remainPenaltyPeriod <= usePenaltyItemDays) {
         setModalContent("남은 페널티 기간이 모두 소멸되었습니다");
       } else {
@@ -87,8 +87,8 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     try {
       const hasPenaltyItem = await tryGetPenaltyItem();
       if (hasPenaltyItem === false) {
-        setModalTitle("페널티 축소권이 없습니다");
-        setModalContent("페널티 축소권은 까비상점에서 구매하실 수 있습니다.");
+        setModalTitle("페널티 감면권이 없습니다");
+        setModalContent("페널티 감면권은 까비상점에서 구매하실 수 있습니다.");
       } else {
         await tryPenaltyItemUse(item, usePenaltyItemDays);
       }
@@ -109,7 +109,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     type: "hasProceedBtn",
     iconType: "CHECK",
     iconScaleEffect: false,
-    title: "페널티 축소권 사용 안내",
+    title: "페널티 감면권 사용 안내",
     proceedBtnText: "네, 사용할게요",
     cancelBtnText: "취소",
     closeModal: onClose,
@@ -145,9 +145,9 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
           <ModalDetailContentStyled>
             현재 남아있는 페널티 일수는 <strong>{remainPenaltyPeriod}</strong>{" "}
             입니다. <br />
-            선택한 페널티 축소권에 해당하는 일수만큼 <br />
+            선택한 페널티 감면권에 해당하는 일수만큼 <br />
             페널티가 감소합니다. <br />
-            페널티 축소권 사용은 취소할수 없습니다.
+            페널티 감면권 사용은 취소할수 없습니다.
           </ModalDetailContentStyled>
         </ModalDetailStyled>
       </>
@@ -198,6 +198,7 @@ const ModalDetailStyled = styled.div`
 
 const ModalDetailContentStyled = styled.div`
   line-height: 1.5;
+  font-size: 0.8rem;
 `;
 
 export default StoreBuyPenalty;

@@ -111,7 +111,6 @@ const MainPage = () => {
   };
 
   const openModal = () => {
-    console.log("openModal");
     setShowSectionAlertModal(true);
   };
 

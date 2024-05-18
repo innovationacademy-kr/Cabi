@@ -249,5 +249,5 @@ export const ItemTypeLabelMap = {
   [StoreItemType.EXTENSION]: "연장권",
   [StoreItemType.SWAP]: "이사권",
   [StoreItemType.ALERT]: "알림 등록권",
-  [StoreItemType.PENALTY]: "페널티 축소권",
+  [StoreItemType.PENALTY]: "페널티 감면권",
 };

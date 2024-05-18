@@ -32,10 +32,8 @@ const StoreInfo = () => {
   const tryCoinCheckGet = async () => {
     try {
       const res = await axiosCoinCheckGet();
-      console.log("오늘 코인 주음  ?", res.data.todayCoinCollection);
       setTodayCoinCollection(res.data.todayCoinCollection);
       setmonthlyCoinCount(res.data.monthlyCoinCount);
-      console.log("res Get", res);
     } catch (error: any) {
       throw error;
     }
