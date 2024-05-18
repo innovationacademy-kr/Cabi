@@ -9,10 +9,6 @@ import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
-// TODO : private
-// TODO : share
-// TODO: club
-// TODO : ExtensionIcon
 export enum additionalModalType {
   MODAL_RETURN = "MODAL_RETURN",
   MODAL_UNAVAILABLE_ALREADY_LENT = "MODAL_UNAVAILABLE_ALREADY_LENT",

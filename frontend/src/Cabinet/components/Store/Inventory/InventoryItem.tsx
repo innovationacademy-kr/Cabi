@@ -114,10 +114,9 @@ const ItemCardStyled = styled.div<{ hasTypes: boolean }>`
 const ItemIconStyled = styled.div`
   width: 32px;
   height: 32px;
-
-  & > svg {
-    height: 32px;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   & > svg > path {
     stroke: var(--sys-main-color);

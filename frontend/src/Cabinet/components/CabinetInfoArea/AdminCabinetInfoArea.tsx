@@ -235,6 +235,11 @@ const CabinetTypeIconStyled = styled.div`
   & path {
     stroke: var(--normal-text-color);
   }
+
+  & > svg {
+    width: 24px;
+    height: 24px;
+  }
 `;
 
 const LinkTextStyled = styled.div`

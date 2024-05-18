@@ -12,6 +12,8 @@ import { ReactComponent as Select } from "@/Cabinet/assets/images/selectMaincolo
 import { ReactComponent as UserCountIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/Cabinet/types/dto/club.dto";
 
+// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
+
 interface ClubMemberListProps {
   isLoading: boolean;
   clubUserCount: number;
@@ -151,6 +153,11 @@ const UserCountIconStyled = styled.div`
 
   & > svg > path {
     stroke: var(--normal-text-color);
+  }
+
+  & > svg {
+    width: 24px;
+    height: 24px;
   }
 `;
 

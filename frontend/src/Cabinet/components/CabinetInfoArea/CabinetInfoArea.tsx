@@ -307,6 +307,11 @@ const CabinetTypeIconStyled = styled.div`
   & path {
     stroke: var(--normal-text-color);
   }
+
+  & > svg {
+    width: 24px;
+    height: 24px;
+  }
 `;
 
 const TextStyled = styled.p<{ fontSize: string; fontColor: string }>`

@@ -156,6 +156,11 @@ const IconWrapperStyled = styled.div`
   & > svg > path {
     stroke: var(--normal-text-color);
   }
+
+  & > svg {
+    width: 18px;
+    height: 28px;
+  }
 `;
 
 export default SearchItemByNum;
