@@ -6,6 +6,7 @@ import {
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import StoreCoinCheckBox from "@/Cabinet/components/Store/StoreCoinCheckBox";
+import { ReactComponent as CloseIcon } from "@/Cabinet/assets/images/exitButton.svg";
 import { ReactComponent as StoreCoin } from "@/Cabinet/assets/images/storeCoin.svg";
 import {
   axiosCoinCheckGet,
@@ -19,6 +20,7 @@ const StoreInfo = () => {
   const { closeStore } = useMenu();
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
   const [monthlyCoinCount, setmonthlyCoinCount] = useState<number>(0);
   const [todayCoinCollection, setTodayCoinCollection] =
@@ -30,10 +32,11 @@ const StoreInfo = () => {
   const tryCoinCheckGet = async () => {
     try {
       const res = await axiosCoinCheckGet();
+      console.log("오늘 코인 주음  ?", res.data.todayCoinCollection);
       setTodayCoinCollection(res.data.todayCoinCollection);
       setmonthlyCoinCount(res.data.monthlyCoinCount);
-      // console.log("res Get", res);
-    } catch (error) {
+      console.log("res Get", res);
+    } catch (error: any) {
       throw error;
     }
   };
@@ -41,19 +44,24 @@ const StoreInfo = () => {
   const tryCoinCheckPost = async () => {
     setIsLoading(true);
     try {
-      // coin 줍기 axios
       if (todayCoinCollection === true) {
-        setHasErrorOnResponse(true);
+        throw { data: { message: "오늘은 동전을 이미 주웠습니다" } };
       } else {
         const res = await axiosCoinCheckPost();
-        console.log("coin 줍기 axios Post", res);
-        setModalContent(`${res.data.reward}까비를 획득했습니다.`);
+        setModalTitle("동전 줍기 성공");
+        setModalContent(
+          `<strong>${res.data.reward}까비</strong>를 획득했습니다.`
+        );
         setmonthlyCoinCount(monthlyCoinCount + 1);
         setTodayCoinCollection(false);
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        setModalTitle("동전 줍기 실패");
+      } else {
+        setModalTitle(error.data.message || error.response.data.message);
+      }
       setHasErrorOnResponse(true);
-      throw error;
     } finally {
       setShowResponseModal(true);
       setIsLoading(false);
@@ -68,7 +76,13 @@ const StoreInfo = () => {
 
   return (
     <WrapperStyled id="storeInfo">
-      <HeaderStyled>동전줍기</HeaderStyled>
+      <HeaderStyled>
+        동전 줍기
+        <CloseIcon
+          onClick={closeStore}
+          style={{ width: "24px", cursor: "pointer", marginLeft: "auto" }}
+        />
+      </HeaderStyled>
       <StoreCoin />
       <StoreCoinCheckBox monthlyCoinCount={monthlyCoinCount} />
 
@@ -88,7 +102,7 @@ const StoreInfo = () => {
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
-            modalTitle="동전 획득에 실패했습니다."
+            modalTitle={modalTitle}
             closeModal={() => {
               setShowResponseModal(false);
               setHasErrorOnResponse(false);
@@ -96,7 +110,7 @@ const StoreInfo = () => {
           />
         ) : (
           <SuccessResponseModal
-            modalTitle="동전을 획득했습니다."
+            modalTitle={modalTitle}
             modalContents={modalContent}
             closeModal={() => setShowResponseModal(false)}
           />
@@ -128,16 +142,19 @@ const WrapperStyled = styled.div`
 
 const HeaderStyled = styled.div`
   display: flex;
-  justify-content: center;
   width: 100%;
   align-items: center;
   color: black;
   font-weight: bold;
   font-size: 1.5rem;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 `;
 
 const ButtonContainerStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   max-height: 140px;
 `;

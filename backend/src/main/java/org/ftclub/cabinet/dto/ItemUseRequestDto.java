@@ -3,13 +3,18 @@ package org.ftclub.cabinet.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.item.domain.ValidItemUse;
+
+
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
+@ValidItemUse
 public class ItemUseRequestDto {
 
 	private Long newCabinetId; // 이사권 사용 시
 
-	// 알림권 사용시 사물함 구역 정보
 	private String building;
 	private Integer floor;
 	private String section;

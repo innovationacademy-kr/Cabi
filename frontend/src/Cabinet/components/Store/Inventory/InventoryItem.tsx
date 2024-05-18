@@ -34,6 +34,11 @@ const convertToItemType = (itemType: string) => {
   }
 };
 
+const extractNumber = (str: string) => {
+  const result = str.match(/\d+/g);
+  return result ? parseInt(result.join(""), 10) : 0;
+};
+
 const InventoryItem = ({
   itemType,
   items,
@@ -48,6 +53,10 @@ const InventoryItem = ({
     setIsToggled((prev) => !prev);
   };
 
+  const sortedItems = items.sort((a, b) => {
+    return extractNumber(a.itemDetails) - extractNumber(b.itemDetails);
+  });
+
   return (
     <>
       <ItemWrapperStyled>
@@ -58,9 +67,9 @@ const InventoryItem = ({
           </button>
         </ItemTitleStyled>
         <ItemCardSectionStyled isToggled={isToggled}>
-          {items.length ? (
+          {sortedItems.length ? (
             <>
-              {items.map((item, idx) => {
+              {sortedItems.map((item, idx) => {
                 const hasTypes =
                   item.itemDetails !== convertToItemTypeLabel(itemType);
                 return (
@@ -100,7 +109,6 @@ const ItemCardStyled = styled.div<{ hasTypes: boolean }>`
   padding: 16px 0;
   justify-content: ${(props) => (props.hasTypes ? "space-between" : "")};
   border: 1.5px solid var(--capsule-btn-border-color);
-  margin: 10px 20px 10px 0;
 `;
 
 const ItemIconStyled = styled.div`
@@ -141,8 +149,7 @@ const ItemTitleStyled = styled.div<{ isToggled: boolean }>`
   padding-left: 5px;
   padding-right: 5px;
   border-bottom: 1.5px solid var(--inventory-item-title-border-btm-color);
-  margin-bottom: 10px;
-  margin-top: 50px;
+  margin: 50px 0 14px;
   cursor: pointer;
 
   & > button {
@@ -167,6 +174,7 @@ const ItemCardSectionStyled = styled.div<{ isToggled: boolean }>`
   display: ${(props) => (props.isToggled ? "none" : "flex")};
   transition: all 0.3s ease-in-out;
   flex-wrap: wrap;
+  gap: 20px;
 `;
 
 const UnavailableItemMsgStyled = styled.div<{ isToggled: boolean }>`
@@ -203,7 +211,10 @@ const UnavailableIconStyled = styled.div`
 
 const ItemWrapperStyled = styled.div`
   width: 70%;
-  /* margin-top: 30px; */
+
+  @media (max-width: 1040px) {
+    width: 80%;
+  }
 `;
 
 export default InventoryItem;

@@ -60,7 +60,7 @@ const ItemUsageLogPage = () => {
 
   return itemUsageLogs.length > 0 ? (
     <WrapperStyled>
-      <TitleWrapperStyled>아이템 사용 내역</TitleWrapperStyled>
+      <TitleWrapperStyled>아이템 사용내역</TitleWrapperStyled>
       <ItemUsageLogWrapperStyled>
         {itemUsageLogs.map((log, idx, logs) => {
           const isNewMonth = idx === 0 || log.dateStr !== logs[idx - 1].dateStr;
@@ -92,7 +92,7 @@ const ItemUsageLogPage = () => {
   ) : (
     <EmptyWrapperStyled>
       <EmptyItemUsageLogTextStyled>
-        아이템 사용 내역이 없습니다.
+        아이템 사용내역이 없습니다.
         <SadCabiIcon />
       </EmptyItemUsageLogTextStyled>
     </EmptyWrapperStyled>
@@ -110,13 +110,17 @@ const TitleWrapperStyled = styled.div`
   font-size: 32px;
   width: 80%;
   font-weight: 700;
-  margin: 20px 0 16px;
+  margin: 20px 0;
   display: flex;
   justify-content: center;
 `;
 
 const ItemUsageLogWrapperStyled = styled.div`
-  width: 80%;
+  width: 70%;
+
+  @media (max-width: 1040px) {
+    width: 80%;
+  }
 `;
 
 const LogItemStyled = styled.div`

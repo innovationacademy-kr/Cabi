@@ -24,11 +24,7 @@ const LeftStoreNav = ({
 }) => {
   const [currentPage, SetCurrentPage] = useState(storePages[0].name);
   const [userInfo] = useRecoilState(userState);
-  // const setUser = useSetRecoilState<UserDto>(userState);
 
-  // useEffect(() => {
-
-  // }, []);
   return (
     <>
       <StoreLeftNavOptionStyled>

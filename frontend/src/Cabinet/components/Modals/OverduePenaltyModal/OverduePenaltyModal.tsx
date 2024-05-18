@@ -16,20 +16,22 @@ const OverduePenaltyModal: React.FC<{
 }> = (props) => {
   const unbannedAtDate = props.unbannedAt ? new Date(props.unbannedAt) : null;
   const hasPenaltyItem = props.hasPenaltyItem;
+  // console.log("unbannedAtDate", unbannedAtDate);
 
   const penaltyDateDetailStore = hasPenaltyItem
     ? `패널티 기간은 <strong>${formatDate(
         unbannedAtDate,
         "/"
-      )} 23:59</strong> 까지 입니다.해당 기간까지 대여를 하실 수 없습니다.
+      )} 23:59</strong> 까지 입니다. 
+      해당 기간까지 대여를 하실 수 없습니다.
       <strong>패널티 축소권</strong>은 <strong>프로필 페이지 - 대여정보</strong> 에서
       사용하실 수 있습니다`
     : `패널티 기간은 <strong>${formatDate(
         unbannedAtDate,
         "/"
       )} 23:59</strong> 까지 입니다.
-       해당 기간까지 대여를 하실 수 없습니다.
-       <strong>패널티 축소권</strong>은 <strong>까비 상점</strong> 에서 구매하실 수 있습니다`;
+      해당 기간까지 대여를 하실 수 없습니다.
+      <strong>패널티 축소권</strong>은 <strong>까비 상점</strong> 에서 구매하실수 있습니다`;
   const localStorageKey = "hideOverdueModalForOneDay";
 
   const showModal = (): React.ReactNode => {
@@ -68,7 +70,7 @@ const OverduePenaltyModal: React.FC<{
     closeModal: props.closeModal,
     iconType: IconType.ERRORICON,
     urlTitle: hasPenaltyItem ? "프로필로 이동" : "까비상점으로 이동 ",
-    url: hasPenaltyItem ? "/profile" : "/store",
+    url: hasPenaltyItem ? "profile" : "store",
   };
 
   return (

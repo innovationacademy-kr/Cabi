@@ -110,6 +110,7 @@ export const getReduceDateString = (
 ) => {
   if (!existExpireDate || dateToExtend === undefined) return;
   let expireDate = new Date(existExpireDate);
+  console.log("expireDate", expireDate);
   expireDate.setDate(expireDate.getDate() - dateToExtend);
   return formatDate(expireDate, "/");
 };
@@ -136,5 +137,6 @@ export const calExpiredTime = (expireTime: Date) =>
 export const getRemainingTime = (expireTime: Date | undefined | null) => {
   if (!expireTime) return 0;
   const remainTime = calExpiredTime(new Date(expireTime));
+  console.log("remainTime", remainTime);
   return remainTime < 0 ? -remainTime : remainTime;
 };
