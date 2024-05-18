@@ -34,6 +34,9 @@ export default StoreCoinCheckBox;
 const CoinCheckOffStyled = styled.div`
   position: relative;
   // cursor: pointer;
+  & > svg > circle {
+    fill: var(--white-text-with-bg-color);
+  }
 `;
 
 const CoinCheckOffImgStyled = styled.div`
