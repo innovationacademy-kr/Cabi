@@ -4,11 +4,10 @@ import { ReactComponent as HappyCcabiImg } from "@/Cabinet/assets/images/happyCc
 import { ReactComponent as MapImg } from "@/Cabinet/assets/images/map.svg";
 import { ReactComponent as MyCabinetIcon } from "@/Cabinet/assets/images/myCabinetIcon.svg";
 import { ReactComponent as SearchImg } from "@/Cabinet/assets/images/searchWhite.svg";
-import { ReactComponent as StoreImg } from "@/Cabinet/assets/images/storeCoinNav.svg";
+import { ReactComponent as MyCoinImg } from "@/Cabinet/assets/images/storeCoinNav.svg";
 
 interface ITopNavButton {
   onClick: React.MouseEventHandler<HTMLDivElement>;
-  // imgSrc: string;
   type: string;
   disable?: boolean;
   width?: string;
@@ -24,7 +23,7 @@ const TopNavButton = (props: ITopNavButton) => {
       onClick={props.onClick}
       disable={props.disable}
     >
-      {props.type === "store" && <StoreImg />}
+      {props.type === "myCoin" && <MyCoinImg />}
       {props.type === "happyCcabi" && <HappyCcabiImg />}
       {props.type === "search" && <SearchImg />}
       {props.type === "myCabinetIcon" && <MyCabinetIcon />}
