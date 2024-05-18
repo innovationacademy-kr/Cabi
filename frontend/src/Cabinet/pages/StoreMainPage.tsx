@@ -66,7 +66,7 @@ const StoreMainPage = () => {
               label: "구매하기",
               onClick: checkMyCoin(item) ? () => buttonClick(item) : () => {},
               isClickable: checkMyCoin(item),
-              color: checkMyCoin(item)
+              fontColor: checkMyCoin(item)
                 ? "var(--sys-main-color)"
                 : "var(--gray-color)",
             }}

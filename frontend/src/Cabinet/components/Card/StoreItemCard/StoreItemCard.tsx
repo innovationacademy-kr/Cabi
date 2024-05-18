@@ -98,7 +98,7 @@ const IconBlockStyled = styled.div`
 const PriseBlockStyled = styled.div`
   width: 53px;
   height: 22px;
-  background-color: var(--white);
+  background-color: var(--card-content-bg-color);
   border-radius: 5px;
   font-size: 12px;
   color: var(--sys-main-color);
@@ -123,7 +123,7 @@ const PriseBlockStyled = styled.div`
 const ItemDetailStyled = styled.div`
   width: 100%;
   height: 100%;
-  background-color: var(--white);
+  background-color: var(--card-content-bg-color);
   font-size: var(--size-base);
   word-wrap: normal;
   padding: 10px 16px;
