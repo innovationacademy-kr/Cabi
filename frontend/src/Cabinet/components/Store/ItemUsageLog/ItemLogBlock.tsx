@@ -46,7 +46,7 @@ const ItemUsageLogStyled = styled.div`
   margin-top: 10px;
   border-radius: 10px;
   height: 90px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--inventory-item-title-border-btm-color);
   display: flex;
   align-items: center;
 `;
@@ -77,7 +77,7 @@ const ItemUsageInfoStyled = styled.div`
 const ItemDateStyled = styled.div`
   font-size: 16px;
   word-spacing: -2px;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 `;
 
 const ItemTitleStyled = styled.div`
