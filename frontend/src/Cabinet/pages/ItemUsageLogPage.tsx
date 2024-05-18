@@ -185,12 +185,16 @@ const EmptyItemUsageLogTextStyled = styled.div`
   align-items: center;
   font-size: 1.125rem;
   line-height: 1.75rem;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 
   & > svg {
     width: 30px;
     height: 30px;
     margin-left: 10px;
+  }
+
+  & > svg > path {
+    fill: var(--normal-text-color);
   }
 `;
 

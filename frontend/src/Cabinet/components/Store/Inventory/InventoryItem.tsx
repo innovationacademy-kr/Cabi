@@ -183,7 +183,7 @@ const UnavailableItemMsgStyled = styled.div<{ isToggled: boolean }>`
   flex-wrap: wrap;
 
   & > p {
-    color: var(--gray-color);
+    color: var(--gray-line-btn-color);
     line-height: 1.5;
     word-break: keep-all;
     margin-left: 10px;
