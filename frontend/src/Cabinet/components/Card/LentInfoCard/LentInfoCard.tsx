@@ -104,7 +104,7 @@ const LentInfoCard = ({
             </CardContentStyled>
             <CardContentStyled>
               <ContentInfoStyled>
-                {!!unbannedAt ? "패널티 종료 일자" : "종료 일자"}
+                {!!unbannedAt ? "페널티 종료 일자" : "종료 일자"}
               </ContentInfoStyled>
               <ContentDetailStyled>
                 {!!unbannedAt

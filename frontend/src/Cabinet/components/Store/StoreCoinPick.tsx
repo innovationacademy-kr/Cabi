@@ -28,7 +28,7 @@ const StoreCoinPick = () => {
 };
 
 const CoinSummary = styled.div`
-  background-color: var(--white);
+  background-color: var(--card-content-bg-color);
   font-size: var(--size-base);
   word-wrap: normal;
   width: 90%;

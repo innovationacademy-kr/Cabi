@@ -1,24 +1,24 @@
-import {
-  axiosDeleteCurrentBanLog,
-  axiosGetBannedUserList,
-} from "@/Cabinet/api/axios/axios.custom";
-import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
-import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
-import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import React, { useState } from "react";
+import { useSetRecoilState } from "recoil";
 import {
   bannedUserListState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
   targetUserInfoState,
 } from "@/Cabinet/recoil/atoms";
+import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import {
+  axiosDeleteCurrentBanLog,
+  axiosGetBannedUserList,
+} from "@/Cabinet/api/axios/axios.custom";
 import { handleBannedUserList } from "@/Cabinet/utils/tableUtils";
-import React, { useState } from "react";
-import { useSetRecoilState } from "recoil";
 
 const BanModal: React.FC<{
   userId: number | null;
@@ -40,7 +40,7 @@ const BanModal: React.FC<{
   해제하시겠습니까?`;
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
-      // 패널티 해제 API 호출
+      // 페널티 해제 API 호출
       await axiosDeleteCurrentBanLog(props.userId);
       setIsCurrentSectionRender(true);
       setModalTitle("해제되었습니다");

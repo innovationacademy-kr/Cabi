@@ -12,5 +12,5 @@ public class ItemDetailsDto {
 
 	private Sku itemSku;
 	private Integer itemPrice;
-	private String itemDetails; // 연장권 종류 - 3, 15, 31일, 패널티 종류 - 3, 7, 31일
+	private String itemDetails; // 연장권 종류 - 3, 15, 31일, 페널티 종류 - 3, 7, 31일
 }

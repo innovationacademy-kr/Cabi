@@ -106,10 +106,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
           disable={true}
         />
       )}
-      <TopNavButton
-        onClick={toggleStore}
-        imgSrc="/src/Cabinet/assets/images/storeCoinNav.svg"
-      />
+      <TopNavButton id="sotreButton" onClick={toggleStore} type="store" />
       {!isAdmin && !!myInfo.cabinetId && (
         <TopNavButton
           disable={!myInfo.cabinetId}

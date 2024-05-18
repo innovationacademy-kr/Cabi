@@ -19,19 +19,19 @@ const OverduePenaltyModal: React.FC<{
   // console.log("unbannedAtDate", unbannedAtDate);
 
   const penaltyDateDetailStore = hasPenaltyItem
-    ? `패널티 기간은 <strong>${formatDate(
+    ? `페널티 기간은 <strong>${formatDate(
         unbannedAtDate,
         "/"
       )} 23:59</strong> 까지 입니다. 
       해당 기간까지 대여를 하실 수 없습니다.
-      <strong>패널티 축소권</strong>은 <strong>프로필 페이지 - 대여정보</strong> 에서
+      <strong>페널티 축소권</strong>은 <strong>프로필 페이지 - 대여정보</strong> 에서
       사용하실 수 있습니다`
-    : `패널티 기간은 <strong>${formatDate(
+    : `페널티 기간은 <strong>${formatDate(
         unbannedAtDate,
         "/"
       )} 23:59</strong> 까지 입니다.
       해당 기간까지 대여를 하실 수 없습니다.
-      <strong>패널티 축소권</strong>은 <strong>까비 상점</strong> 에서 구매하실수 있습니다`;
+      <strong>페널티 축소권</strong>은 <strong>까비 상점</strong> 에서 구매하실수 있습니다`;
   const localStorageKey = "hideOverdueModalForOneDay";
 
   const showModal = (): React.ReactNode => {

@@ -222,7 +222,7 @@ public class ItemFacadeService {
 	 * @return
 	 */
 	private ItemUsage getItemUsage(Long userId, Item item, ItemUseRequestDto data) {
-		// 연장권, 이사권, 패널티
+		// 연장권, 이사권, 페널티
 		if (item.getType().equals(ItemType.SWAP)) {
 			return new SwapItem(userId, data.getNewCabinetId());
 		}

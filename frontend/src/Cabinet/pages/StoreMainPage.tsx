@@ -22,7 +22,7 @@ const StoreMainPage = () => {
   };
 
   const sortedItems = items.sort((a, b) => {
-    const order = ["연장권", "이사권", "알림 등록권", "패널티 감면권"];
+    const order = ["연장권", "이사권", "알림 등록권", "페널티 감면권"];
     const indexA = order.indexOf(a.itemName);
     const indexB = order.indexOf(b.itemName);
     return indexA - indexB;

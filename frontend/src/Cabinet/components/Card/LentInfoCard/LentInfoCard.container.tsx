@@ -109,7 +109,7 @@ const LentInfoCardContainer = ({
 
   const onCLickPenaltyButton = () => {
     setIsModalOpen(true);
-    console.log("패널티 축소 버튼 클릭");
+    console.log("페널티 축소 버튼 클릭");
   };
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -135,7 +135,7 @@ const LentInfoCardContainer = ({
       button={
         isPenaltyUser
           ? {
-              label: "패널티 축소",
+              label: "페널티 축소",
               onClick: onCLickPenaltyButton,
               isClickable: true,
             }

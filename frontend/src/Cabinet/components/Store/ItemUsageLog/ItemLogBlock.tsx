@@ -10,7 +10,7 @@ export function mapItemNameToType(itemName: string): StoreItemType {
       return StoreItemType.SWAP;
     case "알림 등록권":
       return StoreItemType.ALERT;
-    case "패널티 감면권":
+    case "페널티 감면권":
       return StoreItemType.PENALTY;
     default:
       return StoreItemType.EXTENSION;

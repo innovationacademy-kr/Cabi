@@ -63,9 +63,9 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
       await axiosUseItem(item, null, null, null, null);
       const { data: myInfo } = await axiosMyInfo();
       setMyInfo(myInfo);
-      setModalTitle("패널티 축소권 사용 완료");
+      setModalTitle("페널티 축소권 사용 완료");
       if (remainPenaltyPeriod <= usePenaltyItemDays) {
-        setModalContent("남은 패널티 기간이 모두 소멸되었습니다");
+        setModalContent("남은 페널티 기간이 모두 소멸되었습니다");
       } else {
         setModalContent(
           `해제 날짜 : <strong> ${getReduceDateString(
@@ -87,8 +87,8 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     try {
       const hasPenaltyItem = await tryGetPenaltyItem();
       if (hasPenaltyItem === false) {
-        setModalTitle("패널티 축소권이 없습니다");
-        setModalContent("패널티 축소권은 까비상점에서 구매하실 수 있습니다.");
+        setModalTitle("페널티 축소권이 없습니다");
+        setModalContent("페널티 축소권은 까비상점에서 구매하실 수 있습니다.");
       } else {
         await tryPenaltyItemUse(item, usePenaltyItemDays);
       }
@@ -109,7 +109,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     type: "hasProceedBtn",
     iconType: "CHECK",
     iconScaleEffect: false,
-    title: "패널티 축소권 사용 안내",
+    title: "페널티 축소권 사용 안내",
     proceedBtnText: "네, 사용할게요",
     cancelBtnText: "취소",
     closeModal: onClose,
@@ -120,7 +120,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     renderAdditionalComponent: () => (
       <>
         <ModalContainerStyled>
-          <ModalDropdownNameStyled>패널티권 타입</ModalDropdownNameStyled>
+          <ModalDropdownNameStyled>페널티권 타입</ModalDropdownNameStyled>
           <Dropdown
             options={[
               {
@@ -143,11 +143,11 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
 
         <ModalDetailStyled>
           <ModalDetailContentStyled>
-            현재 남아있는 패널티 일수는 <strong>{remainPenaltyPeriod}</strong>{" "}
+            현재 남아있는 페널티 일수는 <strong>{remainPenaltyPeriod}</strong>{" "}
             입니다. <br />
-            선택한 패널티 축소권에 해당하는 일수만큼 <br />
-            패널티가 감소합니다. <br />
-            패널티 축소권 사용은 취소할수 없습니다.
+            선택한 페널티 축소권에 해당하는 일수만큼 <br />
+            페널티가 감소합니다. <br />
+            페널티 축소권 사용은 취소할수 없습니다.
           </ModalDetailContentStyled>
         </ModalDetailStyled>
       </>

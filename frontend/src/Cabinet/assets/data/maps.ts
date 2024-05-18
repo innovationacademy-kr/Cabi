@@ -146,7 +146,7 @@ export const modalPropsMap = {
   },
   MODAL_OVERDUE_PENALTY: {
     type: "error",
-    title: "패널티 안내",
+    title: "페널티 안내",
     confirmMessage: "오늘 하루동안 보지않기",
   },
   MODAL_INVITATION_CODE: {
@@ -249,5 +249,5 @@ export const ItemTypeLabelMap = {
   [StoreItemType.EXTENSION]: "연장권",
   [StoreItemType.SWAP]: "이사권",
   [StoreItemType.ALERT]: "알림 등록권",
-  [StoreItemType.PENALTY]: "패널티 축소권",
+  [StoreItemType.PENALTY]: "페널티 축소권",
 };
