@@ -8,7 +8,6 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
 import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
-import ExtensionCardContainer from "@/Cabinet/components/Card/ExtensionCard/ExtensionCard.container";
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
 import NotificationCardContainer from "@/Cabinet/components/Card/NotificationCard/NotificationCard.container";
 import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileCard.container";
@@ -52,9 +51,6 @@ const ProfilePage = () => {
       ) : (
         <CardGridWrapper>
           <ProfileCardContainer name={myInfo.name} />
-          <ExtensionCardContainer
-            extensionInfo={myInfo.lentExtensionResponseDto}
-          />
           <LentInfoCardContainer
             name={myInfo.name}
             unbannedAt={myInfo.unbannedAt}
@@ -78,7 +74,7 @@ const CardGridWrapper = styled.div`
   grid-template-rows: 163px 183px 348px;
   grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "extension lentInfo" // h: 183px
-    "notification theme"; // h: 230px h: 230px;
+    "theme notification "; // h: 230px h: 230px;
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
