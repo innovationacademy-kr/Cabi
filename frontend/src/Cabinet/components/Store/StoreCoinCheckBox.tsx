@@ -13,7 +13,9 @@ const StoreCoinCheckBox = ({
       {Array.from({ length: 20 }, (_, index) => (
         <CoinCheckOffStyled key={index}>
           {index < monthlyCoinCount && index !== 19 ? (
-            <CoinCheckOnImg />
+            <CoinCheckColorContainer>
+              <CoinCheckOnImg />
+            </CoinCheckColorContainer>
           ) : index === 19 && monthlyCoinCount === 20 ? (
             <CoinCheckOnFinImg />
           ) : (
@@ -30,6 +32,12 @@ const StoreCoinCheckBox = ({
 
 export default StoreCoinCheckBox;
 
+const CoinCheckColorContainer = styled.div`
+  & > svg > circle {
+    stroke: var(--sys-main-color);
+  }
+`;
+
 const CoinCheckOffStyled = styled.div`
   position: relative;
   // cursor: pointer;
@@ -39,6 +47,9 @@ const CoinCheckOffStyled = styled.div`
 `;
 
 const CoinCheckOffImgStyled = styled.div`
+  & > svg > circle {
+    stroke: var(--sys-main-color);
+  }
   position: relative;
 `;
 

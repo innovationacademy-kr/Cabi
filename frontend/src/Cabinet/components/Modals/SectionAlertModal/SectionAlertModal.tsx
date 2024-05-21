@@ -30,7 +30,7 @@ const SectionAlertModal = ({
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-  const sectionAlertDetail = `알림등록권을 사용해 
+  const sectionAlertDetail = `
   <strong>${currentSectionName}</strong>에 알림을 등록합니다.
   이 섹션에서 <strong>개인 사물함</strong>이 반납되면
   <strong>프로필 - 내 정보</strong>에 설정된 경로로

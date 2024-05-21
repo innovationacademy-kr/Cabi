@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useLocation } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
 import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
-import { UserDto } from "@/Cabinet/types/dto/user.dto";
 
 interface IStorePageItem {
   name: string;
@@ -11,10 +11,10 @@ interface IStorePageItem {
 }
 
 const storePages: IStorePageItem[] = [
-  { name: "까비상점", route: "store" },
-  { name: "인벤토리", route: "store/inventory" },
-  { name: "아이템 사용내역", route: "store/item-use-log" },
-  { name: "코인 내역", route: "store/coin-log" },
+  { name: "까비상점", route: "/store" },
+  { name: "인벤토리", route: "/store/inventory" },
+  { name: "아이템 사용내역", route: "/store/item-use-log" },
+  { name: "코인 내역", route: "/store/coin-log" },
 ];
 
 const LeftStoreNav = ({
@@ -22,8 +22,30 @@ const LeftStoreNav = ({
 }: {
   onClickRedirectButton: (location: string) => void;
 }) => {
-  const [currentPage, SetCurrentPage] = useState(storePages[0].name);
+  const location = useLocation();
   const [userInfo] = useRecoilState(userState);
+
+  const getCurrentPageName = () => {
+    const matchingPage = storePages.find(
+      (page) => page.route === location.pathname
+    );
+    return matchingPage ? matchingPage.name : storePages[0].name;
+  };
+
+  const [currentPage, setCurrentPage] = useState(getCurrentPageName());
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setCurrentPage(getCurrentPageName());
+    };
+
+    handleRouteChange();
+    window.addEventListener("popstate", handleRouteChange);
+
+    return () => {
+      window.removeEventListener("popstate", handleRouteChange);
+    };
+  }, [location]);
 
   return (
     <>
@@ -49,7 +71,7 @@ const LeftStoreNav = ({
                 : "cabiButton"
             }
             onClick={() => {
-              SetCurrentPage(item.name);
+              setCurrentPage(item.name);
               onClickRedirectButton(item.route);
             }}
           >
@@ -109,18 +131,19 @@ const StoreSectionStyled = styled.div`
   color: var(--gray-line-btn-color);
   margin: 2px 0;
   cursor: pointer;
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      background-color: var(--sys-main-color);
-      color: var(--white-text-with-bg-color);
-    }
+  &.leftNavButtonActive {
+    background-color: var(--sys-main-color);
+    color: var(--white-text-with-bg-color);
+  }
+  &:hover {
+    background-color: var(--sys-main-color);
+    color: var(--white-text-with-bg-color);
   }
 `;
 
 const CoinIconStyled = styled.div`
   width: 20px;
   height: 20px;
-
   & > svg > path {
     stroke: var(--sys-main-color);
   }
