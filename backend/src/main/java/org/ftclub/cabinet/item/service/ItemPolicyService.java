@@ -53,15 +53,15 @@ public class ItemPolicyService {
 		return monthlyCoinCount.equals(REWARD_COUNT);
 	}
 
-	public int getReward(int randomPercentage) {
+	public Sku getRewardSku(int randomPercentage) {
 		if (randomPercentage < 50) {
-			return 200;
+			return Sku.COIN_REWARD_200;
 		} else if (randomPercentage < 80) {
-			return 500;
+			return Sku.COIN_REWARD_500;
 		} else if (randomPercentage < 95) {
-			return 1000;
+			return Sku.COIN_REWARD_1000;
 		} else {
-			return 2000;
+			return Sku.COIN_REWARD_2000;
 		}
 	}
 }

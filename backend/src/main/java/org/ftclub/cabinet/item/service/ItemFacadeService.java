@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.domain.AlarmItem;
@@ -56,7 +57,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Logging(level = LogLevel.DEBUG)
 public class ItemFacadeService {
 
-	private static final int DAILY_REWARD = 10;
 	private final ItemQueryService itemQueryService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
 	private final ItemHistoryCommandService itemHistoryCommandService;
@@ -67,6 +67,8 @@ public class ItemFacadeService {
 	private final ItemMapper itemMapper;
 	private final ItemPolicyService itemPolicyService;
 	private final ApplicationEventPublisher eventPublisher;
+
+	private final ConcurrentHashMap<Long, Object> coinLockMap = new ConcurrentHashMap<>();
 
 	/**
 	 * 모든 아이템 리스트 반환
@@ -170,23 +172,36 @@ public class ItemFacadeService {
 	@Transactional(readOnly = true)
 	public CoinCollectionRewardResponseDto collectCoinAndIssueReward(Long userId) {
 
-		// 코인 줍기 횟수 (당일, 한 달) 갱신
-		boolean isChecked = itemRedisService.isCoinCollected(userId);
-		itemPolicyService.verifyIsAlreadyCollectedCoin(isChecked);
-		itemRedisService.collectCoin(userId);
+		Object coinCollectLock = coinLockMap.computeIfAbsent(userId, k -> new Object());
+		int reward;
+		synchronized (coinCollectLock) {
+			// 코인 줍기 횟수 (당일, 한 달) 갱신
+			boolean isChecked = itemRedisService.isCoinCollected(userId);
+			itemPolicyService.verifyIsAlreadyCollectedCoin(isChecked);
+			itemRedisService.collectCoin(userId);
 
-		// 출석 일자에 따른 랜덤 리워드 지급
-		Long coinCollectionCountInMonth = itemRedisService.getCoinCollectionCountInMonth(userId);
-		int reward = DAILY_REWARD;
-		if (itemPolicyService.isRewardable(coinCollectionCountInMonth)) {
-			Random random = new Random();
-			int randomPercentage = random.nextInt(100);
-			reward += itemPolicyService.getReward(randomPercentage);
+			// DB에 코인 저장
+			reward = Sku.COIN_COLLECT.getCoinReward();
+			Item coinCollect = itemQueryService.getBySku(Sku.COIN_COLLECT);
+			itemHistoryCommandService.purchaseItem(userId, coinCollect.getId());
+
+			// 출석 일자에 따른 랜덤 리워드 지급
+			Long coinCollectionCountInMonth =
+					itemRedisService.getCoinCollectionCountInMonth(userId);
+			if (itemPolicyService.isRewardable(coinCollectionCountInMonth)) {
+				Random random = new Random();
+				int randomPercentage = random.nextInt(100);
+				Sku coinSku = itemPolicyService.getRewardSku(randomPercentage);
+				Item coinReward = itemQueryService.getBySku(coinSku);
+				itemHistoryCommandService.purchaseItem(userId, coinReward.getId());
+				reward += coinSku.getCoinReward();
+			}
+
+			// Redis에 리워드 저장
+			long coins = itemRedisService.getCoinCount(userId);
+			itemRedisService.saveCoinCount(userId, coins + reward);
 		}
-
-		// Redis에 리워드 저장
-		long coins = itemRedisService.getCoinCount(userId);
-		itemRedisService.saveCoinCount(userId, coins + reward);
+		coinLockMap.remove(userId);
 		return new CoinCollectionRewardResponseDto(reward);
 	}
 
