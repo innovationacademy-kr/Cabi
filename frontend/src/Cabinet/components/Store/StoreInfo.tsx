@@ -51,7 +51,7 @@ const StoreInfo = () => {
           `<strong>${res.data.reward}까비</strong>를 획득했습니다.`
         );
         setmonthlyCoinCount(monthlyCoinCount + 1);
-        setTodayCoinCollection(false);
+        setTodayCoinCollection(true);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
@@ -60,15 +60,16 @@ const StoreInfo = () => {
         setModalTitle(error.data.message || error.response.data.message);
       }
       setHasErrorOnResponse(true);
+      setIsLoading(false);
     } finally {
       setShowResponseModal(true);
-      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     // 날개 열때마다 get요청 안함 -> 처음 랜더링 될때 한번에 다 불러옴
     // 그리고 post되서 성공될때마다 get요청해서 정보 최신화 시키기
+    if (todayCoinCollection === true) setIsLoading(true);
     tryCoinCheckGet();
   }, [todayCoinCollection]);
 
@@ -81,7 +82,9 @@ const StoreInfo = () => {
           style={{ width: "24px", cursor: "pointer", marginLeft: "auto" }}
         />
       </HeaderStyled>
-      <StoreCoin />
+      <StoreIconContainer>
+        <StoreCoin />
+      </StoreIconContainer>
       <StoreCoinCheckBox monthlyCoinCount={monthlyCoinCount} />
 
       <ButtonContainerStyled>
@@ -158,3 +161,6 @@ const ButtonContainerStyled = styled.div`
   width: 100%;
   max-height: 140px;
 `;
+
+// 확대시 꺠짐 방지 div
+const StoreIconContainer = styled.div``;
