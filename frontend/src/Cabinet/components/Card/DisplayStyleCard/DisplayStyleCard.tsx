@@ -1,115 +1,44 @@
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import { CardContentWrapper } from "@/Cabinet/components/Card/CardStyles";
-import ColorTheme from "@/Cabinet/components/Card/DisplayStyleCard/ColorTheme/ColorTheme";
-import PointColor from "@/Cabinet/components/Card/DisplayStyleCard/PointColor/PointColor";
-import { ColorThemeToggleType } from "@/Cabinet/types/enum/colorTheme.type.enum";
+import DisplayStyle from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyle";
+import { DisplayStyleToggleType } from "@/Cabinet/types/enum/displayStyle.type.enum";
 
 interface DisplayStyleProps {
-  showColorPicker: boolean;
-  handlePointColorChange: (mainColor: { hex: string }, type: string) => void;
-  handleReset: () => void;
-  handleSave: () => void;
-  handleCancel: () => void;
-  mainColor: string;
-  subColor: string;
-  mineColor: string;
-  handlePointColorButtonClick: (colorType: string) => void;
-  selectedColorType: string;
-  colorThemeToggle: ColorThemeToggleType;
-  handleColorThemeButtonClick: (colorThemeToggleType: string) => void;
+  displayStyleToggle: DisplayStyleToggleType;
+  handleDisplayStyleButtonClick: (DisplayStyleToggleType: string) => void;
 }
 
 const DisplayStyleCard = ({
-  showColorPicker,
-  handlePointColorChange,
-  handleReset,
-  handleSave,
-  handleCancel,
-  mainColor,
-  subColor,
-  mineColor,
-  handlePointColorButtonClick,
-  selectedColorType,
-  colorThemeToggle,
-  handleColorThemeButtonClick,
+  displayStyleToggle,
+  handleDisplayStyleButtonClick,
 }: DisplayStyleProps) => {
   return (
     <>
-      {showColorPicker && <BackgroundOverlayStyled />}
-      <ThemeColorCardWrapper>
+      <DisplayStyleCardWrapper>
         <Card
           title={"화면 스타일"}
-          gridArea={"theme"}
+          gridArea={"displayStyle"}
           width={"350px"}
-          height={showColorPicker ? "448px" : "348px"}
-          buttons={
-            showColorPicker
-              ? [
-                  {
-                    label: "저장",
-                    onClick: handleSave,
-                    fontColor: "var(--white-text-with-bg-color)",
-                    backgroundColor: "var(--sys-main-color)",
-                    isClickable: true,
-                  },
-                  {
-                    label: "취소",
-                    onClick: handleCancel,
-                    isClickable: true,
-                  },
-                ]
-              : [
-                  {
-                    label: "초기화",
-                    onClick: handleReset,
-                    isClickable: true,
-                  },
-                ]
-          }
+          height={"183px"}
         >
           <>
             <CardContentWrapper>
-              <ColorTheme
-                colorThemeToggle={colorThemeToggle}
-                handleColorThemeButtonClick={handleColorThemeButtonClick}
-              />
-            </CardContentWrapper>
-            <CardContentWrapper>
-              <PointColor
-                showColorPicker={showColorPicker}
-                handleChange={handlePointColorChange}
-                mainColor={mainColor}
-                subColor={subColor}
-                mineColor={mineColor}
-                handlePointColorButtonClick={handlePointColorButtonClick}
-                selectedColorType={selectedColorType}
+              <DisplayStyle
+                displayStyleToggle={displayStyleToggle}
+                handleDisplayStyleButtonClick={handleDisplayStyleButtonClick}
               />
             </CardContentWrapper>
           </>
         </Card>
-      </ThemeColorCardWrapper>
+      </DisplayStyleCardWrapper>
     </>
   );
 };
 
-const BackgroundOverlayStyled = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--modal-bg-shadow-color);
-`;
-
-const ThemeColorCardWrapper = styled.div`
+const DisplayStyleCardWrapper = styled.div`
   z-index: 1;
   align-self: start;
-  margin-top: 67px;
-
-  @media (max-width: 768px) {
-    margin-top: 0;
-  }
 `;
 
 export default DisplayStyleCard;

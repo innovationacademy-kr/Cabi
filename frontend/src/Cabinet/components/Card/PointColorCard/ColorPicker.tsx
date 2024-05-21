@@ -1,6 +1,6 @@
 import { TwitterPicker } from "react-color";
 import styled from "styled-components";
-import { GetCustomColorsValues } from "@/Cabinet/components/Card/DisplayStyleCard/colorInfo";
+import { GetCustomColorsValues } from "@/Cabinet/components/Card/PointColorCard/colorInfo";
 
 interface ColorPickerProps {
   color: string;

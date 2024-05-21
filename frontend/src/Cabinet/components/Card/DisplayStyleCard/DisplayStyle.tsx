@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { ReactComponent as MonitorMobileIcon } from "@/Cabinet/assets/images/monitorMobile.svg";
 import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moon.svg";
 import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sun.svg";
-import { ColorThemeToggleType } from "@/Cabinet/types/enum/colorTheme.type.enum";
+import { DisplayStyleToggleType } from "@/Cabinet/types/enum/displayStyle.type.enum";
 
 interface ItoggleItemSeparated {
   name: string;
@@ -13,41 +13,41 @@ interface ItoggleItemSeparated {
 const toggleList: ItoggleItemSeparated[] = [
   {
     name: "라이트",
-    key: ColorThemeToggleType.LIGHT,
+    key: DisplayStyleToggleType.LIGHT,
     icon: SunIcon,
   },
   {
     name: "다크",
-    key: ColorThemeToggleType.DARK,
+    key: DisplayStyleToggleType.DARK,
     icon: MoonIcon,
   },
   {
     name: "기기설정",
-    key: ColorThemeToggleType.DEVICE,
+    key: DisplayStyleToggleType.DEVICE,
     icon: MonitorMobileIcon,
   },
 ];
 
-const ColorTheme = ({
-  colorThemeToggle,
-  handleColorThemeButtonClick,
+const DisplayStyle = ({
+  displayStyleToggle,
+  handleDisplayStyleButtonClick,
 }: {
-  colorThemeToggle: ColorThemeToggleType;
-  handleColorThemeButtonClick: (colorThemeToggleType: string) => void;
+  displayStyleToggle: DisplayStyleToggleType;
+  handleDisplayStyleButtonClick: (DisplayStyleToggleType: string) => void;
 }) => {
   return (
     <>
       <ButtonsWrapperStyled>
         {toggleList.map((item) => {
-          const ColorThemeIcon = item.icon;
+          const DisplayStyleIcon = item.icon;
           return (
             <ButtonStyled
               key={item.key}
               id={`${item.key}`}
-              isClicked={colorThemeToggle === item.key}
-              onClick={() => handleColorThemeButtonClick(item.key)}
+              isClicked={displayStyleToggle === item.key}
+              onClick={() => handleDisplayStyleButtonClick(item.key)}
             >
-              {ColorThemeIcon && <ColorThemeIcon />}
+              {DisplayStyleIcon && <DisplayStyleIcon />}
               {item.name}
             </ButtonStyled>
           );
@@ -101,4 +101,4 @@ const ButtonStyled = styled.button<{
   }
 `;
 
-export default ColorTheme;
+export default DisplayStyle;

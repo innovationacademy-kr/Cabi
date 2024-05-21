@@ -3,8 +3,8 @@ import {
   CardContentStyled,
   ContentInfoStyled,
 } from "@/Cabinet/components/Card/CardStyles";
-import ColorPicker from "@/Cabinet/components/Card/DisplayStyleCard/PointColor/ColorPicker";
-import { pointColorData } from "@/Cabinet/components/Card/DisplayStyleCard/colorInfo";
+import ColorPicker from "@/Cabinet/components/Card/PointColorCard/ColorPicker";
+import { pointColorData } from "@/Cabinet/components/Card/PointColorCard/colorInfo";
 
 interface PointColorProps {
   showColorPicker: boolean;
