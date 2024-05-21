@@ -23,6 +23,7 @@ export interface IItemDetail {
   itemName: StoreItemType;
   // ex) "연장권"
   itemType: string;
+  // TODO : StoreItemType로
   // ex) "EXTENSION"
   items: IItemStore[];
   // List<ItemDetailsDto>

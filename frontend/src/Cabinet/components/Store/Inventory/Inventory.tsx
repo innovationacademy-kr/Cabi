@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import InventoryItem from "@/Cabinet/components/Store/Inventory/InventoryItem";
 import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
-import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import { axiosMyItems } from "@/Cabinet/api/axios/axios.custom";
 
 interface IInventoryInfo {

@@ -241,13 +241,13 @@ export const cabinetTypeLabelMap = {
 export const ItemIconMap = {
   [StoreItemType.EXTENSION]: ExtensionImg,
   [StoreItemType.SWAP]: SwapImg,
-  [StoreItemType.ALERT]: AlarmImg,
+  [StoreItemType.ALARM]: AlarmImg,
   [StoreItemType.PENALTY]: PenaltyImg,
 };
 
 export const ItemTypeLabelMap = {
   [StoreItemType.EXTENSION]: "연장권",
   [StoreItemType.SWAP]: "이사권",
-  [StoreItemType.ALERT]: "알림 등록권",
+  [StoreItemType.ALARM]: "알림 등록권",
   [StoreItemType.PENALTY]: "페널티 감면권",
 };

@@ -12,8 +12,8 @@ const convertToItemType = (itemType: string) => {
       return StoreItemType.EXTENSION;
     case "SWAP":
       return StoreItemType.SWAP;
-    case "ALERT":
-      return StoreItemType.ALERT;
+    case "ALARM":
+      return StoreItemType.ALARM;
     case "PENALTY":
       return StoreItemType.PENALTY;
     default:

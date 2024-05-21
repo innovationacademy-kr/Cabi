@@ -7,6 +7,6 @@ export enum CoinLogToggleType {
 export enum StoreItemType {
   EXTENSION = "EXTENSION",
   SWAP = "SWAP",
-  ALERT = "ALERT",
+  ALARM = "ALARM",
   PENALTY = "PENALTY",
 }

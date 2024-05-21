@@ -13,7 +13,7 @@ const convertToItemTypeLabel = (itemType: string) => {
     case "swapItems":
       return ItemTypeLabelMap[StoreItemType.SWAP];
     case "alarmItems":
-      return ItemTypeLabelMap[StoreItemType.ALERT];
+      return ItemTypeLabelMap[StoreItemType.ALARM];
     case "penaltyItems":
       return ItemTypeLabelMap[StoreItemType.PENALTY];
   }
@@ -26,7 +26,7 @@ const convertToItemType = (itemType: string) => {
     case "swapItems":
       return StoreItemType.SWAP;
     case "alarmItems":
-      return StoreItemType.ALERT;
+      return StoreItemType.ALARM;
     case "penaltyItems":
       return StoreItemType.PENALTY;
     default:
