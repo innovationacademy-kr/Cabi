@@ -65,26 +65,29 @@ const ProfilePage = () => {
 
 const CardGridWrapper = styled.div`
   display: grid;
-  padding: 60px 0;
+  padding: 60px 0 109px 0;
   justify-content: center;
   align-items: start;
   width: 100%;
   grid-gap: 20px;
   grid-template-columns: 350px 350px;
-  grid-template-rows: 163px 183px 348px;
-  grid-template-areas: "profile lentInfo" // h: 163px h: 366px
+  /* grid-template-rows: 163px 183px 348px; */
+  grid-template-rows: 163px 366px;
+  /* grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "extension lentInfo" // h: 183px
-    "theme notification "; // h: 230px h: 230px;
+    "theme notification "; // h: 230px h: 230px; */
+  grid-template-areas: "profile notification" // h: 163px h: 230px
+    "lentInfo theme"; // h: 366px h: 348px
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
-    grid-template-rows: 163px 366px 183px 230px 348px;
+    grid-template-rows: 163px 366px 230px 348px;
     grid-template-areas:
       "profile"
       "lentInfo"
-      "extension"
       "notification"
       "theme";
+    padding: 60px 0;
   }
 `;
 

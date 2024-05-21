@@ -105,6 +105,11 @@ const BackgroundOverlayStyled = styled.div`
 const ThemeColorCardWrapper = styled.div`
   z-index: 1;
   align-self: start;
+  margin-top: 67px;
+
+  @media (max-width: 768px) {
+    margin-top: 0;
+  }
 `;
 
 export default DisplayStyleCard;
