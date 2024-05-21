@@ -48,7 +48,12 @@ public class UserSessionArgumentResolver implements HandlerMethodArgumentResolve
 
 		String token = cookieManager.getCookieValue(request, jwtProperties.getMainTokenName());
 		if (StringUtil.isNullOrEmpty(token)) {
-			throw ExceptionStatus.INVALID_JWT_TOKEN.asControllerException();
+			token = cookieManager.getCookieValue(request, jwtProperties.getAdminTokenName());
+			if (token != null) {
+				return null;
+			} else {
+				throw ExceptionStatus.INVALID_JWT_TOKEN.asControllerException();
+			}
 		}
 		String name = tokenValidator.getPayloadJson(token).get("name").asText();
 		if (StringUtil.isNullOrEmpty(name)) {

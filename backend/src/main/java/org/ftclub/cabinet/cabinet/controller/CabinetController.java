@@ -54,7 +54,8 @@ public class CabinetController {
 			@UserSession UserSessionDto user,
 			@PathVariable("building") String building,
 			@PathVariable("floor") Integer floor) {
-		return cabinetFacadeService.getCabinetsPerSection(building, floor, user.getUserId());
+		return cabinetFacadeService.getCabinetsPerSection(building, floor,
+				(user == null ? null : user.getUserId()));
 	}
 
 	/**
