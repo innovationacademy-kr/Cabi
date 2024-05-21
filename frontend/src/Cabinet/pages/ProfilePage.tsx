@@ -73,18 +73,10 @@ const CardGridWrapper = styled.div`
   width: 100%;
   grid-gap: 20px;
   grid-template-columns: 350px 350px;
-  /* grid-template-rows: 163px 183px 348px; */
   grid-template-rows: 163px 183px 230px;
-  grid-template-rows: 163px 183px 230px;
-  /* grid-template-areas: "profile lentInfo" // h: 163px h: 366px
-    "extension lentInfo" // h: 183px
-    "theme notification "; // h: 230px h: 230px; */
-  grid-template-areas: "profile lentInfo" // h: 163px h: 230px
+  grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "displayStyle lentInfo" // h: 183px
-    "pointColor notification"; // h: 366px h: 348px
-  grid-template-areas: "profile lentInfo" // h: 163px h: 230px
-    "displayStyle lentInfo" // h: 183px
-    "pointColor notification"; // h: 366px h: 348px
+    "pointColor notification"; // h: 230px h: 230px
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
@@ -93,8 +85,8 @@ const CardGridWrapper = styled.div`
       "profile"
       "lentInfo"
       "displayStyle"
-      "notification"
-      "pointColor";
+      "pointColor"
+      "notification";
   }
 `;
 
