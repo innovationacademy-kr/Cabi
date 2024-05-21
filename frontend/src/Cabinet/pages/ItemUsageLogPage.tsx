@@ -34,7 +34,7 @@ const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
   const [page, setPage] = useState(0);
   const [hasAdditionalLogs, sethasAdditionalLogs] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const size = 5;
 
   const getItemUsageLog = async (page: number, size: number) => {
@@ -58,7 +58,9 @@ const ItemUsageLogPage = () => {
     setPage((prev) => prev + 1);
   };
 
-  return itemUsageLogs.length > 0 ? (
+  return isLoading ? (
+    <LoadingAnimation />
+  ) : itemUsageLogs.length > 0 ? (
     <WrapperStyled>
       <TitleWrapperStyled>아이템 사용내역</TitleWrapperStyled>
       <ItemUsageLogWrapperStyled>

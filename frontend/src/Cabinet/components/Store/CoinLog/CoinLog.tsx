@@ -222,6 +222,7 @@ const LogItemStyled = styled.div<{
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    height: 20px;
   }
 
   & > #amount {
