@@ -40,14 +40,15 @@ const extractNumber = (str: string) => {
 };
 
 const InventoryItem = ({
-  itemType,
+  itemsType,
   items,
 }: {
-  itemType: StoreItemType;
+  itemsType: string;
   items: IStoreItem[];
 }) => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
-  const ItemIcon = ItemIconMap[convertToItemType(itemType)];
+  const itemType = convertToItemType(itemsType);
+  const ItemIcon = ItemIconMap[itemType];
 
   const onClickToggleBtn = () => {
     setIsToggled((prev) => !prev);
@@ -61,7 +62,7 @@ const InventoryItem = ({
     <>
       <ItemWrapperStyled>
         <ItemTitleStyled isToggled={isToggled} onClick={onClickToggleBtn}>
-          <h2>{convertToItemTypeLabel(itemType)}</h2>
+          <h2>{convertToItemTypeLabel(itemsType)}</h2>
           <button>
             <SelectIcon />
           </button>
@@ -71,14 +72,16 @@ const InventoryItem = ({
             <>
               {sortedItems.map((item, idx) => {
                 const hasTypes =
-                  item.itemDetails !== convertToItemTypeLabel(itemType);
+                  item.itemDetails !== convertToItemTypeLabel(itemsType);
                 return (
                   <ItemCardStyled key={idx} hasTypes={hasTypes}>
-                    <ItemIconStyled>
+                    <ItemIconStyled itemType={itemType}>
                       <ItemIcon />
                     </ItemIconStyled>
                     <CardTextStyled hasTypes={hasTypes}>
-                      <span id="title">{convertToItemTypeLabel(itemType)}</span>
+                      <span id="title">
+                        {convertToItemTypeLabel(itemsType)}
+                      </span>
                       {hasTypes && <span id="type">{item.itemDetails}</span>}
                     </CardTextStyled>
                   </ItemCardStyled>
@@ -111,7 +114,7 @@ const ItemCardStyled = styled.div<{ hasTypes: boolean }>`
   border: 1.5px solid var(--capsule-btn-border-color);
 `;
 
-const ItemIconStyled = styled.div`
+const ItemIconStyled = styled.div<{ itemType: StoreItemType }>`
   width: 32px;
   height: 32px;
   display: flex;
@@ -120,6 +123,8 @@ const ItemIconStyled = styled.div`
 
   & > svg > path {
     stroke: var(--sys-main-color);
+    stroke-width: ${(props) =>
+      props.itemType === StoreItemType.EXTENSION ? "2.8px" : "1.5px"};
   }
 `;
 

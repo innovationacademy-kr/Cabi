@@ -2,7 +2,6 @@ import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import type { IButtonProps } from "@/Cabinet/components/Card/Card";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
-import { ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as CoinImg } from "@/Cabinet/assets/images/coinIcon.svg";
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
@@ -43,9 +42,9 @@ const StoreItemCard = ({
         <SectionStyled>
           <BlockStyled>
             <IconBlockStyled>
-              <div>
+              <ItemIconStyled itemType={item.itemType}>
                 <ItemIcon />
-              </div>
+              </ItemIconStyled>
             </IconBlockStyled>
             <PriseBlockStyled>
               <CoinImg />
@@ -86,13 +85,6 @@ const IconBlockStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  > div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 32px;
-    height: 32px;
-  }
 `;
 
 const PriseBlockStyled = styled.div`
@@ -129,6 +121,25 @@ const ItemDetailStyled = styled.div`
   padding: 10px 16px;
   line-height: 1.4;
   border-radius: 10px;
+`;
+
+const ItemIconStyled = styled.div<{ itemType: string }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+
+  & > svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  & > svg > path {
+    stroke: var(--white-text-with-bg-color);
+    stroke-width: ${(props) =>
+      props.itemType === "EXTENSION" ? "2.8px" : "1.5px"};
+  }
 `;
 
 export default StoreItemCard;

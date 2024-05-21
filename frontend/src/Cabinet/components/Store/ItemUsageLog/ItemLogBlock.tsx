@@ -31,7 +31,7 @@ const formatDate = (date: Date) => {
 const ItemLogBlock = ({ log }: { log: IItemUsageLog }) => {
   return (
     <ItemUsageLogStyled>
-      <IconBlockStyled>
+      <IconBlockStyled itemType={mapItemNameToType(log.title)}>
         <log.logo />
       </IconBlockStyled>
       <ItemUsageInfoStyled>
@@ -51,7 +51,7 @@ const ItemUsageLogStyled = styled.div`
   align-items: center;
 `;
 
-const IconBlockStyled = styled.div`
+const IconBlockStyled = styled.div<{ itemType: StoreItemType }>`
   display: flex;
   width: 60px;
   height: 60px;
@@ -64,6 +64,12 @@ const IconBlockStyled = styled.div`
   svg {
     width: 40px;
     height: 40px;
+  }
+
+  & > svg > path {
+    stroke: var(--white-text-with-bg-color);
+    stroke-width: ${(props) =>
+      props.itemType === StoreItemType.EXTENSION ? "3px" : "1.5px"};
   }
 `;
 

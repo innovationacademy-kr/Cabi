@@ -34,11 +34,7 @@ const Inventory = () => {
       <ItemsWrapperStyled>
         {myItems &&
           Object.entries(myItems).map(([key, value]) => (
-            <InventoryItem
-              key={key}
-              itemType={key as StoreItemType}
-              items={value}
-            />
+            <InventoryItem key={key} itemsType={key} items={value} />
           ))}
       </ItemsWrapperStyled>
     </WrapperStyled>

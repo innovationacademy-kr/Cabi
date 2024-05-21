@@ -23,7 +23,7 @@ import {
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
 import alertImg from "@/Cabinet/assets/images/cautionSign.svg";
-import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extensionTicket.svg";
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extension.svg";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 
@@ -190,13 +190,10 @@ const CabinetInfoArea: React.FC<{
                 selectedCabinetInfo.lentType === "SHARE"
               }
             >
-              <ExtensionImg
-                stroke="var(--sys-main-color)"
-                width={24}
-                height={24}
-                style={{ marginRight: "10px" }}
-              />
-              {"연장권 사용하기"}
+              <ExtensionImgStyled>
+                <ExtensionImg />
+              </ExtensionImgStyled>
+              <span>연장권 사용하기</span>
             </ButtonContainerStyled>
           )}
           {isExtensionVisible && isHoverBoxVisible && (
@@ -461,6 +458,21 @@ const ButtonContainerStyled = styled.button`
     `}
   @media (max-height: 745px) {
     margin-bottom: 8px;
+  }
+
+  & > span {
+    height: 20px;
+    line-height: 18px;
+  }
+`;
+
+const ExtensionImgStyled = styled.div`
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+
+  & > svg > path {
+    stroke: var(--sys-main-color);
   }
 `;
 

@@ -1,8 +1,8 @@
 import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extension.svg";
 import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
 import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
-import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
 import { ReactComponent as SwapImg } from "@/Cabinet/assets/images/storeMove.svg";
 import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
