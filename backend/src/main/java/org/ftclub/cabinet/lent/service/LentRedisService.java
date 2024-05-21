@@ -259,4 +259,16 @@ public class LentRedisService {
 	public void setPreviousEndedAt(Long cabinetId, LocalDateTime endedAt) {
 		lentRedis.setPreviousEndedAt(cabinetId.toString(), endedAt.toString());
 	}
+
+	public LocalDateTime getSwapExpiredAt(Long userId) {
+		return lentRedis.getSwapExpiredAt(String.valueOf(userId));
+	}
+
+	public boolean isExistSwapRecord(Long userId) {
+		return lentRedis.isExistSwapRecord(String.valueOf(userId));
+	}
+
+	public void setSwapRecord(Long userId) {
+		lentRedis.setSwap(String.valueOf(userId));
+	}
 }

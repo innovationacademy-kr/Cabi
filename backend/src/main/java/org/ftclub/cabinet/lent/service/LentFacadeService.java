@@ -388,6 +388,11 @@ public class LentFacadeService {
 	 */
 	@Transactional
 	public void swapPrivateCabinet(Long userId, Long newCabinetId) {
+
+		boolean existSwapRecord = lentRedisService.isExistSwapRecord(userId);
+		LocalDateTime swapExpiredAt = lentRedisService.getSwapExpiredAt(userId);
+		lentPolicyService.verifySwappable(existSwapRecord, swapExpiredAt);
+
 		LocalDateTime now = LocalDateTime.now();
 		LentHistory oldLentHistory = lentQueryService.getUserActiveLentHistoryWithCabinet(userId);
 		Cabinet oldCabinet = cabinetQueryService.getCabinetForUpdate(oldLentHistory.getCabinetId());
@@ -414,6 +419,8 @@ public class LentFacadeService {
 		cabinetCommandService.changeUserCount(oldCabinet, 0);
 		cabinetCommandService.updateTitle(oldCabinet, "");
 		cabinetCommandService.updateMemo(oldCabinet, "");
+
+		lentRedisService.setSwapRecord(userId);
 	}
 
 	/**

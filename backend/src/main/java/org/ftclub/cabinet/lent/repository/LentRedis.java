@@ -274,4 +274,27 @@ public class LentRedis {
 	public String getPreviousEndedAt(String cabinetId) {
 		return previousTemplate.get(cabinetId + PREVIOUS_ENDED_AT_SUFFIX);
 	}
+
+	/*-----------------------------------SWAP-----------------------------------*/
+
+	public boolean isExistSwapRecord(String userId) {
+		Boolean isExist = swapTemplate.hasKey(userId + SWAP_KEY_SUFFIX);
+		return Objects.nonNull(isExist) && isExist;
+	}
+
+	public LocalDateTime getSwapExpiredAt(String userId) {
+		if (!this.isExistSwapRecord(userId)) {
+			return null;
+		}
+		String swapKey = userId + SWAP_KEY_SUFFIX;
+		@SuppressWarnings("ConstantConditions")
+		long expire = swapTemplate.getExpire(swapKey, TimeUnit.SECONDS);
+		return LocalDateTime.now().plusSeconds(expire);
+	}
+
+	public void setSwap(String userId) {
+		final String swapKey = userId + SWAP_KEY_SUFFIX;
+		swapTemplate.opsForValue().set(swapKey, USER_SWAPPED);
+		swapTemplate.expire(swapKey, cabinetProperties.getSwapTermPrivateDays(), TimeUnit.DAYS);
+	}
 }
