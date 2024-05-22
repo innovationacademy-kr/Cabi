@@ -6,8 +6,8 @@ import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
+import UnavailableDataInfo from "@/Cabinet/components/Common/UnavailableDataInfo";
 import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg";
-import { ReactComponent as SadCabiIcon } from "@/Cabinet/assets/images/sadCcabi.svg";
 import { ReactComponent as Select } from "@/Cabinet/assets/images/selectMaincolor.svg";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import { axiosCoinLog } from "@/Cabinet/api/axios/axios.custom";
@@ -129,10 +129,10 @@ const CoinLog = () => {
               ))}
             </LogItemWrapperStyled>
           ) : (
-            <EmptyCoinLogTextStyled>
-              {unavailableCoinLogMsgMap[toggleType]} 내역이 없습니다.
-              <SadCabiIcon />
-            </EmptyCoinLogTextStyled>
+            <UnavailableDataInfo
+              msg={unavailableCoinLogMsgMap[toggleType] + "내역이 없습니다."}
+              height="390px"
+            />
           )}
           {moreButton && (
             <ButtonContainerStyled>
@@ -337,27 +337,6 @@ const SelectIconWrapperStyled = styled.div`
 
   & > svg > path {
     stroke: var(--sys-main-color);
-  }
-`;
-
-const EmptyCoinLogTextStyled = styled.div`
-  display: flex;
-  height: 390px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  line-height: 1.75rem;
-  color: var(--gray-line-btn-color);
-
-  & > svg {
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
-  }
-
-  & > svg > path {
-    fill: var(--normal-text-color);
   }
 `;
 

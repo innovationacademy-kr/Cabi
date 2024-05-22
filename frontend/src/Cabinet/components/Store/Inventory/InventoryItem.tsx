@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
+import UnavailableDataInfo from "@/Cabinet/components/Common/UnavailableDataInfo";
 import { ItemIconMap, ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
-import { ReactComponent as SadCcabiIcon } from "@/Cabinet/assets/images/sadCcabi.svg";
 import { ReactComponent as SelectIcon } from "@/Cabinet/assets/images/select.svg";
 import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
@@ -89,12 +89,14 @@ const InventoryItem = ({
               })}
             </>
           ) : (
-            <UnavailableItemMsgStyled isToggled={isToggled}>
-              <p>해당 아이템을 보유하고 있지 않습니다</p>
-              <UnavailableIconStyled>
-                <SadCcabiIcon />
-              </UnavailableIconStyled>
-            </UnavailableItemMsgStyled>
+            !isToggled && (
+              <UnavailableDataInfo
+                msg="해당 아이템을 보유하고 있지 않습니다"
+                fontSize="1rem"
+                iconWidth="24px"
+                iconHeight="24px"
+              />
+            )
           )}
         </ItemCardSectionStyled>
       </ItemWrapperStyled>
@@ -179,38 +181,6 @@ const ItemCardSectionStyled = styled.div<{ isToggled: boolean }>`
   transition: all 0.3s ease-in-out;
   flex-wrap: wrap;
   gap: 20px;
-`;
-
-const UnavailableItemMsgStyled = styled.div<{ isToggled: boolean }>`
-  display: ${(props) => (props.isToggled ? "none" : "flex")};
-  transition: all 0.3s ease-in-out;
-  flex-wrap: wrap;
-
-  & > p {
-    color: var(--gray-line-btn-color);
-    line-height: 1.5;
-    word-break: keep-all;
-    margin-left: 10px;
-  }
-`;
-
-const UnavailableIconStyled = styled.div`
-  width: 24px;
-  height: 24px;
-  margin-left: 10px;
-
-  & > svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  & > svg > path {
-    fill: var(--normal-text-color);
-  }
-
-  @media (max-width: 412px) {
-    display: none;
-  }
 `;
 
 const ItemWrapperStyled = styled.div`

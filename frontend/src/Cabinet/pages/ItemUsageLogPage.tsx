@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import UnavailableDataInfo from "@/Cabinet/components/Common/UnavailableDataInfo";
 import { mapItemNameToType } from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as DropdownChevron } from "@/Cabinet/assets/images/dropdownChevron.svg";
-import { ReactComponent as SadCabiIcon } from "@/Cabinet/assets/images/sadCcabi.svg";
 import { axiosGetItemUsageHistory } from "@/Cabinet/api/axios/axios.custom";
 
 export interface IItemUsageLog {
@@ -92,12 +92,7 @@ const ItemUsageLogPage = () => {
       </ItemUsageLogWrapperStyled>
     </WrapperStyled>
   ) : (
-    <EmptyWrapperStyled>
-      <EmptyItemUsageLogTextStyled>
-        아이템 사용내역이 없습니다.
-        <SadCabiIcon />
-      </EmptyItemUsageLogTextStyled>
-    </EmptyWrapperStyled>
+    <UnavailableDataInfo msg="아이템 사용내역이 없습니다." />
   );
 };
 
@@ -170,33 +165,6 @@ const MoreButtonStyled = styled.button<{
     margin-bottom: -2px;
     width: 13px;
     height: 9px;
-  }
-`;
-
-const EmptyWrapperStyled = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-`;
-
-const EmptyItemUsageLogTextStyled = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-  color: var(--gray-line-btn-color);
-
-  & > svg {
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
-  }
-
-  & > svg > path {
-    fill: var(--normal-text-color);
   }
 `;
 
