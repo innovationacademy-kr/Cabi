@@ -2,31 +2,23 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import BanModal from "@/Cabinet/components/Modals/BanModal/BanModal";
-import {
-  cabinetIconComponentMap,
-  cabinetLabelColorMap,
-  cabinetStatusColorMap,
-} from "@/Cabinet/assets/data/maps";
 import cabiLogo from "@/Cabinet/assets/images/logo.svg";
-import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
-import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
 
-// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
 export interface ISelectedUserInfo {
   name: string;
   userId: number | null;
   isBanned: boolean;
   bannedInfo?: string;
 }
-
-const UserInfoArea: React.FC<{
+// TODO : banModal -> 지급 모달로 변경
+const UserStoreInfoArea: React.FC<{
   selectedUserInfo?: ISelectedUserInfo;
   closeCabinet: () => void;
   openLent: React.MouseEventHandler;
 }> = (props) => {
   const { selectedUserInfo, closeCabinet, openLent } = props;
   const [showBanModal, setShowBanModal] = useState<boolean>(false);
-  const CabinetTypeIcon = cabinetIconComponentMap[CabinetType.PRIVATE];
 
   const handleOpenBanModal = () => {
     setShowBanModal(true);
@@ -48,30 +40,20 @@ const UserInfoArea: React.FC<{
 
   return (
     <CabinetDetailAreaStyled>
-      <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--gray-line-btn-color)">
-        대여 중이 아닌 사용자
-      </TextStyled>
-      <CabinetRectangleStyled
-        cabinetStatus={
-          selectedUserInfo.isBanned ? CabinetStatus.OVERDUE : CabinetStatus.FULL
-        }
-      >
-        {selectedUserInfo.isBanned ? "!" : "-"}
-      </CabinetRectangleStyled>
-      <CabinetTypeIconStyled>
-        <CabinetTypeIcon />
-      </CabinetTypeIconStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--normal-text-color))">
+      <LinkTextStyled onClick={openLent}>아이템 기록</LinkTextStyled>
+      <TextStyled fontSize="1rem" fontColor="var(--normal-text-color)">
         {selectedUserInfo.name}
       </TextStyled>
-
+      <CabinetRectangleStyled>
+        <LogoIconStyled>
+          <LogoIcon />
+        </LogoIconStyled>
+      </CabinetRectangleStyled>
       <CabinetInfoButtonsContainerStyled>
         <ButtonContainer
           onClick={handleOpenBanModal}
-          text="밴 해제"
-          theme="fill"
-          disabled={selectedUserInfo.isBanned === false}
+          text="아이템 지급"
+          theme="line"
         />
         <ButtonContainer onClick={closeCabinet} text="닫기" theme="grayLine" />
       </CabinetInfoButtonsContainerStyled>
@@ -110,23 +92,7 @@ const CabiLogoStyled = styled.img`
   width: 35px;
   height: 35px;
   margin-bottom: 10px;
-`;
-
-const CabinetTypeIconStyled = styled.div`
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
-  min-height: 24px;
-  margin-bottom: 10px;
-
-  & > svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  & > svg > path {
-    stroke: var(--normal-text-color);
-  }
+  /* TODO : 이미지 svg로 */
 `;
 
 const LinkTextStyled = styled.div`
@@ -155,19 +121,17 @@ const TextStyled = styled.p<{ fontSize: string; fontColor: string }>`
   }
 `;
 
-const CabinetRectangleStyled = styled.div<{
-  cabinetStatus: CabinetStatus;
-}>`
+const CabinetRectangleStyled = styled.div`
   width: 80px;
   height: 80px;
   line-height: 80px;
   border-radius: 10px;
   margin-top: 15px;
   margin-bottom: 3vh;
-  background-color: ${(props) => cabinetStatusColorMap[props.cabinetStatus]};
-  font-size: 2rem;
-  color: ${(props) => cabinetLabelColorMap[props.cabinetStatus]};
-  text-align: center;
+  background-color: var(--full-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const CabinetInfoButtonsContainerStyled = styled.div`
@@ -189,4 +153,18 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   text-align: center;
 `;
 
-export default UserInfoArea;
+const LogoIconStyled = styled.div`
+  width: 42px;
+  height: 42px;
+  display: flex;
+
+  & > svg {
+    width: 42px;
+    height: 42px;
+    .logo_svg__currentPath {
+      fill: var(--sys-main-color);
+    }
+  }
+`;
+
+export default UserStoreInfoArea;
