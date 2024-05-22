@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import BanModal from "@/Cabinet/components/Modals/BanModal/BanModal";
-import cabiLogo from "@/Cabinet/assets/images/logo.svg";
 import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
 
 export interface ISelectedUserInfo {
@@ -11,7 +10,7 @@ export interface ISelectedUserInfo {
   isBanned: boolean;
   bannedInfo?: string;
 }
-// TODO : banModal -> 지급 모달로 변경
+// TODO : banModal 만들어지면 지급 모달로 변경
 const UserStoreInfoArea: React.FC<{
   selectedUserInfo?: ISelectedUserInfo;
   closeCabinet: () => void;
@@ -30,10 +29,11 @@ const UserStoreInfoArea: React.FC<{
   if (selectedUserInfo === undefined)
     return (
       <NotSelectedStyled>
-        <CabiLogoStyled src={cabiLogo} />
+        <UserInfoAreaLogoIconStyled selected={selectedUserInfo}>
+          <LogoIcon />
+        </UserInfoAreaLogoIconStyled>
         <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
-          사물함/유저를 <br />
-          선택해주세요
+          유저를 선택해주세요
         </TextStyled>
       </NotSelectedStyled>
     );
@@ -45,9 +45,9 @@ const UserStoreInfoArea: React.FC<{
         {selectedUserInfo.name}
       </TextStyled>
       <CabinetRectangleStyled>
-        <LogoIconStyled>
+        <UserInfoAreaLogoIconStyled selected={selectedUserInfo}>
           <LogoIcon />
-        </LogoIconStyled>
+        </UserInfoAreaLogoIconStyled>
       </CabinetRectangleStyled>
       <CabinetInfoButtonsContainerStyled>
         <ButtonContainer
@@ -57,11 +57,6 @@ const UserStoreInfoArea: React.FC<{
         />
         <ButtonContainer onClick={closeCabinet} text="닫기" theme="grayLine" />
       </CabinetInfoButtonsContainerStyled>
-      {selectedUserInfo.isBanned && (
-        <CabinetLentDateInfoStyled textColor="var(--expired-color)">
-          {selectedUserInfo.bannedInfo!}
-        </CabinetLentDateInfoStyled>
-      )}
       {showBanModal && (
         <BanModal
           userId={selectedUserInfo.userId}
@@ -86,13 +81,6 @@ const CabinetDetailAreaStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-`;
-
-const CabiLogoStyled = styled.img`
-  width: 35px;
-  height: 35px;
-  margin-bottom: 10px;
-  /* TODO : 이미지 svg로 */
 `;
 
 const LinkTextStyled = styled.div`
@@ -144,23 +132,17 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   width: 100%;
 `;
 
-const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
-  color: ${(props) => props.textColor};
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 28px;
-  white-space: pre-line;
-  text-align: center;
-`;
-
-const LogoIconStyled = styled.div`
-  width: 42px;
-  height: 42px;
+export const UserInfoAreaLogoIconStyled = styled.div<{
+  selected: ISelectedUserInfo | undefined;
+}>`
+  width: ${(props) => (props.selected ? "42px" : "35px")};
+  height: ${(props) => (props.selected ? "42px" : "35px")};
   display: flex;
+  margin-bottom: ${(props) => (props.selected ? "0" : "10px")};
 
   & > svg {
-    width: 42px;
-    height: 42px;
+    width: ${(props) => (props.selected ? "42px" : "35px")};
+    height: ${(props) => (props.selected ? "42px" : "35px")};
     .logo_svg__currentPath {
       fill: var(--sys-main-color);
     }

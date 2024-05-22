@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import BanModal from "@/Cabinet/components/Modals/BanModal/BanModal";
+import { UserInfoAreaLogoIconStyled } from "@/Cabinet/components/Store/Admin/UserStoreInfoArea/UserStoreInfoArea";
 import {
   cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
-import cabiLogo from "@/Cabinet/assets/images/logo.svg";
+import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 
@@ -38,7 +39,9 @@ const UserCabinetInfoArea: React.FC<{
   if (selectedUserInfo === undefined)
     return (
       <NotSelectedStyled>
-        <CabiLogoStyled src={cabiLogo} />
+        <UserInfoAreaLogoIconStyled selected={selectedUserInfo}>
+          <LogoIcon />
+        </UserInfoAreaLogoIconStyled>
         <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
           사물함/유저를 <br />
           선택해주세요
