@@ -10,13 +10,13 @@ export interface ISelectedUserInfo {
   isBanned: boolean;
   bannedInfo?: string;
 }
-// TODO : banModal 만들어지면 지급 모달로 변경
+
 const UserStoreInfoArea: React.FC<{
   selectedUserInfo?: ISelectedUserInfo;
-  closeCabinet: () => void;
-  openLent: React.MouseEventHandler;
+  closeUserStore: () => void;
+  openUserStore: React.MouseEventHandler;
 }> = (props) => {
-  const { selectedUserInfo, closeCabinet, openLent } = props;
+  const { selectedUserInfo, closeUserStore, openUserStore } = props;
   const [showBanModal, setShowBanModal] = useState<boolean>(false);
 
   const handleOpenBanModal = () => {
@@ -39,31 +39,35 @@ const UserStoreInfoArea: React.FC<{
     );
 
   return (
-    <CabinetDetailAreaStyled>
-      <LinkTextStyled onClick={openLent}>아이템 기록</LinkTextStyled>
+    <UserStoreInfoAreaStyled>
+      <LinkTextStyled onClick={openUserStore}>아이템 기록</LinkTextStyled>
       <TextStyled fontSize="1rem" fontColor="var(--normal-text-color)">
         {selectedUserInfo.name}
       </TextStyled>
-      <CabinetRectangleStyled>
+      <UserImgRectangleStyled>
         <UserInfoAreaLogoIconStyled selected={selectedUserInfo}>
           <LogoIcon />
         </UserInfoAreaLogoIconStyled>
-      </CabinetRectangleStyled>
-      <CabinetInfoButtonsContainerStyled>
+      </UserImgRectangleStyled>
+      <UserStoreInfoBtnsWrapperStyled>
         <ButtonContainer
           onClick={handleOpenBanModal}
           text="아이템 지급"
           theme="line"
         />
-        <ButtonContainer onClick={closeCabinet} text="닫기" theme="grayLine" />
-      </CabinetInfoButtonsContainerStyled>
+        <ButtonContainer
+          onClick={closeUserStore}
+          text="닫기"
+          theme="grayLine"
+        />
+      </UserStoreInfoBtnsWrapperStyled>
       {showBanModal && (
         <BanModal
           userId={selectedUserInfo.userId}
           closeModal={handleCloseBanModal}
         />
       )}
-    </CabinetDetailAreaStyled>
+    </UserStoreInfoAreaStyled>
   );
 };
 
@@ -75,7 +79,7 @@ const NotSelectedStyled = styled.div`
   align-items: center;
 `;
 
-const CabinetDetailAreaStyled = styled.div`
+const UserStoreInfoAreaStyled = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -109,7 +113,7 @@ const TextStyled = styled.p<{ fontSize: string; fontColor: string }>`
   }
 `;
 
-const CabinetRectangleStyled = styled.div`
+const UserImgRectangleStyled = styled.div`
   width: 80px;
   height: 80px;
   line-height: 80px;
@@ -122,7 +126,7 @@ const CabinetRectangleStyled = styled.div`
   align-items: center;
 `;
 
-const CabinetInfoButtonsContainerStyled = styled.div`
+const UserStoreInfoBtnsWrapperStyled = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

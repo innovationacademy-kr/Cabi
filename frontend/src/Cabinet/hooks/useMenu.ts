@@ -186,6 +186,20 @@ const useMenu = () => {
     }
   };
 
+  const openUserStore = () => {
+    closeLeftNav();
+    closeMap();
+    closeStore();
+    document.getElementById("lentInfo")?.classList.add("on");
+    document.getElementById("menuBg")?.classList.add("on");
+  };
+
+  const closeUserStore = () => {
+    if (document.getElementById("lentInfo")?.classList.contains("on") == true) {
+      document.getElementById("lentInfo")?.classList.remove("on");
+    }
+  };
+
   const closeAll = () => {
     closeLeftNav();
     closeCabinet();
@@ -193,6 +207,7 @@ const useMenu = () => {
     closeMap();
     closeStore();
     closeClubMember();
+    closeUserStore();
   };
 
   return {
@@ -215,6 +230,8 @@ const useMenu = () => {
     closeClubMember,
     openStore,
     closeStore,
+    openUserStore,
+    closeUserStore,
   };
 };
 

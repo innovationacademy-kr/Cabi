@@ -7,7 +7,7 @@ import useMenu from "@/Cabinet/hooks/useMenu";
 
 const UserStoreInfoAreaContainer = (): JSX.Element => {
   const [targetUserInfo] = useRecoilState(targetUserInfoState);
-  const { closeCabinet, openLent } = useMenu();
+  const { closeUserStore, openUserStore } = useMenu();
 
   const userInfoData: ISelectedUserInfo | undefined = targetUserInfo
     ? {
@@ -21,8 +21,8 @@ const UserStoreInfoAreaContainer = (): JSX.Element => {
     <>
       <UserStoreInfoArea
         selectedUserInfo={userInfoData}
-        closeCabinet={closeCabinet}
-        openLent={openLent}
+        closeUserStore={closeUserStore}
+        openUserStore={openUserStore}
       />
       {userInfoData && <AdminLentLog lentType={"USER"} />}
     </>
