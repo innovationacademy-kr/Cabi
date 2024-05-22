@@ -105,7 +105,7 @@ const MemoModal = ({
                   }
             }
             text={mode === "read" ? "닫기" : "취소"}
-            theme={mode === "read" ? "light-grayLine" : "line"}
+            theme={mode === "read" ? "grayLine" : "line"}
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>
