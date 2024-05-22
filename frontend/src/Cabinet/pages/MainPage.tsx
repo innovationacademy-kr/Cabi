@@ -7,6 +7,7 @@ import {
   currentCabinetIdState,
   currentFloorNumberState,
   currentSectionNameState,
+  isCurrentSectionRenderState,
   targetCabinetInfoState,
 } from "@/Cabinet/recoil/atoms";
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
@@ -48,6 +49,9 @@ const MainPage = () => {
   const [isClubSection, setIsClubSection] = useState(false);
   const [showSectionAlertModal, setShowSectionAlertModal] =
     useState<boolean>(false);
+  const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
+    isCurrentSectionRenderState
+  );
 
   useEffect(() => {
     if (!currentFloor) {
@@ -110,8 +114,9 @@ const MainPage = () => {
     mainWrapperRef.current?.scrollTo(0, 0);
   };
 
-  const openModal = () => {
+  const handleAlertIconBtn = () => {
     setShowSectionAlertModal(true);
+    setIsCurrentSectionRender(false);
   };
 
   return (
@@ -133,7 +138,7 @@ const MainPage = () => {
         <AlertStyled>
           {!isClubSection && (
             <IconWrapperStyled
-              onClick={openModal}
+              onClick={handleAlertIconBtn}
               disabled={
                 sectionList[currentSectionIndex]?.alarmRegistered ? true : false
               }
