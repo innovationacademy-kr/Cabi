@@ -9,7 +9,7 @@ import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import LeftNav from "@/Cabinet/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/Cabinet/components/MapInfo/MapInfo.container";
 import AdminTopNavContainer from "@/Cabinet/components/TopNav/AdminTopNav.container";
-import UserInfoAreaContainer from "@/Cabinet/components/UserCabinetInfoArea/UserCabinetInfoArea.container";
+import UserCabinetInfoAreaContainer from "@/Cabinet/components/UserCabinetInfoArea/UserCabinetInfoArea.container";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -93,7 +93,7 @@ const Layout = (): JSX.Element => {
             isFloat={!isMainPage && !isSearchPage}
           >
             {selectedTypeOnSearch === "USER" ? (
-              <UserInfoAreaContainer />
+              <UserCabinetInfoAreaContainer />
             ) : (
               <CabinetInfoAreaContainer />
             )}
