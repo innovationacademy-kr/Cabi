@@ -8,6 +8,7 @@ export interface IDropdownOptions {
   name: string;
   value: any;
   imageSrc?: string;
+  disabled?: boolean;
 }
 
 export interface IDropdown {
@@ -42,30 +43,33 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
         </DropdownSelectionBoxIconStyled>
       </DropdownSelectionBoxStyled>
       <DropdownItemContainerStyled isVisible={isOpen}>
-        {options?.map((option) => {
-          const OptionIcon =
-            cabinetIconComponentMap[option.value as CabinetType];
-          return (
-            <DropdownItemStyled
-              key={option.value}
-              onClick={() => {
-                setCurrentName(option.name);
-                setIsOpen(false);
-                if (onChangeValue) {
-                  onChangeValue(option.value);
-                }
-              }}
-              isSelected={option.name === currentName}
-            >
-              {option.imageSrc && (
-                <OptionsImgStyled isSelected={option.name === currentName}>
-                  <OptionIcon />
-                </OptionsImgStyled>
-              )}
-              <p style={{ paddingLeft: "10px" }}>{option.name}</p>
-            </DropdownItemStyled>
-          );
-        })}
+        {options
+          ?.filter((option) => option.disabled != true)
+          .map((option) => {
+            const OptionIcon =
+              cabinetIconComponentMap[option.value as CabinetType];
+            return (
+              <DropdownItemStyled
+                key={option.value}
+                onClick={() => {
+                  setCurrentName(option.name);
+                  setIsOpen(false);
+                  if (onChangeValue) {
+                    onChangeValue(option.value);
+                  }
+                }}
+                isSelected={option.name === currentName}
+                isDisabled={option.disabled}
+              >
+                {option.imageSrc && (
+                  <OptionsImgStyled isSelected={option.name === currentName}>
+                    <OptionIcon />
+                  </OptionsImgStyled>
+                )}
+                <p style={{ paddingLeft: "10px" }}>{option.name}</p>
+              </DropdownItemStyled>
+            );
+          })}
       </DropdownItemContainerStyled>
     </DropdownContainerStyled>
   );
@@ -107,7 +111,10 @@ const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
     `}
 `;
 
-const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
+const DropdownItemStyled = styled.div<{
+  isSelected: boolean;
+  isDisabled?: boolean;
+}>`
   position: relative;
   display: flex;
   align-items: center;

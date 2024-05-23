@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
@@ -15,11 +15,13 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import { IInventoryInfo } from "@/Cabinet/components/Store/Inventory/Inventory";
 import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
+  axiosMyItems,
   axiosMyLentInfo,
   axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
@@ -35,6 +37,7 @@ const ExtendModal: React.FC<{
   onClose: () => void;
   cabinetId: Number;
 }> = (props) => {
+  const [showExtension, setShowExtension] = useState<boolean>(true);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
@@ -130,6 +133,41 @@ const ExtendModal: React.FC<{
     }
   };
 
+  const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
+
+  const getMyItems = async () => {
+    try {
+      const response = await axiosMyItems();
+      setMyItems(response.data);
+    } catch (error: any) {
+      console.error("Error getting inventory:", error);
+    }
+  };
+
+  useEffect(() => {
+    getMyItems();
+    if (checkExtension() == true){
+      setShowExtension(true);
+      setModalContents(
+        `현재 연장권을 보유하고 있지 않습니다.
+연장권은 까비 상점에서 구매하실 수 있습니다.`
+      );
+    }
+    else setShowExtension(false);
+  }, []);
+
+  const findMyExtension = (period: string) => {
+    return !myItems?.extensionItems.some((item) => item.itemDetails === period);
+  };
+
+  const checkExtension = () => {
+    return (
+      findMyExtension("3일") &&
+      findMyExtension("15일") &&
+      findMyExtension("31일")
+    );
+  };
+
   const [selectedOption, setSelectedOption] = useState(0);
 
   const handleDropdownChange = (option: number) => {
@@ -161,17 +199,26 @@ const ExtendModal: React.FC<{
               {
                 name: extensionPeriod[0].period,
                 value: 0,
+                disabled: findMyExtension(extensionPeriod[0].period),
               },
               {
                 name: extensionPeriod[1].period,
                 value: 1,
+                disabled: findMyExtension(extensionPeriod[1].period),
               },
               {
                 name: extensionPeriod[2].period,
                 value: 2,
+                disabled: findMyExtension(extensionPeriod[2].period),
               },
             ]}
-            defaultValue={extensionPeriod[0].period}
+            defaultValue={
+              !findMyExtension(extensionPeriod[0].period)
+                ? !findMyExtension(extensionPeriod[1].period)
+                  ? extensionPeriod[2].period
+                  : extensionPeriod[1].period
+                : extensionPeriod[0].period
+            }
             onChangeValue={handleDropdownChange}
           />
         </ModalContainerStyled>
@@ -183,8 +230,17 @@ const ExtendModal: React.FC<{
 
   return (
     <ModalPortal>
-      {!showResponseModal && <Modal modalContents={extendModalContents} />}
-      {showResponseModal &&
+      {showExtension && (
+        <FailResponseModal
+          modalTitle={modalTitle}
+          modalContents={modalContents}
+          closeModal={props.onClose}
+          url={"/store"}
+          urlTitle={"까비상점으로 이동"}
+        />
+      )}
+      {!showExtension && !showResponseModal && <Modal modalContents={extendModalContents} />}
+      {!showExtension && showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
             modalTitle={modalTitle}

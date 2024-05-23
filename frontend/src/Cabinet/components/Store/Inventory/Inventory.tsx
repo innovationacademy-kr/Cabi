@@ -4,7 +4,7 @@ import InventoryItem from "@/Cabinet/components/Store/Inventory/InventoryItem";
 import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { axiosMyItems } from "@/Cabinet/api/axios/axios.custom";
 
-interface IInventoryInfo {
+export interface IInventoryInfo {
   extensionItems: IStoreItem[];
   swapItems: IStoreItem[];
   alarmItems: IStoreItem[];
