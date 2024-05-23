@@ -8,6 +8,8 @@ import CabinetInfoAreaContainer from "@/Cabinet/components/CabinetInfoArea/Cabin
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import LeftNav from "@/Cabinet/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/Cabinet/components/MapInfo/MapInfo.container";
+import UserStoreInfoArea from "@/Cabinet/components/Store/Admin/UserStoreInfoArea/UserStoreInfoArea";
+import UserStoreInfoAreaContainer from "@/Cabinet/components/Store/Admin/UserStoreInfoArea/UserStoreInfoArea.container";
 import AdminTopNavContainer from "@/Cabinet/components/TopNav/AdminTopNav.container";
 import UserCabinetInfoAreaContainer from "@/Cabinet/components/UserCabinetInfoArea/UserCabinetInfoArea.container";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";

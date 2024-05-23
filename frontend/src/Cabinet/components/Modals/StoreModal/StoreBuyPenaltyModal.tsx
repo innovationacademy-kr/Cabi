@@ -102,6 +102,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   };
 
   const handleDropdownChange = (option: string) => {
+    // console.log("test",option );
     setSelectedOption(option);
   };
 

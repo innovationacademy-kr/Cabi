@@ -10,6 +10,7 @@ import { MyCabinetInfo } from "@/Cabinet/components/Card/LentInfoCard/LentInfoCa
 import { cabinetIconComponentMap } from "@/Cabinet/assets/data/maps";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
+import AdminUseItemModal from "../../Modals/StoreModal/AdminUseItemModal";
 import StoreBuyPenalty from "../../Modals/StoreModal/StoreBuyPenaltyModal";
 
 const calculateFontSize = (userCount: number): string => {
@@ -130,6 +131,7 @@ const LentInfoCard = ({
           onClose={onClose}
           remainPenaltyPeriod={remainPenaltyPeriod}
         />
+        // <AdminUseItemModal onClose={onClose} />
       )}
     </>
   );

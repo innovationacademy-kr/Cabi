@@ -767,6 +767,26 @@ export const axiosLentClubCabinet = async (
   }
 };
 
+const axiosStatisticsCoinURL = "/v5/admin/statistics/coins";
+export const axiosStatisticsCoin = async () => {
+  try {
+    const response = await instance.get(axiosStatisticsCoinURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosStatisticsItemURL = "/v5/admin/statistics/coins";
+export const axiosStatisticsItem = async () => {
+  try {
+    const response = await instance.get(axiosStatisticsItemURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosLentShareIdURL = "/v4/lent/cabinets/share/";
 export const axiosLentShareId = async (
   cabinetId: number | null,

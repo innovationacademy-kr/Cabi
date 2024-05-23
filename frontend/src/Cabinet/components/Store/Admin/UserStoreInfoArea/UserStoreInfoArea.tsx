@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import BanModal from "@/Cabinet/components/Modals/BanModal/BanModal";
+import AdminUseItemModal from "@/Cabinet/components/Modals/StoreModal/AdminUseItemModal";
 import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
 
 export interface ISelectedUserInfo {
@@ -61,12 +62,7 @@ const UserStoreInfoArea: React.FC<{
           theme="grayLine"
         />
       </UserStoreInfoBtnsWrapperStyled>
-      {showBanModal && (
-        <BanModal
-          userId={selectedUserInfo.userId}
-          closeModal={handleCloseBanModal}
-        />
-      )}
+      {showBanModal && <AdminUseItemModal onClose={handleCloseBanModal} />}
     </UserStoreInfoAreaStyled>
   );
 };

@@ -41,9 +41,10 @@ const CoinCheckColorContainer = styled.div`
 const CoinCheckOffStyled = styled.div`
   position: relative;
   // cursor: pointer;
-  & > svg > circle {
-    fill: var(--white-text-with-bg-color);
-  }
+  //& > svg > circle {
+  //  fill: var(--white-text-with-bg-color);
+  ///* fill: var(--sys-main-color); */
+  //}
 `;
 
 const CoinCheckOffImgStyled = styled.div`
