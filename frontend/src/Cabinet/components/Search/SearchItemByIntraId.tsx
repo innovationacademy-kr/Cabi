@@ -81,12 +81,10 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     if (cabinetInfo?.cabinetId) {
       getCabinetInfoByCabinetId(cabinetInfo.cabinetId);
       setCurrentCabinetId(cabinetInfo.cabinetId);
-      openCabinet();
     } else {
       // TODO: 대여 사물함이 없는 유저 정보를 불러오는 api를 만들어야 함
       resetTargetCabinetInfo();
       setCurrentCabinetId(null);
-      openCabinet();
     }
   };
   const clickStoreItem = () => {
@@ -99,30 +97,14 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     setTargetUserInfo({
       name: name,
       userId: userId,
-      cabinetId: cabinetInfo?.cabinetId,
-      bannedAt: bannedAt,
-      unbannedAt: unbannedAt,
-      cabinetInfo: cabinetInfo,
     });
     setSelectedTypeOnSearch("ITEM");
-    setCurrentIntraId(name);
-    async function getCabinetInfoByCabinetId(cabinetId: number | null) {
-      try {
-        const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
-        setTargetCabinetInfo(data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
     if (cabinetInfo?.cabinetId) {
-      getCabinetInfoByCabinetId(cabinetInfo.cabinetId);
       setCurrentCabinetId(cabinetInfo.cabinetId);
-      openCabinet();
     } else {
       // TODO: 대여 사물함이 없는 유저 정보를 불러오는 api를 만들어야 함
       resetTargetCabinetInfo();
       setCurrentCabinetId(null);
-      openCabinet();
     }
   };
 
@@ -170,7 +152,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
             </NameWrapperStyled>
           </TextWrapper>
           <ButtonWrapper>
-            <CardButtonStyled onClick={clickStoreItem} isClickable>
+            <CardButtonStyled onClick={clickSearchItem} isClickable>
               사물함 정보
             </CardButtonStyled>
             <CardButtonStyled onClick={clickStoreItem} isClickable>

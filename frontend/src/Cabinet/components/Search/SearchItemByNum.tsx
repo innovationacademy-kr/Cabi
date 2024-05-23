@@ -56,7 +56,7 @@ const SearchItemByNum = (props: CabinetInfo) => {
       }
     }
     getData(cabinetId);
-    openCabinet();
+    // openCabinet();
   };
 
   return (

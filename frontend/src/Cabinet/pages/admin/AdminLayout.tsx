@@ -98,8 +98,8 @@ const Layout = (): JSX.Element => {
             {selectedTypeOnSearch === "USER" && (
               <UserCabinetInfoAreaContainer />
             )}
-            {selectedTypeOnSearch === "CABINET" && <CabinetInfoAreaContainer />}
             {selectedTypeOnSearch === "ITEM" && <UserStoreInfoAreaContainer />}
+            {selectedTypeOnSearch === "CABINET" && <CabinetInfoAreaContainer />}
           </DetailInfoContainerStyled>
           <MapInfoContainer />
         </WrapperStyled>
