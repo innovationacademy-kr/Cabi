@@ -1,5 +1,5 @@
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import {
   currentCabinetIdState,
   currentIntraIdState,
@@ -43,14 +43,16 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   );
   const setTargetUserInfo = useSetRecoilState(targetUserInfoState);
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
-  const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
+  const [selectedTypeOnSearch, setSelectedTypeOnSearch] = useRecoilState(
+    selectedTypeOnSearchState
+  );
   const { openCabinet, closeCabinet } = useMenu();
   const CabinetIcon =
     cabinetIconComponentMap[
       cabinetInfo ? cabinetInfo.lentType : CabinetType.PRIVATE
     ];
   const clickSearchItem = () => {
-    if (currentIntraId === name) {
+    if (currentIntraId === name && selectedTypeOnSearch !== "ITEM") {
       resetCurrentIntraId();
       closeCabinet();
       return;
@@ -86,26 +88,28 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       resetTargetCabinetInfo();
       setCurrentCabinetId(null);
     }
+    openCabinet();
   };
+
   const clickStoreItem = () => {
-    if (currentIntraId === name) {
+    if (currentIntraId === name && selectedTypeOnSearch === "ITEM") {
       resetCurrentIntraId();
       closeCabinet();
       return;
     }
-
     setTargetUserInfo({
       name: name,
       userId: userId,
     });
     setSelectedTypeOnSearch("ITEM");
+    setCurrentIntraId(name);
     if (cabinetInfo?.cabinetId) {
       setCurrentCabinetId(cabinetInfo.cabinetId);
     } else {
-      // TODO: 대여 사물함이 없는 유저 정보를 불러오는 api를 만들어야 함
       resetTargetCabinetInfo();
       setCurrentCabinetId(null);
     }
+    openCabinet();
   };
 
   return (

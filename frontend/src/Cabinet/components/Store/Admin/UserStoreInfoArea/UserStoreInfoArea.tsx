@@ -7,10 +7,10 @@ import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
 
 const UserStoreInfoArea: React.FC<{
   selectedUserInfo?: ISelectedUserStoreInfo;
-  closeUserStore: () => void;
   openUserStore: React.MouseEventHandler;
+  closeCabinet: () => void;
 }> = (props) => {
-  const { selectedUserInfo, closeUserStore, openUserStore } = props;
+  const { selectedUserInfo, openUserStore, closeCabinet } = props;
   const [showItemProvisionModal, setShowItemProvisionModal] =
     useState<boolean>(false);
 
@@ -50,11 +50,7 @@ const UserStoreInfoArea: React.FC<{
           text="아이템 지급"
           theme="line"
         />
-        <ButtonContainer
-          onClick={closeUserStore}
-          text="닫기"
-          theme="grayLine"
-        />
+        <ButtonContainer onClick={closeCabinet} text="닫기" theme="grayLine" />
       </UserStoreInfoBtnsWrapperStyled>
       {showItemProvisionModal && (
         <AdminUseItemModal onClose={handleCloseItemProvisionModal} />

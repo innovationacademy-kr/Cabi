@@ -16,7 +16,7 @@ const useMenu = () => {
 
   const toggleLeftNav = () => {
     if (
-      document.getElementById("leftNavWrap")?.classList.contains("on") == true
+      document.getElementById("leftNavWrap")?.classList.contains("on") === true
     ) {
       closeLeftNav();
     } else {
@@ -36,7 +36,7 @@ const useMenu = () => {
 
   const closeLeftNav = () => {
     if (
-      document.getElementById("leftNavWrap")?.classList.contains("on") == true
+      document.getElementById("leftNavWrap")?.classList.contains("on") === true
     ) {
       document.getElementById("menuBg")?.classList.remove("on");
       document.getElementById("leftNavWrap")?.classList.remove("on");
@@ -44,7 +44,9 @@ const useMenu = () => {
   };
 
   const toggleLent = () => {
-    if (document.getElementById("lentInfo")?.classList.contains("on") == true) {
+    if (
+      document.getElementById("lentInfo")?.classList.contains("on") === true
+    ) {
       closeLent();
     } else {
       openLent();
@@ -60,13 +62,15 @@ const useMenu = () => {
   };
 
   const closeLent = () => {
-    if (document.getElementById("lentInfo")?.classList.contains("on") == true) {
+    if (
+      document.getElementById("lentInfo")?.classList.contains("on") === true
+    ) {
       document.getElementById("lentInfo")?.classList.remove("on");
     }
   };
 
   const toggleMap = () => {
-    if (document.getElementById("mapInfo")?.classList.contains("on") == true) {
+    if (document.getElementById("mapInfo")?.classList.contains("on") === true) {
       closeMap();
     } else {
       openMap();
@@ -74,7 +78,7 @@ const useMenu = () => {
   };
 
   const toggleStore = () => {
-    if (document.getElementById("storeInfo")?.classList.contains("on") == true)
+    if (document.getElementById("storeInfo")?.classList.contains("on") === true)
       closeStore();
     else {
       openStore();
@@ -93,7 +97,7 @@ const useMenu = () => {
 
   const closeStore = () => {
     if (
-      document.getElementById("storeInfo")?.classList.contains("on") == true
+      document.getElementById("storeInfo")?.classList.contains("on") === true
     ) {
       document.getElementById("storeInfo")?.classList.remove("on");
       document.getElementById("menuBg")?.classList.remove("on");
@@ -111,7 +115,7 @@ const useMenu = () => {
   };
 
   const closeMap = () => {
-    if (document.getElementById("mapInfo")?.classList.contains("on") == true) {
+    if (document.getElementById("mapInfo")?.classList.contains("on") === true) {
       document.getElementById("mapInfo")?.classList.remove("on");
       document.getElementById("mapFloorOptionBox")?.classList.remove("on");
       document.getElementById("menuBg")?.classList.remove("on");
@@ -120,7 +124,7 @@ const useMenu = () => {
 
   const toggleCabinet = () => {
     if (
-      document.getElementById("cabinetDetailArea")?.classList.contains("on") ==
+      document.getElementById("cabinetDetailArea")?.classList.contains("on") ===
       true
     ) {
       closeCabinet();
@@ -141,8 +145,9 @@ const useMenu = () => {
 
   const closeCabinet = () => {
     closeLent();
+    closeStore();
     if (
-      document.getElementById("cabinetDetailArea")?.classList.contains("on") ==
+      document.getElementById("cabinetDetailArea")?.classList.contains("on") ===
       true
     ) {
       resetTargetCabinetInfo();
@@ -156,8 +161,9 @@ const useMenu = () => {
 
   const toggleClubMember = () => {
     if (
-      document.getElementById("clubMemberInfoArea")?.classList.contains("on") ==
-      true
+      document
+        .getElementById("clubMemberInfoArea")
+        ?.classList.contains("on") === true
     ) {
       closeClubMember();
     } else {
@@ -177,8 +183,9 @@ const useMenu = () => {
 
   const closeClubMember = () => {
     if (
-      document.getElementById("clubMemberInfoArea")?.classList.contains("on") ==
-      true
+      document
+        .getElementById("clubMemberInfoArea")
+        ?.classList.contains("on") === true
     ) {
       resetTargetClubUserInfo();
       document.getElementById("clubMemberInfoArea")?.classList.remove("on");
@@ -195,7 +202,9 @@ const useMenu = () => {
   };
 
   const closeUserStore = () => {
-    if (document.getElementById("lentInfo")?.classList.contains("on") == true) {
+    if (
+      document.getElementById("lentInfo")?.classList.contains("on") === true
+    ) {
       document.getElementById("lentInfo")?.classList.remove("on");
     }
   };

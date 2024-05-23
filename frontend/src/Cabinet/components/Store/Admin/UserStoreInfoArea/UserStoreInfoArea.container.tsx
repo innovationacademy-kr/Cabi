@@ -11,7 +11,7 @@ export interface ISelectedUserStoreInfo {
 
 const UserStoreInfoAreaContainer = (): JSX.Element => {
   const [targetUserInfo] = useRecoilState(targetUserInfoState);
-  const { closeUserStore, openUserStore } = useMenu();
+  const { openUserStore, closeCabinet } = useMenu();
 
   const userInfoData: ISelectedUserStoreInfo | undefined = targetUserInfo
     ? {
@@ -24,8 +24,8 @@ const UserStoreInfoAreaContainer = (): JSX.Element => {
     <>
       <UserStoreInfoArea
         selectedUserInfo={userInfoData}
-        closeUserStore={closeUserStore}
         openUserStore={openUserStore}
+        closeCabinet={closeCabinet}
       />
       {userInfoData && <AdminLentLog lentType={"USER"} />}
     </>
