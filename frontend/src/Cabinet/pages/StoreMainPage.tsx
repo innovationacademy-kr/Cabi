@@ -5,6 +5,7 @@ import { userState } from "@/Cabinet/recoil/atoms";
 import StoreItemCard from "@/Cabinet/components/Card/StoreItemCard/StoreItemCard";
 import StoreBuyItemModal from "@/Cabinet/components/Modals/StoreModal/StoreBuyItemModal";
 import StoreCoinPick from "@/Cabinet/components/Store/StoreCoinPick";
+import { ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
 import { axiosItems } from "@/Cabinet/api/axios/axios.custom";
 
@@ -22,7 +23,12 @@ const StoreMainPage = () => {
   };
 
   const sortedItems = items.sort((a, b) => {
-    const order = ["연장권", "이사권", "알림 등록권", "페널티 감면권"];
+    const order = [
+      ItemTypeLabelMap.EXTENSION,
+      ItemTypeLabelMap.SWAP,
+      ItemTypeLabelMap.ALARM,
+      ItemTypeLabelMap.PENALTY,
+    ];
     const indexA = order.indexOf(a.itemName);
     const indexB = order.indexOf(b.itemName);
     return indexA - indexB;

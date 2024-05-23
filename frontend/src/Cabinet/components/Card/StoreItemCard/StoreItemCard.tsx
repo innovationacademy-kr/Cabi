@@ -123,7 +123,7 @@ const ItemDetailStyled = styled.div`
   border-radius: 10px;
 `;
 
-const ItemIconStyled = styled.div<{ itemType: string }>`
+const ItemIconStyled = styled.div<{ itemType: StoreItemType }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -138,7 +138,7 @@ const ItemIconStyled = styled.div<{ itemType: string }>`
   & > svg > path {
     stroke: var(--white-text-with-bg-color);
     stroke-width: ${(props) =>
-      props.itemType === "EXTENSION" ? "2.8px" : "1.5px"};
+      props.itemType === StoreItemType.EXTENSION ? "2.8px" : "1.5px"};
   }
 `;
 
