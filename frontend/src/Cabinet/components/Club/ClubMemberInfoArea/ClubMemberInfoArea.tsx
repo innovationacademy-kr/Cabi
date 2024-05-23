@@ -21,8 +21,6 @@ import {
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 
-// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
-
 interface ClubMemberInfoAreaProps {
   selectedClubInfo: ClubResponseDto;
   selectedClubMemberInfo: ClubUserResponseDto;
@@ -216,7 +214,7 @@ const ClubMemberIconStyled = styled.div<{ isMasterSelected: boolean }>`
 
   & > svg {
     width: 24px;
-    height: 24px;
+    height: ${(props) => (props.isMasterSelected ? "20px" : "24px")};
   }
 
   & > svg > path {

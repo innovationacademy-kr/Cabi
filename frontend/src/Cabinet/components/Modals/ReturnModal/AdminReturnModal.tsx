@@ -31,8 +31,6 @@ import {
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
 import { handleOverdueUserList } from "@/Cabinet/utils/tableUtils";
 
-// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
-
 const AdminReturnModal: React.FC<{
   lentType?: CabinetType;
   closeModal: React.MouseEventHandler;

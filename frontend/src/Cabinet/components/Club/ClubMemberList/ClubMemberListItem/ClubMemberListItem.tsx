@@ -4,8 +4,6 @@ import { ReactComponent as CrownImg } from "@/Cabinet/assets/images/crown.svg";
 import { ReactComponent as UserImg } from "@/Cabinet/assets/images/privateIcon.svg";
 import { ClubUserResponseDto } from "@/Cabinet/types/dto/club.dto";
 
-// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
-
 interface ClubMemberListItemProps {
   bgColor?: string;
   isMaster?: boolean;

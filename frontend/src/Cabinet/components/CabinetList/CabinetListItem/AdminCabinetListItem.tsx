@@ -21,8 +21,6 @@ import { axiosCabinetById } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
 
-// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
-
 const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
     currentCabinetIdState

@@ -4,8 +4,6 @@ import { cabinetIconComponentMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as DropdownChevronIcon } from "@/Cabinet/assets/images/dropdownChevron.svg";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 
-// TODO : localhost 사물함 정보 제대로 받아온 후 다시 확인
-
 export interface IDropdownOptions {
   name: string;
   value: any;
