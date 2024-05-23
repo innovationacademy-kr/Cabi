@@ -1,61 +1,82 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
+import AdminLentLog from "@/Cabinet/components/LentLog/AdminLentLog";
 import AdminUseItemModal from "@/Cabinet/components/Modals/StoreModal/AdminUseItemModal";
-import { ISelectedUserStoreInfo } from "@/Cabinet/components/Store/Admin/UserStoreInfoArea/UserStoreInfoArea.container";
 import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
+import useMenu from "@/Cabinet/hooks/useMenu";
 
-const UserStoreInfoArea: React.FC<{
-  selectedUserInfo?: ISelectedUserStoreInfo;
-  openUserStore: React.MouseEventHandler;
-  closeCabinet: () => void;
-}> = (props) => {
-  const { selectedUserInfo, openUserStore, closeCabinet } = props;
+interface ISelectedUserStoreInfo {
+  name: string;
+  userId: number | null;
+}
+
+const UserStoreInfoArea = (): JSX.Element => {
+  const [targetUserInfo] = useRecoilState(targetUserInfoState);
+  const { openUserStore, closeCabinet } = useMenu();
   const [showItemProvisionModal, setShowItemProvisionModal] =
     useState<boolean>(false);
+  const userInfoData: ISelectedUserStoreInfo | undefined = targetUserInfo
+    ? {
+        name: targetUserInfo.name,
+        userId: targetUserInfo.userId,
+      }
+    : undefined;
 
   const handleOpenItemProvisionModal = () => {
     setShowItemProvisionModal(true);
   };
+
   const handleCloseItemProvisionModal = () => {
     setShowItemProvisionModal(false);
   };
 
-  if (selectedUserInfo === undefined)
-    return (
-      <NotSelectedStyled>
-        <UserInfoAreaLogoIconStyled selected={selectedUserInfo}>
-          <LogoIcon />
-        </UserInfoAreaLogoIconStyled>
-        <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
-          유저를 선택해주세요
-        </TextStyled>
-      </NotSelectedStyled>
-    );
-
   return (
-    <UserStoreInfoAreaStyled>
-      <LinkTextStyled onClick={openUserStore}>아이템 기록</LinkTextStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--normal-text-color)">
-        {selectedUserInfo.name}
-      </TextStyled>
-      <UserImgRectangleStyled>
-        <UserInfoAreaLogoIconStyled selected={selectedUserInfo}>
-          <LogoIcon />
-        </UserInfoAreaLogoIconStyled>
-      </UserImgRectangleStyled>
-      <UserStoreInfoBtnsWrapperStyled>
-        <ButtonContainer
-          onClick={handleOpenItemProvisionModal}
-          text="아이템 지급"
-          theme="line"
-        />
-        <ButtonContainer onClick={closeCabinet} text="닫기" theme="grayLine" />
-      </UserStoreInfoBtnsWrapperStyled>
-      {showItemProvisionModal && (
-        <AdminUseItemModal onClose={handleCloseItemProvisionModal} />
+    <>
+      {userInfoData ? (
+        <UserStoreInfoAreaStyled>
+          <LinkTextStyled onClick={openUserStore}>아이템 기록</LinkTextStyled>
+          <TextStyled fontSize="1rem" fontColor="var(--normal-text-color)">
+            {userInfoData.name}
+          </TextStyled>
+          <UserImgRectangleStyled>
+            <UserInfoAreaLogoIconStyled selected={userInfoData}>
+              <LogoIcon />
+            </UserInfoAreaLogoIconStyled>
+          </UserImgRectangleStyled>
+          <UserStoreInfoBtnsWrapperStyled>
+            <ButtonContainer
+              onClick={handleOpenItemProvisionModal}
+              text="아이템 지급"
+              theme="line"
+            />
+            <ButtonContainer
+              onClick={closeCabinet}
+              text="닫기"
+              theme="grayLine"
+            />
+          </UserStoreInfoBtnsWrapperStyled>
+          {showItemProvisionModal && (
+            <AdminUseItemModal onClose={handleCloseItemProvisionModal} />
+          )}
+        </UserStoreInfoAreaStyled>
+      ) : (
+        <NotSelectedStyled>
+          <UserInfoAreaLogoIconStyled selected={userInfoData}>
+            <LogoIcon />
+          </UserInfoAreaLogoIconStyled>
+          <TextStyled
+            fontSize="1.125rem"
+            fontColor="var(--gray-line-btn-color)"
+          >
+            유저를 선택해주세요
+          </TextStyled>
+        </NotSelectedStyled>
       )}
-    </UserStoreInfoAreaStyled>
+      {userInfoData && <AdminLentLog lentType={"USER"} />}
+    </>
   );
 };
 

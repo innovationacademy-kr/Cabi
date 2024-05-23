@@ -31,6 +31,7 @@ const UserCabinetInfoArea: React.FC<{
   const handleOpenBanModal = () => {
     setShowBanModal(true);
   };
+
   const handleCloseBanModal = () => {
     setShowBanModal(false);
   };
@@ -42,8 +43,7 @@ const UserCabinetInfoArea: React.FC<{
           <LogoIcon />
         </UserInfoAreaLogoIconStyled>
         <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
-          사물함/유저를 <br />
-          선택해주세요
+          유저를 선택해주세요
         </TextStyled>
       </NotSelectedStyled>
     );

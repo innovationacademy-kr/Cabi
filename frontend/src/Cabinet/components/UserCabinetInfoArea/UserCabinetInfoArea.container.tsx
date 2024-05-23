@@ -9,7 +9,6 @@ import useMenu from "@/Cabinet/hooks/useMenu";
 const UserCabinetInfoAreaContainer = (): JSX.Element => {
   const targetUserInfo = useRecoilValue(targetUserInfoState);
   const { closeCabinet, openLent } = useMenu();
-
   const userInfoData: ISelectedUserCabinetInfo | undefined = targetUserInfo
     ? {
         name: targetUserInfo.name,
