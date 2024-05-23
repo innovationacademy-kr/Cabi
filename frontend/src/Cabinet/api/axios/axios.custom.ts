@@ -856,3 +856,35 @@ export const axiosSendSlackNotificationToChannel = async (
     throw error;
   }
 };
+
+const axiosItemAssignURL = "v5/admin/items/assign";
+export const axiosItemAssign = async (
+  itemSku: string,
+  userId: number,
+): Promise<any> => {
+  try {
+    const response = await instance.post(axiosItemAssignURL, {
+      itemSku,
+      userId,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosItemAssignListURL = "/v5/admin/items/assign";
+export const axiosItemAssignList = async (
+  page: number,
+  size: number,
+): Promise<any> => {
+  if (page === null || size === null) return;
+  try {
+    const response = await instance.get(
+      axiosItemAssignListURL, {params: { page: page, size: size }}
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

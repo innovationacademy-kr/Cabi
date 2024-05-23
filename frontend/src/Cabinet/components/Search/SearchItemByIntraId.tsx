@@ -7,6 +7,7 @@ import {
   targetCabinetInfoState,
   targetUserInfoState,
 } from "@/Cabinet/recoil/atoms";
+import { CardButtonStyled } from "@/Cabinet/components/Card/Card";
 import ChangeToHTML from "@/Cabinet/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 import {
   cabinetIconComponentMap,
@@ -48,13 +49,13 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     cabinetIconComponentMap[
       cabinetInfo ? cabinetInfo.lentType : CabinetType.PRIVATE
     ];
-
   const clickSearchItem = () => {
     if (currentIntraId === name) {
       resetCurrentIntraId();
       closeCabinet();
       return;
     }
+
     setTargetUserInfo({
       name: name,
       userId: userId,
@@ -88,75 +89,110 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       openCabinet();
     }
   };
-  return cabinetInfo?.cabinetId ? (
-    <WrapperStyled
-      className="cabiButton"
-      isSelected={currentIntraId === name}
-      onClick={clickSearchItem}
-    >
-      <RectangleStyled status={cabinetInfo.status}>
-        {cabinetInfo.visibleNum}
-      </RectangleStyled>
-      <TextWrapper>
-        <LocationStyled>
-          {`${cabinetInfo.floor}층 - ${cabinetInfo.section}`}
-        </LocationStyled>
-        <NameWrapperStyled>
-          <IconWrapperStyled>
-            <CabinetIcon />
-          </IconWrapperStyled>
-          <NameStyled>
-            <ChangeToHTML origin={name} replace={searchValue} />
-          </NameStyled>
-        </NameWrapperStyled>
-      </TextWrapper>
-    </WrapperStyled>
-  ) : (
-    <WrapperStyled
-      className="cabiButton"
-      isSelected={currentIntraId === name}
-      onClick={clickSearchItem}
-    >
-      <RectangleStyled banned={!!bannedAt}>
-        {bannedAt ? "!" : "-"}
-      </RectangleStyled>
-      <TextWrapper>
-        <LocationStyled>대여 중이 아닌 사용자</LocationStyled>
-        <NameWrapperStyled>
-          <IconWrapperStyled />
-          <NameStyled>
-            <ChangeToHTML origin={name} replace={searchValue} />
-          </NameStyled>
-        </NameWrapperStyled>
-      </TextWrapper>
-    </WrapperStyled>
+  const clickStoreItem = () => {
+    if (currentIntraId === name) {
+      resetCurrentIntraId();
+      closeCabinet();
+      return;
+    }
+
+    setTargetUserInfo({
+      name: name,
+      userId: userId,
+      cabinetId: cabinetInfo?.cabinetId,
+      bannedAt: bannedAt,
+      unbannedAt: unbannedAt,
+      cabinetInfo: cabinetInfo,
+    });
+    setSelectedTypeOnSearch("ITEM");
+    setCurrentIntraId(name);
+    async function getCabinetInfoByCabinetId(cabinetId: number | null) {
+      try {
+        const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
+        setTargetCabinetInfo(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (cabinetInfo?.cabinetId) {
+      getCabinetInfoByCabinetId(cabinetInfo.cabinetId);
+      setCurrentCabinetId(cabinetInfo.cabinetId);
+      openCabinet();
+    } else {
+      // TODO: 대여 사물함이 없는 유저 정보를 불러오는 api를 만들어야 함
+      resetTargetCabinetInfo();
+      setCurrentCabinetId(null);
+      openCabinet();
+    }
+  };
+
+  return (
+    <>
+      {cabinetInfo?.cabinetId ? (
+        <WrapperStyled>
+          <RectangleStyled status={cabinetInfo.status}>
+            {cabinetInfo.visibleNum}
+          </RectangleStyled>
+          <TextWrapper>
+            <LocationStyled>
+              {`${cabinetInfo.floor}층 - ${cabinetInfo.section}`}
+            </LocationStyled>
+            <NameWrapperStyled>
+              <IconWrapperStyled>
+                <CabinetIcon />
+              </IconWrapperStyled>
+              <NameStyled>
+                <ChangeToHTML origin={name} replace={searchValue} />
+              </NameStyled>
+            </NameWrapperStyled>
+          </TextWrapper>
+          <ButtonWrapper>
+            <CardButtonStyled onClick={clickSearchItem} isClickable>
+              사물함 정보
+            </CardButtonStyled>
+            <CardButtonStyled onClick={clickStoreItem} isClickable>
+              사용자 관리
+            </CardButtonStyled>
+          </ButtonWrapper>
+        </WrapperStyled>
+      ) : (
+        <WrapperStyled>
+          <RectangleStyled banned={!!bannedAt}>
+            {bannedAt ? "!" : "-"}
+          </RectangleStyled>
+          <TextWrapper>
+            <LocationStyled>대여 사물함 없음</LocationStyled>
+            <NameWrapperStyled>
+              <IconWrapperStyled />
+              <NameStyled>
+                <ChangeToHTML origin={name} replace={searchValue} />
+              </NameStyled>
+            </NameWrapperStyled>
+          </TextWrapper>
+          <ButtonWrapper>
+            <CardButtonStyled onClick={clickStoreItem} isClickable>
+              사물함 정보
+            </CardButtonStyled>
+            <CardButtonStyled onClick={clickStoreItem} isClickable>
+              사용자 관리
+            </CardButtonStyled>
+          </ButtonWrapper>
+        </WrapperStyled>
+      )}{" "}
+    </>
   );
 };
 
-const WrapperStyled = styled.div<{ isSelected: boolean }>`
+const WrapperStyled = styled.div`
   width: 350px;
   height: 110px;
   border-radius: 10px;
-  padding: 25px;
+  padding: 24px;
   background-color: var(--card-bg-color);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   transition: transform 0.2s, opacity 0.2s;
-  cursor: pointer;
-  ${({ isSelected }) =>
-    isSelected &&
-    css`
-      opacity: 0.9;
-      transform: scale(1.02);
-      box-shadow: inset 4px 4px 4px var(--table-border-shadow-color-100),
-        2px 2px 4px var(--table-border-shadow-color-100);
-    `}
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      opacity: 0.9;
-      transform: scale(1.05);
-    }
-  }
 `;
 
 const RectangleStyled = styled.div<{
@@ -185,14 +221,17 @@ const RectangleStyled = styled.div<{
 `;
 
 const TextWrapper = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   margin-left: 10px;
+  width: 40%;
 `;
 
 const LocationStyled = styled.p`
   font-size: 0.875rem;
-  line-height: 28px;
+  line-height: 20px;
   color: var(--gray-line-btn-color);
 `;
 
@@ -204,7 +243,6 @@ const NameWrapperStyled = styled.div`
   justify-content: flex-start;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow: hidden;
 `;
 
 const NameStyled = styled.span`
@@ -228,6 +266,20 @@ const IconWrapperStyled = styled.div`
   & > svg {
     width: 18px;
     height: 28px;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: var(--size-base);
+
+  & > div {
+    padding-left: 8px;
+    padding-right: 8px;
   }
 `;
 

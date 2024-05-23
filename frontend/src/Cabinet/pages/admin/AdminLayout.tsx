@@ -20,6 +20,7 @@ const Layout = (): JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
   const selectedTypeOnSearch = useRecoilValue(selectedTypeOnSearchState);
+
   const token = getCookie("admin_access_token");
 
   const checkPath = () => {
@@ -94,11 +95,11 @@ const Layout = (): JSX.Element => {
             id="cabinetDetailArea"
             isFloat={!isMainPage && !isSearchPage}
           >
-            {selectedTypeOnSearch === "USER" ? (
+            {selectedTypeOnSearch === "USER" && (
               <UserCabinetInfoAreaContainer />
-            ) : (
-              <CabinetInfoAreaContainer />
             )}
+            {selectedTypeOnSearch === "CABINET" && <CabinetInfoAreaContainer />}
+            {selectedTypeOnSearch === "ITEM" && <UserStoreInfoAreaContainer />}
           </DetailInfoContainerStyled>
           <MapInfoContainer />
         </WrapperStyled>
