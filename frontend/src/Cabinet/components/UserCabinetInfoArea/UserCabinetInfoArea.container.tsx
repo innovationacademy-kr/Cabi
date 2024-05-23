@@ -2,7 +2,7 @@ import { useRecoilValue } from "recoil";
 import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
 import AdminLentLog from "@/Cabinet/components/LentLog/AdminLentLog";
 import UserCabinetInfoArea, {
-  ISelectedUserInfo,
+  ISelectedUserCabinetInfo,
 } from "@/Cabinet/components/UserCabinetInfoArea/UserCabinetInfoArea";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -10,7 +10,7 @@ const UserCabinetInfoAreaContainer = (): JSX.Element => {
   const targetUserInfo = useRecoilValue(targetUserInfoState);
   const { closeCabinet, openLent } = useMenu();
 
-  const userInfoData: ISelectedUserInfo | undefined = targetUserInfo
+  const userInfoData: ISelectedUserCabinetInfo | undefined = targetUserInfo
     ? {
         name: targetUserInfo.name,
         userId: targetUserInfo.userId,

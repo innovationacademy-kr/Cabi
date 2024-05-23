@@ -12,7 +12,7 @@ import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 
-export interface ISelectedUserInfo {
+export interface ISelectedUserCabinetInfo {
   name: string;
   userId: number | null;
   isBanned: boolean;
@@ -20,7 +20,7 @@ export interface ISelectedUserInfo {
 }
 
 const UserCabinetInfoArea: React.FC<{
-  selectedUserInfo?: ISelectedUserInfo;
+  selectedUserInfo?: ISelectedUserCabinetInfo;
   closeCabinet: () => void;
   openLent: React.MouseEventHandler;
 }> = (props) => {
