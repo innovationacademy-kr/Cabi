@@ -6,7 +6,7 @@ import ClubCabinetInfoCard from "@/Cabinet/components/Card/ClubCabinetInfoCard/C
 import ClubNoticeCard from "@/Cabinet/components/Card/ClubNoticeCard/ClubNoticeCard";
 import ClubMemberListContainer from "@/Cabinet/components/Club/ClubMemberList/ClubMemberList.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { ReactComponent as SadCcabi } from "@/Cabinet/assets/images/sadCcabi.svg";
+import UnavailableDataInfo from "@/Cabinet/components/Common/UnavailableDataInfo";
 import { ClubInfoResponseDto } from "@/Cabinet/types/dto/club.dto";
 import useClubInfo from "@/Cabinet/hooks/useClubInfo";
 import useMenu from "@/Cabinet/hooks/useMenu";
@@ -31,12 +31,9 @@ const ClubInfo = () => {
       {clubInfo === undefined ? (
         <LoadingAnimation />
       ) : clubInfo === STATUS_400_BAD_REQUEST ? (
-        <EmptyClubCabinetTextStyled>
-          동아리 사물함이 없어요
-          <SadCcabiStyled>
-            <SadCcabi />
-          </SadCcabiStyled>
-        </EmptyClubCabinetTextStyled>
+        <>
+          <UnavailableDataInfo msg="동아리 사물함이 없어요" />
+        </>
       ) : (
         <ClubInfoWrapperStyled>
           <TitleStyled>동아리 정보</TitleStyled>
@@ -54,34 +51,6 @@ const ClubInfo = () => {
     </>
   );
 };
-
-const EmptyClubCabinetTextStyled = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.125rem;
-  color: var(--gray-line-btn-color);
-`;
-
-const SadCcabiStyled = styled.div`
-  display: flex;
-  margin-left: 5px;
-  width: 30px;
-  height: 30px;
-  margin-left: 8px;
-  padding-top: 3px;
-
-  & > svg {
-    width: 30px;
-    height: 30px;
-  }
-
-  & > svg > path {
-    fill: var(--gray-line-btn-color);
-  }
-`;
 
 const ClubInfoWrapperStyled = styled.div`
   display: flex;

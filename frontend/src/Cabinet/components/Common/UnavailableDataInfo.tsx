@@ -17,7 +17,7 @@ const UnavailableDataInfo = ({
   return (
     <EmptyWrapperStyled>
       <EmptyItemUsageLogTextStyled height={height} fontSize={fontSize}>
-        <p>{msg}</p>
+        {msg}
       </EmptyItemUsageLogTextStyled>
       <SadCcabiIconStyled width={iconWidth} height={iconHeight}>
         <SadCabiIcon />
