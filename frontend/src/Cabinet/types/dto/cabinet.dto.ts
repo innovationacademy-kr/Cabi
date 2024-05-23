@@ -29,7 +29,7 @@ export interface CabinetInfo {
   cabinetId: number;
   visibleNum: number;
   lentType: CabinetType;
-  title: string | null;
+  title: string;
   maxUser: number;
   status: CabinetStatus;
   section: string;
