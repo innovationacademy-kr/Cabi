@@ -1,30 +1,24 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
-import BanModal from "@/Cabinet/components/Modals/BanModal/BanModal";
 import AdminUseItemModal from "@/Cabinet/components/Modals/StoreModal/AdminUseItemModal";
+import { ISelectedUserStoreInfo } from "@/Cabinet/components/Store/Admin/UserStoreInfoArea/UserStoreInfoArea.container";
 import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
 
-export interface ISelectedUserInfo {
-  name: string;
-  userId: number | null;
-  isBanned: boolean;
-  bannedInfo?: string;
-}
-
 const UserStoreInfoArea: React.FC<{
-  selectedUserInfo?: ISelectedUserInfo;
+  selectedUserInfo?: ISelectedUserStoreInfo;
   closeUserStore: () => void;
   openUserStore: React.MouseEventHandler;
 }> = (props) => {
   const { selectedUserInfo, closeUserStore, openUserStore } = props;
-  const [showBanModal, setShowBanModal] = useState<boolean>(false);
+  const [showItemProvisionModal, setShowItemProvisionModal] =
+    useState<boolean>(false);
 
-  const handleOpenBanModal = () => {
-    setShowBanModal(true);
+  const handleOpenItemProvisionModal = () => {
+    setShowItemProvisionModal(true);
   };
-  const handleCloseBanModal = () => {
-    setShowBanModal(false);
+  const handleCloseItemProvisionModal = () => {
+    setShowItemProvisionModal(false);
   };
 
   if (selectedUserInfo === undefined)
@@ -52,7 +46,7 @@ const UserStoreInfoArea: React.FC<{
       </UserImgRectangleStyled>
       <UserStoreInfoBtnsWrapperStyled>
         <ButtonContainer
-          onClick={handleOpenBanModal}
+          onClick={handleOpenItemProvisionModal}
           text="아이템 지급"
           theme="line"
         />
@@ -62,7 +56,9 @@ const UserStoreInfoArea: React.FC<{
           theme="grayLine"
         />
       </UserStoreInfoBtnsWrapperStyled>
-      {showBanModal && <AdminUseItemModal onClose={handleCloseBanModal} />}
+      {showItemProvisionModal && (
+        <AdminUseItemModal onClose={handleCloseItemProvisionModal} />
+      )}
     </UserStoreInfoAreaStyled>
   );
 };
@@ -133,7 +129,7 @@ const UserStoreInfoBtnsWrapperStyled = styled.div`
 `;
 
 export const UserInfoAreaLogoIconStyled = styled.div<{
-  selected: ISelectedUserInfo | undefined;
+  selected: ISelectedUserStoreInfo | undefined;
 }>`
   width: ${(props) => (props.selected ? "42px" : "35px")};
   height: ${(props) => (props.selected ? "42px" : "35px")};
