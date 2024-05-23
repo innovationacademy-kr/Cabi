@@ -24,7 +24,7 @@ export const getDefaultCabinetInfo = () => ({
   cabinetId: 0,
   visibleNum: 0,
   lentType: CabinetType.PRIVATE,
-  title: null,
+  title: "",
   maxUser: 0,
   status: CabinetStatus.PENDING,
   section: "",
