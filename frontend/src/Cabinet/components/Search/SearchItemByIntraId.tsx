@@ -15,6 +15,7 @@ import {
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
+import AdminNavType from "@/Cabinet/types/enum/adminNav.enum";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 import { axiosAdminCabinetInfoByCabinetId } from "@/Cabinet/api/axios/axios.custom";
@@ -52,7 +53,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       cabinetInfo ? cabinetInfo.lentType : CabinetType.PRIVATE
     ];
   const clickSearchItem = () => {
-    if (currentIntraId === name && selectedTypeOnSearch !== "ITEM") {
+    if (currentIntraId === name && selectedTypeOnSearch !== AdminNavType.ITEM) {
       resetCurrentIntraId();
       closeCabinet();
       return;
@@ -67,9 +68,9 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       cabinetInfo: cabinetInfo,
     });
     if (cabinetInfo?.cabinetId) {
-      setSelectedTypeOnSearch("CABINET");
+      setSelectedTypeOnSearch(AdminNavType.CABINET);
     } else {
-      setSelectedTypeOnSearch("USER");
+      setSelectedTypeOnSearch(AdminNavType.USER);
     }
     setCurrentIntraId(name);
     async function getCabinetInfoByCabinetId(cabinetId: number | null) {
@@ -92,7 +93,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   };
 
   const clickStoreItem = () => {
-    if (currentIntraId === name && selectedTypeOnSearch === "ITEM") {
+    if (currentIntraId === name && selectedTypeOnSearch === AdminNavType.ITEM) {
       resetCurrentIntraId();
       closeCabinet();
       return;
@@ -101,7 +102,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       name: name,
       userId: userId,
     });
-    setSelectedTypeOnSearch("ITEM");
+    setSelectedTypeOnSearch(AdminNavType.ITEM);
     setCurrentIntraId(name);
     if (cabinetInfo?.cabinetId) {
       setCurrentCabinetId(cabinetInfo.cabinetId);

@@ -16,6 +16,7 @@ import { LentDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import { axiosAdminCabinetInfoByCabinetId } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
+import AdminNavType from "@/Cabinet/types/enum/adminNav.enum";
 
 const reformIntraId = (lents: LentDto[]) => {
   if (!lents || lents.length === 0) {
@@ -45,7 +46,7 @@ const SearchItemByNum = (props: CabinetInfo) => {
       closeCabinet();
       return;
     }
-    setSelectedTypeOnSearch("CABINET");
+    setSelectedTypeOnSearch(AdminNavType.CABINET);
     setCurrentCabinetId(cabinetId);
     async function getData(cabinetId: number) {
       try {

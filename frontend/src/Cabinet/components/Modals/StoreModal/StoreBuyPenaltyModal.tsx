@@ -17,6 +17,7 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "../ResponseModal/ResponseModal";
+import { IInventoryInfo } from "../../Store/Inventory/Inventory";
 
 interface PenaltyModalProps {
   onClose: () => void;
@@ -34,6 +35,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const setMyInfo = useSetRecoilState<UserDto>(userState);
+  const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
 
   const penaltyPeriod = [
     { sku: "PENALTY_3", period: "3일" },
@@ -44,6 +46,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   const tryGetPenaltyItem = async () => {
     try {
       const { data } = await axiosMyItems();
+      setMyItems(data);
       const foundItem = data.penaltyItems.find(
         (item: IStoreItem) =>
           item.itemDetails === penaltyPeriod[Number(selectedOption)].period
@@ -53,6 +56,9 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     } catch (error) {
       throw error;
     }
+  };
+  const findMyExtension = (period: string) => {
+    return !myItems?.penaltyItems.some((item) => item.itemDetails === period);
   };
 
   const tryPenaltyItemUse = async (
@@ -105,7 +111,9 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     // console.log("test",option );
     setSelectedOption(option);
   };
-
+  // const findMyExtension = (period: string) => {
+  //   return !myItems?.extensionItems.some((item) => item.itemDetails === period);
+  // };
   const modalContents: IModalContents = {
     type: "hasProceedBtn",
     iconType: "CHECK",
@@ -127,17 +135,24 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
               {
                 name: penaltyPeriod[0].period,
                 value: "0",
+                disabled: findMyExtension(penaltyPeriod[0].period),
               },
               {
                 name: penaltyPeriod[1].period,
                 value: "1",
+                disabled: findMyExtension(penaltyPeriod[1].period),
               },
               {
                 name: penaltyPeriod[2].period,
                 value: "2",
+                disabled: findMyExtension(penaltyPeriod[3].period),
               },
             ]}
-            defaultValue={penaltyPeriod[0].period}
+            defaultValue={!findMyExtension(penaltyPeriod[0].period)
+              ? !findMyExtension(penaltyPeriod[1].period)
+                ? penaltyPeriod[2].period
+                : penaltyPeriod[1].period
+              : penaltyPeriod[0].period}
             onChangeValue={handleDropdownChange}
           />
         </ModalContainerStyled>
