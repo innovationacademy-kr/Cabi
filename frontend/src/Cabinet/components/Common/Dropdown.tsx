@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { cabinetIconComponentMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as DropdownChevronIcon } from "@/Cabinet/assets/images/dropdownChevron.svg";
@@ -8,7 +8,7 @@ export interface IDropdownOptions {
   name: string;
   value: any;
   imageSrc?: string;
-  disabled?: boolean;
+  isDisable?: boolean;
 }
 
 export interface IDropdown {
@@ -29,6 +29,7 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
     <DropdownContainerStyled>
       <DropdownSelectionBoxStyled
         onClick={() => {
+          if (options[selectedIdx].isDisable) return;
           setIsOpen(!isOpen);
         }}
       >
@@ -59,7 +60,7 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
                 }
               }}
               isSelected={option.name === currentName}
-              isDisabled={option.disabled}
+              isDisabled={option.isDisable}
             >
               {option.imageSrc && (
                 <OptionsImgStyled isSelected={option.name === currentName}>

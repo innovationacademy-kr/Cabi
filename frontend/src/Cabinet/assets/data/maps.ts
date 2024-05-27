@@ -7,7 +7,11 @@ import { ReactComponent as SwapImg } from "@/Cabinet/assets/images/storeMove.svg
 import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
+import {
+  StoreExtensionType,
+  StoreItemType,
+  StorePenaltyType,
+} from "@/Cabinet/types/enum/store.enum";
 
 export enum additionalModalType {
   MODAL_RETURN = "MODAL_RETURN",
@@ -250,4 +254,16 @@ export const ItemTypeLabelMap = {
   [StoreItemType.SWAP]: "이사권",
   [StoreItemType.ALARM]: "알림 등록권",
   [StoreItemType.PENALTY]: "페널티 감면권",
+};
+
+export const ItemTypePenaltyMap = {
+  [StorePenaltyType.PENALTY_3]: "3일",
+  [StorePenaltyType.PENALTY_7]: "7일",
+  [StorePenaltyType.PENALTY_31]: "31일",
+};
+
+export const ItemTypeExtensionMap = {
+  [StoreExtensionType.EXTENSION_3]: "3일",
+  [StoreExtensionType.EXTENSION_15]: "15일",
+  [StoreExtensionType.EXTENSION_31]: "31일",
 };

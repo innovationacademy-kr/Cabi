@@ -5,7 +5,11 @@ import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
-import { formatDate, formatDateTime } from "@/Cabinet/utils/dateUtils";
+import {
+  formatDate,
+  formatDateTime,
+  getRemainingTime,
+} from "@/Cabinet/utils/dateUtils";
 
 const OverduePenaltyModal: React.FC<{
   status: CabinetStatus | additionalModalType;
@@ -16,6 +20,7 @@ const OverduePenaltyModal: React.FC<{
   const unbannedAtDate = props.unbannedAt ? new Date(props.unbannedAt) : null;
   const hasPenaltyItem = props.hasPenaltyItem;
 
+  // console.log("getRemainingTime", getRemainingTime(props.unbannedAt));
   const penaltyDateDetailStore = hasPenaltyItem
     ? `페널티 기간은 <strong>${formatDate(
         unbannedAtDate,

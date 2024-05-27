@@ -44,9 +44,8 @@ export const formatDate = (date: Date | null, divider: string) => {
  */
 export const formatDateTime = (date: Date | null, divider: string) => {
   if (date === null) return "";
-  return [date.getHours(), date.getMinutes()].join(divider);
+  return [date.getHours(), date.getMinutes()].map(padTo2Digits).join(divider);
 };
-
 /**
  * @description 주어진 lentType에 따라 대여 만료일을 구해 "YYYY/MM/DD" 형식으로 반환. 예정된 대여 만료일이 있다면 그 일자를 반환
  *
@@ -131,6 +130,16 @@ export const getReduceDateString = (
   expireDate.setDate(expireDate.getDate() - dateToExtend * dayInMilisec);
   return formatDate(expireDate, "/");
 };
+
+// export const getReduceDateString = (
+//   existExpireDate: Date | undefined | null,
+//   dateToExtend: number | undefined
+// ) => {
+//   if (!existExpireDate || dateToExtend === undefined) return;
+//   const expireDate = new Date(existExpireDate);
+//   expireDate.setDate(expireDate.getDate() - dateToExtend);
+//   return formatDate(expireDate, "/");
+// };
 
 /**
  * @description 주어진 대여 만료일을 기준으로 남은 대여일 수를 계산하여 반환. 만료일이 지났다면 음수로 반환

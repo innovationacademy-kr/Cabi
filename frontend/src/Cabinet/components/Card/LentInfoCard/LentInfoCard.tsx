@@ -10,7 +10,7 @@ import { MyCabinetInfo } from "@/Cabinet/components/Card/LentInfoCard/LentInfoCa
 import { cabinetIconComponentMap } from "@/Cabinet/assets/data/maps";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import AdminUseItemModal from "../../Modals/StoreModal/AdminUseItemModal";
+import AdminItemProvisionModal from "../../Modals/StoreModal/AdminItemProvisionModal";
 import StoreBuyPenalty from "../../Modals/StoreModal/StoreBuyPenaltyModal";
 
 const calculateFontSize = (userCount: number): string => {
@@ -129,9 +129,10 @@ const LentInfoCard = ({
       {isModalOpen && (
         <StoreBuyPenalty
           onClose={onClose}
+          // unbannedAt={unbannedAt}
           remainPenaltyPeriod={remainPenaltyPeriod}
         />
-        // <AdminUseItemModal onClose={onClose} />
+        // <AdminItemProvisionModal onClose={onClose} />
       )}
     </>
   );

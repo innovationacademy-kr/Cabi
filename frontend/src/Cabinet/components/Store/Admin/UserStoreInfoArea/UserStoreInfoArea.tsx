@@ -5,7 +5,7 @@ import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import SelectInduction from "@/Cabinet/components/Common/SelectInduction";
 import AdminLentLog from "@/Cabinet/components/LentLog/AdminLentLog";
-import AdminUseItemModal from "@/Cabinet/components/Modals/StoreModal/AdminUseItemModal";
+import AdminItemProvisionModal from "@/Cabinet/components/Modals/StoreModal/AdminItemProvisionModal";
 import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -60,7 +60,7 @@ const UserStoreInfoArea = (): JSX.Element => {
             />
           </UserStoreInfoBtnsWrapperStyled>
           {showItemProvisionModal && (
-            <AdminUseItemModal onClose={handleCloseItemProvisionModal} />
+            <AdminItemProvisionModal onClose={handleCloseItemProvisionModal} />
           )}
         </UserStoreInfoAreaStyled>
       ) : (

@@ -1,34 +1,44 @@
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { myCabinetInfoState, userState } from "@/Cabinet/recoil/atoms";
+import { userState } from "@/Cabinet/recoil/atoms";
 import Dropdown from "@/Cabinet/components/Common/Dropdown";
+import { ItemTypePenaltyMap } from "@/Cabinet/assets/data/maps";
 import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
+import { StorePenaltyType } from "@/Cabinet/types/enum/store.enum";
 import {
   axiosMyInfo,
   axiosMyItems,
   axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
 import { getReduceDateString } from "@/Cabinet/utils/dateUtils";
+import { IInventoryInfo } from "../../Store/Inventory/Inventory";
 import Modal, { IModalContents } from "../Modal";
 import ModalPortal from "../ModalPortal";
 import {
   FailResponseModal,
   SuccessResponseModal,
 } from "../ResponseModal/ResponseModal";
-import { IInventoryInfo } from "../../Store/Inventory/Inventory";
 
 interface PenaltyModalProps {
   onClose: () => void;
   remainPenaltyPeriod: number;
 }
 
+const STATUS_OPTIONS = [
+  { name: "3일", value: StorePenaltyType.PENALTY_3 },
+  { name: "7일", value: StorePenaltyType.PENALTY_7 },
+  { name: "31일", value: StorePenaltyType.PENALTY_31 },
+];
+
 const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   onClose,
   remainPenaltyPeriod,
 }) => {
-  const [selectedOption, setSelectedOption] = useState("0");
+  const [selectedOption, setSelectedOption] = useState<StorePenaltyType>(
+    StorePenaltyType.PENALTY_3
+  );
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState<string>("");
@@ -37,11 +47,15 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   const setMyInfo = useSetRecoilState<UserDto>(userState);
   const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
 
-  const penaltyPeriod = [
-    { sku: "PENALTY_3", period: "3일" },
-    { sku: "PENALTY_7", period: "7일" },
-    { sku: "PENALTY_31", period: "31일" },
-  ];
+  const handleDropdownChange = (option: StorePenaltyType) => {
+    setSelectedOption(option);
+  };
+
+  const STATUS_DROP_DOWN_PROPS = {
+    options: STATUS_OPTIONS,
+    defaultValue: STATUS_OPTIONS[0].name,
+    onChangeValue: handleDropdownChange,
+  };
 
   const tryGetPenaltyItem = async () => {
     try {
@@ -49,7 +63,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
       setMyItems(data);
       const foundItem = data.penaltyItems.find(
         (item: IStoreItem) =>
-          item.itemDetails === penaltyPeriod[Number(selectedOption)].period
+          item.itemDetails === ItemTypePenaltyMap[selectedOption]
       );
       if (foundItem) return true;
       else return false;
@@ -67,7 +81,6 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   //   }
   // };
 
-
   useEffect(() => {
     tryGetPenaltyItem();
   }, []);
@@ -77,15 +90,15 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   };
 
   const tryPenaltyItemUse = async (
-    item: string,
+    sku: StorePenaltyType,
     usePenaltyItemDays: number
   ) => {
     try {
-      await axiosUseItem(item, null, null, null, null);
+      await axiosUseItem(sku, null, null, null, null);
       const { data: myInfo } = await axiosMyInfo();
       setMyInfo(myInfo);
       setModalTitle("페널티 감면권 사용 완료");
-      if (remainPenaltyPeriod <= usePenaltyItemDays) {
+      if (remainPenaltyPeriod < 0) {
         setModalContent("남은 페널티 기간이 모두 소멸되었습니다");
       } else {
         setModalContent(
@@ -100,18 +113,16 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     }
   };
 
-  const HandlePenaltyItemUse = async (item: string) => {
+  const HandlePenaltyItemUse = async (sku: StorePenaltyType) => {
     setIsLoading(true);
-    const usePenaltyItemDays = parseInt(
-      penaltyPeriod[Number(selectedOption)].period
-    );
+    const usePenaltyItemDays = parseInt(ItemTypePenaltyMap[sku]);
     try {
       const hasPenaltyItem = await tryGetPenaltyItem();
       if (hasPenaltyItem === false) {
         setModalTitle("페널티 감면권이 없습니다");
         setModalContent("페널티 감면권은 까비상점에서 구매하실 수 있습니다.");
       } else {
-        await tryPenaltyItemUse(item, usePenaltyItemDays);
+        await tryPenaltyItemUse(sku, usePenaltyItemDays);
       }
     } catch (error: any) {
       setModalTitle(error.response.data.message);
@@ -122,13 +133,6 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     }
   };
 
-  const handleDropdownChange = (option: string) => {
-    // console.log("test",option );
-    setSelectedOption(option);
-  };
-  // const findMyExtension = (period: string) => {
-  //   return !myItems?.extensionItems.some((item) => item.itemDetails === period);
-  // };
   const modalContents: IModalContents = {
     type: "hasProceedBtn",
     iconType: "CHECK",
@@ -139,42 +143,20 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     closeModal: onClose,
     isLoading: isLoading,
     onClickProceed: async () => {
-      HandlePenaltyItemUse(penaltyPeriod[Number(selectedOption)].sku);
+      HandlePenaltyItemUse(selectedOption);
     },
     renderAdditionalComponent: () => (
       <>
         <ModalContainerStyled>
           <ModalDropdownNameStyled>페널티권 타입</ModalDropdownNameStyled>
-          <Dropdown
-            options={[
-              {
-                name: penaltyPeriod[0].period,
-                value: 0,
-                disabled: findMyExtension(penaltyPeriod[0].period),
-              },
-              {
-                name: penaltyPeriod[1].period,
-                value: 1,
-                disabled: findMyExtension(penaltyPeriod[1].period),
-              },
-              {
-                name: penaltyPeriod[2].period,
-                value: 2,
-                disabled: findMyExtension(penaltyPeriod[2].period),
-              },
-            ]}
-            defaultValue={findMyExtension(penaltyPeriod[0].period)
-              ? findMyExtension(penaltyPeriod[1].period)
-                ? penaltyPeriod[0].period
-                : penaltyPeriod[1].period
-              : penaltyPeriod[2].period}
-            onChangeValue={handleDropdownChange}
-          />
+          <Dropdown {...STATUS_DROP_DOWN_PROPS} />
         </ModalContainerStyled>
-
         <ModalDetailStyled>
           <ModalDetailContentStyled>
-            현재 남아있는 페널티 일수는 <strong>{remainPenaltyPeriod}</strong>{" "}
+            현재 남아있는 페널티 일수는{" "}
+            <strong>
+              {remainPenaltyPeriod == 0 ? remainPenaltyPeriod : 1}
+            </strong>{" "}
             입니다. <br />
             선택한 페널티 감면권에 해당하는 일수만큼 <br />
             페널티가 감소합니다. <br />

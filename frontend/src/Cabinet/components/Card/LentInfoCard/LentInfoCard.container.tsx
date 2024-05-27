@@ -119,6 +119,7 @@ const LentInfoCardContainer = ({
       setIsPenaltyUser(false);
     } else {
       // 만료일을 버림 -> 시간 기준으로 평가하기 위함
+      setPenaltyPeriod(getRemainingTime(unbannedAt));
       tempPenaltyPeriod = tempPenaltyPeriod;
     }
   }, [unbannedAt]);
