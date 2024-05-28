@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
+import SelectInduction from "@/Cabinet/components/Common/SelectInduction";
 import BanModal from "@/Cabinet/components/Modals/BanModal/BanModal";
-import { UserInfoAreaLogoIconStyled } from "@/Cabinet/components/Store/Admin/UserStoreInfoArea/UserStoreInfoArea";
 import {
   cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
-import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 
@@ -38,14 +37,10 @@ const UserCabinetInfoArea: React.FC<{
 
   if (selectedUserInfo === undefined)
     return (
-      <NotSelectedStyled>
-        <UserInfoAreaLogoIconStyled selected={selectedUserInfo}>
-          <LogoIcon />
-        </UserInfoAreaLogoIconStyled>
-        <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
-          유저를 선택해주세요
-        </TextStyled>
-      </NotSelectedStyled>
+      <SelectInduction
+        msg="유저를
+              선택해주세요"
+      />
     );
 
   return (
@@ -92,26 +87,12 @@ const UserCabinetInfoArea: React.FC<{
   );
 };
 
-const NotSelectedStyled = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 const CabinetDetailAreaStyled = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-`;
-
-const CabiLogoStyled = styled.img`
-  width: 35px;
-  height: 35px;
-  margin-bottom: 10px;
 `;
 
 const CabinetTypeIconStyled = styled.div`

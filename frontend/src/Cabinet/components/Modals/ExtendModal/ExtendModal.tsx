@@ -149,19 +149,20 @@ const ExtendModal: React.FC<{
   }, []);
 
   useEffect(() => {
-    if (checkExtension() == true){
+    if (checkExtension() == true) {
       setShowExtension(true);
       setModalContents(
         `현재 연장권을 보유하고 있지 않습니다.
 연장권은 까비 상점에서 구매하실 수 있습니다.`
       );
-    }
-    else setShowExtension(false);
-    setExtensionDate(findMyExtension(extensionPeriod[0].period)
-    ? findMyExtension(extensionPeriod[1].period)
-      ? 31
-      : 15
-    : 3)
+    } else setShowExtension(false);
+    setExtensionDate(
+      findMyExtension(extensionPeriod[0].period)
+        ? findMyExtension(extensionPeriod[1].period)
+          ? 31
+          : 15
+        : 3
+    );
   }, [myItems]);
 
   const findMyExtension = (period: string) => {
@@ -247,8 +248,11 @@ const ExtendModal: React.FC<{
           urlTitle={"까비상점으로 이동"}
         />
       )}
-      {!showExtension && !showResponseModal && <Modal modalContents={extendModalContents} />}
-      {!showExtension && showResponseModal &&
+      {!showExtension && !showResponseModal && (
+        <Modal modalContents={extendModalContents} />
+      )}
+      {!showExtension &&
+        showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
             modalTitle={modalTitle}

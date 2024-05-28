@@ -39,7 +39,7 @@ const AdminStorePage = () => {
       <ContainerStyled></ContainerStyled>
       <ContainerStyled>
         <CoinCollectTitleWrapperStyled>
-          <H2styled>이번달 코인 통계</H2styled>
+          <H2styled>코인 통계</H2styled>
           <h3>5월</h3>
         </CoinCollectTitleWrapperStyled>
         <StoreHalfPieChart data={mockData} />

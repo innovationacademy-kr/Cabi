@@ -7,6 +7,7 @@ import {
 } from "@/Cabinet/components/CabinetInfoArea/CabinetInfoArea.container";
 import CountTimeContainer from "@/Cabinet/components/CabinetInfoArea/CountTime/CountTime.container";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
+import SelectInduction from "@/Cabinet/components/Common/SelectInduction";
 import CancelModal from "@/Cabinet/components/Modals/CancelModal/CancelModal";
 import ExtendModal from "@/Cabinet/components/Modals/ExtendModal/ExtendModal";
 import InvitationCodeModalContainer from "@/Cabinet/components/Modals/InvitationCodeModal/InvitationCodeModal.container";
@@ -61,15 +62,10 @@ const CabinetInfoArea: React.FC<{
     : null;
 
   return selectedCabinetInfo === null ? (
-    <NotSelectedStyled>
-      <CabiLogoStyled>
-        <LogoImg />
-      </CabiLogoStyled>
-      <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
-        사물함을 <br />
-        선택해주세요
-      </TextStyled>
-    </NotSelectedStyled>
+    <SelectInduction
+      msg="사물함을
+    선택해주세요"
+    />
   ) : (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-line-btn-color)">
@@ -266,14 +262,6 @@ const CabinetInfoArea: React.FC<{
   );
 };
 
-const NotSelectedStyled = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 const CabinetDetailAreaStyled = styled.div`
   height: 100%;
   max-width: 330px;
@@ -281,17 +269,6 @@ const CabinetDetailAreaStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-`;
-
-const CabiLogoStyled = styled.div`
-  width: 35px;
-  height: 35px;
-  margin-bottom: 10px;
-  svg {
-    .logo_svg__currentPath {
-      fill: var(--sys-main-color);
-    }
-  }
 `;
 
 const CabinetTypeIconStyled = styled.div`

@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
+import SelectInduction from "@/Cabinet/components/Common/SelectInduction";
 import AdminLentLog from "@/Cabinet/components/LentLog/AdminLentLog";
 import AdminUseItemModal from "@/Cabinet/components/Modals/StoreModal/AdminUseItemModal";
 import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
@@ -63,30 +64,15 @@ const UserStoreInfoArea = (): JSX.Element => {
           )}
         </UserStoreInfoAreaStyled>
       ) : (
-        <NotSelectedStyled>
-          <UserInfoAreaLogoIconStyled selected={userInfoData}>
-            <LogoIcon />
-          </UserInfoAreaLogoIconStyled>
-          <TextStyled
-            fontSize="1.125rem"
-            fontColor="var(--gray-line-btn-color)"
-          >
-            유저를 선택해주세요
-          </TextStyled>
-        </NotSelectedStyled>
+        <SelectInduction
+          msg="유저를
+              선택해주세요"
+        />
       )}
       {userInfoData && <AdminLentLog lentType={"USER"} />}
     </>
   );
 };
-
-const NotSelectedStyled = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
 
 const UserStoreInfoAreaStyled = styled.div`
   height: 100%;

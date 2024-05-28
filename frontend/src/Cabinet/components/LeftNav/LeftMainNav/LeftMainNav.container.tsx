@@ -15,6 +15,7 @@ import {
   isCurrentSectionRenderState,
   myCabinetInfoState,
   numberOfAdminWorkState,
+  selectedTypeOnSearchState,
 } from "@/Cabinet/recoil/atoms";
 import { currentBuildingFloorState } from "@/Cabinet/recoil/selectors";
 import LeftMainNav from "@/Cabinet/components/LeftNav/LeftMainNav/LeftMainNav";
@@ -22,6 +23,7 @@ import {
   CabinetInfoByBuildingFloorDto,
   MyCabinetInfoResponseDto,
 } from "@/Cabinet/types/dto/cabinet.dto";
+import AdminNavType from "@/Cabinet/types/enum/adminNav.enum";
 import { axiosCabinetByBuildingFloor } from "@/Cabinet/api/axios/axios.custom";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
@@ -47,6 +49,10 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const navigator = useNavigate();
   const { pathname } = useLocation();
   const [isCurrentSectionRender] = useRecoilState(isCurrentSectionRenderState);
+  const setSelectedTypeOnSearch = useSetRecoilState<AdminNavType>(
+    selectedTypeOnSearchState
+  );
+
   useEffect(() => {
     if (currentFloor === undefined) {
       setCurrentMapFloor(floors[0]);
@@ -86,6 +92,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
     setCurrentMapFloor(floor);
+    setSelectedTypeOnSearch(AdminNavType.CABINET);
     if (!pathname.includes("main")) {
       if (floor === currentFloor) {
         axiosCabinetByBuildingFloor(currentBuilding, currentFloor).then(
