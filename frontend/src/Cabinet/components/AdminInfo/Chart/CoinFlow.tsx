@@ -16,6 +16,18 @@ export enum CoinDateType {
   MONTH = "MONTH",
 }
 
+export enum CoinFlowType {
+  ISSUE = "issueCoin",
+  UNUSED = "unusedCoin",
+  USED = "usedCoin",
+}
+
+const dataToggleList = [
+  { name: "발행 코인", key: CoinFlowType.ISSUE },
+  { name: "미사용 코인", key: CoinFlowType.UNUSED },
+  { name: "사용 코인", key: CoinFlowType.USED },
+];
+
 const toggleList: toggleItem[] = [
   { name: "1d", key: CoinDateType.DAY },
   { name: "7d", key: CoinDateType.WEEK },
@@ -65,6 +77,9 @@ function generateDummyData(
 
 const CoinFlow = () => {
   const [toggleType, setToggleType] = useState<CoinDateType>(CoinDateType.DAY);
+  const [coinToggleType, setCoinToggleType] = useState<CoinFlowType>(
+    CoinFlowType.ISSUE
+  );
   const calculateEndDate = (startDate: Date, type: CoinDateType) => {
     switch (type) {
       case CoinDateType.DAY:
@@ -115,12 +130,20 @@ const CoinFlow = () => {
       })),
     },
   ];
+  const filteredData = formattedData.filter(
+    (data) => data.id === coinToggleType
+  );
   return (
     <>
       <MultiToggleSwitch
         initialState={toggleType}
         setState={setToggleType}
         toggleList={toggleList}
+      />
+      <MultiToggleSwitch
+        initialState={coinToggleType}
+        setState={setCoinToggleType}
+        toggleList={dataToggleList}
       />
       <LineChartStyled>
         <ResponsiveLine
@@ -134,7 +157,7 @@ const CoinFlow = () => {
               },
             },
           }}
-          data={formattedData}
+          data={filteredData}
           margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
           xFormat="time:%Y-%m-%d"
           xScale={{

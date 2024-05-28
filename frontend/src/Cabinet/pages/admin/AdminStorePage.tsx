@@ -66,7 +66,7 @@ const AdminStorePage = () => {
         <CoinFlow />
       </ContainerStyled>
       <ContainerStyled></ContainerStyled>
-      <ContainerStyled></ContainerStyled>
+
       <ContainerStyled>
         <CoinCollectTitleWrapperStyled>
           <H2styled>코인 통계</H2styled>
@@ -78,7 +78,6 @@ const AdminStorePage = () => {
         <H2styled>전체 재화 현황</H2styled>
         <PieChartCoin data={PieChartCoinData} />
       </ContainerStyled>
-      <ContainerStyled></ContainerStyled>
     </AdminHomeStyled>
   );
 };
@@ -92,11 +91,17 @@ const AdminHomeStyled = styled.div`
   grid-template-rows: repeat(2, 1fr);
   place-items: center;
   min-height: 775px;
+  & > :first-child {
+    grid-column: span 3;
+  }
 
   @media screen and (max-width: 1300px) {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 500px);
     overflow: scroll;
+    & > :first-child {
+      grid-column: span 2;
+    }
   }
 
   @media screen and (max-width: 768px) {
@@ -104,6 +109,9 @@ const AdminHomeStyled = styled.div`
     grid-template-rows: repeat(6, 500px);
     min-width: 300px;
     overflow: scroll;
+    & > :first-child {
+      grid-column: span 1;
+    }
   }
 `;
 
