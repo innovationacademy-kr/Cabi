@@ -7,7 +7,7 @@ const AdminItemUsageLogPage = () => {
   return (
     <AdminItemLogStyled id="itemInfo">
       <TitleContainer>
-        <TitleStyled>아이템 사용 기록</TitleStyled>
+        <TitleStyled>아이템 내역</TitleStyled>
         <GoBackButtonStyled onClick={closeStore}>뒤로가기</GoBackButtonStyled>
       </TitleContainer>
       <AdminItemUsageLogContainer />
@@ -31,7 +31,7 @@ const TitleContainer = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   margin-top: 15px;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 `;
 
 const TitleStyled = styled.h1`

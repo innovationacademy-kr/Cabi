@@ -18,7 +18,7 @@ const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
         <TheadStyled>
           <tr>
             <th>발급일</th>
-            <th>아이템 내용</th>
+            <th>아이템</th>
             <th>사용일</th>
           </tr>
         </TheadStyled>
@@ -82,7 +82,7 @@ const TheadStyled = styled.thead`
 
 const TbodyStyled = styled.tbody`
   & > tr {
-    font-size: 11.8px;
+    font-size: small;
     text-align: center;
     height: 50px;
   }

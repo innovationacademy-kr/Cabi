@@ -31,20 +31,20 @@ const AdminItemUsageLogContainer = () => {
     {
       purchasedAt: "2023-05-24T16:00:00",
       usedAt: "2023-05-25T11:00:00",
-      itemName: "페널티 감면권",
-      itemDetails: "5일",
+      itemName: "페널티권",
+      itemDetails: "7일",
     },
     {
       purchasedAt: "2023-05-24T16:00:00",
       usedAt: "",
-      itemName: "페널티 감면권",
-      itemDetails: "5일",
+      itemName: "연장권",
+      itemDetails: "30일",
     },
     {
       purchasedAt: "2023-05-26T14:00:00",
       usedAt: "2023-05-27T00:00:00",
-      itemName: "연장권",
-      itemDetails: "3일",
+      itemName: "알림 등록권",
+      itemDetails: "알림 등록권",
     },
     {
       purchasedAt: "2023-05-25T13:00:00",
@@ -55,20 +55,20 @@ const AdminItemUsageLogContainer = () => {
     {
       purchasedAt: "2023-05-24T16:00:00",
       usedAt: "2023-05-25T11:00:00",
-      itemName: "페널티 감면권",
-      itemDetails: "5일",
+      itemName: "페널티권",
+      itemDetails: "3일",
     },
     {
       purchasedAt: "2023-05-24T16:00:00",
       usedAt: "2023-05-25T11:00:00",
-      itemName: "페널티 감면권",
-      itemDetails: "5일",
+      itemName: "이사권",
+      itemDetails: "이사권",
     },
     {
       purchasedAt: "2023-05-26T14:00:00",
       usedAt: "2023-05-27T00:00:00",
       itemName: "연장권",
-      itemDetails: "3일",
+      itemDetails: "15일",
     },
     {
       purchasedAt: "2023-05-25T13:00:00",
@@ -79,14 +79,14 @@ const AdminItemUsageLogContainer = () => {
     {
       purchasedAt: "2023-05-24T16:00:00",
       usedAt: "2023-05-25T11:00:00",
-      itemName: "페널티 감면권",
-      itemDetails: "5일",
+      itemName: "페널티권",
+      itemDetails: "3일",
     },
     {
       purchasedAt: "2023-05-24T16:00:00",
       usedAt: "2023-05-25T11:00:00",
-      itemName: "페널티 감면권",
-      itemDetails: "5일",
+      itemName: "알림 등록권",
+      itemDetails: "알림 등록권",
     },
   ];
 
