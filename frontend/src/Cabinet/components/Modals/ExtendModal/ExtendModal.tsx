@@ -208,17 +208,17 @@ const ExtendModal: React.FC<{
               {
                 name: extensionPeriod[0].period,
                 value: 0,
-                disabled: findMyExtension(extensionPeriod[0].period),
+                isDisabled: findMyExtension(extensionPeriod[0].period),
               },
               {
                 name: extensionPeriod[1].period,
                 value: 1,
-                disabled: findMyExtension(extensionPeriod[1].period),
+                isDisabled: findMyExtension(extensionPeriod[1].period),
               },
               {
                 name: extensionPeriod[2].period,
                 value: 2,
-                disabled: findMyExtension(extensionPeriod[2].period),
+                isDisabled: findMyExtension(extensionPeriod[2].period),
               },
             ]}
             defaultValue={
