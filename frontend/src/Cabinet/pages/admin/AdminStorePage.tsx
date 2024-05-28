@@ -5,6 +5,7 @@ import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinFlow";
 import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
 import StoreHalfPieChart from "@/Cabinet/components/AdminInfo/Chart/StoreHalfPieChart";
 import { axiosCoinCollectStatistics } from "@/Cabinet/api/axios/axios.custom";
+import { axiosStatisticsItem } from "@/Cabinet/api/axios/axios.custom";
 
 export interface ICoinCollectInfo {
   coinCount: number;
@@ -31,6 +32,11 @@ const mockData: ICoinCollectInfo[] = [
 ];
 // TODO : 작은 횟수부터 큰 횟수까지 차례대로 보내주는지 확인
 
+export interface ITotalCoinInfo {
+  used: number;
+  unused: number;
+}
+
 const PieChartCoinData = [
   {
     used: 70,
@@ -42,6 +48,7 @@ const AdminStorePage = () => {
   const [coinCollectData, setCoinCollectData] = useState<ICoinCollectInfo[]>(
     []
   );
+  const [totalCoinData, setTotalCoinData] = useState<ITotalCoinInfo[]>([]);
 
   const getCoinCollectData = async () => {
     try {
@@ -55,8 +62,19 @@ const AdminStorePage = () => {
     }
   };
 
+  const getTotalCoinData = async () => {
+    try {
+      // const response = await axiosStatisticsItem();
+      // setTotalCoinData(response.data.coinCollectStatistics);
+      setTotalCoinData(PieChartCoinData);
+    } catch (error) {
+      console.error("Error getting total coin data:", error);
+    }
+  };
+
   useEffect(() => {
     getCoinCollectData();
+    getTotalCoinData();
   }, []);
 
   return (
@@ -76,7 +94,7 @@ const AdminStorePage = () => {
       </ContainerStyled>
       <ContainerStyled>
         <H2styled>전체 재화 현황</H2styled>
-        <PieChartCoin data={PieChartCoinData} />
+        <PieChartCoin data={totalCoinData} />
       </ContainerStyled>
     </AdminHomeStyled>
   );
