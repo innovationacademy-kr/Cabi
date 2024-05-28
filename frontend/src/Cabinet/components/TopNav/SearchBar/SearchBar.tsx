@@ -52,8 +52,9 @@ const SearchBar = () => {
         resetSearchState();
         return alert("두 글자 이상의 검색어를 입력해주세요.");
       } else {
-        if (isNaN(Number(searchValue))) setSelectedTypeOnSearch("USER");
-        else setSelectedTypeOnSearch("CABINET");
+        if (isNaN(Number(searchValue)))
+          setSelectedTypeOnSearch(AdminNavType.USER);
+        else setSelectedTypeOnSearch(AdminNavType.CABINET);
 
         let query = floor
           ? `?q=${searchInput.current.value}&floor=${floor}`

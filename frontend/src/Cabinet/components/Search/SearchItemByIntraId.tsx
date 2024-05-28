@@ -138,7 +138,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
               사물함 정보
             </CardButtonStyled>
             <CardButtonStyled onClick={clickStoreItem} isClickable>
-              사용자 관리
+              아이템 관리
             </CardButtonStyled>
           </ButtonWrapper>
         </WrapperStyled>
@@ -161,7 +161,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
               사물함 정보
             </CardButtonStyled>
             <CardButtonStyled onClick={clickStoreItem} isClickable>
-              사용자 관리
+              아이템 관리
             </CardButtonStyled>
           </ButtonWrapper>
         </WrapperStyled>

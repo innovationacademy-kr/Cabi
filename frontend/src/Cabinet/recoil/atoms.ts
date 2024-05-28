@@ -132,7 +132,7 @@ export const numberOfAdminWorkState = atom<number>({
 
 export const selectedTypeOnSearchState = atom<AdminNavType>({
   key: "SelectedTypeOnSearch",
-  default: undefined,
+  default: AdminNavType.CABINET,
 });
 
 export const targetUserInfoState = atom<UserInfo>({
