@@ -103,11 +103,6 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
     onChangeValue: handleDropdownStatusChange,
   };
 
-  // const TYPE_DROP_DOWN_PROPS = {
-  //   options: TYPE_OPTIONS[selectedOption as StoreItemType],
-  //   defaultValue: TYPE_OPTIONS[selectedOption as StoreItemType][0].name,
-  //   onChangeValue: handleDropdownTypeChange,
-  // };
   const TYPE_DROP_DOWN_PROPS = {
     options: TYPE_OPTIONS,
     defaultValue: TYPE_OPTIONS[0].name,

@@ -80,9 +80,7 @@ const useMenu = () => {
   const toggleStore = () => {
     if (document.getElementById("storeInfo")?.classList.contains("on") === true)
       closeStore();
-    else {
-      openStore();
-    }
+    else openStore();
   };
 
   const openStore = () => {
@@ -91,13 +89,15 @@ const useMenu = () => {
     closeCabinet();
     closeLent();
     closeClubMember();
-    document.getElementById("itemInfo")?.classList.add("on");
+    document.getElementById("storeInfo")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
   };
 
   const closeStore = () => {
-    if (document.getElementById("itemInfo")?.classList.contains("on") == true) {
-      document.getElementById("itemInfo")?.classList.remove("on");
+    if (
+      document.getElementById("storeInfo")?.classList.contains("on") == true
+    ) {
+      document.getElementById("storeInfo")?.classList.remove("on");
       document.getElementById("menuBg")?.classList.remove("on");
     }
   };

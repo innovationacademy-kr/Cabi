@@ -8,6 +8,7 @@ interface CoinAmountDto {
   amount: number;
 }
 
+// 가짜 데이터를 생성하는 함수
 function generateDummyData(
   startDate: string,
   endDate: string
@@ -71,11 +72,7 @@ const CoinFlow = ({
   // 현재 날짜
   const today = new Date();
   today.setHours(0, 0, 0, 0); // 현재 날짜의 시간을 00:00:00으로 설정
-
-  // 종료 날짜 계산
   const endDate = calculateEndDate(today, toggleType);
-
-  // 데이터 생성 함수 호출
   const dummyData = generateDummyData(
     today.toISOString().split("T")[0], // 형식 YYYY-MM-DD
     endDate.toISOString().split("T")[0] // 형식 YYYY-MM-DD
@@ -123,7 +120,6 @@ const CoinFlow = ({
             },
           }}
           data={filteredData}
-          // margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
           margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
           xFormat="time:%Y-%m-%d"
           xScale={{
@@ -140,6 +136,7 @@ const CoinFlow = ({
           yFormat=" >0"
           curve="cardinal"
           axisTop={null}
+          colors={["var(--sys-main-color)"]}
           axisRight={null}
           axisBottom={{
             format: "%b %d",

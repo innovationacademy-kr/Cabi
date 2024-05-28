@@ -26,9 +26,6 @@ const StoreInfo = () => {
   const [todayCoinCollection, setTodayCoinCollection] =
     useState<boolean>(false);
 
-  // /v5/items/coin 으로 get ->
-  // 왼족 날개 열기  == /v5/items/coin 으로 GET => 성공시 현재 코인개수, 오늘 클릭할수 있는지 반환
-  // 동전줍기 클릭시 == /v5/items/coin 으로 POST  => 성공시 reward 반환
   const tryCoinCheckGet = async () => {
     try {
       const res = await axiosCoinCheckGet();
@@ -67,8 +64,6 @@ const StoreInfo = () => {
   };
 
   useEffect(() => {
-    // 날개 열때마다 get요청 안함 -> 처음 랜더링 될때 한번에 다 불러옴
-    // 그리고 post되서 성공될때마다 get요청해서 정보 최신화 시키기
     if (todayCoinCollection === true) setIsLoading(true);
     tryCoinCheckGet();
   }, [todayCoinCollection]);
