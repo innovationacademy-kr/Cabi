@@ -11,6 +11,7 @@ import {
   targetUserInfoState,
 } from "@/Cabinet/recoil/atoms";
 import BarChart from "@/Cabinet/components/AdminInfo/Chart/BarChart";
+import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinFlow";
 import LineChart from "@/Cabinet/components/AdminInfo/Chart/LineChart";
 import PieChart from "@/Cabinet/components/AdminInfo/Chart/PieChart";
 import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
@@ -128,6 +129,7 @@ const AdminHomePage = () => {
       <ContainerStyled>
         <H2styled>주간 이용 현황</H2styled>
         <LineChart data={monthlyData} />
+        {/* <CoinFlow /> */}
       </ContainerStyled>
       <ContainerStyled>
         <H2styled>반납지연 유저</H2styled>

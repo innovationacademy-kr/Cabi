@@ -51,7 +51,7 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
             <DropdownItemStyled
               key={option.value}
               onClick={() => {
-                if (!option.disabled) {
+                if (!option.isDisable) {
                   setCurrentName(option.name);
                   setIsOpen(false);
                   if (onChangeValue) {

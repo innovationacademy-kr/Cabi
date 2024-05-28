@@ -73,7 +73,6 @@ function App(): React.ReactElement {
             <Route path="home" element={<AdminHomePage />} />
             <Route path="main" element={<AdminMainPage />} />
             <Route path="search" element={<SearchPage />} />
-            {/* <Route path="" element={<SearchPage />} /> */}
             <Route path="club" element={<AdminClubPage />} />
             <Route path="slack-notification" element={<AdminSlackNotiPage />} />
             <Route path="available" element={<AvailablePage />} />
