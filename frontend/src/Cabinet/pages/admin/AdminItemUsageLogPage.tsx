@@ -1,16 +1,49 @@
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import AdminItemProvideContainer from "@/Cabinet/components/ItemLog/AdminItemProvideLog.container";
 import AdminItemUsageLogContainer from "@/Cabinet/components/ItemLog/AdminItemUsageLog.container";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
-const AdminItemUsageLogPage = () => {
+const AdminItemUsageLogPage = ({
+  toggleType = "PROVIDE",
+}: {
+  toggleType?: string;
+}) => {
   const { closeStore } = useMenu();
+  const [currentToggleType, setToggleType] = useState<string>(toggleType);
+  const isSearchPage = window.location.pathname === "/admin/search";
+
+  useEffect(() => {
+    if (!isSearchPage && toggleType !== currentToggleType) {
+      setToggleType("PROVIDE");
+    }
+  }, [isSearchPage, toggleType]);
+
+  const switchToggleType = () => {
+    setToggleType(currentToggleType === "PROVIDE" ? "LIST" : "PROVIDE");
+  };
+
   return (
     <AdminItemLogStyled id="itemInfo">
       <TitleContainer>
-        <TitleStyled>아이템 내역</TitleStyled>
+        <TitleStyled isClick={isSearchPage} onClick={switchToggleType}>
+          {isSearchPage && (
+            <ImageStyled>
+              <img
+                src="/src/Cabinet/assets/images/LeftSectionButton.svg"
+                alt=""
+              />
+            </ImageStyled>
+          )}
+          {currentToggleType === "PROVIDE" ? "아이템 지급 기록" : "아이템 내역"}
+        </TitleStyled>
         <GoBackButtonStyled onClick={closeStore}>뒤로가기</GoBackButtonStyled>
       </TitleContainer>
-      <AdminItemUsageLogContainer />
+      {currentToggleType === "PROVIDE" ? (
+        <AdminItemProvideContainer />
+      ) : (
+        <AdminItemUsageLogContainer />
+      )}
     </AdminItemLogStyled>
   );
 };
@@ -34,11 +67,20 @@ const TitleContainer = styled.div`
   margin-bottom: 25px;
 `;
 
-const TitleStyled = styled.h1`
-  margin-left: 20px;
+const TitleStyled = styled.h1<{ isClick: boolean }>`
   font-size: 1.5rem;
   font-weight: 700;
   display: flex;
+  cursor: ${(props) => (props.isClick ? "pointer" : "default")};
+  &:hover {
+    color: ${(props) => (props.isClick ? "var(--sys-main-color)" : "")};
+  }
+`;
+
+const ImageStyled = styled.div`
+  width: 24px;
+  transform: rotate(-90deg);
+  margin-right: 4px;
 `;
 
 const AdminItemLogStyled = styled.div`
