@@ -146,6 +146,9 @@ const ExtendModal: React.FC<{
 
   useEffect(() => {
     getMyItems();
+  }, []);
+
+  useEffect(() => {
     if (checkExtension() == true){
       setShowExtension(true);
       setModalContents(
@@ -154,7 +157,12 @@ const ExtendModal: React.FC<{
       );
     }
     else setShowExtension(false);
-  }, []);
+    setExtensionDate(findMyExtension(extensionPeriod[0].period)
+    ? findMyExtension(extensionPeriod[1].period)
+      ? 31
+      : 15
+    : 3)
+  }, [myItems]);
 
   const findMyExtension = (period: string) => {
     return !myItems?.extensionItems.some((item) => item.itemDetails === period);
@@ -213,8 +221,8 @@ const ExtendModal: React.FC<{
               },
             ]}
             defaultValue={
-              !findMyExtension(extensionPeriod[0].period)
-                ? !findMyExtension(extensionPeriod[1].period)
+              findMyExtension(extensionPeriod[0].period)
+                ? findMyExtension(extensionPeriod[1].period)
                   ? extensionPeriod[2].period
                   : extensionPeriod[1].period
                 : extensionPeriod[0].period

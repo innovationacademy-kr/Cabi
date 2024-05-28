@@ -43,33 +43,33 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
         </DropdownSelectionBoxIconStyled>
       </DropdownSelectionBoxStyled>
       <DropdownItemContainerStyled isVisible={isOpen}>
-        {options
-          ?.filter((option) => option.disabled != true)
-          .map((option) => {
-            const OptionIcon =
-              cabinetIconComponentMap[option.value as CabinetType];
-            return (
-              <DropdownItemStyled
-                key={option.value}
-                onClick={() => {
+        {options.map((option) => {
+          const OptionIcon =
+            cabinetIconComponentMap[option.value as CabinetType];
+          return (
+            <DropdownItemStyled
+              key={option.value}
+              onClick={() => {
+                if (!option.disabled) {
                   setCurrentName(option.name);
                   setIsOpen(false);
                   if (onChangeValue) {
                     onChangeValue(option.value);
                   }
-                }}
-                isSelected={option.name === currentName}
-                isDisabled={option.disabled}
-              >
-                {option.imageSrc && (
-                  <OptionsImgStyled isSelected={option.name === currentName}>
-                    <OptionIcon />
-                  </OptionsImgStyled>
-                )}
-                <p style={{ paddingLeft: "10px" }}>{option.name}</p>
-              </DropdownItemStyled>
-            );
-          })}
+                }
+              }}
+              isSelected={option.name === currentName}
+              isDisabled={option.disabled}
+            >
+              {option.imageSrc && (
+                <OptionsImgStyled isSelected={option.name === currentName}>
+                  <OptionIcon />
+                </OptionsImgStyled>
+              )}
+              <p style={{ paddingLeft: "10px" }}>{option.name}</p>
+            </DropdownItemStyled>
+          );
+        })}
       </DropdownItemContainerStyled>
     </DropdownContainerStyled>
   );
@@ -127,9 +127,16 @@ const DropdownItemStyled = styled.div<{
   text-align: start;
   padding-left: 20px;
   font-size: 1.125rem;
-  color: ${({ isSelected }) =>
+  /* color: ${({ isSelected }) =>
     isSelected ? "var(--sys-main-color)" : "var(--normal-text-color)"};
-  cursor: pointer;
+  cursor: pointer; */
+  color: ${({ isSelected, isDisabled }) =>
+    isDisabled
+      ? "var(--capsule-btn-border-color)"
+      : isSelected
+      ? "var(--sys-main-color)"
+      : "var(--normal-text-color)"};
+  cursor: ${({ isDisabled }) => (isDisabled ? "not-allowed" : "pointer")};
   &:first-child {
     border-radius: 10px 10px 0px 0px;
     border-width: 1px 1px 1px 1px;

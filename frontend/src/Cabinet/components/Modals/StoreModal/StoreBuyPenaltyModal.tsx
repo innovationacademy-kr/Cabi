@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState, userState } from "@/Cabinet/recoil/atoms";
@@ -57,6 +57,21 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
       throw error;
     }
   };
+
+  // const getMyItems = async () => {
+  //   try {
+  //     const response = await axiosMyItems();
+  //     setMyItems(response.data);
+  //   } catch (error: any) {
+  //     console.error("Error getting inventory:", error);
+  //   }
+  // };
+
+
+  useEffect(() => {
+    tryGetPenaltyItem();
+  }, []);
+
   const findMyExtension = (period: string) => {
     return !myItems?.penaltyItems.some((item) => item.itemDetails === period);
   };
@@ -134,25 +149,25 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
             options={[
               {
                 name: penaltyPeriod[0].period,
-                value: "0",
+                value: 0,
                 disabled: findMyExtension(penaltyPeriod[0].period),
               },
               {
                 name: penaltyPeriod[1].period,
-                value: "1",
+                value: 1,
                 disabled: findMyExtension(penaltyPeriod[1].period),
               },
               {
                 name: penaltyPeriod[2].period,
-                value: "2",
-                disabled: findMyExtension(penaltyPeriod[3].period),
+                value: 2,
+                disabled: findMyExtension(penaltyPeriod[2].period),
               },
             ]}
-            defaultValue={!findMyExtension(penaltyPeriod[0].period)
-              ? !findMyExtension(penaltyPeriod[1].period)
-                ? penaltyPeriod[2].period
+            defaultValue={findMyExtension(penaltyPeriod[0].period)
+              ? findMyExtension(penaltyPeriod[1].period)
+                ? penaltyPeriod[0].period
                 : penaltyPeriod[1].period
-              : penaltyPeriod[0].period}
+              : penaltyPeriod[2].period}
             onChangeValue={handleDropdownChange}
           />
         </ModalContainerStyled>
