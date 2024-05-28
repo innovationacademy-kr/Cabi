@@ -12,6 +12,7 @@ import MapInfoContainer from "@/Cabinet/components/MapInfo/MapInfo.container";
 import UserStoreInfoArea from "@/Cabinet/components/Store/Admin/UserStoreInfoArea/UserStoreInfoArea";
 import AdminTopNavContainer from "@/Cabinet/components/TopNav/AdminTopNav.container";
 import UserCabinetInfoAreaContainer from "@/Cabinet/components/UserCabinetInfoArea/UserCabinetInfoArea.container";
+import AdminNavType from "@/Cabinet/types/enum/adminNav.enum";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -95,11 +96,18 @@ const Layout = (): JSX.Element => {
             id="cabinetDetailArea"
             isFloat={!isMainPage && !isSearchPage}
           >
-            {selectedTypeOnSearch === "USER" && (
+            {selectedTypeOnSearch === AdminNavType.USER && (
               <UserCabinetInfoAreaContainer />
             )}
-            {selectedTypeOnSearch === "ITEM" && <UserStoreInfoArea />}
-            {selectedTypeOnSearch === "CABINET" && <CabinetInfoAreaContainer />}
+            {selectedTypeOnSearch === AdminNavType.ITEM && (
+              <UserStoreInfoArea />
+            )}
+            {selectedTypeOnSearch === AdminNavType.CABINET &&
+              (isMainPage ? (
+                <CabinetInfoAreaContainer />
+              ) : (
+                <UserCabinetInfoAreaContainer />
+              ))}
           </DetailInfoContainerStyled>
           <MapInfoContainer />
           <AdminItemUsageLogPage />
