@@ -19,7 +19,6 @@
 
   /* red */
   --ref-red-100: #ff4e4e;
-  --ref-red-150: #ff4589;
   --ref-red-200: #e54646;
 
   /* orange */
@@ -67,6 +66,7 @@
 
   /* pink */
   --ref-pink-100: #f473b1;
+  --ref-pink-150: #ff4589;
   --ref-pink-200: #d72766;
 
   /* shadow color */
@@ -85,7 +85,7 @@
   --custom-blue-100: var(--ref-blue-210);
   --custom-blue-200: var(--ref-blue-230);
   --custom-blue-300: var(--ref-blue-450);
-  --custom-pink: var(--ref-red-150);
+  --custom-pink: var(--ref-pink-150);
   --custom-purple-100: var(--ref-purple-350);
   --custom-purple-200: var(--ref-purple-500);
   --custom-orange: var(--ref-orange-100);
