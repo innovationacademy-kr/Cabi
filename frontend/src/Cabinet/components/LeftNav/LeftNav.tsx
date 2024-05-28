@@ -30,7 +30,9 @@ const LeftNav: React.FC<{
         <LeftProfileNav onClickRedirectButton={onClickRedirectButton} />
       )}
       {isMainClubPage && <LeftClubNav closeLeftNav={closeLeftNav} />}
-      {isMainStorePage && <LeftStoreNav onClickRedirectButton={onClickRedirectButton} />}
+      {isMainStorePage && !isAdmin && (
+        <LeftStoreNav onClickRedirectButton={onClickRedirectButton} />
+      )}
     </LeftNavWrapStyled>
   );
 };

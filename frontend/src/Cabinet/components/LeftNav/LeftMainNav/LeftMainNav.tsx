@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { ReactComponent as LogoutImg } from "@/Cabinet/assets/images/close-square.svg";
 import { ReactComponent as ClubImg } from "@/Cabinet/assets/images/clubIconGray.svg";
 import { ReactComponent as ProfileImg } from "@/Cabinet/assets/images/profile-circle.svg";
-import { ReactComponent as SearchImg } from "@/Cabinet/assets/images/search.svg";
 import { ReactComponent as SlackNotiImg } from "@/Cabinet/assets/images/slack-notification.svg";
 import { ReactComponent as SlackImg } from "@/Cabinet/assets/images/slack.svg";
 import { ReactComponent as StoreImg } from "@/Cabinet/assets/images/storeIconGray.svg";
@@ -34,7 +33,6 @@ const LeftMainNav = ({
   onClickFloorButton,
   onClickLogoutButton,
   onClickSlackNotiButton,
-  onClickSearchButton,
   onClickAdminClubButton,
   onClickMainClubButton,
   onClickProfileButton,
@@ -92,6 +90,17 @@ const LeftMainNav = ({
             <>
               <BottomBtnStyled
                 className={
+                  pathname.includes("store")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                onClick={onClickStoreButton}
+              >
+                <StoreImg />
+                Store
+              </BottomBtnStyled>
+              <BottomBtnStyled
+                className={
                   pathname.includes("slack-notification")
                     ? "active cabiButton"
                     : " cabiButton"
@@ -100,17 +109,6 @@ const LeftMainNav = ({
               >
                 <SlackNotiImg />
                 Noti
-              </BottomBtnStyled>
-              <BottomBtnStyled
-                className={
-                  pathname.includes("search")
-                    ? "active cabiButton"
-                    : " cabiButton"
-                }
-                onClick={onClickSearchButton}
-              >
-                <SearchImg />
-                Search
               </BottomBtnStyled>
               <BottomBtnStyled className="cabiButton">
                 <a
