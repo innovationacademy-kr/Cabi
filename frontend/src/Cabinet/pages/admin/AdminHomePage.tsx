@@ -13,6 +13,7 @@ import {
 import BarChart from "@/Cabinet/components/AdminInfo/Chart/BarChart";
 import LineChart from "@/Cabinet/components/AdminInfo/Chart/LineChart";
 import PieChart from "@/Cabinet/components/AdminInfo/Chart/PieChart";
+import StoreHalfPieChart from "@/Cabinet/components/AdminInfo/Chart/StoreHalfPieChart";
 import AdminTable from "@/Cabinet/components/AdminInfo/Table/AdminTable";
 import {
   ICabinetNumbersPerFloor,
@@ -121,6 +122,11 @@ const AdminHomePage = () => {
       <ContainerStyled>
         <H2styled>사물함 현황</H2styled>
         <PieChart data={cabinetNumbersPerFloor} />
+        {/* <CoinCollectTitleWrapperStyled>
+          <H2styled>이번달 코인 통계</H2styled>
+          <h3>5월</h3>
+        </CoinCollectTitleWrapperStyled>
+        <StoreHalfPieChart data={cabinetNumbersPerFloor} /> */}
       </ContainerStyled>
       <ContainerStyled>
         <H2styled>주간 이용 현황</H2styled>
@@ -230,6 +236,15 @@ const AdminHomeStyled = styled.div`
     grid-template-rows: repeat(6, 500px);
     min-width: 300px;
     overflow: scroll;
+  }
+`;
+
+const CoinCollectTitleWrapperStyled = styled.div`
+  & > h3 {
+    text-align: center;
+    color: var(--ref-gray-400);
+    font-weight: bold;
+    margin-top: 10px;
   }
 `;
 

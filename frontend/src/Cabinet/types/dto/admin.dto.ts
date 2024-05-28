@@ -1,3 +1,5 @@
+import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
+
 export interface BannedUserDto {
   userId: number;
   name: string;
@@ -50,3 +52,29 @@ export interface ITableData {
   third?: string;
   info: BannedUserDto | BrokenCabinetDto | OverdueUserDto;
 }
+
+export interface IItemLog {
+  closeItem: React.MouseEventHandler;
+  logs: ItemLogResponseType;
+  page: number;
+  totalPage: number;
+  onClickPrev: React.MouseEventHandler;
+  onClickNext: React.MouseEventHandler;
+}
+
+export interface AdminItemHistoryDto {
+  purchasedAt: string;
+  usedAt: string;
+  itemName: string;
+  itemDetails: string;
+}
+
+export interface ItemLogResponse {
+  itemHistories: AdminItemHistoryDto[];
+  totalLength: number;
+}
+
+export type ItemLogResponseType =
+  | ItemLogResponse
+  | typeof STATUS_400_BAD_REQUEST
+  | undefined;

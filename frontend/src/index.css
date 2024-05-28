@@ -19,7 +19,6 @@
 
   /* red */
   --ref-red-100: #ff4e4e;
-  --ref-red-150: #ff4589;
   --ref-red-200: #e54646;
 
   /* orange */
@@ -58,6 +57,8 @@
   --ref-purple-400: #a17bf3;
   --ref-purple-500: #9747ff;
   --ref-purple-600: #8337e5;
+  --ref-purple-650: #6931b2;
+  --ref-purple-690: #3c1c66;
   --ref-purple-700: #252425;
 
   --ref-transparent-purple-100: #b18cff5f;
@@ -65,6 +66,7 @@
 
   /* pink */
   --ref-pink-100: #f473b1;
+  --ref-pink-150: #ff4589;
   --ref-pink-200: #d72766;
 
   /* shadow color */
@@ -83,7 +85,7 @@
   --custom-blue-100: var(--ref-blue-210);
   --custom-blue-200: var(--ref-blue-230);
   --custom-blue-300: var(--ref-blue-450);
-  --custom-pink: var(--ref-red-150);
+  --custom-pink: var(--ref-pink-150);
   --custom-purple-100: var(--ref-purple-350);
   --custom-purple-200: var(--ref-purple-500);
   --custom-orange: var(--ref-orange-100);

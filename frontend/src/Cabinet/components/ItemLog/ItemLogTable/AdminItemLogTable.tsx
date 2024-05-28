@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { LentLogResponseType } from "@/Cabinet/types/dto/lent.dto";
+import { ItemLogResponseType } from "@/Cabinet/types/dto/admin.dto";
 import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -9,37 +9,39 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   day: "2-digit",
 };
 
-const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
-  if (lentHistory === undefined) return <LoadingAnimation />;
+const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
+  if (itemLog === undefined) return <LoadingAnimation />;
 
   return (
     <LogTableWrapperstyled>
       <LogTableStyled>
         <TheadStyled>
           <tr>
-            <th>위치</th>
-            <th>대여일</th>
-            <th>반납일</th>
+            <th>발급일</th>
+            <th>아이템 내용</th>
+            <th>사용일</th>
           </tr>
         </TheadStyled>
-        {lentHistory !== STATUS_400_BAD_REQUEST && (
+        {itemLog !== STATUS_400_BAD_REQUEST && (
           <TbodyStyled>
-            {lentHistory.map(
-              ({ floor, section, visibleNum, startedAt, endedAt }, idx) => (
+            {itemLog.itemHistories.map(
+              ({ purchasedAt, itemName, itemDetails, usedAt }, idx) => (
                 <tr key={idx}>
-                  <td
-                    title={`${floor}층 ${section}`}
-                  >{`${floor}F - ${visibleNum}번`}</td>
-                  <td title={new Date(startedAt).toLocaleString("ko-KR")}>
-                    {new Date(startedAt).toLocaleString("ko-KR", dateOptions)}
+                  <td title={new Date(purchasedAt).toLocaleString("ko-KR")}>
+                    {new Date(purchasedAt).toLocaleString("ko-KR", dateOptions)}
+                  </td>
+                  <td>
+                    {itemName !== itemDetails
+                      ? `${itemName} - ${itemDetails}`
+                      : itemName}
                   </td>
                   <td
                     title={
-                      endedAt ? new Date(endedAt).toLocaleString("ko-KR") : "-"
+                      usedAt ? new Date(usedAt).toLocaleString("ko-KR") : "-"
                     }
                   >
-                    {endedAt
-                      ? new Date(endedAt).toLocaleString("ko-KR", dateOptions)
+                    {usedAt
+                      ? new Date(usedAt).toLocaleString("ko-KR", dateOptions)
                       : "-"}
                   </td>
                 </tr>
@@ -48,10 +50,9 @@ const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {lentHistory === STATUS_400_BAD_REQUEST ||
-        (lentHistory.length === 0 && (
-          <EmptyLogStyled>대여기록이 없습니다.</EmptyLogStyled>
-        ))}
+      {itemLog === STATUS_400_BAD_REQUEST && (
+        <EmptyLogStyled>아이템 사용기록이 없습니다.</EmptyLogStyled>
+      )}
     </LogTableWrapperstyled>
   );
 };
@@ -61,6 +62,7 @@ const LogTableWrapperstyled = styled.div`
   max-width: 800px;
   border-radius: 10px;
   overflow: hidden;
+  margin: 0 auto;
   box-shadow: 0 0 10px 0 var(--table-border-shadow-color-100);
 `;
 
@@ -76,18 +78,11 @@ const TheadStyled = styled.thead`
   line-height: 50px;
   background-color: var(--sys-main-color);
   color: var(--white-text-with-bg-color);
-
-  & > tr > th:first-child {
-    padding-left: 20px;
-  }
-  & > tr > th:last-child {
-    padding-right: 20px;
-  }
 `;
 
 const TbodyStyled = styled.tbody`
   & > tr {
-    font-size: small;
+    font-size: 11.8px;
     text-align: center;
     height: 50px;
   }
@@ -99,12 +94,6 @@ const TbodyStyled = styled.tbody`
   & > tr:nth-child(2n) {
     background: var(--table-even-row-bg-color);
   }
-  & > tr > td:first-child {
-    padding-left: 20px;
-  }
-  & > tr > td:last-child {
-    padding-right: 20px;
-  }
 `;
 
 const EmptyLogStyled = styled.div`
@@ -114,4 +103,4 @@ const EmptyLogStyled = styled.div`
   padding: 20px 0;
 `;
 
-export default LogTable;
+export default AdminItemLogTable;

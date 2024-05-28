@@ -777,10 +777,39 @@ export const axiosStatisticsCoin = async () => {
   }
 };
 
+const axiosCoinUseStatisticsURL = "/v5/admin/statistics/coins/use";
+export const axiosCoinUseStatistics = async (
+  startDate: Date,
+  endDate: Date
+): Promise<any> => {
+  try {
+    const response = await instance.get(axiosCoinUseStatisticsURL, {
+      params: { startDate, endDate },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosStatisticsItemURL = "/v5/admin/statistics/coins";
 export const axiosStatisticsItem = async () => {
   try {
     const response = await instance.get(axiosStatisticsItemURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCoinCollectStatisticsURL = "/v5/admin/statistics/coins/collect";
+export const axiosCoinCollectStatistics = async (
+  month: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(axiosCoinCollectStatisticsURL, {
+      params: { month },
+    });
     return response;
   } catch (error) {
     throw error;
@@ -860,7 +889,7 @@ export const axiosSendSlackNotificationToChannel = async (
 const axiosItemAssignURL = "v5/admin/items/assign";
 export const axiosItemAssign = async (
   itemSku: string,
-  userId: number,
+  userId: number
 ): Promise<any> => {
   try {
     const response = await instance.post(axiosItemAssignURL, {
@@ -876,13 +905,13 @@ export const axiosItemAssign = async (
 const axiosItemAssignListURL = "/v5/admin/items/assign";
 export const axiosItemAssignList = async (
   page: number,
-  size: number,
+  size: number
 ): Promise<any> => {
   if (page === null || size === null) return;
   try {
-    const response = await instance.get(
-      axiosItemAssignListURL, {params: { page: page, size: size }}
-    );
+    const response = await instance.get(axiosItemAssignListURL, {
+      params: { page: page, size: size },
+    });
     return response.data;
   } catch (error) {
     throw error;

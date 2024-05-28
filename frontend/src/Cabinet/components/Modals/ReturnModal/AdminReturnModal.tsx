@@ -18,6 +18,7 @@ import {
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
+import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import { UserInfo } from "@/Cabinet/types/dto/user.dto";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
@@ -90,7 +91,7 @@ const AdminReturnModal: React.FC<{
 
   const renderSelector = () => (
     <Selector
-      iconSrc="/src/Cabinet/assets/images/shareIcon.svg"
+      icon={ShareIcon}
       selectList={targetCabinetInfo.lents.map((info) => {
         return { key: info.userId, value: info.name };
       })}

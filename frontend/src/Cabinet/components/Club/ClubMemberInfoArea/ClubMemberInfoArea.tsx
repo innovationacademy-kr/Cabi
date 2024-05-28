@@ -10,7 +10,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
-import { ReactComponent as LeaderIcon } from "@/Cabinet/assets/images/leader.svg";
+import { ReactComponent as LeaderIcon } from "@/Cabinet/assets/images/crown.svg";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import { ReactComponent as UserImg } from "@/Cabinet/assets/images/privateIcon.svg";
 import {

@@ -71,8 +71,7 @@ const AdminCabinetInfoArea: React.FC<{
           <LogoImg />
         </CabiLogoStyled>
         <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
-          사물함/유저를 <br />
-          선택해주세요
+          사물함을 선택해주세요
         </TextStyled>
       </NotSelectedStyled>
     );
