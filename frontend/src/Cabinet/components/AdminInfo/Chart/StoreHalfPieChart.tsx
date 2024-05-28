@@ -1,10 +1,6 @@
 import { ResponsivePie } from "@nivo/pie";
 import styled from "styled-components";
-
-interface ICoinCollectInfo {
-  coinCount: number;
-  userCount: number;
-}
+import { ICoinCollectInfo } from "@/Cabinet/pages/admin/AdminStorePage";
 
 const convert = (data: ICoinCollectInfo[]) => {
   let total = 0;

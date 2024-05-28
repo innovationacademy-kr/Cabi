@@ -5,22 +5,27 @@ import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
 import StoreHalfPieChart from "@/Cabinet/components/AdminInfo/Chart/StoreHalfPieChart";
 import { axiosCoinCollectStatistics } from "@/Cabinet/api/axios/axios.custom";
 
-const mockData = [
+export interface ICoinCollectInfo {
+  coinCount: number;
+  userCount: number;
+}
+
+const mockData: ICoinCollectInfo[] = [
   {
     coinCount: 5,
     userCount: 10,
   },
   {
-    coinCount: 10, // 1 ~ 20회
-    userCount: 20, // n 명
+    coinCount: 10,
+    userCount: 20,
   },
   {
-    coinCount: 15, // 1 ~ 20회
-    userCount: 30, // n 명
+    coinCount: 15,
+    userCount: 30,
   },
   {
-    coinCount: 20, // 1 ~ 20회
-    userCount: 40, // n 명
+    coinCount: 20,
+    userCount: 40,
   },
 ];
 // TODO : 작은 횟수부터 큰 횟수까지 차례대로 보내주는지 확인
@@ -33,27 +38,42 @@ const PieChartCoinData = [
 ];
 
 const AdminStorePage = () => {
+  const [coinCollectData, setCoinCollectData] = useState<ICoinCollectInfo[]>(
+    []
+  );
+
   const getCoinCollectData = async () => {
-    const date = new Date();
-    const response = axiosCoinCollectStatistics(date.getMonth() + 1);
+    try {
+      const date = new Date();
+      // TODO
+      // const response = await axiosCoinCollectStatistics(date.getMonth() + 1);
+      // setCoinCollectData(response.data.coinCollectStatistics);
+      setCoinCollectData(mockData);
+    } catch (error) {
+      console.error("Error getting coin collect data:", error);
+    }
   };
+
+  useEffect(() => {
+    getCoinCollectData();
+  }, []);
 
   return (
     <AdminHomeStyled>
       <ContainerStyled></ContainerStyled>
-      <ContainerStyled>
-        <H2styled>전체 재화 현황</H2styled>
-        <PieChartCoin data={PieChartCoinData} />
-      </ContainerStyled>
+      <ContainerStyled></ContainerStyled>
       <ContainerStyled></ContainerStyled>
       <ContainerStyled>
         <CoinCollectTitleWrapperStyled>
           <H2styled>코인 통계</H2styled>
           <h3>5월</h3>
         </CoinCollectTitleWrapperStyled>
-        <StoreHalfPieChart data={mockData} />
+        <StoreHalfPieChart data={coinCollectData} />
       </ContainerStyled>
-      <ContainerStyled></ContainerStyled>
+      <ContainerStyled>
+        <H2styled>전체 재화 현황</H2styled>
+        <PieChartCoin data={PieChartCoinData} />
+      </ContainerStyled>
       <ContainerStyled></ContainerStyled>
     </AdminHomeStyled>
   );
