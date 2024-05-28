@@ -68,12 +68,9 @@ const TopNavContainer: React.FC<{
     setCurrentBuildingName(buildingsList[0]);
   }, [buildingsList]);
 
-  console.log("isLocation", isLocation);
   useEffect(() => {
     if (currentBuildingName === undefined) return;
     else if (currentBuildingName === "새롬관") {
-      // 새로고침시 새롬관이면 home으로 이동
-      // navigator("/home");
       navigator(isLocation);
     }
   }, [currentBuildingName]);
