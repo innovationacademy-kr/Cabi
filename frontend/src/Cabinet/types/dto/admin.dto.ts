@@ -63,10 +63,12 @@ export interface IItemLog {
 }
 
 export interface AdminItemHistoryDto {
-  purchasedAt: string;
-  usedAt: string;
+  itemSku: string;
   itemName: string;
   itemDetails: string;
+  issuedDate?: string;
+  purchasedAt?: string;
+  usedAt?: string;
 }
 
 export interface ItemLogResponse {
