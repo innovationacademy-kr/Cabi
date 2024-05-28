@@ -6,6 +6,7 @@ import { selectedTypeOnSearchState } from "@/Cabinet/recoil/atoms";
 import SearchBarList from "@/Cabinet/components/TopNav/SearchBar/SearchBarList/SearchBarList";
 import { ReactComponent as SearchIcon } from "@/Cabinet/assets/images/searchWhite.svg";
 import { CabinetSimple } from "@/Cabinet/types/dto/cabinet.dto";
+import AdminNavType from "@/Cabinet/types/enum/adminNav.enum";
 import {
   axiosSearchByCabinetNumSimple,
   axiosSearchByIntraId,
@@ -25,7 +26,7 @@ const SearchBar = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [floor, setFloor] = useState<number>(0);
   const { debounce } = useDebounce();
-  const setSelectedTypeOnSearch = useSetRecoilState<string>(
+  const setSelectedTypeOnSearch = useSetRecoilState<AdminNavType>(
     selectedTypeOnSearchState
   );
 
