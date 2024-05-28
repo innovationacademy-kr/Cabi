@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinFlow";
 import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
 import StoreHalfPieChart from "@/Cabinet/components/AdminInfo/Chart/StoreHalfPieChart";
 import { axiosCoinCollectStatistics } from "@/Cabinet/api/axios/axios.custom";
@@ -60,7 +61,10 @@ const AdminStorePage = () => {
 
   return (
     <AdminHomeStyled>
-      <ContainerStyled></ContainerStyled>
+      <ContainerStyled>
+        <H2styled>재화 사용 통계</H2styled>
+        <CoinFlow />
+      </ContainerStyled>
       <ContainerStyled></ContainerStyled>
       <ContainerStyled></ContainerStyled>
       <ContainerStyled>
