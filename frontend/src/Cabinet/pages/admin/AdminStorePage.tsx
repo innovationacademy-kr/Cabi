@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
 import StoreHalfPieChart from "@/Cabinet/components/AdminInfo/Chart/StoreHalfPieChart";
 import { axiosCoinCollectStatistics } from "@/Cabinet/api/axios/axios.custom";
 
@@ -23,19 +25,26 @@ const mockData = [
 ];
 // TODO : 작은 횟수부터 큰 횟수까지 차례대로 보내주는지 확인
 
+const PieChartCoinData = [
+  {
+    used: 70,
+    unused: 50,
+  },
+];
+
 const AdminStorePage = () => {
   const getCoinCollectData = async () => {
     const date = new Date();
     const response = axiosCoinCollectStatistics(date.getMonth() + 1);
   };
 
-  useEffect(() => {
-    getCoinCollectData();
-  }, []);
   return (
     <AdminHomeStyled>
       <ContainerStyled></ContainerStyled>
-      <ContainerStyled></ContainerStyled>
+      <ContainerStyled>
+        <H2styled>전체 재화 현황</H2styled>
+        <PieChartCoin data={PieChartCoinData} />
+      </ContainerStyled>
       <ContainerStyled></ContainerStyled>
       <ContainerStyled>
         <CoinCollectTitleWrapperStyled>

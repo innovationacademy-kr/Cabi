@@ -13,6 +13,8 @@ import {
 import BarChart from "@/Cabinet/components/AdminInfo/Chart/BarChart";
 import LineChart from "@/Cabinet/components/AdminInfo/Chart/LineChart";
 import PieChart from "@/Cabinet/components/AdminInfo/Chart/PieChart";
+import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
+import StoreHalfPieChart from "@/Cabinet/components/AdminInfo/Chart/StoreHalfPieChart";
 import AdminTable from "@/Cabinet/components/AdminInfo/Table/AdminTable";
 import {
   ICabinetNumbersPerFloor,
