@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { selectedTypeOnSearchState } from "@/Cabinet/recoil/atoms";
 import SearchBarList from "@/Cabinet/components/TopNav/SearchBar/SearchBarList/SearchBarList";
 import { ReactComponent as SearchIcon } from "@/Cabinet/assets/images/searchWhite.svg";
 import { CabinetSimple } from "@/Cabinet/types/dto/cabinet.dto";
@@ -23,6 +25,9 @@ const SearchBar = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [floor, setFloor] = useState<number>(0);
   const { debounce } = useDebounce();
+  const setSelectedTypeOnSearch = useSetRecoilState<string>(
+    selectedTypeOnSearchState
+  );
 
   const resetSearchState = () => {
     setSearchListById([]);
@@ -46,6 +51,9 @@ const SearchBar = () => {
         resetSearchState();
         return alert("두 글자 이상의 검색어를 입력해주세요.");
       } else {
+        if (isNaN(Number(searchValue))) setSelectedTypeOnSearch("USER");
+        else setSelectedTypeOnSearch("CABINET");
+
         let query = floor
           ? `?q=${searchInput.current.value}&floor=${floor}`
           : `?q=${searchInput.current.value}`;
