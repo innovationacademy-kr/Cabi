@@ -1,38 +1,12 @@
 // import { ResponsiveLine } from "@nivo/line";
-import { LineSvgProps, ResponsiveLine } from "@nivo/line";
-import { useState } from "react";
+import { ResponsiveLine } from "@nivo/line";
 import styled from "styled-components";
-import MultiToggleSwitch, { toggleItem } from "../../Common/MultiToggleSwitch";
-import ToggleSwitch from "../../Common/ToggleSwitch";
+import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
 
 interface CoinAmountDto {
   date: Date;
   amount: number;
 }
-
-export enum CoinDateType {
-  DAY = "DAY",
-  WEEK = "WEEK",
-  MONTH = "MONTH",
-}
-
-export enum CoinFlowType {
-  ISSUE = "issueCoin",
-  UNUSED = "unusedCoin",
-  USED = "usedCoin",
-}
-
-const dataToggleList = [
-  { name: "발행 코인", key: CoinFlowType.ISSUE },
-  { name: "미사용 코인", key: CoinFlowType.UNUSED },
-  { name: "사용 코인", key: CoinFlowType.USED },
-];
-
-const toggleList: toggleItem[] = [
-  { name: "1d", key: CoinDateType.DAY },
-  { name: "7d", key: CoinDateType.WEEK },
-  { name: "30d", key: CoinDateType.MONTH },
-];
 
 function generateDummyData(
   startDate: string,
@@ -45,13 +19,11 @@ function generateDummyData(
   const start = new Date(startDate);
   const end = new Date(endDate);
   const oneDay = 24 * 60 * 60 * 1000; // 하루의 밀리초
-
   const dummyData = {
     issueCoin: [] as CoinAmountDto[],
     unusedCoin: [] as CoinAmountDto[],
     usedCoin: [] as CoinAmountDto[],
   };
-
   for (
     let date = start;
     date <= end;
@@ -71,15 +43,16 @@ function generateDummyData(
       amount: Math.floor(Math.random() * 700) + 300,
     });
   }
-
   return dummyData;
 }
 
-const CoinFlow = () => {
-  const [toggleType, setToggleType] = useState<CoinDateType>(CoinDateType.DAY);
-  const [coinToggleType, setCoinToggleType] = useState<CoinFlowType>(
-    CoinFlowType.ISSUE
-  );
+const CoinFlow = ({
+  toggleType,
+  coinToggleType,
+}: {
+  toggleType: CoinDateType;
+  coinToggleType: CoinFlowType;
+}) => {
   const calculateEndDate = (startDate: Date, type: CoinDateType) => {
     switch (type) {
       case CoinDateType.DAY:
@@ -130,21 +103,13 @@ const CoinFlow = () => {
       })),
     },
   ];
+
+  // 발행코인, 미사용 코인, 사용코인 나눠서 보내주는 함수
   const filteredData = formattedData.filter(
     (data) => data.id === coinToggleType
   );
   return (
     <>
-      <MultiToggleSwitch
-        initialState={toggleType}
-        setState={setToggleType}
-        toggleList={toggleList}
-      />
-      <MultiToggleSwitch
-        initialState={coinToggleType}
-        setState={setCoinToggleType}
-        toggleList={dataToggleList}
-      />
       <LineChartStyled>
         <ResponsiveLine
           theme={{
@@ -158,7 +123,8 @@ const CoinFlow = () => {
             },
           }}
           data={filteredData}
-          margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+          // margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+          margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
           xFormat="time:%Y-%m-%d"
           xScale={{
             format: "%Y-%m-%d",
@@ -191,31 +157,31 @@ const CoinFlow = () => {
           pointLabelYOffset={-12}
           enableArea={true}
           useMesh={true}
-          legends={[
-            {
-              anchor: "bottom-right",
-              direction: "column",
-              justify: false,
-              translateX: 110,
-              translateY: 0,
-              itemWidth: 100,
-              itemHeight: 20,
-              itemsSpacing: 2,
-              symbolSize: 10,
-              symbolShape: "circle",
-              itemDirection: "left-to-right",
-              itemTextColor: "#777",
-              effects: [
-                {
-                  on: "hover",
-                  style: {
-                    itemBackground: "rgba(0, 0, 0, .03)",
-                    itemOpacity: 1,
-                  },
-                },
-              ],
-            },
-          ]}
+          // legends={[
+          //   {
+          //     anchor: "bottom-left",
+          //     direction: "row",
+          //     justify: false,
+          //     translateX: 0,
+          //     translateY: 50,
+          //     itemWidth: 100,
+          //     itemHeight: 20,
+          //     itemsSpacing: 2,
+          //     symbolSize: 10,
+          //     symbolShape: "circle",
+          //     itemDirection: "left-to-right",
+          //     itemTextColor: "#777",
+          //     effects: [
+          //       {
+          //         on: "hover",
+          //         style: {
+          //           itemBackground: "rgba(0, 0, 0, .03)",
+          //           itemOpacity: 1,
+          //         },
+          //       },
+          //     ],
+          //   },
+          // ]}
         />
       </LineChartStyled>
     </>

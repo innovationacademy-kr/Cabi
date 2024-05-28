@@ -12,7 +12,11 @@ import {
   axiosMyItems,
   axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
-import { getReduceDateString } from "@/Cabinet/utils/dateUtils";
+import {
+  formatDate,
+  formatDateTime,
+  getReduceDateString,
+} from "@/Cabinet/utils/dateUtils";
 import { IInventoryInfo } from "../../Store/Inventory/Inventory";
 import Modal, { IModalContents } from "../Modal";
 import ModalPortal from "../ModalPortal";
@@ -83,6 +87,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
 
   useEffect(() => {
     tryGetPenaltyItem();
+    console.log("remainPenaltyPeriod MODAL", remainPenaltyPeriod);
   }, []);
 
   const findMyExtension = (period: string) => {
@@ -98,14 +103,17 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
       const { data: myInfo } = await axiosMyInfo();
       setMyInfo(myInfo);
       setModalTitle("페널티 감면권 사용 완료");
-      if (remainPenaltyPeriod < 0) {
+      // console.log("myInfo", myInfo);
+      // if (remainPenaltyPeriod <= 0)
+      if (myInfo.unbannedAt === null) {
         setModalContent("남은 페널티 기간이 모두 소멸되었습니다");
       } else {
+        console.log("myInfo.unbannedAt", myInfo.unbannedAt);
         setModalContent(
-          `해제 날짜 : <strong> ${getReduceDateString(
+          `해제 날짜 : <strong> ${formatDate(
             myInfo.unbannedAt,
-            usePenaltyItemDays
-          )} 23:59 </strong> `
+            ":"
+          )} ${formatDateTime(myInfo.unbannedAt, "/")}</strong> `
         );
       }
     } catch (error) {
@@ -125,7 +133,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
         await tryPenaltyItemUse(sku, usePenaltyItemDays);
       }
     } catch (error: any) {
-      setModalTitle(error.response.data.message);
+      setModalTitle(error.response);
       setHasErrorOnResponse(true);
     } finally {
       setIsLoading(false);
@@ -155,7 +163,8 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
           <ModalDetailContentStyled>
             현재 남아있는 페널티 일수는{" "}
             <strong>
-              {remainPenaltyPeriod == 0 ? remainPenaltyPeriod : 1}
+              {remainPenaltyPeriod}
+              {/* {remainPenaltyPeriod == 0 ? 1 : remainPenaltyPeriod} */}
             </strong>{" "}
             입니다. <br />
             선택한 페널티 감면권에 해당하는 일수만큼 <br />

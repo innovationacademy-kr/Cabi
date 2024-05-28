@@ -4,6 +4,10 @@ import styled from "styled-components";
 import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinFlow";
 import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
 import StoreHalfPieChart from "@/Cabinet/components/AdminInfo/Chart/StoreHalfPieChart";
+import MultiToggleSwitch, {
+  toggleItem,
+} from "@/Cabinet/components/Common/MultiToggleSwitch";
+import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
 import { axiosCoinCollectStatistics } from "@/Cabinet/api/axios/axios.custom";
 import { axiosStatisticsItem } from "@/Cabinet/api/axios/axios.custom";
 
@@ -45,10 +49,26 @@ const PieChartCoinData = [
 ];
 
 const AdminStorePage = () => {
+  const [toggleType, setToggleType] = useState<CoinDateType>(CoinDateType.DAY);
+  const [coinToggleType, setCoinToggleType] = useState<CoinFlowType>(
+    CoinFlowType.ISSUE
+  );
   const [coinCollectData, setCoinCollectData] = useState<ICoinCollectInfo[]>(
     []
   );
   const [totalCoinData, setTotalCoinData] = useState<ITotalCoinInfo[]>([]);
+
+  const dataToggleList: toggleItem[] = [
+    { name: "발행 코인", key: CoinFlowType.ISSUE },
+    { name: "미사용 코인", key: CoinFlowType.UNUSED },
+    { name: "사용 코인", key: CoinFlowType.USED },
+  ];
+
+  const toggleList: toggleItem[] = [
+    { name: "1d", key: CoinDateType.DAY },
+    { name: "7d", key: CoinDateType.WEEK },
+    { name: "30d", key: CoinDateType.MONTH },
+  ];
 
   const getCoinCollectData = async () => {
     try {
@@ -80,8 +100,22 @@ const AdminStorePage = () => {
   return (
     <AdminHomeStyled>
       <ContainerStyled>
-        <H2styled>재화 사용 통계</H2styled>
-        <CoinFlow />
+        <HeaderStyled>
+          <H2styled>재화 사용 통계</H2styled>
+          <ToggleContainer>
+            <MultiToggleSwitch
+              initialState={coinToggleType}
+              setState={setCoinToggleType}
+              toggleList={dataToggleList}
+            />
+            <MultiToggleSwitch
+              initialState={toggleType}
+              setState={setToggleType}
+              toggleList={toggleList}
+            />
+          </ToggleContainer>
+        </HeaderStyled>
+        <CoinFlow toggleType={toggleType} coinToggleType={coinToggleType} />
       </ContainerStyled>
       <ContainerStyled></ContainerStyled>
 
@@ -99,6 +133,23 @@ const AdminStorePage = () => {
     </AdminHomeStyled>
   );
 };
+
+const HeaderStyled = styled.div`
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: flex-start;
+`;
+
+const ToggleContainer = styled.div`
+  width: 82%;
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+`;
 
 const AdminHomeStyled = styled.div`
   background: var(--bg-color);

@@ -22,3 +22,15 @@ export enum StoreExtensionType {
   EXTENSION_15 = "EXTENSION_15",
   EXTENSION_31 = "EXTENSION_31",
 }
+
+export enum CoinDateType {
+  DAY = "DAY",
+  WEEK = "WEEK",
+  MONTH = "MONTH",
+}
+
+export enum CoinFlowType {
+  ISSUE = "issueCoin",
+  UNUSED = "unusedCoin",
+  USED = "usedCoin",
+}

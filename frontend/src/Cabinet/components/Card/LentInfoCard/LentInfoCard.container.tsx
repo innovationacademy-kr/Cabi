@@ -77,7 +77,7 @@ const LentInfoCardContainer = ({
   const [isPenaltyUser, setIsPenaltyUser] = useState(true);
   const [penaltyPeriod, setPenaltyPeriod] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  let tempPenaltyPeriod = getRemainingTime(unbannedAt);
+  // let tempPenaltyPeriod = getRemainingTime(unbannedAt);
 
   let dateUsed, dateLeft, expireDate;
   if (name && myCabinetInfo.lents) {
@@ -120,9 +120,14 @@ const LentInfoCardContainer = ({
     } else {
       // 만료일을 버림 -> 시간 기준으로 평가하기 위함
       setPenaltyPeriod(getRemainingTime(unbannedAt));
-      tempPenaltyPeriod = tempPenaltyPeriod;
+      console.log("getRemainingTime(unbannedAt)", getRemainingTime(unbannedAt));
+      // tempPenaltyPeriod = tempPenaltyPeriod;
     }
   }, [unbannedAt]);
+
+  useEffect(() => {
+    console.log("penaltyPeriod", penaltyPeriod);
+  }, [penaltyPeriod]);
 
   return (
     <LentInfoCard
