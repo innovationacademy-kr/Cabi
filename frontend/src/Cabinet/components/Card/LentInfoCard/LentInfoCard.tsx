@@ -8,9 +8,9 @@ import {
 } from "@/Cabinet/components/Card/CardStyles";
 import { MyCabinetInfo } from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
 import { cabinetIconComponentMap } from "@/Cabinet/assets/data/maps";
+import { IItemTimeRemaining } from "@/Cabinet/types/dto/store.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import AdminItemProvisionModal from "../../Modals/StoreModal/AdminItemProvisionModal";
 import StoreBuyPenalty from "../../Modals/StoreModal/StoreBuyPenaltyModal";
 
 const calculateFontSize = (userCount: number): string => {
@@ -37,7 +37,7 @@ const LentInfoCard = ({
   unbannedAt: Date | null | undefined;
   button: IButtonProps | undefined;
   isModalOpen: boolean;
-  remainPenaltyPeriod: number;
+  remainPenaltyPeriod: IItemTimeRemaining | null;
   onClose: () => void;
 }) => {
   const CabinetIcon = cabinetIconComponentMap[cabinetInfo.lentType];
@@ -129,10 +129,8 @@ const LentInfoCard = ({
       {isModalOpen && (
         <StoreBuyPenalty
           onClose={onClose}
-          // unbannedAt={unbannedAt}
           remainPenaltyPeriod={remainPenaltyPeriod}
         />
-        // <AdminItemProvisionModal onClose={onClose} />
       )}
     </>
   );

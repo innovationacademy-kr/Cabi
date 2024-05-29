@@ -27,3 +27,9 @@ export interface IItemDetail {
   items: IItemStore[];
   // List<ItemDetailsDto>
 }
+
+export interface IItemTimeRemaining {
+  days: number;
+  hours: number;
+  minutes: number;
+}

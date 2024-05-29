@@ -5,9 +5,10 @@ import LentInfoCard from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard";
 import { getDefaultCabinetInfo } from "@/Cabinet/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import { LentDto } from "@/Cabinet/types/dto/lent.dto";
+import { IItemTimeRemaining } from "@/Cabinet/types/dto/store.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import { getRemainingTime } from "@/Cabinet/utils/dateUtils";
+import { getRemainingTime, getTimeRemaining } from "@/Cabinet/utils/dateUtils";
 
 export interface MyCabinetInfo {
   name: string | null;
@@ -75,9 +76,9 @@ const LentInfoCardContainer = ({
 }) => {
   const myCabinetInfo = useRecoilValue(myCabinetInfoState);
   const [isPenaltyUser, setIsPenaltyUser] = useState(true);
-  const [penaltyPeriod, setPenaltyPeriod] = useState(0);
+  const [remainPenaltyPeriod, setRemainPenaltyPeriod] =
+    useState<IItemTimeRemaining | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // let tempPenaltyPeriod = getRemainingTime(unbannedAt);
 
   let dateUsed, dateLeft, expireDate;
   if (name && myCabinetInfo.lents) {
@@ -118,16 +119,9 @@ const LentInfoCardContainer = ({
     if (unbannedAt == null) {
       setIsPenaltyUser(false);
     } else {
-      // 만료일을 버림 -> 시간 기준으로 평가하기 위함
-      setPenaltyPeriod(getRemainingTime(unbannedAt));
-      console.log("getRemainingTime(unbannedAt)", getRemainingTime(unbannedAt));
-      // tempPenaltyPeriod = tempPenaltyPeriod;
+      setRemainPenaltyPeriod(getTimeRemaining(unbannedAt));
     }
   }, [unbannedAt]);
-
-  useEffect(() => {
-    console.log("penaltyPeriod", penaltyPeriod);
-  }, [penaltyPeriod]);
 
   return (
     <LentInfoCard
@@ -143,7 +137,7 @@ const LentInfoCardContainer = ({
           : undefined
       }
       isModalOpen={isModalOpen}
-      remainPenaltyPeriod={penaltyPeriod}
+      remainPenaltyPeriod={remainPenaltyPeriod}
       onClose={handleCloseModal}
     />
   );
