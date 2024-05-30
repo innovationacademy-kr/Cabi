@@ -99,17 +99,17 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         {type === "hasProceedBtn" && (
           <ButtonWrapperStyled>
             <Button
-              onClick={closeModal}
-              text={cancelBtnText || "취소"}
-              theme="line"
-            />
-            <Button
               onClick={(e) => {
                 onClickProceed!(e);
               }}
               text={proceedBtnText || "확인"}
               theme="fill"
               disabled={isLoading}
+            />
+            <Button
+              onClick={closeModal}
+              text={cancelBtnText || "취소"}
+              theme="line"
             />
           </ButtonWrapperStyled>
         )}
