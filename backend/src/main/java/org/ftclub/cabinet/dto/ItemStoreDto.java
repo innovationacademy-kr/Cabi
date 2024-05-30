@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.dto;
 
+import java.util.Comparator;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,4 +18,9 @@ public class ItemStoreDto {
 	private ItemType itemType;
 	private String description;
 	private List<ItemDetailsDto> items;
+
+	//SKU 기준 오름차순 정렬
+	public void sortBySkuASC() {
+		items.sort(Comparator.comparing(ItemDetailsDto::getItemSku));
+	}
 }

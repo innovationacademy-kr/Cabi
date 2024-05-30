@@ -83,7 +83,12 @@ public class ItemFacadeService {
 				.collect(groupingBy(Item::getType,
 						mapping(itemMapper::toItemDetailsDto, Collectors.toList())));
 		List<ItemStoreDto> result = itemMap.entrySet().stream()
-				.map(entry -> itemMapper.toItemStoreDto(entry.getKey(), entry.getValue()))
+				.map(entry -> {
+					ItemStoreDto itemStoreDto = itemMapper.toItemStoreDto(entry.getKey(),
+							entry.getValue());
+					itemStoreDto.sortBySkuASC();
+					return itemStoreDto;
+				})
 				.collect(Collectors.toList());
 		return new ItemStoreResponseDto(result);
 	}
