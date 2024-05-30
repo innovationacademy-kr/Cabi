@@ -12,7 +12,6 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
-import { ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import { axiosItemAssign, axiosItems } from "@/Cabinet/api/axios/axios.custom";
@@ -38,6 +37,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   const [targetUserInfo] = useRecoilState(targetUserInfoState);
 
   const HandleItemProvisionBtn = async () => {
+    setIsLoading(true);
     try {
       await axiosItemAssign(selectedItemSku, targetUserInfo.userId!);
     } catch (error: any) {
@@ -49,6 +49,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
       // TODO : error일때 오는 데이터 확인해서 수정
     } finally {
       setShowResponseModal(true);
+      setIsLoading(false);
     }
   };
 
@@ -58,19 +59,8 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     });
 
     if (foundItem) {
-      setTypeOptions(
-        foundItem.items.length === 1
-          ? [
-              {
-                name: "타입이 없습니다",
-                value: foundItem.items[0].itemSku,
-                hasNoOptions: true,
-              },
-            ]
-          : foundItem.items.map((item) => {
-              return { name: item.itemDetails, value: item.itemSku };
-            })
-      );
+      setTypeOptions(getTypeOptions(foundItem));
+      setSelectedItemSku(foundItem.items[0].itemSku);
     }
   };
 
@@ -109,19 +99,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
           return { name: item.itemName, value: item.itemType };
         })
       );
-      setTypeOptions(
-        sortedItems[0].items.length === 1
-          ? [
-              {
-                name: "타입이 없습니다",
-                value: sortedItems[0].items[0].itemSku,
-                hasNoOptions: true,
-              },
-            ]
-          : sortedItems[0].items.map((item) => {
-              return { name: item.itemDetails, value: item.itemSku };
-            })
-      );
+      setTypeOptions(getTypeOptions(sortedItems[0]));
       setSelectedItemSku(sortedItems[0].items[0].itemSku);
     }
   }, [items]);
@@ -129,6 +107,20 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   useEffect(() => {
     getItems();
   }, []);
+
+  const getTypeOptions = (item: IItemDetail) => {
+    return item.items.length === 1
+      ? [
+          {
+            name: "타입이 없습니다",
+            value: item.items[0].itemSku,
+            hasNoOptions: true,
+          },
+        ]
+      : item.items.map((item) => {
+          return { name: item.itemDetails, value: item.itemSku };
+        });
+  };
 
   const modalContents: IModalContents = {
     type: "hasProceedBtn",
