@@ -25,7 +25,6 @@ import AdminNavType from "@/Cabinet/types/enum/adminNav.enum";
 import { axiosCabinetById } from "@/Cabinet/api/axios/axios.custom";
 import { useAdminHomeApi } from "@/Cabinet/hooks/useAdminHomeApi";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import ItemBarChart from "@/Cabinet/components/AdminInfo/Chart/ItemBarChart";
 
 const AdminHomePage = () => {
   const [overdueUserList, setOverdueUserList] = useRecoilState<ITableData[]>(
@@ -123,7 +122,6 @@ const AdminHomePage = () => {
       </ContainerStyled>
       <ContainerStyled>
         <H2styled>사물함 현황</H2styled>
-        {/* <ItemBarChart></ItemBarChart> */}
         <PieChart data={cabinetNumbersPerFloor} />
       </ContainerStyled>
       <ContainerStyled>

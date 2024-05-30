@@ -10,6 +10,7 @@ import MultiToggleSwitch, {
 import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
 import { axiosCoinCollectStatistics } from "@/Cabinet/api/axios/axios.custom";
 import { axiosStatisticsItem } from "@/Cabinet/api/axios/axios.custom";
+import ItemBarChart, { IitemUseCountDto } from "@/Cabinet/components/AdminInfo/Chart/ItemBarChart";
 
 export interface ICoinCollectInfo {
   coinCount: number;
@@ -36,6 +37,41 @@ const mockData: ICoinCollectInfo[] = [
 ];
 // TODO : 작은 횟수부터 큰 횟수까지 차례대로 보내주는지 확인
 
+const itemCount: IitemUseCountDto[] = [
+  {		itemName : "연장권",
+		itemDetails : "extension_31",
+		useCount : 31,
+  },
+  {		itemName : "연장권",
+  itemDetails : "extension_15",
+  useCount : 15,
+},
+{		itemName : "연장권",
+itemDetails : "extension_3",
+useCount : 3,
+},
+{		itemName : "알림권",
+itemDetails : "alram",
+useCount : 10,
+},
+{		itemName : "이사권",
+itemDetails : "move",
+useCount : 10,
+},
+{		itemName : "패널티 축소권",
+itemDetails : "penalty_31",
+useCount : 31,
+},
+{		itemName : "패널티 축소권",
+itemDetails : "penalty_7",
+useCount : 7,
+},
+{		itemName : "패널티 축소권",
+itemDetails : "penalty_3",
+useCount : 3,
+},
+
+]
 export interface ITotalCoinInfo {
   used: number;
   unused: number;
@@ -57,6 +93,7 @@ const AdminStorePage = () => {
     []
   );
   const [totalCoinData, setTotalCoinData] = useState<ITotalCoinInfo[]>([]);
+  const [totalItemData, setTotalItemData] = useState<IitemUseCountDto[]>([]);
 
   const dataToggleList: toggleItem[] = [
     { name: "발행 코인", key: CoinFlowType.ISSUE },
@@ -92,9 +129,22 @@ const AdminStorePage = () => {
     }
   };
 
+
+  const getTotalItemData = async () => {
+    try {
+      // const response = await axiosStatisticsItemUse();
+      // setTotalItemData(response.data.coinCollectStatistics);
+      setTotalItemData(itemCount);
+    } catch (error) {
+      console.error("Error getting total coin data:", error);
+    }
+  };
+
+
   useEffect(() => {
     getCoinCollectData();
     getTotalCoinData();
+    getTotalItemData();
   }, []);
 
   return (
@@ -125,6 +175,13 @@ const AdminStorePage = () => {
           <h3>5월</h3>
         </CoinCollectTitleWrapperStyled>
         <StoreHalfPieChart data={coinCollectData} />
+      </ContainerStyled>
+      <ContainerStyled>
+        <CoinCollectTitleWrapperStyled>
+          <H2styled>아이템 통계</H2styled>
+        </CoinCollectTitleWrapperStyled>
+        <ItemBarChart data = {totalItemData}/>
+        {/* <StoreHalfPieChart data={coinCollectData} /> */}
       </ContainerStyled>
       <ContainerStyled>
         <H2styled>전체 재화 현황</H2styled>

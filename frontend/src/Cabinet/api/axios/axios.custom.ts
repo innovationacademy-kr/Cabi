@@ -801,6 +801,15 @@ export const axiosStatisticsItem = async () => {
     throw error;
   }
 };
+const axiosStatisticsItemUseURL = "/v5/admin/statistics/items";
+export const axiosStatisticsItemUse = async () => {
+  try {
+    const response = await instance.get(axiosStatisticsItemUseURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const axiosCoinCollectStatisticsURL = "/v5/admin/statistics/coins/collect";
 export const axiosCoinCollectStatistics = async (

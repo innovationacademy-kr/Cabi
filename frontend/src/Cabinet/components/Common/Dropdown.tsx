@@ -8,7 +8,7 @@ export interface IDropdownOptions {
   name: string;
   value: any;
   imageSrc?: string;
-  isDisable?: boolean;
+  isDisabled?: boolean;
 }
 
 export interface IDropdown {
