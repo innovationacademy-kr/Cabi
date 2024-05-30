@@ -21,7 +21,6 @@ interface IPenaltyModalProps {
 }
 
 // TODO : drop down option 닫기
-// TODO : axiosItems items 적은 일수부터 띄워지는지 확인
 
 const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   const [selectedItemSku, setSelectedItemSku] = useState<string>("");

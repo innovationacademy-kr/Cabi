@@ -15,9 +15,9 @@ import {
   CabinetInfo,
   CabinetPreviewInfo,
 } from "@/Cabinet/types/dto/cabinet.dto";
-import AdminNavType from "@/Cabinet/types/enum/adminNav.enum";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailAreaType.enum";
 import { axiosCabinetById } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
@@ -29,7 +29,7 @@ const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
-  const setSelectedTypeOnSearch = useSetRecoilState<AdminNavType>(
+  const setSelectedTypeOnSearch = useSetRecoilState<CabinetDetailAreaType>(
     selectedTypeOnSearchState
   );
   const { openCabinet, closeCabinet } = useMenu();
@@ -65,7 +65,7 @@ const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
     }
 
     setCurrentCabinetId(cabinetId);
-    setSelectedTypeOnSearch(AdminNavType.CABINET);
+    setSelectedTypeOnSearch(CabinetDetailAreaType.CABINET);
     async function getData(cabinetId: number) {
       try {
         const { data } = await axiosCabinetById(cabinetId);

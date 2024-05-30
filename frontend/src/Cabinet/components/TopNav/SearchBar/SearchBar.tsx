@@ -6,7 +6,7 @@ import { selectedTypeOnSearchState } from "@/Cabinet/recoil/atoms";
 import SearchBarList from "@/Cabinet/components/TopNav/SearchBar/SearchBarList/SearchBarList";
 import { ReactComponent as SearchIcon } from "@/Cabinet/assets/images/searchWhite.svg";
 import { CabinetSimple } from "@/Cabinet/types/dto/cabinet.dto";
-import AdminNavType from "@/Cabinet/types/enum/adminNav.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailAreaType.enum";
 import {
   axiosSearchByCabinetNumSimple,
   axiosSearchByIntraId,
@@ -26,7 +26,7 @@ const SearchBar = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [floor, setFloor] = useState<number>(0);
   const { debounce } = useDebounce();
-  const setSelectedTypeOnSearch = useSetRecoilState<AdminNavType>(
+  const setSelectedTypeOnSearch = useSetRecoilState<CabinetDetailAreaType>(
     selectedTypeOnSearchState
   );
 
@@ -53,8 +53,8 @@ const SearchBar = () => {
         return alert("두 글자 이상의 검색어를 입력해주세요.");
       } else {
         if (isNaN(Number(searchValue)))
-          setSelectedTypeOnSearch(AdminNavType.USER);
-        else setSelectedTypeOnSearch(AdminNavType.CABINET);
+          setSelectedTypeOnSearch(CabinetDetailAreaType.USER);
+        else setSelectedTypeOnSearch(CabinetDetailAreaType.CABINET);
 
         let query = floor
           ? `?q=${searchInput.current.value}&floor=${floor}`

@@ -18,7 +18,7 @@ import {
 } from "@/Cabinet/types/dto/club.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import { UserDto, UserInfo } from "@/Cabinet/types/dto/user.dto";
-import AdminNavType from "../types/enum/adminNav.enum";
+import CabinetDetailAreaType from "../types/enum/cabinetDetailAreaType.enum";
 
 const { persistAtom } = recoilPersist();
 
@@ -130,9 +130,9 @@ export const numberOfAdminWorkState = atom<number>({
   default: 0,
 });
 
-export const selectedTypeOnSearchState = atom<AdminNavType>({
+export const selectedTypeOnSearchState = atom<CabinetDetailAreaType>({
   key: "SelectedTypeOnSearch",
-  default: AdminNavType.CABINET,
+  default: CabinetDetailAreaType.CABINET,
 });
 
 export const targetUserInfoState = atom<UserInfo>({

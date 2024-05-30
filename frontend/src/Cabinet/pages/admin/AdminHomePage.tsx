@@ -21,7 +21,7 @@ import {
   ITableData,
 } from "@/Cabinet/types/dto/admin.dto";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
-import AdminNavType from "@/Cabinet/types/enum/adminNav.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailAreaType.enum";
 import { axiosCabinetById } from "@/Cabinet/api/axios/axios.custom";
 import { useAdminHomeApi } from "@/Cabinet/hooks/useAdminHomeApi";
 import useMenu from "@/Cabinet/hooks/useMenu";
@@ -80,9 +80,9 @@ const AdminHomePage = () => {
       let cabinetId = -1;
       if (str) cabinetId = JSON.parse(str)?.cabinetId;
       getData(cabinetId);
-      setSelectedTypeOnSearch(AdminNavType.CABINET);
+      setSelectedTypeOnSearch(CabinetDetailAreaType.CABINET);
     } else {
-      setSelectedTypeOnSearch(AdminNavType.USER);
+      setSelectedTypeOnSearch(CabinetDetailAreaType.USER);
       let result;
       if (str) {
         result = JSON.parse(str);

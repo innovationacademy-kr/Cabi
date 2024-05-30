@@ -6,7 +6,7 @@ import {
 } from "@/Cabinet/recoil/atoms";
 import { CabinetPreviewInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import AdminNavType from "../types/enum/adminNav.enum";
+import CabinetDetailAreaType from "../types/enum/cabinetDetailAreaType.enum";
 
 const useMultiSelect = () => {
   const [targetCabinetInfoList, setTargetCabinetInfoList] = useRecoilState<
@@ -47,7 +47,7 @@ const useMultiSelect = () => {
   };
 
   const clickCabinetOnMultiSelectMode = (cabinet: CabinetPreviewInfo) => {
-    setSelectedTypeOnSearch(AdminNavType.CABINET);
+    setSelectedTypeOnSearch(CabinetDetailAreaType.CABINET);
     if (!containsCabinet(cabinet.cabinetId)) {
       setTargetCabinetInfoList([...targetCabinetInfoList, cabinet]);
       return;

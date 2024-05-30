@@ -12,7 +12,7 @@ import MapInfoContainer from "@/Cabinet/components/MapInfo/MapInfo.container";
 import UserStoreInfoArea from "@/Cabinet/components/Store/Admin/UserStoreInfoArea/UserStoreInfoArea";
 import AdminTopNavContainer from "@/Cabinet/components/TopNav/AdminTopNav.container";
 import UserCabinetInfoAreaContainer from "@/Cabinet/components/UserCabinetInfoArea/UserCabinetInfoArea.container";
-import AdminNavType from "@/Cabinet/types/enum/adminNav.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailAreaType.enum";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -96,13 +96,13 @@ const Layout = (): JSX.Element => {
             id="cabinetDetailArea"
             isFloat={!isMainPage && !isSearchPage}
           >
-            {selectedTypeOnSearch === AdminNavType.USER && (
+            {selectedTypeOnSearch === CabinetDetailAreaType.USER && (
               <UserCabinetInfoAreaContainer />
             )}
-            {selectedTypeOnSearch === AdminNavType.ITEM && (
+            {selectedTypeOnSearch === CabinetDetailAreaType.ITEM && (
               <UserStoreInfoArea />
             )}
-            {selectedTypeOnSearch === AdminNavType.CABINET &&
+            {selectedTypeOnSearch === CabinetDetailAreaType.CABINET &&
               (isMainPage ? (
                 <CabinetInfoAreaContainer />
               ) : (

@@ -15,9 +15,9 @@ import {
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
-import AdminNavType from "@/Cabinet/types/enum/adminNav.enum";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailAreaType.enum";
 import { axiosAdminCabinetInfoByCabinetId } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -53,7 +53,10 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       cabinetInfo ? cabinetInfo.lentType : CabinetType.PRIVATE
     ];
   const clickSearchItem = () => {
-    if (currentIntraId === name && selectedTypeOnSearch !== AdminNavType.ITEM) {
+    if (
+      currentIntraId === name &&
+      selectedTypeOnSearch !== CabinetDetailAreaType.ITEM
+    ) {
       resetCurrentIntraId();
       closeCabinet();
       return;
@@ -68,9 +71,9 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       cabinetInfo: cabinetInfo,
     });
     if (cabinetInfo?.cabinetId) {
-      setSelectedTypeOnSearch(AdminNavType.CABINET);
+      setSelectedTypeOnSearch(CabinetDetailAreaType.CABINET);
     } else {
-      setSelectedTypeOnSearch(AdminNavType.USER);
+      setSelectedTypeOnSearch(CabinetDetailAreaType.USER);
     }
     setCurrentIntraId(name);
     async function getCabinetInfoByCabinetId(cabinetId: number | null) {
@@ -93,7 +96,10 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   };
 
   const clickStoreItem = () => {
-    if (currentIntraId === name && selectedTypeOnSearch === AdminNavType.ITEM) {
+    if (
+      currentIntraId === name &&
+      selectedTypeOnSearch === CabinetDetailAreaType.ITEM
+    ) {
       resetCurrentIntraId();
       closeCabinet();
       return;
@@ -102,7 +108,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       name: name,
       userId: userId,
     });
-    setSelectedTypeOnSearch(AdminNavType.ITEM);
+    setSelectedTypeOnSearch(CabinetDetailAreaType.ITEM);
     setCurrentIntraId(name);
     if (cabinetInfo?.cabinetId) {
       setCurrentCabinetId(cabinetInfo.cabinetId);
