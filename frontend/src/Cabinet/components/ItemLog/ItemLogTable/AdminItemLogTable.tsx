@@ -27,8 +27,13 @@ const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
             {itemLog.itemHistories.map(
               ({ purchasedAt, itemName, itemDetails, usedAt }, idx) => (
                 <tr key={idx}>
-                  <td title={new Date(purchasedAt).toLocaleString("ko-KR")}>
-                    {new Date(purchasedAt).toLocaleString("ko-KR", dateOptions)}
+                  <td
+                    title={new Date(purchasedAt ?? "").toLocaleString("ko-KR")}
+                  >
+                    {new Date(purchasedAt ?? "").toLocaleString(
+                      "ko-KR",
+                      dateOptions
+                    )}
                   </td>
                   <td>
                     {itemName !== itemDetails

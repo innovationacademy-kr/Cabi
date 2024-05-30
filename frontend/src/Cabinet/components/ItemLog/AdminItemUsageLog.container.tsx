@@ -93,7 +93,12 @@ const AdminItemUsageLogContainer = () => {
   async function getData(page: number) {
     try {
       const paginatedData = {
-        itemHistories: mockItemHistories.slice(page * size, (page + 1) * size),
+        itemHistories: mockItemHistories
+          .slice(page * size, (page + 1) * size)
+          .map((history) => ({
+            ...history,
+            itemSku: "",
+          })),
         totalLength: mockItemHistories.length,
       };
       setLogs(paginatedData);
