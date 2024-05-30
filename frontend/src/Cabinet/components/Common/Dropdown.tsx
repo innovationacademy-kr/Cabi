@@ -50,11 +50,9 @@ const Dropdown = ({
           </OptionsImgStyled>
         )}
         <p style={{ paddingLeft: "10px" }}>{currentName}</p>
-        {!options[selectedIdx]?.hasNoOptions === true && (
-          <DropdownSelectionBoxIconStyled isOpen={isOpen}>
-            <DropdownChevronIcon />
-          </DropdownSelectionBoxIconStyled>
-        )}
+        <DropdownSelectionBoxIconStyled isOpen={isOpen}>
+          <DropdownChevronIcon />
+        </DropdownSelectionBoxIconStyled>
       </DropdownSelectionBoxStyled>
       <DropdownItemContainerStyled isVisible={isOpen}>
         {options.map((option) => {
