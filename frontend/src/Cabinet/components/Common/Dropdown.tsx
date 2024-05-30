@@ -38,7 +38,7 @@ const Dropdown = ({
     <DropdownContainerStyled>
       <DropdownSelectionBoxStyled
         onClick={() => {
-          if (options[selectedIdx].isDisable) return;
+          if (options[selectedIdx].isDisabled) return;
           setIsOpen(!isOpen);
         }}
       >
@@ -60,7 +60,7 @@ const Dropdown = ({
             <DropdownItemStyled
               key={option.value}
               onClick={() => {
-                if (!option.isDisable) {
+                if (!option.isDisabled) {
                   setCurrentName(option.name);
                   setIsOpen(false);
                   if (onChangeValue) {
@@ -69,7 +69,7 @@ const Dropdown = ({
                 }
               }}
               isSelected={option.name === currentName}
-              isDisabled={option.isDisable}
+              isDisabled={option.isDisabled}
             >
               {option.imageSrc && (
                 <OptionsImgStyled isSelected={option.name === currentName}>
