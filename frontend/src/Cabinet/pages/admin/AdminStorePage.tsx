@@ -137,13 +137,15 @@ const AdminStorePage = () => {
 const HeaderStyled = styled.div`
   width: 90%;
   display: flex;
+  margin-top: 60px;
+  margin-left: 110px;
   flex-direction: column;
   justify-content: start;
   align-items: flex-start;
 `;
 
 const ToggleContainer = styled.div`
-  width: 82%;
+  width: 90%;
   display: flex;
   /* flex-direction: column; */
   justify-content: space-between;
@@ -189,6 +191,7 @@ const ContainerStyled = styled.div`
   width: 100%;
   min-width: 0;
   min-height: 0;
+  padding: 10px;
   background: var(--bg-color);
   display: flex;
   justify-content: center;
