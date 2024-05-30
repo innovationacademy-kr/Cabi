@@ -1,4 +1,4 @@
-import { BarSvgProps, ResponsiveBar } from "@nivo/bar";
+import {ResponsiveBar } from "@nivo/bar";
 import styled from "styled-components";
 
 export interface IitemUseCountDto {
@@ -23,14 +23,20 @@ function transformData(itemCount: IitemUseCountDto[]): ITransformedItem[] {
 
     if (existingItem) {
       const typeNumber = itemDetails.split("_")[1];
-      existingItem[`type_${typeNumber}`] = useCount;
+      if (typeNumber)
+        existingItem[`type_${typeNumber}`] = useCount;
+      else 
+        existingItem[`type`] = useCount;
     } else {
       const newItem: ITransformedItem = {
         item: itemName,
       };
 
       const typeNumber = itemDetails.split("_")[1];
+      if (typeNumber)
       newItem[`type_${typeNumber}`] = useCount;
+      else 
+      newItem[`type`] = useCount;
 
       transformedData.push(newItem);
     }
@@ -55,8 +61,8 @@ const ItemBarChart = ({ data }: { data: IitemUseCountDto[] }) => (
         },
       }}
       data={transformData(data)}
-      keys={["type_undefined", "type_31", "type_15", "type_7", "type_3"]}
-      indexBy="item" 
+      keys={["type", "type_31", "type_15", "type_7", "type_3"]}
+      indexBy="item"
       margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
       padding={0.2}
       layout="vertical"

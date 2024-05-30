@@ -37,7 +37,6 @@ const ExtendModal: React.FC<{
   onClose: () => void;
   cabinetId: Number;
 }> = (props) => {
-  const [showExtension, setShowExtension] = useState<boolean>(true);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
@@ -84,6 +83,67 @@ const ExtendModal: React.FC<{
       : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].confirmMessage;
   };
 
+  // 연장권 보유 여부 확인하는 부분
+  const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
+  const [selectedOption, setSelectedOption] = useState(0);
+
+  const findMyExtension = (period: string) => {
+    return !myItems?.extensionItems.some((item) => item.itemDetails === period);
+  };
+
+  // 연장권이 하나라도 없다면 true
+  const checkExtension = () => {
+    return (
+      findMyExtension("3일") &&
+      findMyExtension("15일") &&
+      findMyExtension("31일")
+    );
+  };
+
+  const getDefault = () => {
+    if (!findMyExtension(extensionPeriod[0].period)) return 3;
+    if (!findMyExtension(extensionPeriod[1].period)) return 15;
+    if (!findMyExtension(extensionPeriod[2].period)) return 31;
+    else return 0;
+  };
+  const getDefaultOption = (option: number) => {
+    if (option == 3) return 0;
+    else if (option == 15) return 1;
+    else return 2;
+  };
+
+  const getMyItems = async () => {
+    try {
+      const response = await axiosMyItems();
+      setMyItems(response.data);
+    } catch (error: any) {
+      console.error("Error getting inventory:", error);
+    }
+  };
+
+  useEffect(() => {
+    getMyItems();
+  }, []);
+
+  useEffect(() => {
+    if (checkExtension() == true) {
+      setShowResponseModal(true);
+      setHasErrorOnResponse(true);
+      setModalContents(
+        `현재 연장권을 보유하고 있지 않습니다.
+연장권은 까비 상점에서 구매하실 수 있습니다.`
+      );
+    } else {
+      setShowResponseModal(false);
+      setHasErrorOnResponse(false);
+    }
+    setExtensionDate(getDefault());
+  }, [myItems]);
+
+  useEffect(() => {
+    setSelectedOption(getDefaultOption(extensionDate));
+  }, [extensionDate]);
+
   const extensionItemUse = async (item: string) => {
     // 아이템 사용
     if (currentCabinetId === 0 || myInfo.cabinetId === null) {
@@ -122,7 +182,7 @@ const ExtendModal: React.FC<{
         setModalTitle("연장권 사용실패");
         setModalContents(
           `현재 연장권을 보유하고 있지 않습니다.
-  연장권은 까비 상점에서 구매하실 수 있습니다.`
+            연장권은 까비 상점에서 구매하실 수 있습니다.`
         );
       } else
         error.response
@@ -132,52 +192,6 @@ const ExtendModal: React.FC<{
       setShowResponseModal(true);
     }
   };
-
-  const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
-
-  const getMyItems = async () => {
-    try {
-      const response = await axiosMyItems();
-      setMyItems(response.data);
-    } catch (error: any) {
-      console.error("Error getting inventory:", error);
-    }
-  };
-
-  useEffect(() => {
-    getMyItems();
-  }, []);
-
-  useEffect(() => {
-    if (checkExtension() == true) {
-      setShowExtension(true);
-      setModalContents(
-        `현재 연장권을 보유하고 있지 않습니다.
-연장권은 까비 상점에서 구매하실 수 있습니다.`
-      );
-    } else setShowExtension(false);
-    setExtensionDate(
-      findMyExtension(extensionPeriod[0].period)
-        ? findMyExtension(extensionPeriod[1].period)
-          ? 31
-          : 15
-        : 3
-    );
-  }, [myItems]);
-
-  const findMyExtension = (period: string) => {
-    return !myItems?.extensionItems.some((item) => item.itemDetails === period);
-  };
-
-  const checkExtension = () => {
-    return (
-      findMyExtension("3일") &&
-      findMyExtension("15일") &&
-      findMyExtension("31일")
-    );
-  };
-
-  const [selectedOption, setSelectedOption] = useState(0);
 
   const handleDropdownChange = (option: number) => {
     setSelectedOption(option);
@@ -239,20 +253,8 @@ const ExtendModal: React.FC<{
 
   return (
     <ModalPortal>
-      {showExtension && (
-        <FailResponseModal
-          modalTitle={modalTitle}
-          modalContents={modalContents}
-          closeModal={props.onClose}
-          url={"/store"}
-          urlTitle={"까비상점으로 이동"}
-        />
-      )}
-      {!showExtension && !showResponseModal && (
-        <Modal modalContents={extendModalContents} />
-      )}
-      {!showExtension &&
-        showResponseModal &&
+      {!showResponseModal && <Modal modalContents={extendModalContents} />}
+      {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
             modalTitle={modalTitle}
