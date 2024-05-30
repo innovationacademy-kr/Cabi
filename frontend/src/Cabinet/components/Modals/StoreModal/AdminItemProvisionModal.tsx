@@ -22,78 +22,43 @@ interface PenaltyModalProps {
   onClose: () => void;
 }
 
-type TypeOptions = {
-  [key in StoreItemType]: {
-    name: string;
-    value: StorePenaltyType | StoreExtensionType | StoreItemType;
-    isDisable?: boolean;
-  }[];
-};
-
-// const typeOptions: TypeOptions = {
-//   [StoreItemType.PENALTY]: [
-//     { name: "3일", value: StorePenaltyType.PENALTY_3 },
-//     { name: "7일", value: StorePenaltyType.PENALTY_7 },
-//     { name: "31일", value: StorePenaltyType.PENALTY_31 },
-//   ],
-//   [StoreItemType.EXTENSION]: [
-//     { name: "3일", value: StoreExtensionType.EXTENSION_3 },
-//     { name: "15일", value: StoreExtensionType.EXTENSION_15 },
-//     { name: "31일", value: StoreExtensionType.EXTENSION_31 },
-//   ],
-//   [StoreItemType.SWAP]: [
-//     { name: "타입이 없습니다.", value: StoreItemType.SWAP, isDisable: true },
-//   ],
-//   [StoreItemType.ALARM]: [
-//     { name: "타입이 없습니다.", value: StoreItemType.ALARM, isDisable: true },
-//   ],
-// };
-
 const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
-  const [selectedOption, setSelectedOption] = useState<StoreItemType>(
-    StoreItemType.EXTENSION
-  );
+  const [selectedItem, setSelectedItem] = useState<IItemDetail | null>(null);
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [isHasType, setIsHasType] = useState<boolean>(true);
   const [items, setItems] = useState<IItemDetail[]>([]);
   const [statusOptions, setStatusOptions] = useState<IDropdownOptions[]>([]);
   const [typeOptions, setTypeOptions] = useState<IDropdownOptions[]>([]);
 
-  // const penaltyPeriod = [
-  //   { sku: "PENALTY", period: ["3일", "7일", "31일"], str: "페널티" },
-  //   { sku: "EXTENSION", period: ["3일", "15일", "31일"], str: "연장권" },
-  //   { sku: "SWAP", period: "", str: "이사권" },
-  //   { sku: "ALARM", period: "", str: "알람권" },
-  // ];
-
-  // const typeOptions = [
-  //   { name: "3일", value: selectedOption },
-  //   { name: "7일", value: selectedOption },
-  //   { name: "15일", value: selectedOption },
-  //   { name: "31일", value: selectedOption },
-  //   { name: "타입이 없습니다", value: selectedOption, isDisable: true },
-  // ];
 
   const HandlePenaltyItemUse = async () => {
     // setPostItemSku(item);
-    console.log("나중에 axios연결 selectOption", selectedOption);
+    // console.log("나중에 axios연결 selectOption", selectedItem);
   };
 
   const handleDropdownStatusChange = (option: StoreItemType) => {
-    // console.log("admin optionss", option);
-    setSelectedOption(option);
-    // if (option === StoreItemType.PENALTY || option === StoreItemType.EXTENSION)
-    //   setIsHasType(true);
-    // else setIsHasType(false);
+    const foundItem = items.find((item) => {
+      return item.itemType === option;
+    });
+
+    if (foundItem) {
+      setSelectedItem(foundItem);
+
+      setTypeOptions(
+        foundItem.items.length === 1
+          ? [{ name: "타입이 없습니다", value: foundItem.itemType }]
+          : foundItem.items.map((item) => {
+              return { name: item.itemDetails, value: item.itemDetails };
+            })
+      );
+    }
   };
 
   const handleDropdownTypeChange = (option: StoreItemType) => {
-    // console.log("admin optionss", option);
-    setSelectedOption(option);
+    // setSelectedItem(option);
   };
 
   const STATUS_DROP_DOWN_PROPS = {
@@ -101,12 +66,11 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
     defaultValue: statusOptions[0]?.name,
     onChangeValue: handleDropdownStatusChange,
   };
-
-  // const TYPE_DROP_DOWN_PROPS = {
-  //   options: typeOptions,
-  //   defaultValue: typeOptions[0].name,
-  //   onChangeValue: handleDropdownTypeChange,
-  // };
+  const TYPE_DROP_DOWN_PROPS = {
+    options: typeOptions,
+    defaultValue: typeOptions[0]?.name,
+    onChangeValue: handleDropdownTypeChange,
+  };
 
   const getItems = async () => {
     try {
@@ -116,25 +80,34 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
       throw error;
     }
   };
-
   useEffect(() => {
-    const sortedItems = items.sort((a, b) => {
-      const order = [
-        ItemTypeLabelMap.EXTENSION,
-        ItemTypeLabelMap.SWAP,
-        ItemTypeLabelMap.ALARM,
-        ItemTypeLabelMap.PENALTY,
-      ];
-      const indexA = order.indexOf(a.itemName);
-      const indexB = order.indexOf(b.itemName);
-      return indexA - indexB;
-    });
+    if (items.length) {
+      const sortedItems = items.sort((a, b) => {
+        const order = [
+          ItemTypeLabelMap.EXTENSION,
+          ItemTypeLabelMap.SWAP,
+          ItemTypeLabelMap.ALARM,
+          ItemTypeLabelMap.PENALTY,
+        ];
+        const indexA = order.indexOf(a.itemName);
+        const indexB = order.indexOf(b.itemName);
+        return indexA - indexB;
+      });
 
-    setStatusOptions(
-      sortedItems.map((item) => {
-        return { name: item.itemName, value: item.itemType };
-      })
-    );
+      setSelectedItem(sortedItems[0]);
+      setStatusOptions(
+        sortedItems.map((item) => {
+          return { name: item.itemName, value: item.itemType };
+        })
+      );
+      setTypeOptions(
+        sortedItems[0].items.length === 1
+          ? [{ name: "타입이 없습니다", value: sortedItems[0].itemType }]
+          : sortedItems[0].items.map((item) => {
+              return { name: item.itemDetails, value: item.itemDetails };
+            })
+      );
+    }
   }, [items]);
 
   useEffect(() => {
@@ -162,7 +135,7 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
 
         <ModalContainerStyled>
           <ModalDropdownNameStyled>아이템 타입</ModalDropdownNameStyled>
-          {/* <Dropdown {...TYPE_DROP_DOWN_PROPS} /> */}
+          <Dropdown {...TYPE_DROP_DOWN_PROPS} />
         </ModalContainerStyled>
       </>
     ),
