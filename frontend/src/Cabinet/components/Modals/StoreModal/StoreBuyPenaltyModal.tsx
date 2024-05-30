@@ -109,7 +109,6 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
 
   const HandlePenaltyItemUse = async (sku: StorePenaltyType) => {
     setIsLoading(true);
-    // const usePenaltyItemDays = parseInt(ItemTypePenaltyMap[sku]);
     try {
       const hasPenaltyItem = await tryGetPenaltyItem();
       if (hasPenaltyItem === false) {
@@ -150,10 +149,11 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
         </ModalContainerStyled>
         <ModalDetailStyled>
           <ModalDetailContentStyled>
-            현재 남아있는 페널티 기간은{" "}
+            현재 남아있는 페널티 기간은 <br />
             <strong>
               {remainPenaltyPeriod && remainPenaltyPeriod.days}일{" "}
               {remainPenaltyPeriod && remainPenaltyPeriod.hours}시간{" "}
+              {remainPenaltyPeriod && remainPenaltyPeriod.minutes}분{" "}
             </strong>{" "}
             입니다. <br />
             선택한 페널티 감면권에 해당하는 일수만큼 <br />
