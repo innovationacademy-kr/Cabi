@@ -79,7 +79,7 @@ public class ItemFacadeService {
 	public ItemStoreResponseDto getAllItems() {
 		List<Item> allItems = itemQueryService.getAllItems();
 		Map<ItemType, List<ItemDetailsDto>> itemMap = allItems.stream()
-				.filter(item -> item.getPrice() < 0)
+				.filter(item -> item.getPrice() > 0)
 				.collect(groupingBy(Item::getType,
 						mapping(itemMapper::toItemDetailsDto, Collectors.toList())));
 		List<ItemStoreDto> result = itemMap.entrySet().stream()
