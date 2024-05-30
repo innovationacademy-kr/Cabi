@@ -9,6 +9,7 @@ export interface IDropdownOptions {
   value: any;
   imageSrc?: string;
   isDisabled?: boolean;
+  hasNoOptions?: boolean;
 }
 
 export interface IDropdown {
@@ -30,6 +31,7 @@ const Dropdown = ({
   const DefaultOptionIcon =
     defaultImageSrc &&
     cabinetIconComponentMap[options[selectedIdx].value as CabinetType];
+
   useEffect(() => {
     setCurrentName(defaultValue);
   }, [defaultValue]);
@@ -48,9 +50,11 @@ const Dropdown = ({
           </OptionsImgStyled>
         )}
         <p style={{ paddingLeft: "10px" }}>{currentName}</p>
-        <DropdownSelectionBoxIconStyled isOpen={isOpen}>
-          <DropdownChevronIcon />
-        </DropdownSelectionBoxIconStyled>
+        {!options[selectedIdx]?.hasNoOptions === true && (
+          <DropdownSelectionBoxIconStyled isOpen={isOpen}>
+            <DropdownChevronIcon />
+          </DropdownSelectionBoxIconStyled>
+        )}
       </DropdownSelectionBoxStyled>
       <DropdownItemContainerStyled isVisible={isOpen}>
         {options.map((option) => {
@@ -70,6 +74,7 @@ const Dropdown = ({
               }}
               isSelected={option.name === currentName}
               isDisabled={option.isDisabled}
+              hasNoOptions={option.hasNoOptions}
             >
               {option.imageSrc && (
                 <OptionsImgStyled isSelected={option.name === currentName}>
@@ -124,6 +129,7 @@ const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
 const DropdownItemStyled = styled.div<{
   isSelected: boolean;
   isDisabled?: boolean;
+  hasNoOptions?: boolean;
 }>`
   position: relative;
   display: flex;
@@ -152,8 +158,10 @@ const DropdownItemStyled = styled.div<{
     border-width: 1px 1px 1px 1px;
   }
   &:last-child {
-    border-radius: 0px 0px 10px 10px;
+    border-radius: ${(props) =>
+      props.hasNoOptions ? "10px" : "0px 0px 10px 10px"};
   }
+
   &:hover {
     background-color: var(--map-floor-color);
   }

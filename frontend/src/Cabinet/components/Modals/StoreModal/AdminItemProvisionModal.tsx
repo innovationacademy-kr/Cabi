@@ -22,6 +22,9 @@ interface PenaltyModalProps {
   onClose: () => void;
 }
 
+// TODO : drop down option 닫기
+// TODO : axiosItems items 적은 일수부터 보내달라 요청
+
 const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
   const [selectedItem, setSelectedItem] = useState<IItemDetail | null>(null);
   const [showResponseModal, setShowResponseModal] = useState(false);
@@ -32,7 +35,6 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
   const [items, setItems] = useState<IItemDetail[]>([]);
   const [statusOptions, setStatusOptions] = useState<IDropdownOptions[]>([]);
   const [typeOptions, setTypeOptions] = useState<IDropdownOptions[]>([]);
-
 
   const HandlePenaltyItemUse = async () => {
     // setPostItemSku(item);
@@ -49,7 +51,13 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
 
       setTypeOptions(
         foundItem.items.length === 1
-          ? [{ name: "타입이 없습니다", value: foundItem.itemType }]
+          ? [
+              {
+                name: "타입이 없습니다",
+                value: foundItem.itemType,
+                hasNoOptions: true,
+              },
+            ]
           : foundItem.items.map((item) => {
               return { name: item.itemDetails, value: item.itemDetails };
             })
@@ -61,12 +69,13 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
     // setSelectedItem(option);
   };
 
-  const STATUS_DROP_DOWN_PROPS = {
+  const statusDropDownProps = {
     options: statusOptions,
     defaultValue: statusOptions[0]?.name,
     onChangeValue: handleDropdownStatusChange,
   };
-  const TYPE_DROP_DOWN_PROPS = {
+
+  const typeDropDownProps = {
     options: typeOptions,
     defaultValue: typeOptions[0]?.name,
     onChangeValue: handleDropdownTypeChange,
@@ -80,6 +89,7 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
       throw error;
     }
   };
+
   useEffect(() => {
     if (items.length) {
       const sortedItems = items.sort((a, b) => {
@@ -102,7 +112,13 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
       );
       setTypeOptions(
         sortedItems[0].items.length === 1
-          ? [{ name: "타입이 없습니다", value: sortedItems[0].itemType }]
+          ? [
+              {
+                name: "타입이 없습니다",
+                value: sortedItems[0].itemType,
+                hasNoOptions: true,
+              },
+            ]
           : sortedItems[0].items.map((item) => {
               return { name: item.itemDetails, value: item.itemDetails };
             })
@@ -130,12 +146,12 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
       <>
         <ModalContainerStyled>
           <ModalDropdownNameStyled>아이템</ModalDropdownNameStyled>
-          <Dropdown {...STATUS_DROP_DOWN_PROPS} />
+          <Dropdown {...statusDropDownProps} />
         </ModalContainerStyled>
 
         <ModalContainerStyled>
           <ModalDropdownNameStyled>아이템 타입</ModalDropdownNameStyled>
-          <Dropdown {...TYPE_DROP_DOWN_PROPS} />
+          <Dropdown {...typeDropDownProps} />
         </ModalContainerStyled>
       </>
     ),
@@ -161,19 +177,6 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
     </ModalPortal>
   );
 };
-
-const ModalDropdownTypeEmptyStyled = styled.div`
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--line-color);
-  width: 100%;
-  height: 60px;
-  border-radius: 10px;
-  text-align: start;
-  padding-left: 20px;
-  font-size: 1.125rem;
-  color: var(--sys-main-color);
-`;
 
 const ModalContainerStyled = styled.div`
   padding: 10px 20px 0 20px;

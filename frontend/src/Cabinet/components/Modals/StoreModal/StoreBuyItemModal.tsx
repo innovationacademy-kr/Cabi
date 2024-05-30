@@ -26,7 +26,6 @@ const StoreBuyItemModal: React.FC<{
   const [errorDetails, setErrorDetails] = useState("");
   const [userInfo] = useRecoilState(userState);
   // const [userInfo, setMyInfo] = useRecoilState(userState);
-
   const setUser = useSetRecoilState<UserDto>(userState);
 
   const handlePurchase = async (item: IItemStore) => {
