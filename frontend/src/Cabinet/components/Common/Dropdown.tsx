@@ -18,12 +18,21 @@ export interface IDropdown {
   onChangeValue?: (param: any) => any;
 }
 
-const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
+const Dropdown = ({
+  options,
+  defaultValue,
+  onChangeValue,
+  defaultImageSrc,
+}: IDropdown) => {
   const [currentName, setCurrentName] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const selectedIdx = options.findIndex((op) => op.name === currentName) ?? 0;
   const DefaultOptionIcon =
+    defaultImageSrc &&
     cabinetIconComponentMap[options[selectedIdx].value as CabinetType];
+  useEffect(() => {
+    setCurrentName(defaultValue);
+  }, [defaultValue]);
 
   return (
     <DropdownContainerStyled>
@@ -33,7 +42,7 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
           setIsOpen(!isOpen);
         }}
       >
-        {options[selectedIdx].imageSrc?.length && (
+        {DefaultOptionIcon && (
           <OptionsImgStyled>
             <DefaultOptionIcon />
           </OptionsImgStyled>
