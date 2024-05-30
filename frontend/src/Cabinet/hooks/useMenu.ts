@@ -195,15 +195,13 @@ const useMenu = () => {
     closeLeftNav();
     closeMap();
     closeStore();
-    // document.getElementById("lentInfo")?.classList.add("on");
     document.getElementById("itemInfo")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
   };
 
   const closeUserStore = () => {
-    // if (document.getElementById("lentInfo")?.classList.contains("on") == true) {
     if (document.getElementById("itemInfo")?.classList.contains("on") == true) {
-      document.getElementById("lentInfo")?.classList.remove("on");
+      document.getElementById("itemInfo")?.classList.remove("on");
     }
   };
 

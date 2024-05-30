@@ -9,7 +9,7 @@ const AdminItemUsageLogPage = ({
 }: {
   toggleType?: string;
 }) => {
-  const { closeStore } = useMenu();
+  const { closeUserStore } = useMenu();
   const [currentToggleType, setToggleType] = useState<string>(toggleType);
   const isSearchPage = window.location.pathname === "/admin/search";
 
@@ -37,7 +37,7 @@ const AdminItemUsageLogPage = ({
           )}
           {currentToggleType === "PROVIDE" ? "아이템 지급 기록" : "아이템 내역"}
         </TitleStyled>
-        <GoBackButtonStyled onClick={closeStore}>뒤로가기</GoBackButtonStyled>
+        <GoBackButtonStyled onClick={closeUserStore}>뒤로가기</GoBackButtonStyled>
       </TitleContainer>
       {currentToggleType === "PROVIDE" ? (
         <AdminItemProvideContainer />

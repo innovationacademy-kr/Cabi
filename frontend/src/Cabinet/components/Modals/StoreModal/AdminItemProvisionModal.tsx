@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
+import { sortItems } from "@/Cabinet/pages/StoreMainPage";
 import Dropdown, {
   IDropdownOptions,
 } from "@/Cabinet/components/Common/Dropdown";
@@ -11,22 +14,19 @@ import {
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import { ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
-import {
-  StoreExtensionType,
-  StoreItemType,
-  StorePenaltyType,
-} from "@/Cabinet/types/enum/store.enum";
-import { axiosItems } from "@/Cabinet/api/axios/axios.custom";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
+import { axiosItemAssign, axiosItems } from "@/Cabinet/api/axios/axios.custom";
 
-interface PenaltyModalProps {
+interface IPenaltyModalProps {
   onClose: () => void;
 }
 
 // TODO : drop down option 닫기
-// TODO : axiosItems items 적은 일수부터 보내달라 요청
+// TODO : axiosItems items 적은 일수부터 띄워지는지 확인
 
-const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
-  const [selectedItem, setSelectedItem] = useState<IItemDetail | null>(null);
+const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
+  const [selectedItemSku, setSelectedItemSku] = useState<string>("");
+  // TODO : sku?
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState<string>("");
@@ -35,10 +35,21 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
   const [items, setItems] = useState<IItemDetail[]>([]);
   const [statusOptions, setStatusOptions] = useState<IDropdownOptions[]>([]);
   const [typeOptions, setTypeOptions] = useState<IDropdownOptions[]>([]);
+  const [targetUserInfo] = useRecoilState(targetUserInfoState);
 
-  const HandlePenaltyItemUse = async () => {
-    // setPostItemSku(item);
-    // console.log("나중에 axios연결 selectOption", selectedItem);
+  const HandleItemProvisionBtn = async () => {
+    try {
+      await axiosItemAssign(selectedItemSku, targetUserInfo.userId!);
+    } catch (error: any) {
+      setHasErrorOnResponse(true);
+      console.log("error : ", error);
+      error.response
+        ? setModalTitle(error.response.data.message)
+        : setModalTitle(error.data.message);
+      // TODO : error일때 오는 데이터 확인해서 수정
+    } finally {
+      setShowResponseModal(true);
+    }
   };
 
   const handleDropdownStatusChange = (option: StoreItemType) => {
@@ -47,26 +58,34 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
     });
 
     if (foundItem) {
-      setSelectedItem(foundItem);
-
       setTypeOptions(
         foundItem.items.length === 1
           ? [
               {
                 name: "타입이 없습니다",
-                value: foundItem.itemType,
+                value: foundItem.items[0].itemSku,
                 hasNoOptions: true,
               },
             ]
           : foundItem.items.map((item) => {
-              return { name: item.itemDetails, value: item.itemDetails };
+              return { name: item.itemDetails, value: item.itemSku };
             })
       );
     }
   };
 
-  const handleDropdownTypeChange = (option: StoreItemType) => {
-    // setSelectedItem(option);
+  const handleDropdownTypeChange = (option: any) => {
+    // TODO : sku?
+    setSelectedItemSku(option);
+  };
+
+  const getItems = async () => {
+    try {
+      const response = await axiosItems();
+      setItems(response.data.items);
+    } catch (error) {
+      throw error;
+    }
   };
 
   const statusDropDownProps = {
@@ -81,30 +100,10 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
     onChangeValue: handleDropdownTypeChange,
   };
 
-  const getItems = async () => {
-    try {
-      const response = await axiosItems();
-      setItems(response.data.items);
-    } catch (error) {
-      throw error;
-    }
-  };
-
   useEffect(() => {
     if (items.length) {
-      const sortedItems = items.sort((a, b) => {
-        const order = [
-          ItemTypeLabelMap.EXTENSION,
-          ItemTypeLabelMap.SWAP,
-          ItemTypeLabelMap.ALARM,
-          ItemTypeLabelMap.PENALTY,
-        ];
-        const indexA = order.indexOf(a.itemName);
-        const indexB = order.indexOf(b.itemName);
-        return indexA - indexB;
-      });
+      const sortedItems = sortItems(items);
 
-      setSelectedItem(sortedItems[0]);
       setStatusOptions(
         sortedItems.map((item) => {
           return { name: item.itemName, value: item.itemType };
@@ -115,14 +114,15 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
           ? [
               {
                 name: "타입이 없습니다",
-                value: sortedItems[0].itemType,
+                value: sortedItems[0].items[0].itemSku,
                 hasNoOptions: true,
               },
             ]
           : sortedItems[0].items.map((item) => {
-              return { name: item.itemDetails, value: item.itemDetails };
+              return { name: item.itemDetails, value: item.itemSku };
             })
       );
+      setSelectedItemSku(sortedItems[0].items[0].itemSku);
     }
   }, [items]);
 
@@ -135,12 +135,12 @@ const AdminItemProvisionModal: React.FC<PenaltyModalProps> = ({ onClose }) => {
     iconType: "CHECK",
     iconScaleEffect: false,
     title: "아이템 지급",
-    proceedBtnText: "네, 사용할게요",
+    proceedBtnText: "지급하기",
     cancelBtnText: "취소",
     closeModal: onClose,
     isLoading: isLoading,
     onClickProceed: async () => {
-      HandlePenaltyItemUse();
+      HandleItemProvisionBtn();
     },
     renderAdditionalComponent: () => (
       <>

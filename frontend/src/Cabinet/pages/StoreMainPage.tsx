@@ -9,20 +9,8 @@ import { ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
 import { axiosItems } from "@/Cabinet/api/axios/axios.custom";
 
-const StoreMainPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<IItemDetail | null>(null);
-  const [items, setItem] = useState([] as IItemDetail[]);
-  const [userInfo] = useRecoilState(userState);
-
-  const checkMyCoin = (item: IItemDetail) => {
-    return (
-      userInfo.coins !== null &&
-      userInfo.coins >= item.items[item.items.length - 1].itemPrice * -1
-    );
-  };
-
-  const sortedItems = items.sort((a, b) => {
+export const sortItems = (items: IItemDetail[]) => {
+  return items.sort((a, b) => {
     const order = [
       ItemTypeLabelMap.EXTENSION,
       ItemTypeLabelMap.SWAP,
@@ -33,6 +21,21 @@ const StoreMainPage = () => {
     const indexB = order.indexOf(b.itemName);
     return indexA - indexB;
   });
+};
+
+const StoreMainPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<IItemDetail | null>(null);
+  const [items, setItem] = useState([] as IItemDetail[]);
+  const [userInfo] = useRecoilState(userState);
+  const sortedItems = sortItems(items);
+
+  const checkMyCoin = (item: IItemDetail) => {
+    return (
+      userInfo.coins !== null &&
+      userInfo.coins >= item.items[item.items.length - 1].itemPrice * -1
+    );
+  };
 
   const getItems = async () => {
     try {
