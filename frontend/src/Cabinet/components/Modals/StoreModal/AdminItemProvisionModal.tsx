@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
+import { sortItems } from "@/Cabinet/pages/StoreMainPage";
 import Dropdown, {
   IDropdownOptions,
 } from "@/Cabinet/components/Common/Dropdown";
@@ -24,8 +25,7 @@ interface IPenaltyModalProps {
 // TODO : axiosItems items 적은 일수부터 띄워지는지 확인
 
 const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
-  const [selectedItem, setSelectedItem] = useState<IItemDetail | null>(null);
-  const [selectedItemType, setSelectedItemType] = useState<string>("");
+  const [selectedItemSku, setSelectedItemSku] = useState<string>("");
   // TODO : sku?
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
@@ -39,7 +39,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
 
   const HandleItemProvisionBtn = async () => {
     try {
-      await axiosItemAssign(selectedItemType, targetUserInfo.userId!);
+      await axiosItemAssign(selectedItemSku, targetUserInfo.userId!);
     } catch (error: any) {
       setHasErrorOnResponse(true);
       console.log("error : ", error);
@@ -58,7 +58,6 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     });
 
     if (foundItem) {
-      setSelectedItem(foundItem);
       setTypeOptions(
         foundItem.items.length === 1
           ? [
@@ -77,7 +76,16 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
 
   const handleDropdownTypeChange = (option: any) => {
     // TODO : sku?
-    setSelectedItemType(option);
+    setSelectedItemSku(option);
+  };
+
+  const getItems = async () => {
+    try {
+      const response = await axiosItems();
+      setItems(response.data.items);
+    } catch (error) {
+      throw error;
+    }
   };
 
   const statusDropDownProps = {
@@ -92,30 +100,10 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     onChangeValue: handleDropdownTypeChange,
   };
 
-  const getItems = async () => {
-    try {
-      const response = await axiosItems();
-      setItems(response.data.items);
-    } catch (error) {
-      throw error;
-    }
-  };
-
   useEffect(() => {
     if (items.length) {
-      const sortedItems = items.sort((a, b) => {
-        const order = [
-          ItemTypeLabelMap.EXTENSION,
-          ItemTypeLabelMap.SWAP,
-          ItemTypeLabelMap.ALARM,
-          ItemTypeLabelMap.PENALTY,
-        ];
-        const indexA = order.indexOf(a.itemName);
-        const indexB = order.indexOf(b.itemName);
-        return indexA - indexB;
-      });
+      const sortedItems = sortItems(items);
 
-      setSelectedItem(sortedItems[0]);
       setStatusOptions(
         sortedItems.map((item) => {
           return { name: item.itemName, value: item.itemType };
@@ -134,7 +122,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
               return { name: item.itemDetails, value: item.itemSku };
             })
       );
-      setSelectedItemType(sortedItems[0].items[0].itemSku);
+      setSelectedItemSku(sortedItems[0].items[0].itemSku);
     }
   }, [items]);
 
