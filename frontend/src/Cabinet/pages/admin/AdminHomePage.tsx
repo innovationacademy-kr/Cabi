@@ -21,7 +21,7 @@ import {
   ITableData,
 } from "@/Cabinet/types/dto/admin.dto";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
-import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailAreaType.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import { axiosCabinetById } from "@/Cabinet/api/axios/axios.custom";
 import { useAdminHomeApi } from "@/Cabinet/hooks/useAdminHomeApi";
 import useMenu from "@/Cabinet/hooks/useMenu";

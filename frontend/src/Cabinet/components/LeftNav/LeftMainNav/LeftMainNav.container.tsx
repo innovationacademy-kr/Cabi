@@ -23,7 +23,7 @@ import {
   CabinetInfoByBuildingFloorDto,
   MyCabinetInfoResponseDto,
 } from "@/Cabinet/types/dto/cabinet.dto";
-import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailAreaType.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import { axiosCabinetByBuildingFloor } from "@/Cabinet/api/axios/axios.custom";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";

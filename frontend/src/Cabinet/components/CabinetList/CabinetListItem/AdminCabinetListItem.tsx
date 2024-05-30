@@ -17,7 +17,7 @@ import {
 } from "@/Cabinet/types/dto/cabinet.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailAreaType.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import { axiosCabinetById } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";

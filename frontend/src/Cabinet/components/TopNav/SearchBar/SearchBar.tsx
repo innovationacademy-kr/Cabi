@@ -6,7 +6,7 @@ import { selectedTypeOnSearchState } from "@/Cabinet/recoil/atoms";
 import SearchBarList from "@/Cabinet/components/TopNav/SearchBar/SearchBarList/SearchBarList";
 import { ReactComponent as SearchIcon } from "@/Cabinet/assets/images/searchWhite.svg";
 import { CabinetSimple } from "@/Cabinet/types/dto/cabinet.dto";
-import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailAreaType.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import {
   axiosSearchByCabinetNumSimple,
   axiosSearchByIntraId,

@@ -6,7 +6,7 @@ import {
 } from "@/Cabinet/recoil/atoms";
 import { CabinetPreviewInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import CabinetDetailAreaType from "../types/enum/cabinetDetailAreaType.enum";
+import CabinetDetailAreaType from "../types/enum/cabinetDetailArea.type.enum";
 
 const useMultiSelect = () => {
   const [targetCabinetInfoList, setTargetCabinetInfoList] = useRecoilState<
