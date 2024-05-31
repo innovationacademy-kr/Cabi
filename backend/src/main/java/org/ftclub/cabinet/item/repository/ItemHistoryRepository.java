@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.item.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.springframework.data.domain.Page;
@@ -64,4 +65,15 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 			+ "FROM ItemHistory ih "
 			+ "WHERE ih.itemId = :itemId")
 	int getCountByItemIds(@Param("itemId") Long itemId);
+
+	@Query("SELECT ih "
+			+ "FROM ItemHistory ih "
+			+ "JOIN FETCH ih.item "
+			+ "WHERE ih.usedAt IS NOT NULL "
+			+ "AND DATE(ih.usedAt) >= DATE(:start) "
+			+ "AND DATE(ih.usedAt) <= DATE(:end)"
+	)
+	List<ItemHistory> findAllUsedAtIsNotNullBetween(
+			@Param("start") LocalDate startDate,
+			@Param("end") LocalDate endDate);
 }

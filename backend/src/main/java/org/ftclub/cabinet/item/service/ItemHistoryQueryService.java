@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.item.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.item.domain.ItemHistory;
@@ -39,5 +40,11 @@ public class ItemHistoryQueryService {
 
 	public int getPurchaseCountByItemId(Long itemId) {
 		return itemHistoryRepository.getCountByItemIds(itemId);
+	}
+
+	public List<ItemHistory> getUsedCoinHistoryBetween(
+			LocalDate startDate,
+			LocalDate endDate) {
+		return itemHistoryRepository.findAllUsedAtIsNotNullBetween(startDate, endDate);
 	}
 }

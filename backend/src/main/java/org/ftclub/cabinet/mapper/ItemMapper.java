@@ -2,9 +2,11 @@ package org.ftclub.cabinet.mapper;
 
 import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.ftclub.cabinet.admin.dto.AdminItemHistoryDto;
+import org.ftclub.cabinet.dto.CoinAmountDto;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
@@ -86,4 +88,6 @@ public interface ItemMapper {
 	@Mapping(target = "itemName", source = "item.type.name")
 	@Mapping(target = "itemDetails", source = "item.sku.details")
 	ItemPurchaseCountDto toItemPurchaseCountDto(Item item, int userCount);
+
+	CoinAmountDto toCoinAmountDto(LocalDate date, Long amount);
 }
