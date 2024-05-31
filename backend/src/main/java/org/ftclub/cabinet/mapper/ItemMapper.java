@@ -4,6 +4,7 @@ import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.ftclub.cabinet.admin.dto.AdminItemHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
@@ -44,6 +45,10 @@ public interface ItemMapper {
 	@Mapping(target = "itemPrice", source = "item.price")
 	@Mapping(target = "itemDetails", source = "item.sku.details")
 	ItemDto toItemDto(Item item);
+
+	@Mapping(target = "itemName", source = "item.type.name")
+	@Mapping(target = "itemDetail", source = "item.sku.details")
+	AdminItemHistoryDto toAdminItemHistoryDto(ItemHistory itemHistory, Item item);
 
 	@Mapping(target = "itemSku", source = "item.sku")
 	@Mapping(target = "itemPrice", source = "item.price")

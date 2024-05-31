@@ -1,15 +1,16 @@
 package org.ftclub.cabinet.admin.item.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.admin.dto.AdminItemHistoryPaginationDto;
 import org.ftclub.cabinet.admin.item.service.AdminItemFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
-import org.ftclub.cabinet.dto.ItemAssignPaginationDto;
 import org.ftclub.cabinet.dto.ItemAssignRequestDto;
 import org.ftclub.cabinet.dto.ItemCreateDto;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,9 +39,10 @@ public class AdminItemController {
 				itemAssignRequestDto.getItemSku());
 	}
 
-	@GetMapping("/assign")
+	@GetMapping("/users/{userId}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public ItemAssignPaginationDto getAssignedItems(Pageable pageable) {
-		return adminItemFacadeService.getAssignedItems(pageable);
+	public AdminItemHistoryPaginationDto getUserItemHistoryPagination(
+			@PathVariable(value = "userId") Long userId, Pageable pageable) {
+		return adminItemFacadeService.getUserItemHistories(userId, pageable);
 	}
 }
