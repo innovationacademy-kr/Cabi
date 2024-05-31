@@ -1,28 +1,38 @@
 package org.ftclub.cabinet.admin.statistics.service;
 
+import static java.util.stream.Collectors.groupingBy;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.BROKEN;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.FULL;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.OVERDUE;
+import static org.ftclub.cabinet.item.domain.Sku.COIN_COLLECT;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
+import org.ftclub.cabinet.dto.CoinCollectStatisticsDto;
+import org.ftclub.cabinet.dto.CoinCollectedCountDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.item.domain.ItemHistory;
+import org.ftclub.cabinet.item.service.ItemHistoryQueryService;
+import org.ftclub.cabinet.item.service.ItemQueryService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.CabinetMapper;
+import org.ftclub.cabinet.mapper.ItemMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.service.BanHistoryQueryService;
@@ -48,6 +58,9 @@ public class AdminStatisticsFacadeService {
 
 	private final CabinetMapper cabinetMapper;
 	private final UserMapper userMapper;
+	private final ItemHistoryQueryService itemHistoryQueryService;
+	private final ItemQueryService itemQueryService;
+	private final ItemMapper itemMapper;
 
 	/**
 	 * 현재 가용중인 모든 사물함의 현황을 반환합니다.
@@ -113,5 +126,32 @@ public class AdminStatisticsFacadeService {
 						DateUtil.calculateTwoDateDiff(now, lh.getExpiredAt()))
 				).collect(Collectors.toList());
 		return cabinetMapper.toOverdueUserCabinetPaginationDto(result, (long) lentHistories.size());
+	}
+
+	/**
+	 * 특정 연도, 월의 동전 줍기 횟수를 횟수 별로 통계를 내서 반환
+	 *
+	 * @param year
+	 * @param month 조회를 원하는 기간
+	 * @return
+	 */
+	public CoinCollectStatisticsDto getCoinCollectCountByMonth(Integer year, Integer month) {
+		Long itemId = itemQueryService.getBySku(COIN_COLLECT).getId();
+		List<ItemHistory> coinCollectedInfoByMonth =
+				itemHistoryQueryService.getCoinCollectedInfoByMonth(itemId, year, month);
+		Map<Long, Long> coinCollectCountByUser = coinCollectedInfoByMonth.stream()
+				.collect(groupingBy(ItemHistory::getUserId, Collectors.counting()));
+
+		int[] coinCollectArray = new int[31];
+		coinCollectCountByUser.forEach((userId, coinCount) ->
+				coinCollectArray[coinCount.intValue() - 1]++);
+
+		List<CoinCollectedCountDto> coinCollectedCountDto = IntStream.rangeClosed(0,
+						30) // 1부터 30까지의 범위로 스트림 생성
+				.mapToObj(i -> new CoinCollectedCountDto(i + 1,
+						coinCollectArray[i])) // 각 인덱스와 해당하는 배열 값으로 CoinCollectedCountDto 생성
+				.collect(Collectors.toList()); // 리스트로 변환하여 반환
+
+		return new CoinCollectStatisticsDto(coinCollectedCountDto);
 	}
 }

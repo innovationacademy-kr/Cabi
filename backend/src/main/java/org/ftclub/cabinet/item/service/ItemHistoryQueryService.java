@@ -32,4 +32,9 @@ public class ItemHistoryQueryService {
 	public List<ItemHistory> getUnusedItemsInUserInventory(Long userId, Long itemId) {
 		return itemHistoryRepository.findAllByUserIdAndItemIdAndUsedAtIsNull(userId, itemId);
 	}
+
+	public List<ItemHistory> getCoinCollectedInfoByMonth(Long itemId, Integer year,
+			Integer month) {
+		return itemHistoryRepository.findCoinCollectInfoByMonth(itemId, year, month);
+	}
 }
