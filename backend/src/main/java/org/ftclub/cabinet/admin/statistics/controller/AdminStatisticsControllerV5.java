@@ -5,6 +5,7 @@ import org.ftclub.cabinet.admin.statistics.service.AdminStatisticsFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.CoinCollectStatisticsDto;
+import org.ftclub.cabinet.dto.TotalCoinAmountDto;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,17 @@ public class AdminStatisticsControllerV5 {
 			@RequestParam("year") Integer year,
 			@RequestParam("month") Integer month) {
 		return adminStatisticsFacadeService.getCoinCollectCountByMonth(year, month);
+	}
+
+	/**
+	 * 전체 기간동안 동전의 발행량 및 사용량 반환
+	 *
+	 * @return
+	 */
+	@GetMapping("/coins")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public TotalCoinAmountDto getTotalCoinAmount() {
+		return adminStatisticsFacadeService.getTotalCoinAmount();
 	}
 
 }

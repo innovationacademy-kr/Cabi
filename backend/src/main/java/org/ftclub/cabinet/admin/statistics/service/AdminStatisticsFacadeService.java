@@ -21,12 +21,14 @@ import org.ftclub.cabinet.dto.CoinCollectedCountDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.TotalCoinAmountDto;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.service.ItemHistoryQueryService;
 import org.ftclub.cabinet.item.service.ItemQueryService;
+import org.ftclub.cabinet.item.service.ItemRedisService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.log.LogLevel;
@@ -61,6 +63,7 @@ public class AdminStatisticsFacadeService {
 	private final ItemHistoryQueryService itemHistoryQueryService;
 	private final ItemQueryService itemQueryService;
 	private final ItemMapper itemMapper;
+	private final ItemRedisService itemRedisService;
 
 	/**
 	 * 현재 가용중인 모든 사물함의 현황을 반환합니다.
@@ -153,5 +156,17 @@ public class AdminStatisticsFacadeService {
 				.collect(Collectors.toList()); // 리스트로 변환하여 반환
 
 		return new CoinCollectStatisticsDto(coinCollectedCountDto);
+	}
+
+	/**
+	 * 전체 기간동안 동전의 발행량 및 사용량 반환
+	 *
+	 * @return
+	 */
+	public TotalCoinAmountDto getTotalCoinAmount() {
+		long totalCoinSupply = itemRedisService.getTotalCoinSupply();
+		long totalCoinUsage = itemRedisService.getTotalCoinUsage();
+
+		return new TotalCoinAmountDto(-1 * totalCoinUsage, totalCoinSupply);
 	}
 }

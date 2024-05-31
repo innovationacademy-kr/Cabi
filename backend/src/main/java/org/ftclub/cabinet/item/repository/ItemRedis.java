@@ -20,6 +20,8 @@ public class ItemRedis {
 	private static final String COIN_COUNT_KEY_SUFFIX = ":coinCount";
 	private static final String COIN_COLLECT_KEY_SUFFIX = ":coinCollect";
 	private static final String COIN_COLLECT_COUNT_KEY_SUFFIX = ":coinCollectCount";
+	private static final String TOTAL_COIN_SUPPLY_KEY_SUFFIX = "totalCoinSupply";
+	private static final String TOTAL_COIN_USAGE_KEY_SUFFIX = "totalCoinUsage";
 
 
 	private final RedisTemplate<String, String> coinTemplate;
@@ -36,6 +38,44 @@ public class ItemRedis {
 	public void saveCoinCount(String userId, String coinCount) {
 		coinTemplate.opsForValue().set(userId + COIN_COUNT_KEY_SUFFIX, coinCount);
 	}
+
+	/**
+	 * 전체 동전 발행량 반환
+	 *
+	 * @return
+	 */
+	public String getTotalCoinSupply() {
+		return coinTemplate.opsForValue().get(TOTAL_COIN_SUPPLY_KEY_SUFFIX);
+	}
+
+	/**
+	 * 전체 동전 사용량 반환
+	 *
+	 * @return
+	 */
+	public String getTotalcoinUsage() {
+		return coinTemplate.opsForValue().get(TOTAL_COIN_USAGE_KEY_SUFFIX);
+	}
+
+	/**
+	 * 전체 동전 발행량 저장
+	 *
+	 * @param coinSupply
+	 */
+
+	public void saveTotalCoinSupply(String coinSupply) {
+		coinTemplate.opsForValue().set(TOTAL_COIN_SUPPLY_KEY_SUFFIX, coinSupply);
+	}
+
+	/**
+	 * 전체 동전 사용량 저장
+	 *
+	 * @param coinUsage
+	 */
+	public void saveTotalCoinUsage(String coinUsage) {
+		coinTemplate.opsForValue().set(TOTAL_COIN_USAGE_KEY_SUFFIX, coinUsage);
+	}
+
 
 	/**
 	 * 하루동안 유지되는 redis를 탐색하여 동전줍기를 했는지 검수
@@ -99,9 +139,5 @@ public class ItemRedis {
 			long expireTime = between.getSeconds();
 			coinTemplate.expire(key, expireTime, TimeUnit.SECONDS);
 		}
-	}
-
-	public void saveCoinCollectionCount(String userId, String coinCollectionCount) {
-		coinTemplate.opsForValue().set(userId + COIN_COLLECT_COUNT_KEY_SUFFIX, coinCollectionCount);
 	}
 }

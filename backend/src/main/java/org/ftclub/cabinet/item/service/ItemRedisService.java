@@ -20,8 +20,8 @@ public class ItemRedisService {
 		String coinCount = itemRedis.getCoinCount(userIdString);
 		if (coinCount == null) {
 			long coin = itemHistoryRepository.findAllByUserId(userId).stream()
-				.mapToLong(ih -> ih.getItem().getPrice())
-				.reduce(Long::sum).orElse(0L);
+					.mapToLong(ih -> ih.getItem().getPrice())
+					.reduce(Long::sum).orElse(0L);
 			itemRedis.saveCoinCount(userIdString, Long.toString(coin));
 			return coin;
 		}
@@ -34,6 +34,54 @@ public class ItemRedisService {
 
 	public boolean isCoinCollected(Long userId) {
 		return itemRedis.isCoinCollected(userId.toString());
+	}
+
+	/**
+	 * 전체 기간 동전 발행량 반환
+	 *
+	 * @return
+	 */
+	public long getTotalCoinSupply() {
+		String totalCoinSupply = itemRedis.getTotalCoinSupply();
+		if (totalCoinSupply == null) {
+			long coin = 0L;
+			itemRedis.saveTotalCoinSupply(Long.toString(coin));
+			return coin;
+		}
+		return Long.parseLong(totalCoinSupply);
+	}
+
+	/**
+	 * 전체 기간 동전 사용량 반환
+	 *
+	 * @return
+	 */
+	public long getTotalCoinUsage() {
+		String totalCoinUsage = itemRedis.getTotalcoinUsage();
+		if (totalCoinUsage == null) {
+			long coin = 0L;
+			itemRedis.saveTotalCoinUsage(Long.toString(coin));
+			return coin;
+		}
+		return Long.parseLong(totalCoinUsage);
+	}
+
+	/**
+	 * 전체 기간 동전 발행량 저장
+	 *
+	 * @param coin
+	 */
+	public void saveTotalCoinSupply(long coin) {
+		itemRedis.saveTotalCoinSupply(String.valueOf(coin));
+	}
+
+	/**
+	 * 전체 기간 동전 사용량 저장
+	 *
+	 * @param coin
+	 */
+	public void saveTotalCoinUsage(long coin) {
+		itemRedis.saveTotalCoinUsage(String.valueOf(coin));
 	}
 
 	/**

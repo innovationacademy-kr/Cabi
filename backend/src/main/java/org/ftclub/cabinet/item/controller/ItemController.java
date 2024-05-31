@@ -34,12 +34,23 @@ public class ItemController {
 
 	private final ItemFacadeService itemFacadeService;
 
+	/**
+	 * 전체 아이템 목록 조회
+	 *
+	 * @return
+	 */
 	@GetMapping("")
 	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public ItemStoreResponseDto getAllItems() {
 		return itemFacadeService.getAllItems();
 	}
 
+	/**
+	 * 특정 아이템 구매 요청
+	 *
+	 * @param user
+	 * @param sku
+	 */
 	@PostMapping("/{sku}/purchase")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void purchaseItem(@UserSession UserSessionDto user,
@@ -47,6 +58,13 @@ public class ItemController {
 		itemFacadeService.purchaseItem(user.getUserId(), sku);
 	}
 
+	/**
+	 * 유저의 아이템 구매, 사용 내역 목록 조회
+	 *
+	 * @param user
+	 * @param pageable
+	 * @return
+	 */
 	@GetMapping("/history")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public ItemHistoryPaginationDto getItemHistory(@UserSession UserSessionDto user,
@@ -54,12 +72,26 @@ public class ItemController {
 		return itemFacadeService.getItemHistory(user.getUserId(), pageable);
 	}
 
+	/**
+	 * 유저가 보유하고 있는 아이템 목록 조회
+	 *
+	 * @param user
+	 * @return
+	 */
 	@GetMapping("/me")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public MyItemResponseDto getMyItems(@UserSession UserSessionDto user) {
 		return itemFacadeService.getMyItems(user);
 	}
 
+	/**
+	 * 유저의 동전 줍기 내역 반환
+	 *
+	 * @param user
+	 * @param type     ALL, EARN, USE
+	 * @param pageable
+	 * @return
+	 */
 	@GetMapping("/coin/history")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public CoinHistoryPaginationDto getCoinHistory(@UserSession UserSessionDto user,
