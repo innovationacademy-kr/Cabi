@@ -7,6 +7,7 @@ import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.ItemAssignRequestDto;
 import org.ftclub.cabinet.dto.ItemCreateDto;
+import org.ftclub.cabinet.dto.ItemStatisticsDto;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,10 +40,28 @@ public class AdminItemController {
 				itemAssignRequestDto.getItemSku());
 	}
 
+	/**
+	 * 특정 유저의 아이템 history 조회
+	 *
+	 * @param userId
+	 * @param pageable
+	 * @return
+	 */
 	@GetMapping("/users/{userId}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public AdminItemHistoryPaginationDto getUserItemHistoryPagination(
 			@PathVariable(value = "userId") Long userId, Pageable pageable) {
 		return adminItemFacadeService.getUserItemHistories(userId, pageable);
+	}
+
+	/**
+	 * 아이템별 구매 인원 조회
+	 *
+	 * @return
+	 */
+	@GetMapping("/statistics/items")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public ItemStatisticsDto getItemPurchaseStatistics() {
+		return adminItemFacadeService.getItemPurchaseStatistics();
 	}
 }
