@@ -47,7 +47,7 @@ public interface ItemMapper {
 	ItemDto toItemDto(Item item);
 
 	@Mapping(target = "itemName", source = "item.type.name")
-	@Mapping(target = "itemDetail", source = "item.sku.details")
+	@Mapping(target = "itemDetails", source = "item.sku.details")
 	AdminItemHistoryDto toAdminItemHistoryDto(ItemHistory itemHistory, Item item);
 
 	@Mapping(target = "itemSku", source = "item.sku")

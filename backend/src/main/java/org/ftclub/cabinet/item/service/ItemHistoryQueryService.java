@@ -25,6 +25,10 @@ public class ItemHistoryQueryService {
 		return itemHistoryRepository.findAllByUserIdOnMinusPriceItemsWithSubQuery(userId, pageable);
 	}
 
+	public Page<ItemHistory> getItemHistoriesByUserIdWithItem(Long userId, Pageable pageable) {
+		return itemHistoryRepository.findAllByUserId(userId, pageable);
+	}
+
 	public Page<ItemHistory> getCoinHistory(Long userId, Pageable pageable, List<Long> itemIds) {
 		return itemHistoryRepository.findAllByUserIdAndItemIdIn(userId, pageable, itemIds);
 	}

@@ -8,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AdminItemHistoryDto {
 
-	private LocalDateTime purchasedAt;
+	private LocalDateTime purchaseAt;
 	private LocalDateTime usedAt;
 	private String itemName;
 	private String itemDetails;

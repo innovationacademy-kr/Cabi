@@ -4,6 +4,7 @@ import java.util.List;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,6 +39,9 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 					+ "AND i.price < 0")
 	Page<ItemHistory> findAllByUserIdOnMinusPriceItemsWithSubQuery(
 			@Param("userId") Long userId, Pageable pageable);
+
+	@EntityGraph(attributePaths = "item")
+	Page<ItemHistory> findAllByUserId(Long userId, Pageable pageable);
 
 	@Query("SELECT ih "
 			+ "FROM ItemHistory ih "

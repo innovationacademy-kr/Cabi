@@ -47,7 +47,7 @@ public class AdminItemFacadeService {
 
 	public AdminItemHistoryPaginationDto getUserItemHistories(Long userId, Pageable pageable) {
 		Page<ItemHistory> itemHistoryWithItem =
-				itemHistoryQueryService.getItemHistoryWithItem(userId, pageable);
+				itemHistoryQueryService.getItemHistoriesByUserIdWithItem(userId, pageable);
 
 		List<AdminItemHistoryDto> result = itemHistoryWithItem.stream()
 				.map(ih -> itemMapper.toAdminItemHistoryDto(ih, ih.getItem()))
