@@ -1,13 +1,16 @@
 package org.ftclub.cabinet.dto;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.ftclub.cabinet.item.domain.Sku;
 
 @Getter
 @AllArgsConstructor
 public class ItemAssignResponseDto {
 
-	Long total;
-	private List<ItemAssignResponseDto> items;
+	private Sku itemSku; // sku
+	private String itemName; // itemType
+	private String itemDetails; // sku.description
+	private LocalDateTime issuedDate; // itemHistory -> purchasedAt
 }

@@ -2,10 +2,12 @@ package org.ftclub.cabinet.mapper;
 
 import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.ftclub.cabinet.dto.CoinHistoryDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
+import org.ftclub.cabinet.dto.ItemAssignResponseDto;
 import org.ftclub.cabinet.dto.ItemDetailsDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
@@ -15,6 +17,7 @@ import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.domain.ItemType;
+import org.ftclub.cabinet.item.domain.Sku;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -67,4 +70,11 @@ public interface ItemMapper {
 
 	CoinMonthlyCollectionDto toCoinMonthlyCollectionDto(Long monthlyCoinCount,
 			boolean todayCoinCollection);
+
+	@Mapping(target = "itemSku", source = "sku")
+	@Mapping(target = "itemDetails", source = "sku.details")
+	@Mapping(target = "itemName", source = "itemType.name")
+	ItemAssignResponseDto toItemAssignResponseDto(Sku sku, ItemType itemType,
+			LocalDateTime issuedDate);
+
 }
