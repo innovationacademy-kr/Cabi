@@ -59,4 +59,9 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 	List<ItemHistory> getAllUnusedItemHistoryByUser(@Param("userId") Long userId);
 
 	List<ItemHistory> findAllByUserIdAndItemIdAndUsedAtIsNull(Long userId, Long itemId);
+
+	@Query("SELECT COUNT(ih) "
+			+ "FROM ItemHistory ih "
+			+ "WHERE ih.itemId = :itemId")
+	int getCountByItemIds(@Param("itemId") Long itemId);
 }

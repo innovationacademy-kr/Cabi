@@ -13,6 +13,7 @@ import org.ftclub.cabinet.dto.ItemDetailsDto;
 import org.ftclub.cabinet.dto.ItemDto;
 import org.ftclub.cabinet.dto.ItemHistoryDto;
 import org.ftclub.cabinet.dto.ItemHistoryPaginationDto;
+import org.ftclub.cabinet.dto.ItemPurchaseCountDto;
 import org.ftclub.cabinet.dto.ItemStoreDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.item.domain.Item;
@@ -82,4 +83,7 @@ public interface ItemMapper {
 	ItemAssignResponseDto toItemAssignResponseDto(Sku sku, ItemType itemType,
 			LocalDateTime issuedDate);
 
+	@Mapping(target = "itemName", source = "item.type.name")
+	@Mapping(target = "itemDetails", source = "item.sku.details")
+	ItemPurchaseCountDto toItemPurchaseCountDto(Item item, int userCount);
 }

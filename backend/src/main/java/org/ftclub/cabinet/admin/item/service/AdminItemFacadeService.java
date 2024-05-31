@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminItemHistoryDto;
 import org.ftclub.cabinet.admin.dto.AdminItemHistoryPaginationDto;
+import org.ftclub.cabinet.dto.ItemPurchaseCountDto;
+import org.ftclub.cabinet.dto.ItemStatisticsDto;
 import org.ftclub.cabinet.item.domain.Item;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.domain.ItemType;
@@ -13,6 +15,7 @@ import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.item.service.ItemCommandService;
 import org.ftclub.cabinet.item.service.ItemHistoryCommandService;
 import org.ftclub.cabinet.item.service.ItemHistoryQueryService;
+import org.ftclub.cabinet.item.service.ItemPolicyService;
 import org.ftclub.cabinet.item.service.ItemQueryService;
 import org.ftclub.cabinet.mapper.ItemMapper;
 import org.springframework.data.domain.Page;
@@ -28,6 +31,7 @@ public class AdminItemFacadeService {
 	private final ItemCommandService itemCommandService;
 	private final ItemHistoryCommandService itemHistoryCommandService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
+	private final ItemPolicyService itemPolicyService;
 	private final ItemMapper itemMapper;
 
 	@Transactional
@@ -45,6 +49,7 @@ public class AdminItemFacadeService {
 		itemHistoryCommandService.purchaseItem(userIds, item.getId(), now);
 	}
 
+	@Transactional(readOnly = true)
 	public AdminItemHistoryPaginationDto getUserItemHistories(Long userId, Pageable pageable) {
 		Page<ItemHistory> itemHistoryWithItem =
 				itemHistoryQueryService.getItemHistoriesByUserIdWithItem(userId, pageable);
@@ -56,4 +61,15 @@ public class AdminItemFacadeService {
 		return new AdminItemHistoryPaginationDto(result, itemHistoryWithItem.getTotalElements());
 	}
 
+	@Transactional(readOnly = true)
+	public ItemStatisticsDto getItemPurchaseStatistics() {
+		List<Item> itemsOnSale = itemQueryService.getUseItemIds();
+		List<ItemPurchaseCountDto> result = itemsOnSale.stream()
+				.map(item -> {
+					int userCount = itemHistoryQueryService.getPurchaseCountByItemId(item.getId());
+					return itemMapper.toItemPurchaseCountDto(item, userCount);
+				}).collect(Collectors.toList());
+
+		return new ItemStatisticsDto(result);
+	}
 }

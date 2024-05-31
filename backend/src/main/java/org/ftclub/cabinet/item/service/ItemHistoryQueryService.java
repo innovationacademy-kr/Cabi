@@ -36,4 +36,8 @@ public class ItemHistoryQueryService {
 	public List<ItemHistory> getUnusedItemsInUserInventory(Long userId, Long itemId) {
 		return itemHistoryRepository.findAllByUserIdAndItemIdAndUsedAtIsNull(userId, itemId);
 	}
+
+	public int getPurchaseCountByItemId(Long itemId) {
+		return itemHistoryRepository.getCountByItemIds(itemId);
+	}
 }
