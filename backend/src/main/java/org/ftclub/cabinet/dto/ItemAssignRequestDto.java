@@ -11,7 +11,7 @@ import org.ftclub.cabinet.item.domain.Sku;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemAssignDto {
+public class ItemAssignRequestDto {
 
 	private Sku itemSku;
 	private List<Long> userIds;
