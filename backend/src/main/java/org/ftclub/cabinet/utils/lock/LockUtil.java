@@ -13,14 +13,4 @@ public abstract class LockUtil {
 		}
 		redisCoinLock.remove(userId);
 	}
-
-	public static int lockRedisCoin(Long userId, IntegerLock functionalInterface) {
-		Object lock = redisCoinLock.computeIfAbsent(userId, v -> new Object());
-		int result;
-		synchronized (lock) {
-			result = functionalInterface.invoke();
-		}
-		redisCoinLock.remove(userId);
-		return result;
-	}
 }

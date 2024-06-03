@@ -44,10 +44,9 @@ public class LentExtensionManager {
 		Item coinRewardItem = itemQueryService.getBySku(Sku.COIN_FULL_TIME);
 		users.forEach(user -> {
 			Long userId = user.getId();
-			LockUtil.lockRedisCoin(userId, () -> {
-				itemHistoryCommandService.purchaseItem(userId, coinRewardItem.getId());
-				saveCoinChangeOnRedis(userId, coinRewardItem.getPrice());
-			});
+			itemHistoryCommandService.purchaseItem(userId, coinRewardItem.getId());
+			LockUtil.lockRedisCoin(userId, () ->
+					saveCoinChangeOnRedis(userId, coinRewardItem.getPrice()));
 		});
 	}
 
