@@ -1,9 +1,11 @@
 package org.ftclub.cabinet.item.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -39,6 +41,9 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 	Page<ItemHistory> findAllByUserIdOnMinusPriceItemsWithSubQuery(
 			@Param("userId") Long userId, Pageable pageable);
 
+	@EntityGraph(attributePaths = "item")
+	Page<ItemHistory> findAllByUserIdOrderByPurchaseAtDesc(Long userId, Pageable pageable);
+
 	@Query("SELECT ih "
 			+ "FROM ItemHistory ih "
 			+ "JOIN FETCH ih.item "
@@ -65,4 +70,19 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 	)
 	List<ItemHistory> findCoinCollectInfoByMonth(@Param("itemId") Long itemId,
 			@Param("year") Integer year, @Param("month") Integer month);
+
+	@Query("SELECT COUNT(ih) "
+			+ "FROM ItemHistory ih "
+			+ "WHERE ih.itemId = :itemId")
+	int getCountByItemIds(@Param("itemId") Long itemId);
+
+	@Query("SELECT ih "
+			+ "FROM ItemHistory ih "
+			+ "JOIN FETCH ih.item "
+			+ "WHERE DATE(ih.usedAt) >= DATE(:start) "
+			+ "AND DATE(ih.usedAt) <= DATE(:end)"
+	)
+	List<ItemHistory> findAllUsedAtIsNotNullBetween(
+			@Param("start") LocalDate startDate,
+			@Param("end") LocalDate endDate);
 }

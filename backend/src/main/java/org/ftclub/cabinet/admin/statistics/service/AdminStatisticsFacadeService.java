@@ -7,7 +7,11 @@ import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.FULL;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.OVERDUE;
 import static org.ftclub.cabinet.item.domain.Sku.COIN_COLLECT;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,8 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
+import org.ftclub.cabinet.dto.CoinAmountDto;
 import org.ftclub.cabinet.dto.CoinCollectStatisticsDto;
 import org.ftclub.cabinet.dto.CoinCollectedCountDto;
+import org.ftclub.cabinet.dto.CoinStaticsDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
@@ -169,5 +175,51 @@ public class AdminStatisticsFacadeService {
 
 		// 재화 총 사용량, 현재 총 보유량 (총 공급량 - 총 사용량) 반환
 		return new TotalCoinAmountDto(-1 * totalCoinUsage, totalCoinSupply + totalCoinUsage);
+	}
+
+	/**
+	 * 특정 기간동안 재화 사용량 및 발행량 조회
+	 *
+	 * @param startDate
+	 * @param endDate   조회를 원하는 기간
+	 * @return
+	 */
+	public CoinStaticsDto getCoinStaticsDto(LocalDate startDate, LocalDate endDate) {
+		Map<LocalDate, Long> issuedAmount = new LinkedHashMap<>();
+		Map<LocalDate, Long> usedAmount = new LinkedHashMap<>();
+		long dayDifference = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+		IntStream.range(0, (int) dayDifference)
+				.mapToObj(startDate::plusDays)
+				.forEach(date -> {
+					issuedAmount.put(date, 0L);
+					usedAmount.put(date, 0L);
+				});
+
+		List<ItemHistory> usedCoins =
+				itemHistoryQueryService.getUsedCoinHistoryBetween(startDate,
+						endDate);
+
+		usedCoins.forEach(
+				ih -> {
+					Long price = ih.getItem().getPrice();
+					LocalDate date = ih.getUsedAt().toLocalDate();
+
+					if (price > 0) {
+						issuedAmount.put(date, issuedAmount.get(date) + price);
+					} else {
+						usedAmount.put(date, usedAmount.get(date) + price);
+					}
+				});
+		List<CoinAmountDto> issueCoin = convertMapToList(issuedAmount);
+		List<CoinAmountDto> usedCoin = convertMapToList(usedAmount);
+
+		return new CoinStaticsDto(issueCoin, usedCoin);
+	}
+
+	List<CoinAmountDto> convertMapToList(Map<LocalDate, Long> map) {
+		return map.entrySet().stream()
+				.map(entry -> itemMapper.toCoinAmountDto(entry.getKey(), entry.getValue()))
+				.sorted(Comparator.comparing(CoinAmountDto::getDate))
+				.collect(Collectors.toList());
 	}
 }
