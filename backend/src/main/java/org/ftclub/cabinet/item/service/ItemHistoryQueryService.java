@@ -47,4 +47,9 @@ public class ItemHistoryQueryService {
 			LocalDate endDate) {
 		return itemHistoryRepository.findAllUsedAtIsNotNullBetween(startDate, endDate);
 	}
+
+	public List<ItemHistory> getCoinCollectedInfoByMonth(Long itemId, Integer year,
+			Integer month) {
+		return itemHistoryRepository.findCoinCollectInfoByMonth(itemId, year, month);
+	}
 }

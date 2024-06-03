@@ -61,6 +61,16 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 
 	List<ItemHistory> findAllByUserIdAndItemIdAndUsedAtIsNull(Long userId, Long itemId);
 
+
+	@Query("SELECT ih "
+			+ "FROM ItemHistory ih "
+			+ "WHERE ih.itemId = :itemId "
+			+ "AND YEAR(ih.purchaseAt) = :year "
+			+ "AND MONTH(ih.purchaseAt) = :month "
+	)
+	List<ItemHistory> findCoinCollectInfoByMonth(@Param("itemId") Long itemId,
+			@Param("year") Integer year, @Param("month") Integer month);
+
 	@Query("SELECT COUNT(ih) "
 			+ "FROM ItemHistory ih "
 			+ "WHERE ih.itemId = :itemId")

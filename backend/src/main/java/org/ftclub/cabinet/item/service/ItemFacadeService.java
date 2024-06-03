@@ -93,6 +93,12 @@ public class ItemFacadeService {
 		return new ItemStoreResponseDto(result);
 	}
 
+	/**
+	 * 유저의 보유 아이템 반환
+	 *
+	 * @param user
+	 * @return
+	 */
 	@Transactional(readOnly = true)
 	public MyItemResponseDto getMyItems(UserSessionDto user) {
 		List<ItemHistory> userItemHistories = itemHistoryQueryService.findAllItemHistoryByUser(
@@ -205,6 +211,10 @@ public class ItemFacadeService {
 			// Redis에 리워드 저장
 			long coins = itemRedisService.getCoinCount(userId);
 			itemRedisService.saveCoinCount(userId, coins + reward);
+
+			// Redis에 전체 코인 발행량 저장
+			long totalCoinSupply = itemRedisService.getTotalCoinSupply();
+			itemRedisService.saveTotalCoinSupply(totalCoinSupply + reward);
 		}
 		coinLockMap.remove(userId);
 		return new CoinCollectionRewardResponseDto(reward);
@@ -212,6 +222,8 @@ public class ItemFacadeService {
 
 
 	/**
+	 * 아이템 사용
+	 *
 	 * @param userId
 	 * @param sku
 	 * @param data
@@ -287,6 +299,10 @@ public class ItemFacadeService {
 
 		// 코인 차감
 		itemRedisService.saveCoinCount(userId, userCoin + price);
+
+		// 전체 코인 사용량 저장
+		long totalCoinUsage = itemRedisService.getTotalCoinUsage();
+		itemRedisService.saveTotalCoinUsage(totalCoinUsage + price);
 	}
 
 	@Transactional
