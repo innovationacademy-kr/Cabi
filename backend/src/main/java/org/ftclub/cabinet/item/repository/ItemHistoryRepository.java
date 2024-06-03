@@ -42,7 +42,7 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 			@Param("userId") Long userId, Pageable pageable);
 
 	@EntityGraph(attributePaths = "item")
-	Page<ItemHistory> findAllByUserId(Long userId, Pageable pageable);
+	Page<ItemHistory> findAllByUserIdOrderByPurchaseAtDesc(Long userId, Pageable pageable);
 
 	@Query("SELECT ih "
 			+ "FROM ItemHistory ih "

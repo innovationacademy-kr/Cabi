@@ -27,7 +27,7 @@ public class ItemHistoryQueryService {
 	}
 
 	public Page<ItemHistory> getItemHistoriesByUserIdWithItem(Long userId, Pageable pageable) {
-		return itemHistoryRepository.findAllByUserId(userId, pageable);
+		return itemHistoryRepository.findAllByUserIdOrderByPurchaseAtDesc(userId, pageable);
 	}
 
 	public Page<ItemHistory> getCoinHistory(Long userId, Pageable pageable, List<Long> itemIds) {
