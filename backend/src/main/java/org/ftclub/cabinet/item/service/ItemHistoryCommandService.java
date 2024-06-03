@@ -23,10 +23,9 @@ public class ItemHistoryCommandService {
 	}
 
 	public void purchaseItem(List<Long> userIds, Long itemId, LocalDateTime usedAt) {
-		List<ItemHistory> itemHistories =
-				userIds.stream()
-						.map(userId -> ItemHistory.of(userId, itemId, usedAt))
-						.collect(Collectors.toList());
+		List<ItemHistory> itemHistories = userIds.stream()
+				.map(userId -> ItemHistory.of(userId, itemId, usedAt))
+				.collect(Collectors.toList());
 		itemHistoryRepository.saveAll(itemHistories);
 	}
 }

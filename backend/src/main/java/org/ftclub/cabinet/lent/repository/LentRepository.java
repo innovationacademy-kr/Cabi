@@ -174,7 +174,8 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "LEFT JOIN FETCH lh.user u "
 			+ "LEFT JOIN FETCH lh.cabinet c "
 			+ "LEFT JOIN FETCH c.cabinetPlace cp "
-			+ "WHERE lh.cabinetId = :cabinetId ",
+			+ "WHERE lh.cabinetId = :cabinetId "
+			+ "ORDER BY lh.startedAt DESC",
 			countQuery = "SELECT count(lh) "
 					+ "FROM LentHistory lh "
 					+ "WHERE lh.cabinetId = :cabinetId ")
@@ -255,8 +256,8 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 * cabinet 정보를 Join하여 가져옵니다.
 	 * </p>
 	 *
-	 * @param userId
-	 * @return
+	 * @param userId 찾으려는 user id
+	 * @return 반납하지 않은 {@link LentHistory}의 {@link Optional}
 	 */
 	@Query("SELECT lh "
 			+ "FROM LentHistory lh "

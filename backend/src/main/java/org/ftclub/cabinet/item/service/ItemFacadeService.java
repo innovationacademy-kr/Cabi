@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.domain.AlarmItem;
@@ -45,6 +44,7 @@ import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
+import org.ftclub.cabinet.utils.lock.LockUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,7 +68,6 @@ public class ItemFacadeService {
 	private final ItemPolicyService itemPolicyService;
 	private final ApplicationEventPublisher eventPublisher;
 
-	private final ConcurrentHashMap<Long, Object> coinLockMap = new ConcurrentHashMap<>();
 
 	/**
 	 * 모든 아이템 리스트 반환
@@ -96,8 +95,8 @@ public class ItemFacadeService {
 	/**
 	 * 유저의 보유 아이템 반환
 	 *
-	 * @param user
-	 * @return
+	 * @param user 유저 정보
+	 * @return 유저의 보유 아이템
 	 */
 	@Transactional(readOnly = true)
 	public MyItemResponseDto getMyItems(UserSessionDto user) {
@@ -159,7 +158,7 @@ public class ItemFacadeService {
 	 * itemRedisService 를 통해 동전 줍기 정보 생성
 	 *
 	 * @param userId redis 의 고유 key 를 만들 userId
-	 * @return
+	 * @return 동전 줍기 정보
 	 */
 	@Transactional(readOnly = true)
 	public CoinMonthlyCollectionDto getCoinCollectionCountInMonth(Long userId) {
@@ -180,53 +179,57 @@ public class ItemFacadeService {
 	 *
 	 * @param userId redis 의 고유 key 를 만들 userId
 	 */
-	@Transactional(readOnly = true)
+	@Transactional
 	public CoinCollectionRewardResponseDto collectCoinAndIssueReward(Long userId) {
 
-		Object coinCollectLock = coinLockMap.computeIfAbsent(userId, k -> new Object());
-		int reward;
-		synchronized (coinCollectLock) {
-			// 코인 줍기 횟수 (당일, 한 달) 갱신
-			boolean isChecked = itemRedisService.isCoinCollected(userId);
-			itemPolicyService.verifyIsAlreadyCollectedCoin(isChecked);
-			itemRedisService.collectCoin(userId);
+		// 코인 줍기 횟수 (당일, 한 달) 갱신
+		boolean isChecked = itemRedisService.isCoinCollected(userId);
+		itemPolicyService.verifyIsAlreadyCollectedCoin(isChecked);
+		itemRedisService.collectCoin(userId);
 
-			// DB에 코인 저장
-			reward = Sku.COIN_COLLECT.getCoinReward();
-			Item coinCollect = itemQueryService.getBySku(Sku.COIN_COLLECT);
-			itemHistoryCommandService.purchaseItem(userId, coinCollect.getId());
+		// DB에 코인 저장
+		int reward = Sku.COIN_COLLECT.getCoinReward();
+		Item coinCollect = itemQueryService.getBySku(Sku.COIN_COLLECT);
+		itemHistoryCommandService.purchaseItem(userId, coinCollect.getId());
 
-			// 출석 일자에 따른 랜덤 리워드 지급
-			Long coinCollectionCountInMonth =
-					itemRedisService.getCoinCollectionCountInMonth(userId);
-			if (itemPolicyService.isRewardable(coinCollectionCountInMonth)) {
-				Random random = new Random();
-				int randomPercentage = random.nextInt(100);
-				Sku coinSku = itemPolicyService.getRewardSku(randomPercentage);
-				Item coinReward = itemQueryService.getBySku(coinSku);
-				itemHistoryCommandService.purchaseItem(userId, coinReward.getId());
-				reward += coinSku.getCoinReward();
-			}
+		// 출석 일자에 따른 랜덤 리워드 지급
+		Long coinCollectionCountInMonth =
+				itemRedisService.getCoinCollectionCountInMonth(userId);
+		if (itemPolicyService.isRewardable(coinCollectionCountInMonth)) {
+			Random random = new Random();
+			int randomPercentage = random.nextInt(100);
+			Sku coinSku = itemPolicyService.getRewardSku(randomPercentage);
+			Item coinReward = itemQueryService.getBySku(coinSku);
 
-			// Redis에 리워드 저장
+			itemHistoryCommandService.purchaseItem(userId, coinReward.getId());
+			reward += coinSku.getCoinReward();
+		}
+
+		// Redis에 코인 변화량 저장
+		saveCoinChangeOnRedis(userId, reward);
+
+		return new CoinCollectionRewardResponseDto(reward);
+	}
+
+	private void saveCoinChangeOnRedis(Long userId, final int reward) {
+		LockUtil.lockRedisCoin(userId, () -> {
+			// Redis에 유저 리워드 저장
 			long coins = itemRedisService.getCoinCount(userId);
 			itemRedisService.saveCoinCount(userId, coins + reward);
 
 			// Redis에 전체 코인 발행량 저장
 			long totalCoinSupply = itemRedisService.getTotalCoinSupply();
 			itemRedisService.saveTotalCoinSupply(totalCoinSupply + reward);
-		}
-		coinLockMap.remove(userId);
-		return new CoinCollectionRewardResponseDto(reward);
+		});
 	}
 
 
 	/**
 	 * 아이템 사용
 	 *
-	 * @param userId
-	 * @param sku
-	 * @param data
+	 * @param userId 사용자 아이디
+	 * @param sku    아이템 sku
+	 * @param data   아이템 사용 요청 데이터
 	 */
 	@Transactional
 	public void useItem(Long userId, Sku sku, ItemUseRequestDto data) {
@@ -248,10 +251,10 @@ public class ItemFacadeService {
 	/**
 	 * itemType 에 따른 구현체 반환
 	 *
-	 * @param userId
-	 * @param item
-	 * @param data
-	 * @return
+	 * @param userId 사용자 아이디
+	 * @param item   아이템
+	 * @param data   아이템 사용 요청 데이터
+	 * @return 아이템 사용 구현체
 	 */
 	private ItemUsage getItemUsage(Long userId, Item item, ItemUseRequestDto data) {
 		// 연장권, 이사권, 페널티
@@ -275,8 +278,8 @@ public class ItemFacadeService {
 	/**
 	 * user가 아이템 구매 요청
 	 *
-	 * @param userId
-	 * @param sku
+	 * @param userId 사용자 아이디
+	 * @param sku    아이템 sku
 	 */
 	@Transactional
 	public void purchaseItem(Long userId, Sku sku) {
@@ -297,12 +300,14 @@ public class ItemFacadeService {
 		// 아이템 구매 처리
 		itemHistoryCommandService.purchaseItem(user.getId(), item.getId());
 
-		// 코인 차감
-		itemRedisService.saveCoinCount(userId, userCoin + price);
+		LockUtil.lockRedisCoin(userId, () -> {
+			// 코인 차감
+			itemRedisService.saveCoinCount(userId, userCoin + price);
 
-		// 전체 코인 사용량 저장
-		long totalCoinUsage = itemRedisService.getTotalCoinUsage();
-		itemRedisService.saveTotalCoinUsage(totalCoinUsage + price);
+			// 전체 코인 사용량 저장
+			long totalCoinUsage = itemRedisService.getTotalCoinUsage();
+			itemRedisService.saveTotalCoinUsage(totalCoinUsage + price);
+		});
 	}
 
 	@Transactional
