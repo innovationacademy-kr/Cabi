@@ -58,7 +58,7 @@ const mockData: ICoinCollectInfo[] = [
 // 아이템 통계 그래프 확인용
 const itemList: IItemUseCountDto[] = [
   { itemName: "연장권", itemDetails: "출석 연장권 보상", userCount: 38 },
-  { itemName: "연장권", itemDetails: "31일", userCount: 83 },
+  { itemName: "연장권", itemDetails: "31일", userCount: 503 },
   { itemName: "연장권", itemDetails: "15일", userCount: 22 },
   { itemName: "연장권", itemDetails: "3일", userCount: 30 },
   { itemName: "페널티 감면권", itemDetails: "31일", userCount: 10 },
@@ -299,22 +299,22 @@ const ContainerStyled = styled.div`
   }
   @media screen and (max-width: 1300px) {
     &:nth-child(1) {
-      order: 6;
+      order: 1;
     }
     &:nth-child(2) {
-      order: 5;
-    }
-    &:nth-child(3) {
-      order: 4;
-    }
-    &:nth-child(4) {
-      order: 3;
-    }
-    &:nth-child(5) {
       order: 2;
     }
+    &:nth-child(3) {
+      order: 3;
+    }
+    &:nth-child(4) {
+      order: 4;
+    }
+    &:nth-child(5) {
+      order: 5;
+    }
     &:nth-child(6) {
-      order: 1;
+      order: 6;
     }
   }
 `;
@@ -337,28 +337,3 @@ const CoinCollectTitleWrapperStyled = styled.div`
 
 export default AdminStorePage;
 
-// interface IItemUseCountDto {
-//   itemName: string;
-//   itemDetails: string;
-//   userCount: number;
-// }
-
-// interface ITransformedItem {
-//   item: string;
-//   [key: string]: number | string;
-// }
-
-// interface IItemUseCountDtoarr {
-//   arr : IItemUseCountDto[];
-
-// };
-
-// const data: ITransformedItem[] = [
-//   { item: "연장권", "출석 연장권 보상": 0, "31일": 1, "15일": 2, "3일": 0 },
-//   { item: "페널티 감면권", "31일": 0, "7일": 0, "3일": 0 },
-//   { item: "이사권", "이사권": 0 },
-//   { item: "알림 등록권", "알림 등록권": 0 },
-// ];
-// //     itemName별로 묶어서 1. 0: 1. item: "연장권" 2. 3일: 3 3. 15일: 15 4. 31일: 31 5. 연장권 보상 : 10 2. 1: 1. item: "알림권" 2. 알림권: 10
-// // 1. 2: 1. item: "이사권" 2. 이사권: 10
-// // 2. 3: 1. item: "패널티 축소권" 2. 3일: 3 3. 7일: 7 4. 31일: 31 이런 형식으로 만들고싶어

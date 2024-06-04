@@ -12,25 +12,6 @@ interface ITransformedItem {
   [key: string]: number | string;
 }
 
-
-/*
-    if (existingItem) {
-      existingItem[`${itemName}-${itemDetails}`] = userCount;
-    } else {
-      const newItem: ITransformedItem = {
-        item: itemName,
-      };
-
-      if (itemName === itemDetails) {
-        newItem[itemDetails] = userCount;
-      } else {
-        newItem[`${itemName}-${itemDetails}`] = userCount;
-      }
-
-      transformedData.push(newItem);
-    }
-  });
-*/
 const transformData = (itemArr: IItemUseCountDto[]): ITransformedItem[] => {
   const transformedData: ITransformedItem[] = [];
 
@@ -59,27 +40,7 @@ const transformData = (itemArr: IItemUseCountDto[]): ITransformedItem[] => {
   console.log(transformedData);
   return transformedData;
 };
-// const transformData = (itemArr: IItemUseCountDto[]): ITransformedItem[] => {
-//   const transformedData: ITransformedItem[] = [];
 
-//   itemArr.forEach((item) => {
-//     const { itemName, itemDetails, userCount } = item;
-//     const existingItem = transformedData.find(
-//       (transformed) => transformed.item === itemName
-//     );
-
-//     if (existingItem) {
-//       existingItem[`${itemName}-${itemDetails}`] = userCount;
-//     } else {
-//       const newItem: ITransformedItem = {
-//         item: itemName,
-//         [itemDetails]: userCount,
-//       };
-//       transformedData.push(newItem);
-//     }
-//   });
-//   return transformedData;
-// };
 
 const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => (
   <ItemBarChartStyled>
