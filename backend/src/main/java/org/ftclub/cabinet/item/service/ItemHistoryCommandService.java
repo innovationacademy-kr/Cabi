@@ -22,7 +22,7 @@ public class ItemHistoryCommandService {
 		itemHistoryRepository.save(itemHistory);
 	}
 
-	public void purchaseItem(List<Long> userIds, Long itemId, LocalDateTime usedAt) {
+	public void createItemHistories(List<Long> userIds, Long itemId, LocalDateTime usedAt) {
 		List<ItemHistory> itemHistories = userIds.stream()
 				.map(userId -> ItemHistory.of(userId, itemId, usedAt))
 				.collect(Collectors.toList());
