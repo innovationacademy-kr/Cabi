@@ -147,7 +147,7 @@ public class AdminStatisticsFacadeService {
 	public CoinCollectStatisticsDto getCoinCollectCountByMonth(Integer year, Integer month) {
 		Long itemId = itemQueryService.getBySku(COIN_COLLECT).getId();
 		List<ItemHistory> coinCollectedInfoByMonth =
-				itemHistoryQueryService.getCoinCollectedInfoByMonth(itemId, year, month);
+				itemHistoryQueryService.findCoinCollectedInfoByMonth(itemId, year, month);
 		Map<Long, Long> coinCollectCountByUser = coinCollectedInfoByMonth.stream()
 				.collect(groupingBy(ItemHistory::getUserId, Collectors.counting()));
 
@@ -174,7 +174,7 @@ public class AdminStatisticsFacadeService {
 		long totalCoinUsage = itemRedisService.getTotalCoinUsage();
 
 		// 재화 총 사용량, 현재 총 보유량 (총 공급량 - 총 사용량) 반환
-		return new TotalCoinAmountDto(-1 * totalCoinUsage, totalCoinSupply + totalCoinUsage);
+		return new TotalCoinAmountDto(totalCoinUsage, totalCoinSupply + totalCoinUsage);
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class AdminStatisticsFacadeService {
 				});
 
 		List<ItemHistory> usedCoins =
-				itemHistoryQueryService.getUsedCoinHistoryBetween(startDate,
+				itemHistoryQueryService.findUsedCoinHistoryBetween(startDate,
 						endDate);
 
 		usedCoins.forEach(

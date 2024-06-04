@@ -8,8 +8,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.domain.AlarmItem;
@@ -123,7 +123,7 @@ public class ItemFacadeService {
 	@Transactional(readOnly = true)
 	public ItemHistoryPaginationDto getItemHistory(Long userId, Pageable pageable) {
 		Page<ItemHistory> itemHistories =
-				itemHistoryQueryService.getItemHistoryWithItem(userId, pageable);
+				itemHistoryQueryService.findItemHistoryWithItem(userId, pageable);
 		List<ItemHistoryDto> result = itemHistories.stream()
 				.map(ih -> itemMapper.toItemHistoryDto(ih, itemMapper.toItemDto(ih.getItem())))
 				.collect(Collectors.toList());
@@ -143,7 +143,7 @@ public class ItemFacadeService {
 		}
 		List<Long> itemIds = items.stream().map(Item::getId).collect(Collectors.toList());
 		Page<ItemHistory> coinHistories =
-				itemHistoryQueryService.getCoinHistory(userId, pageable, itemIds);
+				itemHistoryQueryService.findCoinHistory(userId, pageable, itemIds);
 
 		Map<Long, Item> itemMap = items.stream()
 				.collect(Collectors.toMap(Item::getId, item -> item));
@@ -196,7 +196,7 @@ public class ItemFacadeService {
 		Long coinCollectionCountInMonth =
 				itemRedisService.getCoinCollectionCountInMonth(userId);
 		if (itemPolicyService.isRewardable(coinCollectionCountInMonth)) {
-			Random random = new Random();
+			ThreadLocalRandom random = ThreadLocalRandom.current();
 			int randomPercentage = random.nextInt(100);
 			Sku coinSku = itemPolicyService.getRewardSku(randomPercentage);
 			Item coinReward = itemQueryService.getBySku(coinSku);
@@ -240,7 +240,7 @@ public class ItemFacadeService {
 		}
 		Item item = itemQueryService.getBySku(sku);
 		List<ItemHistory> itemInInventory =
-				itemHistoryQueryService.getUnusedItemsInUserInventory(user.getId(), item.getId());
+				itemHistoryQueryService.findUnusedItemsInUserInventory(user.getId(), item.getId());
 		ItemHistory firstItem = itemPolicyService.verifyEmptyItems(itemInInventory);
 		ItemUsage itemUsage = getItemUsage(userId, item, data);
 

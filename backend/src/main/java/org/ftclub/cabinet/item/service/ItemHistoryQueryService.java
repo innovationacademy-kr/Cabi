@@ -22,34 +22,34 @@ public class ItemHistoryQueryService {
 		return itemHistoryRepository.getAllUnusedItemHistoryByUser(userId);
 	}
 
-	public Page<ItemHistory> getItemHistoryWithItem(Long userId, Pageable pageable) {
+	public Page<ItemHistory> findItemHistoryWithItem(Long userId, Pageable pageable) {
 		return itemHistoryRepository.findAllByUserIdOnMinusPriceItemsWithSubQuery(userId, pageable);
 	}
 
-	public Page<ItemHistory> getItemHistoriesByUserIdWithItem(Long userId, Pageable pageable) {
+	public Page<ItemHistory> findItemHistoriesByUserIdWithItem(Long userId, Pageable pageable) {
 		return itemHistoryRepository.findAllByUserIdOrderByPurchaseAtDesc(userId, pageable);
 	}
 
-	public Page<ItemHistory> getCoinHistory(Long userId, Pageable pageable, List<Long> itemIds) {
+	public Page<ItemHistory> findCoinHistory(Long userId, Pageable pageable, List<Long> itemIds) {
 		return itemHistoryRepository.findAllByUserIdAndItemIdIn(userId, pageable, itemIds);
 	}
 
-	public List<ItemHistory> getUnusedItemsInUserInventory(Long userId, Long itemId) {
+	public List<ItemHistory> findUnusedItemsInUserInventory(Long userId, Long itemId) {
 		return itemHistoryRepository.findAllByUserIdAndItemIdAndUsedAtIsNull(userId, itemId);
 	}
 
-	public int getPurchaseCountByItemId(Long itemId) {
+	public int findPurchaseCountByItemId(Long itemId) {
 		return itemHistoryRepository.getCountByItemIds(itemId);
 	}
 
-	public List<ItemHistory> getUsedCoinHistoryBetween(
+	public List<ItemHistory> findUsedCoinHistoryBetween(
 			LocalDate startDate,
 			LocalDate endDate) {
 		return itemHistoryRepository.findAllUsedAtIsNotNullBetween(startDate, endDate);
 	}
 
-	public List<ItemHistory> getCoinCollectedInfoByMonth(Long itemId, Integer year,
+	public List<ItemHistory> findCoinCollectedInfoByMonth(Long itemId, Integer year,
 			Integer month) {
-		return itemHistoryRepository.findCoinCollectInfoByMonth(itemId, year, month);
+		return itemHistoryRepository.findCoinCollectInfoByIdAtYearAndMonth(itemId, year, month);
 	}
 }
