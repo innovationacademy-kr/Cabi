@@ -188,8 +188,8 @@ public class ItemFacadeService {
 		itemRedisService.collectCoin(userId);
 
 		// DB에 코인 저장
-		int reward = Sku.COIN_COLLECT.getCoinReward();
 		Item coinCollect = itemQueryService.getBySku(Sku.COIN_COLLECT);
+		int reward = (int) (coinCollect.getPrice().longValue());
 		itemHistoryCommandService.purchaseItem(userId, coinCollect.getId());
 
 		// 출석 일자에 따른 랜덤 리워드 지급
@@ -202,7 +202,7 @@ public class ItemFacadeService {
 			Item coinReward = itemQueryService.getBySku(coinSku);
 
 			itemHistoryCommandService.purchaseItem(userId, coinReward.getId());
-			reward += coinSku.getCoinReward();
+			reward += coinReward.getPrice();
 		}
 
 		// Redis에 코인 변화량 저장
