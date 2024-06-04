@@ -58,7 +58,7 @@ const mockData: ICoinCollectInfo[] = [
 // 아이템 통계 그래프 확인용
 const itemList: IItemUseCountDto[] = [
   { itemName: "연장권", itemDetails: "출석 연장권 보상", userCount: 38 },
-  { itemName: "연장권", itemDetails: "31일", userCount: 503 },
+  { itemName: "연장권", itemDetails: "31일", userCount: 53 },
   { itemName: "연장권", itemDetails: "15일", userCount: 22 },
   { itemName: "연장권", itemDetails: "3일", userCount: 30 },
   { itemName: "페널티 감면권", itemDetails: "31일", userCount: 10 },
@@ -131,7 +131,7 @@ const AdminStorePage = () => {
     try {
       const response = await axiosStatisticsTotalItemUse();
       setTotalItemData(response.data.items);
-      setTotalItemData(itemList);
+      // setTotalItemData(itemList);
     } catch (error) {
       console.error("Err or getting total coin data:", error);
     }
