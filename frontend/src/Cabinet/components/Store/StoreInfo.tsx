@@ -64,7 +64,10 @@ const StoreInfo = () => {
   };
 
   useEffect(() => {
-    if (todayCoinCollection === true) setIsLoading(true);
+    console.log("monthlyCoinCount", monthlyCoinCount);
+    if (monthlyCoinCount === 20 || todayCoinCollection === true) {
+      setIsLoading(true);
+    }
     tryCoinCheckGet();
   }, [todayCoinCollection]);
 

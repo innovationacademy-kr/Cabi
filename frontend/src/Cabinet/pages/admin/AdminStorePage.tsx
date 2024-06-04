@@ -30,8 +30,8 @@ export interface ICoinAmountDto {
 }
 
 export interface ICoinStatisticsDto {
-  issueCoin: ICoinAmountDto[];
-  unusedCoin: ICoinAmountDto[];
+  issuedCoin: ICoinAmountDto[];
+  // unusedCoin: ICoinAmountDto[];
   usedCoin: ICoinAmountDto[];
 }
 
@@ -95,7 +95,7 @@ const AdminStorePage = () => {
 
   const dataToggleList: toggleItem[] = [
     { name: "발행 코인", key: CoinFlowType.ISSUE },
-    { name: "미사용 코인", key: CoinFlowType.UNUSED },
+    // { name: "미사용 코인", key: CoinFlowType.UNUSED },
     { name: "사용 코인", key: CoinFlowType.USED },
   ];
 
@@ -137,21 +137,44 @@ const AdminStorePage = () => {
     }
   };
 
-  const getTotalCoinUseData = async () => {
+  const getTotalCoinUseData = async (startDate: Date, endDate: Date) => {
     try {
-      const response = await axiosCoinUseStatistics(
-        new Date("2024 06 01"),
-        new Date("2024 06 07")
-      );
+      const response = await axiosCoinUseStatistics(startDate, endDate);
       setTotalCoinUseData(response.data);
-      // setTotalItemData(itemCount);
     } catch (error) {
       console.error("Error getting total item data:", error);
     }
   };
+  useEffect(() => {
+    const startDate = new Date();
+    let endDate;
+
+    switch (toggleType) {
+      case "DAY":
+        endDate = new Date();
+        endDate.setDate(startDate.getDate() + 7);
+        break;
+      case "WEEK":
+        endDate = new Date();
+        endDate.setDate(startDate.getDate() + 28); // 4주 = 28일
+        break;
+      case "MONTH":
+        endDate = new Date();
+        endDate.setMonth(startDate.getMonth() + 4); // 4달
+        break;
+      default:
+        endDate = new Date();
+    }
+
+    getTotalCoinUseData(startDate, endDate);
+  }, [toggleType]);
 
   useEffect(() => {
-    getTotalCoinUseData();
+    console.log("toggleType", toggleType);
+  }, [toggleType]);
+
+  useEffect(() => {
+    // getTotalCoinUseData();
     getCoinCollectData();
     getTotalCoinData();
     getTotalItemData();

@@ -8,43 +8,43 @@ import {
 import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
 
 // 가짜 데이터를 생성하는 함수
-function generateDummyData(
-  startDate: string,
-  endDate: string
-): {
-  issueCoin: ICoinAmountDto[];
-  unusedCoin: ICoinAmountDto[];
-  usedCoin: ICoinAmountDto[];
-} {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  const oneDay = 24 * 60 * 60 * 1000; // 하루의 밀리초
-  const dummyData = {
-    issueCoin: [] as ICoinAmountDto[],
-    unusedCoin: [] as ICoinAmountDto[],
-    usedCoin: [] as ICoinAmountDto[],
-  };
-  for (
-    let date = start;
-    date <= end;
-    date = new Date(date.getTime() + oneDay)
-  ) {
-    // 예시 데이터 생성 로직
-    dummyData.issueCoin.push({
-      date: new Date(date).toISOString().split("T")[0],
-      amount: Math.floor(Math.random() * 2000) + 1000,
-    });
-    dummyData.unusedCoin.push({
-      date: new Date(date).toISOString().split("T")[0],
-      amount: Math.floor(Math.random() * 500) + 500,
-    });
-    dummyData.usedCoin.push({
-      date: new Date(date).toISOString().split("T")[0],
-      amount: Math.floor(Math.random() * 700) + 300,
-    });
-  }
-  return dummyData;
-}
+// function generateDummyData(
+//   startDate: string,
+//   endDate: string
+// ): {
+//   issueCoin: ICoinAmountDto[];
+//   unusedCoin: ICoinAmountDto[];
+//   usedCoin: ICoinAmountDto[];
+// } {
+//   const start = new Date(startDate);
+//   const end = new Date(endDate);
+//   const oneDay = 24 * 60 * 60 * 1000; // 하루의 밀리초
+//   const dummyData = {
+//     issueCoin: [] as ICoinAmountDto[],
+//     unusedCoin: [] as ICoinAmountDto[],
+//     usedCoin: [] as ICoinAmountDto[],
+//   };
+//   for (
+//     let date = start;
+//     date <= end;
+//     date = new Date(date.getTime() + oneDay)
+//   ) {
+//     // 예시 데이터 생성 로직
+//     dummyData.issueCoin.push({
+//       date: new Date(date).toISOString().split("T")[0],
+//       amount: Math.floor(Math.random() * 2000) + 1000,
+//     });
+//     dummyData.unusedCoin.push({
+//       date: new Date(date).toISOString().split("T")[0],
+//       amount: Math.floor(Math.random() * 500) + 500,
+//     });
+//     dummyData.usedCoin.push({
+//       date: new Date(date).toISOString().split("T")[0],
+//       amount: Math.floor(Math.random() * 700) + 300,
+//     });
+//   }
+//   return dummyData;
+// }
 
 // const calculateEndDate = (startDate: Date, type: CoinDateType) => {
 //   switch (type) {
@@ -83,28 +83,31 @@ const CoinFlow = ({
     {
       id: "issuedCoin",
       data:
-        totalCoinUseData?.issueCoin?.map((item) => ({
+        totalCoinUseData?.issuedCoin?.map((item) => ({
+          // x: new Date(item.date).toISOString().split("T")[0],
           x: item.date,
           y: item.amount,
         })) || [],
     },
-    {
-      id: "unusedCoin",
-      data:
-        totalCoinUseData?.unusedCoin?.map((item) => ({
-          x: item.date,
-          y: item.amount,
-        })) || [],
-    },
+    // {
+    //   id: "unusedCoin",
+    //   data:
+    //     totalCoinUseData?.unusedCoin?.map((item) => ({
+    //       x: item.date,
+    //       y: item.amount,
+    //     })) || [],
+    // },
     {
       id: "usedCoin",
       data:
         totalCoinUseData?.usedCoin?.map((item) => ({
+          // x: new Date(item.date).toISOString().split("T")[0],
           x: item.date,
           y: item.amount,
         })) || [],
     },
   ];
+  console.log("formattedData: ", formattedData);
 
   // 발행코인, 미사용 코인, 사용코인 나눠서 보내주는 함수
   const filteredData = formattedData.filter(
