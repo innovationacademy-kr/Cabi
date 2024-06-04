@@ -7,16 +7,10 @@ import {
 } from "@/Cabinet/pages/admin/AdminStorePage";
 import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
 
-// interface ICoinAmountDto {
-//   date: Date;
-//   amount: number;
-// }
-
 // 가짜 데이터를 생성하는 함수
 function generateDummyData(
   startDate: string,
   endDate: string
-  // totalCoinUseData : ICoinStatisticsDto[];
 ): {
   issueCoin: ICoinAmountDto[];
   unusedCoin: ICoinAmountDto[];
@@ -52,6 +46,29 @@ function generateDummyData(
   return dummyData;
 }
 
+// const calculateEndDate = (startDate: Date, type: CoinDateType) => {
+//   switch (type) {
+//     case CoinDateType.DAY:
+//       return new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000); // 7일 뒤
+//     case CoinDateType.WEEK:
+//       return new Date(startDate.getTime() + 4 * 7 * 24 * 60 * 60 * 1000); // 4주 뒤
+//     case CoinDateType.MONTH:
+//       const endDate = new Date(startDate);
+//       endDate.setMonth(startDate.getMonth() + 4); // 4개월 뒤
+//       return endDate;
+//     default:
+//       return startDate;
+//   }
+// };
+// 현재 날짜
+// const today = new Date();
+// today.setHours(0, 0, 0, 0); // 현재 날짜의 시간을 00:00:00으로 설정
+// const endDate = calculateEndDate(today, toggleType);
+// const dummyData = generateDummyData(
+//   today.toISOString().split("T")[0], // 형식 YYYY-MM-DD
+//   endDate.toISOString().split("T")[0] // 형식 YYYY-MM-DD
+// );
+
 const CoinFlow = ({
   toggleType,
   coinToggleType,
@@ -61,32 +78,10 @@ const CoinFlow = ({
   coinToggleType: CoinFlowType;
   totalCoinUseData: ICoinStatisticsDto | undefined;
 }) => {
-  // const calculateEndDate = (startDate: Date, type: CoinDateType) => {
-  //   switch (type) {
-  //     case CoinDateType.DAY:
-  //       return new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000); // 7일 뒤
-  //     case CoinDateType.WEEK:
-  //       return new Date(startDate.getTime() + 4 * 7 * 24 * 60 * 60 * 1000); // 4주 뒤
-  //     case CoinDateType.MONTH:
-  //       const endDate = new Date(startDate);
-  //       endDate.setMonth(startDate.getMonth() + 4); // 4개월 뒤
-  //       return endDate;
-  //     default:
-  //       return startDate;
-  //   }
-  // };
-  // 현재 날짜
-  // const today = new Date();
-  // today.setHours(0, 0, 0, 0); // 현재 날짜의 시간을 00:00:00으로 설정
-  // const endDate = calculateEndDate(today, toggleType);
-  // const dummyData = generateDummyData(
-  //   today.toISOString().split("T")[0], // 형식 YYYY-MM-DD
-  //   endDate.toISOString().split("T")[0] // 형식 YYYY-MM-DD
-  // );
   console.log("totalCoinUseData: ", totalCoinUseData);
   const formattedData = [
     {
-      id: "issueCoin",
+      id: "issuedCoin",
       data:
         totalCoinUseData?.issueCoin?.map((item) => ({
           x: item.date,
