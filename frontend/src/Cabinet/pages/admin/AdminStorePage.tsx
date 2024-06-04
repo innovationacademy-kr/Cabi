@@ -3,7 +3,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinFlow";
 import ItemBarChart, {
-  IitemUseCountDto,
+  IItemUseCountDto,
 } from "@/Cabinet/components/AdminInfo/Chart/ItemBarChart";
 import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
 import StoreHalfPieChart from "@/Cabinet/components/AdminInfo/Chart/StoreHalfPieChart";
@@ -14,6 +14,7 @@ import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
 import {
   axiosCoinCollectStatistics,
   axiosCoinUseStatistics,
+  axiosStatisticsTotalItemUse,
 } from "@/Cabinet/api/axios/axios.custom";
 import { axiosStatisticsItem } from "@/Cabinet/api/axios/axios.custom";
 
@@ -54,16 +55,18 @@ const mockData: ICoinCollectInfo[] = [
 ];
 // TODO : 작은 횟수부터 큰 횟수까지 차례대로 보내주는지 확인
 
-const itemCount: IitemUseCountDto[] = [
-  { itemName: "연장권", itemDetails: "extension_31", useCount: 31 },
-  { itemName: "연장권", itemDetails: "extension_15", useCount: 15 },
-  { itemName: "연장권", itemDetails: "extension_3", useCount: 3 },
-  { itemName: "알림권", itemDetails: "alram", useCount: 10 },
-  { itemName: "이사권", itemDetails: "move", useCount: 10 },
-  { itemName: "패널티 축소권", itemDetails: "penalty_31", useCount: 31 },
-  { itemName: "패널티 축소권", itemDetails: "penalty_7", useCount: 7 },
-  { itemName: "패널티 축소권", itemDetails: "penalty_3", useCount: 3 },
-];
+// 아이템 통계 그래프 확인용
+// const itemList: IItemUseCountDto[] = [
+//   { itemName: "연장권", itemDetails: "출석 연장권 보상", userCount: 38 },
+//   { itemName: "연장권", itemDetails: "31일", userCount: 123 },
+//   { itemName: "연장권", itemDetails: "15일", userCount: 22 },
+//   { itemName: "연장권", itemDetails: "3일", userCount: 30 },
+//   { itemName: "페널티 감면권", itemDetails: "31일", userCount: 10 },
+//   { itemName: "페널티 감면권", itemDetails: "7일", userCount: 30 },
+//   { itemName: "페널티 감면권", itemDetails: "3일", userCount: 10 },
+//   { itemName: "이사권", itemDetails: "이사권", userCount: 20 },
+//   { itemName: "알림 등록권", itemDetails: "알림 등록권", userCount: 40 },
+// ];
 export interface ITotalCoinInfo {
   used: number;
   unused: number;
@@ -88,7 +91,7 @@ const AdminStorePage = () => {
   const [totalCoinUseData, setTotalCoinUseData] = useState<
     ICoinStatisticsDto | undefined
   >();
-  const [totalItemData, setTotalItemData] = useState<IitemUseCountDto[]>([]);
+  const [totalItemData, setTotalItemData] = useState<IItemUseCountDto[]>([]);
 
   const dataToggleList: toggleItem[] = [
     { name: "발행 코인", key: CoinFlowType.ISSUE },
@@ -126,8 +129,8 @@ const AdminStorePage = () => {
 
   const getTotalItemData = async () => {
     try {
-      // const response = await axiosStatisticsTotalItemUse();
-      // setTotalItemData(response.data.coinCollectStatistics);
+      const response = await axiosStatisticsTotalItemUse();
+      setTotalItemData(response.data.items);
       // setTotalItemData(itemCount);
     } catch (error) {
       console.error("Err or getting total coin data:", error);
@@ -143,7 +146,7 @@ const AdminStorePage = () => {
       setTotalCoinUseData(response.data);
       // setTotalItemData(itemCount);
     } catch (error) {
-      console.error("Error getting total coin data:", error);
+      console.error("Error getting total item data:", error);
     }
   };
 
@@ -310,3 +313,29 @@ const CoinCollectTitleWrapperStyled = styled.div`
 `;
 
 export default AdminStorePage;
+
+// interface IItemUseCountDto {
+//   itemName: string;
+//   itemDetails: string;
+//   userCount: number;
+// }
+
+// interface ITransformedItem {
+//   item: string;
+//   [key: string]: number | string;
+// }
+
+// interface IItemUseCountDtoarr {
+//   arr : IItemUseCountDto[];
+
+// };
+
+// const data: ITransformedItem[] = [
+//   { item: "연장권", "출석 연장권 보상": 0, "31일": 1, "15일": 2, "3일": 0 },
+//   { item: "페널티 감면권", "31일": 0, "7일": 0, "3일": 0 },
+//   { item: "이사권", "이사권": 0 },
+//   { item: "알림 등록권", "알림 등록권": 0 },
+// ];
+// //     itemName별로 묶어서 1. 0: 1. item: "연장권" 2. 3일: 3 3. 15일: 15 4. 31일: 31 5. 연장권 보상 : 10 2. 1: 1. item: "알림권" 2. 알림권: 10
+// // 1. 2: 1. item: "이사권" 2. 이사권: 10
+// // 2. 3: 1. item: "패널티 축소권" 2. 3일: 3 3. 7일: 7 4. 31일: 31 이런 형식으로 만들고싶어

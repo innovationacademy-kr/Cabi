@@ -1,10 +1,10 @@
-import {ResponsiveBar } from "@nivo/bar";
+import { ResponsiveBar } from "@nivo/bar";
 import styled from "styled-components";
 
-export interface IitemUseCountDto {
+export interface IItemUseCountDto {
   itemName: string;
   itemDetails: string;
-  useCount: number;
+  userCount: number;
 }
 
 interface ITransformedItem {
@@ -12,39 +12,29 @@ interface ITransformedItem {
   [key: string]: number | string;
 }
 
-function transformData(itemCount: IitemUseCountDto[]): ITransformedItem[] {
+const transformData = (itemArr: IItemUseCountDto[]): ITransformedItem[] => {
   const transformedData: ITransformedItem[] = [];
 
-  itemCount.forEach((item) => {
-    const { itemName, itemDetails, useCount } = item;
+  itemArr.forEach((item) => {
+    const { itemName, itemDetails, userCount } = item;
     const existingItem = transformedData.find(
       (transformed) => transformed.item === itemName
     );
 
     if (existingItem) {
-      const typeNumber = itemDetails.split("_")[1];
-      if (typeNumber)
-        existingItem[`type_${typeNumber}`] = useCount;
-      else 
-        existingItem[`type`] = useCount;
+      existingItem[itemDetails] = userCount;
     } else {
       const newItem: ITransformedItem = {
         item: itemName,
+        [itemDetails]: userCount,
       };
-
-      const typeNumber = itemDetails.split("_")[1];
-      if (typeNumber)
-      newItem[`type_${typeNumber}`] = useCount;
-      else 
-      newItem[`type`] = useCount;
-
       transformedData.push(newItem);
     }
   });
   return transformedData;
-}
+};
 
-const ItemBarChart = ({ data }: { data: IitemUseCountDto[] }) => (
+const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => (
   <ItemBarChartStyled>
     <ResponsiveBar
       theme={{
@@ -61,7 +51,7 @@ const ItemBarChart = ({ data }: { data: IitemUseCountDto[] }) => (
         },
       }}
       data={transformData(data)}
-      keys={["type", "type_31", "type_15", "type_7", "type_3"]}
+      keys={["이사권", "알림 등록권", "31일", "15일", "7일", "3일"]}
       indexBy="item"
       margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
       padding={0.2}
@@ -70,6 +60,7 @@ const ItemBarChart = ({ data }: { data: IitemUseCountDto[] }) => (
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
       colors={[
+        "var(--sys-main-color)",
         "var(--sys-main-color)",
         "var(--sys-main-color)",
         "var(--ref-purple-400)",
