@@ -20,7 +20,6 @@ const OverduePenaltyModal: React.FC<{
   const unbannedAtDate = props.unbannedAt ? new Date(props.unbannedAt) : null;
   const hasPenaltyItem = props.hasPenaltyItem;
 
-  // console.log("getRemainingTime", getRemainingTime(props.unbannedAt));
   const penaltyDateDetailStore = hasPenaltyItem
     ? `페널티 기간은 <strong>${formatDate(
         unbannedAtDate,

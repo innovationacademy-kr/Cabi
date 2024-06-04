@@ -58,7 +58,7 @@ const mockData: ICoinCollectInfo[] = [
 // 아이템 통계 그래프 확인용
 const itemList: IItemUseCountDto[] = [
   { itemName: "연장권", itemDetails: "출석 연장권 보상", userCount: 38 },
-  { itemName: "연장권", itemDetails: "31일", userCount: 503 },
+  { itemName: "연장권", itemDetails: "31일", userCount: 53 },
   { itemName: "연장권", itemDetails: "15일", userCount: 22 },
   { itemName: "연장권", itemDetails: "3일", userCount: 30 },
   { itemName: "페널티 감면권", itemDetails: "31일", userCount: 10 },
@@ -95,7 +95,6 @@ const AdminStorePage = () => {
 
   const dataToggleList: toggleItem[] = [
     { name: "발행 코인", key: CoinFlowType.ISSUE },
-    // { name: "미사용 코인", key: CoinFlowType.UNUSED },
     { name: "사용 코인", key: CoinFlowType.USED },
   ];
 
@@ -131,7 +130,7 @@ const AdminStorePage = () => {
     try {
       const response = await axiosStatisticsTotalItemUse();
       setTotalItemData(response.data.items);
-      setTotalItemData(itemList);
+      // setTotalItemData(itemList);
     } catch (error) {
       console.error("Err or getting total coin data:", error);
     }
@@ -145,6 +144,7 @@ const AdminStorePage = () => {
       console.error("Error getting total item data:", error);
     }
   };
+
   useEffect(() => {
     const startDate = new Date();
     let endDate;
@@ -152,21 +152,21 @@ const AdminStorePage = () => {
     switch (toggleType) {
       case "DAY":
         endDate = new Date();
-        endDate.setDate(startDate.getDate() + 7);
+        endDate.setDate(startDate.getDate() - 7);
         break;
       case "WEEK":
         endDate = new Date();
-        endDate.setDate(startDate.getDate() + 28); // 4주 = 28일
+        endDate.setDate(startDate.getDate() - 28); // 4주 = 28일
         break;
       case "MONTH":
         endDate = new Date();
-        endDate.setMonth(startDate.getMonth() + 4); // 4달
+        endDate.setMonth(startDate.getMonth() - 4); // 4달
         break;
       default:
         endDate = new Date();
     }
 
-    getTotalCoinUseData(startDate, endDate);
+    getTotalCoinUseData(endDate, startDate);
   }, [toggleType]);
 
   useEffect(() => {
@@ -336,4 +336,3 @@ const CoinCollectTitleWrapperStyled = styled.div`
 `;
 
 export default AdminStorePage;
-
