@@ -56,8 +56,9 @@ const StoreHorizontalBarChart = ({ data }: { data: ICoinCollectInfo[] }) => {
         }}
         theme={{
           legends: { text: { fontSize: "14px" } },
-          labels: { text: { fontSize: "14px", color: "var(--ref-gray-500)" } },
+          labels: { text: { fontSize: "14px", fill: "var(--ref-gray-500)" } },
           axis: { ticks: { text: { fontSize: "14px" } } },
+          textColor: "var(--normal-text-color)",
         }}
         margin={{ top: 20, right: 70, bottom: 80, left: 80 }}
         colors={[
