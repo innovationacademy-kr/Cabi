@@ -10,8 +10,7 @@ const dateOptions: Intl.DateTimeFormatOptions = {
 };
 
 const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
-  if (itemLog === undefined) return <LoadingAnimation />;
-
+  if (!itemLog) return <LoadingAnimation />;
   return (
     <LogTableWrapperstyled>
       <LogTableStyled>
@@ -22,41 +21,45 @@ const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
             <th>사용일</th>
           </tr>
         </TheadStyled>
-        {itemLog !== STATUS_400_BAD_REQUEST && (
-          <TbodyStyled>
-            {itemLog.itemHistories.map(
-              ({ purchasedAt, itemName, itemDetails, usedAt }, idx) => (
-                <tr key={idx}>
-                  <td
-                    title={new Date(purchasedAt ?? "").toLocaleString("ko-KR")}
-                  >
-                    {new Date(purchasedAt ?? "").toLocaleString(
-                      "ko-KR",
-                      dateOptions
-                    )}
-                  </td>
-                  <td>
-                    {itemName !== itemDetails
-                      ? `${itemName} - ${itemDetails}`
-                      : itemName}
-                  </td>
-                  <td
-                    title={
-                      usedAt ? new Date(usedAt).toLocaleString("ko-KR") : "-"
-                    }
-                  >
-                    {usedAt
-                      ? new Date(usedAt).toLocaleString("ko-KR", dateOptions)
-                      : "-"}
-                  </td>
-                </tr>
-              )
-            )}
-          </TbodyStyled>
-        )}
+        {itemLog !== STATUS_400_BAD_REQUEST &&
+          Array.isArray(itemLog.itemHistories) && (
+            <TbodyStyled>
+              {itemLog.itemHistories.map(
+                ({ purchasedAt, itemName, itemDetails, usedAt }, idx) => (
+                  <tr key={idx}>
+                    <td
+                      title={new Date(purchasedAt ?? "").toLocaleString(
+                        "ko-KR"
+                      )}
+                    >
+                      {new Date(purchasedAt ?? "").toLocaleString(
+                        "ko-KR",
+                        dateOptions
+                      )}
+                    </td>
+                    <td>
+                      {itemName !== itemDetails
+                        ? `${itemName} - ${itemDetails}`
+                        : itemName}
+                    </td>
+                    <td
+                      title={
+                        usedAt ? new Date(usedAt).toLocaleString("ko-KR") : "-"
+                      }
+                    >
+                      {usedAt
+                        ? new Date(usedAt).toLocaleString("ko-KR", dateOptions)
+                        : "-"}
+                    </td>
+                  </tr>
+                )
+              )}
+            </TbodyStyled>
+          )}
       </LogTableStyled>
-      {itemLog === STATUS_400_BAD_REQUEST && (
-        <EmptyLogStyled>아이템 사용기록이 없습니다.</EmptyLogStyled>
+      {(itemLog === STATUS_400_BAD_REQUEST ||
+        itemLog.totalLength === undefined) && (
+        <EmptyLogStyled>아이템 내역이 없습니다.</EmptyLogStyled>
       )}
     </LogTableWrapperstyled>
   );
