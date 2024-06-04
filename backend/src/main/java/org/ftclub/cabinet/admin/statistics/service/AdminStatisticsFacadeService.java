@@ -147,7 +147,7 @@ public class AdminStatisticsFacadeService {
 	public CoinCollectStatisticsDto getCoinCollectCountByMonth(Integer year, Integer month) {
 		Long itemId = itemQueryService.getBySku(COIN_COLLECT).getId();
 		List<ItemHistory> coinCollectedInfoByMonth =
-				itemHistoryQueryService.getCoinCollectedInfoByMonth(itemId, year, month);
+				itemHistoryQueryService.findCoinCollectedInfoByMonth(itemId, year, month);
 		Map<Long, Long> coinCollectCountByUser = coinCollectedInfoByMonth.stream()
 				.collect(groupingBy(ItemHistory::getUserId, Collectors.counting()));
 
@@ -196,7 +196,7 @@ public class AdminStatisticsFacadeService {
 				});
 
 		List<ItemHistory> usedCoins =
-				itemHistoryQueryService.getUsedCoinHistoryBetween(startDate,
+				itemHistoryQueryService.findUsedCoinHistoryBetween(startDate,
 						endDate);
 
 		usedCoins.forEach(

@@ -52,7 +52,7 @@ public class AdminItemFacadeService {
 	@Transactional(readOnly = true)
 	public AdminItemHistoryPaginationDto getUserItemHistories(Long userId, Pageable pageable) {
 		Page<ItemHistory> itemHistoryWithItem =
-				itemHistoryQueryService.getItemHistoriesByUserIdWithItem(userId, pageable);
+				itemHistoryQueryService.findItemHistoriesByUserIdWithItem(userId, pageable);
 
 		List<AdminItemHistoryDto> result = itemHistoryWithItem.stream()
 				.map(ih -> itemMapper.toAdminItemHistoryDto(ih, ih.getItem()))
@@ -66,7 +66,7 @@ public class AdminItemFacadeService {
 		List<Item> itemsOnSale = itemQueryService.getUseItemIds();
 		List<ItemPurchaseCountDto> result = itemsOnSale.stream()
 				.map(item -> {
-					int userCount = itemHistoryQueryService.getPurchaseCountByItemId(item.getId());
+					int userCount = itemHistoryQueryService.findPurchaseCountByItemId(item.getId());
 					return itemMapper.toItemPurchaseCountDto(item, userCount);
 				}).collect(Collectors.toList());
 
