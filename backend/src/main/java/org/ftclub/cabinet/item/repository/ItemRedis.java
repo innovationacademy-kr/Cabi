@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Logging(level = LogLevel.DEBUG)
 public class ItemRedis {
 
-	private static final String COIN_COUNT_KEY_SUFFIX = ":coinCount";
+	private static final String COIN_COUNT_KEY_SUFFIX = ":coinAmount";
 	private static final String COIN_COLLECT_KEY_SUFFIX = ":coinCollect";
 	private static final String COIN_COLLECT_COUNT_KEY_SUFFIX = ":coinCollectCount";
 	private static final String TOTAL_COIN_SUPPLY_KEY_SUFFIX = "totalCoinSupply";
