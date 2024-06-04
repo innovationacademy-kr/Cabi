@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import AdminItemUsageLog from "@/Cabinet/components/ItemLog/AdminItemUsageLog";
 import { ItemLogResponseType } from "@/Cabinet/types/dto/admin.dto";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const AdminItemUsageLogContainer = () => {
   const { closeStore } = useMenu();
