@@ -64,12 +64,11 @@ const StoreInfo = () => {
   };
 
   useEffect(() => {
-    console.log("monthlyCoinCount", monthlyCoinCount);
     if (monthlyCoinCount === 20 || todayCoinCollection === true) {
       setIsLoading(true);
     }
     tryCoinCheckGet();
-  }, [todayCoinCollection]);
+  }, [todayCoinCollection, monthlyCoinCount]);
 
   return (
     <WrapperStyled id="storeInfo">
