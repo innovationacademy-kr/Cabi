@@ -187,8 +187,8 @@ public class AdminStatisticsFacadeService {
 	public CoinStaticsDto getCoinStaticsDto(LocalDate startDate, LocalDate endDate) {
 		Map<LocalDate, Long> issuedAmount = new LinkedHashMap<>();
 		Map<LocalDate, Long> usedAmount = new LinkedHashMap<>();
-		long dayDifference = ChronoUnit.DAYS.between(startDate, endDate) + 1;
-		IntStream.range(0, (int) dayDifference)
+		int dayDifference = (int) ChronoUnit.DAYS.between(startDate, endDate) + 1;
+		IntStream.range(0, dayDifference)
 				.mapToObj(startDate::plusDays)
 				.forEach(date -> {
 					issuedAmount.put(date, 0L);
@@ -196,20 +196,18 @@ public class AdminStatisticsFacadeService {
 				});
 
 		List<ItemHistory> usedCoins =
-				itemHistoryQueryService.findUsedCoinHistoryBetween(startDate,
-						endDate);
+				itemHistoryQueryService.findUsedCoinHistoryBetween(startDate, endDate);
 
-		usedCoins.forEach(
-				ih -> {
-					Long price = ih.getItem().getPrice();
-					LocalDate date = ih.getUsedAt().toLocalDate();
+		usedCoins.forEach(ih -> {
+			Long price = ih.getItem().getPrice();
+			LocalDate date = ih.getPurchaseAt().toLocalDate();
 
-					if (price > 0) {
-						issuedAmount.put(date, issuedAmount.get(date) + price);
-					} else {
-						usedAmount.put(date, usedAmount.get(date) + price);
-					}
-				});
+			if (price > 0) {
+				issuedAmount.put(date, issuedAmount.get(date) + price);
+			} else {
+				usedAmount.put(date, usedAmount.get(date) - price);
+			}
+		});
 		List<CoinAmountDto> issueCoin = convertMapToList(issuedAmount);
 		List<CoinAmountDto> usedCoin = convertMapToList(usedAmount);
 
