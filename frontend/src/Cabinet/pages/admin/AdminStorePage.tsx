@@ -5,7 +5,7 @@ import ItemBarChart, {
   IItemUseCountDto,
 } from "@/Cabinet/components/AdminInfo/Chart/ItemBarChart";
 import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
-import StoreHalfPieChart from "@/Cabinet/components/AdminInfo/Chart/StoreHalfPieChart";
+import StoreHorizontalBarChart from "@/Cabinet/components/AdminInfo/Chart/StoreHorizontalBarChart";
 import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
@@ -209,36 +209,35 @@ const AdminStorePage = () => {
       </ContainerStyled>
       <ContainerStyled>
         <CoinCollectTitleWrapperStyled>
-          <MoveSectionButtonStyled
-            src={LeftSectionButton}
-            onClick={() => moveMonth("left")}
-            className="cabiButton"
-          />
-          <MoveSectionButtonStyled
-            src={LeftSectionButton}
-            onClick={() => moveMonth("right")}
-            arrowReversed={true}
-            className="cabiButton"
-          />
-
           <H2styled>동전 줍기 통계</H2styled>
-          <h3>
-            {coinCollectDate.getFullYear() +
-              "년 " +
-              (coinCollectDate.getMonth() + 1).toString().padStart(2, "0") +
-              "월"}
-          </h3>
+          <div>
+            <MoveSectionButtonStyled
+              src={LeftSectionButton}
+              onClick={() => moveMonth("left")}
+              className="cabiButton"
+            />
+            <span>
+              {coinCollectDate.getFullYear() +
+                "년 " +
+                (coinCollectDate.getMonth() + 1).toString().padStart(2, "0") +
+                "월"}
+            </span>
+            <MoveSectionButtonStyled
+              src={LeftSectionButton}
+              onClick={() => moveMonth("right")}
+              arrowReversed={true}
+              className="cabiButton"
+            />
+          </div>
         </CoinCollectTitleWrapperStyled>
-        <StoreHalfPieChart data={coinCollectData} />
+        <StoreHorizontalBarChart data={coinCollectData} />
       </ContainerStyled>
       <ContainerStyled>
         <H2styled>전체 재화 현황</H2styled>
         <PieChartCoin data={totalCoinData} />
       </ContainerStyled>
       <ContainerStyled>
-        <CoinCollectTitleWrapperStyled>
-          <H2styled>아이템 통계</H2styled>
-        </CoinCollectTitleWrapperStyled>
+        <H2styled>아이템 통계</H2styled>
         <ItemBarChart data={totalItemData} />
       </ContainerStyled>
     </AdminHomeStyled>
@@ -347,11 +346,24 @@ const H2styled = styled.h2`
 `;
 
 const CoinCollectTitleWrapperStyled = styled.div`
-  & > h3 {
-    text-align: center;
-    color: var(--ref-gray-400);
-    font-weight: bold;
+  height: 70px;
+
+  & > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 10px;
+  }
+
+  & > div > span {
+    color: var(--ref-gray-400);
+    height: 20px;
+    line-height: 18px;
+  }
+
+  & > div > img {
+    height: 20px;
+    width: 20px;
   }
 `;
 
