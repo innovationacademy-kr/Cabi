@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v5/admin/statistics")
 @RequiredArgsConstructor
 @Logging
-public class AdminStatisticsControllerV5 {
+public class AdminItemStatisticsController {
 
 	private final AdminStatisticsFacadeService adminStatisticsFacadeService;
 	private final AdminItemFacadeService adminItemFacadeService;

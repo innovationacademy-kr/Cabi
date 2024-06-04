@@ -68,7 +68,7 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 			+ "AND YEAR(ih.purchaseAt) = :year "
 			+ "AND MONTH(ih.purchaseAt) = :month "
 	)
-	List<ItemHistory> findCoinCollectInfoByMonth(@Param("itemId") Long itemId,
+	List<ItemHistory> findCoinCollectInfoByIdAtYearAndMonth(@Param("itemId") Long itemId,
 			@Param("year") Integer year, @Param("month") Integer month);
 
 	@Query("SELECT COUNT(ih) "

@@ -50,6 +50,6 @@ public class ItemHistoryQueryService {
 
 	public List<ItemHistory> getCoinCollectedInfoByMonth(Long itemId, Integer year,
 			Integer month) {
-		return itemHistoryRepository.findCoinCollectInfoByMonth(itemId, year, month);
+		return itemHistoryRepository.findCoinCollectInfoByIdAtYearAndMonth(itemId, year, month);
 	}
 }
