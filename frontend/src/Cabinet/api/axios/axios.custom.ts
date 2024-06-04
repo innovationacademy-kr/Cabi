@@ -926,3 +926,19 @@ export const axiosItemAssignList = async (
     throw error;
   }
 };
+
+const axiosGetUserItemsURL = "/v5/admin/items/users/";
+export const axiosGetUserItems = async (
+  userId: number,
+  page: number,
+  size: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(`${axiosGetUserItemsURL}${userId}`, {
+      params: { page, size },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
