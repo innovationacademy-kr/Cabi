@@ -141,7 +141,9 @@ const DropdownItemStyled = styled.div<{
   text-align: start;
   padding-left: 20px;
   font-size: 1.125rem;
-  color: ${({ isSelected, isDisabled }) => // 비활성화 된 항목은 --capsule-btn-border-color 로 띄우고 클릭 못하게
+  color: ${(
+    { isSelected, isDisabled } // 비활성화 된 항목은 --capsule-btn-border-color 로 띄우고 클릭 못하게
+  ) =>
     isDisabled
       ? "var(--capsule-btn-border-color)"
       : isSelected

@@ -1,29 +1,34 @@
 // import { ResponsiveLine } from "@nivo/line";
 import { ResponsiveLine } from "@nivo/line";
 import styled from "styled-components";
+import {
+  ICoinAmountDto,
+  ICoinStatisticsDto,
+} from "@/Cabinet/pages/admin/AdminStorePage";
 import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
 
-interface CoinAmountDto {
-  date: Date;
-  amount: number;
-}
+// interface ICoinAmountDto {
+//   date: Date;
+//   amount: number;
+// }
 
 // 가짜 데이터를 생성하는 함수
 function generateDummyData(
   startDate: string,
   endDate: string
+  // totalCoinUseData : ICoinStatisticsDto[];
 ): {
-  issueCoin: CoinAmountDto[];
-  unusedCoin: CoinAmountDto[];
-  usedCoin: CoinAmountDto[];
+  issueCoin: ICoinAmountDto[];
+  unusedCoin: ICoinAmountDto[];
+  usedCoin: ICoinAmountDto[];
 } {
   const start = new Date(startDate);
   const end = new Date(endDate);
   const oneDay = 24 * 60 * 60 * 1000; // 하루의 밀리초
   const dummyData = {
-    issueCoin: [] as CoinAmountDto[],
-    unusedCoin: [] as CoinAmountDto[],
-    usedCoin: [] as CoinAmountDto[],
+    issueCoin: [] as ICoinAmountDto[],
+    unusedCoin: [] as ICoinAmountDto[],
+    usedCoin: [] as ICoinAmountDto[],
   };
   for (
     let date = start;
@@ -32,15 +37,15 @@ function generateDummyData(
   ) {
     // 예시 데이터 생성 로직
     dummyData.issueCoin.push({
-      date: new Date(date),
+      date: new Date(date).toISOString().split("T")[0],
       amount: Math.floor(Math.random() * 2000) + 1000,
     });
     dummyData.unusedCoin.push({
-      date: new Date(date),
+      date: new Date(date).toISOString().split("T")[0],
       amount: Math.floor(Math.random() * 500) + 500,
     });
     dummyData.usedCoin.push({
-      date: new Date(date),
+      date: new Date(date).toISOString().split("T")[0],
       amount: Math.floor(Math.random() * 700) + 300,
     });
   }
@@ -50,54 +55,59 @@ function generateDummyData(
 const CoinFlow = ({
   toggleType,
   coinToggleType,
+  totalCoinUseData,
 }: {
   toggleType: CoinDateType;
   coinToggleType: CoinFlowType;
+  totalCoinUseData: ICoinStatisticsDto | undefined;
 }) => {
-  const calculateEndDate = (startDate: Date, type: CoinDateType) => {
-    switch (type) {
-      case CoinDateType.DAY:
-        return new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000); // 7일 뒤
-      case CoinDateType.WEEK:
-        return new Date(startDate.getTime() + 4 * 7 * 24 * 60 * 60 * 1000); // 4주 뒤
-      case CoinDateType.MONTH:
-        const endDate = new Date(startDate);
-        endDate.setMonth(startDate.getMonth() + 4); // 4개월 뒤
-        return endDate;
-      default:
-        return startDate;
-    }
-  };
-
+  // const calculateEndDate = (startDate: Date, type: CoinDateType) => {
+  //   switch (type) {
+  //     case CoinDateType.DAY:
+  //       return new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000); // 7일 뒤
+  //     case CoinDateType.WEEK:
+  //       return new Date(startDate.getTime() + 4 * 7 * 24 * 60 * 60 * 1000); // 4주 뒤
+  //     case CoinDateType.MONTH:
+  //       const endDate = new Date(startDate);
+  //       endDate.setMonth(startDate.getMonth() + 4); // 4개월 뒤
+  //       return endDate;
+  //     default:
+  //       return startDate;
+  //   }
+  // };
   // 현재 날짜
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // 현재 날짜의 시간을 00:00:00으로 설정
-  const endDate = calculateEndDate(today, toggleType);
-  const dummyData = generateDummyData(
-    today.toISOString().split("T")[0], // 형식 YYYY-MM-DD
-    endDate.toISOString().split("T")[0] // 형식 YYYY-MM-DD
-  );
+  // const today = new Date();
+  // today.setHours(0, 0, 0, 0); // 현재 날짜의 시간을 00:00:00으로 설정
+  // const endDate = calculateEndDate(today, toggleType);
+  // const dummyData = generateDummyData(
+  //   today.toISOString().split("T")[0], // 형식 YYYY-MM-DD
+  //   endDate.toISOString().split("T")[0] // 형식 YYYY-MM-DD
+  // );
+  console.log("totalCoinUseData: ", totalCoinUseData);
   const formattedData = [
     {
       id: "issueCoin",
-      data: dummyData.issueCoin.map((item) => ({
-        x: item.date.toISOString().split("T")[0],
-        y: item.amount,
-      })),
+      data:
+        totalCoinUseData?.issueCoin?.map((item) => ({
+          x: item.date,
+          y: item.amount,
+        })) || [],
     },
     {
       id: "unusedCoin",
-      data: dummyData.unusedCoin.map((item) => ({
-        x: item.date.toISOString().split("T")[0],
-        y: item.amount,
-      })),
+      data:
+        totalCoinUseData?.unusedCoin?.map((item) => ({
+          x: item.date,
+          y: item.amount,
+        })) || [],
     },
     {
       id: "usedCoin",
-      data: dummyData.usedCoin.map((item) => ({
-        x: item.date.toISOString().split("T")[0],
-        y: item.amount,
-      })),
+      data:
+        totalCoinUseData?.usedCoin?.map((item) => ({
+          x: item.date,
+          y: item.amount,
+        })) || [],
     },
   ];
 
@@ -105,6 +115,7 @@ const CoinFlow = ({
   const filteredData = formattedData.filter(
     (data) => data.id === coinToggleType
   );
+
   return (
     <>
       <LineChartStyled>

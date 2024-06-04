@@ -11,12 +11,27 @@ import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
 import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
-import { axiosCoinCollectStatistics } from "@/Cabinet/api/axios/axios.custom";
+import {
+  axiosCoinCollectStatistics,
+  axiosCoinUseStatistics,
+} from "@/Cabinet/api/axios/axios.custom";
 import { axiosStatisticsItem } from "@/Cabinet/api/axios/axios.custom";
 
 export interface ICoinCollectInfo {
   coinCount: number;
   userCount: number;
+}
+
+export interface ICoinAmountDto {
+  // date: Date;
+  date: string;
+  amount: number;
+}
+
+export interface ICoinStatisticsDto {
+  issueCoin: ICoinAmountDto[];
+  unusedCoin: ICoinAmountDto[];
+  usedCoin: ICoinAmountDto[];
 }
 
 const mockData: ICoinCollectInfo[] = [
@@ -70,6 +85,9 @@ const AdminStorePage = () => {
     []
   );
   const [totalCoinData, setTotalCoinData] = useState<ITotalCoinInfo[]>([]);
+  const [totalCoinUseData, setTotalCoinUseData] = useState<
+    ICoinStatisticsDto | undefined
+  >();
   const [totalItemData, setTotalItemData] = useState<IitemUseCountDto[]>([]);
 
   const dataToggleList: toggleItem[] = [
@@ -110,13 +128,27 @@ const AdminStorePage = () => {
     try {
       // const response = await axiosStatisticsTotalItemUse();
       // setTotalItemData(response.data.coinCollectStatistics);
-      setTotalItemData(itemCount);
+      // setTotalItemData(itemCount);
+    } catch (error) {
+      console.error("Err or getting total coin data:", error);
+    }
+  };
+
+  const getTotalCoinUseData = async () => {
+    try {
+      const response = await axiosCoinUseStatistics(
+        new Date("2024 06 01"),
+        new Date("2024 06 07")
+      );
+      setTotalCoinUseData(response.data);
+      // setTotalItemData(itemCount);
     } catch (error) {
       console.error("Error getting total coin data:", error);
     }
   };
 
   useEffect(() => {
+    getTotalCoinUseData();
     getCoinCollectData();
     getTotalCoinData();
     getTotalItemData();
@@ -140,7 +172,11 @@ const AdminStorePage = () => {
             />
           </ToggleContainer>
         </HeaderStyled>
-        <CoinFlow toggleType={toggleType} coinToggleType={coinToggleType} />
+        <CoinFlow
+          toggleType={toggleType}
+          coinToggleType={coinToggleType}
+          totalCoinUseData={totalCoinUseData}
+        />
       </ContainerStyled>
       <ContainerStyled>
         <CoinCollectTitleWrapperStyled>
