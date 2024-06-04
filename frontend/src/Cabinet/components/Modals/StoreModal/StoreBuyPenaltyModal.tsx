@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
-import Dropdown from "@/Cabinet/components/Common/Dropdown";
-import { ItemTypePenaltyMap } from "@/Cabinet/assets/data/maps";
+import Dropdown, { IDropdown } from "@/Cabinet/components/Common/Dropdown";
 import { IItemTimeRemaining, IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { StorePenaltyType } from "@/Cabinet/types/enum/store.enum";
@@ -13,7 +12,6 @@ import {
   axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
 import { formatDate, formatDateTime } from "@/Cabinet/utils/dateUtils";
-import { IInventoryInfo } from "../../Store/Inventory/Inventory";
 import Modal, { IModalContents } from "../Modal";
 import ModalPortal from "../ModalPortal";
 import {
@@ -27,9 +25,9 @@ interface PenaltyModalProps {
 }
 
 const STATUS_OPTIONS = [
-  { name: "3일", value: StorePenaltyType.PENALTY_3 },
-  { name: "7일", value: StorePenaltyType.PENALTY_7 },
-  { name: "31일", value: StorePenaltyType.PENALTY_31 },
+  { name: "3일", value: StorePenaltyType.PENALTY_3, isDisabled: false },
+  { name: "7일", value: StorePenaltyType.PENALTY_7, isDisabled: false },
+  { name: "31일", value: StorePenaltyType.PENALTY_31, isDisabled: false },
 ];
 
 const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
@@ -45,45 +43,54 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const setMyInfo = useSetRecoilState<UserDto>(userState);
-  const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
+  const [statusOptions, setStatusOptions] = useState(STATUS_OPTIONS);
+  const [isPenaltyItem, setIsPenaltyItem] = useState<boolean>(false);
+  const [enabledOptions, setEnabledOptions] = useState(
+    STATUS_OPTIONS.find((option) => !option.isDisabled)
+  );
 
   const handleDropdownChange = (option: StorePenaltyType) => {
     setSelectedOption(option);
   };
 
-  const STATUS_DROP_DOWN_PROPS = {
-    options: STATUS_OPTIONS,
-    defaultValue: STATUS_OPTIONS[0].name,
+  useEffect(() => {
+    const enabledOption = statusOptions.find((option) => !option.isDisabled);
+    setEnabledOptions(enabledOption);
+    setSelectedOption(
+      enabledOption ? enabledOption.value : StorePenaltyType.PENALTY_3
+    );
+  }, [statusOptions]);
+
+  const STATUS_DROP_DOWN_PROPS: IDropdown = {
+    options: statusOptions,
+    defaultValue: enabledOptions ? enabledOptions.name : "",
     onChangeValue: handleDropdownChange,
   };
 
   const tryGetPenaltyItem = async () => {
     try {
       const { data } = await axiosMyItems();
-      setMyItems(data);
-      const foundItem = data.penaltyItems.find(
-        (item: IStoreItem) =>
-          item.itemDetails === ItemTypePenaltyMap[selectedOption]
+      const penaltyTypes = data.penaltyItems.map(
+        (item: IStoreItem) => item.itemSku
       );
-      if (foundItem) return true;
-      else return false;
+      setStatusOptions((prevOptions) =>
+        prevOptions.map((option) => ({
+          ...option,
+          isDisabled: !penaltyTypes.includes(option.value),
+        }))
+      );
+      if (data.penaltyItems.length == 0) {
+        setShowResponseModal(true);
+        setHasErrorOnResponse(true);
+        setModalTitle("페널티 감면권이 없습니다");
+        setModalContent("페널티 감면권은 까비상점에서 구매하실 수 있습니다.");
+      } else {
+        setIsPenaltyItem(true);
+      }
     } catch (error) {
       throw error;
     }
   };
-
-  // const getMyItems = async () => {
-  //   try {
-  //     const response = await axiosMyItems();
-  //     setMyItems(response.data);
-  //   } catch (error: any) {
-  //     console.error("Error getting inventory:", error);
-  //   }
-  // };
-
-  // const findMyExtension = (period: string) => {
-  //   return !myItems?.penaltyItems.some((item) => item.itemDetails === period);
-  // };
 
   const tryPenaltyItemUse = async (sku: StorePenaltyType) => {
     try {
@@ -110,13 +117,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   const HandlePenaltyItemUse = async (sku: StorePenaltyType) => {
     setIsLoading(true);
     try {
-      const hasPenaltyItem = await tryGetPenaltyItem();
-      if (hasPenaltyItem === false) {
-        setModalTitle("페널티 감면권이 없습니다");
-        setModalContent("페널티 감면권은 까비상점에서 구매하실 수 있습니다.");
-      } else {
-        await tryPenaltyItemUse(sku);
-      }
+      await tryPenaltyItemUse(sku);
     } catch (error: any) {
       setModalTitle(error.response);
       setHasErrorOnResponse(true);
@@ -125,6 +126,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
       setShowResponseModal(true);
     }
   };
+
   useEffect(() => {
     tryGetPenaltyItem();
   }, []);
@@ -167,7 +169,9 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
 
   return (
     <ModalPortal>
-      {!showResponseModal && <Modal modalContents={modalContents} />}
+      {isPenaltyItem && !showResponseModal && (
+        <Modal modalContents={modalContents} />
+      )}
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
