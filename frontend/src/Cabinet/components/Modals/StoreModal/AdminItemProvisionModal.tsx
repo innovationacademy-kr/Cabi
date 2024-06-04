@@ -38,7 +38,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   const HandleItemProvisionBtn = async () => {
     setIsLoading(true);
     try {
-      await axiosItemAssign(selectedItemSku, targetUserInfo.userId!);
+      await axiosItemAssign(selectedItemSku, [targetUserInfo.userId!]);
     } catch (error: any) {
       setHasErrorOnResponse(true);
       console.log("error : ", error);
