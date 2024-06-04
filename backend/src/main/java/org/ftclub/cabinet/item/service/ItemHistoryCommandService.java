@@ -17,7 +17,7 @@ public class ItemHistoryCommandService {
 
 	private final ItemHistoryRepository itemHistoryRepository;
 
-	public void purchaseItem(Long userId, Long itemId) {
+	public void createItemHistory(Long userId, Long itemId) {
 		ItemHistory itemHistory = ItemHistory.of(userId, itemId, null);
 		itemHistoryRepository.save(itemHistory);
 	}
