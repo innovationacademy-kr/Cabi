@@ -12,6 +12,25 @@ interface ITransformedItem {
   [key: string]: number | string;
 }
 
+
+/*
+    if (existingItem) {
+      existingItem[`${itemName}-${itemDetails}`] = userCount;
+    } else {
+      const newItem: ITransformedItem = {
+        item: itemName,
+      };
+
+      if (itemName === itemDetails) {
+        newItem[itemDetails] = userCount;
+      } else {
+        newItem[`${itemName}-${itemDetails}`] = userCount;
+      }
+
+      transformedData.push(newItem);
+    }
+  });
+*/
 const transformData = (itemArr: IItemUseCountDto[]): ITransformedItem[] => {
   const transformedData: ITransformedItem[] = [];
 
@@ -22,17 +41,45 @@ const transformData = (itemArr: IItemUseCountDto[]): ITransformedItem[] => {
     );
 
     if (existingItem) {
-      existingItem[itemDetails] = userCount;
+      existingItem[`${itemName}-${itemDetails}`] = userCount;
     } else {
       const newItem: ITransformedItem = {
         item: itemName,
-        [itemDetails]: userCount,
       };
+
+      if (itemName === itemDetails) {
+        newItem[itemDetails] = userCount;
+      } else {
+        newItem[`${itemName}-${itemDetails}`] = userCount;
+      }
+
       transformedData.push(newItem);
     }
   });
+  console.log(transformedData);
   return transformedData;
 };
+// const transformData = (itemArr: IItemUseCountDto[]): ITransformedItem[] => {
+//   const transformedData: ITransformedItem[] = [];
+
+//   itemArr.forEach((item) => {
+//     const { itemName, itemDetails, userCount } = item;
+//     const existingItem = transformedData.find(
+//       (transformed) => transformed.item === itemName
+//     );
+
+//     if (existingItem) {
+//       existingItem[`${itemName}-${itemDetails}`] = userCount;
+//     } else {
+//       const newItem: ITransformedItem = {
+//         item: itemName,
+//         [itemDetails]: userCount,
+//       };
+//       transformedData.push(newItem);
+//     }
+//   });
+//   return transformedData;
+// };
 
 const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => (
   <ItemBarChartStyled>
@@ -51,7 +98,7 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => (
         },
       }}
       data={transformData(data)}
-      keys={["이사권", "알림 등록권", "31일", "15일", "7일", "3일"]}
+      keys={["이사권", "알림 등록권", "연장권-31일", "연장권-15일", "연장권-3일","페널티 감면권-31일","페널티 감면권-7일", "페널티 감면권-3일"]}
       indexBy="item"
       margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
       padding={0.2}
@@ -60,12 +107,14 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => (
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
       colors={[
-        "var(--sys-main-color)",
-        "var(--sys-main-color)",
-        "var(--sys-main-color)",
-        "var(--ref-purple-400)",
-        "var(--ref-purple-400)",
-        "var(--ref-purple-200)",
+        "var(--custom-green-200)",
+        "var(--custom-yellow)",
+        "var(--custom-blue-300)",
+        "var(--custom-blue-200)",
+        "var(--custom-blue-100)",
+        "var(--custom-pink-300)",
+        "var(--custom-pink-200)",
+        "var(--custom-pink-100)",
       ]}
       defs={[]}
       fill={[]}

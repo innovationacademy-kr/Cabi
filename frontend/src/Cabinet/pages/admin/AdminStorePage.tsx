@@ -56,17 +56,17 @@ const mockData: ICoinCollectInfo[] = [
 // TODO : 작은 횟수부터 큰 횟수까지 차례대로 보내주는지 확인
 
 // 아이템 통계 그래프 확인용
-// const itemList: IItemUseCountDto[] = [
-//   { itemName: "연장권", itemDetails: "출석 연장권 보상", userCount: 38 },
-//   { itemName: "연장권", itemDetails: "31일", userCount: 123 },
-//   { itemName: "연장권", itemDetails: "15일", userCount: 22 },
-//   { itemName: "연장권", itemDetails: "3일", userCount: 30 },
-//   { itemName: "페널티 감면권", itemDetails: "31일", userCount: 10 },
-//   { itemName: "페널티 감면권", itemDetails: "7일", userCount: 30 },
-//   { itemName: "페널티 감면권", itemDetails: "3일", userCount: 10 },
-//   { itemName: "이사권", itemDetails: "이사권", userCount: 20 },
-//   { itemName: "알림 등록권", itemDetails: "알림 등록권", userCount: 40 },
-// ];
+const itemList: IItemUseCountDto[] = [
+  { itemName: "연장권", itemDetails: "출석 연장권 보상", userCount: 38 },
+  { itemName: "연장권", itemDetails: "31일", userCount: 83 },
+  { itemName: "연장권", itemDetails: "15일", userCount: 22 },
+  { itemName: "연장권", itemDetails: "3일", userCount: 30 },
+  { itemName: "페널티 감면권", itemDetails: "31일", userCount: 10 },
+  { itemName: "페널티 감면권", itemDetails: "7일", userCount: 30 },
+  { itemName: "페널티 감면권", itemDetails: "3일", userCount: 80 },
+  { itemName: "이사권", itemDetails: "이사권", userCount: 60 },
+  { itemName: "알림 등록권", itemDetails: "알림 등록권", userCount: 100 },
+];
 export interface ITotalCoinInfo {
   used: number;
   unused: number;
@@ -131,7 +131,7 @@ const AdminStorePage = () => {
     try {
       const response = await axiosStatisticsTotalItemUse();
       setTotalItemData(response.data.items);
-      // setTotalItemData(itemCount);
+      setTotalItemData(itemList);
     } catch (error) {
       console.error("Err or getting total coin data:", error);
     }
