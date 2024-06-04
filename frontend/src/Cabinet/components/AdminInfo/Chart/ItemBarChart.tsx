@@ -37,10 +37,9 @@ const transformData = (itemArr: IItemUseCountDto[]): ITransformedItem[] => {
       transformedData.push(newItem);
     }
   });
-  console.log(transformedData);
+
   return transformedData;
 };
-
 
 const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => (
   <ItemBarChartStyled>
@@ -59,7 +58,16 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => (
         },
       }}
       data={transformData(data)}
-      keys={["이사권", "알림 등록권", "연장권-31일", "연장권-15일", "연장권-3일","페널티 감면권-31일","페널티 감면권-7일", "페널티 감면권-3일"]}
+      keys={[
+        "이사권",
+        "알림 등록권",
+        "연장권-31일",
+        "연장권-15일",
+        "연장권-3일",
+        "페널티 감면권-31일",
+        "페널티 감면권-7일",
+        "페널티 감면권-3일",
+      ]}
       indexBy="item"
       margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
       padding={0.2}
@@ -68,7 +76,6 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => (
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
       colors={[
-
         "var(--sys-main-color)",
         "var(--sys-main-color)",
         "var(--sys-main-color)",
@@ -77,7 +84,6 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => (
         "var(--sys-main-color)",
         "var(--ref-purple-300)",
         "var(--ref-purple-200)",
-        
         // "var(--custom-green-200)",
         // "var(--custom-yellow)",
         // "var(--custom-blue-300)",

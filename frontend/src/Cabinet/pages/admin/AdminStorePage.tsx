@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinFlow";
 import ItemBarChart, {
@@ -10,6 +9,8 @@ import StoreHalfPieChart from "@/Cabinet/components/AdminInfo/Chart/StoreHalfPie
 import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
+import { MoveSectionButtonStyled } from "@/Cabinet/components/SectionPagination/SectionPagination";
+import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
 import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
 import {
   axiosCoinCollectStatistics,
@@ -34,26 +35,6 @@ export interface ICoinStatisticsDto {
   // unusedCoin: ICoinAmountDto[];
   usedCoin: ICoinAmountDto[];
 }
-
-const mockData: ICoinCollectInfo[] = [
-  {
-    coinCount: 5,
-    userCount: 10,
-  },
-  {
-    coinCount: 10,
-    userCount: 20,
-  },
-  {
-    coinCount: 15,
-    userCount: 30,
-  },
-  {
-    coinCount: 20,
-    userCount: 40,
-  },
-];
-// TODO : 작은 횟수부터 큰 횟수까지 차례대로 보내주는지 확인
 
 // 아이템 통계 그래프 확인용
 const itemList: IItemUseCountDto[] = [
@@ -92,6 +73,7 @@ const AdminStorePage = () => {
     ICoinStatisticsDto | undefined
   >();
   const [totalItemData, setTotalItemData] = useState<IItemUseCountDto[]>([]);
+  const [coinCollectDate, setCoinCollectDate] = useState(new Date());
 
   const dataToggleList: toggleItem[] = [
     { name: "발행 코인", key: CoinFlowType.ISSUE },
@@ -106,11 +88,11 @@ const AdminStorePage = () => {
 
   const getCoinCollectData = async () => {
     try {
-      const date = new Date();
-      // TODO
-      // const response = await axiosCoinCollectStatistics(date.getMonth() + 1);
-      // setCoinCollectData(response.data.coinCollectStatistics);
-      setCoinCollectData(mockData);
+      const response = await axiosCoinCollectStatistics(
+        coinCollectDate.getFullYear(),
+        coinCollectDate.getMonth() + 1
+      );
+      setCoinCollectData(response.data.coinCollectStatistics);
     } catch (error) {
       console.error("Error getting coin collect data:", error);
     }
@@ -145,6 +127,28 @@ const AdminStorePage = () => {
     }
   };
 
+  const moveMonth = (direction: string) => {
+    let currentDateYear = coinCollectDate.getFullYear();
+    let currentDateMonth = coinCollectDate.getMonth();
+
+    if (direction === "left") {
+      if (currentDateMonth === 1) {
+        currentDateYear -= 1;
+        currentDateMonth = 12;
+      } else {
+        currentDateMonth -= 1;
+      }
+    } else {
+      if (currentDateMonth === 12) {
+        currentDateYear += 1;
+        currentDateMonth = 1;
+      } else {
+        currentDateMonth += 1;
+      }
+    }
+    setCoinCollectDate(new Date(currentDateYear, currentDateMonth));
+  };
+
   useEffect(() => {
     const startDate = new Date();
     let endDate;
@@ -170,12 +174,11 @@ const AdminStorePage = () => {
   }, [toggleType]);
 
   useEffect(() => {
-    console.log("toggleType", toggleType);
-  }, [toggleType]);
+    getCoinCollectData();
+  }, [coinCollectDate]);
 
   useEffect(() => {
     // getTotalCoinUseData();
-    getCoinCollectData();
     getTotalCoinData();
     getTotalItemData();
   }, []);
@@ -206,8 +209,25 @@ const AdminStorePage = () => {
       </ContainerStyled>
       <ContainerStyled>
         <CoinCollectTitleWrapperStyled>
-          <H2styled>코인 통계</H2styled>
-          <h3>5월</h3>
+          <MoveSectionButtonStyled
+            src={LeftSectionButton}
+            onClick={() => moveMonth("left")}
+            className="cabiButton"
+          />
+          <MoveSectionButtonStyled
+            src={LeftSectionButton}
+            onClick={() => moveMonth("right")}
+            arrowReversed={true}
+            className="cabiButton"
+          />
+
+          <H2styled>동전 줍기 통계</H2styled>
+          <h3>
+            {coinCollectDate.getFullYear() +
+              "년 " +
+              (coinCollectDate.getMonth() + 1).toString().padStart(2, "0") +
+              "월"}
+          </h3>
         </CoinCollectTitleWrapperStyled>
         <StoreHalfPieChart data={coinCollectData} />
       </ContainerStyled>

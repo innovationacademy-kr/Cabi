@@ -1,23 +1,44 @@
-import { ResponsivePie } from "@nivo/pie";
+import { ResponsiveBar } from "@nivo/bar";
 import styled from "styled-components";
 import { ICoinCollectInfo } from "@/Cabinet/pages/admin/AdminStorePage";
 
 const convert = (data: ICoinCollectInfo[]) => {
+  let userTotalPerCnt = 0;
   let total = 0;
-  const obj = data.map((cur) => {
-    total += cur.userCount;
-    return { id: cur.coinCount + "회", value: cur.userCount };
+  let ary: any = [];
+  data.forEach((cur) => {
+    userTotalPerCnt += cur.userCount;
+    if (
+      cur.coinCount % 5 === 0 &&
+      cur.coinCount / 5 >= 1 &&
+      cur.coinCount / 5 <= 4
+    ) {
+      total += userTotalPerCnt;
+      ary.push({ cnt: cur.coinCount + "회", "유저 수": userTotalPerCnt });
+      userTotalPerCnt = 0;
+    }
   });
+  ary.push({ cnt: "전체", "유저 수": total });
 
-  obj.push({ id: "전체", value: total });
-  return obj;
+  return ary;
 };
 
 const StoreHalfPieChart = ({ data }: { data: ICoinCollectInfo[] }) => {
   return (
     <HalfPieChartStyled>
-      <ResponsivePie
+      <ResponsiveBar
         data={convert(data)}
+        keys={["유저 수"]}
+        indexBy="cnt"
+        maxValue="auto"
+        borderWidth={2}
+        borderColor={{ from: "color" }}
+        layout="horizontal"
+        animate={true}
+        isInteractive={true}
+        enableGridX={false}
+        enableGridY={false}
+        axisLeft={{ tickSize: 0, tickPadding: 25 }}
         theme={{
           legends: { text: { fontSize: "15px" } },
           labels: { text: { fontSize: "15px" } },
@@ -37,48 +58,31 @@ const StoreHalfPieChart = ({ data }: { data: ICoinCollectInfo[] }) => {
           "var(--ref-purple-650)",
           "var(--ref-purple-690)",
         ]}
-        innerRadius={0.5}
-        padAngle={0.7}
-        cornerRadius={3}
-        activeOuterRadiusOffset={8}
-        borderWidth={1}
-        borderColor={{
-          from: "color",
-          modifiers: [["darker", 0.2]],
-        }}
-        arcLinkLabelsSkipAngle={10}
-        arcLinkLabelsTextColor="var(--pie-chart-label-text-color)"
-        arcLinkLabelsThickness={2}
-        arcLinkLabelsColor={{ from: "color" }}
-        arcLabelsSkipAngle={10}
-        arcLabelsTextColor={"var(--white-text-with-bg-color)"}
-        legends={[
-          {
-            anchor: "bottom",
-            direction: "row",
-            justify: false,
-            translateX: 0,
-            translateY: 30,
-            itemsSpacing: 5,
-            itemWidth: 50,
-            itemHeight: 18,
-            itemTextColor: "var(--gray-line-btn-color)",
-            itemDirection: "top-to-bottom",
-            itemOpacity: 1,
-            symbolSize: 12,
-            symbolShape: "circle",
-            effects: [
-              {
-                on: "hover",
-                style: {
-                  itemTextColor: "var(--normal-text-color)",
-                },
-              },
-            ],
-          },
-        ]}
-        startAngle={-90}
-        endAngle={90}
+        // legends={[
+        //   {
+        //     // anchor: "bottom",
+        //     // direction: "row",
+        //     // justify: false,
+        //     // translateX: 0,
+        //     // translateY: 30,
+        //     // itemsSpacing: 5,
+        //     // itemWidth: 50,
+        //     // itemHeight: 18,
+        //     // itemTextColor: "var(--gray-line-btn-color)",
+        //     // itemDirection: "top-to-bottom",
+        //     // itemOpacity: 1,
+        //     // symbolSize: 12,
+        //     // symbolShape: "circle",
+        //     // effects: [
+        //     //   {
+        //     //     on: "hover",
+        //     //     style: {
+        //     //       itemTextColor: "var(--normal-text-color)",
+        //     //     },
+        //     //   },
+        //     // ],
+        //   },
+        // ]}
       />
     </HalfPieChartStyled>
   );
