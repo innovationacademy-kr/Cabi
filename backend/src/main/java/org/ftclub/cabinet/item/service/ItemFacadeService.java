@@ -8,8 +8,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.domain.AlarmItem;
@@ -196,7 +196,7 @@ public class ItemFacadeService {
 		Long coinCollectionCountInMonth =
 				itemRedisService.getCoinCollectionCountInMonth(userId);
 		if (itemPolicyService.isRewardable(coinCollectionCountInMonth)) {
-			Random random = new Random();
+			ThreadLocalRandom random = ThreadLocalRandom.current();
 			int randomPercentage = random.nextInt(100);
 			Sku coinSku = itemPolicyService.getRewardSku(randomPercentage);
 			Item coinReward = itemQueryService.getBySku(coinSku);
