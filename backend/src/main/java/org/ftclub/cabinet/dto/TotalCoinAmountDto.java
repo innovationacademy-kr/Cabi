@@ -1,12 +1,15 @@
 package org.ftclub.cabinet.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class TotalCoinAmountDto {
 
 	private Long used;
 	private Long unused;
+
+	public TotalCoinAmountDto(Long used, Long unused) {
+		this.used = -1 * used;
+		this.unused = unused;
+	}
 }

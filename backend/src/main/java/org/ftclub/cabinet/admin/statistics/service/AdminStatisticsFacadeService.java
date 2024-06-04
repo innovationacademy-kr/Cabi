@@ -174,7 +174,7 @@ public class AdminStatisticsFacadeService {
 		long totalCoinUsage = itemRedisService.getTotalCoinUsage();
 
 		// 재화 총 사용량, 현재 총 보유량 (총 공급량 - 총 사용량) 반환
-		return new TotalCoinAmountDto(-1 * totalCoinUsage, totalCoinSupply + totalCoinUsage);
+		return new TotalCoinAmountDto(totalCoinUsage, totalCoinSupply + totalCoinUsage);
 	}
 
 	/**
