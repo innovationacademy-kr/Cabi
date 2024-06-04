@@ -56,23 +56,4 @@ public enum Sku {
 		}
 		throw ExceptionStatus.NOT_FOUND_ITEM.asDomainException();
 	}
-
-	public int getCoinReward() {
-		if (this.equals(COIN_COLLECT)) {
-			return 10;
-		}
-		if (this.equals(COIN_REWARD_200)) {
-			return 200;
-		}
-		if (this.equals(COIN_REWARD_500)) {
-			return 500;
-		}
-		if (this.equals(COIN_REWARD_1000)) {
-			return 1000;
-		}
-		if (this.equals(COIN_REWARD_2000)) {
-			return 2000;
-		}
-		throw ExceptionStatus.NOT_FOUND_ITEM.asDomainException();
-	}
 }

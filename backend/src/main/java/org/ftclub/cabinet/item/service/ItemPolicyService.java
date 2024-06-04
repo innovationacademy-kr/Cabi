@@ -27,7 +27,7 @@ public class ItemPolicyService {
 		}
 	}
 
-	public ItemHistory verifyEmptyItems(List<ItemHistory> itemInInventory) {
+	public ItemHistory verifyNotEmptyAndFindOldest(List<ItemHistory> itemInInventory) {
 		return itemInInventory.stream()
 				.min(Comparator.comparing(ItemHistory::getPurchaseAt))
 				.orElseThrow(ExceptionStatus.ITEM_NOT_OWNED::asServiceException);

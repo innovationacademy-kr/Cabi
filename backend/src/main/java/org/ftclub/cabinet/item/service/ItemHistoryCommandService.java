@@ -17,12 +17,12 @@ public class ItemHistoryCommandService {
 
 	private final ItemHistoryRepository itemHistoryRepository;
 
-	public void purchaseItem(Long userId, Long itemId) {
+	public void createItemHistory(Long userId, Long itemId) {
 		ItemHistory itemHistory = ItemHistory.of(userId, itemId, null);
 		itemHistoryRepository.save(itemHistory);
 	}
 
-	public void purchaseItem(List<Long> userIds, Long itemId, LocalDateTime usedAt) {
+	public void createItemHistories(List<Long> userIds, Long itemId, LocalDateTime usedAt) {
 		List<ItemHistory> itemHistories = userIds.stream()
 				.map(userId -> ItemHistory.of(userId, itemId, usedAt))
 				.collect(Collectors.toList());

@@ -46,7 +46,7 @@ public class AdminItemFacadeService {
 		if (item.getPrice() > 0) {
 			now = LocalDateTime.now();
 		}
-		itemHistoryCommandService.purchaseItem(userIds, item.getId(), now);
+		itemHistoryCommandService.createItemHistories(userIds, item.getId(), now);
 	}
 
 	@Transactional(readOnly = true)

@@ -28,12 +28,12 @@ const StoreMainPage = () => {
   const [selectedItem, setSelectedItem] = useState<IItemDetail | null>(null);
   const [items, setItem] = useState([] as IItemDetail[]);
   const [userInfo] = useRecoilState(userState);
+  // const sortedItems = items;
   const sortedItems = sortItems(items);
-
+  // delete sortedItems.
   const checkMyCoin = (item: IItemDetail) => {
     return (
-      userInfo.coins !== null &&
-      userInfo.coins >= item.items[item.items.length - 1].itemPrice * -1
+      userInfo.coins !== null && userInfo.coins >= item.items[0].itemPrice * -1
     );
   };
 
@@ -59,7 +59,6 @@ const StoreMainPage = () => {
     setIsModalOpen(false);
     setSelectedItem(null);
   };
-
   return (
     <WrapperStyled>
       <HeaderStyled>
@@ -67,20 +66,26 @@ const StoreMainPage = () => {
       </HeaderStyled>
       <StoreCoinGridWrapper>
         <StoreCoinPick />
-        {sortedItems.map((item: IItemDetail) => (
-          <StoreItemCard
-            key={item.itemName}
-            item={item}
-            button={{
-              label: "구매하기",
-              onClick: checkMyCoin(item) ? () => buttonClick(item) : () => {},
-              isClickable: checkMyCoin(item),
-              fontColor: checkMyCoin(item)
-                ? "var(--sys-main-color)"
-                : "var(--gray-color)",
-            }}
-          />
-        ))}
+        {sortedItems.map((item: IItemDetail) => {
+          const filteredItems = item.items.filter(
+            // 연장권 배열에 들어있는 출석 연장권 보상 아이템 제거 후 넘기기
+            (innerItem) => innerItem.itemDetails !== "출석 연장권 보상"
+          );
+          return (
+            <StoreItemCard
+              key={item.itemName}
+              item={{ ...item, items: filteredItems }}
+              button={{
+                label: "구매하기",
+                onClick: checkMyCoin(item) ? () => buttonClick(item) : () => {},
+                isClickable: checkMyCoin(item),
+                fontColor: checkMyCoin(item)
+                  ? "var(--sys-main-color)"
+                  : "var(--gray-color)",
+              }}
+            />
+          );
+        })}
       </StoreCoinGridWrapper>
       {selectedItem && (
         <StoreBuyItemModal

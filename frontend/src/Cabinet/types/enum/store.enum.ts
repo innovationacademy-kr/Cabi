@@ -30,7 +30,7 @@ export enum CoinDateType {
 }
 
 export enum CoinFlowType {
-  ISSUE = "issueCoin",
-  UNUSED = "unusedCoin",
+  ISSUE = "issuedCoin",
+  // UNUSED = "unusedCoin",
   USED = "usedCoin",
 }

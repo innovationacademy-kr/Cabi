@@ -45,6 +45,8 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   const setMyInfo = useSetRecoilState<UserDto>(userState);
   const [statusOptions, setStatusOptions] = useState(STATUS_OPTIONS);
   const [isPenaltyItem, setIsPenaltyItem] = useState<boolean>(false);
+  const [urlTitle, setUrlTitle] = useState<string>("");
+  const [url, setUrl] = useState<string>("");
   const [enabledOptions, setEnabledOptions] = useState(
     STATUS_OPTIONS.find((option) => !option.isDisabled)
   );
@@ -84,6 +86,8 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
         setHasErrorOnResponse(true);
         setModalTitle("페널티 감면권이 없습니다");
         setModalContent("페널티 감면권은 까비상점에서 구매하실 수 있습니다.");
+        setUrlTitle("까비상점으로 이동");
+        setUrl("/store");
       } else {
         setIsPenaltyItem(true);
       }
@@ -136,10 +140,12 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     iconType: "CHECK",
     iconScaleEffect: false,
     title: "페널티 감면권 사용 안내",
-    proceedBtnText: "지급하기",
+    proceedBtnText: "사용하기",
     cancelBtnText: "취소",
     closeModal: onClose,
     isLoading: isLoading,
+    // urlTitle: isPenaltyItem ? null : "까비상점으로 이동",
+    // url: isPenaltyItem ? null : "store",
     onClickProceed: async () => {
       HandlePenaltyItemUse(selectedOption);
     },
@@ -177,6 +183,8 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
           <FailResponseModal
             modalTitle={modalTitle}
             modalContents={modalContent}
+            urlTitle={urlTitle}
+            url={url}
             closeModal={onClose}
           />
         ) : (

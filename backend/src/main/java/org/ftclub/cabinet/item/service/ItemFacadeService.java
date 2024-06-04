@@ -188,9 +188,9 @@ public class ItemFacadeService {
 		itemRedisService.collectCoin(userId);
 
 		// DB에 코인 저장
-		int reward = Sku.COIN_COLLECT.getCoinReward();
 		Item coinCollect = itemQueryService.getBySku(Sku.COIN_COLLECT);
-		itemHistoryCommandService.purchaseItem(userId, coinCollect.getId());
+		int reward = (int) (coinCollect.getPrice().longValue());
+		itemHistoryCommandService.createItemHistory(userId, coinCollect.getId());
 
 		// 출석 일자에 따른 랜덤 리워드 지급
 		Long coinCollectionCountInMonth =
@@ -201,8 +201,8 @@ public class ItemFacadeService {
 			Sku coinSku = itemPolicyService.getRewardSku(randomPercentage);
 			Item coinReward = itemQueryService.getBySku(coinSku);
 
-			itemHistoryCommandService.purchaseItem(userId, coinReward.getId());
-			reward += coinSku.getCoinReward();
+			itemHistoryCommandService.createItemHistory(userId, coinReward.getId());
+			reward += coinReward.getPrice();
 		}
 
 		// Redis에 코인 변화량 저장
@@ -243,11 +243,12 @@ public class ItemFacadeService {
 		Item item = itemQueryService.getBySku(sku);
 		List<ItemHistory> itemInInventory =
 				itemHistoryQueryService.findUnusedItemsInUserInventory(user.getId(), item.getId());
-		ItemHistory firstItem = itemPolicyService.verifyEmptyItems(itemInInventory);
+		ItemHistory oldestItemHistory =
+				itemPolicyService.verifyNotEmptyAndFindOldest(itemInInventory);
 		ItemUsage itemUsage = getItemUsage(userId, item, data);
 
 		eventPublisher.publishEvent(itemUsage);
-		firstItem.updateUsedAt();
+		oldestItemHistory.updateUsedAt();
 	}
 
 	/**
@@ -300,7 +301,7 @@ public class ItemFacadeService {
 		itemPolicyService.verifyIsAffordable(userCoin, price);
 
 		// 아이템 구매 처리
-		itemHistoryCommandService.purchaseItem(user.getId(), item.getId());
+		itemHistoryCommandService.createItemHistory(user.getId(), item.getId());
 
 		LockUtil.lockRedisCoin(userId, () -> {
 			// 코인 차감

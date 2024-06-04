@@ -48,7 +48,7 @@ const StoreItemCard = ({
             </IconBlockStyled>
             <PriseBlockStyled>
               <CoinImg />
-              <span>{item.items[item.items.length - 1].itemPrice * -1}</span>
+              <span>{item.items[0].itemPrice * -1}</span>
             </PriseBlockStyled>
           </BlockStyled>
           <ItemDetailStyled>{item.description}</ItemDetailStyled>

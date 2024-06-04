@@ -79,8 +79,8 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 	@Query("SELECT ih "
 			+ "FROM ItemHistory ih "
 			+ "JOIN FETCH ih.item "
-			+ "WHERE DATE(ih.usedAt) >= DATE(:start) "
-			+ "AND DATE(ih.usedAt) <= DATE(:end)"
+			+ "WHERE DATE(ih.purchaseAt) >= DATE(:start) "
+			+ "AND DATE(ih.purchaseAt) <= DATE(:end)"
 	)
 	List<ItemHistory> findAllUsedAtIsNotNullBetween(
 			@Param("start") LocalDate startDate,

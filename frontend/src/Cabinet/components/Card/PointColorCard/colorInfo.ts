@@ -29,7 +29,7 @@ export const pointColorData: ColorData[] = [
 ];
 
 export const customColors = [
-  "--custom-pink",
+  "--custom-pink-200",
   "--custom-orange",
   "--custom-yellow",
   "--custom-green-100",

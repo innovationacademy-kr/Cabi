@@ -1,106 +1,28 @@
 import { useEffect, useState } from "react";
 import AdminItemUsageLog from "@/Cabinet/components/ItemLog/AdminItemUsageLog";
 import { ItemLogResponseType } from "@/Cabinet/types/dto/admin.dto";
+import { axiosGetUserItems } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
 const AdminItemUsageLogContainer = () => {
   const { closeStore } = useMenu();
+  const [userId, setUserId] = useState<number>(0);
   const [logs, setLogs] = useState<ItemLogResponseType>({
     itemHistories: [],
     totalLength: 0,
   });
   const [page, setPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(-1);
-  const [needsUpdate, setNeedsUpdate] = useState<boolean>(false);
+  const [needsUpdate, setNeedsUpdate] = useState<boolean>(true);
   const size = 8;
-
-  const mockItemHistories = [
-    {
-      purchasedAt: "2023-05-26T14:00:00",
-      usedAt: "2023-05-27T00:00:00",
-      itemName: "연장권",
-      itemDetails: "3일",
-    },
-    {
-      purchasedAt: "2023-05-25T13:00:00",
-      usedAt: "2023-05-26T10:00:00",
-      itemName: "이사권",
-      itemDetails: "이사권",
-    },
-    {
-      purchasedAt: "2023-05-24T16:00:00",
-      usedAt: "2023-05-25T11:00:00",
-      itemName: "페널티권",
-      itemDetails: "7일",
-    },
-    {
-      purchasedAt: "2023-05-24T16:00:00",
-      usedAt: "",
-      itemName: "연장권",
-      itemDetails: "30일",
-    },
-    {
-      purchasedAt: "2023-05-26T14:00:00",
-      usedAt: "2023-05-27T00:00:00",
-      itemName: "알림 등록권",
-      itemDetails: "알림 등록권",
-    },
-    {
-      purchasedAt: "2023-05-25T13:00:00",
-      usedAt: "2023-05-26T10:00:00",
-      itemName: "이사권",
-      itemDetails: "이사권",
-    },
-    {
-      purchasedAt: "2023-05-24T16:00:00",
-      usedAt: "2023-05-25T11:00:00",
-      itemName: "페널티권",
-      itemDetails: "3일",
-    },
-    {
-      purchasedAt: "2023-05-24T16:00:00",
-      usedAt: "2023-05-25T11:00:00",
-      itemName: "이사권",
-      itemDetails: "이사권",
-    },
-    {
-      purchasedAt: "2023-05-26T14:00:00",
-      usedAt: "2023-05-27T00:00:00",
-      itemName: "연장권",
-      itemDetails: "15일",
-    },
-    {
-      purchasedAt: "2023-05-25T13:00:00",
-      usedAt: "",
-      itemName: "이사권",
-      itemDetails: "이사권",
-    },
-    {
-      purchasedAt: "2023-05-24T16:00:00",
-      usedAt: "2023-05-25T11:00:00",
-      itemName: "페널티권",
-      itemDetails: "3일",
-    },
-    {
-      purchasedAt: "2023-05-24T16:00:00",
-      usedAt: "2023-05-25T11:00:00",
-      itemName: "알림 등록권",
-      itemDetails: "알림 등록권",
-    },
-  ];
 
   async function getData(page: number) {
     try {
-      const paginatedData = {
-        itemHistories: mockItemHistories
-          .slice(page * size, (page + 1) * size)
-          .map((history) => ({
-            ...history,
-            itemSku: "",
-          })),
-        totalLength: mockItemHistories.length,
-      };
-      setLogs(paginatedData);
+      const paginatedData = await axiosGetUserItems(userId, page, size);
+      setLogs({
+        itemHistories: paginatedData.itemHistories,
+        totalLength: paginatedData.totalLength,
+      });
       setTotalPage(Math.ceil(paginatedData.totalLength / size));
     } catch {
       setLogs({ itemHistories: [], totalLength: 0 });
@@ -109,15 +31,11 @@ const AdminItemUsageLogContainer = () => {
   }
 
   useEffect(() => {
-    getData(page);
-  }, [page]);
-
-  useEffect(() => {
     if (needsUpdate) {
       getData(page);
       setNeedsUpdate(false);
     }
-  }, [needsUpdate, page]);
+  }, [needsUpdate, page, userId]);
 
   const onClickPrev = () => {
     if (page > 0) {

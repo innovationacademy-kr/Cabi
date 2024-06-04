@@ -21,7 +21,7 @@ const StoreBuyItemModal: React.FC<{
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState(
-    String(props.selectItem.items.length - 1)
+    String(props.selectItem.items.length - 3)
   );
   const [errorDetails, setErrorDetails] = useState("");
   const [userInfo] = useRecoilState(userState);
@@ -76,9 +76,9 @@ const StoreBuyItemModal: React.FC<{
               options={[
                 {
                   name: props.selectItem.items[
-                    props.selectItem.items.length - 1
+                    props.selectItem.items.length - 3
                   ].itemDetails,
-                  value: String(props.selectItem.items.length - 1),
+                  value: String(props.selectItem.items.length - 3),
                 },
                 {
                   name: props.selectItem.items[
@@ -88,13 +88,13 @@ const StoreBuyItemModal: React.FC<{
                 },
                 {
                   name: props.selectItem.items[
-                    props.selectItem.items.length - 3
+                    props.selectItem.items.length - 1
                   ].itemDetails,
-                  value: String(props.selectItem.items.length - 3),
+                  value: String(props.selectItem.items.length - 1),
                 },
               ]}
               defaultValue={
-                props.selectItem.items[props.selectItem.items.length - 1]
+                props.selectItem.items[props.selectItem.items.length - 3]
                   .itemDetails
               }
               onChangeValue={handleDropdownChange}

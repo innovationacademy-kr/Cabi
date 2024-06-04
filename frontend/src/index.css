@@ -85,13 +85,16 @@
   --custom-blue-100: var(--ref-blue-210);
   --custom-blue-200: var(--ref-blue-230);
   --custom-blue-300: var(--ref-blue-450);
-  --custom-pink: var(--ref-pink-150);
+  --custom-pink-100: var(--ref-pink-100);
+  --custom-pink-200: var(--ref-pink-150);
+  --custom-pink-300: var(--ref-pink-200);
   --custom-purple-100: var(--ref-purple-350);
   --custom-purple-200: var(--ref-purple-500);
   --custom-orange: var(--ref-orange-100);
   --custom-yellow: var(--ref-yellow);
   --custom-green-100: var(--ref-green-300);
   --custom-green-200: var(--ref-green-400);
+
 
   /* component variable */
   --color-picker-hash-color: var(--ref-gray-450);
