@@ -79,6 +79,9 @@ const CoinFlow = ({
   totalCoinUseData: ICoinStatisticsDto | undefined;
 }) => {
   console.log("totalCoinUseData: ", totalCoinUseData);
+  if (totalCoinUseData === undefined) {
+    return null;
+  }
   const formattedData = [
     {
       id: "issuedCoin",
@@ -143,7 +146,8 @@ const CoinFlow = ({
             max: "auto",
           }}
           yFormat=" >0"
-          curve="cardinal"
+          // curve="cardinal"
+          curve="monotoneX"
           axisTop={null}
           colors={["var(--sys-main-color)"]}
           axisRight={null}
