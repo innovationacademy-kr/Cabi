@@ -136,7 +136,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     iconType: "CHECK",
     iconScaleEffect: false,
     title: "페널티 감면권 사용 안내",
-    proceedBtnText: "지급하기",
+    proceedBtnText: "사용하기",
     cancelBtnText: "취소",
     closeModal: onClose,
     isLoading: isLoading,
