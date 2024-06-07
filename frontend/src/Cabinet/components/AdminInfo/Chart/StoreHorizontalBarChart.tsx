@@ -2,31 +2,41 @@ import { ResponsiveBar } from "@nivo/bar";
 import styled from "styled-components";
 import { ICoinCollectInfoDto } from "@/Cabinet/types/dto/store.dto";
 
+const keys = ["5회", "10회", "15회", "20회", "전체"];
+
+interface IConvertedData {
+  cnt: string;
+  [key: string]: number | string;
+}
+
 const convert = (data: ICoinCollectInfoDto[]) => {
   let userTotalPerCnt = 0;
-  let total = 0;
-  let ary = [];
+  let userTotal = 0;
+  let ary: IConvertedData[] = [];
 
   data.forEach((cur) => {
     userTotalPerCnt += cur.userCount;
 
-    // 0~5회, 6~10회, 11~15회, 16~20회
+    // NOTE : 정책에 따라 변경
+    // 현재 정책 - 0~5, 6~10, 11~15, 16~20회
     if (
       cur.coinCount % 5 === 0 &&
       cur.coinCount / 5 >= 1 &&
       cur.coinCount / 5 <= 4
     ) {
-      ary.push({
-        cnt: cur.coinCount + "회",
-        [cur.coinCount + "회"]: userTotalPerCnt,
-      });
-      total += userTotalPerCnt;
+      ary = [
+        ...ary,
+        {
+          cnt: cur.coinCount + "회",
+          [cur.coinCount + "회"]: userTotalPerCnt,
+        },
+      ];
+      userTotal += userTotalPerCnt;
       userTotalPerCnt = 0;
     }
   });
-  ary.push({ cnt: "전체", ["전체"]: total });
 
-  return ary;
+  return [...ary, { cnt: "전체", ["전체"]: userTotal }];
 };
 
 const StoreHorizontalBarChart = ({ data }: { data: ICoinCollectInfoDto[] }) => {
@@ -34,7 +44,7 @@ const StoreHorizontalBarChart = ({ data }: { data: ICoinCollectInfoDto[] }) => {
     <HalfPieChartStyled>
       <ResponsiveBar
         data={convert(data)}
-        keys={["5회", "10회", "15회", "20회", "전체"]}
+        keys={keys}
         indexBy="cnt"
         maxValue="auto"
         borderWidth={2}
