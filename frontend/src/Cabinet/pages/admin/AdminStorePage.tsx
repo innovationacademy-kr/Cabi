@@ -11,6 +11,7 @@ import MultiToggleSwitch, {
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
 import { MoveSectionButtonStyled } from "@/Cabinet/components/SectionPagination/SectionPagination";
 import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
+import { ICoinCollectInfoDto } from "@/Cabinet/types/dto/store.dto";
 import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
 import {
   axiosCoinCollectStatistics,
@@ -18,11 +19,7 @@ import {
   axiosStatisticsTotalItemUse,
 } from "@/Cabinet/api/axios/axios.custom";
 import { axiosStatisticsItem } from "@/Cabinet/api/axios/axios.custom";
-
-export interface ICoinCollectInfo {
-  coinCount: number;
-  userCount: number;
-}
+import { padTo2Digits } from "@/Cabinet/utils/dateUtils";
 
 export interface ICoinAmountDto {
   // date: Date;
@@ -65,15 +62,15 @@ const AdminStorePage = () => {
   const [coinToggleType, setCoinToggleType] = useState<CoinFlowType>(
     CoinFlowType.ISSUE
   );
-  const [coinCollectData, setCoinCollectData] = useState<ICoinCollectInfo[]>(
+  const [coinCollectData, setCoinCollectData] = useState<ICoinCollectInfoDto[]>(
     []
   );
+  const [coinCollectDate, setCoinCollectDate] = useState(new Date());
   const [totalCoinData, setTotalCoinData] = useState<ITotalCoinInfo[]>([]);
   const [totalCoinUseData, setTotalCoinUseData] = useState<
     ICoinStatisticsDto | undefined
   >();
   const [totalItemData, setTotalItemData] = useState<IItemUseCountDto[]>([]);
-  const [coinCollectDate, setCoinCollectDate] = useState(new Date());
 
   const dataToggleList: toggleItem[] = [
     { name: "발행 코인", key: CoinFlowType.ISSUE },
@@ -219,7 +216,7 @@ const AdminStorePage = () => {
             <span>
               {coinCollectDate.getFullYear() +
                 "년 " +
-                (coinCollectDate.getMonth() + 1).toString().padStart(2, "0") +
+                padTo2Digits(coinCollectDate.getMonth() + 1) +
                 "월"}
             </span>
             <MoveSectionButtonStyled

@@ -1,8 +1,8 @@
 import { ResponsiveBar } from "@nivo/bar";
 import styled from "styled-components";
-import { ICoinCollectInfo } from "@/Cabinet/pages/admin/AdminStorePage";
+import { ICoinCollectInfoDto } from "@/Cabinet/types/dto/store.dto";
 
-const convert = (data: ICoinCollectInfo[]) => {
+const convert = (data: ICoinCollectInfoDto[]) => {
   let userTotalPerCnt = 0;
   let total = 0;
   let ary = [];
@@ -29,7 +29,7 @@ const convert = (data: ICoinCollectInfo[]) => {
   return ary;
 };
 
-const StoreHorizontalBarChart = ({ data }: { data: ICoinCollectInfo[] }) => {
+const StoreHorizontalBarChart = ({ data }: { data: ICoinCollectInfoDto[] }) => {
   return (
     <HalfPieChartStyled>
       <ResponsiveBar
