@@ -102,6 +102,7 @@ const StoreHorizontalBarChart = ({ data }: { data: ICoinCollectInfoDto[] }) => {
             ],
           },
         ]}
+        labelSkipWidth={1}
       />
     </HalfPieChartStyled>
   );

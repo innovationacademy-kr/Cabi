@@ -39,9 +39,11 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     setIsLoading(true);
     try {
       await axiosItemAssign(selectedItemSku, [targetUserInfo.userId!]);
+      // TODO : setModalContent
     } catch (error: any) {
       setHasErrorOnResponse(true);
       console.log("error : ", error);
+      // TODO : setModalContent
       error.response
         ? setModalTitle(error.response.data.message)
         : setModalTitle(error.data.message);
@@ -135,15 +137,15 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     },
     renderAdditionalComponent: () => (
       <>
-        <ModalContainerStyled>
+        <ModalWrapperStyled>
           <ModalDropdownNameStyled>아이템</ModalDropdownNameStyled>
           <Dropdown {...statusDropDownProps} />
-        </ModalContainerStyled>
+        </ModalWrapperStyled>
 
-        <ModalContainerStyled>
+        <ModalWrapperStyled>
           <ModalDropdownNameStyled>아이템 타입</ModalDropdownNameStyled>
           <Dropdown {...typeDropDownProps} />
-        </ModalContainerStyled>
+        </ModalWrapperStyled>
       </>
     ),
   };
@@ -169,7 +171,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   );
 };
 
-const ModalContainerStyled = styled.div`
+const ModalWrapperStyled = styled.div`
   padding: 10px 20px 0 20px;
 `;
 
