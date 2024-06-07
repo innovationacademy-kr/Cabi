@@ -181,8 +181,8 @@ const AdminStorePage = () => {
   }, []);
 
   return (
-    <AdminHomeStyled>
-      <ContainerStyled>
+    <AdminStorePageStyled>
+      <WrapperStyled>
         <HeaderStyled>
           <H2styled>재화 사용 통계</H2styled>
           <ToggleContainer>
@@ -203,8 +203,8 @@ const AdminStorePage = () => {
           coinToggleType={coinToggleType}
           totalCoinUseData={totalCoinUseData}
         />
-      </ContainerStyled>
-      <ContainerStyled>
+      </WrapperStyled>
+      <WrapperStyled>
         <CoinCollectTitleWrapperStyled>
           <H2styled>동전 줍기 통계</H2styled>
           <div>
@@ -228,16 +228,16 @@ const AdminStorePage = () => {
           </div>
         </CoinCollectTitleWrapperStyled>
         <StoreHorizontalBarChart data={coinCollectData} />
-      </ContainerStyled>
-      <ContainerStyled>
+      </WrapperStyled>
+      <WrapperStyled>
         <H2styled>전체 재화 현황</H2styled>
         <PieChartCoin data={totalCoinData} />
-      </ContainerStyled>
-      <ContainerStyled>
+      </WrapperStyled>
+      <WrapperStyled>
         <H2styled>아이템 통계</H2styled>
         <ItemBarChart data={totalItemData} />
-      </ContainerStyled>
-    </AdminHomeStyled>
+      </WrapperStyled>
+    </AdminStorePageStyled>
   );
 };
 
@@ -260,7 +260,7 @@ const ToggleContainer = styled.div`
   margin-top: 20px;
 `;
 
-const AdminHomeStyled = styled.div`
+const AdminStorePageStyled = styled.div`
   background: var(--bg-color);
   width: 100%;
   height: 100%;
@@ -269,6 +269,7 @@ const AdminHomeStyled = styled.div`
   grid-template-rows: repeat(2, 1fr);
   place-items: center;
   min-height: 775px;
+  margin: 42px 0;
   & > :first-child {
     grid-column: span 3;
   }
@@ -293,7 +294,7 @@ const AdminHomeStyled = styled.div`
   }
 `;
 
-const ContainerStyled = styled.div`
+const WrapperStyled = styled.div`
   height: 90%;
   width: 100%;
   min-width: 0;
