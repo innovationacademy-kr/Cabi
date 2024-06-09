@@ -2,15 +2,15 @@
 import { ResponsiveLine } from "@nivo/line";
 import styled from "styled-components";
 import { ICoinStatisticsDto } from "@/Cabinet/pages/admin/AdminStorePage";
-import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
+import { CoinUseDateType, CoinUseType } from "@/Cabinet/types/enum/store.enum";
 
 const CoinFlow = ({
   toggleType,
   coinToggleType,
   totalCoinUseData,
 }: {
-  toggleType: CoinDateType;
-  coinToggleType: CoinFlowType;
+  toggleType: CoinUseDateType;
+  coinToggleType: CoinUseType;
   totalCoinUseData: ICoinStatisticsDto | undefined;
 }) => {
   if (totalCoinUseData === undefined) {
@@ -40,8 +40,6 @@ const CoinFlow = ({
     (data) => data.id === coinToggleType
   );
 
-  console.log("filteredData", filteredData);
-  console.log("filteredData.id", filteredData[0].id);
   return (
     <>
       <LineChartStyled>

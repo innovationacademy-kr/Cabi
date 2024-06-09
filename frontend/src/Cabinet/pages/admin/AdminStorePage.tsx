@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinFlow";
+import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinUseLineChart";
 import ItemBarChart, {
   IItemUseCountDto,
 } from "@/Cabinet/components/AdminInfo/Chart/ItemBarChart";
@@ -12,7 +12,7 @@ import MultiToggleSwitch, {
 import { MoveSectionButtonStyled } from "@/Cabinet/components/SectionPagination/SectionPagination";
 import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
 import { ICoinCollectInfoDto } from "@/Cabinet/types/dto/store.dto";
-import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
+import { CoinUseDateType, CoinUseType } from "@/Cabinet/types/enum/store.enum";
 import {
   axiosCoinCollectStatistics,
   axiosCoinUseStatistics,
@@ -51,9 +51,11 @@ export interface ITotalCoinInfo {
 }
 
 const AdminStorePage = () => {
-  const [toggleType, setToggleType] = useState<CoinDateType>(CoinDateType.DAY);
-  const [coinToggleType, setCoinToggleType] = useState<CoinFlowType>(
-    CoinFlowType.ISSUE
+  const [toggleType, setToggleType] = useState<CoinUseDateType>(
+    CoinUseDateType.DAY
+  );
+  const [coinToggleType, setCoinToggleType] = useState<CoinUseType>(
+    CoinUseType.ISSUE
   );
   const [coinCollectData, setCoinCollectData] = useState<ICoinCollectInfoDto[]>(
     []
@@ -68,14 +70,14 @@ const AdminStorePage = () => {
   const [totalItemData, setTotalItemData] = useState<IItemUseCountDto[]>([]);
 
   const dataToggleList: toggleItem[] = [
-    { name: "발행 코인", key: CoinFlowType.ISSUE },
-    { name: "사용 코인", key: CoinFlowType.USED },
+    { name: "발행 코인", key: CoinUseType.ISSUE },
+    { name: "사용 코인", key: CoinUseType.USED },
   ];
 
   const toggleList: toggleItem[] = [
-    { name: "1d", key: CoinDateType.DAY },
-    { name: "7d", key: CoinDateType.WEEK },
-    { name: "30d", key: CoinDateType.MONTH },
+    { name: "1d", key: CoinUseDateType.DAY },
+    { name: "7d", key: CoinUseDateType.WEEK },
+    { name: "30d", key: CoinUseDateType.MONTH },
   ];
 
   const getCoinCollectData = async () => {
