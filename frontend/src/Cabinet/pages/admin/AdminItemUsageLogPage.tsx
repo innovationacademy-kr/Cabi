@@ -8,12 +8,12 @@ const AdminItemUsageLogPage = () => {
 
   return (
     <AdminItemLogStyled id="itemInfo">
-      <TitleContainer>
+      <TitleWrapper>
         <TitleStyled isClick={isSearchPage}>아이템 내역</TitleStyled>
         <GoBackButtonStyled onClick={closeUserStore}>
           뒤로가기
         </GoBackButtonStyled>
-      </TitleContainer>
+      </TitleWrapper>
       <AdminItemUsageLogContainer />
     </AdminItemLogStyled>
   );
@@ -39,7 +39,7 @@ const AdminItemLogStyled = styled.div`
   }
 `;
 
-const TitleContainer = styled.div`
+const TitleWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
