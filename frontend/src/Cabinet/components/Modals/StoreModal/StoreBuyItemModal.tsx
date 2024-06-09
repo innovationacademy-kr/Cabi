@@ -20,13 +20,10 @@ const StoreBuyItemModal: React.FC<{
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState(
-    String(props.selectItem.items.length - 3)
-  );
+  const [selectedOption, setSelectedOption] = useState("0");
   const [errorDetails, setErrorDetails] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [userInfo] = useRecoilState(userState);
-  // const [userInfo, setMyInfo] = useRecoilState(userState);
   const setUser = useSetRecoilState<UserDto>(userState);
 
   const handlePurchase = async (item: IItemStore) => {
@@ -54,6 +51,11 @@ const StoreBuyItemModal: React.FC<{
     setSelectedOption(option);
   };
 
+  useEffect(() => {
+    if (props.selectItem.items.length > 3) {
+      setSelectedOption("1");
+    }
+  },[])
   const modalContents: IModalContents = {
     type: "hasProceedBtn",
     iconType: "CHECK",
@@ -122,7 +124,7 @@ const StoreBuyItemModal: React.FC<{
             구매시
             <span>
               {" "}
-              {props.selectItem.items[Number(selectedOption)].itemPrice
+              {props.selectItem.items[Number(selectedOption)]?.itemPrice
                 ? props.selectItem.items[Number(selectedOption)].itemPrice * -1
                 : props.selectItem.items[0].itemPrice * -1}{" "}
               까비
