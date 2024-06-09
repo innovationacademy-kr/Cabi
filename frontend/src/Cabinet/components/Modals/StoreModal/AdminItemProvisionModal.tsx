@@ -26,7 +26,6 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [items, setItems] = useState<IItemDetail[]>([]);
   const [statusOptions, setStatusOptions] = useState<IDropdownOptions[]>([]);
@@ -40,17 +39,13 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     try {
       await axiosItemAssign(selectedItemSku, [targetUserInfo.userId!]);
       setModalTitle("아이템 지급완료");
-      // setModalContent("아이템 지급이 완료되었습니다.");
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      console.log("error : ", error);
-      setModalTitle("아이템 지급실패");
-      // setModalContent("아이템 지급을 실패했습니다.");
-
-      error.response
-        ? setModalTitle(error.response.data.message)
-        : setModalTitle(error.data.message);
-      // TODO : error일때 오는 데이터 확인해서 수정
+      if (error.response.ststus === 400) setModalTitle("아이템 지급실패");
+      else
+        error.response
+          ? setModalTitle(error.response.data.message)
+          : setModalTitle(error.data.message);
     } finally {
       setShowResponseModal(true);
       setIsLoading(false);
@@ -164,17 +159,9 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
       {!showResponseModal && <Modal modalContents={modalContents} />}
       {showResponseModal &&
         (hasErrorOnResponse ? (
-          <FailResponseModal
-            modalTitle={modalTitle}
-            modalContents={modalContent}
-            closeModal={onClose}
-          />
+          <FailResponseModal modalTitle={modalTitle} closeModal={onClose} />
         ) : (
-          <SuccessResponseModal
-            modalTitle={modalTitle}
-            modalContents={modalContent}
-            closeModal={onClose}
-          />
+          <SuccessResponseModal modalTitle={modalTitle} closeModal={onClose} />
         ))}
     </ModalPortal>
   );
