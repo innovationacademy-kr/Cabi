@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinUseLineChart";
-import ItemBarChart, {
-  IItemUseCountDto,
-} from "@/Cabinet/components/AdminInfo/Chart/ItemBarChart";
+import ItemBarChart from "@/Cabinet/components/AdminInfo/Chart/ItemBarChart";
 import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
 import StoreHorizontalBarChart from "@/Cabinet/components/AdminInfo/Chart/StoreHorizontalBarChart";
 import MultiToggleSwitch, {
@@ -20,6 +17,8 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import { axiosStatisticsCoin } from "@/Cabinet/api/axios/axios.custom";
 import { padTo2Digits } from "@/Cabinet/utils/dateUtils";
+import { IItemUseCountDto } from "@/Cabinet/types/dto/admin.dto";
+import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinUseLineChart";
 
 export interface ICoinAmountDto {
   // date: Date;
@@ -34,17 +33,7 @@ export interface ICoinStatisticsDto {
 }
 
 // 아이템 통계 그래프 확인용
-const itemList: IItemUseCountDto[] = [
-  { itemName: "연장권", itemDetails: "출석 연장권 보상", userCount: 38 },
-  { itemName: "연장권", itemDetails: "31일", userCount: 53 },
-  { itemName: "연장권", itemDetails: "15일", userCount: 22 },
-  { itemName: "연장권", itemDetails: "3일", userCount: 30 },
-  { itemName: "페널티 감면권", itemDetails: "31일", userCount: 10 },
-  { itemName: "페널티 감면권", itemDetails: "7일", userCount: 30 },
-  { itemName: "페널티 감면권", itemDetails: "3일", userCount: 80 },
-  { itemName: "이사권", itemDetails: "이사권", userCount: 60 },
-  { itemName: "알림 등록권", itemDetails: "알림 등록권", userCount: 100 },
-];
+
 export interface ITotalCoinInfo {
   used: number;
   unused: number;
@@ -110,7 +99,6 @@ const AdminStorePage = () => {
     try {
       const response = await axiosStatisticsTotalItemUse();
       setTotalItemData(response.data.items);
-      // setTotalItemData(itemList);
     } catch (error) {
       console.error("Err or getting total coin data:", error);
     }
