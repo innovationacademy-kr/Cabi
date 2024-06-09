@@ -52,9 +52,8 @@ const StoreHorizontalBarChart = ({ data }: { data: ICoinCollectInfoDto[] }) => {
         layout="horizontal"
         animate={true}
         isInteractive={true}
-        enableGridX={false}
+        enableGridX={true}
         enableGridY={false}
-        axisLeft={{ tickSize: 0, tickPadding: 25 }}
         tooltip={(point) => {
           return (
             <ToolTipStyled color={point.color}>

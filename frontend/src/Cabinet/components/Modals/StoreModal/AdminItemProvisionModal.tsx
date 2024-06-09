@@ -20,8 +20,6 @@ interface IPenaltyModalProps {
   onClose: () => void;
 }
 
-// TODO : drop down option 닫기
-
 const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   const [selectedItemSku, setSelectedItemSku] = useState<string>("");
   // TODO : sku?
@@ -33,6 +31,8 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   const [items, setItems] = useState<IItemDetail[]>([]);
   const [statusOptions, setStatusOptions] = useState<IDropdownOptions[]>([]);
   const [typeOptions, setTypeOptions] = useState<IDropdownOptions[]>([]);
+  const [isItemDropdownOpen, setIsItemDropdownOpen] = useState(false);
+  const [isItemTypeDropdownOpen, setIsItemTypeDropdownOpen] = useState(false);
   const [targetUserInfo] = useRecoilState(targetUserInfoState);
 
   const HandleItemProvisionBtn = async () => {
@@ -86,12 +86,18 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     options: statusOptions,
     defaultValue: statusOptions[0]?.name,
     onChangeValue: handleDropdownStatusChange,
+    isOpen: isItemDropdownOpen,
+    setIsOpen: setIsItemDropdownOpen,
+    closeOtherDropdown: () => setIsItemTypeDropdownOpen(false),
   };
 
   const typeDropDownProps = {
     options: typeOptions,
     defaultValue: typeOptions[0]?.name,
     onChangeValue: handleDropdownTypeChange,
+    isOpen: isItemTypeDropdownOpen,
+    setIsOpen: setIsItemTypeDropdownOpen,
+    closeOtherDropdown: () => setIsItemDropdownOpen(false),
   };
 
   useEffect(() => {
