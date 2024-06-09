@@ -263,9 +263,9 @@ const MyCoinWrapperStyled = styled.div`
 `;
 
 const MyCoinStyled = styled.div`
-  width: 120px;
   display: flex;
   justify-content: center;
+  white-space: nowrap;
   align-items: center;
   font-size: 18px;
 
