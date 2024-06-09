@@ -44,6 +44,7 @@ const Dropdown = ({
     <DropdownContainerStyled>
       <DropdownSelectionBoxStyled
         onClick={() => {
+          console.log(options[selectedIdx]);
           if (options[selectedIdx].isDisabled) return;
           setIsOpen(!isOpen);
           closeOtherDropdown && closeOtherDropdown();
