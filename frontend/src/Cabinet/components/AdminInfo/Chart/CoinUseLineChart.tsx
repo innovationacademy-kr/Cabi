@@ -1,7 +1,6 @@
-// import { ResponsiveLine } from "@nivo/line";
 import { ResponsiveLine } from "@nivo/line";
 import styled from "styled-components";
-import { ICoinStatisticsDto } from "@/Cabinet/pages/admin/AdminStorePage";
+import { ICoinStatisticsDto } from "@/Cabinet/types/dto/admin.dto";
 import { CoinUseDateType, CoinUseType } from "@/Cabinet/types/enum/store.enum";
 
 const CoinUseLineChart = ({

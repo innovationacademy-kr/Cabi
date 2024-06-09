@@ -9,7 +9,10 @@ import MultiToggleSwitch, {
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
 import { MoveSectionButtonStyled } from "@/Cabinet/components/SectionPagination/SectionPagination";
 import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
-import { IItemUseCountDto } from "@/Cabinet/types/dto/admin.dto";
+import {
+  ICoinStatisticsDto,
+  IItemUseCountDto,
+} from "@/Cabinet/types/dto/admin.dto";
 import { ICoinCollectInfoDto } from "@/Cabinet/types/dto/store.dto";
 import { CoinUseDateType, CoinUseType } from "@/Cabinet/types/enum/store.enum";
 import {
@@ -19,16 +22,6 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import { axiosStatisticsCoin } from "@/Cabinet/api/axios/axios.custom";
 import { padTo2Digits } from "@/Cabinet/utils/dateUtils";
-
-export interface ICoinAmountDto {
-  date: string;
-  amount: number;
-}
-
-export interface ICoinStatisticsDto {
-  issuedCoin: ICoinAmountDto[];
-  usedCoin: ICoinAmountDto[];
-}
 
 const dataToggleList: toggleItem[] = [
   { name: "발행 코인", key: CoinUseType.ISSUE },
@@ -172,7 +165,7 @@ const AdminStorePage = () => {
       <WrapperStyled>
         <HeaderStyled>
           <H2styled>재화 사용 통계</H2styled>
-          <ToggleContainer>
+          <ToggleWrapper>
             <MultiToggleSwitch
               initialState={coinToggleType}
               setState={setCoinToggleType}
@@ -183,7 +176,7 @@ const AdminStorePage = () => {
               setState={setToggleType}
               toggleList={toggleList}
             />
-          </ToggleContainer>
+          </ToggleWrapper>
         </HeaderStyled>
         <CoinUseLineChart
           toggleType={toggleType}
@@ -238,7 +231,7 @@ const HeaderStyled = styled.div`
   align-items: flex-start;
 `;
 
-const ToggleContainer = styled.div`
+const ToggleWrapper = styled.div`
   width: 90%;
   display: flex;
   /* flex-direction: column; */

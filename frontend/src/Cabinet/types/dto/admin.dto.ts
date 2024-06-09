@@ -86,3 +86,13 @@ export interface IItemUseCountDto {
   itemDetails: string;
   userCount: number;
 }
+
+export interface ICoinAmountDto {
+  date: string;
+  amount: number;
+}
+
+export interface ICoinStatisticsDto {
+  issuedCoin: ICoinAmountDto[];
+  usedCoin: ICoinAmountDto[];
+}
