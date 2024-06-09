@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { ICoinStatisticsDto } from "@/Cabinet/pages/admin/AdminStorePage";
 import { CoinUseDateType, CoinUseType } from "@/Cabinet/types/enum/store.enum";
 
-const CoinFlow = ({
+const CoinUseLineChart = ({
   toggleType,
   coinToggleType,
   totalCoinUseData,
@@ -129,4 +129,4 @@ const ToolTipStyled = styled.div<{ color: string }>`
   }
 `;
 
-export default CoinFlow;
+export default CoinUseLineChart;

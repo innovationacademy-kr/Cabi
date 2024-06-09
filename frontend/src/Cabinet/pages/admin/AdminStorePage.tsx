@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import CoinUseLineChart from "@/Cabinet/components/AdminInfo/Chart/CoinUseLineChart";
 import ItemBarChart from "@/Cabinet/components/AdminInfo/Chart/ItemBarChart";
 import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
 import StoreHorizontalBarChart from "@/Cabinet/components/AdminInfo/Chart/StoreHorizontalBarChart";
@@ -8,6 +9,7 @@ import MultiToggleSwitch, {
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
 import { MoveSectionButtonStyled } from "@/Cabinet/components/SectionPagination/SectionPagination";
 import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
+import { IItemUseCountDto } from "@/Cabinet/types/dto/admin.dto";
 import { ICoinCollectInfoDto } from "@/Cabinet/types/dto/store.dto";
 import { CoinUseDateType, CoinUseType } from "@/Cabinet/types/enum/store.enum";
 import {
@@ -17,20 +19,21 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import { axiosStatisticsCoin } from "@/Cabinet/api/axios/axios.custom";
 import { padTo2Digits } from "@/Cabinet/utils/dateUtils";
-import { IItemUseCountDto } from "@/Cabinet/types/dto/admin.dto";
-import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinUseLineChart";
 
 export interface ICoinAmountDto {
-  // date: Date;
   date: string;
   amount: number;
 }
 
 export interface ICoinStatisticsDto {
   issuedCoin: ICoinAmountDto[];
-  // unusedCoin: ICoinAmountDto[];
   usedCoin: ICoinAmountDto[];
 }
+
+const dataToggleList: toggleItem[] = [
+  { name: "발행 코인", key: CoinUseType.ISSUE },
+  { name: "사용 코인", key: CoinUseType.USED },
+];
 
 // 아이템 통계 그래프 확인용
 
@@ -57,11 +60,6 @@ const AdminStorePage = () => {
     ICoinStatisticsDto | undefined
   >();
   const [totalItemData, setTotalItemData] = useState<IItemUseCountDto[]>([]);
-
-  const dataToggleList: toggleItem[] = [
-    { name: "발행 코인", key: CoinUseType.ISSUE },
-    { name: "사용 코인", key: CoinUseType.USED },
-  ];
 
   const toggleList: toggleItem[] = [
     { name: "1d", key: CoinUseDateType.DAY },
@@ -187,7 +185,7 @@ const AdminStorePage = () => {
             />
           </ToggleContainer>
         </HeaderStyled>
-        <CoinFlow
+        <CoinUseLineChart
           toggleType={toggleType}
           coinToggleType={coinToggleType}
           totalCoinUseData={totalCoinUseData}
