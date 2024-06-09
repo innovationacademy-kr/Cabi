@@ -40,23 +40,35 @@ const CoinFlow = ({
     (data) => data.id === coinToggleType
   );
 
+  console.log("filteredData", filteredData);
+  console.log("filteredData.id", filteredData[0].id);
   return (
     <>
       <LineChartStyled>
         <ResponsiveLine
           theme={{
             textColor: "var(--normal-text-color)",
-            tooltip: {
-              container: {
-                backgroundColor: "var(--bg-color)",
-                boxShadow: "var(--left-nav-border-shadow-color) 0 1px 2px",
-                color: "var(--normal-text-color)",
-              },
-            },
           }}
+          tooltip={(point) => {
+            return (
+              <ToolTipStyled color={point.point.color}>
+                <span></span>
+                <p>
+                  date : <strong>{point.point.data.xFormatted} </strong>
+                </p>
+                <p>
+                  , coin : <strong>{point.point.data.yFormatted}</strong>
+                </p>
+              </ToolTipStyled>
+            );
+          }}
+          isInteractive={true}
+          animate={true}
           data={filteredData}
           margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
-          xFormat="time:%Y-%m-%d"
+          // xFormat="time:%b %d"
+          // %b -> 영어로 달 표시
+          xFormat="time:%m.%d"
           xScale={{
             format: "%Y-%m-%d",
             precision: "day",
@@ -75,7 +87,7 @@ const CoinFlow = ({
           colors={["var(--sys-main-color)"]}
           axisRight={null}
           axisBottom={{
-            format: "%b %d",
+            format: "%m.%d",
             legendOffset: -12,
             tickValues: `every 1 ${toggleType.toLowerCase()}`,
           }}
@@ -84,10 +96,6 @@ const CoinFlow = ({
           }}
           enableGridX={false}
           pointSize={0}
-          pointColor={{ from: "color", modifiers: [] }}
-          pointBorderWidth={2}
-          pointBorderColor={{ from: "serieColor" }}
-          pointLabelYOffset={-12}
           enableArea={true}
           useMesh={true}
         />
@@ -102,6 +110,25 @@ const LineChartStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const ToolTipStyled = styled.div<{ color: string }>`
+  height: 24px;
+  background-color: var(--bg-color);
+  box-shadow: var(--left-nav-border-shadow-color) 0 1px 2px;
+  color: var(--normal-text-color);
+  display: flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 2px;
+
+  & > span {
+    display: block;
+    width: 12px;
+    height: 12px;
+    background-color: ${(props) => props.color};
+    margin-right: 8px;
+  }
 `;
 
 export default CoinFlow;
