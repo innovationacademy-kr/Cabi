@@ -2,6 +2,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IItemUseCountDto } from "@/Cabinet/types/dto/admin.dto";
+
 interface ITransformedItem {
   item: string;
   [key: string]: number | string;
@@ -67,7 +68,7 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => {
             "페널티 감면권-3일",
           ]}
           indexBy="item"
-          margin={{ top: 50, right: 10, bottom: 80, left: 60 }}
+          margin={{ top: 50, right: 100, bottom: 80, left: 50 }}
           padding={0.3}
           layout="vertical"
           groupMode="stacked"
