@@ -39,11 +39,14 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     setIsLoading(true);
     try {
       await axiosItemAssign(selectedItemSku, [targetUserInfo.userId!]);
-      // TODO : setModalContent
+      setModalTitle("아이템 지급완료");
+      // setModalContent("아이템 지급이 완료되었습니다.");
     } catch (error: any) {
       setHasErrorOnResponse(true);
       console.log("error : ", error);
-      // TODO : setModalContent
+      setModalTitle("아이템 지급실패");
+      // setModalContent("아이템 지급을 실패했습니다.");
+
       error.response
         ? setModalTitle(error.response.data.message)
         : setModalTitle(error.data.message);
