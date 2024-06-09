@@ -18,7 +18,7 @@ import {
   axiosCoinUseStatistics,
   axiosStatisticsTotalItemUse,
 } from "@/Cabinet/api/axios/axios.custom";
-import { axiosStatisticsItem } from "@/Cabinet/api/axios/axios.custom";
+import { axiosStatisticsCoin } from "@/Cabinet/api/axios/axios.custom";
 import { padTo2Digits } from "@/Cabinet/utils/dateUtils";
 
 export interface ICoinAmountDto {
@@ -50,13 +50,6 @@ export interface ITotalCoinInfo {
   unused: number;
 }
 
-const PieChartCoinData = [
-  {
-    used: 70,
-    unused: 50,
-  },
-];
-
 const AdminStorePage = () => {
   const [toggleType, setToggleType] = useState<CoinDateType>(CoinDateType.DAY);
   const [coinToggleType, setCoinToggleType] = useState<CoinFlowType>(
@@ -66,7 +59,9 @@ const AdminStorePage = () => {
     []
   );
   const [coinCollectDate, setCoinCollectDate] = useState(new Date());
-  const [totalCoinData, setTotalCoinData] = useState<ITotalCoinInfo[]>([]);
+  const [totalCoinData, setTotalCoinData] = useState<
+    { used: number; unused: number }[]
+  >([]);
   const [totalCoinUseData, setTotalCoinUseData] = useState<
     ICoinStatisticsDto | undefined
   >();
@@ -97,11 +92,15 @@ const AdminStorePage = () => {
 
   const getTotalCoinData = async () => {
     try {
-      // const response = await axiosStatisticsItem();
-      // setTotalCoinData(response.data.coinCollectStatistics);
-      setTotalCoinData(PieChartCoinData);
+      const response = await axiosStatisticsCoin();
+      const formattedData: { used: number; unused: number } = {
+        used: response.data.used || 0,
+        unused: response.data.unused || 0,
+      };
+      setTotalCoinData([formattedData]);
     } catch (error) {
       console.error("Error getting total coin data:", error);
+      setTotalCoinData([{ used: 0, unused: 0 }]);
     }
   };
 
