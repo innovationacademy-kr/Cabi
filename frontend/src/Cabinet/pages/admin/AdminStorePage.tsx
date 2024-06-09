@@ -165,7 +165,7 @@ const AdminStorePage = () => {
       <WrapperStyled>
         <HeaderStyled>
           <H2styled>재화 사용 통계</H2styled>
-          <ToggleWrapper>
+          <ToggleWrapperStyled>
             <MultiToggleSwitch
               initialState={coinToggleType}
               setState={setCoinToggleType}
@@ -176,7 +176,7 @@ const AdminStorePage = () => {
               setState={setToggleType}
               toggleList={toggleList}
             />
-          </ToggleWrapper>
+          </ToggleWrapperStyled>
         </HeaderStyled>
         <CoinUseLineChart
           toggleType={toggleType}
@@ -224,20 +224,30 @@ const AdminStorePage = () => {
 const HeaderStyled = styled.div`
   width: 90%;
   display: flex;
-  margin-top: 60px;
+  margin-top: 10px;
   margin-left: 110px;
   flex-direction: column;
   justify-content: start;
   align-items: flex-start;
 `;
 
-const ToggleWrapper = styled.div`
+const ToggleWrapperStyled = styled.div`
   width: 90%;
   display: flex;
-  /* flex-direction: column; */
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
+
+  @media screen and (max-width: 1100px) {
+    width: 85%;
+  }
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    & > :first-child {
+      margin-bottom: 20px;
+    }
+  }
 `;
 
 const AdminStorePageStyled = styled.div`
