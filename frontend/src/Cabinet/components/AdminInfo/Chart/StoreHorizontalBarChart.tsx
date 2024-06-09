@@ -58,8 +58,7 @@ const StoreHorizontalBarChart = ({ data }: { data: ICoinCollectInfoDto[] }) => {
           return (
             <ToolTipStyled color={point.color}>
               <span></span>
-              {point.data.cnt + " - "}
-              <strong>{point.value}</strong>명
+              {point.data.cnt + ":"} <strong>{point.value}</strong>명
             </ToolTipStyled>
           );
         }}
@@ -131,6 +130,9 @@ const ToolTipStyled = styled.div<{ color: string }>`
     height: 12px;
     background-color: ${(props) => props.color};
     margin-right: 8px;
+  }
+  & > strong {
+    padding-left: 4px;
   }
 `;
 
