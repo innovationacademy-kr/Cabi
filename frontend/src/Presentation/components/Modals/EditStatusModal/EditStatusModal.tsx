@@ -68,6 +68,9 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   const [location, setLocation] = useState<PresentationLocation>(
     PresentationLocation.THIRD
   );
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+  const [isDatesDropdownOpen, setIsDatesDropdownOpen] = useState(false);
+  const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
   const [invalidDates, setInvalidDates] = useState<string[]>([]);
   const [statusDropdownProps, setStatusDropdownProps] = useState<IDropdown>({
     options: statusOptions,
@@ -79,6 +82,12 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
     onChangeValue: (val: PresentationStatusType) => {
       setPresentationStatus(val);
     },
+    isOpen: isStatusDropdownOpen,
+    setIsOpen: setIsStatusDropdownOpen,
+    closeOtherDropdown: () => {
+      setIsDatesDropdownOpen(false);
+      setIsLocationDropdownOpen(false);
+    },
   });
   const [datesDropdownProps, setDatesDropdownProps] = useState<IDropdown>({
     options: [],
@@ -88,6 +97,12 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
     defaultImageSrc: "",
     onChangeValue: (val: string) => {
       setPresentationDate(val);
+    },
+    isOpen: isDatesDropdownOpen,
+    setIsOpen: setIsDatesDropdownOpen,
+    closeOtherDropdown: () => {
+      setIsStatusDropdownOpen(false);
+      setIsLocationDropdownOpen(false);
     },
   });
   const [locationDropdownProps, setLocationDropdownProps] = useState<IDropdown>(
@@ -100,6 +115,12 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
       defaultImageSrc: "",
       onChangeValue: (val: PresentationLocation) => {
         setLocation(val);
+      },
+      isOpen: isLocationDropdownOpen,
+      setIsOpen: setIsLocationDropdownOpen,
+      closeOtherDropdown: () => {
+        setIsStatusDropdownOpen(false);
+        setIsDatesDropdownOpen(false);
       },
     }
   );
@@ -168,6 +189,12 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
       defaultValue: dropdownOptions[0].name,
       onChangeValue: (val: string) => {
         setPresentationDate(val);
+      },
+      isOpen: isDatesDropdownOpen,
+      setIsOpen: setIsDatesDropdownOpen,
+      closeOtherDropdown: () => {
+        setIsStatusDropdownOpen(false);
+        setIsLocationDropdownOpen(false);
       },
     });
   }, [invalidDates]);

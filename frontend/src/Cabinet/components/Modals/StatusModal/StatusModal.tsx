@@ -63,6 +63,8 @@ const StatusModal = ({
     useState<CabinetType>(cabinetType);
   const [newCabinetStatus, setNewCabinetStatus] =
     useState<CabinetStatus>(cabinetStatus);
+  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const handleClickWriteMode = (e: any) => {
     setMode("write");
   };
@@ -81,12 +83,18 @@ const StatusModal = ({
     defaultValue: cabinetTypeLabelMap[newCabinetType],
     defaultImageSrc: cabinetIconSrcMap[cabinetType],
     onChangeValue: handleDropdownChangeValue,
+    isOpen: isTypeDropdownOpen,
+    setIsOpen: setIsTypeDropdownOpen,
+    closeOtherDropdown: () => setIsStatusDropdownOpen(false),
   };
 
   const STATUS_DROP_DOWN_PROPS = {
     options: STATUS_OPTIONS,
     defaultValue: cabinetStatusLabelMap[newCabinetStatus],
     onChangeValue: handleDropdownChangeValue,
+    isOpen: isStatusDropdownOpen,
+    setIsOpen: setIsStatusDropdownOpen,
+    closeOtherDropdown: () => setIsTypeDropdownOpen(false),
   };
 
   const handleClickSave = () => {

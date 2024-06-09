@@ -24,6 +24,7 @@ const StoreBuyItemModal: React.FC<{
     String(props.selectItem.items.length - 3)
   );
   const [errorDetails, setErrorDetails] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   const [userInfo] = useRecoilState(userState);
   // const [userInfo, setMyInfo] = useRecoilState(userState);
   const setUser = useSetRecoilState<UserDto>(userState);
@@ -98,6 +99,8 @@ const StoreBuyItemModal: React.FC<{
                   .itemDetails
               }
               onChangeValue={handleDropdownChange}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
             />{" "}
           </ModalContainerStyled>
         )}
