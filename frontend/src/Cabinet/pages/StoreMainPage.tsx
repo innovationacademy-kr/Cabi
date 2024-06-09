@@ -28,10 +28,15 @@ const StoreMainPage = () => {
   const [selectedItem, setSelectedItem] = useState<IItemDetail | null>(null);
   const [items, setItem] = useState([] as IItemDetail[]);
   const [userInfo] = useRecoilState(userState);
-  // const sortedItems = items;
   const sortedItems = sortItems(items);
-  // delete sortedItems.
   const checkMyCoin = (item: IItemDetail) => {
+    
+    if (item.items.length > 3) {
+      return (
+        userInfo.coins !== null && userInfo.coins >= item.items[1].itemPrice * -1
+      );
+    }
+    else
     return (
       userInfo.coins !== null && userInfo.coins >= item.items[0].itemPrice * -1
     );
