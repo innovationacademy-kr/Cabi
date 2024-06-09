@@ -236,6 +236,8 @@ public class ItemFacadeService {
 		itemPolicyService.verifyDataFieldBySku(sku, data);
 		User user = userQueryService.getUser(userId);
 		if (user.isBlackholed()) {
+			// 이벤트를 발생시켰는데 동기로직이다..?
+			// TODO: 근데 그 이벤트가 뭘 하는지 이 코드 흐름에서는 알 수 없다..?
 			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
 		}
 		Item item = itemQueryService.getBySku(sku);

@@ -33,3 +33,8 @@ export interface IItemTimeRemaining {
   hours: number;
   minutes: number;
 }
+
+export interface ICoinCollectInfoDto {
+  coinCount: number;
+  userCount: number;
+}

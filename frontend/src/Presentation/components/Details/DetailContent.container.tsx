@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import { padTo2Digits } from "@/Cabinet/utils/dateUtils";
 import { isCurrentModalState } from "@/Presentation/recoil/atoms";
 import DetailContent from "@/Presentation/components/Details/DetailContent";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
@@ -135,14 +136,14 @@ const DetailContentContainer = () => {
         requestDate.year = (currentDateYear - 1).toString();
         requestDate.month = (12).toString();
       } else {
-        requestDate.month = (currentDateMonth - 1).toString().padStart(2, "0");
+        requestDate.month = padTo2Digits(currentDateMonth - 1);
       }
     } else {
       if (currentDateMonth === 12) {
         requestDate.year = (currentDateYear + 1).toString();
         requestDate.month = (1).toString();
       } else {
-        requestDate.month = (currentDateMonth + 1).toString().padStart(2, "0");
+        requestDate.month = padTo2Digits(currentDateMonth + 1);
       }
     }
 

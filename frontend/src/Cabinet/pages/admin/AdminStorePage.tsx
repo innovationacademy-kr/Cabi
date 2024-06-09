@@ -1,27 +1,25 @@
 import { useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinFlow";
 import ItemBarChart, {
   IItemUseCountDto,
 } from "@/Cabinet/components/AdminInfo/Chart/ItemBarChart";
 import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
-import StoreHalfPieChart from "@/Cabinet/components/AdminInfo/Chart/StoreHalfPieChart";
+import StoreHorizontalBarChart from "@/Cabinet/components/AdminInfo/Chart/StoreHorizontalBarChart";
 import MultiToggleSwitch, {
   toggleItem,
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
+import { MoveSectionButtonStyled } from "@/Cabinet/components/SectionPagination/SectionPagination";
+import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
+import { ICoinCollectInfoDto } from "@/Cabinet/types/dto/store.dto";
 import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
 import {
   axiosCoinCollectStatistics,
   axiosCoinUseStatistics,
   axiosStatisticsTotalItemUse,
 } from "@/Cabinet/api/axios/axios.custom";
-import { axiosStatisticsItem } from "@/Cabinet/api/axios/axios.custom";
-
-export interface ICoinCollectInfo {
-  coinCount: number;
-  userCount: number;
-}
+import { axiosStatisticsCoin } from "@/Cabinet/api/axios/axios.custom";
+import { padTo2Digits } from "@/Cabinet/utils/dateUtils";
 
 export interface ICoinAmountDto {
   // date: Date;
@@ -34,26 +32,6 @@ export interface ICoinStatisticsDto {
   // unusedCoin: ICoinAmountDto[];
   usedCoin: ICoinAmountDto[];
 }
-
-const mockData: ICoinCollectInfo[] = [
-  {
-    coinCount: 5,
-    userCount: 10,
-  },
-  {
-    coinCount: 10,
-    userCount: 20,
-  },
-  {
-    coinCount: 15,
-    userCount: 30,
-  },
-  {
-    coinCount: 20,
-    userCount: 40,
-  },
-];
-// TODO : 작은 횟수부터 큰 횟수까지 차례대로 보내주는지 확인
 
 // 아이템 통계 그래프 확인용
 const itemList: IItemUseCountDto[] = [
@@ -72,22 +50,18 @@ export interface ITotalCoinInfo {
   unused: number;
 }
 
-const PieChartCoinData = [
-  {
-    used: 70,
-    unused: 50,
-  },
-];
-
 const AdminStorePage = () => {
   const [toggleType, setToggleType] = useState<CoinDateType>(CoinDateType.DAY);
   const [coinToggleType, setCoinToggleType] = useState<CoinFlowType>(
     CoinFlowType.ISSUE
   );
-  const [coinCollectData, setCoinCollectData] = useState<ICoinCollectInfo[]>(
+  const [coinCollectData, setCoinCollectData] = useState<ICoinCollectInfoDto[]>(
     []
   );
-  const [totalCoinData, setTotalCoinData] = useState<ITotalCoinInfo[]>([]);
+  const [coinCollectDate, setCoinCollectDate] = useState(new Date());
+  const [totalCoinData, setTotalCoinData] = useState<
+    { used: number; unused: number }[]
+  >([]);
   const [totalCoinUseData, setTotalCoinUseData] = useState<
     ICoinStatisticsDto | undefined
   >();
@@ -106,11 +80,11 @@ const AdminStorePage = () => {
 
   const getCoinCollectData = async () => {
     try {
-      const date = new Date();
-      // TODO
-      // const response = await axiosCoinCollectStatistics(date.getMonth() + 1);
-      // setCoinCollectData(response.data.coinCollectStatistics);
-      setCoinCollectData(mockData);
+      const response = await axiosCoinCollectStatistics(
+        coinCollectDate.getFullYear(),
+        coinCollectDate.getMonth() + 1
+      );
+      setCoinCollectData(response.data.coinCollectStatistics);
     } catch (error) {
       console.error("Error getting coin collect data:", error);
     }
@@ -118,11 +92,15 @@ const AdminStorePage = () => {
 
   const getTotalCoinData = async () => {
     try {
-      // const response = await axiosStatisticsItem();
-      // setTotalCoinData(response.data.coinCollectStatistics);
-      setTotalCoinData(PieChartCoinData);
+      const response = await axiosStatisticsCoin();
+      const formattedData: { used: number; unused: number } = {
+        used: response.data.used || 0,
+        unused: response.data.unused || 0,
+      };
+      setTotalCoinData([formattedData]);
     } catch (error) {
       console.error("Error getting total coin data:", error);
+      setTotalCoinData([{ used: 0, unused: 0 }]);
     }
   };
 
@@ -143,6 +121,28 @@ const AdminStorePage = () => {
     } catch (error) {
       console.error("Error getting total item data:", error);
     }
+  };
+
+  const moveMonth = (direction: string) => {
+    let currentDateYear = coinCollectDate.getFullYear();
+    let currentDateMonth = coinCollectDate.getMonth();
+
+    if (direction === "left") {
+      if (currentDateMonth === 1) {
+        currentDateYear -= 1;
+        currentDateMonth = 12;
+      } else {
+        currentDateMonth -= 1;
+      }
+    } else {
+      if (currentDateMonth === 12) {
+        currentDateYear += 1;
+        currentDateMonth = 1;
+      } else {
+        currentDateMonth += 1;
+      }
+    }
+    setCoinCollectDate(new Date(currentDateYear, currentDateMonth));
   };
 
   useEffect(() => {
@@ -170,19 +170,18 @@ const AdminStorePage = () => {
   }, [toggleType]);
 
   useEffect(() => {
-    console.log("toggleType", toggleType);
-  }, [toggleType]);
+    getCoinCollectData();
+  }, [coinCollectDate]);
 
   useEffect(() => {
     // getTotalCoinUseData();
-    getCoinCollectData();
     getTotalCoinData();
     getTotalItemData();
   }, []);
 
   return (
-    <AdminHomeStyled>
-      <ContainerStyled>
+    <AdminStorePageStyled>
+      <WrapperStyled>
         <HeaderStyled>
           <H2styled>재화 사용 통계</H2styled>
           <ToggleContainer>
@@ -203,25 +202,41 @@ const AdminStorePage = () => {
           coinToggleType={coinToggleType}
           totalCoinUseData={totalCoinUseData}
         />
-      </ContainerStyled>
-      <ContainerStyled>
+      </WrapperStyled>
+      <WrapperStyled>
         <CoinCollectTitleWrapperStyled>
-          <H2styled>코인 통계</H2styled>
-          <h3>5월</h3>
+          <H2styled>동전 줍기 통계</H2styled>
+          <div>
+            <MoveSectionButtonStyled
+              src={LeftSectionButton}
+              onClick={() => moveMonth("left")}
+              className="cabiButton"
+            />
+            <span>
+              {coinCollectDate.getFullYear() +
+                "년 " +
+                padTo2Digits(coinCollectDate.getMonth() + 1) +
+                "월"}
+            </span>
+            <MoveSectionButtonStyled
+              src={LeftSectionButton}
+              onClick={() => moveMonth("right")}
+              arrowReversed={true}
+              className="cabiButton"
+            />
+          </div>
         </CoinCollectTitleWrapperStyled>
-        <StoreHalfPieChart data={coinCollectData} />
-      </ContainerStyled>
-      <ContainerStyled>
+        <StoreHorizontalBarChart data={coinCollectData} />
+      </WrapperStyled>
+      <WrapperStyled>
         <H2styled>전체 재화 현황</H2styled>
         <PieChartCoin data={totalCoinData} />
-      </ContainerStyled>
-      <ContainerStyled>
-        <CoinCollectTitleWrapperStyled>
-          <H2styled>아이템 통계</H2styled>
-        </CoinCollectTitleWrapperStyled>
+      </WrapperStyled>
+      <WrapperStyled>
+        <H2styled>아이템 통계</H2styled>
         <ItemBarChart data={totalItemData} />
-      </ContainerStyled>
-    </AdminHomeStyled>
+      </WrapperStyled>
+    </AdminStorePageStyled>
   );
 };
 
@@ -244,7 +259,7 @@ const ToggleContainer = styled.div`
   margin-top: 20px;
 `;
 
-const AdminHomeStyled = styled.div`
+const AdminStorePageStyled = styled.div`
   background: var(--bg-color);
   width: 100%;
   height: 100%;
@@ -253,6 +268,7 @@ const AdminHomeStyled = styled.div`
   grid-template-rows: repeat(2, 1fr);
   place-items: center;
   min-height: 775px;
+  margin: 42px 0;
   & > :first-child {
     grid-column: span 3;
   }
@@ -277,7 +293,7 @@ const AdminHomeStyled = styled.div`
   }
 `;
 
-const ContainerStyled = styled.div`
+const WrapperStyled = styled.div`
   height: 90%;
   width: 100%;
   min-width: 0;
@@ -327,11 +343,24 @@ const H2styled = styled.h2`
 `;
 
 const CoinCollectTitleWrapperStyled = styled.div`
-  & > h3 {
-    text-align: center;
-    color: var(--ref-gray-400);
-    font-weight: bold;
+  height: 70px;
+
+  & > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 10px;
+  }
+
+  & > div > span {
+    color: var(--ref-gray-400);
+    height: 20px;
+    line-height: 18px;
+  }
+
+  & > div > img {
+    height: 20px;
+    width: 20px;
   }
 `;
 

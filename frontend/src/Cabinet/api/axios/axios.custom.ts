@@ -813,11 +813,12 @@ export const axiosStatisticsTotalItemUse = async () => {
 
 const axiosCoinCollectStatisticsURL = "/v5/admin/statistics/coins/collect";
 export const axiosCoinCollectStatistics = async (
+  year: number,
   month: number
 ): Promise<any> => {
   try {
     const response = await instance.get(axiosCoinCollectStatisticsURL, {
-      params: { month },
+      params: { year: year, month: month },
     });
     return response;
   } catch (error) {
@@ -898,12 +899,12 @@ export const axiosSendSlackNotificationToChannel = async (
 const axiosItemAssignURL = "v5/admin/items/assign";
 export const axiosItemAssign = async (
   itemSku: string,
-  userId: number
+  userIds: number[]
 ): Promise<any> => {
   try {
     const response = await instance.post(axiosItemAssignURL, {
       itemSku,
-      userId,
+      userIds,
     });
     return response;
   } catch (error) {
