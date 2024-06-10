@@ -4,8 +4,8 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import Dropdown, {
-  IDropdown,
   IDropdownOptions,
+  IDropdownProps,
 } from "@/Cabinet/components/Common/Dropdown";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
@@ -69,18 +69,19 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
     PresentationLocation.THIRD
   );
   const [invalidDates, setInvalidDates] = useState<string[]>([]);
-  const [statusDropdownProps, setStatusDropdownProps] = useState<IDropdown>({
-    options: statusOptions,
-    defaultValue:
-      statusOptions.find(
-        (option) => option.value === currentPresentation?.presentationStatus
-      )?.name ?? "발표 예정",
-    defaultImageSrc: "",
-    onChangeValue: (val: PresentationStatusType) => {
-      setPresentationStatus(val);
-    },
-  });
-  const [datesDropdownProps, setDatesDropdownProps] = useState<IDropdown>({
+  const [statusDropdownProps, setStatusDropdownProps] =
+    useState<IDropdownProps>({
+      options: statusOptions,
+      defaultValue:
+        statusOptions.find(
+          (option) => option.value === currentPresentation?.presentationStatus
+        )?.name ?? "발표 예정",
+      defaultImageSrc: "",
+      onChangeValue: (val: PresentationStatusType) => {
+        setPresentationStatus(val);
+      },
+    });
+  const [datesDropdownProps, setDatesDropdownProps] = useState<IDropdownProps>({
     options: [],
     defaultValue: currentPresentation?.dateTime
       ? format(currentPresentation?.dateTime.split("T")[0], "M월 d일")
@@ -90,8 +91,8 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
       setPresentationDate(val);
     },
   });
-  const [locationDropdownProps, setLocationDropdownProps] = useState<IDropdown>(
-    {
+  const [locationDropdownProps, setLocationDropdownProps] =
+    useState<IDropdownProps>({
       options: floorOptions,
       defaultValue:
         floorOptions.find(
@@ -101,8 +102,7 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
       onChangeValue: (val: PresentationLocation) => {
         setLocation(val);
       },
-    }
-  );
+    });
 
   const tryEditPresentationStatus = async (e: React.MouseEvent) => {
     if (!currentPresentation || !currentPresentation.id) return;

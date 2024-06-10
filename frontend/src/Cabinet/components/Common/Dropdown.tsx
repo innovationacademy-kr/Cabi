@@ -10,17 +10,18 @@ export interface IDropdownOptions {
   imageSrc?: string;
 }
 
-export interface IDropdown {
+export interface IDropdownProps {
   options: IDropdownOptions[];
   defaultValue: string;
   defaultImageSrc?: string;
   onChangeValue?: (param: any) => any;
 }
 
-const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
+const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdownProps) => {
   const [currentName, setCurrentName] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const selectedIdx = options.findIndex((op) => op.name === currentName) ?? 0;
+  const idx: number = options.findIndex((op) => op.name === currentName);
+  const selectedIdx: number = idx === -1 ? 0 : idx;
 
   return (
     <DropdownContainerStyled>
@@ -30,7 +31,7 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
         }}
         isOpen={isOpen}
       >
-        {options[selectedIdx].imageSrc?.length && (
+        {options[selectedIdx] && options[selectedIdx].imageSrc && (
           <OptionsImgStyled>
             {options[selectedIdx].value === "PRIVATE" && <PrivateIcon />}
             {options[selectedIdx].value === "CLUB" && <ClubIcon />}
