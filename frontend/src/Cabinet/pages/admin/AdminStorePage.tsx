@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import CoinFlow from "@/Cabinet/components/AdminInfo/Chart/CoinFlow";
-import ItemBarChart, {
-  IItemUseCountDto,
-} from "@/Cabinet/components/AdminInfo/Chart/ItemBarChart";
+import CoinUseLineChart from "@/Cabinet/components/AdminInfo/Chart/CoinUseLineChart";
+import ItemBarChart from "@/Cabinet/components/AdminInfo/Chart/ItemBarChart";
 import PieChartCoin from "@/Cabinet/components/AdminInfo/Chart/PieChartCoin";
 import StoreHorizontalBarChart from "@/Cabinet/components/AdminInfo/Chart/StoreHorizontalBarChart";
 import MultiToggleSwitch, {
@@ -11,8 +9,12 @@ import MultiToggleSwitch, {
 } from "@/Cabinet/components/Common/MultiToggleSwitch";
 import { MoveSectionButtonStyled } from "@/Cabinet/components/SectionPagination/SectionPagination";
 import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
+import {
+  ICoinStatisticsDto,
+  IItemUseCountDto,
+} from "@/Cabinet/types/dto/admin.dto";
 import { ICoinCollectInfoDto } from "@/Cabinet/types/dto/store.dto";
-import { CoinDateType, CoinFlowType } from "@/Cabinet/types/enum/store.enum";
+import { CoinUseDateType, CoinUseType } from "@/Cabinet/types/enum/store.enum";
 import {
   axiosCoinCollectStatistics,
   axiosCoinUseStatistics,
@@ -21,39 +23,24 @@ import {
 import { axiosStatisticsCoin } from "@/Cabinet/api/axios/axios.custom";
 import { padTo2Digits } from "@/Cabinet/utils/dateUtils";
 
-export interface ICoinAmountDto {
-  // date: Date;
-  date: string;
-  amount: number;
-}
-
-export interface ICoinStatisticsDto {
-  issuedCoin: ICoinAmountDto[];
-  // unusedCoin: ICoinAmountDto[];
-  usedCoin: ICoinAmountDto[];
-}
+const dataToggleList: toggleItem[] = [
+  { name: "발행 코인", key: CoinUseType.ISSUE },
+  { name: "사용 코인", key: CoinUseType.USED },
+];
 
 // 아이템 통계 그래프 확인용
-const itemList: IItemUseCountDto[] = [
-  { itemName: "연장권", itemDetails: "출석 연장권 보상", userCount: 38 },
-  { itemName: "연장권", itemDetails: "31일", userCount: 53 },
-  { itemName: "연장권", itemDetails: "15일", userCount: 22 },
-  { itemName: "연장권", itemDetails: "3일", userCount: 30 },
-  { itemName: "페널티 감면권", itemDetails: "31일", userCount: 10 },
-  { itemName: "페널티 감면권", itemDetails: "7일", userCount: 30 },
-  { itemName: "페널티 감면권", itemDetails: "3일", userCount: 80 },
-  { itemName: "이사권", itemDetails: "이사권", userCount: 60 },
-  { itemName: "알림 등록권", itemDetails: "알림 등록권", userCount: 100 },
-];
+
 export interface ITotalCoinInfo {
   used: number;
   unused: number;
 }
 
 const AdminStorePage = () => {
-  const [toggleType, setToggleType] = useState<CoinDateType>(CoinDateType.DAY);
-  const [coinToggleType, setCoinToggleType] = useState<CoinFlowType>(
-    CoinFlowType.ISSUE
+  const [toggleType, setToggleType] = useState<CoinUseDateType>(
+    CoinUseDateType.DAY
+  );
+  const [coinToggleType, setCoinToggleType] = useState<CoinUseType>(
+    CoinUseType.ISSUE
   );
   const [coinCollectData, setCoinCollectData] = useState<ICoinCollectInfoDto[]>(
     []
@@ -67,15 +54,10 @@ const AdminStorePage = () => {
   >();
   const [totalItemData, setTotalItemData] = useState<IItemUseCountDto[]>([]);
 
-  const dataToggleList: toggleItem[] = [
-    { name: "발행 코인", key: CoinFlowType.ISSUE },
-    { name: "사용 코인", key: CoinFlowType.USED },
-  ];
-
   const toggleList: toggleItem[] = [
-    { name: "1d", key: CoinDateType.DAY },
-    { name: "7d", key: CoinDateType.WEEK },
-    { name: "30d", key: CoinDateType.MONTH },
+    { name: "1d", key: CoinUseDateType.DAY },
+    { name: "7d", key: CoinUseDateType.WEEK },
+    { name: "30d", key: CoinUseDateType.MONTH },
   ];
 
   const getCoinCollectData = async () => {
@@ -108,7 +90,6 @@ const AdminStorePage = () => {
     try {
       const response = await axiosStatisticsTotalItemUse();
       setTotalItemData(response.data.items);
-      // setTotalItemData(itemList);
     } catch (error) {
       console.error("Err or getting total coin data:", error);
     }
@@ -184,7 +165,7 @@ const AdminStorePage = () => {
       <WrapperStyled>
         <HeaderStyled>
           <H2styled>재화 사용 통계</H2styled>
-          <ToggleContainer>
+          <ToggleWrapperStyled>
             <MultiToggleSwitch
               initialState={coinToggleType}
               setState={setCoinToggleType}
@@ -195,9 +176,9 @@ const AdminStorePage = () => {
               setState={setToggleType}
               toggleList={toggleList}
             />
-          </ToggleContainer>
+          </ToggleWrapperStyled>
         </HeaderStyled>
-        <CoinFlow
+        <CoinUseLineChart
           toggleType={toggleType}
           coinToggleType={coinToggleType}
           totalCoinUseData={totalCoinUseData}
@@ -243,20 +224,30 @@ const AdminStorePage = () => {
 const HeaderStyled = styled.div`
   width: 90%;
   display: flex;
-  margin-top: 60px;
+  margin-top: 10px;
   margin-left: 110px;
   flex-direction: column;
   justify-content: start;
   align-items: flex-start;
 `;
 
-const ToggleContainer = styled.div`
+const ToggleWrapperStyled = styled.div`
   width: 90%;
   display: flex;
-  /* flex-direction: column; */
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
+
+  @media screen and (max-width: 1100px) {
+    width: 85%;
+  }
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    & > :first-child {
+      margin-bottom: 20px;
+    }
+  }
 `;
 
 const AdminStorePageStyled = styled.div`

@@ -13,7 +13,7 @@ const AdminItemUsageLog = ({
   return (
     <AdminItemUsageLogStyled>
       <AdminItemLogTable itemLog={logs} />
-      <ButtonContainerStyled>
+      <ButtonWrapperStyled>
         <PageButtonStyled
           page={page}
           totalPage={totalPage}
@@ -46,7 +46,7 @@ const AdminItemUsageLog = ({
             </ImageStyled>
           </ImgCenterStyled>
         </PageButtonStyled>
-      </ButtonContainerStyled>
+      </ButtonWrapperStyled>
     </AdminItemUsageLogStyled>
   );
 };
@@ -56,7 +56,7 @@ const AdminItemUsageLogStyled = styled.div`
   position: relative;
 `;
 
-const ButtonContainerStyled = styled.div`
+const ButtonWrapperStyled = styled.div`
   position: absolute;
   top: 0;
   left: 0;

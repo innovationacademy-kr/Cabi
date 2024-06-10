@@ -17,6 +17,9 @@ export interface IDropdown {
   defaultValue: string;
   defaultImageSrc?: string;
   onChangeValue?: (param: any) => any;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  closeOtherDropdown?: () => void;
 }
 
 const Dropdown = ({
@@ -24,9 +27,11 @@ const Dropdown = ({
   defaultValue,
   onChangeValue,
   defaultImageSrc,
+  isOpen,
+  setIsOpen,
+  closeOtherDropdown,
 }: IDropdown) => {
   const [currentName, setCurrentName] = useState(defaultValue);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const selectedIdx = options.findIndex((op) => op.name === currentName) ?? 0;
   const DefaultOptionIcon =
     defaultImageSrc &&
@@ -35,13 +40,14 @@ const Dropdown = ({
   useEffect(() => {
     setCurrentName(defaultValue);
   }, [defaultValue]);
-
   return (
     <DropdownContainerStyled>
       <DropdownSelectionBoxStyled
         onClick={() => {
+          console.log(options[selectedIdx]);
           if (options[selectedIdx].isDisabled) return;
           setIsOpen(!isOpen);
+          closeOtherDropdown && closeOtherDropdown();
         }}
       >
         {DefaultOptionIcon && (

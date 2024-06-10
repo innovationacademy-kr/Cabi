@@ -50,6 +50,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   const [enabledOptions, setEnabledOptions] = useState(
     STATUS_OPTIONS.find((option) => !option.isDisabled)
   );
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleDropdownChange = (option: StorePenaltyType) => {
     setSelectedOption(option);
@@ -67,6 +68,8 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     options: statusOptions,
     defaultValue: enabledOptions ? enabledOptions.name : "",
     onChangeValue: handleDropdownChange,
+    isOpen: isOpen,
+    setIsOpen: setIsOpen,
   };
 
   const tryGetPenaltyItem = async () => {

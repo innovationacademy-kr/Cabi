@@ -42,6 +42,7 @@ const ExtendModal: React.FC<{
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContents, setModalContents] = useState<string | null>(null);
   const [extensionDate, setExtensionDate] = useState<number>(3);
+  const [isOpen, setIsOpen] = useState(false);
   const [currentCabinetId] = useRecoilState(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myLentInfo, setMyLentInfo] =
@@ -243,6 +244,8 @@ const ExtendModal: React.FC<{
                 : extensionPeriod[0].period
             }
             onChangeValue={handleDropdownChange}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
           />
         </ModalContainerStyled>
 

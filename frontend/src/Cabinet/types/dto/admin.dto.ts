@@ -80,3 +80,19 @@ export type ItemLogResponseType =
   | ItemLogResponse
   | typeof STATUS_400_BAD_REQUEST
   | undefined;
+
+export interface IItemUseCountDto {
+  itemName: string;
+  itemDetails: string;
+  userCount: number;
+}
+
+export interface ICoinAmountDto {
+  date: string;
+  amount: number;
+}
+
+export interface ICoinStatisticsDto {
+  issuedCoin: ICoinAmountDto[];
+  usedCoin: ICoinAmountDto[];
+}
