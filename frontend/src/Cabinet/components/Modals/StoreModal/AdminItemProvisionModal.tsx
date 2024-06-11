@@ -28,8 +28,10 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   const [modalTitle, setModalTitle] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [items, setItems] = useState<IItemDetail[]>([]);
-  const [statusOptions, setStatusOptions] = useState<IDropdownOptions[]>([]);
-  const [typeOptions, setTypeOptions] = useState<IDropdownOptions[]>([]);
+  const [itemOptions, setItemOptions] = useState<IDropdownOptions[]>([]);
+  const [itemTypeOptions, setItemTypeOptions] = useState<IDropdownOptions[]>(
+    []
+  );
   const [isItemDropdownOpen, setIsItemDropdownOpen] = useState(false);
   const [isItemTypeDropdownOpen, setIsItemTypeDropdownOpen] = useState(false);
   const [targetUserInfo] = useRecoilState(targetUserInfoState);
@@ -52,18 +54,18 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     }
   };
 
-  const handleDropdownStatusChange = (option: StoreItemType) => {
+  const handleItemDropdownChange = (option: StoreItemType) => {
     const foundItem = items.find((item) => {
       return item.itemType === option;
     });
 
     if (foundItem) {
-      setTypeOptions(getTypeOptions(foundItem));
+      setItemTypeOptions(getItemTypeOptions(foundItem));
       setSelectedItemSku(foundItem.items[0].itemSku);
     }
   };
 
-  const handleDropdownTypeChange = (option: any) => {
+  const handleItemTypeDropdownChange = (option: any) => {
     // TODO : sku?
     setSelectedItemSku(option);
   };
@@ -77,19 +79,19 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     }
   };
 
-  const statusDropDownProps = {
-    options: statusOptions,
-    defaultValue: statusOptions[0]?.name,
-    onChangeValue: handleDropdownStatusChange,
+  const itemDropDownProps = {
+    options: itemOptions,
+    defaultValue: itemOptions[0]?.name,
+    onChangeValue: handleItemDropdownChange,
     isOpen: isItemDropdownOpen,
     setIsOpen: setIsItemDropdownOpen,
     closeOtherDropdown: () => setIsItemTypeDropdownOpen(false),
   };
 
-  const typeDropDownProps = {
-    options: typeOptions,
-    defaultValue: typeOptions[0]?.name,
-    onChangeValue: handleDropdownTypeChange,
+  const itemTypeDropDownProps = {
+    options: itemTypeOptions,
+    defaultValue: itemTypeOptions[0]?.name,
+    onChangeValue: handleItemTypeDropdownChange,
     isOpen: isItemTypeDropdownOpen,
     setIsOpen: setIsItemTypeDropdownOpen,
     closeOtherDropdown: () => setIsItemDropdownOpen(false),
@@ -99,12 +101,12 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     if (items.length) {
       const sortedItems = sortItems(items);
 
-      setStatusOptions(
+      setItemOptions(
         sortedItems.map((item) => {
           return { name: item.itemName, value: item.itemType };
         })
       );
-      setTypeOptions(getTypeOptions(sortedItems[0]));
+      setItemTypeOptions(getItemTypeOptions(sortedItems[0]));
       setSelectedItemSku(sortedItems[0].items[0].itemSku);
     }
   }, [items]);
@@ -113,7 +115,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     getItems();
   }, []);
 
-  const getTypeOptions = (item: IItemDetail) => {
+  const getItemTypeOptions = (item: IItemDetail) => {
     return item.items.length === 1
       ? [
           {
@@ -143,12 +145,12 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
       <>
         <ModalWrapperStyled>
           <ModalDropdownNameStyled>아이템</ModalDropdownNameStyled>
-          <Dropdown {...statusDropDownProps} />
+          <Dropdown {...itemDropDownProps} />
         </ModalWrapperStyled>
 
         <ModalWrapperStyled>
           <ModalDropdownNameStyled>아이템 타입</ModalDropdownNameStyled>
-          <Dropdown {...typeDropDownProps} />
+          <Dropdown {...itemTypeDropDownProps} />
         </ModalWrapperStyled>
       </>
     ),

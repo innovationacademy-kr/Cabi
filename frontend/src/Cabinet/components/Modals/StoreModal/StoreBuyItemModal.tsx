@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
-import Dropdown from "@/Cabinet/components/Common/Dropdown";
+import Dropdown, { IDropdown } from "@/Cabinet/components/Common/Dropdown";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
@@ -51,11 +51,44 @@ const StoreBuyItemModal: React.FC<{
     setSelectedOption(option);
   };
 
+  const [dropdownProps, setDropdownProps] = useState<IDropdown>({
+    options: [],
+    defaultValue: "",
+    onChangeValue: () => {},
+    isOpen: false,
+    setIsOpen: () => {},
+  });
+
   useEffect(() => {
-    if (props.selectItem.items.length > 3) {
-      setSelectedOption("1");
+    if (props.selectItem.items.length > 3) setSelectedOption("1");
+    if (props.selectItem.items.length > 1) {
+      setDropdownProps({
+        options: [
+          {
+            name: props.selectItem.items[props.selectItem.items.length - 3]
+              .itemDetails,
+            value: String(props.selectItem.items.length - 3),
+          },
+          {
+            name: props.selectItem.items[props.selectItem.items.length - 2]
+              .itemDetails,
+            value: String(props.selectItem.items.length - 2),
+          },
+          {
+            name: props.selectItem.items[props.selectItem.items.length - 1]
+              .itemDetails,
+            value: String(props.selectItem.items.length - 1),
+          },
+        ],
+        defaultValue:
+          props.selectItem.items[props.selectItem.items.length - 3].itemDetails,
+        onChangeValue: handleDropdownChange,
+        isOpen: isOpen,
+        setIsOpen: setIsOpen,
+      });
     }
-  },[])
+  }, [props]);
+
   const modalContents: IModalContents = {
     type: "hasProceedBtn",
     iconType: "CHECK",
@@ -70,12 +103,13 @@ const StoreBuyItemModal: React.FC<{
     },
     renderAdditionalComponent: () => (
       <>
+        {console.log("dropdown", dropdownProps)}
         {props.selectItem.items.length > 1 && (
           <ModalContainerStyled>
             <ModalDropdownNameStyled>
               {props.selectItem.itemName} 타입
             </ModalDropdownNameStyled>
-            <Dropdown
+            {/* <Dropdown
               options={[
                 {
                   name: props.selectItem.items[
@@ -103,7 +137,8 @@ const StoreBuyItemModal: React.FC<{
               onChangeValue={handleDropdownChange}
               isOpen={isOpen}
               setIsOpen={setIsOpen}
-            />{" "}
+            /> */}
+            <Dropdown {...dropdownProps} />{" "}
           </ModalContainerStyled>
         )}
 
