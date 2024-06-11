@@ -128,34 +128,43 @@ public class CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
 			Integer floor, Long userId) {
+		// 건물, 층에 있는 현재 대여 중인 사물함 정보, 해당 사물함에 대여 중인 유저 정보, 해당 대여 기록 조회
 		List<ActiveCabinetInfoEntities> activeCabinetInfos =
 				cabinetQueryService.findActiveCabinetInfoEntities(building, floor);
+		// 조회한 사물함, 유저, 대여기록 리스트를 사물함 기준으로 대여기록 그룹화(Map)
 		Map<Cabinet, List<LentHistory>> cabinetLentHistories = activeCabinetInfos.stream().
 				collect(groupingBy(ActiveCabinetInfoEntities::getCabinet,
 						mapping(ActiveCabinetInfoEntities::getLentHistory, Collectors.toList())));
+		// 건물, 층에 있는 모든 사물함 정보 조회
 		List<Cabinet> allCabinetsOnSection =
 				cabinetQueryService.findAllCabinetsByBuildingAndFloor(building, floor);
+		// 동아리 사물함 대여 정보들을 조회하여 사물함 ID를 기준으로 그룹화(Map)
 		Map<Long, List<ClubLentHistory>> clubLentMap =
 				clubLentQueryService.findAllActiveLentHistoriesWithClub().stream()
 						.collect(groupingBy(ClubLentHistory::getCabinetId));
 
+		// 층, 건물에 따른 유저가 알람 등록한 section 조회
 		Set<String> unsetAlarmSection =
-				sectionAlarmQueryService.getUnsetAlarm(userId, building, floor)
+				sectionAlarmQueryService.getUnsentAlarm(userId, building, floor)
 						.stream()
 						.map(alarm -> alarm.getCabinetPlace().getLocation().getSection())
 						.collect(Collectors.toSet());
 
+		// 층, 건물에 있는 사물함을 순회하며, visibleNum으로 정렬하고, 섹션별로 사물함 정보를 그룹화
 		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new LinkedHashMap<>();
 		allCabinetsOnSection.stream()
 				.sorted(Comparator.comparing(Cabinet::getVisibleNum))
 				.forEach(cabinet -> {
 					String section = cabinet.getCabinetPlace().getLocation().getSection();
+					// 동아리 사물함이라면,
 					if (cabinet.getLentType().equals(LentType.CLUB)) {
+						// 동아리 사물함이 대여 중인 아닌 경우 빈 이름으로 Dto 생성,
 						if (!clubLentMap.containsKey(cabinet.getId())) {
 							cabinetPreviewsBySection.computeIfAbsent(section,
 											k -> new ArrayList<>())
 									.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 						} else {
+							// 대여 중인 경우 대여기록을 가져와서 사물함 title을 가져와 Dto 생성
 							clubLentMap.get(cabinet.getId()).stream()
 									.map(c -> c.getClub().getName())
 									.findFirst().ifPresent(clubName -> cabinetPreviewsBySection
@@ -164,14 +173,16 @@ public class CabinetFacadeService {
 						}
 						return;
 					}
+					// 사물함 대여기록을 조회 및 사물함 제목을 가져옴
 					List<LentHistory> lentHistories =
 							cabinetLentHistories.getOrDefault(cabinet, Collections.emptyList());
 					String title = getCabinetTitle(cabinet, lentHistories);
+					// 사물함과 대여기록, title로 Dto 생성
 					cabinetPreviewsBySection.computeIfAbsent(section, k -> new ArrayList<>())
 							.add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(),
 									title));
 				});
-
+		// 생성한 Dto를 섹션별로 묶어서 반환
 		return cabinetPreviewsBySection.entrySet().stream()
 				.map(entry -> {
 					String section = entry.getKey();
@@ -204,30 +215,41 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public CabinetPendingResponseDto getAvailableCabinets(String building) {
+		// 현재 시간 및 어제 13시 00분 00초 시간 설정
 		final LocalDateTime now = LocalDateTime.now();
 		final LocalDateTime yesterday = now.minusDays(1).withHour(13).withMinute(0).withSecond(0);
+
+		// 빌딩에 있는 CLUB 대여 타입이 아니면서, AVAILABLE, PENDING 상태인 사물함 조회
 		List<Cabinet> availableCabinets = cabinetQueryService.findCabinetsNotLentTypeAndStatus(
 				building, LentType.CLUB, List.of(AVAILABLE, PENDING));
+		// 그 중 PENDING 상태인 사물함들만 ID를 리스트로 변환
 		List<Long> cabinetIds = availableCabinets.stream()
 				.filter(cabinet -> cabinet.isStatus(PENDING))
 				.map(Cabinet::getId).collect(Collectors.toList());
+
 		Map<Long, List<LentHistory>> lentHistoriesMap;
+		// 현재 시간이 13시 이전이면 어제 반납된 사물함을 조회
 		if (now.getHour() < 13) {
 			lentHistoriesMap = lentQueryService.findPendingLentHistoriesOnDate(
 							yesterday.toLocalDate(), cabinetIds)
 					.stream().collect(groupingBy(LentHistory::getCabinetId));
 		} else {
+			// 13시 이후면 현재 PENDING 인 사물함들을 조회
 			lentHistoriesMap = lentQueryService.findCabinetLentHistories(cabinetIds)
 					.stream().collect(groupingBy(LentHistory::getCabinetId));
 		}
+
+		// 층별로 사물함 정보를 그룹화
 		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap =
 				cabinetQueryService.findAllFloorsByBuilding(building).stream()
 						.collect(toMap(key -> key, value -> new ArrayList<>()));
 		availableCabinets.forEach(cabinet -> {
 			Integer floor = cabinet.getCabinetPlace().getLocation().getFloor();
+			// AVAILABLE 상태인 사물함은 바로 추가
 			if (cabinet.isStatus(AVAILABLE)) {
 				cabinetFloorMap.get(floor).add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 			}
+			// PENDING 상태인 사물함이면서 오픈 예정으로 보여주어야 하는 사물함 추가
 			if (cabinet.isStatus(PENDING) && lentHistoriesMap.containsKey(cabinet.getId())) {
 				lentHistoriesMap.get(cabinet.getId()).stream()
 						.map(LentHistory::getEndedAt)

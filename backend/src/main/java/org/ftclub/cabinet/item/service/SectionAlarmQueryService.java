@@ -20,7 +20,7 @@ public class SectionAlarmQueryService {
 		return sectionAlarmRepository.findAllByAlarmedAtIsNull();
 	}
 
-	public List<SectionAlarm> getUnsetAlarm(Long userId, String building, Integer floor) {
+	public List<SectionAlarm> getUnsentAlarm(Long userId, String building, Integer floor) {
 		return sectionAlarmRepository.findAllByUserIdAndCabinetPlaceAndAlarmedAtIsNull(
 				userId, building, floor);
 	}

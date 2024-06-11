@@ -42,23 +42,28 @@ public class SectionAlarmManager {
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime from = LocalDate.now().atStartOfDay();
 
+		// 오늘 열리는 모든 사물함 조회
 		List<Cabinet> allPendingCabinets =
 				cabinetQueryService.findAllPendingCabinets(CabinetStatus.PENDING);
+		// 반납일이 오늘 이전인 사물함만 필터링
 		Map<Location, List<Cabinet>> locationCabinetMap = allPendingCabinets.stream()
 				.filter(cabinet ->
 						lentRedisService.getPreviousEndedAt(cabinet.getId()).isBefore(from))
 				.collect(groupingBy(cabinet -> cabinet.getCabinetPlace().getLocation(),
 						mapping(cabinet -> cabinet, Collectors.toList())));
 
+		// 사용되지 않은 알람권 조회
 		List<Long> alarmIds = new ArrayList<>();
 		sectionAlarmQueryService.getUnsentAlarms().forEach(alarm -> {
 			Location location = alarm.getCabinetPlace().getLocation();
+			// 오늘 열리는 사물함인 경우에만 알람 이벤트 생성
 			if (locationCabinetMap.containsKey(location)) {
 				alarmIds.add(alarm.getId());
 				eventPublisher.publishEvent(
 						AlarmEvent.of(alarm.getUserId(), new AvailableSectionAlarm(location)));
 			}
 		});
+		// 사용된 알림권 업데이트
 		if (!alarmIds.isEmpty()) {
 			sectionAlarmCommandService.updateAlarmSend(alarmIds, now);
 		}
