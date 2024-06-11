@@ -66,9 +66,6 @@ const InventoryItem = ({
   const itemTooltip = convertToItemTooltip(itemsType);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  console.log("itemsType", itemsType);
-  console.log("itemTooltip", itemTooltip);
-
   const onClickToggleBtn = () => {
     setIsToggled((prev) => !prev);
   };
@@ -88,8 +85,11 @@ const InventoryItem = ({
   return (
     <>
       <ItemWrapperStyled>
-        <ItemTitleStyled isToggled={isToggled} onClick={onClickToggleBtn}>
-          <SubNameStyled>
+        <ItemTitleWrapperStyled
+          isToggled={isToggled}
+          onClick={onClickToggleBtn}
+        >
+          <ItemTitleStyled>
             <h2>{convertToItemTypeLabel(itemsType)}</h2>
             <CautionWrapperStyled>
               <CautionIconStyled
@@ -107,11 +107,11 @@ const InventoryItem = ({
                 </TooltipBoxDateStyled>
               )}
             </CautionWrapperStyled>
-          </SubNameStyled>
+          </ItemTitleStyled>
           <button>
             <SelectIcon />
           </button>
-        </ItemTitleStyled>
+        </ItemTitleWrapperStyled>
         <ItemCardSectionStyled isToggled={isToggled}>
           {sortedItems.length ? (
             <>
@@ -192,7 +192,7 @@ const CardTextStyled = styled.div<{ hasTypes: boolean }>`
   }
 `;
 
-const ItemTitleStyled = styled.div<{ isToggled: boolean }>`
+const ItemTitleWrapperStyled = styled.div<{ isToggled: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -254,7 +254,7 @@ const CautionIconStyled = styled.img`
   }
 `;
 
-export const SubNameStyled = styled.div`
+export const ItemTitleStyled = styled.div`
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -291,7 +291,7 @@ const TooltipBoxDateStyled = styled.div`
     border-color: transparent var(--tooltip-shadow-color) transparent
       transparent;
   }
-  ${SubNameStyled}:hover & {
+  ${ItemTitleStyled}:hover & {
     opacity: 1;
   }
 `;
