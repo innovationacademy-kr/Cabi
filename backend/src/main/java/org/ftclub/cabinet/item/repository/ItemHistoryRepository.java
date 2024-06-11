@@ -41,11 +41,8 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 	@EntityGraph(attributePaths = "item")
 	Page<ItemHistory> findAllByUserIdOrderByPurchaseAtDesc(Long userId, Pageable pageable);
 
-	@Query("SELECT ih "
-			+ "FROM ItemHistory ih "
-			+ "JOIN FETCH ih.item "
-			+ "WHERE ih.userId = :userId")
-	List<ItemHistory> findAllByUserId(@Param("userId") Long userId);
+	@EntityGraph(attributePaths = "item")
+	List<ItemHistory> findAllByUserId(Long userId);
 
 	@Query(value = "SELECT SUM(i.price) "
 			+ "FROM ItemHistory ih "

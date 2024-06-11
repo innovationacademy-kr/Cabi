@@ -31,11 +31,11 @@ public class ItemRedis {
 		this.coinTemplate = coinTemplate;
 	}
 
-	public String getCoinCount(String userId) {
+	public String getCoinAmount(String userId) {
 		return coinTemplate.opsForValue().get(userId + COIN_COUNT_KEY_SUFFIX);
 	}
 
-	public void saveCoinCount(String userId, String coinCount) {
+	public void saveCoinAmount(String userId, String coinCount) {
 		coinTemplate.opsForValue().set(userId + COIN_COUNT_KEY_SUFFIX, coinCount);
 	}
 

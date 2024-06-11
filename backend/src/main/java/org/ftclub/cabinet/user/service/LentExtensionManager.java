@@ -34,9 +34,10 @@ public class LentExtensionManager {
 	 */
 	@Transactional
 	public void issueLentExtension() {
-		UserMonthDataDto[] userLastMonthOccupiedTime = occupiedTimeManager.getUserLastMonthOccupiedTime();
-		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
-				userLastMonthOccupiedTime);
+		UserMonthDataDto[] userLastMonthOccupiedTime =
+				occupiedTimeManager.getUserLastMonthOccupiedTime();
+		List<UserMonthDataDto> userMonthDataDtos =
+				occupiedTimeManager.filterToMetUserMonthlyTime(userLastMonthOccupiedTime);
 		List<String> userNames = userMonthDataDtos.stream().map(UserMonthDataDto::getLogin)
 				.collect(Collectors.toList());
 
@@ -44,9 +45,9 @@ public class LentExtensionManager {
 		Item coinRewardItem = itemQueryService.getBySku(Sku.COIN_FULL_TIME);
 		users.forEach(user -> {
 			Long userId = user.getId();
-			itemHistoryCommandService.createItemHistory(userId, coinRewardItem.getId());
 			LockUtil.lockRedisCoin(userId, () ->
 					saveCoinChangeOnRedis(userId, coinRewardItem.getPrice()));
+			itemHistoryCommandService.createItemHistory(userId, coinRewardItem.getId());
 		});
 	}
 
