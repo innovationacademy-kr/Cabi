@@ -28,8 +28,6 @@ const dataToggleList: toggleItem[] = [
   { name: "사용 코인", key: CoinUseType.USED },
 ];
 
-// 아이템 통계 그래프 확인용
-
 export interface ITotalCoinInfo {
   used: number;
   unused: number;
@@ -275,12 +273,13 @@ const AdminStorePageStyled = styled.div`
 
   @media screen and (max-width: 768px) {
     grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: repeat(6, 500px);
+    grid-template-rows: repeat(4, 500px);
     min-width: 300px;
     overflow: scroll;
     & > :first-child {
       grid-column: span 1;
     }
+    margin: 0;
   }
 `;
 

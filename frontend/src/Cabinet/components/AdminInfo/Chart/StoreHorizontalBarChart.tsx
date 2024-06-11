@@ -112,6 +112,10 @@ const HalfPieChartStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const ToolTipStyled = styled.div<{ color: string }>`
