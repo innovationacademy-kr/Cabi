@@ -4,7 +4,9 @@ import styled from "styled-components";
 import { currentSectionNameState } from "@/Cabinet/recoil/atoms";
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import CabinetColorTable from "@/Cabinet/components/LeftNav/CabinetColorTable/CabinetColorTable";
+import { clubSectionsData } from "@/Cabinet/assets/data/mapPositionData";
 import { ReactComponent as FilledHeartIcon } from "@/Cabinet/assets/images/filledHeart.svg";
+import { ReactComponent as LineHeartIcon } from "@/Cabinet/assets/images/lineHeart.svg";
 import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
 const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
@@ -18,6 +20,11 @@ const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
   return (
     <LeftNavOptionStyled>
       {floorSection.map((section: ICurrentSectionInfo, index: number) => {
+        const isClubSection = clubSectionsData.find((clubSection) => {
+          return clubSection === section.sectionName;
+        })
+          ? true
+          : false;
         return (
           <FloorSectionStyled
             className={
@@ -33,7 +40,12 @@ const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
           >
             {section.sectionName}
             <IconWrapperStyled>
-              {section.alarmRegistered && <FilledHeartIcon />}
+              {!isClubSection &&
+                (section.alarmRegistered ? (
+                  <FilledHeartIcon />
+                ) : (
+                  <LineHeartIcon />
+                ))}
             </IconWrapperStyled>
           </FloorSectionStyled>
         );
