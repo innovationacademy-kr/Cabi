@@ -68,7 +68,7 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => {
             "페널티 감면권-3일",
           ]}
           indexBy="item"
-          margin={{ top: 60, right: 30, bottom: 50, left: 35}}
+          margin={{ top: 60, right: 30, bottom: 50, left: 35 }}
           padding={0.3}
           layout="vertical"
           groupMode="stacked"
