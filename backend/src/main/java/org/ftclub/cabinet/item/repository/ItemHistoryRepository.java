@@ -24,13 +24,10 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 
 	@Query(value = "SELECT ih "
 			+ "FROM ItemHistory ih "
-			+ "JOIN FETCH ih.item "
+			+ "JOIN FETCH ih.item i "
 			+ "WHERE ih.userId = :userId "
 			+ "AND ih.usedAt IS NOT NULL "
-			+ "AND ih.itemId IN ("
-			+ "     SELECT i.id "
-			+ "     FROM Item i "
-			+ "     WHERE i.price < 0) "
+			+ "AND i.price < 0 "
 			+ "ORDER BY ih.usedAt DESC",
 			countQuery = "SELECT COUNT(ih) "
 					+ "FROM ItemHistory ih "
@@ -50,6 +47,17 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 			+ "WHERE ih.userId = :userId")
 	List<ItemHistory> findAllByUserId(@Param("userId") Long userId);
 
+	@Query(value = "SELECT SUM(i.price) "
+			+ "FROM ItemHistory ih "
+			+ "JOIN ih.item i "
+			+ "WHERE i.price < 0")
+	long getPriceSumOnMinusPriceItems();
+
+	@Query(value = "SELECT SUM(i.price) "
+			+ "FROM ItemHistory ih "
+			+ "JOIN ih.item i "
+			+ "WHERE i.price > 0")
+	long getPriceSumOnPlusPriceItems();
 
 	@Query("SELECT ih "
 			+ "FROM ItemHistory ih "

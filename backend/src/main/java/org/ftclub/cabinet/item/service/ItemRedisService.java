@@ -44,7 +44,7 @@ public class ItemRedisService {
 	public long getTotalCoinSupply() {
 		String totalCoinSupply = itemRedis.getTotalCoinSupply();
 		if (totalCoinSupply == null) {
-			long coin = 0L;
+			long coin = itemHistoryRepository.getPriceSumOnPlusPriceItems();
 			itemRedis.saveTotalCoinSupply(Long.toString(coin));
 			return coin;
 		}
@@ -59,7 +59,7 @@ public class ItemRedisService {
 	public long getTotalCoinUsage() {
 		String totalCoinUsage = itemRedis.getTotalcoinUsage();
 		if (totalCoinUsage == null) {
-			long coin = 0L;
+			long coin = itemHistoryRepository.getPriceSumOnMinusPriceItems();
 			itemRedis.saveTotalCoinUsage(Long.toString(coin));
 			return coin;
 		}
