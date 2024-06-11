@@ -30,7 +30,7 @@ const Dropdown = ({
   isOpen,
   setIsOpen,
   closeOtherDropdown,
-}: IDropdown) => {
+}: IDropdownProps) => {
   const [currentName, setCurrentName] = useState(defaultValue);
   const idx: number = options.findIndex((op) => op.name === currentName);
   const selectedIdx: number = idx === -1 ? 0 : idx;
