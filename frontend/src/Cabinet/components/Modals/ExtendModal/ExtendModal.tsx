@@ -145,6 +145,41 @@ const ExtendModal: React.FC<{
     setSelectedOption(getDefaultOption(extensionDate));
   }, [extensionDate]);
 
+
+  const handleDropdownChange = (option: number) => {
+    setSelectedOption(option);
+    setExtensionDate(extensionPeriod[option].day);
+  };
+
+  const extensionDropdownProps = {
+    options: [
+      {
+        name: extensionPeriod[0].period,
+        value: 0,
+        isDisabled: findMyExtension(extensionPeriod[0].period),
+      },
+      {
+        name: extensionPeriod[1].period,
+        value: 1,
+        isDisabled: findMyExtension(extensionPeriod[1].period),
+      },
+      {
+        name: extensionPeriod[2].period,
+        value: 2,
+        isDisabled: findMyExtension(extensionPeriod[2].period),
+      },
+    ],
+    defaultValue: findMyExtension(extensionPeriod[0].period)
+      ? findMyExtension(extensionPeriod[1].period)
+        ? extensionPeriod[2].period
+        : extensionPeriod[1].period
+      : extensionPeriod[0].period,
+    onChangeValue: handleDropdownChange,
+    isOpen: isOpen,
+    setIsOpen: setIsOpen,
+  };
+
+
   const extensionItemUse = async (item: string) => {
     // 아이템 사용
     if (currentCabinetId === 0 || myInfo.cabinetId === null) {
@@ -194,10 +229,7 @@ const ExtendModal: React.FC<{
     }
   };
 
-  const handleDropdownChange = (option: number) => {
-    setSelectedOption(option);
-    setExtensionDate(extensionPeriod[option].day);
-  };
+
 
   const extendModalContents: IModalContents = {
     type: myInfo.cabinetId === null ? "penaltyBtn" : "hasProceedBtn",
@@ -218,7 +250,7 @@ const ExtendModal: React.FC<{
       <>
         <ModalContainerStyled>
           <ModalDropdownNameStyled>연장권 타입</ModalDropdownNameStyled>
-          <Dropdown
+          {/* <Dropdown
             options={[
               {
                 name: extensionPeriod[0].period,
@@ -246,7 +278,8 @@ const ExtendModal: React.FC<{
             onChangeValue={handleDropdownChange}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
-          />
+          /> */}
+          <Dropdown {...extensionDropdownProps} />
         </ModalContainerStyled>
 
         <ModalDetailStyled></ModalDetailStyled>

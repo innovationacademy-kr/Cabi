@@ -68,7 +68,7 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => {
             "페널티 감면권-3일",
           ]}
           indexBy="item"
-          margin={{ top: 50, right: 100, bottom: 80, left: 50 }}
+          margin={{ top: 60, right: 30, bottom: 50, left: 45 }}
           padding={0.3}
           layout="vertical"
           groupMode="stacked"
@@ -92,7 +92,8 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => {
           axisBottom={{
             tickSize: 5,
             tickPadding: 5,
-            tickRotation: 0, // -45
+            // tickRotation: -45, //아이템 이름 각도
+            tickRotation: 0, //아이템 이름 각도
             legend: "",
             legendPosition: "middle",
             legendOffset: 32,
@@ -116,15 +117,6 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => {
             e.id + ": " + e.formattedValue + " in item: " + e.indexValue
           }
           minValue={0}
-          maxValue={
-            Math.max(
-              ...data.map((d) =>
-                Math.max(
-                  ...Object.values(d).filter((v) => typeof v === "number")
-                )
-              )
-            ) * 1.1
-          }
         />
       </ResponsiveBarStyled>
 
@@ -144,6 +136,9 @@ const ItemBarChartStyled = styled.div`
 const ResponsiveBarStyled = styled.div`
   height: 100%;
   width: 100%;
+  @media screen and (min-width: 768px) {
+    padding-right: 80px;
+  }
 `;
 
 const ItemLegendsStyled = styled.div`

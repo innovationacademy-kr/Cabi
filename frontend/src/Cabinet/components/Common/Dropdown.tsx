@@ -40,7 +40,13 @@ const Dropdown = ({
   useEffect(() => {
     setCurrentName(defaultValue);
   }, [defaultValue]);
-
+  // console.log("options : ",options  );
+  // console.log("defaultValue : ",defaultValue);
+  // console.log("onChangeValue : ",onChangeValue);
+  // console.log("defaultImageSrc : ",defaultImageSrc);
+  // console.log("isOpenn : ",isOpen);
+  // console.log("setIsOpen : ",setIsOpen);
+  // console.log("closeOtherDropdown : ",closeOtherDropdown);
   return (
     <DropdownContainerStyled>
       <DropdownSelectionBoxStyled
