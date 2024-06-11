@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
-import Dropdown, { IDropdown } from "@/Cabinet/components/Common/Dropdown";
+import Dropdown, { IDropdownProps } from "@/Cabinet/components/Common/Dropdown";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
@@ -51,7 +51,7 @@ const StoreBuyItemModal: React.FC<{
     setSelectedOption(option);
   };
 
-  let dropdownProps: IDropdown = {
+  let dropdownProps: IDropdownProps = {
     options:
       props.selectItem.items.length > 1
         ? [

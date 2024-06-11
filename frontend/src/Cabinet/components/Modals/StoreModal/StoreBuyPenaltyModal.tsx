@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
-import Dropdown, { IDropdown } from "@/Cabinet/components/Common/Dropdown";
+import Dropdown, { IDropdownProps } from "@/Cabinet/components/Common/Dropdown";
 import { IItemTimeRemaining, IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { StorePenaltyType } from "@/Cabinet/types/enum/store.enum";
@@ -64,7 +64,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     );
   }, [statusOptions]);
 
-  const STATUS_DROP_DOWN_PROPS: IDropdown = {
+  const STATUS_DROP_DOWN_PROPS: IDropdownProps = {
     options: statusOptions,
     defaultValue: enabledOptions ? enabledOptions.name : "",
     onChangeValue: handleDropdownChange,
