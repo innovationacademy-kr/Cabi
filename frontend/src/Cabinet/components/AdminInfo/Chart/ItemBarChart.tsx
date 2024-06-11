@@ -68,7 +68,7 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => {
             "페널티 감면권-3일",
           ]}
           indexBy="item"
-          margin={{ top: 60, right: 30, bottom: 50, left: 45 }}
+          margin={{ top: 60, right: 30, bottom: 50, left: 35}}
           padding={0.3}
           layout="vertical"
           groupMode="stacked"
@@ -126,19 +126,20 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => {
 };
 
 const ItemBarChartStyled = styled.div`
-  height: 90%;
+  height: 100%;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  @media screen and (min-width: 768px) {
+    padding-right: 80px;
+    padding-left: 50px;
+  }
 `;
 
 const ResponsiveBarStyled = styled.div`
   height: 100%;
   width: 100%;
-  @media screen and (min-width: 768px) {
-    padding-right: 80px;
-  }
 `;
 
 const ItemLegendsStyled = styled.div`
