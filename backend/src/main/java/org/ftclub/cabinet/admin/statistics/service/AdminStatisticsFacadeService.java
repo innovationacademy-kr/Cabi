@@ -140,9 +140,9 @@ public class AdminStatisticsFacadeService {
 	/**
 	 * 특정 연도, 월의 동전 줍기 횟수를 횟수 별로 통계를 내서 반환
 	 *
-	 * @param year
+	 * @param year  조회를 원하는 기간
 	 * @param month 조회를 원하는 기간
-	 * @return
+	 * @return 동전 줍기 횟수 통계
 	 */
 	public CoinCollectStatisticsDto getCoinCollectCountByMonth(Integer year, Integer month) {
 		Long itemId = itemQueryService.getBySku(COIN_COLLECT).getId();
@@ -167,7 +167,7 @@ public class AdminStatisticsFacadeService {
 	/**
 	 * 전체 기간동안 동전의 발행량 및 사용량 반환
 	 *
-	 * @return
+	 * @return 동전의 발행량 및 사용량
 	 */
 	public TotalCoinAmountDto getTotalCoinAmount() {
 		long totalCoinSupply = itemRedisService.getTotalCoinSupply();
@@ -180,9 +180,9 @@ public class AdminStatisticsFacadeService {
 	/**
 	 * 특정 기간동안 재화 사용량 및 발행량 조회
 	 *
-	 * @param startDate
+	 * @param startDate 조회를 원하는 기간
 	 * @param endDate   조회를 원하는 기간
-	 * @return
+	 * @return 재화 사용량 및 발행량
 	 */
 	public CoinStaticsDto getCoinStaticsDto(LocalDate startDate, LocalDate endDate) {
 		Map<LocalDate, Long> issuedAmount = new LinkedHashMap<>();
