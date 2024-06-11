@@ -17,9 +17,9 @@ export function mapItemNameToType(itemName: string): StoreItemType {
   }
 }
 
-function extractItemName(item: string): string {
+const extractItemName = (item: string): string  => {
   // 정규 표현식 패턴을 정의합니다. 숫자와 밑줄을 제외한 모든 부분을 추출합니다.
-  const pattern = /^[^\d_\-]+/;
+  const pattern = /^[^\d_\-\s]+/;
   const match = item.match(pattern);
   return match ? match[0] : item;
 }
@@ -36,13 +36,6 @@ const formatDate = (date: Date) => {
 };
 
 const ItemLogBlock = ({ log }: { log: IItemUsageLog }) => {
-  // console.log("log : ", log);
-  // console.log("log.title : ", log.title);
-  console.log("log.title extractItemName: ", extractItemName(log.title));
-  console.log(
-    "log.title extractItemName: ",
-    mapItemNameToType(extractItemName(log.title))
-  );
   return (
     <ItemUsageLogStyled>
       <IconBlockStyled itemType={mapItemNameToType(extractItemName(log.title))}>
@@ -81,9 +74,7 @@ const IconBlockStyled = styled.div<{ itemType: StoreItemType }>`
   }
 
   & > svg > path {
-    /* stroke: var(--white-text-with-bg-color); */
-    stroke: ${(props) =>
-      props.itemType === StoreItemType.EXTENSION ? "red" : "green"};
+    stroke: var(--white-text-with-bg-color);
     stroke-width: ${(props) =>
       props.itemType === StoreItemType.EXTENSION ? "3px" : "1.5px"};
   }
