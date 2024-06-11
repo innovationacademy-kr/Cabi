@@ -89,72 +89,68 @@ const CoinLog = () => {
 
   return (
     <>
-      {isLoading ? (
-        <LoadingAnimation />
-      ) : (
-        <WrapperStyled>
-          <TitleStyled>코인 내역</TitleStyled>
-          <MyCoinWrapperStyled>
-            <MyCoinStyled>
-              <CoinIconStyled>
-                <CoinIcon />
-              </CoinIconStyled>
-              <span>{userInfo.coins}</span>
-              까비
-            </MyCoinStyled>
-          </MyCoinWrapperStyled>
-          <MultiToggleSwitchStyled>
-            <MultiToggleSwitch
-              initialState={toggleType}
-              setState={setToggleType}
-              toggleList={toggleList}
-            />
-          </MultiToggleSwitchStyled>
-          {coinLogs?.length ? (
-            <LogItemWrapperStyled>
-              {coinLogs.map((log, idx) => (
-                <LogItemStyled isEarned={log.amount > 0} key={idx}>
-                  <span id="date">
-                    {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
-                  </span>
-                  <span id="history" title={log.history}>
-                    {log.history}{" "}
-                    {log.itemDetails !== log.history && "- " + log.itemDetails}
-                  </span>
-                  <span id="amount">
-                    {log.amount > 0 ? "+" : ""}
-                    {log.amount}
-                  </span>
-                </LogItemStyled>
-              ))}
-            </LogItemWrapperStyled>
-          ) : (
-            <UnavailableDataInfo
-              msg={unavailableCoinLogMsgMap[toggleType] + "내역이 없습니다."}
-              height="390px"
-            />
-          )}
-          {moreButton && (
-            <ButtonContainerStyled>
-              <MoreButtonStyled
-                onClick={clickMoreButton}
-                moreBtnIsLoading={moreBtnIsLoading}
-              >
-                {moreBtnIsLoading ? (
-                  <LoadingAnimation />
-                ) : (
-                  <ButtonContentWrapperStyled>
-                    <ButtonTextWrapperStyled>더보기</ButtonTextWrapperStyled>
-                    <SelectIconWrapperStyled>
-                      <Select />
-                    </SelectIconWrapperStyled>
-                  </ButtonContentWrapperStyled>
-                )}
-              </MoreButtonStyled>
-            </ButtonContainerStyled>
-          )}
-        </WrapperStyled>
-      )}
+      <WrapperStyled>
+        <TitleStyled>코인 내역</TitleStyled>
+        <MyCoinWrapperStyled>
+          <MyCoinStyled>
+            <CoinIconStyled>
+              <CoinIcon />
+            </CoinIconStyled>
+            <span>{userInfo.coins}</span>
+            까비
+          </MyCoinStyled>
+        </MyCoinWrapperStyled>
+        <MultiToggleSwitchStyled>
+          <MultiToggleSwitch
+            initialState={toggleType}
+            setState={setToggleType}
+            toggleList={toggleList}
+          />
+        </MultiToggleSwitchStyled>
+        {coinLogs?.length ? (
+          <LogItemWrapperStyled>
+            {coinLogs.map((log, idx) => (
+              <LogItemStyled isEarned={log.amount > 0} key={idx}>
+                <span id="date">
+                  {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
+                </span>
+                <span id="history" title={log.history}>
+                  {log.history}{" "}
+                  {log.itemDetails !== log.history && "- " + log.itemDetails}
+                </span>
+                <span id="amount">
+                  {log.amount > 0 ? "+" : ""}
+                  {log.amount}
+                </span>
+              </LogItemStyled>
+            ))}
+          </LogItemWrapperStyled>
+        ) : (
+          <UnavailableDataInfo
+            msg={unavailableCoinLogMsgMap[toggleType] + "내역이 없습니다."}
+            height="390px"
+          />
+        )}
+        {moreButton && (
+          <ButtonContainerStyled>
+            <MoreButtonStyled
+              onClick={clickMoreButton}
+              moreBtnIsLoading={moreBtnIsLoading}
+            >
+              {moreBtnIsLoading ? (
+                <LoadingAnimation />
+              ) : (
+                <ButtonContentWrapperStyled>
+                  <ButtonTextWrapperStyled>더보기</ButtonTextWrapperStyled>
+                  <SelectIconWrapperStyled>
+                    <Select />
+                  </SelectIconWrapperStyled>
+                </ButtonContentWrapperStyled>
+              )}
+            </MoreButtonStyled>
+          </ButtonContainerStyled>
+        )}
+      </WrapperStyled>
     </>
   );
 };
