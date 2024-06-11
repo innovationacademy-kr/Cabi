@@ -51,13 +51,13 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 			+ "FROM ItemHistory ih "
 			+ "JOIN ih.item i "
 			+ "WHERE i.price < 0")
-	long getPriceSumOnMinusPriceItems();
+	Long getPriceSumOnMinusPriceItems();
 
 	@Query(value = "SELECT SUM(i.price) "
 			+ "FROM ItemHistory ih "
 			+ "JOIN ih.item i "
 			+ "WHERE i.price > 0")
-	long getPriceSumOnPlusPriceItems();
+	Long getPriceSumOnPlusPriceItems();
 
 	@Query("SELECT ih "
 			+ "FROM ItemHistory ih "
