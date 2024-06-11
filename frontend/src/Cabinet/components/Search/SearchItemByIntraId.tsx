@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
@@ -14,10 +15,12 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
+import { ItemLogResponseType } from "@/Cabinet/types/dto/admin.dto";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
+import { axiosGetUserItems } from "@/Cabinet/api/axios/axios.custom";
 import { axiosAdminCabinetInfoByCabinetId } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -52,6 +55,17 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     cabinetIconComponentMap[
       cabinetInfo ? cabinetInfo.lentType : CabinetType.PRIVATE
     ];
+
+  const { closeStore } = useMenu();
+  const [logs, setLogs] = useState<ItemLogResponseType>({
+    itemHistories: [],
+    totalLength: 0,
+  });
+  const [page, setPage] = useState<number>(0);
+  const [totalPage, setTotalPage] = useState<number>(-1);
+  const [needsUpdate, setNeedsUpdate] = useState<boolean>(true);
+  const size = 8;
+
   const clickSearchItem = () => {
     if (
       currentIntraId === name &&
@@ -110,12 +124,26 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     });
     setSelectedTypeOnSearch(CabinetDetailAreaType.ITEM);
     setCurrentIntraId(name);
-    if (cabinetInfo?.cabinetId) {
-      setCurrentCabinetId(cabinetInfo.cabinetId);
-    } else {
-      resetTargetCabinetInfo();
-      setCurrentCabinetId(null);
+    async function getData(page: number) {
+      try {
+        const paginatedData = await axiosGetUserItems(userId, page, size);
+        setLogs({
+          itemHistories: paginatedData.itemHistories,
+          totalLength: paginatedData.totalLength,
+        });
+        setTotalPage(Math.ceil(paginatedData.totalLength / size));
+      } catch {
+        setLogs({ itemHistories: [], totalLength: 0 });
+        setTotalPage(1);
+      }
     }
+    getData(page);
+    // if (cabinetInfo?.cabinetId) {
+    //   setCurrentCabinetId(cabinetInfo.cabinetId);
+    // } else {
+    //   resetTargetCabinetInfo();
+    //   setCurrentCabinetId(null);
+    // }
     openCabinet();
   };
 

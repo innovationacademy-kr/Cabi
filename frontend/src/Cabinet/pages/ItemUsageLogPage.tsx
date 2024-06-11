@@ -32,9 +32,9 @@ function createLogEntries(data: { result: any[] }) {
 
 const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
-  const [page, setPage] = useState(0);
-  const [hasAdditionalLogs, sethasAdditionalLogs] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState<number>(0);
+  const [hasAdditionalLogs, sethasAdditionalLogs] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const size = 5;
 
   const getItemUsageLog = async (page: number, size: number) => {
@@ -46,8 +46,9 @@ const ItemUsageLogPage = () => {
       sethasAdditionalLogs(data.result.length === size);
     } catch (error) {
       console.error("Failed to fetch item usage history:", error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -58,9 +59,7 @@ const ItemUsageLogPage = () => {
     setPage((prev) => prev + 1);
   };
 
-  return isLoading ? (
-    <LoadingAnimation />
-  ) : itemUsageLogs.length > 0 ? (
+  return itemUsageLogs.length > 0 ? (
     <WrapperStyled>
       <TitleWrapperStyled>아이템 사용내역</TitleWrapperStyled>
       <ItemUsageLogWrapperStyled>

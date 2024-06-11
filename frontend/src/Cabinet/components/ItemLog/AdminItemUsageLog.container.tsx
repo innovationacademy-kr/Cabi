@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
 import AdminItemUsageLog from "@/Cabinet/components/ItemLog/AdminItemUsageLog";
 import { ItemLogResponseType } from "@/Cabinet/types/dto/admin.dto";
 import { axiosGetUserItems } from "@/Cabinet/api/axios/axios.custom";
@@ -7,6 +9,7 @@ import useMenu from "@/Cabinet/hooks/useMenu";
 const AdminItemUsageLogContainer = () => {
   const { closeStore } = useMenu();
   const [userId, setUserId] = useState<number>(0);
+  const [targetUserInfo] = useRecoilState(targetUserInfoState);
   const [logs, setLogs] = useState<ItemLogResponseType>({
     itemHistories: [],
     totalLength: 0,
@@ -18,12 +21,16 @@ const AdminItemUsageLogContainer = () => {
 
   async function getData(page: number) {
     try {
-      const paginatedData = await axiosGetUserItems(userId, page, size);
+      const paginatedData = await axiosGetUserItems(
+        targetUserInfo.userId!,
+        page,
+        size
+      );
       setLogs({
-        itemHistories: paginatedData.itemHistories,
-        totalLength: paginatedData.totalLength,
+        itemHistories: paginatedData.data.itemHistories,
+        totalLength: paginatedData.data.totalLength,
       });
-      setTotalPage(Math.ceil(paginatedData.totalLength / size));
+      setTotalPage(Math.ceil(paginatedData.data.totalLength / size));
     } catch {
       setLogs({ itemHistories: [], totalLength: 0 });
       setTotalPage(1);
@@ -35,7 +42,7 @@ const AdminItemUsageLogContainer = () => {
       getData(page);
       setNeedsUpdate(false);
     }
-  }, [needsUpdate, page, userId]);
+  }, [needsUpdate, page]);
 
   const onClickPrev = () => {
     if (page > 0) {

@@ -25,14 +25,12 @@ const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
           Array.isArray(itemLog.itemHistories) && (
             <TbodyStyled>
               {itemLog.itemHistories.map(
-                ({ purchasedAt, itemName, itemDetails, usedAt }, idx) => (
+                ({ purchaseAt, itemName, itemDetails, usedAt }, idx) => (
                   <tr key={idx}>
                     <td
-                      title={new Date(purchasedAt ?? "").toLocaleString(
-                        "ko-KR"
-                      )}
+                      title={new Date(purchaseAt ?? "").toLocaleString("ko-KR")}
                     >
-                      {new Date(purchasedAt ?? "").toLocaleString(
+                      {new Date(purchaseAt ?? "").toLocaleString(
                         "ko-KR",
                         dateOptions
                       )}
@@ -58,7 +56,8 @@ const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
           )}
       </LogTableStyled>
       {(itemLog === STATUS_400_BAD_REQUEST ||
-        itemLog.totalLength === undefined) && (
+        itemLog.totalLength === undefined ||
+        itemLog.totalLength === 0) && (
         <EmptyLogStyled>아이템 내역이 없습니다.</EmptyLogStyled>
       )}
     </LogTableWrapperstyled>
@@ -90,7 +89,7 @@ const TheadStyled = styled.thead`
 
 const TbodyStyled = styled.tbody`
   & > tr {
-    font-size: small;
+    font-size: 11px;
     text-align: center;
     height: 50px;
   }

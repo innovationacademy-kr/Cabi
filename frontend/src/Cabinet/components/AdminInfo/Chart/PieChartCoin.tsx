@@ -41,7 +41,7 @@ const convert = (data: ICoinInfo[]) => {
   }));
 };
 
-const PieChart = ({ data }: { data: ICoinInfo[] }) => {
+const PieChartCoin = ({ data }: { data: ICoinInfo[] }) => {
   return (
     <PieChartStyled>
       <ResponsivePie
@@ -114,4 +114,4 @@ const PieChartStyled = styled.div`
   justify-content: center;
   align-items: center;
 `;
-export default PieChart;
+export default PieChartCoin;

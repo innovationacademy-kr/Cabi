@@ -21,7 +21,7 @@ const AdminItemUsageLogPage = () => {
 
 const AdminItemLogStyled = styled.div`
   position: absolute;
-  top: 120px;
+  top: 0px;
   right: 0;
   min-width: 330px;
   min-height: 100%;
