@@ -15,9 +15,14 @@ export interface IItemUsageLog {
   logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 }
 
+
+
 function createLogEntries(data: { result: any[] }) {
   return data.result.map((item) => {
     const itemDate = new Date(item.date);
+    // console.log("itemType : ",item.itemDto.itemName)
+    // console.log("itemType : ",extractItemName(item.itemDto.itemName))
+    // console.log("itemType : ",mapItemNameToType(extractItemName(item.itemDto.itemName)))
     return {
       date: itemDate,
       dateStr: `${itemDate.getFullYear()}년 ${itemDate.getMonth() + 1}월`,

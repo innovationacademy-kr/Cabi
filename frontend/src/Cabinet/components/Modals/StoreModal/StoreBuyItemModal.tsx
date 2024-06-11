@@ -55,34 +55,19 @@ const StoreBuyItemModal: React.FC<{
     options:
       props.selectItem.items.length > 1
         ? [
-            {
-              name: props.selectItem.items[props.selectItem.items.length - 3]
-                .itemDetails,
-              value: String(props.selectItem.items.length - 3),
-            },
-            {
-              name: props.selectItem.items[props.selectItem.items.length - 2]
-                .itemDetails,
-              value: String(props.selectItem.items.length - 2),
-            },
-            {
-              name: props.selectItem.items[props.selectItem.items.length - 1]
-                .itemDetails,
-              value: String(props.selectItem.items.length - 1),
-            },
+            { name: props.selectItem.items[0].itemDetails, value: "0" },
+            { name: props.selectItem.items[1].itemDetails, value: "1" },
+            { name: props.selectItem.items[2].itemDetails, value: "2" },
           ]
         : [],
     defaultValue:
       props.selectItem.items.length > 1
-        ? props.selectItem.items[props.selectItem.items.length - 3].itemDetails
+        ? props.selectItem.items[0].itemDetails
         : "",
     onChangeValue: handleDropdownChange,
     isOpen: isOpen,
     setIsOpen: setIsOpen,
   };
-  useEffect(() => {
-    if (props.selectItem.items.length > 3) setSelectedOption("1");
-  }, [props]);
 
   const modalContents: IModalContents = {
     type: "hasProceedBtn",
@@ -106,7 +91,6 @@ const StoreBuyItemModal: React.FC<{
             <Dropdown {...dropdownProps} />{" "}
           </ModalContainerStyled>
         )}
-
         <ModalDetailStyled>
           <p>
             <span>

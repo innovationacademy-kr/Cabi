@@ -30,13 +30,12 @@ const StoreMainPage = () => {
   const [userInfo] = useRecoilState(userState);
   const sortedItems = sortItems(items);
   const checkMyCoin = (item: IItemDetail) => {
-    
-    if (item.items.length > 3) {
-      return (
-        userInfo.coins !== null && userInfo.coins >= item.items[1].itemPrice * -1
-      );
-    }
-    else
+    // if (item.items.length > 3) {
+    //   return (
+    //     userInfo.coins !== null && userInfo.coins >= item.items[1].itemPrice * -1
+    //   );
+    // }
+    // else
     return (
       userInfo.coins !== null && userInfo.coins >= item.items[0].itemPrice * -1
     );
@@ -72,14 +71,10 @@ const StoreMainPage = () => {
       <StoreCoinGridWrapper>
         <StoreCoinPick />
         {sortedItems.map((item: IItemDetail) => {
-          const filteredItems = item.items.filter(
-            // 연장권 배열에 들어있는 출석 연장권 보상 아이템 제거 후 넘기기
-            (innerItem) => innerItem.itemDetails !== "출석 연장권 보상"
-          );
           return (
             <StoreItemCard
               key={item.itemName}
-              item={{ ...item, items: filteredItems }}
+              item={item}
               button={{
                 label: "구매하기",
                 onClick: checkMyCoin(item) ? () => buttonClick(item) : () => {},
