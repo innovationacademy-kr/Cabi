@@ -6,7 +6,7 @@
 //import java.time.LocalDateTime;
 //
 //import org.ftclub.cabinet.user.domain.User;
-//import org.ftclub.cabinet.user.domain.UserRole;
+//import org.ftclub.cabinet.club.domain.UserRole;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

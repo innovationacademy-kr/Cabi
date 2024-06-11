@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.alarm.discord.DiscordScheduleAlarmMessage;
 import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
+import org.ftclub.cabinet.alarm.handler.SectionAlarmManager;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.FtClubCabinetException;
@@ -48,6 +49,7 @@ public class SystemScheduler {
 		}
 	}
 
+	private final SectionAlarmManager sectionAlarmManager;
 
 	/**
 	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거
@@ -176,4 +178,10 @@ public class SystemScheduler {
 //		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.metLimitTimeUser(occupiedTimeManager.getUserLastMonthOccupiedTime());
 //		userService.updateUserExtensible(userMonthDataDtos);
 //	}
+
+	@Scheduled(cron = "${cabinet.schedule.cron.section-alarm-time}")
+	public void sectionAlarm() {
+		log.info("called sectionAlarm");
+		sectionAlarmManager.sendSectionAlarm();
+	}
 }

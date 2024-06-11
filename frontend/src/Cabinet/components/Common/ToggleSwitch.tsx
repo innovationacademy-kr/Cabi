@@ -57,9 +57,7 @@ const ToggleSwitchStyled = styled.label<{
   display: inline-block;
   position: relative;
   background: ${(props) =>
-    props.checked
-      ? "var(--sys-main-color)"
-      : "var(--toggle-switch-off-bg-color)"};
+    props.checked ? "var(--sys-main-color)" : "var(--line-color)"};
   width: 56px;
   height: 28px;
   border-radius: 50px;

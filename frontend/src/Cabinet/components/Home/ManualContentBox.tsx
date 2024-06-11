@@ -1,12 +1,7 @@
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
-import { ReactComponent as ClockImg } from "@/Cabinet/assets/images/clock.svg";
-import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
-import { ReactComponent as ExtensionIcon } from "@/Cabinet/assets/images/extension.svg";
 import { ReactComponent as ManualPeopleImg } from "@/Cabinet/assets/images/manualPeople.svg";
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
-import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
-import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
 interface MaunalContentBoxProps {
@@ -22,24 +17,17 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
       contentStatus={contentStatus}
     >
       {contentStatus === ContentStatus.EXTENSION && (
-        <ManualPeopleImg className="peopleImg" fill="var(--sys-main-color)" />
+        <ManualPeopleImg className="peopleImg" />
       )}
-      {contentStatus === ContentStatus.PRIVATE && (
-        <PrivateIcon className="contentImg" />
-      )}
-      {contentStatus === ContentStatus.SHARE && (
-        <ShareIcon className="contentImg" />
-      )}
-      {contentStatus === ContentStatus.CLUB && (
-        <ClubIcon className="contentImg" />
-      )}
-      {contentStatus === ContentStatus.EXTENSION && (
-        <ExtensionIcon className="contentImg" />
-      )}
-      <ContentTextStyled>
-        {contentStatus === ContentStatus.IN_SESSION && (
-          <ClockImg stroke="var(--sys-main-color)" className="clockImg" />
+      {contentStatus !== ContentStatus.IN_SESSION &&
+        contentData.iconComponent && (
+          <contentData.iconComponent className="contentImg" />
         )}
+      <ContentTextStyled>
+        {contentStatus === ContentStatus.IN_SESSION &&
+          contentData.iconComponent && (
+            <contentData.iconComponent className="clockImg" />
+          )}
         <p>{contentData.contentTitle}</p>
       </ContentTextStyled>
       <MoveBtnImg className="moveButton" />
@@ -49,9 +37,9 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
 
 const Rotation = keyframes`
  to {
-		transform : rotate(360deg)
+   transform : rotate(360deg)
 	}
-`;
+  `;
 
 const MaunalContentBoxStyled = styled.div<{
   background: string;
@@ -76,6 +64,7 @@ const MaunalContentBoxStyled = styled.div<{
     margin-right: 10px;
     margin-top: 160px;
     animation: ${Rotation} 1s linear infinite;
+    stroke: var(--sys-main-color);
   }
 
   .contentImg {
@@ -87,10 +76,6 @@ const MaunalContentBoxStyled = styled.div<{
         props.contentStatus === ContentStatus.EXTENSION
           ? "var(--normal-text-color)"
           : "var(--white-text-with-bg-color)"};
-      transform: ${(props) =>
-        props.contentStatus === ContentStatus.EXTENSION
-          ? "scale(1.4)"
-          : "scale(3.3)"};
     }
   }
 
@@ -101,6 +86,7 @@ const MaunalContentBoxStyled = styled.div<{
     position: absolute;
     right: 100px;
     bottom: 30px;
+    fill: var(--sys-main-color);
   }
 
   ${({ contentStatus }) =>

@@ -2,11 +2,7 @@ import React from "react";
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
-import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
-import { ReactComponent as ExtensionIcon } from "@/Cabinet/assets/images/extension.svg";
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
-import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
-import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
 interface ModalProps {
@@ -60,17 +56,8 @@ const ManualModal: React.FC<ModalProps> = ({
           {hasImage && (
             <BasicInfo>
               <ContentImgStyled contentStatus={contentStatus}>
-                {contentStatus === ContentStatus.PRIVATE && (
-                  <PrivateIcon className="contentImg" />
-                )}
-                {contentStatus === ContentStatus.SHARE && (
-                  <ShareIcon className="contentImg" />
-                )}
-                {contentStatus === ContentStatus.CLUB && (
-                  <ClubIcon className="contentImg" />
-                )}
-                {contentStatus === ContentStatus.EXTENSION && (
-                  <ExtensionIcon className="contentImg" />
+                {contentData.iconComponent && (
+                  <contentData.iconComponent className="contentImg" />
                 )}
               </ContentImgStyled>
               {isCabinetType && (
@@ -339,10 +326,6 @@ const ContentImgStyled = styled.div<{
         props.contentStatus === ContentStatus.EXTENSION
           ? "var(--normal-text-color)"
           : "var(--white-text-with-bg-color)"};
-      transform: ${(props) =>
-        props.contentStatus === ContentStatus.EXTENSION
-          ? "scale(1.4)"
-          : "scale(3.3)"};
     }
   }
 `;

@@ -36,7 +36,7 @@ const SearchListItem = (props: {
         resetSearchState();
       }}
     >
-      <ContentIconStyled isNum={isNum} title="유저">
+      <ContentIconStyled title="유저">
         {isNum ? <CabinetIcon /> : <PrivateIcon />}
       </ContentIconStyled>
       {isNum && <span>{floor}F - </span>}
@@ -57,30 +57,30 @@ const LiStyled = styled.li`
 
   &.active {
     background-color: var(--button-line-color);
-    color: var(--bg-color);
+    color: var(--white-text-with-bg-color);
   }
   &.active strong {
-    color: var(--bg-color);
+    color: var(--white-text-with-bg-color);
   }
-  &.active div {
-    filter: invert(100%);
+  &.active path {
+    stroke: var(--white-text-with-bg-color);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--button-line-color);
-      color: var(--bg-color);
+      color: var(--white-text-with-bg-color);
     }
     &:hover strong {
-      color: var(--bg-color);
+      color: var(--white-text-with-bg-color);
     }
-    &:hover div {
-      filter: invert(100%);
+    &:hover path {
+      stroke: var(--white-text-with-bg-color);
     }
   }
 `;
 
-const ContentIconStyled = styled.div<{ isNum?: boolean }>`
+const ContentIconStyled = styled.div`
   width: 20px;
   height: 20px;
   margin-right: 8px;
@@ -90,9 +90,12 @@ const ContentIconStyled = styled.div<{ isNum?: boolean }>`
     height: 20px;
   }
 
-  & path {
+  & > svg > path {
     stroke: var(--normal-text-color);
-    transform: ${(props) => (props.isNum ? "scale(1)" : "scale(0.8)")};
+  }
+
+  &:hover & > svg > path {
+    stroke: var(--white-text-with-bg-color);
   }
 `;
 

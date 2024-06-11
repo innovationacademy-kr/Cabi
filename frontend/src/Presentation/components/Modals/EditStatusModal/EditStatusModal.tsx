@@ -68,41 +68,61 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   const [location, setLocation] = useState<PresentationLocation>(
     PresentationLocation.THIRD
   );
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+  const [isDatesDropdownOpen, setIsDatesDropdownOpen] = useState(false);
+  const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
   const [invalidDates, setInvalidDates] = useState<string[]>([]);
-  const [statusDropdownProps, setStatusDropdownProps] =
-    useState<IDropdownProps>({
-      options: statusOptions,
-      defaultValue:
-        statusOptions.find(
-          (option) => option.value === currentPresentation?.presentationStatus
-        )?.name ?? "발표 예정",
-      defaultImageSrc: "",
-      onChangeValue: (val: PresentationStatusType) => {
-        setPresentationStatus(val);
-      },
-    });
-  const [datesDropdownProps, setDatesDropdownProps] = useState<IDropdownProps>({
-    options: [],
-    defaultValue: currentPresentation?.dateTime
-      ? format(currentPresentation?.dateTime.split("T")[0], "M월 d일")
-      : "",
+  const [datesDropdownOptions, setDatesDropdownOptions] = useState<
+    IDropdownOptions[]
+  >([]);
+  const statusDropdownProps = {
+    options: statusOptions,
+    defaultValue:
+      statusOptions.find(
+        (option) => option.value === currentPresentation?.presentationStatus
+      )?.name ?? "발표 예정",
+    defaultImageSrc: "",
+    onChangeValue: (val: PresentationStatusType) => {
+      setPresentationStatus(val);
+    },
+    isOpen: isStatusDropdownOpen,
+    setIsOpen: setIsStatusDropdownOpen,
+    closeOtherDropdown: () => {
+      setIsDatesDropdownOpen(false);
+      setIsLocationDropdownOpen(false);
+    },
+  };
+  const datesDropdownProps = {
+    options: datesDropdownOptions,
+    defaultValue: datesDropdownOptions[0]?.name,
     defaultImageSrc: "",
     onChangeValue: (val: string) => {
       setPresentationDate(val);
     },
-  });
-  const [locationDropdownProps, setLocationDropdownProps] =
-    useState<IDropdownProps>({
-      options: floorOptions,
-      defaultValue:
-        floorOptions.find(
-          (option) => option.value === currentPresentation?.presentationLocation
-        )?.name ?? "3층",
-      defaultImageSrc: "",
-      onChangeValue: (val: PresentationLocation) => {
-        setLocation(val);
-      },
-    });
+    isOpen: isDatesDropdownOpen,
+    setIsOpen: setIsDatesDropdownOpen,
+    closeOtherDropdown: () => {
+      setIsStatusDropdownOpen(false);
+      setIsLocationDropdownOpen(false);
+    },
+  };
+  const locationDropdownProps = {
+    options: floorOptions,
+    defaultValue:
+      floorOptions.find(
+        (option) => option.value === currentPresentation?.presentationLocation
+      )?.name ?? "3층",
+    defaultImageSrc: "",
+    onChangeValue: (val: PresentationLocation) => {
+      setLocation(val);
+    },
+    isOpen: isLocationDropdownOpen,
+    setIsOpen: setIsLocationDropdownOpen,
+    closeOtherDropdown: () => {
+      setIsStatusDropdownOpen(false);
+      setIsDatesDropdownOpen(false);
+    },
+  };
 
   const tryEditPresentationStatus = async (e: React.MouseEvent) => {
     if (!currentPresentation || !currentPresentation.id) return;
@@ -157,19 +177,12 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
       invalidDates
     );
     // NOTE: 발표 가능 날짜들을 Dropdown options으로 변환
-    const dropdownOptions: IDropdownOptions[] = availableDatesFiltered.map(
-      (date) => ({
+    setDatesDropdownOptions(
+      availableDatesFiltered.map((date) => ({
         name: format(date, "M월 d일"),
         value: date,
-      })
+      }))
     );
-    setDatesDropdownProps({
-      options: dropdownOptions,
-      defaultValue: dropdownOptions[0].name,
-      onChangeValue: (val: string) => {
-        setPresentationDate(val);
-      },
-    });
   }, [invalidDates]);
 
   return (

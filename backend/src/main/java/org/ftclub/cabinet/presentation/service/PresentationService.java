@@ -18,7 +18,6 @@ import org.ftclub.cabinet.dto.PresentationUpdateDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
-import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
@@ -54,13 +53,13 @@ public class PresentationService {
 	 * @param dto    신청서 작성에 필요한 정보들
 	 */
 	@Transactional
-	public void createPresentationFrom(Long userId, PresentationFormRequestDto dto) {
+	public void createPresentationForm(Long userId, PresentationFormRequestDto dto) {
 		presentationPolicyService.verifyReservationDate(dto.getDateTime());
 
 		Presentation presentation =
-			Presentation.of(dto.getCategory(), dto.getDateTime(),
-				dto.getPresentationTime(), dto.getSubject(), dto.getSummary(),
-				dto.getDetail());
+				Presentation.of(dto.getCategory(), dto.getDateTime(),
+						dto.getPresentationTime(), dto.getSubject(), dto.getSummary(),
+						dto.getDetail());
 		User user = userQueryService.getUser(userId);
 
 		presentation.setUser(user);
@@ -79,10 +78,10 @@ public class PresentationService {
 		LocalDateTime end = start.plusMonths(MAX_MONTH);
 
 		List<LocalDateTime> invalidDates =
-			presentationQueryService.getRegisteredPresentations(start, end)
-				.stream()
-				.map(Presentation::getDateTime)
-				.collect(Collectors.toList());
+				presentationQueryService.getRegisteredPresentations(start, end)
+						.stream()
+						.map(Presentation::getDateTime)
+						.collect(Collectors.toList());
 
 		return new InvalidDateResponseDto(invalidDates);
 	}
@@ -98,16 +97,16 @@ public class PresentationService {
 		LocalDateTime limit = now.atStartOfDay();
 		LocalDateTime start = limit.minusYears(10);
 		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
-			Sort.by(DATE_TIME).descending());
+				Sort.by(DATE_TIME).descending());
 
 		List<Presentation> presentations =
-			presentationQueryService.getPresentationsBetweenWithPageRequest(start, limit,
-				pageRequest);
+				presentationQueryService.getPresentationsBetweenWithPageRequest(start, limit,
+						pageRequest);
 
 		return presentations.stream()
-			.filter(presentation ->
-				presentation.getPresentationStatus().equals(PresentationStatus.DONE))
-			.collect(Collectors.toList());
+				.filter(presentation ->
+						presentation.getPresentationStatus().equals(PresentationStatus.DONE))
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -121,15 +120,15 @@ public class PresentationService {
 		LocalDateTime start = now.atStartOfDay();
 		LocalDateTime end = start.plusMonths(MAX_MONTH);
 		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
-			Sort.by(DATE_TIME).ascending());
+				Sort.by(DATE_TIME).ascending());
 
 		List<Presentation> presentations = presentationQueryService.
-			getPresentationsBetweenWithPageRequest(start, end, pageRequest);
+				getPresentationsBetweenWithPageRequest(start, end, pageRequest);
 
 		return presentations.stream()
-			.filter(presentation ->
-				presentation.getPresentationStatus().equals(PresentationStatus.EXPECTED))
-			.collect(Collectors.toList());
+				.filter(presentation ->
+						presentation.getPresentationStatus().equals(PresentationStatus.EXPECTED))
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -140,17 +139,17 @@ public class PresentationService {
 	 * @return
 	 */
 	public PresentationMainData getPastAndUpcomingPresentations(
-		int pastFormCount, int upcomingFormCount) {
+			int pastFormCount, int upcomingFormCount) {
 		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount);
 		List<Presentation> upcomingPresentations = getLatestUpcomingPresentations(
-			upcomingFormCount);
+				upcomingFormCount);
 
 		List<PresentationFormData> past = pastPresentations.stream()
-			.map(presentationMapper::toPresentationFormDataDto)
-			.collect(Collectors.toList());
+				.map(presentationMapper::toPresentationFormDataDto)
+				.collect(Collectors.toList());
 		List<PresentationFormData> upcoming = upcomingPresentations.stream()
-			.map(presentationMapper::toPresentationFormDataDto)
-			.collect(Collectors.toList());
+				.map(presentationMapper::toPresentationFormDataDto)
+				.collect(Collectors.toList());
 
 		return presentationMapper.toPresentationMainData(past, upcoming);
 	}
@@ -164,12 +163,13 @@ public class PresentationService {
 	public PresentationFormResponseDto getUserPresentationSchedule(YearMonth yearMonth) {
 
 		List<PresentationFormData> result =
-			presentationQueryService.getPresentationsByYearMonth(yearMonth)
-				.stream()
-				.filter(presentation ->
-					!presentation.getPresentationStatus().equals(PresentationStatus.CANCEL))
-				.map(presentationMapper::toPresentationFormDataDto)
-				.collect(Collectors.toList());
+				presentationQueryService.getPresentationsByYearMonth(yearMonth)
+						.stream()
+						.filter(presentation ->
+								!presentation.getPresentationStatus()
+										.equals(PresentationStatus.CANCEL))
+						.map(presentationMapper::toPresentationFormDataDto)
+						.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
 	}
@@ -177,10 +177,10 @@ public class PresentationService {
 	public PresentationFormResponseDto getAdminPresentationSchedule(YearMonth yearMonth) {
 
 		List<PresentationFormData> result =
-			presentationQueryService.getPresentationsByYearMonth(yearMonth)
-				.stream()
-				.map(presentationMapper::toPresentationFormDataDto)
-				.collect(Collectors.toList());
+				presentationQueryService.getPresentationsByYearMonth(yearMonth)
+						.stream()
+						.map(presentationMapper::toPresentationFormDataDto)
+						.collect(Collectors.toList());
 
 		return new PresentationFormResponseDto(result);
 	}
@@ -199,8 +199,8 @@ public class PresentationService {
 	@Transactional
 	public void updatePresentationByFormId(Long formId, PresentationUpdateDto dto) {
 		Presentation presentationToUpdate =
-			presentationRepository.findById(formId)
-				.orElseThrow(ExceptionStatus.INVALID_FORM_ID::asServiceException);
+				presentationRepository.findById(formId)
+						.orElseThrow(ExceptionStatus.INVALID_FORM_ID::asServiceException);
 		//날짜 변경시에만 유효성 검증
 		if (!presentationToUpdate.getDateTime().isEqual(dto.getDateTime())) {
 			presentationPolicyService.verifyReservationDate(dto.getDateTime());
@@ -218,11 +218,11 @@ public class PresentationService {
 	 */
 	public PresentationMyPagePaginationDto getUserPresentations(Long userId, Pageable pageable) {
 		Page<Presentation> presentations = presentationQueryService.getPresentationsById(userId,
-			pageable);
+				pageable);
 
 		List<PresentationMyPageDto> result = presentations.stream()
-			.map(presentationMapper::toPresentationMyPageDto)
-			.collect(Collectors.toList());
+				.map(presentationMapper::toPresentationMyPageDto)
+				.collect(Collectors.toList());
 
 		return new PresentationMyPagePaginationDto(result, presentations.getTotalElements());
 	}

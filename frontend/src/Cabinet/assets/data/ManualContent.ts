@@ -1,8 +1,13 @@
+import { ReactComponent as ClockImg } from "@/Cabinet/assets/images/clock.svg";
+import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
+import { ReactComponent as ExtensionIcon } from "@/Cabinet/assets/images/extension.svg";
+import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
+import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
 interface ContentStatusData {
   contentTitle: string;
-  imagePath: string;
+  iconComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null;
   background: string;
   rentalPeriod?: string;
   capacity?: string;
@@ -13,7 +18,7 @@ interface ContentStatusData {
 export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.PRIVATE]: {
     contentTitle: "개인 사물함",
-    imagePath: "/src/Cabinet/assets/images/privateIcon.svg",
+    iconComponent: PrivateIcon,
     background:
       "linear-gradient(to bottom, var(--ref-purple-400), var(--ref-purple-600))",
     rentalPeriod: `${import.meta.env.VITE_PRIVATE_LENT_PERIOD}일`,
@@ -35,7 +40,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.SHARE]: {
     contentTitle: "공유 사물함",
-    imagePath: "/src/Cabinet/assets/images/shareIcon.svg",
+    iconComponent: ShareIcon,
     background:
       "linear-gradient(to bottom, var(--ref-blue-200), var(--ref-blue-300))",
     rentalPeriod: `${import.meta.env.VITE_SHARE_LENT_PERIOD}일 + n * ${
@@ -65,7 +70,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.CLUB]: {
     contentTitle: "동아리 사물함",
-    imagePath: "/src/Cabinet/assets/images/clubIcon.svg",
+    iconComponent: ClubIcon,
     background:
       "linear-gradient(to bottom, var(--ref-pink-100), var(--ref-pink-200))",
     rentalPeriod: "상세내용 참조",
@@ -93,7 +98,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.PENDING]: {
     contentTitle: "오픈예정",
-    imagePath: "",
+    iconComponent: null,
     background: "var(--sys-main-color)",
     contentText: `<span>◦ 상세 내용</span><br/>
     <div>사물함 반납 시, 해당 사물함은 오픈예정 상태로 변경됩니다.<br />
@@ -109,7 +114,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.IN_SESSION]: {
     contentTitle: "대기중",
-    imagePath: "/src/Cabinet/assets/images/clock.svg",
+    iconComponent: ClockImg,
     background: "var(--card-bg-color)",
     contentText: `<span>◦ 상세 내용</span><br/>
     <div>공유 사물함 대여 시 <strong>10분</strong>간의 대기 시간이 발생합니다.<br/>
@@ -129,7 +134,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.EXTENSION]: {
     contentTitle: "연장권 이용방법 안내서",
-    imagePath: "/src/Cabinet/assets/images/extension.svg",
+    iconComponent: ExtensionIcon,
     background: "var(--card-bg-color)",
     contentText: `<span>◦ 연장권 취득 조건</span><br/>
     <div>

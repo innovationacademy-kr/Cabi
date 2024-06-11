@@ -1,8 +1,17 @@
 import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extension.svg";
 import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
 import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
+import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
+import { ReactComponent as SwapImg } from "@/Cabinet/assets/images/storeMove.svg";
+import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import {
+  StoreExtensionType,
+  StoreItemType,
+  StorePenaltyType,
+} from "@/Cabinet/types/enum/store.enum";
 
 export enum additionalModalType {
   MODAL_RETURN = "MODAL_RETURN",
@@ -141,7 +150,7 @@ export const modalPropsMap = {
   },
   MODAL_OVERDUE_PENALTY: {
     type: "error",
-    title: "패널티 안내",
+    title: "페널티 안내",
     confirmMessage: "오늘 하루동안 보지않기",
   },
   MODAL_INVITATION_CODE: {
@@ -169,6 +178,7 @@ export const modalPropsMap = {
     title: "이사하기",
     confirmMessage: "네, 이사할게요",
   },
+
   MODAL_CLUB_ADD_MEM: {
     type: "confirm",
     title: "동아리 멤버 추가",
@@ -193,6 +203,16 @@ export const modalPropsMap = {
     type: "confirm",
     title: "비밀번호 수적",
     confirmMessage: "입력",
+  },
+  MODAL_STORE_SWAP: {
+    type: "confirm",
+    title: "이사권 사용 안내",
+    confirmMessage: "네, 사용할게요",
+  },
+  MODAL_SECTION_ALERT: {
+    type: "confirm",
+    title: "알림 등록권 사용 안내",
+    confirmMessage: "네, 사용할게요",
   },
 };
 
@@ -220,4 +240,30 @@ export const cabinetTypeLabelMap = {
   [CabinetType.CLUB]: "동아리 사물함",
   [CabinetType.PRIVATE]: "개인 사물함",
   [CabinetType.SHARE]: "공유 사물함",
+};
+
+export const ItemIconMap = {
+  [StoreItemType.EXTENSION]: ExtensionImg,
+  [StoreItemType.SWAP]: SwapImg,
+  [StoreItemType.ALARM]: AlarmImg,
+  [StoreItemType.PENALTY]: PenaltyImg,
+};
+
+export const ItemTypeLabelMap = {
+  [StoreItemType.EXTENSION]: "연장권",
+  [StoreItemType.SWAP]: "이사권",
+  [StoreItemType.ALARM]: "알림 등록권",
+  [StoreItemType.PENALTY]: "페널티 감면권",
+};
+
+export const ItemTypePenaltyMap = {
+  [StorePenaltyType.PENALTY_3]: "3일",
+  [StorePenaltyType.PENALTY_7]: "7일",
+  [StorePenaltyType.PENALTY_31]: "31일",
+};
+
+export const ItemTypeExtensionMap = {
+  [StoreExtensionType.EXTENSION_3]: "3일",
+  [StoreExtensionType.EXTENSION_15]: "15일",
+  [StoreExtensionType.EXTENSION_31]: "31일",
 };

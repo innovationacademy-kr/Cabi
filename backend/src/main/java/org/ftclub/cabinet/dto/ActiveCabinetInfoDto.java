@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.dto;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -7,9 +8,6 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.user.domain.UserRole;
-
-import java.time.LocalDateTime;
 
 /**
  * 현재 대여 기록의 모든 연관관계를 담는 내부 계층 간 DTO
@@ -18,6 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 public class ActiveCabinetInfoDto {
+
 	private final Long cabinetId;
 	private final Long lentHistoryId;
 	private final Long userId;
@@ -25,7 +24,6 @@ public class ActiveCabinetInfoDto {
 	private final String email;
 	private final LocalDateTime blackholedAt;
 	private final LocalDateTime deletedAt;
-	private final UserRole role;
 	private final LocalDateTime startedAt;
 	private final LocalDateTime expiredAt;
 	private final LocalDateTime endedAt;

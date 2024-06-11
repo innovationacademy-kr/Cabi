@@ -24,7 +24,7 @@ export const getDefaultCabinetInfo = () => ({
   cabinetId: 0,
   visibleNum: 0,
   lentType: CabinetType.PRIVATE,
-  title: null,
+  title: "",
   maxUser: 0,
   status: CabinetStatus.PENDING,
   section: "",
@@ -33,7 +33,8 @@ export const getDefaultCabinetInfo = () => ({
 });
 
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
-  const { toggleCabinet, toggleMap, openCabinet, closeAll } = useMenu();
+  const { toggleCabinet, toggleMap, toggleStore, openCabinet, closeAll } =
+    useMenu();
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
     currentCabinetIdState
   );
@@ -104,6 +105,9 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
           type="search"
           disable={true}
         />
+      )}
+      {!isAdmin && (
+        <TopNavButton id="myCoinButton" onClick={toggleStore} type="myCoin" />
       )}
       {!isAdmin && !!myInfo.cabinetId && (
         <TopNavButton

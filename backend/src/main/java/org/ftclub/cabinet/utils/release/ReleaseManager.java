@@ -35,7 +35,7 @@ public class ReleaseManager {
 				.map(Cabinet::getId).collect(Collectors.toList());
 		Set<Long> todayReturnedSet = lentQueryService.findCabinetLentHistories(cabinetIds)
 				.stream()
-				.filter(lh -> lh.getEndedAt().isAfter(from))
+				.filter(lh -> lh.getEndedAt() != null && lh.getEndedAt().isAfter(from))
 				.map(LentHistory::getCabinetId)
 				.collect(Collectors.toSet());
 

@@ -258,7 +258,7 @@ const CardInputStyled = styled.input<{ isFocus: boolean }>`
   border: ${(props) =>
     props.isFocus
       ? "1px solid var(--sys-main-color)"
-      : "1px solid var(--toggle-switch-off-bg-color)"};
+      : "1px solid var(--line-color)"};
   color: var(--normal-text-color);
 `;
 

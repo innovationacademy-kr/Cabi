@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
@@ -207,4 +208,21 @@ public class CabinetQueryService {
 	public List<Cabinet> findAllPendingCabinets(CabinetStatus cabinetStatus) {
 		return cabinetRepository.findAllByStatus(cabinetStatus);
 	}
+
+
+	/**
+	 * 사물함 위치 정보로 CabinetPlaceId를 가져옵니다.
+	 *
+	 * @param building
+	 * @param floor
+	 * @param section
+	 * @return
+	 */
+	public CabinetPlace getCabinetPlaceInfoByLocation(String building, Integer floor,
+			String section) {
+		return cabinetRepository.findCabinetPlaceInfoByLocation(building, floor, section)
+				.orElseThrow(ExceptionStatus.NOT_FOUND_SECTION::asServiceException);
+
+	}
+
 }

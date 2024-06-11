@@ -1,5 +1,5 @@
 import React, { SetStateAction, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   buildingsFloorState,
@@ -29,6 +29,7 @@ const TopNavContainer: React.FC<{
   const { setIsLoading } = props;
   const { toggleLeftNav } = useMenu();
   const navigator = useNavigate();
+  const isLocation = useLocation();
 
   const onClickLogo = () => {
     toggleLeftNav();
@@ -70,7 +71,7 @@ const TopNavContainer: React.FC<{
   useEffect(() => {
     if (currentBuildingName === undefined) return;
     else if (currentBuildingName === "새롬관") {
-      navigator("/home");
+      navigator(isLocation);
     }
   }, [currentBuildingName]);
 

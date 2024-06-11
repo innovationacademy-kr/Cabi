@@ -42,4 +42,17 @@ public class BanHistoryCommandService {
 			banHistoryRepository.delete(banHistory);
 		}
 	}
+
+	@Transactional
+	public void updateBanDate(BanHistory recentBanHistory, LocalDateTime reducedBanDate) {
+		LocalDateTime newUnbannedAt = findMaxUnbannedAt(reducedBanDate, LocalDateTime.now());
+		recentBanHistory.updateUnbannedAt(newUnbannedAt);
+	}
+
+	private LocalDateTime findMaxUnbannedAt(LocalDateTime reducedBanDate, LocalDateTime now) {
+		if (reducedBanDate.isAfter(now)) {
+			return reducedBanDate;
+		}
+		return now;
+	}
 }

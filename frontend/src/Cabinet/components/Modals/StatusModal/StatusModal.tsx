@@ -63,6 +63,8 @@ const StatusModal = ({
     useState<CabinetType>(cabinetType);
   const [newCabinetStatus, setNewCabinetStatus] =
     useState<CabinetStatus>(cabinetStatus);
+  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const handleClickWriteMode = (e: any) => {
     setMode("write");
   };
@@ -81,12 +83,18 @@ const StatusModal = ({
     defaultValue: cabinetTypeLabelMap[newCabinetType],
     defaultImageSrc: cabinetIconSrcMap[cabinetType],
     onChangeValue: handleDropdownChangeValue,
+    isOpen: isTypeDropdownOpen,
+    setIsOpen: setIsTypeDropdownOpen,
+    closeOtherDropdown: () => setIsStatusDropdownOpen(false),
   };
 
   const STATUS_DROP_DOWN_PROPS = {
     options: STATUS_OPTIONS,
     defaultValue: cabinetStatusLabelMap[newCabinetStatus],
     onChangeValue: handleDropdownChangeValue,
+    isOpen: isStatusDropdownOpen,
+    setIsOpen: setIsStatusDropdownOpen,
+    closeOtherDropdown: () => setIsTypeDropdownOpen(false),
   };
 
   const handleClickSave = () => {
@@ -155,7 +163,7 @@ const StatusModal = ({
                   }
             }
             text={mode === "read" ? "닫기" : "취소"}
-            theme={mode === "read" ? "light-grayLine" : "line"}
+            theme={mode === "read" ? "grayLine" : "line"}
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>
@@ -224,7 +232,7 @@ const ContentItemContainerStyled = styled.div<{ mode: string }>`
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid var(--toggle-switch-off-bg-color);
+  border: 1px solid var(--line-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -247,7 +255,6 @@ const ContentItemIconStyled = styled.div`
   }
 
   & > svg path {
-    transform: scale(0.8);
     stroke: var(--normal-text-color);
   }
 `;

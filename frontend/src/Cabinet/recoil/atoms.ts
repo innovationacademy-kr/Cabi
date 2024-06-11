@@ -18,6 +18,7 @@ import {
 } from "@/Cabinet/types/dto/club.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import { UserDto, UserInfo } from "@/Cabinet/types/dto/user.dto";
+import CabinetDetailAreaType from "../types/enum/cabinetDetailArea.type.enum";
 
 const { persistAtom } = recoilPersist();
 
@@ -31,6 +32,7 @@ export const userState = atom<UserDto>({
     unbannedAt: null,
     alarmTypes: null,
     isDeviceTokenExpired: null,
+    coins: null,
   },
 });
 
@@ -128,9 +130,9 @@ export const numberOfAdminWorkState = atom<number>({
   default: 0,
 });
 
-export const selectedTypeOnSearchState = atom<string>({
+export const selectedTypeOnSearchState = atom<CabinetDetailAreaType>({
   key: "SelectedTypeOnSearch",
-  default: "CABINET",
+  default: CabinetDetailAreaType.CABINET,
 });
 
 export const targetUserInfoState = atom<UserInfo>({

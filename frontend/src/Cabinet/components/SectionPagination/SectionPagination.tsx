@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
+import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
 const SectionPagination: React.FC<{
   currentSectionName: string;
   currentPositionName: string;
-  sectionList: Array<string>;
+  sectionList: Array<ICurrentSectionInfo>;
   changeSectionOnClickIndexButton: (index: number) => void;
   moveToLeftSection: React.MouseEventHandler;
   moveToRightSection: React.MouseEventHandler;
@@ -18,11 +19,11 @@ const SectionPagination: React.FC<{
     moveToRightSection,
   } = props;
 
-  const paginationIndexBar = sectionList.map((sectionName, index) => (
+  const paginationIndexBar = sectionList.map((section, index) => (
     <IndexRectangleStyled
-      key={sectionName}
+      key={section.sectionName}
       filledColor={
-        sectionName === currentSectionName
+        section.sectionName === currentSectionName
           ? "var(--sys-main-color)"
           : "var(--service-man-title-border-btm-color)"
       }
@@ -54,7 +55,6 @@ const SectionPagination: React.FC<{
 
 const SectionPaginationStyled = styled.div`
   min-width: 360px;
-  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;

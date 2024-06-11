@@ -1,9 +1,5 @@
-import {
-  axiosCabinetById,
-  axiosMyLentInfo,
-  axiosSwapId,
-} from "@/Cabinet/api/axios/axios.custom";
-import { modalPropsMap } from "@/Cabinet/assets/data/maps";
+import { useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
@@ -11,10 +7,15 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/Cabinet/recoil/atoms";
+import { modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
-import { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
+import {
+  axiosCabinetById,
+  axiosMyLentInfo,
+  axiosSwapId,
+} from "@/Cabinet/api/axios/axios.custom";
 import Modal, { IModalContents } from "../Modal";
 import ModalPortal from "../ModalPortal";
 import {
@@ -45,17 +46,18 @@ const SwapModal: React.FC<{
   const swapDetail = `사물함 위치가  <strong>${myLentInfo.floor}층 ${myLentInfo.section} ${myLentInfo.visibleNum}번</strong>에서
   <strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.visibleNum}번</strong>로 변경됩니다.
   대여 기간은 그대로 유지되며,
-  이사는 취소할 수 없습니다.
-  <strong>주 1회만 이사할 수 있습니다.</strong>`;
+  이사권 사용은 취소할 수 없습니다.`;
 
   const trySwapRequest = async () => {
     setIsLoading(true);
     try {
-      await axiosSwapId(currentCabinetId);
+      // await axiosSwapId(currentCabinetId);
+      await axiosUseItem("SWAP", currentCabinetId, null, null, null);
+
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
-      setModalTitle("이사가 완료되었습니다");
+      setModalTitle("이사권 사용완료");
       // 캐비닛 상세정보 바꾸는 곳
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
@@ -73,8 +75,15 @@ const SwapModal: React.FC<{
         throw error;
       }
     } catch (error: any) {
-      // setModalTitle(error.response.data.message);
-      setModalContent(error.response.data.message);
+      setModalTitle("이사권 사용실패");
+      if (error.response.ststus === 400) {
+        setModalContent(
+          "현재 이사권을 보유하고 있지 않습니다.\n이사권은 까비상점에서 구매하실 수 있습니다."
+        );
+      } else {
+        setModalContent(error.response.data.message);
+      }
+
       setHasErrorOnResponse(true);
     } finally {
       setIsLoading(false);
@@ -84,9 +93,9 @@ const SwapModal: React.FC<{
 
   const swapModalContents: IModalContents = {
     type: "hasProceedBtn",
-    title: modalPropsMap.MODAL_SWAP.title,
+    title: modalPropsMap.MODAL_STORE_SWAP.title,
     detail: swapDetail,
-    proceedBtnText: modalPropsMap.MODAL_SWAP.confirmMessage,
+    proceedBtnText: modalPropsMap.MODAL_STORE_SWAP.confirmMessage,
     onClickProceed: trySwapRequest,
     closeModal: props.closeModal,
     isLoading: isLoading,
@@ -99,9 +108,11 @@ const SwapModal: React.FC<{
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
-            modalTitle="이사 횟수 초과"
+            modalTitle={modalTitle}
             modalContents={modalContent}
             closeModal={props.closeModal}
+            url={"/store"}
+            urlTitle={"까비상점으로 이동"}
           />
         ) : (
           <SuccessResponseModal

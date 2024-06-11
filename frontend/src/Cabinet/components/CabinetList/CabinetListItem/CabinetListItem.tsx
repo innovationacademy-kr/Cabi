@@ -292,7 +292,11 @@ const CabinetIconContainerStyled = styled.div<{
 
   & > svg > path {
     stroke: ${(props) => cabinetFilterMap[props.status]};
-    transform: scale(0.7);
+  }
+
+  & > svg {
+    width: 16px;
+    height: 16px;
   }
 `;
 

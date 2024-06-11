@@ -12,14 +12,13 @@ import {
   axiosCabinetById,
   axiosMyLentInfo,
 } from "@/Cabinet/api/axios/axios.custom";
+import { padTo2Digits } from "@/Cabinet/utils/dateUtils";
 
 const returnCountTime = (countDown: number) => {
-  const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60))
-    .toString()
-    .padStart(2, "0");
-  const seconds = Math.floor((countDown % (1000 * 60)) / 1000)
-    .toString()
-    .padStart(2, "0");
+  const minutes = padTo2Digits(
+    Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60))
+  );
+  const seconds = padTo2Digits(Math.floor((countDown % (1000 * 60)) / 1000));
   return [minutes, seconds];
 };
 
