@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,8 +76,7 @@ public class CabinetFacadeService {
 		List<String> allBuildings = cabinetQueryService.findAllBuildings();
 		return allBuildings.stream()
 				.map(building -> cabinetMapper.toBuildingFloorsDto(building,
-						cabinetQueryService.findAllFloorsByBuilding(building))
-				)
+						cabinetQueryService.findAllFloorsByBuilding(building)))
 				.collect(Collectors.toList());
 	}
 
@@ -99,8 +99,8 @@ public class CabinetFacadeService {
 			LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
 			return cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos, sessionExpiredAt);
 		}
-		List<LentHistory> cabinetActiveLentHistories = lentQueryService.findCabinetActiveLentHistories(
-				cabinetId);
+		List<LentHistory> cabinetActiveLentHistories =
+				lentQueryService.findCabinetActiveLentHistories(cabinetId);
 		List<LentDto> lentDtos = cabinetActiveLentHistories.stream()
 				.map(lentHistory -> lentMapper.toLentDto(lentHistory.getUser(), lentHistory))
 				.collect(Collectors.toList());
@@ -109,8 +109,7 @@ public class CabinetFacadeService {
 			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
 			List<User> users = userQueryService.findUsers(usersInCabinet);
 			users.forEach(user -> lentDtos.add(
-					LentDto.builder().userId(user.getId()).name(user.getName()).build()
-			));
+					LentDto.builder().userId(user.getId()).name(user.getName()).build()));
 		}
 		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
 
@@ -145,8 +144,7 @@ public class CabinetFacadeService {
 
 		// 층, 건물에 따른 유저가 알람 등록한 section 조회
 		Set<String> unsetAlarmSection =
-				sectionAlarmQueryService.getUnsentAlarm(userId, building, floor)
-						.stream()
+				sectionAlarmQueryService.getUnsentAlarm(userId, building, floor).stream()
 						.map(alarm -> alarm.getCabinetPlace().getLocation().getSection())
 						.collect(Collectors.toSet());
 
@@ -217,7 +215,7 @@ public class CabinetFacadeService {
 	public CabinetPendingResponseDto getAvailableCabinets(String building) {
 		// 현재 시간 및 어제 13시 00분 00초 시간 설정
 		final LocalDateTime now = LocalDateTime.now();
-		final LocalDateTime yesterday = now.minusDays(1).withHour(13).withMinute(0).withSecond(0);
+		final LocalDate yesterday = now.minusDays(1).toLocalDate();
 
 		// 빌딩에 있는 CLUB 대여 타입이 아니면서, AVAILABLE, PENDING 상태인 사물함 조회
 		List<Cabinet> availableCabinets = cabinetQueryService.findCabinetsNotLentTypeAndStatus(
@@ -230,9 +228,9 @@ public class CabinetFacadeService {
 		Map<Long, List<LentHistory>> lentHistoriesMap;
 		// 현재 시간이 13시 이전이면 어제 반납된 사물함을 조회
 		if (now.getHour() < 13) {
-			lentHistoriesMap = lentQueryService.findPendingLentHistoriesOnDate(
-							yesterday.toLocalDate(), cabinetIds)
-					.stream().collect(groupingBy(LentHistory::getCabinetId));
+			lentHistoriesMap =
+					lentQueryService.findAvailableLentHistoriesOnDate(yesterday, cabinetIds)
+							.stream().collect(groupingBy(LentHistory::getCabinetId));
 		} else {
 			// 13시 이후면 현재 PENDING 인 사물함들을 조회
 			lentHistoriesMap = lentQueryService.findCabinetLentHistories(cabinetIds)
@@ -286,8 +284,8 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getLentHistoryPagination(Long cabinetId, Pageable pageable) {
-		Page<LentHistory> lentHistories = lentQueryService.findCabinetLentHistoriesWithUserAndCabinet(
-				cabinetId, pageable);
+		Page<LentHistory> lentHistories =
+				lentQueryService.findCabinetLentHistoriesWithUserAndCabinet(cabinetId, pageable);
 		List<LentHistoryDto> result = lentHistories.stream()
 				.map(lh -> lentMapper.toLentHistoryDto(lh, lh.getUser(), lh.getCabinet()))
 				.collect(Collectors.toList());
