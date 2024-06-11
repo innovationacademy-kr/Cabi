@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
+import AdminItemUsageLogPage from "@/Cabinet/pages/admin/AdminItemUsageLogPage";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import SelectInduction from "@/Cabinet/components/Common/SelectInduction";
 import AdminLentLog from "@/Cabinet/components/LentLog/AdminLentLog";
@@ -69,7 +70,7 @@ const UserStoreInfoArea = (): JSX.Element => {
               선택해주세요"
         />
       )}
-      {userInfoData && <AdminLentLog lentType={"USER"} />}
+      {userInfoData && <AdminItemUsageLogPage />}
     </>
   );
 };
