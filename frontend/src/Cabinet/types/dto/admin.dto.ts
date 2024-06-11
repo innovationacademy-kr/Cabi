@@ -67,7 +67,7 @@ export interface AdminItemHistoryDto {
   itemName: string;
   itemDetails: string;
   issuedDate?: string;
-  purchasedAt?: string;
+  purchaseAt?: string;
   usedAt?: string;
 }
 
