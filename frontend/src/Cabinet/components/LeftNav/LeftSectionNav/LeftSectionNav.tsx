@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
@@ -16,6 +17,8 @@ const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
   const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
     currentSectionNameState
   );
+  const { pathname } = useLocation();
+  const isAdmin = pathname.includes("admin");
 
   return (
     <LeftNavOptionStyled>
@@ -40,7 +43,8 @@ const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
           >
             {section.sectionName}
             <IconWrapperStyled>
-              {!isClubSection &&
+              {!isAdmin &&
+                !isClubSection &&
                 (section.alarmRegistered ? (
                   <FilledHeartIcon />
                 ) : (
