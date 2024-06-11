@@ -126,14 +126,14 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => {
 };
 
 const ItemBarChartStyled = styled.div`
-  height: 100%;
+  height: 90%;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   @media screen and (min-width: 768px) {
-    padding-right: 80px;
-    padding-left: 50px;
+    padding-right: 60px;
+    padding-left: 60px;
   }
 `;
 

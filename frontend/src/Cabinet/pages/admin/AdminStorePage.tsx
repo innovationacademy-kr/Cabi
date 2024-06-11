@@ -212,7 +212,7 @@ const AdminStorePage = () => {
         <PieChartCoin data={totalCoinData} />
       </WrapperStyled>
       <WrapperStyled>
-        <H2styled>아이템 통계</H2styled>
+        <H2styled>아이템 사용 통계</H2styled>
         <ItemBarChart data={totalItemData} />
       </WrapperStyled>
     </AdminStorePageStyled>
