@@ -276,10 +276,10 @@ const AdminStorePageStyled = styled.div`
     grid-template-rows: repeat(4, 500px);
     min-width: 300px;
     overflow: scroll;
+    margin-bottom: 0;
     & > :first-child {
       grid-column: span 1;
     }
-    margin: 0;
   }
 `;
 

@@ -40,6 +40,7 @@ const Dropdown = ({
   useEffect(() => {
     setCurrentName(defaultValue);
   }, [defaultValue]);
+
   return (
     <DropdownContainerStyled>
       <DropdownSelectionBoxStyled
