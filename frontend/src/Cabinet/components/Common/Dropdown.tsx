@@ -12,7 +12,7 @@ export interface IDropdownOptions {
   hasNoOptions?: boolean;
 }
 
-export interface IDropdown {
+export interface IDropdownProps {
   options: IDropdownOptions[];
   defaultValue: string;
   defaultImageSrc?: string;
@@ -32,7 +32,8 @@ const Dropdown = ({
   closeOtherDropdown,
 }: IDropdown) => {
   const [currentName, setCurrentName] = useState(defaultValue);
-  const selectedIdx = options.findIndex((op) => op.name === currentName) ?? 0;
+  const idx: number = options.findIndex((op) => op.name === currentName);
+  const selectedIdx: number = idx === -1 ? 0 : idx;
   const DefaultOptionIcon =
     defaultImageSrc &&
     cabinetIconComponentMap[options[selectedIdx].value as CabinetType];

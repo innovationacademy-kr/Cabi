@@ -4,8 +4,8 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import Dropdown, {
-  IDropdown,
   IDropdownOptions,
+  IDropdownProps,
 } from "@/Cabinet/components/Common/Dropdown";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
