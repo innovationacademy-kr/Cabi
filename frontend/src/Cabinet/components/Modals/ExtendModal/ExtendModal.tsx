@@ -110,7 +110,7 @@ const ExtendModal: React.FC<{
     if (!findMyExtension(extensionPeriod[0].period)) return 3;
     if (!findMyExtension(extensionPeriod[1].period)) return 15;
     if (!findMyExtension(extensionPeriod[2].period)) return 31;
-    if (!findMyExtension(extensionPeriod[3].period)) return 31;
+    if (!findMyExtension(extensionPeriod[3].period)) return 30;
     else return 0;
   };
   const getDefaultOption = (option: number) => {
@@ -157,6 +157,7 @@ const ExtendModal: React.FC<{
     setExtensionDate(extensionPeriod[option].day);
   };
 
+  console.log("!!! : ", extensionPeriod[2].period);
   const extensionDropdownProps = {
     options: [
       {
@@ -182,7 +183,9 @@ const ExtendModal: React.FC<{
     ],
     defaultValue: findMyExtension(extensionPeriod[0].period)
       ? findMyExtension(extensionPeriod[1].period)
-        ? findMyExtension(extensionPeriod[2].period) ? extensionPeriod[3].period : extensionPeriod[2].period
+        ? findMyExtension(extensionPeriod[2].period)
+          ? extensionPeriod[3].period
+          : extensionPeriod[2].period
         : extensionPeriod[1].period
       : extensionPeriod[0].period,
     onChangeValue: handleDropdownChange,
