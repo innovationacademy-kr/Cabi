@@ -20,7 +20,8 @@ public enum ItemType {
 			"20일 동안 매일 동전을 주웠다면, 보너스 동전을 받습니다\uD83D\uDCB0"),
 	COIN_FULL_TIME("42 출석 보상",
 			"42 서울에 열심히 출석했다면, 보상을 받을 수 있습니다\uD83D\uDCB0"),
-	;
+	ADMIN_REWARD("관리자 지급",
+			"관리자 지급 내역입니다.");
 
 	private final String name;
 	private final String description;

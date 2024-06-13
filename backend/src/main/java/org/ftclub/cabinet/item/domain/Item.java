@@ -72,7 +72,7 @@ public class Item {
 	 * @return 유효한 인스턴스 여부
 	 */
 	private boolean isValid() {
-		return sku.isValid() && type.isValid() && type.isValid();
+		return type.isValid() && type.isValid();
 	}
 
 	@Override
