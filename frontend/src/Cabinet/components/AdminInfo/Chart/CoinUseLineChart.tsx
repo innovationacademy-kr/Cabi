@@ -39,6 +39,27 @@ const CoinUseLineChart = ({
     (data) => data.id === coinToggleType
   );
 
+  const yMin = Math.min(...filteredData[0].data.map((d) => d.y));
+  const yMax = Math.max(...filteredData[0].data.map((d) => d.y));
+  console.log("ymin, yMax", yMin, yMax);
+  const getYTickValues = (yMax: number) => {
+    let test = yMax;
+    let exponent = 1;
+
+    while (test >= 10) {
+      console.log("test", test);
+      console.log("exponent", exponent);
+      test /= 10;
+      exponent++;
+    }
+    const tickValues = [];
+    for (let i = 0; i <= exponent; i++) {
+      tickValues.push(Math.pow(10, i));
+    }
+    return tickValues;
+  };
+  const yTickValues = getYTickValues(yMax);
+
   return (
     <>
       <LineChartStyled>
@@ -73,9 +94,9 @@ const CoinUseLineChart = ({
             useUTC: false,
           }}
           yScale={{
-            type: "linear",
-            min: 0,
-            max: "auto",
+            type: "symlog",
+            min: yMin,
+            max: yMax,
           }}
           yFormat=" >0"
           // curve="cardinal"
@@ -90,11 +111,15 @@ const CoinUseLineChart = ({
           }}
           axisLeft={{
             legendOffset: 12,
+            tickValues: yTickValues,
           }}
+          gridYValues={yTickValues}
           enableGridX={false}
+          enableGridY={true}
           pointSize={0}
           enableArea={true}
           useMesh={true}
+          enableSlices={false}
         />
       </LineChartStyled>
     </>
