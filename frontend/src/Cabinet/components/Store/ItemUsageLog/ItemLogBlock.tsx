@@ -1,30 +1,9 @@
 import styled from "styled-components";
 import { IItemUsageLog } from "@/Cabinet/pages/ItemUsageLogPage";
+import { ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
-export function mapItemNameToType(itemName: string): StoreItemType {
-  switch (itemName) {
-    case "연장권":
-      return StoreItemType.EXTENSION;
-    case "이사권":
-      return StoreItemType.SWAP;
-    case "알림 등록권":
-      return StoreItemType.ALARM;
-    case "페널티 감면권":
-      return StoreItemType.PENALTY;
-    default:
-      return StoreItemType.PENALTY;
-  }
-}
-
-const extractItemName = (item: string): string => {
-  // 정규 표현식 패턴을 정의합니다. 숫자와 밑줄을 제외한 모든 부분을 추출합니다.
-  const pattern = /^[^\d_\-\s]+/;
-  const match = item.match(pattern);
-  return match ? match[0] : item;
-};
-
-const formatDate = (date: Date) => {
+const formatItemLogDate = (date: Date) => {
   return new Intl.DateTimeFormat("ko-KR", {
     year: "numeric",
     month: "2-digit",
@@ -38,12 +17,12 @@ const formatDate = (date: Date) => {
 const ItemLogBlock = ({ log }: { log: IItemUsageLog }) => {
   return (
     <ItemUsageLogStyled>
-      <IconBlockStyled itemType={mapItemNameToType(extractItemName(log.title))}>
+      <IconBlockStyled itemName={log.itemName}>
         <log.logo />
       </IconBlockStyled>
       <ItemUsageInfoStyled>
-        <ItemDateStyled>{formatDate(log.date)}</ItemDateStyled>
-        <ItemTitleStyled>{log.title}</ItemTitleStyled>
+        <ItemDateStyled>{formatItemLogDate(log.date)}</ItemDateStyled>
+        <ItemTitleStyled>{log.titleWithDetails}</ItemTitleStyled>
       </ItemUsageInfoStyled>
     </ItemUsageLogStyled>
   );
@@ -58,7 +37,7 @@ const ItemUsageLogStyled = styled.div`
   align-items: center;
 `;
 
-const IconBlockStyled = styled.div<{ itemType: StoreItemType }>`
+const IconBlockStyled = styled.div<{ itemName: string }>`
   display: flex;
   width: 60px;
   height: 60px;
@@ -76,7 +55,9 @@ const IconBlockStyled = styled.div<{ itemType: StoreItemType }>`
   & > svg > path {
     stroke: var(--white-text-with-bg-color);
     stroke-width: ${(props) =>
-      props.itemType === StoreItemType.EXTENSION ? "3px" : "1.5px"};
+      props.itemName === ItemTypeLabelMap[StoreItemType.EXTENSION]
+        ? "3px"
+        : "1.5px"};
   }
 `;
 

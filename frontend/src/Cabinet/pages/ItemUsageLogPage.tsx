@@ -2,35 +2,48 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import UnavailableDataInfo from "@/Cabinet/components/Common/UnavailableDataInfo";
-import { mapItemNameToType } from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as DropdownChevron } from "@/Cabinet/assets/images/dropdownChevron.svg";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import { axiosGetItemUsageHistory } from "@/Cabinet/api/axios/axios.custom";
+
+const mapItemNameToType = (itemName: string): StoreItemType => {
+  switch (itemName) {
+    case "연장권":
+      return StoreItemType.EXTENSION;
+    case "이사권":
+      return StoreItemType.SWAP;
+    case "알림 등록권":
+      return StoreItemType.ALARM;
+    case "페널티 감면권":
+      return StoreItemType.PENALTY;
+    default:
+      return StoreItemType.PENALTY;
+  }
+};
 
 export interface IItemUsageLog {
   date: Date;
   dateStr?: string;
-  title: string;
+  titleWithDetails: string;
   logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  itemName: string;
 }
-
-
 
 function createLogEntries(data: { result: any[] }) {
   return data.result.map((item) => {
     const itemDate = new Date(item.date);
-    // console.log("itemType : ",item.itemDto.itemName)
-    // console.log("itemType : ",extractItemName(item.itemDto.itemName))
-    // console.log("itemType : ",mapItemNameToType(extractItemName(item.itemDto.itemName)))
+
     return {
       date: itemDate,
       dateStr: `${itemDate.getFullYear()}년 ${itemDate.getMonth() + 1}월`,
-      title:
+      titleWithDetails:
         item.itemDto.itemName === item.itemDto.itemDetails
           ? item.itemDto.itemName
           : `${item.itemDto.itemName} - ${item.itemDto.itemDetails}`,
       logo: ItemIconMap[mapItemNameToType(item.itemDto.itemName)],
+      itemName: item.itemDto.itemName,
     };
   });
 }
