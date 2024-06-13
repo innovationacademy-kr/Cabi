@@ -102,12 +102,10 @@ const Layout = (): JSX.Element => {
             {selectedTypeOnSearch === CabinetDetailAreaType.ITEM && (
               <UserStoreInfoArea />
             )}
-            {selectedTypeOnSearch === CabinetDetailAreaType.CABINET &&
-              (isMainPage ? (
-                <CabinetInfoAreaContainer />
-              ) : (
-                <UserCabinetInfoAreaContainer />
-              ))}
+
+            {selectedTypeOnSearch === CabinetDetailAreaType.CABINET && (
+              <CabinetInfoAreaContainer />
+            )}
           </DetailInfoContainerStyled>
           <MapInfoContainer />
           <AdminItemUsageLogPage />
