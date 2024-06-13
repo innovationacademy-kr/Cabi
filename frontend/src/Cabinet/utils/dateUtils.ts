@@ -1,13 +1,14 @@
 /**
  * @description 해당 월, 일의 앞자리를 0으로 채워 두 자리로 만듦
  *
- * @param num 날짜
+ * @param numToBePadded 날짜
  *
  * @returns 두 자리로 만들어진 날짜
  */
-export const padTo2Digits = (num: number) => {
-  return num.toString().padStart(2, "0");
+export const padToNDigits = (numToBePadded: number, maxLength: number) => {
+  return numToBePadded.toString().padStart(maxLength, "0");
 };
+// TODO : padToNDigits
 
 /**
  * @description 해당 날짜의 년, 월, 일을 divider 로 구분하여 반환
@@ -25,8 +26,8 @@ export const formatDate = (date: Date | null, divider: string) => {
   if (date === null) return "";
   return [
     date.getFullYear(),
-    padTo2Digits(date.getMonth() + 1),
-    padTo2Digits(date.getDate()),
+    padToNDigits(date.getMonth() + 1, 2),
+    padToNDigits(date.getDate(), 2),
   ].join(divider);
 };
 
@@ -44,7 +45,7 @@ export const formatDate = (date: Date | null, divider: string) => {
  */
 export const formatDateTime = (date: Date | null, divider: string) => {
   if (date === null) return "";
-  return [date.getHours(), date.getMinutes()].map(padTo2Digits).join(divider);
+  return [date.getHours(), date.getMinutes()].map(padToNDigits).join(divider);
 };
 /**
  * @description 주어진 lentType에 따라 대여 만료일을 구해 "YYYY/MM/DD" 형식으로 반환. 예정된 대여 만료일이 있다면 그 일자를 반환

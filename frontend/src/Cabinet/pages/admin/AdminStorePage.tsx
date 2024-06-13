@@ -21,7 +21,7 @@ import {
   axiosStatisticsTotalItemUse,
 } from "@/Cabinet/api/axios/axios.custom";
 import { axiosStatisticsCoin } from "@/Cabinet/api/axios/axios.custom";
-import { padTo2Digits } from "@/Cabinet/utils/dateUtils";
+import { padToNDigits } from "@/Cabinet/utils/dateUtils";
 
 const dataToggleList: toggleItem[] = [
   { name: "발행 코인", key: CoinUseType.ISSUE },
@@ -194,7 +194,7 @@ const AdminStorePage = () => {
             <span>
               {coinCollectDate.getFullYear() +
                 "년 " +
-                padTo2Digits(coinCollectDate.getMonth() + 1) +
+                padToNDigits(coinCollectDate.getMonth() + 1, 2) +
                 "월"}
             </span>
             <MoveSectionButtonStyled
