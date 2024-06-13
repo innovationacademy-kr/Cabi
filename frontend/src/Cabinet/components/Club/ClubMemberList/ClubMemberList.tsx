@@ -152,6 +152,11 @@ const UserCountIconStyled = styled.div`
   & > svg > path {
     stroke: var(--normal-text-color);
   }
+
+  & > svg {
+    width: 24px;
+    height: 24px;
+  }
 `;
 
 const AddMemberCardStyled = styled.div`

@@ -297,3 +297,9 @@ export const mapPostionData: IFloorSectionsInfo = {
     },
   ],
 };
+
+export const clubSectionsData = [
+  "Cluster X - 1",
+  "Cluster X - 2",
+  "Cluster X - 3",
+];

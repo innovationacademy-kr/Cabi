@@ -4,15 +4,14 @@ import {
   TClubModalState,
 } from "@/Cabinet/components/Club/ClubMemberInfoArea/ClubMemberInfoArea.container";
 import Button from "@/Cabinet/components/Common/Button";
+import SelectInduction from "@/Cabinet/components/Common/SelectInduction";
 import DeleteClubMemberModal from "@/Cabinet/components/Modals/ClubModal/DeleteClubMemberModal";
 import MandateClubMemberModal from "@/Cabinet/components/Modals/ClubModal/MandateClubMemberModal";
 import {
-  cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
-import { ReactComponent as LeaderIcon } from "@/Cabinet/assets/images/leader.svg";
-import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
+import { ReactComponent as LeaderIcon } from "@/Cabinet/assets/images/crown.svg";
 import { ReactComponent as UserImg } from "@/Cabinet/assets/images/privateIcon.svg";
 import {
   ClubCabinetInfo,
@@ -51,18 +50,10 @@ const ClubMemberInfoArea = ({
     <>
       <ClubMemberInfoAreaStyled id="clubMemberInfoArea">
         {selectedClubCabinetInfo === null ? (
-          <NotSelectedStyled>
-            <CabiLogoStyled>
-              <LogoImg />
-            </CabiLogoStyled>
-            <TextStyled
-              fontSize="1.125rem"
-              fontColor="var(--gray-line-btn-color)"
-            >
-              동아리를 <br />
-              선택해주세요
-            </TextStyled>
-          </NotSelectedStyled>
+          <SelectInduction
+            msg="동아리를
+              선택해주세요"
+          />
         ) : (
           <>
             <ClubInfoWrapperStyled>
@@ -120,24 +111,6 @@ const ClubMemberInfoArea = ({
   );
 };
 
-const NotSelectedStyled = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const CabiLogoStyled = styled.div`
-  width: 35px;
-  height: 35px;
-  margin-bottom: 10px;
-  svg {
-    .logo_svg__currentPath {
-      fill: var(--sys-main-color);
-    }
-  }
-`;
 const ClubMemberInfoAreaStyled = styled.div`
   position: fixed;
   top: 120px;
@@ -215,13 +188,11 @@ const ClubMemberIconStyled = styled.div<{ isMasterSelected: boolean }>`
 
   & > svg {
     width: 24px;
-    height: 24px;
+    height: ${(props) => (props.isMasterSelected ? "20px" : "24px")};
   }
 
   & > svg > path {
     stroke: var(--normal-text-color);
-    transform: ${(props) =>
-      props.isMasterSelected ? "scale(1.3)" : "scale(1.0)"};
   }
 `;
 

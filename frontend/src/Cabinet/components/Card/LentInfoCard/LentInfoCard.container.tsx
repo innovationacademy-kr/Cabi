@@ -1,12 +1,14 @@
+import { useEffect, useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { myCabinetInfoState, userState } from "@/Cabinet/recoil/atoms";
 import LentInfoCard from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard";
 import { getDefaultCabinetInfo } from "@/Cabinet/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
-import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import { LentDto } from "@/Cabinet/types/dto/lent.dto";
+import { IItemTimeRemaining } from "@/Cabinet/types/dto/store.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import { getRemainingTime } from "@/Cabinet/utils/dateUtils";
-import { useRecoilValue } from "recoil";
+import { getRemainingTime, getTimeRemaining } from "@/Cabinet/utils/dateUtils";
 
 export interface MyCabinetInfo {
   name: string | null;
@@ -73,6 +75,10 @@ const LentInfoCardContainer = ({
   unbannedAt: Date | null | undefined;
 }) => {
   const myCabinetInfo = useRecoilValue(myCabinetInfoState);
+  const [isPenaltyUser, setIsPenaltyUser] = useState(true);
+  const [remainPenaltyPeriod, setRemainPenaltyPeriod] =
+    useState<IItemTimeRemaining | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   let dateUsed, dateLeft, expireDate;
   if (name && myCabinetInfo.lents) {
@@ -102,7 +108,39 @@ const LentInfoCardContainer = ({
     status: myCabinetInfo.status || "",
   };
 
-  return <LentInfoCard cabinetInfo={cabinetLentInfo} unbannedAt={unbannedAt} />;
+  const onCLickPenaltyButton = () => {
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    if (unbannedAt == null) {
+      setIsPenaltyUser(false);
+    } else {
+      setRemainPenaltyPeriod(getTimeRemaining(unbannedAt));
+    }
+  }, [unbannedAt]);
+
+  return (
+    <LentInfoCard
+      cabinetInfo={cabinetLentInfo}
+      unbannedAt={unbannedAt}
+      button={
+        isPenaltyUser
+          ? {
+              label: "페널티 감면",
+              onClick: onCLickPenaltyButton,
+              isClickable: true,
+            }
+          : undefined
+      }
+      isModalOpen={isModalOpen}
+      remainPenaltyPeriod={remainPenaltyPeriod}
+      onClose={handleCloseModal}
+    />
+  );
 };
 
 export default LentInfoCardContainer;

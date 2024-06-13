@@ -4,12 +4,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled, { css } from "styled-components";
 import { selectedTypeOnSearchState } from "@/Cabinet/recoil/atoms";
+import AdminItemUsageLogPage from "@/Cabinet/pages/admin/AdminItemUsageLogPage";
 import CabinetInfoAreaContainer from "@/Cabinet/components/CabinetInfoArea/CabinetInfoArea.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import LeftNav from "@/Cabinet/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/Cabinet/components/MapInfo/MapInfo.container";
+import UserStoreInfoArea from "@/Cabinet/components/Store/Admin/UserStoreInfoArea/UserStoreInfoArea";
 import AdminTopNavContainer from "@/Cabinet/components/TopNav/AdminTopNav.container";
-import UserInfoAreaContainer from "@/Cabinet/components/UserInfoArea/UserInfoArea.container";
+import UserCabinetInfoAreaContainer from "@/Cabinet/components/UserCabinetInfoArea/UserCabinetInfoArea.container";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -18,6 +21,7 @@ const Layout = (): JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
   const selectedTypeOnSearch = useRecoilValue(selectedTypeOnSearchState);
+
   const token = getCookie("admin_access_token");
 
   const checkPath = () => {
@@ -92,13 +96,21 @@ const Layout = (): JSX.Element => {
             id="cabinetDetailArea"
             isFloat={!isMainPage && !isSearchPage}
           >
-            {selectedTypeOnSearch === "USER" ? (
-              <UserInfoAreaContainer />
-            ) : (
-              <CabinetInfoAreaContainer />
+            {selectedTypeOnSearch === CabinetDetailAreaType.USER && (
+              <UserCabinetInfoAreaContainer />
             )}
+            {selectedTypeOnSearch === CabinetDetailAreaType.ITEM && (
+              <UserStoreInfoArea />
+            )}
+            {selectedTypeOnSearch === CabinetDetailAreaType.CABINET &&
+              (isMainPage ? (
+                <CabinetInfoAreaContainer />
+              ) : (
+                <UserCabinetInfoAreaContainer />
+              ))}
           </DetailInfoContainerStyled>
           <MapInfoContainer />
+          <AdminItemUsageLogPage />
         </WrapperStyled>
       )}
     </React.Fragment>

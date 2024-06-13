@@ -2,6 +2,7 @@ import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 
 const axiosLogoutUrl = "/v4/auth/logout";
@@ -318,6 +319,107 @@ const axiosExtendLentPeriodURL = "/v4/lent/cabinets/extend";
 export const axiosExtendLentPeriod = async (): Promise<any> => {
   try {
     const response = await instance.patch(axiosExtendLentPeriodURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCoinCheck = "/v5/items/coin";
+export const axiosCoinCheckGet = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosCoinCheck);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosCoinCheckPost = async (): Promise<any> => {
+  try {
+    const response = await instance.post(axiosCoinCheck);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCoinLogURL = "/v5/items/coin/history";
+export const axiosCoinLog = async (
+  type: CoinLogToggleType,
+  page: number,
+  size: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(axiosCoinLogURL, {
+      params: { type: type, page: page, size: size },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosMyItemsURL = "/v5/items/me";
+export const axiosMyItems = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosMyItemsURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosItemHistoryURL = "/v5/items/history";
+export const axiosGetItemUsageHistory = async (
+  page: number,
+  size: number
+): Promise<any> => {
+  if (page === null || size === null) return;
+  try {
+    const response = await instance.get(axiosItemHistoryURL, {
+      params: { page: page, size: size },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosItemsURL = "/v5/items";
+export const axiosItems = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosItemsURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosBuyItemURL = "/v5/items/";
+export const axiosBuyItem = async (sku: String): Promise<any> => {
+  try {
+    const response = await instance.post(axiosBuyItemURL + sku + "/purchase");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosUseItem = async (
+  sku: String,
+  newCabinetId: number | null,
+  building: string | null,
+  floor: number | null,
+  section: string | null
+): Promise<any> => {
+  try {
+    const response = await instance.post(axiosBuyItemURL + sku + "/use", {
+      newCabinetId: newCabinetId,
+      building: building,
+      floor: floor,
+      section: section,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -665,6 +767,65 @@ export const axiosLentClubCabinet = async (
   }
 };
 
+const axiosStatisticsCoinURL = "/v5/admin/statistics/coins";
+export const axiosStatisticsCoin = async () => {
+  try {
+    const response = await instance.get(axiosStatisticsCoinURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCoinUseStatisticsURL = "/v5/admin/statistics/coins/use";
+export const axiosCoinUseStatistics = async (
+  startDate: Date,
+  endDate: Date
+): Promise<any> => {
+  try {
+    const response = await instance.get(axiosCoinUseStatisticsURL, {
+      params: { startDate, endDate },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosStatisticsItemURL = "/v5/admin/statistics/coins";
+export const axiosStatisticsItem = async () => {
+  try {
+    const response = await instance.get(axiosStatisticsItemURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+const axiosStatisticsTotalItemUseURL = "/v5/admin/statistics/items";
+export const axiosStatisticsTotalItemUse = async () => {
+  try {
+    const response = await instance.get(axiosStatisticsTotalItemUseURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCoinCollectStatisticsURL = "/v5/admin/statistics/coins/collect";
+export const axiosCoinCollectStatistics = async (
+  year: number,
+  month: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(axiosCoinCollectStatisticsURL, {
+      params: { year: year, month: month },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosLentShareIdURL = "/v4/lent/cabinets/share/";
 export const axiosLentShareId = async (
   cabinetId: number | null,
@@ -730,6 +891,54 @@ export const axiosSendSlackNotificationToChannel = async (
       receiverName: receiverName,
       message: message,
     });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosItemAssignURL = "v5/admin/items/assign";
+export const axiosItemAssign = async (
+  itemSku: string,
+  userIds: number[]
+): Promise<any> => {
+  try {
+    const response = await instance.post(axiosItemAssignURL, {
+      itemSku,
+      userIds,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosItemAssignListURL = "/v5/admin/items/assign";
+export const axiosItemAssignList = async (
+  page: number,
+  size: number
+): Promise<any> => {
+  if (page === null || size === null) return;
+  try {
+    const response = await instance.get(axiosItemAssignListURL, {
+      params: { page: page, size: size },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetUserItemsURL = "/v5/admin/items/users/";
+export const axiosGetUserItems = async (
+  userId: number,
+  page: number,
+  size: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(`${axiosGetUserItemsURL}${userId}`, {
+      params: { page, size },
+    });
+    return response;
   } catch (error) {
     throw error;
   }

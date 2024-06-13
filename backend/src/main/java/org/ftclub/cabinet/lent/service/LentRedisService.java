@@ -1,9 +1,11 @@
 package org.ftclub.cabinet.lent.service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.CabinetProperties;
@@ -225,31 +227,48 @@ public class LentRedisService {
 	}
 
 	/**
-	 * 정책 기한 이내에 swap 기록이 있는지 확인합니다.
+	 * 사물함의 이전 대여 종료 시간을 가져옵니다.
 	 *
-	 * @param userId 유저 이름
-	 * @return
+	 * @param cabinetId 사물함 id
+	 * @return 이전 대여 종료 시간
 	 */
-	public boolean isExistSwapRecord(Long userId) {
-		return lentRedis.isExistPreviousSwap(String.valueOf(userId));
+	public LocalDateTime getPreviousEndedAt(Long cabinetId) {
+		LocalDateTime previousEndedAt;
+		String previousEndedAtString = lentRedis.getPreviousEndedAt(cabinetId.toString());
+		if (Objects.isNull(previousEndedAtString)) {
+			Optional<LentHistory> cabinetLastLentHistory =
+					lentRepository.findFirstByCabinetIdOrderByEndedAtDesc(cabinetId);
+			previousEndedAt = cabinetLastLentHistory.map(LentHistory::getEndedAt).orElse(null);
+			if (Objects.nonNull(previousEndedAt)) {
+				lentRedis.setPreviousEndedAt(cabinetId.toString(), previousEndedAt.toString());
+			}
+		} else {
+			DateTimeFormatter dateFormatter =
+					DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+			previousEndedAt = LocalDateTime.parse(previousEndedAtString, dateFormatter);
+		}
+		return previousEndedAt;
 	}
 
 	/**
-	 * swap에 성공한 유저를 등록합니다.
+	 * 사물함의 이전 대여 종료 시간을 설정합니다.
 	 *
-	 * @param userId swap 기능을 사용한 유저 이름
+	 * @param cabinetId 사물함 id
+	 * @param endedAt   이전 대여 종료 시간
 	 */
+	public void setPreviousEndedAt(Long cabinetId, LocalDateTime endedAt) {
+		lentRedis.setPreviousEndedAt(cabinetId.toString(), endedAt.toString());
+	}
+
+	public LocalDateTime getSwapExpiredAt(Long userId) {
+		return lentRedis.getSwapExpiredAt(String.valueOf(userId));
+	}
+
+	public boolean isExistSwapRecord(Long userId) {
+		return lentRedis.isExistSwapRecord(String.valueOf(userId));
+	}
+
 	public void setSwapRecord(Long userId) {
 		lentRedis.setSwap(String.valueOf(userId));
-	}
-
-	/**
-	 * swap 기능이 사용가능한 시간을 리턴합니다.
-	 *
-	 * @param userId 유저 이름
-	 * @return 사용 가능한 시간
-	 */
-	public LocalDateTime getSwapExpiredAt(Long userId) {
-		return lentRedis.getSwapExpiredTime(String.valueOf(userId));
 	}
 }

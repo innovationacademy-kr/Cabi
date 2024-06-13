@@ -6,6 +6,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class AlarmEvent {
+
 	private final Long receiverId;
 	private final Alarm alarm;
 
@@ -14,7 +15,7 @@ public class AlarmEvent {
 		this.alarm = alarm;
 	}
 
-	public static AlarmEvent of(Long id, Alarm alarm) {
-		return new AlarmEvent(id, alarm);
+	public static AlarmEvent of(Long receiverId, Alarm alarm) {
+		return new AlarmEvent(receiverId, alarm);
 	}
 }

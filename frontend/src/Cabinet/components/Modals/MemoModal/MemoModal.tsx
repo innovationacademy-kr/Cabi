@@ -6,14 +6,14 @@ import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 
 export interface MemoModalInterface {
   cabinetType: CabinetType;
-  cabinetTitle: string | null;
+  cabinetTitle: string;
   cabinetMemo: string;
 }
 
 interface MemoModalContainerInterface {
   memoModalObj: MemoModalInterface;
   onClose: React.MouseEventHandler;
-  onSave: (newTitle: string | null, newMemo: string) => void;
+  onSave: (newTitle: string, newMemo: string) => void;
 }
 
 const MAX_INPUT_LENGTH = 14;
@@ -33,6 +33,7 @@ const MemoModal = ({
       newTitle.current.select();
     }
   };
+
   const handleClickSave = (e: React.MouseEvent) => {
     //사물함 제목, 사물함 비밀메모 update api 호출
     // onClose(e);
@@ -40,7 +41,7 @@ const MemoModal = ({
     if (newTitle.current!.value) {
       onSave(newTitle.current!.value, newMemo.current!.value);
     } else {
-      onSave(null, newMemo.current!.value);
+      onSave("", newMemo.current!.value);
     }
     setMode("read");
   };
@@ -100,12 +101,12 @@ const MemoModal = ({
                 ? onClose
                 : () => {
                     setMode("read");
-                    if (cabinetTitle) newTitle.current!.value = cabinetTitle;
+                    newTitle.current!.value = cabinetTitle;
                     newMemo.current!.value = cabinetMemo;
                   }
             }
             text={mode === "read" ? "닫기" : "취소"}
-            theme={mode === "read" ? "light-grayLine" : "line"}
+            theme={mode === "read" ? "grayLine" : "line"}
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>
@@ -183,9 +184,7 @@ const ContentItemInputStyled = styled.input<{
     mode === "read" ? "var(--sys-main-color)" : "var(--normal-text-color)"};
   &::placeholder {
     color: ${({ mode }) =>
-      mode === "read"
-        ? "var(--sys-main-color)"
-        : "var(--toggle-switch-off-bg-color)"};
+      mode === "read" ? "var(--sys-main-color)" : "var(--line-color)"};
   }
 `;
 

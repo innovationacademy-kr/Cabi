@@ -22,13 +22,15 @@ export interface UserDto {
   unbannedAt?: Date | null;
   alarmTypes: AlarmInfo | null;
   isDeviceTokenExpired: boolean | null;
+  coins: number | null; // 보유 코인
 }
 
 export interface UserInfo {
-  name: string;
   userId: number | null;
+  name: string;
   cabinetId?: number | null;
   bannedAt?: Date | null;
   unbannedAt?: Date | null;
   cabinetInfo?: CabinetInfo | null;
+  coins?: number | null;
 }

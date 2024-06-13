@@ -15,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,7 +55,7 @@ public class BanHistory {
 	private User user;
 
 	protected BanHistory(LocalDateTime bannedAt, LocalDateTime unbannedAt, BanType banType,
-	                     Long userId) {
+		Long userId) {
 		this.bannedAt = bannedAt;
 		this.unbannedAt = unbannedAt;
 		this.banType = banType;
@@ -64,10 +63,10 @@ public class BanHistory {
 	}
 
 	public static BanHistory of(LocalDateTime bannedAt, LocalDateTime unbannedAt, BanType banType,
-	                            Long userId) {
+		Long userId) {
 		BanHistory banHistory = new BanHistory(bannedAt, unbannedAt, banType, userId);
 		ExceptionUtil.throwIfFalse(banHistory.isValid(),
-				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+			new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return banHistory;
 	}
 
@@ -89,5 +88,9 @@ public class BanHistory {
 
 	public boolean isBanned(LocalDateTime date) {
 		return date.isBefore(unbannedAt);
+	}
+
+	public void updateUnbannedAt(LocalDateTime localDateTime) {
+		this.unbannedAt = localDateTime;
 	}
 }

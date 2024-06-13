@@ -1,16 +1,5 @@
-import {
-  axiosCabinetById,
-  axiosMyLentInfo,
-  axiosReturn,
-} from "@/Cabinet/api/axios/axios.custom";
-import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
-import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
-import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
-import { getDefaultCabinetInfo } from "@/Cabinet/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
+import React, { useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
@@ -18,14 +7,25 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/Cabinet/recoil/atoms";
+import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import { getDefaultCabinetInfo } from "@/Cabinet/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
+import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import {
+  axiosCabinetById,
+  axiosMyLentInfo,
+  axiosReturn,
+} from "@/Cabinet/api/axios/axios.custom";
 import {
   getExpireDateString,
   getShortenedExpireDateString,
 } from "@/Cabinet/utils/dateUtils";
-import React, { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 const ReturnModal: React.FC<{
   lentType: string;
@@ -61,7 +61,7 @@ const ReturnModal: React.FC<{
       : myLentInfo.lentType === "SHARE" && myLentInfo.lents.length > 1
       ? `대여기간 이내 취소(반납) 시,
 대여 기간이 <strong>${shortenedExpireDateString} 23:59</strong>으로
-변경되는 패널티가 발생합니다.`
+변경되는 페널티가 발생합니다.`
       : `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.`
   }
   지금 반납 하시겠습니까?`;

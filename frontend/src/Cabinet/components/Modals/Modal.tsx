@@ -1,11 +1,11 @@
 import React, { ReactElement } from "react";
+import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import AdminClubLogContainer from "@/Cabinet/components/Club/AdminClubLog.container";
 import Button from "@/Cabinet/components/Common/Button";
 import { ReactComponent as CheckIcon } from "@/Cabinet/assets/images/checkIcon.svg";
 import { ReactComponent as ErrorIcon } from "@/Cabinet/assets/images/errorIcon.svg";
 import { ReactComponent as NotificationIcon } from "@/Cabinet/assets/images/notificationSign.svg";
-import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
 
 /**
@@ -24,6 +24,8 @@ import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
  * @property {boolean} isClubLentModal : 동아리 (CLUB) 대여 모달인지 여부
  * @property {boolean} isLoading : 로딩중 요청 버튼 비활성화 감지를 위한 변수
  * @property {boolean} isCheckIcon : checkIcon인지 errorIcon인지 감지를 위한 변수
+ * @property {string} urlTitle : 모달에서 링크로 이동할 url의 제목
+ * @property {string} url : 모달에서 링크로 이동할 url 값
  */
 export interface IModalContents {
   type: string;
@@ -38,6 +40,8 @@ export interface IModalContents {
   isClubLentModal?: boolean;
   isLoading?: boolean;
   iconType?: string;
+  urlTitle?: string | null;
+  url?: string | null;
 }
 
 const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
@@ -54,8 +58,11 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
     isClubLentModal,
     isLoading,
     iconType,
+    urlTitle,
+    url,
   } = props.modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
+  const navigator = useNavigate();
 
   return (
     <>
@@ -92,17 +99,17 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         {type === "hasProceedBtn" && (
           <ButtonWrapperStyled>
             <Button
-              onClick={closeModal}
-              text={cancelBtnText || "취소"}
-              theme="line"
-            />
-            <Button
               onClick={(e) => {
                 onClickProceed!(e);
               }}
               text={proceedBtnText || "확인"}
               theme="fill"
               disabled={isLoading}
+            />
+            <Button
+              onClick={closeModal}
+              text={cancelBtnText || "취소"}
+              theme="line"
             />
           </ButtonWrapperStyled>
         )}
@@ -116,6 +123,15 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
               theme="smallGrayLine"
             />
           </ButtonWrapperStyled>
+        )}
+        {url && urlTitle && (
+          <UrlSectionStyled
+            onClick={() => {
+              navigator(url);
+            }}
+          >
+            {urlTitle}
+          </UrlSectionStyled>
         )}
       </ModalStyled>
     </>
@@ -218,8 +234,16 @@ const DropdownStyled = styled.select`
   height: 40px;
 `;
 
-const Option = styled.option`
-  background-color: var(--expired-color);
+const UrlSectionStyled = styled.div`
+  display: inline-block;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  color: var(--sys-main-color);
+  margin-top: 20px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export default Modal;

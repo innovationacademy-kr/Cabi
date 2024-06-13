@@ -6,7 +6,7 @@ import {
   ContentDetailStyled,
 } from "@/Cabinet/components/Card/CardStyles";
 import ClubPasswordModalContainer from "@/Cabinet/components/Modals/ClubModal/ClubPasswordModal.container";
-import { ReactComponent as LeaderIcon } from "@/Cabinet/assets/images/leader.svg";
+import { ReactComponent as LeaderIcon } from "@/Cabinet/assets/images/crown.svg";
 import { ReactComponent as LockIcon } from "@/Cabinet/assets/images/lock.svg";
 import { ClubInfoResponseDto } from "@/Cabinet/types/dto/club.dto";
 
@@ -165,7 +165,6 @@ const CabinetIconStyled = styled.div`
 
   & > svg > path {
     stroke: var(--normal-text-color);
-    transform: scale(1.1);
   }
 `;
 

@@ -1,110 +1,126 @@
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import { CardContentWrapper } from "@/Cabinet/components/Card/CardStyles";
-import ColorTheme from "@/Cabinet/components/Card/DisplayStyleCard/ColorTheme/ColorTheme";
-import PointColor from "@/Cabinet/components/Card/DisplayStyleCard/PointColor/PointColor";
-import { ColorThemeToggleType } from "@/Cabinet/types/enum/colorTheme.type.enum";
+import { ReactComponent as MonitorMobileIcon } from "@/Cabinet/assets/images/monitorMobile.svg";
+import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moon.svg";
+import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sun.svg";
+import { DisplayStyleToggleType } from "@/Cabinet/types/enum/displayStyle.type.enum";
 
 interface DisplayStyleProps {
-  showColorPicker: boolean;
-  handlePointColorChange: (mainColor: { hex: string }, type: string) => void;
-  handleReset: () => void;
-  handleSave: () => void;
-  handleCancel: () => void;
-  mainColor: string;
-  subColor: string;
-  mineColor: string;
-  handlePointColorButtonClick: (colorType: string) => void;
-  selectedColorType: string;
-  colorThemeToggle: ColorThemeToggleType;
-  handleColorThemeButtonClick: (colorThemeToggleType: string) => void;
+  displayStyleToggle: DisplayStyleToggleType;
+  handleDisplayStyleButtonClick: (DisplayStyleToggleType: string) => void;
 }
 
+interface IToggleItemSeparated {
+  name: string;
+  key: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+const toggleList: IToggleItemSeparated[] = [
+  {
+    name: "라이트",
+    key: DisplayStyleToggleType.LIGHT,
+    icon: SunIcon,
+  },
+  {
+    name: "다크",
+    key: DisplayStyleToggleType.DARK,
+    icon: MoonIcon,
+  },
+  {
+    name: "기기설정",
+    key: DisplayStyleToggleType.DEVICE,
+    icon: MonitorMobileIcon,
+  },
+];
+
 const DisplayStyleCard = ({
-  showColorPicker,
-  handlePointColorChange,
-  handleReset,
-  handleSave,
-  handleCancel,
-  mainColor,
-  subColor,
-  mineColor,
-  handlePointColorButtonClick,
-  selectedColorType,
-  colorThemeToggle,
-  handleColorThemeButtonClick,
+  displayStyleToggle,
+  handleDisplayStyleButtonClick,
 }: DisplayStyleProps) => {
   return (
     <>
-      {showColorPicker && <BackgroundOverlayStyled />}
-      <ThemeColorCardWrapper>
+      <DisplayStyleCardWrapper>
         <Card
           title={"화면 스타일"}
-          gridArea={"theme"}
+          gridArea={"displayStyle"}
           width={"350px"}
-          height={showColorPicker ? "448px" : "348px"}
-          buttons={
-            showColorPicker
-              ? [
-                  {
-                    label: "저장",
-                    onClick: handleSave,
-                    fontColor: "var(--white-text-with-bg-color)",
-                    backgroundColor: "var(--sys-main-color)",
-                    isClickable: true,
-                  },
-                  {
-                    label: "취소",
-                    onClick: handleCancel,
-                    isClickable: true,
-                  },
-                ]
-              : [
-                  {
-                    label: "초기화",
-                    onClick: handleReset,
-                    isClickable: true,
-                  },
-                ]
-          }
+          height={"183px"}
         >
           <>
             <CardContentWrapper>
-              <ColorTheme
-                colorThemeToggle={colorThemeToggle}
-                handleColorThemeButtonClick={handleColorThemeButtonClick}
-              />
-            </CardContentWrapper>
-            <CardContentWrapper>
-              <PointColor
-                showColorPicker={showColorPicker}
-                handleChange={handlePointColorChange}
-                mainColor={mainColor}
-                subColor={subColor}
-                mineColor={mineColor}
-                handlePointColorButtonClick={handlePointColorButtonClick}
-                selectedColorType={selectedColorType}
-              />
+              <ButtonsWrapperStyled>
+                {toggleList.map((item) => {
+                  const DisplayStyleIcon = item.icon;
+                  return (
+                    <ButtonStyled
+                      key={item.key}
+                      id={`${item.key}`}
+                      isClicked={displayStyleToggle === item.key}
+                      onClick={() => handleDisplayStyleButtonClick(item.key)}
+                    >
+                      {DisplayStyleIcon && <DisplayStyleIcon />}
+                      {item.name}
+                    </ButtonStyled>
+                  );
+                })}
+              </ButtonsWrapperStyled>
             </CardContentWrapper>
           </>
         </Card>
-      </ThemeColorCardWrapper>
+      </DisplayStyleCardWrapper>
     </>
   );
 };
 
-const BackgroundOverlayStyled = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--modal-bg-shadow-color);
-`;
-
-const ThemeColorCardWrapper = styled.div`
+const DisplayStyleCardWrapper = styled.div`
   z-index: 1;
   align-self: start;
+`;
+
+const ButtonsWrapperStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  justify-content: space-between;
+  padding: 0 16px;
+`;
+
+const ButtonStyled = styled.button<{
+  isClicked: boolean;
+}>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  min-width: 50px;
+  width: 90px;
+  min-width: 50px;
+  border-radius: 10px;
+  font-size: 1rem;
+  height: 90px;
+  font-weight: 500;
+  background-color: ${(props) =>
+    props.isClicked ? "var(--sys-main-color)" : "var(--card-bg-color)"};
+  color: ${(props) =>
+    props.isClicked
+      ? "var(--white-text-with-bg-color)"
+      : "var(--normal-text-color)"};
+  padding: 12px 0 16px 0;
+
+  & > svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  & > svg > path {
+    stroke: ${(props) =>
+      props.isClicked
+        ? "var(--white-text-with-bg-color)"
+        : "var(--normal-text-color)"};
+  }
 `;
 
 export default DisplayStyleCard;

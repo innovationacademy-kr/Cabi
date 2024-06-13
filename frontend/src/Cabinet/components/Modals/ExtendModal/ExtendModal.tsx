@@ -1,15 +1,6 @@
-import {
-  axiosCabinetById,
-  axiosMyLentInfo,
-  axiosUseExtension, // axiosExtend, // TODO: 연장권 api 생성 후 연결해야 함
-} from "@/Cabinet/api/axios/axios.custom";
-import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
-import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
-import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import React, { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import styled from "styled-components";
 import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
@@ -17,11 +8,30 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/Cabinet/recoil/atoms";
+import Dropdown from "@/Cabinet/components/Common/Dropdown";
+import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import { IInventoryInfo } from "@/Cabinet/components/Store/Inventory/Inventory";
+import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import {
+  axiosCabinetById,
+  axiosMyItems,
+  axiosMyLentInfo,
+  axiosUseItem,
+} from "@/Cabinet/api/axios/axios.custom";
 import { getExtendedDateString } from "@/Cabinet/utils/dateUtils";
-import React, { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+
+const extensionPeriod = [
+  { sku: "EXTENSION_3", period: "3일", day: 3 },
+  { sku: "EXTENSION_15", period: "15일", day: 15 },
+  { sku: "EXTENSION_31", period: "31일", day: 31 },
+];
 
 const ExtendModal: React.FC<{
   onClose: () => void;
@@ -30,7 +40,10 @@ const ExtendModal: React.FC<{
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const currentCabinetId = useRecoilValue(currentCabinetIdState);
+  const [modalContents, setModalContents] = useState<string | null>(null);
+  const [extensionDate, setExtensionDate] = useState<number>(3);
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentCabinetId] = useRecoilState(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myLentInfo, setMyLentInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -40,7 +53,9 @@ const ExtendModal: React.FC<{
   );
   const formattedExtendedDate = getExtendedDateString(
     myLentInfo.lents[0].expiredAt,
-    myInfo.lentExtensionResponseDto?.extensionPeriod
+    // myInfo.lentExtensionResponseDto?.extensionPeriod
+    extensionDate
+    //내가 선택한 옵션의 연장 기간을 number 로 넘겨주기
   );
   const extensionExpiredDate = getExtendedDateString(
     myInfo.lentExtensionResponseDto?.expiredAt,
@@ -49,24 +64,123 @@ const ExtendModal: React.FC<{
   const extendDetail = `사물함 연장권 사용 시,
   대여 기간이 <strong>${formattedExtendedDate} 23:59</strong>으로
   연장됩니다.
-  연장권 사용은 취소할 수 없습니다.
-  연장권을 사용하시겠습니까?`;
+  연장권 사용은 취소할 수 없습니다.`;
   const extendInfoDetail = `사물함을 대여하시면 연장권 사용이 가능합니다.
 연장권은 <strong>${extensionExpiredDate} 23:59</strong> 이후 만료됩니다.`;
+
   const getModalTitle = (cabinetId: number | null) => {
     return cabinetId === null
       ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].title
       : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].title;
   };
+
   const getModalDetail = (cabinetId: number | null) => {
     return cabinetId === null ? extendInfoDetail : extendDetail;
   };
+
   const getModalProceedBtnText = (cabinetId: number | null) => {
     return cabinetId === null
       ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].confirmMessage
       : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].confirmMessage;
   };
-  const tryExtendRequest = async (e: React.MouseEvent) => {
+
+  // 연장권 보유 여부 확인하는 부분
+  const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
+  const [selectedOption, setSelectedOption] = useState(0);
+
+  const findMyExtension = (period: string) => {
+    return !myItems?.extensionItems.some((item) => item.itemDetails === period);
+  };
+
+  // 연장권이 하나라도 없다면 true
+  const checkExtension = () => {
+    return (
+      findMyExtension("3일") &&
+      findMyExtension("15일") &&
+      findMyExtension("31일")
+    );
+  };
+
+  const getDefault = () => {
+    if (!findMyExtension(extensionPeriod[0].period)) return 3;
+    if (!findMyExtension(extensionPeriod[1].period)) return 15;
+    if (!findMyExtension(extensionPeriod[2].period)) return 31;
+    else return 0;
+  };
+  const getDefaultOption = (option: number) => {
+    if (option == 3) return 0;
+    else if (option == 15) return 1;
+    else return 2;
+  };
+
+  const getMyItems = async () => {
+    try {
+      const response = await axiosMyItems();
+      setMyItems(response.data);
+    } catch (error: any) {
+      console.error("Error getting inventory:", error);
+    }
+  };
+
+  useEffect(() => {
+    getMyItems();
+  }, []);
+
+  useEffect(() => {
+    if (checkExtension() == true) {
+      setShowResponseModal(true);
+      setHasErrorOnResponse(true);
+      setModalContents(
+        `현재 연장권을 보유하고 있지 않습니다.
+연장권은 까비 상점에서 구매하실 수 있습니다.`
+      );
+    } else {
+      setShowResponseModal(false);
+      setHasErrorOnResponse(false);
+    }
+    setExtensionDate(getDefault());
+  }, [myItems]);
+
+  useEffect(() => {
+    setSelectedOption(getDefaultOption(extensionDate));
+  }, [extensionDate]);
+
+
+  const handleDropdownChange = (option: number) => {
+    setSelectedOption(option);
+    setExtensionDate(extensionPeriod[option].day);
+  };
+
+  const extensionDropdownProps = {
+    options: [
+      {
+        name: extensionPeriod[0].period,
+        value: 0,
+        isDisabled: findMyExtension(extensionPeriod[0].period),
+      },
+      {
+        name: extensionPeriod[1].period,
+        value: 1,
+        isDisabled: findMyExtension(extensionPeriod[1].period),
+      },
+      {
+        name: extensionPeriod[2].period,
+        value: 2,
+        isDisabled: findMyExtension(extensionPeriod[2].period),
+      },
+    ],
+    defaultValue: findMyExtension(extensionPeriod[0].period)
+      ? findMyExtension(extensionPeriod[1].period)
+        ? extensionPeriod[2].period
+        : extensionPeriod[1].period
+      : extensionPeriod[0].period,
+    onChangeValue: handleDropdownChange,
+    isOpen: isOpen,
+    setIsOpen: setIsOpen,
+  };
+
+  const extensionItemUse = async (item: string) => {
+    // 아이템 사용
     if (currentCabinetId === 0 || myInfo.cabinetId === null) {
       setHasErrorOnResponse(true);
       setModalTitle("현재 대여중인 사물함이 없습니다.");
@@ -74,14 +188,17 @@ const ExtendModal: React.FC<{
       return;
     }
     try {
-      await axiosUseExtension();
+      await axiosUseItem(item, null, null, null, null);
       setMyInfo({
         ...myInfo,
         cabinetId: currentCabinetId,
         lentExtensionResponseDto: null,
       });
       setIsCurrentSectionRender(true);
-      setModalTitle("연장되었습니다");
+      setModalTitle("연장권 사용완료");
+      setModalContents(
+        `대여 기간이 <strong>${formattedExtendedDate}</strong>으로 연장되었습니다.`
+      );
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
         setTargetCabinetInfo(data);
@@ -96,13 +213,22 @@ const ExtendModal: React.FC<{
       }
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      error.response
-        ? setModalTitle(error.response.data.message)
-        : setModalTitle(error.data.message);
+      if (error.response.status === 400) {
+        setModalTitle("연장권 사용실패");
+        setModalContents(
+          `현재 연장권을 보유하고 있지 않습니다.
+            연장권은 까비 상점에서 구매하실 수 있습니다.`
+        );
+      } else
+        error.response
+          ? setModalTitle(error.response.data.message)
+          : setModalTitle(error.data.message);
     } finally {
       setShowResponseModal(true);
     }
   };
+
+
 
   const extendModalContents: IModalContents = {
     type: myInfo.cabinetId === null ? "penaltyBtn" : "hasProceedBtn",
@@ -114,9 +240,20 @@ const ExtendModal: React.FC<{
         ? async (e: React.MouseEvent) => {
             props.onClose();
           }
-        : tryExtendRequest,
+        : async () => {
+            extensionItemUse(extensionPeriod[selectedOption].sku);
+          },
     closeModal: props.onClose,
     iconType: IconType.CHECKICON,
+    renderAdditionalComponent: () => (
+      <>
+        <ModalContainerStyled>
+          <ModalDropdownNameStyled>연장권 타입</ModalDropdownNameStyled>
+          <Dropdown {...extensionDropdownProps} />
+        </ModalContainerStyled>
+        <ModalDetailStyled></ModalDetailStyled>
+      </>
+    ),
   };
 
   return (
@@ -126,16 +263,42 @@ const ExtendModal: React.FC<{
         (hasErrorOnResponse ? (
           <FailResponseModal
             modalTitle={modalTitle}
+            modalContents={modalContents}
             closeModal={props.onClose}
+            url={"/store"}
+            urlTitle={"까비상점으로 이동"}
           />
         ) : (
           <SuccessResponseModal
             modalTitle={modalTitle}
+            modalContents={modalContents}
             closeModal={props.onClose}
           />
         ))}
     </ModalPortal>
   );
 };
+
+const ModalContainerStyled = styled.div`
+  padding: 10px 20px 0 20px;
+`;
+
+const ModalDropdownNameStyled = styled.div`
+  display: flex;
+  margin: 10px 10px 15px 5px;
+  font-size: 18px;
+`;
+
+const ModalDetailStyled = styled.div`
+  width: 100%;
+  height: 100%;
+  margin-top: 30px;
+  > p {
+    margin: 10px;
+    > span {
+      font-weight: 600;
+    }
+  }
+`;
 
 export default ExtendModal;

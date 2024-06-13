@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -23,9 +24,9 @@ public class BanHistoryQueryService {
 	public Optional<BanHistory> findRecentActiveBanHistory(Long userId, LocalDateTime now) {
 		List<BanHistory> banHistories = banHistoryRepository.findByUserId(userId);
 		return banHistories.stream()
-				.filter(history -> history.getUnbannedAt().isAfter(now))
-				.sorted(Comparator.comparing(BanHistory::getUnbannedAt, Comparator.reverseOrder()))
-				.findFirst();
+			.filter(history -> history.getUnbannedAt().isAfter(now))
+			.sorted(Comparator.comparing(BanHistory::getUnbannedAt, Comparator.reverseOrder()))
+			.findFirst();
 	}
 
 	public List<BanHistory> findActiveBanHistories(Long userId, LocalDateTime date) {
@@ -38,5 +39,13 @@ public class BanHistoryQueryService {
 
 	public Page<BanHistory> findActiveBanHistories(LocalDateTime now, Pageable pageable) {
 		return banHistoryRepository.findPaginationActiveBanHistoriesJoinUser(pageable, now);
+	}
+
+	public BanHistory getRecentBanHistory(Long userId) {
+		List<BanHistory> activeBanHistories =
+			banHistoryRepository.findByUserIdAndUnbannedAt(userId, LocalDateTime.now());
+		return activeBanHistories.stream()
+			.max(Comparator.comparing(BanHistory::getBannedAt))
+			.orElseThrow(ExceptionStatus.NOT_FOUND_BAN_HISTORY::asServiceException);
 	}
 }

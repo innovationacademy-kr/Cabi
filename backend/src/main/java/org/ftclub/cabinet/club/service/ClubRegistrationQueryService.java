@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.club.service;
 
 
-import static org.ftclub.cabinet.user.domain.UserRole.CLUB_ADMIN;
+import static org.ftclub.cabinet.club.domain.UserRole.CLUB_ADMIN;
 
 import java.util.List;
 import java.util.Optional;
