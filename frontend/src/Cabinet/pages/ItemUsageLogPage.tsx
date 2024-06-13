@@ -31,7 +31,7 @@ export interface IItemUsageLog {
   itemName: string;
 }
 
-function createLogEntries(data: { result: any[] }) {
+const createLogEntries = (data: { result: any[] }) => {
   return data.result.map((item) => {
     const itemDate = new Date(item.date);
 
@@ -46,7 +46,7 @@ function createLogEntries(data: { result: any[] }) {
       itemName: item.itemDto.itemName,
     };
   });
-}
+};
 
 const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
