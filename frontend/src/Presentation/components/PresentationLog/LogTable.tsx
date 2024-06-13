@@ -1,17 +1,12 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import { formatDate } from "@/Cabinet/utils/dateUtils";
 import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 import {
   PresentationLocationLabelMap,
   PresentationStatusTypeLabelMap,
 } from "@/Presentation/assets/data/maps";
 import { PresentationHistoryResponseType } from "@/Presentation/types/dto/presentation.dto";
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "2-digit",
-  month: "2-digit",
-  day: "2-digit",
-};
 
 const LogTable = ({
   presentationHistory,
@@ -40,7 +35,7 @@ const LogTable = ({
               ) => (
                 <tr key={idx}>
                   <td title={new Date(dateTime).toLocaleString("ko-KR")}>
-                    {new Date(dateTime).toLocaleString("ko-KR", dateOptions)}
+                    {formatDate(new Date(dateTime), ".", 2, 2, 2)}
                   </td>
                   <td title={subject}>{subject}</td>
                   <td title={presentationLocation}>
