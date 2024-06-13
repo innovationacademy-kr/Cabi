@@ -105,7 +105,7 @@ public class ItemFacadeService {
 
 		Map<ItemType, List<ItemDto>> itemMap = userItemHistories.stream()
 				.map(ItemHistory::getItem)
-				.filter(item -> item.getPrice() < 0)
+				.filter(item -> item.getPrice() <= 0)
 				.collect(groupingBy(Item::getType,
 						mapping(itemMapper::toItemDto, Collectors.toList())));
 
