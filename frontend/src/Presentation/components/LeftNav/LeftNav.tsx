@@ -8,7 +8,6 @@ const LeftNav: React.FC<{
   return (
     <LeftNavWrapStyled id="leftNavWrap">
       <LeftMainNavContainer isAdmin={isAdmin} />
-      {/* <LeftSectionNavContainer isVisible={isVisible} /> */}
     </LeftNavWrapStyled>
   );
 };

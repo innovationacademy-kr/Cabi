@@ -45,6 +45,36 @@
   }
 }
 
+/* mapInfo */
+#mapInfo.on {
+  transform: translateX(0%);
+}
+
+/* storeInfo */
+#storeInfo.on {
+  transform: translateX(0%);
+}
+
+/* itemInfo */
+#itemInfo.on {
+  transform: translateX(0%);
+}
+
+/* ClubMemberInfoArea(rightSection) */
+/* #clubMemberInfoArea {
+    position: fixed;
+    top: 120px;
+    right: 0;
+    height: calc(100% - 120px);
+    z-index: 9;
+    transform: translateX(120%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 0 40px 0 var(--bg-shadow);
+  } */
+#clubMemberInfoArea.on {
+  transform: translateX(0%);
+}
+
 /* search */
 @media (max-width: 768px) {
   #searchBar {

@@ -15,4 +15,5 @@ public class CabinetsPerSectionResponseDto {
 
 	private final String section;
 	private final List<CabinetPreviewDto> cabinets;
+	private final boolean alarmRegistered;
 }

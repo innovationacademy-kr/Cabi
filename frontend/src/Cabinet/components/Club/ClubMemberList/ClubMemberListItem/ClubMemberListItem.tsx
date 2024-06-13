@@ -86,7 +86,6 @@ const MemberListItemStyled = styled.div<{ isMaster: boolean }>`
       props.isMaster
         ? "var(--white-text-with-bg-color)"
         : "var(--normal-text-color)"};
-    transform: ${(props) => (props.isMaster ? "" : "scale(0.7)")};
   }
 `;
 

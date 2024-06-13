@@ -1,205 +1,84 @@
 import { useEffect, useState } from "react";
 import DisplayStyleCard from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard";
-import ColorType from "@/Cabinet/types/enum/color.type.enum";
 import {
-  ColorThemeToggleType,
-  ColorThemeType,
-} from "@/Cabinet/types/enum/colorTheme.type.enum";
+  DisplayStyleToggleType,
+  DisplayStyleType,
+} from "@/Cabinet/types/enum/displayStyle.type.enum";
 
-// 로컬스토리지의 color-theme-toggle 값에 따라 ColorThemeType 반환
-export const getInitialColorTheme = (
-  savedColorThemeToggle: ColorThemeToggleType,
+// 로컬스토리지의 display-style-toggle 값에 따라 DisplayStyleType 반환
+export const getInitialDisplayStyle = (
+  savedDisplayStyleToggle: DisplayStyleToggleType,
   darkModeQuery: MediaQueryList
 ) => {
   // 라이트 / 다크 버튼
-  if (savedColorThemeToggle === ColorThemeToggleType.LIGHT)
-    return ColorThemeType.LIGHT;
-  else if (savedColorThemeToggle === ColorThemeToggleType.DARK)
-    return ColorThemeType.DARK;
+  if (savedDisplayStyleToggle === DisplayStyleToggleType.LIGHT)
+    return DisplayStyleType.LIGHT;
+  else if (savedDisplayStyleToggle === DisplayStyleToggleType.DARK)
+    return DisplayStyleType.DARK;
   // 디바이스 버튼
   if (darkModeQuery.matches) {
-    return ColorThemeType.DARK;
+    return DisplayStyleType.DARK;
   }
-  return ColorThemeType.LIGHT;
+  return DisplayStyleType.LIGHT;
 };
 
 const DisplayStyleCardContainer = () => {
-  const savedMainColor =
-    localStorage.getItem("main-color") || "var(--sys-default-main-color)";
-  const savedSubColor =
-    localStorage.getItem("sub-color") || "var(--sys-default-sub-color)";
-  const savedMineColor =
-    localStorage.getItem("mine-color") || "var(--sys-default-mine-color)";
-
-  const [mainColor, setMainColor] = useState<string>(savedMainColor);
-  const [subColor, setSubColor] = useState<string>(savedSubColor);
-  const [mineColor, setMineColor] = useState<string>(savedMineColor);
-
-  const [showColorPicker, setShowColorPicker] = useState(false);
-  const body: HTMLElement = document.body;
-  const root: HTMLElement = document.documentElement;
-
-  const [selectedColorType, setSelectedColorType] = useState<string>(
-    ColorType.MAIN
-  );
-
-  const handlePointColorChange = (
-    mainColor: { hex: string },
-    colorType: string
-  ) => {
-    const selectedColor: string = mainColor.hex;
-    if (colorType === ColorType.MAIN) {
-      setMainColor(selectedColor);
-    } else if (colorType === ColorType.SUB) {
-      setSubColor(selectedColor);
-    } else if (colorType === ColorType.MINE) {
-      setMineColor(selectedColor);
-    }
-  };
-
-  const setColorsAndLocalStorage = (
-    main: string,
-    sub: string,
-    mine: string,
-    toggleType: ColorThemeToggleType
-  ) => {
-    setMainColor(main);
-    setSubColor(sub);
-    setMineColor(mine);
-    body.style.setProperty("--sys-main-color", main);
-    body.style.setProperty("--sys-sub-color", sub);
-    body.style.setProperty("--mine-color", mine);
-    root.style.setProperty("--sys-main-color", main);
-    root.style.setProperty("--sys-sub-color", sub);
-    root.style.setProperty("--mine-color", mine);
-    localStorage.setItem("main-color", main);
-    localStorage.setItem("sub-color", sub);
-    localStorage.setItem("mine-color", mine);
-
-    setToggleType(toggleType);
-    localStorage.setItem("color-theme-toggle", toggleType);
-  };
-
-  const handleReset = () => {
-    setColorsAndLocalStorage(
-      "var(--sys-default-main-color)",
-      "var(--sys-default-sub-color)",
-      "var(--sys-default-mine-color)",
-      ColorThemeToggleType.DEVICE
-    );
-  };
-
-  const handleSave = () => {
-    setColorsAndLocalStorage(mainColor, subColor, mineColor, toggleType);
-    setShowColorPicker(!showColorPicker);
-  };
-
-  const handleCancel = () => {
-    setColorsAndLocalStorage(
-      savedMainColor,
-      savedSubColor,
-      savedMineColor,
-      savedColorThemeToggle
-    );
-    setShowColorPicker(!showColorPicker);
-  };
-
-  const handlePointColorButtonClick = (pointColorType: string) => {
-    setSelectedColorType(pointColorType);
-    setShowColorPicker(true);
-  };
-
-  const handleColorThemeButtonClick = (colorThemeToggleType: string) => {
-    if (toggleType === colorThemeToggleType) return;
-    setToggleType(
-      colorThemeToggleType as React.SetStateAction<ColorThemeToggleType>
-    );
-    setShowColorPicker(true);
-  };
-
-  const savedColorThemeToggle =
-    (localStorage.getItem("color-theme-toggle") as ColorThemeToggleType) ||
-    ColorThemeToggleType.DEVICE;
+  const savedDisplayStyleToggle =
+    (localStorage.getItem("display-style-toggle") as DisplayStyleToggleType) ||
+    DisplayStyleToggleType.DEVICE;
   var darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-  const initialColorTheme = getInitialColorTheme(
-    savedColorThemeToggle,
+  const initialDisplayStyle = getInitialDisplayStyle(
+    savedDisplayStyleToggle,
     darkModeQuery
   );
-  const [darkMode, setDarkMode] = useState<ColorThemeType>(
-    initialColorTheme as ColorThemeType
+  const [darkMode, setDarkMode] = useState<DisplayStyleType>(
+    initialDisplayStyle as DisplayStyleType
   );
-  const [toggleType, setToggleType] = useState<ColorThemeToggleType>(
-    savedColorThemeToggle
+  const [toggleType, setToggleType] = useState<DisplayStyleToggleType>(
+    savedDisplayStyleToggle
   );
+
+  const setColorsAndLocalStorage = (toggleType: DisplayStyleToggleType) => {
+    setToggleType(toggleType);
+    localStorage.setItem("display-style-toggle", toggleType);
+  };
+
+  const handleDisplayStyleButtonClick = (displayStyleToggleType: string) => {
+    if (toggleType === displayStyleToggleType) return;
+    setToggleType(
+      displayStyleToggleType as React.SetStateAction<DisplayStyleToggleType>
+    );
+    setColorsAndLocalStorage(displayStyleToggleType as DisplayStyleToggleType);
+  };
 
   useEffect(() => {
     darkModeQuery.addEventListener("change", (event) =>
-      setDarkMode(event.matches ? ColorThemeType.DARK : ColorThemeType.LIGHT)
+      setDarkMode(
+        event.matches ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
+      )
     );
   }, []);
 
   useEffect(() => {
-    document.body.setAttribute("color-theme", darkMode);
+    document.body.setAttribute("display-style", darkMode);
   }, [darkMode]);
 
   useEffect(() => {
-    if (toggleType === ColorThemeToggleType.LIGHT) {
-      setDarkMode(ColorThemeType.LIGHT);
-    } else if (toggleType === ColorThemeToggleType.DARK) {
-      setDarkMode(ColorThemeType.DARK);
+    if (toggleType === DisplayStyleToggleType.LIGHT) {
+      setDarkMode(DisplayStyleType.LIGHT);
+    } else if (toggleType === DisplayStyleToggleType.DARK) {
+      setDarkMode(DisplayStyleType.DARK);
     } else {
       setDarkMode(
-        darkModeQuery.matches ? ColorThemeType.DARK : ColorThemeType.LIGHT
+        darkModeQuery.matches ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
       );
     }
   }, [toggleType]);
 
-  useEffect(() => {
-    body.style.setProperty("--sys-main-color", mainColor);
-    body.style.setProperty("--sys-sub-color", subColor);
-    body.style.setProperty("--mine-color", mineColor);
-    root.style.setProperty("--sys-main-color", mainColor);
-    root.style.setProperty("--sys-sub-color", subColor);
-    root.style.setProperty("--mine-color", mineColor);
-    const confirmBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (
-        mainColor !== savedMainColor ||
-        subColor !== savedSubColor ||
-        mineColor !== savedMineColor ||
-        toggleType !== savedColorThemeToggle
-      ) {
-        e.returnValue =
-          "변경된 색상이 저장되지 않을 수 있습니다. 페이지를 나가시겠습니까?";
-      }
-    };
-    window.addEventListener("beforeunload", confirmBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", confirmBeforeUnload);
-    };
-  }, [
-    mainColor,
-    mineColor,
-    savedMainColor,
-    savedMineColor,
-    subColor,
-    savedSubColor,
-    toggleType,
-  ]);
-
   return (
     <DisplayStyleCard
-      showColorPicker={showColorPicker}
-      handlePointColorChange={handlePointColorChange}
-      handleReset={handleReset}
-      handleSave={handleSave}
-      handleCancel={handleCancel}
-      mainColor={mainColor}
-      subColor={subColor}
-      mineColor={mineColor}
-      handlePointColorButtonClick={handlePointColorButtonClick}
-      selectedColorType={selectedColorType}
-      colorThemeToggle={toggleType}
-      handleColorThemeButtonClick={handleColorThemeButtonClick}
+      displayStyleToggle={toggleType}
+      handleDisplayStyleButtonClick={handleDisplayStyleButtonClick}
     />
   );
 };

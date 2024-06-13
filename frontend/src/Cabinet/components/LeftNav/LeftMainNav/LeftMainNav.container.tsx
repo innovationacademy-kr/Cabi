@@ -12,8 +12,10 @@ import {
   currentFloorNumberState,
   currentMapFloorState,
   currentSectionNameState,
+  isCurrentSectionRenderState,
   myCabinetInfoState,
   numberOfAdminWorkState,
+  selectedTypeOnSearchState,
 } from "@/Cabinet/recoil/atoms";
 import { currentBuildingFloorState } from "@/Cabinet/recoil/selectors";
 import LeftMainNav from "@/Cabinet/components/LeftNav/LeftMainNav/LeftMainNav";
@@ -21,6 +23,7 @@ import {
   CabinetInfoByBuildingFloorDto,
   MyCabinetInfoResponseDto,
 } from "@/Cabinet/types/dto/cabinet.dto";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import { axiosCabinetByBuildingFloor } from "@/Cabinet/api/axios/axios.custom";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
@@ -45,6 +48,10 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const numberOfAdminWork = useRecoilValue<number>(numberOfAdminWorkState);
   const navigator = useNavigate();
   const { pathname } = useLocation();
+  const [isCurrentSectionRender] = useRecoilState(isCurrentSectionRenderState);
+  const setSelectedTypeOnSearch = useSetRecoilState<CabinetDetailAreaType>(
+    selectedTypeOnSearchState
+  );
 
   useEffect(() => {
     if (currentFloor === undefined) {
@@ -79,11 +86,13 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     myCabinetInfo?.cabinetId,
     numberOfAdminWork,
     myCabinetInfo?.status,
+    isCurrentSectionRender,
   ]);
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
     setCurrentMapFloor(floor);
+    setSelectedTypeOnSearch(CabinetDetailAreaType.CABINET);
     if (!pathname.includes("main")) {
       if (floor === currentFloor) {
         axiosCabinetByBuildingFloor(currentBuilding, currentFloor).then(
@@ -118,7 +127,12 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     navigator("slack-notification");
     closeAll();
   };
-  
+
+  const onClickStoreButton = (): void => {
+    navigator("store");
+    closeAll();
+  };
+
   const onClickMainClubButton = () => {
     navigator("clubs");
     closeAll();
@@ -152,7 +166,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     resetCurrentSection();
     navigator("/login");
   };
-  
+
   return (
     <LeftMainNav
       pathname={pathname}
@@ -168,6 +182,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickMainClubButton={onClickMainClubButton}
       onClickProfileButton={onClickProfileButton}
       onClickAvailableButton={onClickAvailableButton}
+      onClickStoreButton={onClickStoreButton}
       isAdmin={isAdmin}
     />
   );

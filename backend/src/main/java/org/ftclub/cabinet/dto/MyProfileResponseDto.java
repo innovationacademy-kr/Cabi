@@ -1,12 +1,11 @@
 package org.ftclub.cabinet.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 
 /**
  * 내 프로필 정보와 대여 중인 사물함의 ID를 반환하는 DTO입니다.
@@ -25,4 +24,5 @@ public class MyProfileResponseDto {
 	private final LentExtensionResponseDto lentExtensionResponseDto;
 	private final AlarmTypeResponseDto alarmTypes;
 	private final Boolean isDeviceTokenExpired;
+	private final Long coins;
 }

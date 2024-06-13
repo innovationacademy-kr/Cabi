@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Card, { IButtonProps } from "@/Cabinet/components/Card/Card";
 import {
   CardContentStyled,
@@ -8,7 +9,6 @@ import {
 import { NotificationModal } from "@/Cabinet/components/Modals/NotificationModal/NotificationModal";
 import { LentExtensionDto } from "@/Cabinet/types/dto/lent.dto";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import { useState } from "react";
 
 interface ExtensionProps {
   extensionInfo: LentExtensionDto | null;

@@ -3,8 +3,7 @@ package org.ftclub.cabinet.lent.domain;
 /**
  * 대여 상태
  */
-public enum
-LentPolicyStatus {
+public enum LentPolicyStatus {
 	/**
 	 * 빌릴 수 있음
 	 */
@@ -56,6 +55,8 @@ LentPolicyStatus {
 	BLACKHOLED_USER, SWAP_EXPIREDAT_IMMINENT,
 	INVALID_LENT_TYPE,
 	INVALID_ARGUMENT,
-	INVALID_EXPIREDAT, SWAP_SAME_CABINET, SWAP_LIMIT_EXCEEDED, LENT_NOT_CLUB,
+	INVALID_EXPIREDAT, SWAP_SAME_CABINET, LENT_NOT_CLUB,
+
+	SWAP_LIMIT_EXCEEDED
 
 }

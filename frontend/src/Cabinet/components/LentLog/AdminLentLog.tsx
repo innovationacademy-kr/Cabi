@@ -70,7 +70,8 @@ const TitleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 30px;
+  margin-top: 15px;
+  margin-bottom: 25px;
 `;
 
 const TitleStyled = styled.h1<{ isClick: boolean }>`

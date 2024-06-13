@@ -264,7 +264,7 @@ const FormTextareaStyled = styled.textarea`
   text-align: left;
   padding: 10px;
   ::placeholder {
-    color: var(--toggle-switch-off-bg-color);
+    color: var(--line-color);
   }
 `;
 

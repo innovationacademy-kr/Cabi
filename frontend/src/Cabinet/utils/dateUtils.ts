@@ -31,6 +31,22 @@ export const formatDate = (date: Date | null, divider: string) => {
 };
 
 /**
+ * @description 해당 날짜의 시, 분을 divider 로 구분하여 반환
+ *
+ * @param date 날짜
+ * @param divider 구분자
+ *
+ * @returns 구분자로 구분된 시, 분
+ *
+ * @example
+ * const result = formatDate(new Date(), ":")
+ * //=> "23:42"
+ */
+export const formatDateTime = (date: Date | null, divider: string) => {
+  if (date === null) return "";
+  return [date.getHours(), date.getMinutes()].map(padTo2Digits).join(divider);
+};
+/**
  * @description 주어진 lentType에 따라 대여 만료일을 구해 "YYYY/MM/DD" 형식으로 반환. 예정된 대여 만료일이 있다면 그 일자를 반환
  *
  * @param lentType 대여 타입
@@ -97,6 +113,30 @@ export const getExtendedDateString = (
 };
 
 /**
+ * @description 주어진 날짜와 현재 날짜를 비교해 days, hours, minutes을 반환, 만료일이 지났다면 -1을 반환
+ *
+ * @param existExpireDate 예정된 만료일
+ *
+ * @returns "YYYY/MM/DD" 형식의 연장된 대여 만료일
+ */
+export const getTimeRemaining = (existExpireDate: Date | undefined | null) => {
+  if (!existExpireDate) {
+    return null;
+  }
+
+  const diff = new Date(existExpireDate).getTime() - new Date().getTime();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+  return {
+    days,
+    hours,
+    minutes,
+  };
+};
+
+/**
  * @description 주어진 대여 만료일을 기준으로 남은 대여일 수를 계산하여 반환. 만료일이 지났다면 음수로 반환
  *
  * @param expireTime 대여 만료일
@@ -115,7 +155,8 @@ export const calExpiredTime = (expireTime: Date) =>
  *
  * @returns 남은 대여일 수
  */
-export const getRemainingTime = (expireTime: Date | undefined) => {
+
+export const getRemainingTime = (expireTime: Date | undefined | null) => {
   if (!expireTime) return 0;
   const remainTime = calExpiredTime(new Date(expireTime));
   return remainTime < 0 ? -remainTime : remainTime;

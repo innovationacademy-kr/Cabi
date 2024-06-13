@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { ReactComponent as LogoutImg } from "@/Cabinet/assets/images/close-square.svg";
-import { ReactComponent as CulbImg } from "@/Cabinet/assets/images/clubIconGray.svg";
+import { ReactComponent as ClubImg } from "@/Cabinet/assets/images/clubIconGray.svg";
 import { ReactComponent as ProfileImg } from "@/Cabinet/assets/images/profile-circle.svg";
-import { ReactComponent as SearchImg } from "@/Cabinet/assets/images/search.svg";
 import { ReactComponent as SlackNotiImg } from "@/Cabinet/assets/images/slack-notification.svg";
 import { ReactComponent as SlackImg } from "@/Cabinet/assets/images/slack.svg";
+import { ReactComponent as StoreImg } from "@/Cabinet/assets/images/storeIconGray.svg";
 
 interface ILeftMainNav {
   pathname: string;
@@ -20,6 +20,7 @@ interface ILeftMainNav {
   onClickMainClubButton: React.MouseEventHandler;
   onClickProfileButton: React.MouseEventHandler;
   onClickAvailableButton: React.MouseEventHandler;
+  onClickStoreButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
@@ -32,11 +33,11 @@ const LeftMainNav = ({
   onClickFloorButton,
   onClickLogoutButton,
   onClickSlackNotiButton,
-  onClickSearchButton,
   onClickAdminClubButton,
   onClickMainClubButton,
   onClickProfileButton,
   onClickAvailableButton,
+  onClickStoreButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
@@ -89,25 +90,25 @@ const LeftMainNav = ({
             <>
               <BottomBtnStyled
                 className={
+                  pathname.includes("store")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                onClick={onClickStoreButton}
+              >
+                <StoreImg />
+                Store
+              </BottomBtnStyled>
+              <BottomBtnStyled
+                className={
                   pathname.includes("slack-notification")
                     ? "active cabiButton"
                     : " cabiButton"
                 }
                 onClick={onClickSlackNotiButton}
               >
-                <SlackNotiImg stroke="var(--gray-line-btn-color)" />
+                <SlackNotiImg />
                 Noti
-              </BottomBtnStyled>
-              <BottomBtnStyled
-                className={
-                  pathname.includes("search")
-                    ? "active cabiButton"
-                    : " cabiButton"
-                }
-                onClick={onClickSearchButton}
-              >
-                <SearchImg stroke="var(--gray-line-btn-color)" />
-                Search
               </BottomBtnStyled>
               <BottomBtnStyled className="cabiButton">
                 <a
@@ -127,14 +128,14 @@ const LeftMainNav = ({
                 }
                 onClick={onClickAdminClubButton}
               >
-                <CulbImg stroke="var(--gray-line-btn-color)" />
+                <ClubImg />
                 Club
               </BottomBtnStyled>
               <BottomBtnStyled
                 className="cabiButton"
                 onClick={onClickLogoutButton}
               >
-                <LogoutImg stroke="var(--gray-line-btn-color)" />
+                <LogoutImg />
                 Logout
               </BottomBtnStyled>
             </>
@@ -143,13 +144,24 @@ const LeftMainNav = ({
             <>
               <BottomBtnStyled
                 className={
+                  pathname.includes("store")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                onClick={onClickStoreButton}
+              >
+                <StoreImg />
+                Store
+              </BottomBtnStyled>
+              <BottomBtnStyled
+                className={
                   pathname.includes("clubs")
                     ? "active cabiButton"
                     : " cabiButton"
                 }
                 onClick={onClickMainClubButton}
               >
-                <CulbImg stroke="var(--gray-line-btn-color)" />
+                <ClubImg />
                 Clubs
               </BottomBtnStyled>
               <BottomBtnStyled
@@ -160,7 +172,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickProfileButton}
               >
-                <ProfileImg stroke="var(--gray-line-btn-color)" />
+                <ProfileImg />
                 Profile
               </BottomBtnStyled>
             </>
@@ -198,6 +210,8 @@ const TopBtnStyled = styled.li`
   width: 100%;
   height: 48px;
   line-height: 48px;
+  /*   font-size: var(--size-base); */
+  font-size: var(--size-base);
   font-weight: 300;
   margin-bottom: 2.5vh;
   border-radius: 10px;
@@ -227,7 +241,7 @@ const BottomSectionStyled = styled.section`
     margin: 0 auto;
     width: 56px;
     height: 1px;
-    background-color: var(--toggle-switch-off-bg-color);
+    background-color: var(--line-color);
   }
 `;
 
@@ -240,6 +254,7 @@ const BottomBtnStyled = styled.li`
   width: 100%;
   min-height: 48px;
   line-height: 1.125rem;
+  font-size: var(--size-base);
   font-weight: 300;
   margin-top: 2.5vh;
   border-radius: 10px;
@@ -268,8 +283,11 @@ const BottomBtnStyled = styled.li`
       stroke: var(--button-line-color);
     }
   }
-  svg {
+  & > svg {
     margin: 0 auto;
+    width: 24px;
+    height: 24px;
+    stroke: var(--gray-line-btn-color);
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {

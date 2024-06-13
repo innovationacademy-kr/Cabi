@@ -22,15 +22,21 @@ import {
   ClubResponseDto,
 } from "@/Cabinet/types/dto/club.dto";
 import { UserDto, UserInfo } from "@/Cabinet/types/dto/user.dto";
-import { axiosMyClubList, axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
+import {
+  axiosMyClubList,
+  axiosMyInfo,
+  axiosMyItems,
+} from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
+import StoreInfo from "../components/Store/StoreInfo";
 
 const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
 const token = getCookie("access_token");
 
 const Layout = (): JSX.Element => {
+  const [hasPenaltyItem, setHasPenaltyItem] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -67,12 +73,16 @@ const Layout = (): JSX.Element => {
         data: myInfo,
         data: { date: serverTime },
       } = await axiosMyInfo();
+      const { data } = await axiosMyItems();
 
       const formattedServerTime = serverTime.split(" KST")[0];
       setServerTime(new Date(formattedServerTime)); // 접속 후 최초 서버 시간을 가져옴
       setMyInfoData(myInfo);
       setUser(myInfo);
       setIsValidToken(true);
+      if (data.penaltyItems.length == 0) {
+        setHasPenaltyItem(false);
+      }
       if (myInfo.unbannedAt) {
         openModal();
       }
@@ -160,11 +170,13 @@ const Layout = (): JSX.Element => {
           </DetailInfoContainerStyled>
           <ClubMemberInfoAreaContainer />
           <MapInfoContainer />
+          <StoreInfo />
           {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
             <OverduePenaltyModal
               status={additionalModalType.MODAL_OVERDUE_PENALTY}
               closeModal={closeModal}
               unbannedAt={myInfoData.unbannedAt}
+              hasPenaltyItem={hasPenaltyItem}
             />
           )}
         </WrapperStyled>

@@ -10,6 +10,7 @@ import org.ftclub.cabinet.alarm.config.AlarmProperties;
 import org.ftclub.cabinet.alarm.domain.Alarm;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.AnnouncementAlarm;
+import org.ftclub.cabinet.alarm.domain.AvailableSectionAlarm;
 import org.ftclub.cabinet.alarm.domain.ExtensionExpirationImminentAlarm;
 import org.ftclub.cabinet.alarm.domain.ExtensionIssuanceAlarm;
 import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
@@ -60,6 +61,8 @@ public class PushAlarmSender {
 					(ExtensionExpirationImminentAlarm) alarm);
 		} else if (alarm instanceof AnnouncementAlarm) {
 			return generateAnnouncementAlarm();
+		} else if (alarm instanceof AvailableSectionAlarm) {
+			return generateAvailableSectionAlarm((AvailableSectionAlarm) alarm);
 		} else {
 			throw ExceptionStatus.NOT_FOUND_ALARM.asServiceException();
 		}
@@ -119,6 +122,16 @@ public class PushAlarmSender {
 		String title = alarmProperties.getLentSuccessSubject();
 		String body = String.format(alarmProperties.getLentSuccessFcmTemplate(),
 				building + " " + floor + "층 " + visibleNum + "번");
+		return new FCMDto(title, body);
+	}
+
+	private FCMDto generateAvailableSectionAlarm(AvailableSectionAlarm alarm) {
+		String building = alarm.getLocation().getBuilding();
+		Integer floor = alarm.getLocation().getFloor();
+		String section = alarm.getLocation().getSection();
+		String title = alarmProperties.getSectionAlarmSubject();
+		String body = String.format(alarmProperties.getSectionAlarmSlackTemplate(),
+				building + " " + floor + "층 " + section + "구역");
 		return new FCMDto(title, body);
 	}
 

@@ -1,18 +1,17 @@
-import PillButton from "@/Cabinet/components/Common/PillButton";
 import styled from "styled-components";
+import PillButton from "@/Cabinet/components/Common/PillButton";
 
 interface ISelectorProps {
-  iconSrc?: string;
+  icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   selectList: { key: number; value: string }[];
   onClickSelect: any;
 }
 
-const Selector = ({ iconSrc, selectList, onClickSelect }: ISelectorProps) => {
+const Selector = ({ icon, selectList, onClickSelect }: ISelectorProps) => {
+  const Icon = icon;
   return (
     <SelectorWrapperStyled>
-      <IconWrapperStyled>
-        <img src={iconSrc} />
-      </IconWrapperStyled>
+      <IconWrapperStyled>{Icon && <Icon />}</IconWrapperStyled>
       {selectList &&
         selectList.map((elem) => {
           return (
@@ -42,6 +41,10 @@ const IconWrapperStyled = styled.div`
   width: 24px;
   height: 24px;
   margin-bottom: 12px;
+
+  & > svg > path {
+    stroke: var(--normal-text-color);
+  }
 `;
 
 export default Selector;

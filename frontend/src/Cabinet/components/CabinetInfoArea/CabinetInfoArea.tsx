@@ -7,6 +7,7 @@ import {
 } from "@/Cabinet/components/CabinetInfoArea/CabinetInfoArea.container";
 import CountTimeContainer from "@/Cabinet/components/CabinetInfoArea/CountTime/CountTime.container";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
+import SelectInduction from "@/Cabinet/components/Common/SelectInduction";
 import CancelModal from "@/Cabinet/components/Modals/CancelModal/CancelModal";
 import ExtendModal from "@/Cabinet/components/Modals/ExtendModal/ExtendModal";
 import InvitationCodeModalContainer from "@/Cabinet/components/Modals/InvitationCodeModal/InvitationCodeModal.container";
@@ -23,7 +24,7 @@ import {
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
 import alertImg from "@/Cabinet/assets/images/cautionSign.svg";
-import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extensionTicket.svg";
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extension.svg";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 
@@ -50,11 +51,8 @@ const CabinetInfoArea: React.FC<{
   closeModal,
   isSwappable,
 }) => {
-  const isExtensionVisible =
-    isMine &&
-    isExtensible &&
-    selectedCabinetInfo &&
-    selectedCabinetInfo.status !== "IN_SESSION";
+  const isExtensionVisible = isMine && selectedCabinetInfo;
+  // selectedCabinetInfo.status !== "IN_SESSION";
   const isHoverBoxVisible =
     selectedCabinetInfo &&
     selectedCabinetInfo.lentsLength <= 1 &&
@@ -64,15 +62,10 @@ const CabinetInfoArea: React.FC<{
     : null;
 
   return selectedCabinetInfo === null ? (
-    <NotSelectedStyled>
-      <CabiLogoStyled>
-        <LogoImg />
-      </CabiLogoStyled>
-      <TextStyled fontSize="1.125rem" fontColor="var(--gray-line-btn-color)">
-        사물함을 <br />
-        선택해주세요
-      </TextStyled>
-    </NotSelectedStyled>
+    <SelectInduction
+      msg="사물함을
+    선택해주세요"
+    />
   ) : (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-line-btn-color)">
@@ -193,13 +186,10 @@ const CabinetInfoArea: React.FC<{
                 selectedCabinetInfo.lentType === "SHARE"
               }
             >
-              <ExtensionImg
-                stroke="var(--sys-main-color)"
-                width={24}
-                height={24}
-                style={{ marginRight: "10px" }}
-              />
-              {"연장권 사용하기"}
+              <ExtensionImgStyled>
+                <ExtensionImg />
+              </ExtensionImgStyled>
+              <span>연장권 사용하기</span>
             </ButtonContainerStyled>
           )}
           {isExtensionVisible && isHoverBoxVisible && (
@@ -272,14 +262,6 @@ const CabinetInfoArea: React.FC<{
   );
 };
 
-const NotSelectedStyled = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 const CabinetDetailAreaStyled = styled.div`
   height: 100%;
   max-width: 330px;
@@ -287,17 +269,6 @@ const CabinetDetailAreaStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-`;
-
-const CabiLogoStyled = styled.div`
-  width: 35px;
-  height: 35px;
-  margin-bottom: 10px;
-  svg {
-    .logo_svg__currentPath {
-      fill: var(--sys-main-color);
-    }
-  }
 `;
 
 const CabinetTypeIconStyled = styled.div`
@@ -309,6 +280,11 @@ const CabinetTypeIconStyled = styled.div`
 
   & path {
     stroke: var(--normal-text-color);
+  }
+
+  & > svg {
+    width: 24px;
+    height: 24px;
   }
 `;
 
@@ -459,6 +435,21 @@ const ButtonContainerStyled = styled.button`
     `}
   @media (max-height: 745px) {
     margin-bottom: 8px;
+  }
+
+  & > span {
+    height: 20px;
+    line-height: 18px;
+  }
+`;
+
+const ExtensionImgStyled = styled.div`
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+
+  & > svg > path {
+    stroke: var(--sys-main-color);
   }
 `;
 

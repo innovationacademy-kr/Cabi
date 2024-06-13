@@ -68,7 +68,7 @@ export const SlackAlarmTemplates: ISlackAlarmTemplate[] = [
 		:happy_ccabi: 이전 사용자의 짐과 관련한 문의는 데스크에 문의 부탁드립니다!
 		:pushpin: 공유 사물함을 대여했는데 비밀번호는 어디서 알 수 있을까요?
 		:happy_ccabi: 같이 사용하는 사람이 있다면 대여 내역에서 공유 메모에 적혀 있을 수 있습니다. 또는 함께 사용하는 분에게 여쭤보세요!
-		:pushpin: 사물함을 연체 했는데 패널티는 무엇인가요?
+		:pushpin: 사물함을 연체 했는데 페널티는 무엇인가요?
 		:happy_ccabi: 연체일만큼 누적 연체일이 증가하고, 누적일 만큼 대여가 불가능합니다:face_holding_back_tears:`,
   },
   {

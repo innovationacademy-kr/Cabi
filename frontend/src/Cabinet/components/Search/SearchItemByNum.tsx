@@ -5,15 +5,16 @@ import {
   selectedTypeOnSearchState,
   targetCabinetInfoState,
 } from "@/Cabinet/recoil/atoms";
+import { CardButtonStyled } from "@/Cabinet/components/Card/Card";
 import {
-  cabinetIconSrcMap,
+  cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import { LentDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
-import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import { axiosAdminCabinetInfoByCabinetId } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -38,13 +39,14 @@ const SearchItemByNum = (props: CabinetInfo) => {
 
   const { floor, section, cabinetId, visibleNum, status, lentType, lents } =
     props;
+  const CabinetIcon = cabinetIconComponentMap[lentType];
 
   const clickSearchItem = () => {
     if (currentCabinetId === cabinetId) {
       closeCabinet();
       return;
     }
-    setSelectedTypeOnSearch("CABINET");
+    setSelectedTypeOnSearch(CabinetDetailAreaType.CABINET);
     setCurrentCabinetId(cabinetId);
     async function getData(cabinetId: number) {
       try {
@@ -55,51 +57,40 @@ const SearchItemByNum = (props: CabinetInfo) => {
       }
     }
     getData(cabinetId);
-    openCabinet();
+    // openCabinet();
   };
 
   return (
-    <WrapperStyled
-      className="cabiButton"
-      isSelected={currentCabinetId === cabinetId}
-      onClick={clickSearchItem}
-    >
+    <WrapperStyled>
       <RectangleStyled status={status}>{visibleNum}</RectangleStyled>
       <TextWrapper>
         <LocationStyled>{`${floor}층 - ${section}`}</LocationStyled>
         <NameWrapperStyled>
-          <IconStyled lentType={lentType} />
+          <IconWrapperStyled>
+            <CabinetIcon />
+          </IconWrapperStyled>
           <NameStyled>{reformIntraId(lents)}</NameStyled>
         </NameWrapperStyled>
       </TextWrapper>
+      <ButtonWrapper>
+        <CardButtonStyled onClick={clickSearchItem} isClickable>
+          사물함 정보
+        </CardButtonStyled>
+      </ButtonWrapper>
     </WrapperStyled>
   );
 };
 
-const WrapperStyled = styled.div<{ isSelected: boolean }>`
-  width: 350px;
+const WrapperStyled = styled.div`
+  width: 360px;
   height: 110px;
   border-radius: 10px;
   padding: 25px;
   background-color: var(--card-bg-color);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   transition: transform 0.2s, opacity 0.2s;
-  cursor: pointer;
-  ${({ isSelected }) =>
-    isSelected &&
-    css`
-      opacity: 0.9;
-      transform: scale(1.02);
-      box-shadow: inset 4px 4px 4px var(--table-border-shadow-color-100),
-        2px 2px 4px var(--table-border-shadow-color-100);
-    `}
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      opacity: 0.9;
-      transform: scale(1.05);
-    }
-  }
 `;
 
 const RectangleStyled = styled.div<{ status: CabinetStatus }>`
@@ -118,14 +109,17 @@ const RectangleStyled = styled.div<{ status: CabinetStatus }>`
 `;
 
 const TextWrapper = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   margin-left: 10px;
+  width: 40%;
 `;
 
 const LocationStyled = styled.p`
   font-size: 0.875rem;
-  line-height: 28px;
+  line-height: 20px;
   color: var(--gray-line-btn-color);
 `;
 
@@ -136,21 +130,42 @@ const NameWrapperStyled = styled.div`
   display: flex;
   justify-content: flex-start;
   white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`;
-
-const IconStyled = styled.div<{ lentType: CabinetType }>`
-  width: 18px;
-  height: 28px;
-  background: url(${(props) => cabinetIconSrcMap[props.lentType]}) no-repeat
-    center center / contain;
 `;
 
 const NameStyled = styled.span`
   line-height: 28px;
   font-size: 0.875rem;
   margin-left: 4px;
+`;
+
+const IconWrapperStyled = styled.div`
+  width: 18px;
+  height: 28px;
+  display: flex;
+
+  & > svg > path {
+    stroke: var(--normal-text-color);
+  }
+
+  & > svg {
+    width: 18px;
+    height: 28px;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: var(--size-base);
+
+  & > div {
+    width: 85px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
 `;
 
 export default SearchItemByNum;

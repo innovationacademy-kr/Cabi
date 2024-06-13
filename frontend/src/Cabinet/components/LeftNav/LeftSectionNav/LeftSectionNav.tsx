@@ -1,100 +1,67 @@
+import { useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { currentSectionNameState } from "@/Cabinet/recoil/atoms";
+import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import CabinetColorTable from "@/Cabinet/components/LeftNav/CabinetColorTable/CabinetColorTable";
-import LeftSectionNavClubs from "@/Cabinet/components/LeftNav/LeftSectionNav/LeftSectionNavClubs";
-import { ReactComponent as LinkImg } from "@/Cabinet/assets/images/link.svg";
+import { clubSectionsData } from "@/Cabinet/assets/data/mapPositionData";
+import { ReactComponent as FilledHeartIcon } from "@/Cabinet/assets/images/filledHeart.svg";
+import { ReactComponent as LineHeartIcon } from "@/Cabinet/assets/images/lineHeart.svg";
+import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
-interface ILeftSectionNav {
-  isVisible: boolean;
-  onClickSection: Function;
-  currentFloorSection: string;
-  floorSection: string[];
-  isProfile: boolean;
-  onClickProfile: Function;
-  pathname: string;
-  onClickLentLogButton: Function;
-  onClickSlack: Function;
-  onClickClubForm: Function;
-  isClub: boolean;
-}
+const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
+  const floorSection = useRecoilValue<Array<ICurrentSectionInfo>>(
+    currentFloorSectionState
+  );
+  const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
+    currentSectionNameState
+  );
+  const { pathname } = useLocation();
+  const isAdmin = pathname.includes("admin");
 
-const LeftSectionNav = ({
-  isVisible,
-  currentFloorSection,
-  onClickSection,
-  floorSection,
-  isProfile,
-  onClickProfile,
-  pathname,
-  onClickLentLogButton,
-  onClickSlack,
-  onClickClubForm,
-  isClub,
-}: ILeftSectionNav) => {
   return (
-    <>
-      <LeftNavOptionStyled isVisible={isVisible}>
-        {floorSection.map((section: string, index: number) => (
+    <LeftNavOptionStyled>
+      {floorSection.map((section: ICurrentSectionInfo, index: number) => {
+        const isClubSection = clubSectionsData.find((clubSection) => {
+          return clubSection === section.sectionName;
+        })
+          ? true
+          : false;
+        return (
           <FloorSectionStyled
             className={
-              currentFloorSection === section
+              currentFloorSection === section.sectionName
                 ? "leftNavButtonActive cabiButton"
                 : "cabiButton"
             }
             key={index}
-            onClick={() => onClickSection(section)}
+            onClick={() => {
+              closeLeftNav();
+              setCurrentFloorSection(section.sectionName);
+            }}
           >
-            {section}
+            {section.sectionName}
+            <IconWrapperStyled>
+              {!isAdmin &&
+                !isClubSection &&
+                (section.alarmRegistered ? (
+                  <FilledHeartIcon />
+                ) : (
+                  <LineHeartIcon />
+                ))}
+            </IconWrapperStyled>
           </FloorSectionStyled>
-        ))}
-        <CabinetColorTable />
-      </LeftNavOptionStyled>
-
-      <ProfileLeftNavOptionStyled isProfile={isProfile}>
-        <FloorSectionStyled
-          className={
-            pathname === "/profile"
-              ? "leftNavButtonActive cabiButton"
-              : " cabiButton"
-          }
-          onClick={() => onClickProfile()}
-        >
-          내 정보
-        </FloorSectionStyled>
-        <FloorSectionStyled
-          className={
-            pathname.includes("profile/log")
-              ? "leftNavButtonActive cabiButton"
-              : " cabiButton"
-          }
-          onClick={() => onClickLentLogButton()}
-        >
-          대여 기록
-        </FloorSectionStyled>
-        <hr />
-        <SectionLinkStyled
-          onClick={() => onClickSlack()}
-          title="슬랙 캐비닛 채널 새창으로 열기"
-        >
-          문의하기
-          <LinkImg id="linknImg" stroke="var(--gray-line-btn-color)" />
-        </SectionLinkStyled>
-        <SectionLinkStyled
-          onClick={() => onClickClubForm()}
-          title="동아리 사물함 사용 신청서 새창으로 열기"
-        >
-          동아리 신청서
-          <LinkImg id="linknImg" stroke="var(--gray-line-btn-color)" />
-        </SectionLinkStyled>
-      </ProfileLeftNavOptionStyled>
-      {isClub && <LeftSectionNavClubs />}
-    </>
+        );
+      })}
+      <CabinetColorTable />
+    </LeftNavOptionStyled>
   );
 };
 
-const LeftNavOptionStyled = styled.div<{
-  isVisible: boolean;
-}>`
-  display: ${(props) => (props.isVisible ? "block" : "none")};
+const LeftNavOptionStyled = styled.div`
+  font-size: var(--size-base);
+  display: block;
   min-width: 240px;
   height: 100%;
   padding: 32px 10px;
@@ -102,27 +69,6 @@ const LeftNavOptionStyled = styled.div<{
   font-weight: 300;
   position: relative;
   font-size: var(--size-base);
-`;
-
-const ProfileLeftNavOptionStyled = styled.div<{
-  isProfile: boolean;
-}>`
-  display: ${(props) => (props.isProfile ? "block" : "none")};
-  min-width: 240px;
-  height: 100%;
-  padding: 32px 10px;
-  border-right: 1px solid var(--line-color);
-  font-weight: 300;
-  position: relative;
-  font-size: var(--size-base);
-  & hr {
-    width: 80%;
-    height: 1px;
-    background-color: var(--service-man-title-border-btm-color);
-    border: 0;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
 `;
 
 export const FloorSectionStyled = styled.div`
@@ -134,6 +80,9 @@ export const FloorSectionStyled = styled.div`
   color: var(--gray-line-btn-color);
   margin: 2px 0;
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--sys-main-color);
@@ -142,32 +91,15 @@ export const FloorSectionStyled = styled.div`
   }
 `;
 
-const SectionLinkStyled = styled.div`
-  width: 100%;
-  height: 40px;
-  line-height: 40px;
-  text-indent: 20px;
-  margin: 2px 0;
-  padding-right: 30px;
-  cursor: pointer;
+const IconWrapperStyled = styled.div`
+  height: 14px;
+  width: 14px;
+  margin-right: 12px;
   display: flex;
-  align-items: center;
-  color: var(--gray-line-btn-color);
 
-  #linknImg {
-    width: 15px;
-    height: 15px;
-    margin-left: auto;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--button-line-color);
-
-      svg {
-        stroke: var(--button-line-color);
-      }
-    }
+  & > svg {
+    height: 14px;
+    width: 14px;
   }
 `;
 
