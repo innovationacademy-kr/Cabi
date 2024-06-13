@@ -17,19 +17,6 @@ instance.interceptors.request.use(async (config) => {
   return config;
 });
 
-// instance.interceptors.request.use(async (config: AxiosRequestConfig) => {
-//   const token = getCookie("admin_access_token") ?? getCookie("access_token");
-//   config.headers = {
-//     Authorization: `Bearer ${token}`,
-//   };
-//   // if (config.headers) {
-//   //   config.headers.Authorization = `Bearer ${token}`;
-//   // } else {
-//   //   config.headers = { Authorization: `Bearer ${token}` };
-//   // }
-//   return config;
-// });
-
 instance.interceptors.response.use(
   (response) => {
     return response;
