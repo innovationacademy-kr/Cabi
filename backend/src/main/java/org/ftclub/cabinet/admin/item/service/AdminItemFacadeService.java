@@ -13,6 +13,7 @@ import org.ftclub.cabinet.item.domain.ItemHistory;
 import org.ftclub.cabinet.item.domain.ItemType;
 import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.item.service.ItemCommandService;
+import org.ftclub.cabinet.item.service.ItemHistoryCommandService;
 import org.ftclub.cabinet.item.service.ItemHistoryQueryService;
 import org.ftclub.cabinet.item.service.ItemQueryService;
 import org.ftclub.cabinet.item.service.ItemRedisService;
@@ -30,6 +31,7 @@ public class AdminItemFacadeService {
 	private final ItemQueryService itemQueryService;
 	private final ItemCommandService itemCommandService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
+	private final ItemHistoryCommandService itemHistoryCommandService;
 	private final ItemMapper itemMapper;
 
 	private final ItemRedisService itemRedisService;
@@ -53,6 +55,7 @@ public class AdminItemFacadeService {
 				itemRedisService.saveTotalCoinSupply(totalCoinSupply + item.getPrice());
 			}));
 		}
+		itemHistoryCommandService.createItemHistories(userIds, item.getId(), now);
 	}
 
 	@Transactional(readOnly = true)
