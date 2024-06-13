@@ -214,7 +214,7 @@ public class ItemFacadeService {
 	private void saveCoinChangeOnRedis(Long userId, final int reward) {
 		LockUtil.lockRedisCoin(userId, () -> {
 			// Redis에 유저 리워드 저장
-			long coins = itemRedisService.getCoinCount(userId);
+			long coins = itemRedisService.getCoinAmount(userId);
 			itemRedisService.saveCoinCount(userId, coins + reward);
 
 			// Redis에 전체 코인 발행량 저장
@@ -294,7 +294,7 @@ public class ItemFacadeService {
 
 		Item item = itemQueryService.getBySku(sku);
 		long price = item.getPrice();
-		long userCoin = itemRedisService.getCoinCount(userId);
+		long userCoin = itemRedisService.getCoinAmount(userId);
 
 		// 아이템 Policy 검증
 		itemPolicyService.verifyOnSale(price);
