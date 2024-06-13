@@ -25,11 +25,11 @@ public enum Sku {
 	COIN_REWARD_1000("동전 줍기 20일 보상"),
 	COIN_REWARD_2000("동전 줍기 20일 보상"),
 
-	ADMIN_REWARD_100("관리자 보상"),
-	ADMIN_REWARD_200("관리자 보상"),
-	ADMIN_REWARD_500("관리자 보상"),
-	ADMIN_REWARD_1000("관리자 보상"),
-	ADMIN_REWARD_2000("관리자 보상"),
+	ADMIN_REWARD_100("보상"),
+	ADMIN_REWARD_200("보상"),
+	ADMIN_REWARD_500("보상"),
+	ADMIN_REWARD_1000("보상"),
+	ADMIN_REWARD_2000("보상"),
 	;
 
 	private final String details;
