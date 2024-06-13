@@ -4,7 +4,7 @@
     position: fixed;
     top: 120px;
     left: 0;
-    background-color: var(--white);
+    background-color: var(--bg-color);
     height: calc(100% - 120px);
     z-index: 9;
     transform: translateX(-100%);
@@ -12,17 +12,17 @@
   }
   #leftNavWrap.on {
     transform: translateX(0%);
-    box-shadow: 0 0 40px 0 var(--bg-shadow);
+    box-shadow: 0 0 40px 0 var(--left-nav-border-shadow-color);
   }
 
   #menuBg {
     display: block;
     position: fixed;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--bg-shadow);
+    background-color: var(--menu-bg-shadow-color);
     transform: translateX(-100%);
     z-index: 8;
   }
@@ -30,7 +30,6 @@
     transform: translateX(0%);
   }
 
-  /* cabinetDetailArea(rightSection) */
   #cabinetDetailArea {
     position: fixed;
     top: 120px;
@@ -39,7 +38,7 @@
     z-index: 9;
     transform: translateX(120%);
     transition: transform 0.3s ease-in-out;
-    box-shadow: 0 0 40px 0 var(--bg-shadow);
+    box-shadow: 0 0 40px 0 var(--left-nav-border-shadow-color);
   }
   #cabinetDetailArea.on {
     transform: translateX(0%);
@@ -48,6 +47,16 @@
 
 /* mapInfo */
 #mapInfo.on {
+  transform: translateX(0%);
+}
+
+/* storeInfo */
+#storeInfo.on {
+  transform: translateX(0%);
+}
+
+/* itemInfo */
+#itemInfo.on {
   transform: translateX(0%);
 }
 

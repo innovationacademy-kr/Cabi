@@ -31,10 +31,13 @@ import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.BanType;
+import org.ftclub.cabinet.user.domain.LentExtension;
+import org.ftclub.cabinet.user.domain.LentExtensionType;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.BanHistoryCommandService;
 import org.ftclub.cabinet.user.service.BanHistoryQueryService;
 import org.ftclub.cabinet.user.service.BanPolicyService;
+import org.ftclub.cabinet.user.service.LentExtensionCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -65,6 +68,7 @@ public class LentFacadeService {
 
 	private final LentMapper lentMapper;
 	private final CabinetMapper cabinetMapper;
+	private final LentExtensionCommandService lentExtensionCommandService;
 
 
 	/**
@@ -417,5 +421,26 @@ public class LentFacadeService {
 		cabinetCommandService.updateMemo(oldCabinet, "");
 
 		lentRedisService.setSwapRecord(userId);
+	}
+
+	/**
+	 * 아이템 사용 로직
+	 * <p>
+	 * 연체중이지 않고, 대여중인 상태라면 일자만큼 연장 수치를 늘려줍니다.
+	 * <p>
+	 * 살 때 발급시키고 쓸 때 사용하는게 맞나, 쓸 때 바로 발급시키고 사용하는게 맞나..
+	 *
+	 * @param userId
+	 * @param days
+	 */
+	@Transactional
+	public void plusExtensionDays(Long userId, Integer days) {
+		Cabinet cabinet = cabinetQueryService.getUserActiveCabinet(userId);
+
+		LentExtension lentExtensionByItem = lentExtensionCommandService.createLentExtensionByItem(
+				userId, LentExtensionType.ALL, days);
+		List<LentHistory> lentHistories = lentQueryService.findCabinetActiveLentHistories(
+				cabinet.getId());
+		lentExtensionCommandService.useLentExtension(lentExtensionByItem, lentHistories);
 	}
 }

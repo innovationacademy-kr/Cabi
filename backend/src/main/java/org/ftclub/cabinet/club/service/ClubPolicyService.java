@@ -2,10 +2,10 @@ package org.ftclub.cabinet.club.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.club.domain.UserRole;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
-import org.ftclub.cabinet.user.domain.UserRole;
 import org.springframework.stereotype.Service;
 
 @Service

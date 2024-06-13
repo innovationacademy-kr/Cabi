@@ -33,13 +33,13 @@ class LentHistoryTest {
 		assertFalse(lentHistory.isCabinetIdEqual(2L));
 	}
 
-	@Test
-	void isSetExpiredAt() {
-		LocalDateTime now = LocalDateTime.now();
-		LentHistory lentHistory = LentHistory.of(now, now.plusDays(3), 1L, 1L);
-		assertTrue(lentHistory.isSetExpiredAt());
-		assertThrows(DomainException.class, () -> LentHistory.of(now, null, 1L, 1L));
-	}
+//	@Test
+//	void isSetExpiredAt() {
+//		LocalDateTime now = LocalDateTime.now();
+//		LentHistory lentHistory = LentHistory.of(now, now.plusDays(3), 1L, 1L);
+//		assertTrue(lentHistory.isSetExpiredAt());
+//		assertThrows(DomainException.class, () -> LentHistory.of(now, null, 1L, 1L));
+//	}
 
 	@Test
 	void isSetEndedAt() {

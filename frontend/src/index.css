@@ -1,32 +1,115 @@
 @import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@300;400;700&display=swap");
 
 :root {
-  /* color variable */
-  --black: #181818;
-  --white: #ffffff;
-  --main-color: #9747ff;
-  --sub-color: #b18cff;
-  --line-color: #bcbcbc;
-  --gray-color: #7b7b7b;
-  --lightgray-color: #f5f5f5;
-  --bg-shadow: rgba(0, 0, 0, 0.4);
-  /* 수요지식회 (구 까비지식회) */
-  --presentation-main-color: #3f69fd;
-  --presentation-sub-color: #91b5fa;
+  /* white, gray, black */
+  --ref-white: #ffffff;
+  --ref-gray-100: #f5f5f5;
+  --ref-gray-200: #eeeeee;
+  --ref-gray-300: #d9d9d9;
+  --ref-gray-400: #bcbcbc;
+  --ref-gray-450: #8c8c8c;
+  --ref-gray-500: #7b7b7b;
+  --ref-gray-530: #505354;
+  --ref-gray-550: #3d3f40;
+  --ref-gray-600: #3c3c3c;
+  --ref-gray-700: #313233;
+  --ref-gray-800: #262626;
+  --ref-gray-900: #1f1f1f;
+  --ref-black: #181818;
 
-  /* cabinet color variable */
-  --mine: #47ffa7;
-  --expired: #ff4e4e;
-  --available: var(--main-color);
-  --full: #eeeeee;
-  --broken: #3c3c3c;
-  --banned: #3c3c3c;
-  --session: #eeeeee;
-  --pending: var(--main-color);
+  /* red */
+  --ref-red-100: #ff4e4e;
+  --ref-red-200: #e54646;
 
-  --default-main-color: #9747ff;
-  --default-sub-color: #b18cff;
-  --default-mine-color: #47ffa7;
+  /* orange */
+  --ref-orange-100: #ff8b5b;
+  --ref-orange-200: #ef8172;
+
+  /* yellow */
+  --ref-yellow: #ffc74c;
+
+  /* green */
+  --ref-green-100: #47ffa7;
+  --ref-green-200: #3fe596;
+  --ref-green-300: #00cec9;
+  --ref-green-400: #00c2ab;
+
+  /* blue */
+  --ref-blue-100: #f5f7ff;
+  --ref-blue-150: #dce7fd;
+  --ref-blue-160: #91b5fa;
+  --ref-blue-200: #7ebffb;
+  --ref-blue-210: #74b9ff;
+  --ref-blue-230: #0984e3;
+  --ref-blue-250: #5278fd;
+  --ref-blue-300: #406ee4;
+  --ref-blue-400: #3f69fd;
+  --ref-blue-430: #2c5afd;
+  --ref-blue-450: #0d4c92;
+  --ref-blue-470: #26447e;
+  --ref-blue-500: #252526;
+
+  /* purple */
+  --ref-purple-100: #f9f6ff;
+  --ref-purple-200: #dfd0fe;
+  --ref-purple-300: #b18cff;
+  --ref-purple-350: #a29bfe;
+  --ref-purple-400: #a17bf3;
+  --ref-purple-500: #9747ff;
+  --ref-purple-600: #8337e5;
+  --ref-purple-650: #6931b2;
+  --ref-purple-690: #3c1c66;
+  --ref-purple-700: #252425;
+
+  --ref-transparent-purple-100: #b18cff5f;
+  --ref-transparent-purple-200: #b08cffe1;
+
+  /* pink */
+  --ref-pink-100: #f473b1;
+  --ref-pink-150: #ff4589;
+  --ref-pink-200: #d72766;
+
+  /* shadow color */
+  --ref-black-shadow-100: rgba(0, 0, 0, 0.1);
+  --ref-black-shadow-200: rgba(0, 0, 0, 0.25);
+  --ref-black-shadow-300: rgba(0, 0, 0, 0.4);
+  --ref-black-shadow-400: rgba(0, 0, 0, 0.8);
+
+  /* cabinet */
+  --full-color: var(--ref-gray-200);
+  --banned-color: var(--ref-gray-600);
+  --broken-color: var(--ref-gray-600);
+  --session-color: var(--ref-gray-200);
+
+  /* custom color */
+  --custom-blue-100: var(--ref-blue-210);
+  --custom-blue-200: var(--ref-blue-230);
+  --custom-blue-300: var(--ref-blue-450);
+  --custom-pink-100: var(--ref-pink-100);
+  --custom-pink-200: var(--ref-pink-150);
+  --custom-pink-300: var(--ref-pink-200);
+  --custom-purple-100: var(--ref-purple-350);
+  --custom-purple-200: var(--ref-purple-500);
+  --custom-orange: var(--ref-orange-100);
+  --custom-yellow: var(--ref-yellow);
+  --custom-green-100: var(--ref-green-300);
+  --custom-green-200: var(--ref-green-400);
+
+
+  /* component variable */
+  --color-picker-hash-color: var(--ref-gray-450);
+  --sys-sub-color: var(--ref-purple-300);
+  --sys-default-sub-color: var(--ref-purple-300);
+  --sys-presentation-sub-color: var(--ref-blue-160);
+  --tooltip-shadow-color: var(--ref-black-shadow-400);
+  --color-picker-border-shadow-color: var(--ref-black-shadow-200);
+  --presentation-detail-available-color: var(--ref-blue-150);
+  --presentation-blue-pagination-btn-color: var(--ref-blue-250);
+  --mine-text-color: var(--ref-black);
+
+  --size-base: 14px;
+
+  --size-base: 14px;
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;
@@ -37,13 +120,10 @@
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
-
-  color: var(--black);
-  background-color: #ffffff;
 }
 
 a {
-  color: var(--main-color);
+  color: var(--sys-main-color);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -72,6 +152,8 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  background-color: var(--bg-color);
 }
 
 h1 {
@@ -82,8 +164,8 @@ h1 {
 button {
   cursor: pointer;
   border: none;
-  background-color: var(--main-color);
-  color: var(--white);
+  background-color: var(--sys-main-color);
+  color: var(--white-text-with-bg-color);
   width: 200px;
   height: 60px;
   font-size: 1.125rem;
@@ -115,7 +197,7 @@ img {
 }
 
 input {
-  color: var(--black);
+  color: var(--normal-text-color);
   text-align: center;
   border: none;
   font-size: 1rem;
@@ -126,7 +208,7 @@ input {
 
 .modal {
   border-radius: 10px;
-  box-shadow: 10px 10px 40px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 10px 10px 40px 0px var(--login-card-border-shadow-color);
 }
 
 .textNowrap {
@@ -161,8 +243,8 @@ input {
 }
 
 .leftNavButtonActive {
-  background: var(--main-color);
-  color: var(--white) !important;
+  background: var(--sys-main-color);
+  color: var(--white-text-with-bg-color) !important;
 }
 
 .cabiButton {
@@ -170,5 +252,5 @@ input {
 }
 
 .domainButtonActive {
-  color: var(--main-color) !important;
+  color: var(--sys-main-color) !important;
 }

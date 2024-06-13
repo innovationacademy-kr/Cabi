@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { ReactComponent as WarningIcon } from "@/Cabinet/assets/images/warningTriangleIcon.svg";
 
 export interface WarningNotificationProps {
   isVisible: boolean;
@@ -12,24 +13,13 @@ const WarningNotification: React.FC<WarningNotificationProps> = ({
 }: WarningNotificationProps) => {
   return (
     <WarningWrapper isVisible={isVisible}>
-      <WarningIcon isVisible={isVisible} />
+      <IconWrapperStyled isVisible={isVisible}>
+        <WarningIcon />
+      </IconWrapperStyled>
       <WarningBox>{message}</WarningBox>
     </WarningWrapper>
   );
 };
-
-const WarningIcon = styled.div<{ isVisible: boolean }>`
-  display: ${({ isVisible }) => (isVisible ? "block" : "none")};
-  background-image: url("/src/Cabinet/assets/images/warningTriangleIcon.svg");
-  width: 24px;
-  height: 24px;
-  margin: 0px auto;
-  opacity: 0.6;
-  cursor: pointer;
-  &:hover {
-    opacity: 1;
-  }
-`;
 
 const WarningBox = styled.div`
   position: relative;
@@ -50,19 +40,31 @@ const WarningBox = styled.div`
     padding 0.5s ease-in-out;
 `;
 
+const IconWrapperStyled = styled.div<{ isVisible: boolean }>`
+  display: ${({ isVisible }) => (isVisible ? "block" : "none")};
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  margin: 0px auto;
+  opacity: 0.6;
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 const WarningWrapper = styled.div<{ isVisible: boolean }>`
   display: ${({ isVisible }) => (isVisible ? "block" : "none")};
   position: relative;
   width: 100%;
   height: 24px;
   justify-content: center;
-  & ${WarningIcon}:hover + ${WarningBox} {
+  & ${IconWrapperStyled}:hover + ${WarningBox} {
     visibility: visible;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.8);
+    color: var(--white-text-with-bg-color);
+    background-color: var(--tooltip-shadow-color);
     &:before {
-      border-color: transparent transparent rgba(0, 0, 0, 0.8)
-        rgba(0, 0, 0, 0.8);
+      border-color: transparent transparent var(--tooltip-shadow-color)
+        var(--tooltip-shadow-color);
     }
   }
 `;

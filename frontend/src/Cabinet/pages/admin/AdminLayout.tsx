@@ -4,12 +4,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled, { css } from "styled-components";
 import { selectedTypeOnSearchState } from "@/Cabinet/recoil/atoms";
+import AdminItemUsageLogPage from "@/Cabinet/pages/admin/AdminItemUsageLogPage";
 import CabinetInfoAreaContainer from "@/Cabinet/components/CabinetInfoArea/CabinetInfoArea.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import LeftNav from "@/Cabinet/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/Cabinet/components/MapInfo/MapInfo.container";
+import UserStoreInfoArea from "@/Cabinet/components/Store/Admin/UserStoreInfoArea/UserStoreInfoArea";
 import AdminTopNavContainer from "@/Cabinet/components/TopNav/AdminTopNav.container";
-import UserInfoAreaContainer from "@/Cabinet/components/UserInfoArea/UserInfoArea.container";
+import UserCabinetInfoAreaContainer from "@/Cabinet/components/UserCabinetInfoArea/UserCabinetInfoArea.container";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -18,6 +21,7 @@ const Layout = (): JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
   const selectedTypeOnSearch = useRecoilValue(selectedTypeOnSearchState);
+
   const token = getCookie("admin_access_token");
 
   const checkPath = () => {
@@ -32,6 +36,7 @@ const Layout = (): JSX.Element => {
   const isSearchPage: boolean = location.pathname === "/admin/search";
 
   useEffect(() => {
+    deleteOldPointColors();
     if (!token && !isLoginPage) navigate("/admin/login");
     else if (token) {
       setIsLoading(true);
@@ -39,14 +44,32 @@ const Layout = (): JSX.Element => {
     }
   }, []);
 
-  const savedMainColor = localStorage.getItem("main-color");
-  const savedSubColor = localStorage.getItem("sub-color");
-  const savedMineColor = localStorage.getItem("mine-color");
+  const deleteOldPointColors = () => {
+    localStorage.getItem("main-color") === "var(--default-main-color)" &&
+      localStorage.removeItem("main-color");
+    localStorage.getItem("sub-color") === "var(--default-sub-color)" &&
+      localStorage.removeItem("sub-color");
+    localStorage.getItem("mine-color") === "var(--default-mine-color)" &&
+      localStorage.removeItem("mine-color");
+  };
+
+  const savedMainColor =
+    localStorage.getItem("main-color") || "var(--sys-default-main-color)";
+  const savedSubColor =
+    localStorage.getItem("sub-color") || "var(--sys-default-sub-color)";
+  const savedMineColor =
+    localStorage.getItem("mine-color") || "var(--sys-default-mine-color)";
+
+  const body: HTMLElement = document.body;
   const root: HTMLElement = document.documentElement;
+
   useEffect(() => {
-    root.style.setProperty("--main-color", savedMainColor);
-    root.style.setProperty("--sub-color", savedSubColor);
-    root.style.setProperty("--mine", savedMineColor);
+    root.style.setProperty("--sys-main-color", savedMainColor);
+    root.style.setProperty("--sys-sub-color", savedSubColor);
+    root.style.setProperty("--mine-color", savedMineColor);
+    body.style.setProperty("--sys-main-color", savedMainColor);
+    body.style.setProperty("--sys-sub-color", savedSubColor);
+    body.style.setProperty("--mine-color", savedMineColor);
   }, [savedMainColor, savedSubColor, savedMineColor]);
 
   const { closeAll } = useMenu();
@@ -73,13 +96,21 @@ const Layout = (): JSX.Element => {
             id="cabinetDetailArea"
             isFloat={!isMainPage && !isSearchPage}
           >
-            {selectedTypeOnSearch === "USER" ? (
-              <UserInfoAreaContainer />
-            ) : (
-              <CabinetInfoAreaContainer />
+            {selectedTypeOnSearch === CabinetDetailAreaType.USER && (
+              <UserCabinetInfoAreaContainer />
             )}
+            {selectedTypeOnSearch === CabinetDetailAreaType.ITEM && (
+              <UserStoreInfoArea />
+            )}
+            {selectedTypeOnSearch === CabinetDetailAreaType.CABINET &&
+              (isMainPage ? (
+                <CabinetInfoAreaContainer />
+              ) : (
+                <UserCabinetInfoAreaContainer />
+              ))}
           </DetailInfoContainerStyled>
           <MapInfoContainer />
+          <AdminItemUsageLogPage />
         </WrapperStyled>
       )}
     </React.Fragment>
@@ -107,7 +138,7 @@ const DetailInfoContainerStyled = styled.div<{ isFloat: boolean }>`
   padding: 45px 40px 20px;
   position: relative;
   border-left: 1px solid var(--line-color);
-  background-color: var(--white);
+  background-color: var(--bg-color);
   overflow-x: hidden;
   height: 100%;
   ${(props) =>
@@ -120,7 +151,7 @@ const DetailInfoContainerStyled = styled.div<{ isFloat: boolean }>`
       z-index: 9;
       transform: translateX(120%);
       transition: transform 0.3s ease-in-out;
-      box-shadow: 0 0 40px 0 var(--bg-shadow);
+      box-shadow: 0 0 40px 0 var(--page-btn-shadow-color);
       &.on {
         transform: translateX(0%);
       }

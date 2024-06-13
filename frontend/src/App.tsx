@@ -3,14 +3,19 @@ import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AvailablePage from "@/Cabinet/pages/AvailablePage";
 import ClubPage from "@/Cabinet/pages/ClubPage";
+import CoinLogPage from "@/Cabinet/pages/CoinLogPage";
 import HomePage from "@/Cabinet/pages/HomePage";
+import InventoryPage from "@/Cabinet/pages/InventoryPage";
+import ItemUsageLogPage from "@/Cabinet/pages/ItemUsageLogPage";
 import Layout from "@/Cabinet/pages/Layout";
 import LogPage from "@/Cabinet/pages/LogPage";
 import LoginPage from "@/Cabinet/pages/LoginPage";
 import MainPage from "@/Cabinet/pages/MainPage";
 import PostLogin from "@/Cabinet/pages/PostLogin";
 import ProfilePage from "@/Cabinet/pages/ProfilePage";
+import StoreMainPage from "@/Cabinet/pages/StoreMainPage";
 import AdminMainPage from "@/Cabinet/pages/admin/AdminMainPage";
+import AdminStorePage from "@/Cabinet/pages/admin/AdminStorePage";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import DetailPage from "@/Presentation/pages/DetailPage";
 import PresentationHomePage from "@/Presentation/pages/HomePage";
@@ -49,6 +54,10 @@ function App(): React.ReactElement {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="profile/log" element={<LogPage />} />
             <Route path="clubs" element={<ClubPage />} />
+            <Route path="store" element={<StoreMainPage />} />
+            <Route path="store/inventory" element={<InventoryPage />} />
+            <Route path="store/item-use-log" element={<ItemUsageLogPage />} />
+            <Route path="store/coin-log" element={<CoinLogPage />} />
           </Route>
           <Route path="/presentation/" element={<PresentationLayout />}>
             <Route path="home" element={<PresentationHomePage />} />
@@ -65,6 +74,7 @@ function App(): React.ReactElement {
             <Route path="club" element={<AdminClubPage />} />
             <Route path="slack-notification" element={<AdminSlackNotiPage />} />
             <Route path="available" element={<AvailablePage />} />
+            <Route path="store" element={<AdminStorePage />} />
           </Route>
           <Route
             path="/admin/presentation/"

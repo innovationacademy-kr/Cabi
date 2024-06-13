@@ -63,11 +63,6 @@ public class LentPolicyService {
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 				throw new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED,
 						unbannedAtString).asCustomServiceException();
-			case SWAP_LIMIT_EXCEEDED:
-				unbannedAtString = policyDate.format(
-						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				throw new CustomExceptionStatus(ExceptionStatus.SWAP_LIMIT_EXCEEDED,
-						unbannedAtString).asCustomServiceException();
 			case BLACKHOLED_USER:
 				throw ExceptionStatus.BLACKHOLED_USER.asServiceException();
 			case PENDING_CABINET:
@@ -80,6 +75,11 @@ public class LentPolicyService {
 				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
 			case SWAP_SAME_CABINET:
 				throw ExceptionStatus.SWAP_SAME_CABINET.asServiceException();
+			case SWAP_LIMIT_EXCEEDED:
+				unbannedAtString = policyDate.format(
+						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+				throw new CustomExceptionStatus(ExceptionStatus.SWAP_LIMIT_EXCEEDED,
+						unbannedAtString).asCustomServiceException();
 			case NOT_USER:
 			case INTERNAL_ERROR:
 			default:

@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { selectedTypeOnSearchState } from "@/Cabinet/recoil/atoms";
 import SearchBarList from "@/Cabinet/components/TopNav/SearchBar/SearchBarList/SearchBarList";
+import { ReactComponent as SearchIcon } from "@/Cabinet/assets/images/searchWhite.svg";
 import { CabinetSimple } from "@/Cabinet/types/dto/cabinet.dto";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import {
   axiosSearchByCabinetNumSimple,
   axiosSearchByIntraId,
@@ -22,6 +26,9 @@ const SearchBar = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [floor, setFloor] = useState<number>(0);
   const { debounce } = useDebounce();
+  const setSelectedTypeOnSearch = useSetRecoilState<CabinetDetailAreaType>(
+    selectedTypeOnSearchState
+  );
 
   const resetSearchState = () => {
     setSearchListById([]);
@@ -45,6 +52,10 @@ const SearchBar = () => {
         resetSearchState();
         return alert("두 글자 이상의 검색어를 입력해주세요.");
       } else {
+        if (isNaN(Number(searchValue)))
+          setSelectedTypeOnSearch(CabinetDetailAreaType.USER);
+        else setSelectedTypeOnSearch(CabinetDetailAreaType.CABINET);
+
         let query = floor
           ? `?q=${searchInput.current.value}&floor=${floor}`
           : `?q=${searchInput.current.value}`;
@@ -164,7 +175,9 @@ const SearchBar = () => {
           onChange={() => debounce("topNavSearch", typeSearchInput, 300)}
           onKeyDown={handleInputKey}
         ></SearchBarInputStyled>
-        <SearchButtonStyled onClick={clickSearchButton} />
+        <IconWrapperStyled>
+          <SearchIcon onClick={clickSearchButton} />
+        </IconWrapperStyled>
       </SearchBarStyled>
       <CancelButtonStyled onClick={clickCancelButton}>취소</CancelButtonStyled>
       {isFocus && searchInput.current?.value && totalLength > 0 && (
@@ -195,25 +208,14 @@ const SearchBarStyled = styled.div`
 const SearchBarInputStyled = styled.input`
   width: 300px;
   height: 40px;
-  border: 1px solid #7b7b7b;
+  border: 1px solid var(--gray-line-btn-color);
   border-radius: 10px;
   text-align: left;
   padding: 0 20px;
-  color: #7b7b7b;
-  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--gray-line-btn-color);
   &::placeholder {
-    color: #7b7b7b;
+    color: var(--gray-line-btn-color);
   }
-`;
-
-const SearchButtonStyled = styled.button`
-  background: url("/src/Cabinet/assets/images/searchWhite.svg") no-repeat 50%
-    50%;
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  top: 4px;
-  right: 14px;
 `;
 
 const CancelButtonStyled = styled.button`
@@ -225,6 +227,14 @@ const CancelButtonStyled = styled.button`
   @media screen and (max-width: 768px) {
     display: block;
   }
+`;
+
+const IconWrapperStyled = styled.div`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 8px;
+  right: 14px;
 `;
 
 export default SearchBar;

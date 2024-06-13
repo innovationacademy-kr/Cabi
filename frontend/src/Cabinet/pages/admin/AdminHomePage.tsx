@@ -20,6 +20,7 @@ import {
   ITableData,
 } from "@/Cabinet/types/dto/admin.dto";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import { axiosCabinetById } from "@/Cabinet/api/axios/axios.custom";
 import { useAdminHomeApi } from "@/Cabinet/hooks/useAdminHomeApi";
 import useMenu from "@/Cabinet/hooks/useMenu";
@@ -78,9 +79,9 @@ const AdminHomePage = () => {
       let cabinetId = -1;
       if (str) cabinetId = JSON.parse(str)?.cabinetId;
       getData(cabinetId);
-      setSelectedTypeOnSearch("CABINET");
+      setSelectedTypeOnSearch(CabinetDetailAreaType.CABINET);
     } else {
-      setSelectedTypeOnSearch("USER");
+      setSelectedTypeOnSearch(CabinetDetailAreaType.USER);
       let result;
       if (str) {
         result = JSON.parse(str);
@@ -141,7 +142,7 @@ const AdminHomePage = () => {
         <AdminTable
           data={bannedUserList}
           handleClick={(e) => onClick(e, "banned")}
-          thInfo={["Intra ID", "사용정지 일", "기간"]}
+          thInfo={["Intra ID", "사용정지일", "기간"]}
           ratio={["33%", "33%", "33%"]}
           ROW_COUNT={5}
         />
@@ -151,7 +152,7 @@ const AdminHomePage = () => {
         <AdminTable
           data={brokenCabinetList}
           handleClick={(e) => onClick(e, "broken")}
-          thInfo={["위치", "섹  션", ""]}
+          thInfo={["위치", "섹션", ""]}
           ratio={["50%", "50%", "0%"]}
           fontSize={["1rem", "0.8rem", "1rem"]}
           ROW_COUNT={5}
@@ -173,7 +174,7 @@ const ContainerStyled = styled.div`
   width: 100%;
   min-width: 0;
   min-height: 0;
-  background: var(--white);
+  background: var(--bg-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -210,7 +211,7 @@ const ContainerStyled = styled.div`
 `;
 
 const AdminHomeStyled = styled.div`
-  background: var(--white);
+  background: var(--bg-color);
   width: 100%;
   height: 100%;
   display: grid;

@@ -1,11 +1,11 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import Dropdown, {
-  IDropdown,
   IDropdownOptions,
+  IDropdownProps,
 } from "@/Cabinet/components/Common/Dropdown";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
@@ -68,8 +68,14 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   const [location, setLocation] = useState<PresentationLocation>(
     PresentationLocation.THIRD
   );
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+  const [isDatesDropdownOpen, setIsDatesDropdownOpen] = useState(false);
+  const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
   const [invalidDates, setInvalidDates] = useState<string[]>([]);
-  const [statusDropdownProps, setStatusDropdownProps] = useState<IDropdown>({
+  const [datesDropdownOptions, setDatesDropdownOptions] = useState<
+    IDropdownOptions[]
+  >([]);
+  const statusDropdownProps = {
     options: statusOptions,
     defaultValue:
       statusOptions.find(
@@ -79,30 +85,44 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
     onChangeValue: (val: PresentationStatusType) => {
       setPresentationStatus(val);
     },
-  });
-  const [datesDropdownProps, setDatesDropdownProps] = useState<IDropdown>({
-    options: [],
-    defaultValue: currentPresentation?.dateTime
-      ? format(currentPresentation?.dateTime.split("T")[0], "M월 d일")
-      : "",
+    isOpen: isStatusDropdownOpen,
+    setIsOpen: setIsStatusDropdownOpen,
+    closeOtherDropdown: () => {
+      setIsDatesDropdownOpen(false);
+      setIsLocationDropdownOpen(false);
+    },
+  };
+  const datesDropdownProps = {
+    options: datesDropdownOptions,
+    defaultValue: datesDropdownOptions[0]?.name,
     defaultImageSrc: "",
     onChangeValue: (val: string) => {
       setPresentationDate(val);
     },
-  });
-  const [locationDropdownProps, setLocationDropdownProps] = useState<IDropdown>(
-    {
-      options: floorOptions,
-      defaultValue:
-        floorOptions.find(
-          (option) => option.value === currentPresentation?.presentationLocation
-        )?.name ?? "3층",
-      defaultImageSrc: "",
-      onChangeValue: (val: PresentationLocation) => {
-        setLocation(val);
-      },
-    }
-  );
+    isOpen: isDatesDropdownOpen,
+    setIsOpen: setIsDatesDropdownOpen,
+    closeOtherDropdown: () => {
+      setIsStatusDropdownOpen(false);
+      setIsLocationDropdownOpen(false);
+    },
+  };
+  const locationDropdownProps = {
+    options: floorOptions,
+    defaultValue:
+      floorOptions.find(
+        (option) => option.value === currentPresentation?.presentationLocation
+      )?.name ?? "3층",
+    defaultImageSrc: "",
+    onChangeValue: (val: PresentationLocation) => {
+      setLocation(val);
+    },
+    isOpen: isLocationDropdownOpen,
+    setIsOpen: setIsLocationDropdownOpen,
+    closeOtherDropdown: () => {
+      setIsStatusDropdownOpen(false);
+      setIsDatesDropdownOpen(false);
+    },
+  };
 
   const tryEditPresentationStatus = async (e: React.MouseEvent) => {
     if (!currentPresentation || !currentPresentation.id) return;
@@ -157,19 +177,12 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
       invalidDates
     );
     // NOTE: 발표 가능 날짜들을 Dropdown options으로 변환
-    const dropdownOptions: IDropdownOptions[] = availableDatesFiltered.map(
-      (date) => ({
+    setDatesDropdownOptions(
+      availableDatesFiltered.map((date) => ({
         name: format(date, "M월 d일"),
         value: date,
-      })
+      }))
     );
-    setDatesDropdownProps({
-      options: dropdownOptions,
-      defaultValue: dropdownOptions[0].name,
-      onChangeValue: (val: string) => {
-        setPresentationDate(val);
-      },
-    });
   }, [invalidDates]);
 
   return (
@@ -234,7 +247,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--hover-box-shadow-color);
   z-index: 1000;
 `;
 const ModalContainerStyled = styled.div<{ type: string }>`
@@ -242,7 +255,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);

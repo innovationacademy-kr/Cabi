@@ -57,7 +57,7 @@ const ToggleSwitchStyled = styled.label<{
   display: inline-block;
   position: relative;
   background: ${(props) =>
-    props.checked ? "var(--main-color)" : "var(--lightgray-color)"};
+    props.checked ? "var(--sys-main-color)" : "var(--line-color)"};
   width: 56px;
   height: 28px;
   border-radius: 50px;
@@ -82,7 +82,7 @@ const ToggleKnobStyled = styled.span<{ checked: boolean }>`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: var(--white);
+  background: var(--white-text-with-bg-color);
   transition: transform 0.2s;
   transform: ${(props) =>
     props.checked ? "translateX(28px)" : "translateX(0)"};

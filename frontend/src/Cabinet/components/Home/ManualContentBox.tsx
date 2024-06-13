@@ -1,6 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
-import { ReactComponent as ClockImg } from "@/Cabinet/assets/images/clock.svg";
 import { ReactComponent as ManualPeopleImg } from "@/Cabinet/assets/images/manualPeople.svg";
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
@@ -18,16 +17,17 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
       contentStatus={contentStatus}
     >
       {contentStatus === ContentStatus.EXTENSION && (
-        <ManualPeopleImg className="peopleImg" fill="var(--main-color)" />
+        <ManualPeopleImg className="peopleImg" />
       )}
-      {contentStatus !== ContentStatus.PENDING &&
-        contentStatus !== ContentStatus.IN_SESSION && (
-          <img className="contentImg" src={contentData.imagePath} alt="" />
+      {contentStatus !== ContentStatus.IN_SESSION &&
+        contentData.iconComponent && (
+          <contentData.iconComponent className="contentImg" />
         )}
       <ContentTextStyled>
-        {contentStatus === ContentStatus.IN_SESSION && (
-          <ClockImg stroke="var(--main-color)" className="clockImg" />
-        )}
+        {contentStatus === ContentStatus.IN_SESSION &&
+          contentData.iconComponent && (
+            <contentData.iconComponent className="clockImg" />
+          )}
         <p>{contentData.contentTitle}</p>
       </ContentTextStyled>
       <MoveBtnImg className="moveButton" />
@@ -37,9 +37,9 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
 
 const Rotation = keyframes`
  to {
-		transform : rotate(360deg)
+   transform : rotate(360deg)
 	}
-`;
+  `;
 
 const MaunalContentBoxStyled = styled.div<{
   background: string;
@@ -54,23 +54,29 @@ const MaunalContentBoxStyled = styled.div<{
   flex-direction: column;
   align-items: flex-start;
   font-size: 1.75rem;
-  color: white;
+  color: var(--white-text-with-bg-color);
   padding: 25px;
   font-weight: bold;
   cursor: pointer;
+
   .clockImg {
     width: 35px;
     margin-right: 10px;
     margin-top: 160px;
     animation: ${Rotation} 1s linear infinite;
+    stroke: var(--sys-main-color);
   }
 
   .contentImg {
     width: 80px;
     height: 80px;
-    filter: brightness(
-      ${(props) => (props.contentStatus === ContentStatus.EXTENSION ? 0 : 100)}
-    );
+
+    & > path {
+      stroke: ${(props) =>
+        props.contentStatus === ContentStatus.EXTENSION
+          ? "var(--normal-text-color)"
+          : "var(--white-text-with-bg-color)"};
+    }
   }
 
   .peopleImg {
@@ -80,27 +86,28 @@ const MaunalContentBoxStyled = styled.div<{
     position: absolute;
     right: 100px;
     bottom: 30px;
+    fill: var(--sys-main-color);
   }
 
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.PENDING &&
     css`
-      border: 5px double var(--main-color);
-      box-shadow: inset 0px 0px 0px 5px var(--white);
+      border: 5px double var(--sys-main-color);
+      box-shadow: inset 0px 0px 0px 5px var(--bg-color);
     `}
 
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.IN_SESSION &&
     css`
-      border: 5px solid var(--main-color);
-      color: var(--main-color);
+      border: 5px solid var(--sys-main-color);
+      color: var(--sys-main-color);
     `}
 
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.EXTENSION &&
     css`
       width: 900px;
-      color: black;
+      color: var(--normal-text-color);
       @media screen and (max-width: 1000px) {
         width: 280px;
         .peopleImg {
@@ -111,7 +118,7 @@ const MaunalContentBoxStyled = styled.div<{
     `}
   
     p {
-    margin-top: 120px;
+    margin-top: 90px;
     ${({ contentStatus }) =>
       (contentStatus === ContentStatus.PENDING ||
         contentStatus === ContentStatus.IN_SESSION) &&
@@ -128,10 +135,10 @@ const MaunalContentBoxStyled = styled.div<{
     bottom: 35px;
     stroke: ${(props) =>
       props.contentStatus === ContentStatus.IN_SESSION
-        ? "var(--main-color)"
+        ? "var(--sys-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
-        ? "black"
-        : "white"};
+        ? "var(--normal-text-color)"
+        : "var(--white-text-with-bg-color)"};
     cursor: pointer;
   }
 
@@ -140,12 +147,12 @@ const MaunalContentBoxStyled = styled.div<{
     ${({ contentStatus }) =>
       contentStatus === ContentStatus.PENDING
         ? css`
-            border: 5px double var(--main-color);
-            box-shadow: inset 0px 0px 0px 5px var(--white),
-              10px 10px 25px 0 rgba(0, 0, 0, 0.2);
+            border: 5px double var(--sys-main-color);
+            box-shadow: inset 0px 0px 0px 5px var(--bg-color),
+              10px 10px 25px 0 var(--left-nav-border-shadow-color);
           `
         : css`
-            box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: 10px 10px 25px 0 var(--left-nav-border-shadow-color);
           `}
     p {
       transition: all 0.3s ease-in-out;

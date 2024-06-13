@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,15 +14,14 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.club.domain.ClubLentHistory;
-import org.ftclub.cabinet.club.service.ClubQueryService;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
@@ -34,6 +34,7 @@ import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.item.service.SectionAlarmQueryService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.ClubLentQueryService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
@@ -59,8 +60,8 @@ public class CabinetFacadeService {
 	private final LentQueryService lentQueryService;
 	private final LentRedisService lentRedisService;
 	private final UserQueryService userQueryService;
-	private final ClubQueryService clubQueryService;
 	private final ClubLentQueryService clubLentQueryService;
+	private final SectionAlarmQueryService sectionAlarmQueryService;
 
 	private final CabinetMapper cabinetMapper;
 	private final LentMapper lentMapper;
@@ -75,8 +76,7 @@ public class CabinetFacadeService {
 		List<String> allBuildings = cabinetQueryService.findAllBuildings();
 		return allBuildings.stream()
 				.map(building -> cabinetMapper.toBuildingFloorsDto(building,
-						cabinetQueryService.findAllFloorsByBuilding(building))
-				)
+						cabinetQueryService.findAllFloorsByBuilding(building)))
 				.collect(Collectors.toList());
 	}
 
@@ -99,8 +99,8 @@ public class CabinetFacadeService {
 			LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
 			return cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos, sessionExpiredAt);
 		}
-		List<LentHistory> cabinetActiveLentHistories = lentQueryService.findCabinetActiveLentHistories(
-				cabinetId);
+		List<LentHistory> cabinetActiveLentHistories =
+				lentQueryService.findCabinetActiveLentHistories(cabinetId);
 		List<LentDto> lentDtos = cabinetActiveLentHistories.stream()
 				.map(lentHistory -> lentMapper.toLentDto(lentHistory.getUser(), lentHistory))
 				.collect(Collectors.toList());
@@ -109,8 +109,7 @@ public class CabinetFacadeService {
 			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
 			List<User> users = userQueryService.findUsers(usersInCabinet);
 			users.forEach(user -> lentDtos.add(
-					LentDto.builder().userId(user.getId()).name(user.getName()).build()
-			));
+					LentDto.builder().userId(user.getId()).name(user.getName()).build()));
 		}
 		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
 
@@ -127,29 +126,43 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
-			Integer floor) {
+			Integer floor, Long userId) {
+		// 건물, 층에 있는 현재 대여 중인 사물함 정보, 해당 사물함에 대여 중인 유저 정보, 해당 대여 기록 조회
 		List<ActiveCabinetInfoEntities> activeCabinetInfos =
 				cabinetQueryService.findActiveCabinetInfoEntities(building, floor);
+		// 조회한 사물함, 유저, 대여기록 리스트를 사물함 기준으로 대여기록 그룹화(Map)
 		Map<Cabinet, List<LentHistory>> cabinetLentHistories = activeCabinetInfos.stream().
 				collect(groupingBy(ActiveCabinetInfoEntities::getCabinet,
 						mapping(ActiveCabinetInfoEntities::getLentHistory, Collectors.toList())));
+		// 건물, 층에 있는 모든 사물함 정보 조회
 		List<Cabinet> allCabinetsOnSection =
 				cabinetQueryService.findAllCabinetsByBuildingAndFloor(building, floor);
+		// 동아리 사물함 대여 정보들을 조회하여 사물함 ID를 기준으로 그룹화(Map)
 		Map<Long, List<ClubLentHistory>> clubLentMap =
 				clubLentQueryService.findAllActiveLentHistoriesWithClub().stream()
 						.collect(groupingBy(ClubLentHistory::getCabinetId));
 
+		// 층, 건물에 따른 유저가 알람 등록한 section 조회
+		Set<String> unsetAlarmSection =
+				sectionAlarmQueryService.getUnsentAlarm(userId, building, floor).stream()
+						.map(alarm -> alarm.getCabinetPlace().getLocation().getSection())
+						.collect(Collectors.toSet());
+
+		// 층, 건물에 있는 사물함을 순회하며, visibleNum으로 정렬하고, 섹션별로 사물함 정보를 그룹화
 		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new LinkedHashMap<>();
 		allCabinetsOnSection.stream()
 				.sorted(Comparator.comparing(Cabinet::getVisibleNum))
 				.forEach(cabinet -> {
 					String section = cabinet.getCabinetPlace().getLocation().getSection();
+					// 동아리 사물함이라면,
 					if (cabinet.getLentType().equals(LentType.CLUB)) {
+						// 동아리 사물함이 대여 중인 아닌 경우 빈 이름으로 Dto 생성,
 						if (!clubLentMap.containsKey(cabinet.getId())) {
 							cabinetPreviewsBySection.computeIfAbsent(section,
 											k -> new ArrayList<>())
 									.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 						} else {
+							// 대여 중인 경우 대여기록을 가져와서 사물함 title을 가져와 Dto 생성
 							clubLentMap.get(cabinet.getId()).stream()
 									.map(c -> c.getClub().getName())
 									.findFirst().ifPresent(clubName -> cabinetPreviewsBySection
@@ -158,18 +171,22 @@ public class CabinetFacadeService {
 						}
 						return;
 					}
+					// 사물함 대여기록을 조회 및 사물함 제목을 가져옴
 					List<LentHistory> lentHistories =
 							cabinetLentHistories.getOrDefault(cabinet, Collections.emptyList());
 					String title = getCabinetTitle(cabinet, lentHistories);
+					// 사물함과 대여기록, title로 Dto 생성
 					cabinetPreviewsBySection.computeIfAbsent(section, k -> new ArrayList<>())
 							.add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(),
 									title));
 				});
-
+		// 생성한 Dto를 섹션별로 묶어서 반환
 		return cabinetPreviewsBySection.entrySet().stream()
-				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(),
-						entry.getValue()))
-				.collect(Collectors.toList());
+				.map(entry -> {
+					String section = entry.getKey();
+					return cabinetMapper.toCabinetsPerSectionResponseDto(section, entry.getValue(),
+							unsetAlarmSection.contains(section));
+				}).collect(Collectors.toList());
 	}
 
 	/**
@@ -194,32 +211,43 @@ public class CabinetFacadeService {
 	 * @param building 건물 이름
 	 * @return 빌딩에 있는 모든 PENDING 상태의 사물함
 	 */
-	@Transactional
+	@Transactional(readOnly = true)
 	public CabinetPendingResponseDto getAvailableCabinets(String building) {
+		// 현재 시간 및 어제 13시 00분 00초 시간 설정
 		final LocalDateTime now = LocalDateTime.now();
-		final LocalDateTime yesterday = now.minusDays(1).withHour(13).withMinute(0).withSecond(0);
+		final LocalDate yesterday = now.minusDays(1).toLocalDate();
+
+		// 빌딩에 있는 CLUB 대여 타입이 아니면서, AVAILABLE, PENDING 상태인 사물함 조회
 		List<Cabinet> availableCabinets = cabinetQueryService.findCabinetsNotLentTypeAndStatus(
 				building, LentType.CLUB, List.of(AVAILABLE, PENDING));
+		// 그 중 PENDING 상태인 사물함들만 ID를 리스트로 변환
 		List<Long> cabinetIds = availableCabinets.stream()
 				.filter(cabinet -> cabinet.isStatus(PENDING))
 				.map(Cabinet::getId).collect(Collectors.toList());
+
 		Map<Long, List<LentHistory>> lentHistoriesMap;
+		// 현재 시간이 13시 이전이면 어제 반납된 사물함을 조회
 		if (now.getHour() < 13) {
-			lentHistoriesMap = lentQueryService.findPendingLentHistoriesOnDate(
-							yesterday.toLocalDate(), cabinetIds)
-					.stream().collect(groupingBy(LentHistory::getCabinetId));
+			lentHistoriesMap =
+					lentQueryService.findAvailableLentHistoriesOnDate(yesterday, cabinetIds)
+							.stream().collect(groupingBy(LentHistory::getCabinetId));
 		} else {
+			// 13시 이후면 현재 PENDING 인 사물함들을 조회
 			lentHistoriesMap = lentQueryService.findCabinetLentHistories(cabinetIds)
 					.stream().collect(groupingBy(LentHistory::getCabinetId));
 		}
+
+		// 층별로 사물함 정보를 그룹화
 		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap =
 				cabinetQueryService.findAllFloorsByBuilding(building).stream()
 						.collect(toMap(key -> key, value -> new ArrayList<>()));
 		availableCabinets.forEach(cabinet -> {
 			Integer floor = cabinet.getCabinetPlace().getLocation().getFloor();
+			// AVAILABLE 상태인 사물함은 바로 추가
 			if (cabinet.isStatus(AVAILABLE)) {
 				cabinetFloorMap.get(floor).add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 			}
+			// PENDING 상태인 사물함이면서 오픈 예정으로 보여주어야 하는 사물함 추가
 			if (cabinet.isStatus(PENDING) && lentHistoriesMap.containsKey(cabinet.getId())) {
 				lentHistoriesMap.get(cabinet.getId()).stream()
 						.map(LentHistory::getEndedAt)
@@ -238,6 +266,7 @@ public class CabinetFacadeService {
 	 * @param pageable 페이징 정보
 	 * @return 캐비넷 정보
 	 */
+	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status,
 			Pageable pageable) {
 		Page<Cabinet> cabinets = cabinetQueryService.findAllByStatus(status, pageable);
@@ -255,10 +284,9 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getLentHistoryPagination(Long cabinetId, Pageable pageable) {
-		Page<LentHistory> lentHistories = lentQueryService.findCabinetLentHistoriesWithUserAndCabinet(
-				cabinetId, pageable);
+		Page<LentHistory> lentHistories =
+				lentQueryService.findCabinetLentHistoriesWithUserAndCabinet(cabinetId, pageable);
 		List<LentHistoryDto> result = lentHistories.stream()
-				.sorted(Comparator.comparing(LentHistory::getStartedAt).reversed())
 				.map(lh -> lentMapper.toLentHistoryDto(lh, lh.getUser(), lh.getCabinet()))
 				.collect(Collectors.toList());
 		return lentMapper.toLentHistoryPaginationDto(result, lentHistories.getTotalElements());
@@ -340,19 +368,6 @@ public class CabinetFacadeService {
 	}
 
 	/**
-	 * [ADMIN] 사물함에 동아리 유저를 대여 시킵니다. {inheritDoc}
-	 *
-	 * @param clubId     대여할 유저 ID
-	 * @param cabinetId  대여할 사물함 ID
-	 * @param statusNote 상태 메모
-	 */
-	@Transactional
-	public void updateClub(Long clubId, Long cabinetId, String statusNote) {
-		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(cabinetId);
-		Club club = clubQueryService.getClub(clubId);
-	}
-
-	/**
 	 * [ADMIN] 사물함id 로 사물함을 찾아서, 상태를 변경시킵니다
 	 *
 	 * @param cabinetId 사물함 ID
@@ -365,10 +380,5 @@ public class CabinetFacadeService {
 		}
 		Cabinet cabinet = cabinetQueryService.getCabinetForUpdate(cabinetId);
 		cabinet.specifyStatus(status);
-	}
-
-
-	public void updateStatus(List<Long> cabinetId, CabinetStatus status) {
-		cabinetCommandService.updateStatusBulk(cabinetId, status);
 	}
 }

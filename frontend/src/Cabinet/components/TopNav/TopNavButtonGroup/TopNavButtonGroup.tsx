@@ -24,7 +24,7 @@ export const getDefaultCabinetInfo = () => ({
   cabinetId: 0,
   visibleNum: 0,
   lentType: CabinetType.PRIVATE,
-  title: null,
+  title: "",
   maxUser: 0,
   status: CabinetStatus.PENDING,
   section: "",
@@ -33,7 +33,8 @@ export const getDefaultCabinetInfo = () => ({
 });
 
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
-  const { toggleCabinet, toggleMap, openCabinet, closeAll } = useMenu();
+  const { toggleCabinet, toggleMap, toggleStore, openCabinet, closeAll } =
+    useMenu();
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
     currentCabinetIdState
   );
@@ -47,6 +48,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
 
   async function setTargetCabinetInfoToMyCabinet() {
     setCurrentCabinetId(myInfo.cabinetId);
+    setMyInfo((prev) => ({ ...prev, cabinetId: null }));
     try {
       if (!myCabinetInfo?.cabinetId) return;
       const { data } = await axiosCabinetById(myCabinetInfo.cabinetId);
@@ -93,32 +95,28 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
       {import.meta.env.VITE_UNBAN === "true" && (
         <TopNavButton
           onClick={() => axiosDeleteCurrentBanLog(myInfo.userId)}
-          imgSrc="/src/Cabinet/assets/images/happyCcabiWhite.png"
-          width="32px"
-          height="32px"
+          type="happyCcabi"
         />
       )}
       {isAdmin && (
         <TopNavButton
           id="searchButton"
           onClick={clickSearchButton}
-          imgSrc="/src/Cabinet/assets/images/searchWhite.svg"
-          width="28px"
-          height="28px"
+          type="search"
           disable={true}
         />
+      )}
+      {!isAdmin && (
+        <TopNavButton id="myCoinButton" onClick={toggleStore} type="myCoin" />
       )}
       {!isAdmin && !!myInfo.cabinetId && (
         <TopNavButton
           disable={!myInfo.cabinetId}
           onClick={clickMyCabinet}
-          imgSrc="/src/Cabinet/assets/images/myCabinetIcon.svg"
+          type="myCabinetIcon"
         />
       )}
-      <TopNavButton
-        onClick={toggleMap}
-        imgSrc="/src/Cabinet/assets/images/map.svg"
-      />
+      <TopNavButton onClick={toggleMap} type="map" />
     </NaviButtonsStyled>
   );
 };

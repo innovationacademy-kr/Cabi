@@ -22,14 +22,21 @@ import {
   ClubResponseDto,
 } from "@/Cabinet/types/dto/club.dto";
 import { UserDto, UserInfo } from "@/Cabinet/types/dto/user.dto";
-import { axiosMyClubList, axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
+import {
+  axiosMyClubList,
+  axiosMyInfo,
+  axiosMyItems,
+} from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
+import StoreInfo from "../components/Store/StoreInfo";
 
+const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
 const token = getCookie("access_token");
 
 const Layout = (): JSX.Element => {
+  const [hasPenaltyItem, setHasPenaltyItem] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -47,10 +54,6 @@ const Layout = (): JSX.Element => {
   const isRootPath: boolean = location.pathname === "/";
   const isLoginPage: boolean = location.pathname === "/login";
   const isMainPage: boolean = location.pathname === "/main";
-
-  const savedMainColor = localStorage.getItem("main-color");
-  const savedSubColor = localStorage.getItem("sub-color");
-  const savedMineColor = localStorage.getItem("mine-color");
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -70,12 +73,16 @@ const Layout = (): JSX.Element => {
         data: myInfo,
         data: { date: serverTime },
       } = await axiosMyInfo();
+      const { data } = await axiosMyItems();
 
       const formattedServerTime = serverTime.split(" KST")[0];
       setServerTime(new Date(formattedServerTime)); // 접속 후 최초 서버 시간을 가져옴
       setMyInfoData(myInfo);
       setUser(myInfo);
       setIsValidToken(true);
+      if (data.penaltyItems.length == 0) {
+        setHasPenaltyItem(false);
+      }
       if (myInfo.unbannedAt) {
         openModal();
       }
@@ -102,6 +109,7 @@ const Layout = (): JSX.Element => {
   };
 
   useEffect(() => {
+    deleteOldPointColors();
     if (!token && !isLoginPage) navigate("/login");
     else if (token) {
       getMyInfo();
@@ -115,10 +123,29 @@ const Layout = (): JSX.Element => {
     }
   }, []);
 
+  const deleteOldPointColors = () => {
+    localStorage.getItem("main-color") === "var(--default-main-color)" &&
+      localStorage.removeItem("main-color");
+    localStorage.getItem("sub-color") === "var(--default-sub-color)" &&
+      localStorage.removeItem("sub-color");
+    localStorage.getItem("mine-color") === "var(--default-mine-color)" &&
+      localStorage.removeItem("mine-color");
+  };
+
+  const savedMainColor =
+    localStorage.getItem("main-color") || "var(--sys-default-main-color)";
+  const savedSubColor =
+    localStorage.getItem("sub-color") || "var(--sys-default-sub-color)";
+  const savedMineColor =
+    localStorage.getItem("mine-color") || "var(--sys-default-mine-color)";
+
   useEffect(() => {
-    root.style.setProperty("--main-color", savedMainColor);
-    root.style.setProperty("--sub-color", savedSubColor);
-    root.style.setProperty("--mine", savedMineColor);
+    root.style.setProperty("--sys-main-color", savedMainColor);
+    root.style.setProperty("--sys-sub-color", savedSubColor);
+    root.style.setProperty("--mine-color", savedMineColor);
+    body.style.setProperty("--sys-main-color", savedMainColor);
+    body.style.setProperty("--sys-sub-color", savedSubColor);
+    body.style.setProperty("--mine-color", savedMineColor);
   }, [savedMainColor, savedSubColor, savedMineColor]);
 
   return isLoginPage ? (
@@ -143,11 +170,13 @@ const Layout = (): JSX.Element => {
           </DetailInfoContainerStyled>
           <ClubMemberInfoAreaContainer />
           <MapInfoContainer />
+          <StoreInfo />
           {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
             <OverduePenaltyModal
               status={additionalModalType.MODAL_OVERDUE_PENALTY}
               closeModal={closeModal}
               unbannedAt={myInfoData.unbannedAt}
+              hasPenaltyItem={hasPenaltyItem}
             />
           )}
         </WrapperStyled>
@@ -175,7 +204,7 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
   padding: 45px 40px 20px;
   position: relative;
   border-left: 1px solid var(--line-color);
-  background-color: var(--white);
+  background-color: var(--bg-color);
   overflow-y: auto;
   ${(props) =>
     props.isHomePage &&
@@ -187,7 +216,7 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
       z-index: 9;
       transform: translateX(120%);
       transition: transform 0.3s ease-in-out;
-      box-shadow: 0 0 40px 0 var(--bg-shadow);
+      box-shadow: 0 0 40px 0 var(--login-card-border-shadow-color);
       &.on {
         transform: translateX(0%);
       }

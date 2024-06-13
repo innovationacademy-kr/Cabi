@@ -60,15 +60,15 @@ const AdminLoginTemplate = (props: {
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">
         <TopContentsStyled>
-          <LoginTitleStyled color="var(--black)">
+          <LoginTitleStyled color="var(--normal-text-color)">
             42서울 캐비닛 서비스
           </LoginTitleStyled>
-          <LoginTitleStyled color="var(--sub-color)">
+          <LoginTitleStyled color="var(--sys-sub-color)">
             여러분의 일상을 가볍게
           </LoginTitleStyled>
         </TopContentsStyled>
         <LoginImgStyled>
-          <AdminLoginImg fill="var(--main-color)" />
+          <AdminLoginImg fill="var(--sys-main-color)" />
         </LoginImgStyled>
         <BottomContentsStyled>
           <p>
@@ -188,7 +188,7 @@ const BottomContentsStyled = styled.div`
 `;
 
 const CabiStyled = styled.span`
-  color: var(--main-color);
+  color: var(--sys-main-color);
 `;
 
 const RightSectionStyled = styled.section`
@@ -197,7 +197,7 @@ const RightSectionStyled = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--main-color);
+  background-color: var(--sys-main-color);
 `;
 
 const LoginCardStyled = styled.div`
@@ -208,7 +208,7 @@ const LoginCardStyled = styled.div`
   align-items: center;
   flex-direction: column;
   padding: 85px 40px;
-  background-color: var(--white);
+  background-color: var(--bg-color);
 `;
 
 const CardLogoStyled = styled.div`
@@ -216,7 +216,7 @@ const CardLogoStyled = styled.div`
   height: 70px;
   svg {
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
   }
 `;
@@ -232,7 +232,7 @@ const CardTitleStyled = styled.h1`
 `;
 
 const CardSubTitleStyled = styled.p`
-  color: var(--main-color);
+  color: var(--sys-main-color);
 `;
 
 const CardInputBoxStyled = styled.div`
@@ -252,18 +252,19 @@ const CardInputStyled = styled.input<{ isFocus: boolean }>`
   letter-spacing: 0.05rem;
   width: 100%;
   height: 48px;
-  background-color: var(--white);
+  background-color: var(--bg-color);
   border-radius: 8px;
   margin-bottom: 8px;
   border: ${(props) =>
     props.isFocus
-      ? "1px solid var(--main-color)"
+      ? "1px solid var(--sys-main-color)"
       : "1px solid var(--line-color)"};
+  color: var(--normal-text-color);
 `;
 
 const CardGoogleOauthStyled = styled.button`
-  background-color: var(--white);
-  color: var(--black);
+  background-color: var(--bg-color);
+  color: var(--normal-text-color);
   font-style: oblique;
   height: 30px;
   margin-top: 10px;

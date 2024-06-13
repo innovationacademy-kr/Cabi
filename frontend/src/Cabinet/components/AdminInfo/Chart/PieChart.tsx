@@ -59,9 +59,21 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
         theme={{
           legends: { text: { fontSize: "15px" } },
           labels: { text: { fontSize: "15px" } },
+          tooltip: {
+            container: {
+              backgroundColor: "var(--bg-color)",
+              boxShadow: "var(--left-nav-border-shadow-color) 0 1px 2px",
+              color: "var(--normal-text-color)",
+            },
+          },
         }}
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-        colors={["#d9d9d9", "#ff4e4e", "var(--main-color)", "#3c3c3c "]}
+        colors={[
+          "var(--full-color)",
+          "var(--expired-color)",
+          "var(--sys-main-color)",
+          "var(--banned-color)",
+        ]}
         innerRadius={0.5}
         padAngle={0.7}
         cornerRadius={3}
@@ -72,7 +84,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
           modifiers: [["darker", 0.2]],
         }}
         arcLinkLabelsSkipAngle={10}
-        arcLinkLabelsTextColor="#333333"
+        arcLinkLabelsTextColor="var(--pie-chart-label-text-color)"
         arcLinkLabelsThickness={2}
         arcLinkLabelsColor={{ from: "color" }}
         arcLabelsSkipAngle={10}
@@ -90,7 +102,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
             itemsSpacing: 5,
             itemWidth: 70,
             itemHeight: 18,
-            itemTextColor: "#999",
+            itemTextColor: "var(--gray-line-btn-color)",
             itemDirection: "top-to-bottom",
             itemOpacity: 1,
             symbolSize: 12,
@@ -99,7 +111,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
               {
                 on: "hover",
                 style: {
-                  itemTextColor: "#000",
+                  itemTextColor: "var(--normal-text-color)",
                 },
               },
             ],

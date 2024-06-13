@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import AdminCabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/AdminCabinetListItem";
 import CabinetListItem from "@/Cabinet/components/CabinetList/CabinetListItem/CabinetListItem";
+import UnavailableDataInfo from "@/Cabinet/components/Common/UnavailableDataInfo";
+import { ReactComponent as SelectImg } from "@/Cabinet/assets/images/select.svg";
 import { CabinetPreviewInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
 // 하나의 층에 대한 타이틀과 캐비넷 리스트를 담고 있는 컴포넌트
@@ -20,15 +22,16 @@ const FloorContainer = ({
   const toggle = () => {
     setIsToggled(!isToggled);
   };
-
   return (
     <FloorContainerStyled>
       <FloorTitleStyled isToggled={isToggled} onClick={toggle}>
         <h2>{floorNumber}층</h2>
-        <button></button>
+        <button>
+          <SelectImg />
+        </button>
       </FloorTitleStyled>
       {pendingCabinetsList.length !== 0 ? (
-        <FlootCabinetsContainerStyled isToggled={isToggled}>
+        <FloorCabinetsContainerStyled isToggled={isToggled}>
           {pendingCabinetsList.map((cabinet: CabinetPreviewInfo) =>
             isAdmin ? (
               <AdminCabinetListItem key={cabinet.cabinetId} {...cabinet} />
@@ -36,15 +39,16 @@ const FloorContainer = ({
               <CabinetListItem key={cabinet.cabinetId} {...cabinet} />
             )
           )}
-        </FlootCabinetsContainerStyled>
+        </FloorCabinetsContainerStyled>
       ) : (
-        <NoAvailableCabinetMessageStyled isToggled={isToggled}>
-          <p>해당 층에는 사용 가능한 사물함이 없습니다 </p>
-          <img
-            src="/src/Cabinet/assets/images/sadCcabi.png"
-            alt="noAvailable"
-          />
-        </NoAvailableCabinetMessageStyled>
+        !isToggled && (
+          <UnavailableCabinetMsgWrapperStyled>
+            <UnavailableDataInfo
+              msg="해당 층에는 사용 가능한 사물함이 없습니다"
+              fontSize="1rem"
+            />
+          </UnavailableCabinetMsgWrapperStyled>
+        )
       )}
     </FloorContainerStyled>
   );
@@ -59,25 +63,27 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   display: flex;
   justify-content: space-between;
   font-size: 1.1rem;
-  color: var(--black);
+  color: var(--normal-text-color);
   padding-left: 5px;
   padding-right: 5px;
-  border-bottom: 1.5px solid #d9d9d9;
+  border-bottom: 1.5px solid var(--service-man-title-border-btm-color);
   cursor: pointer;
+
   button {
     all: initial;
     cursor: inherit;
     z-index: 2;
     height: 30px;
-    width: 20px;
-    background: url(/src/Cabinet/assets/images/select.svg) no-repeat center
-      center;
     transform: ${(props) =>
       props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
   }
+
+  & > button > svg > path {
+    stroke: var(--gray-line-btn-color);
+  }
 `;
 
-const FlootCabinetsContainerStyled = styled.div<{ isToggled: boolean }>`
+const FloorCabinetsContainerStyled = styled.div<{ isToggled: boolean }>`
   display: ${(props) => (props.isToggled ? "none" : "flex")};
   transition: all 0.3s ease-in-out;
   flex-wrap: wrap;
@@ -89,21 +95,11 @@ const FlootCabinetsContainerStyled = styled.div<{ isToggled: boolean }>`
   }
 `;
 
-const NoAvailableCabinetMessageStyled = styled.div<{ isToggled: boolean }>`
-  display: ${(props) => (props.isToggled ? "none" : "flex")};
-  align-items: center;
-  margin-top: 20px;
-  margin-left: 5px;
-  p {
-    color: var(--gray-color);
-    line-height: 1.5;
-    word-break: keep-all;
-  }
-  img {
-    width: 30px;
-    aspect-ratio: 1 / 1;
-    margin-left: 8px;
-  }
+const UnavailableCabinetMsgWrapperStyled = styled.div`
+  width: 100%;
+  display: flex;
+  padding-top: 20px;
+  padding-left: 5px;
 `;
 
 export default FloorContainer;

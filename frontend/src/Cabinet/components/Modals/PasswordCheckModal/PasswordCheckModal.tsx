@@ -37,7 +37,7 @@ const PasswordCheckModal: React.FC<{
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
         {iconType === "CHECK" && (
           <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
-            <CheckIcon stroke="var(--main-color)" />
+            <CheckIcon stroke="var(--sys-main-color)" />
           </ModalIconImgStyled>
         )}
         <H2Styled>{title}</H2Styled>
@@ -71,7 +71,9 @@ const Input = styled.input<{ isEmpty: number | null }>`
   border-radius: 10px;
   outline: none;
   border: ${({ isEmpty }) =>
-    isEmpty ? "1px solid var(--main-color)" : "1px solid #dfd0fe"};
+    isEmpty
+      ? "1px solid var(--sys-main-color)"
+      : "1px solid var(--ref-purple-200)"};
 `;
 
 const PasswordContainer = styled.div`
@@ -90,7 +92,7 @@ const ModalStyled = styled.div`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -152,15 +154,14 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgb(0, 0, 0);
-  opacity: 0.4;
+  background: var(--modal-bg-shadow-color);
   animation: fadeInBg 0.5s;
   @keyframes fadeInBg {
     0% {
       opacity: 0;
     }
     100% {
-      opacity: 0.4;
+      opacity: 1;
     }
   }
   z-index: 1000;

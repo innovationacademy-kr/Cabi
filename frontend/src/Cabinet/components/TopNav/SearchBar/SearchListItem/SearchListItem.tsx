@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ChangeToHTML from "@/Cabinet/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
+import { ReactComponent as CabinetIcon } from "@/Cabinet/assets/images/cabinet.svg";
+import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
 
 const SearchListItem = (props: {
   floor?: number;
@@ -20,11 +22,6 @@ const SearchListItem = (props: {
   } = props;
   const navigate = useNavigate();
 
-  const chooseImage = (isCabinet: boolean | undefined) => {
-    if (isCabinet) return "/src/Cabinet/assets/images/cabinet.svg";
-    return "/src/Cabinet/assets/images/privateIcon.svg";
-  };
-
   return (
     <LiStyled
       className={isTargetIndex ? "active" : ""}
@@ -39,7 +36,9 @@ const SearchListItem = (props: {
         resetSearchState();
       }}
     >
-      <ImgStyled src={chooseImage(isNum)} alt="유저" />
+      <ContentIconStyled title="유저">
+        {isNum ? <CabinetIcon /> : <PrivateIcon />}
+      </ContentIconStyled>
       {isNum && <span>{floor}F - </span>}
       <ChangeToHTML origin={resultText} replace={inputText} />
     </LiStyled>
@@ -50,39 +49,54 @@ const LiStyled = styled.li`
   padding: 12px;
   border-radius: 10px;
   cursor: pointer;
+  display: flex;
+
   & strong {
-    color: var(--main-color);
+    color: var(--button-line-color);
   }
 
   &.active {
-    background-color: var(--main-color);
-    color: var(--white);
+    background-color: var(--button-line-color);
+    color: var(--white-text-with-bg-color);
   }
   &.active strong {
-    color: var(--white);
+    color: var(--white-text-with-bg-color);
   }
-  &.active img {
-    filter: invert(100%);
+  &.active path {
+    stroke: var(--white-text-with-bg-color);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--main-color);
-      color: var(--white);
+      background-color: var(--button-line-color);
+      color: var(--white-text-with-bg-color);
     }
     &:hover strong {
-      color: var(--white);
+      color: var(--white-text-with-bg-color);
     }
-    &:hover img {
-      filter: invert(100%);
+    &:hover path {
+      stroke: var(--white-text-with-bg-color);
     }
   }
 `;
 
-const ImgStyled = styled.img`
+const ContentIconStyled = styled.div`
   width: 20px;
   height: 20px;
   margin-right: 8px;
+
+  & > svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  & > svg > path {
+    stroke: var(--normal-text-color);
+  }
+
+  &:hover & > svg > path {
+    stroke: var(--white-text-with-bg-color);
+  }
 `;
 
 export default SearchListItem;

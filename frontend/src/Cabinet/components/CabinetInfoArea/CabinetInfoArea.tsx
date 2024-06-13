@@ -7,6 +7,7 @@ import {
 } from "@/Cabinet/components/CabinetInfoArea/CabinetInfoArea.container";
 import CountTimeContainer from "@/Cabinet/components/CabinetInfoArea/CountTime/CountTime.container";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
+import SelectInduction from "@/Cabinet/components/Common/SelectInduction";
 import CancelModal from "@/Cabinet/components/Modals/CancelModal/CancelModal";
 import ExtendModal from "@/Cabinet/components/Modals/ExtendModal/ExtendModal";
 import InvitationCodeModalContainer from "@/Cabinet/components/Modals/InvitationCodeModal/InvitationCodeModal.container";
@@ -18,15 +19,14 @@ import SwapModal from "@/Cabinet/components/Modals/SwapModal/SwapModal";
 import UnavailableModal from "@/Cabinet/components/Modals/UnavailableModal/UnavailableModal";
 import {
   additionalModalType,
-  cabinetIconSrcMap,
+  cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
 import alertImg from "@/Cabinet/assets/images/cautionSign.svg";
-import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extensionTicket.svg";
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extension.svg";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
-import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -51,29 +51,24 @@ const CabinetInfoArea: React.FC<{
   closeModal,
   isSwappable,
 }) => {
-  const isExtensionVisible =
-    isMine &&
-    isExtensible &&
-    selectedCabinetInfo &&
-    selectedCabinetInfo.status !== "IN_SESSION";
+  const isExtensionVisible = isMine && selectedCabinetInfo;
+  // selectedCabinetInfo.status !== "IN_SESSION";
   const isHoverBoxVisible =
     selectedCabinetInfo &&
     selectedCabinetInfo.lentsLength <= 1 &&
     selectedCabinetInfo.lentType === "SHARE";
+  const CabinetIcon = selectedCabinetInfo
+    ? cabinetIconComponentMap[selectedCabinetInfo.lentType]
+    : null;
 
   return selectedCabinetInfo === null ? (
-    <NotSelectedStyled>
-      <CabiLogoStyled>
-        <LogoImg />
-      </CabiLogoStyled>
-      <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
-        사물함을 <br />
-        선택해주세요
-      </TextStyled>
-    </NotSelectedStyled>
+    <SelectInduction
+      msg="사물함을
+    선택해주세요"
+    />
   ) : (
     <CabinetDetailAreaStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
+      <TextStyled fontSize="1rem" fontColor="var(--gray-line-btn-color)">
         {selectedCabinetInfo!.floor !== 0
           ? selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section
           : "-"}
@@ -86,11 +81,10 @@ const CabinetInfoArea: React.FC<{
           ? selectedCabinetInfo!.visibleNum
           : "-"}
       </CabinetRectangleStyled>
-      <CabinetTypeIconStyled
-        title={selectedCabinetInfo!.lentType}
-        cabinetType={selectedCabinetInfo!.lentType}
-      />
-      <TextStyled fontSize="1rem" fontColor="black">
+      <CabinetTypeIconStyled title={selectedCabinetInfo!.lentType}>
+        {CabinetIcon && <CabinetIcon />}
+      </CabinetTypeIconStyled>
+      <TextStyled fontSize="1rem" fontColor="var(--normal-text-color)">
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
@@ -176,7 +170,7 @@ const CabinetInfoArea: React.FC<{
       >
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
-      <CabinetLentDateInfoStyled textColor="var(--black)">
+      <CabinetLentDateInfoStyled textColor="var(--normal-text-color)">
         {selectedCabinetInfo!.cabinetId === 0 ? "" : expireDate}
       </CabinetLentDateInfoStyled>
       <ButtonHoverWrapper>
@@ -192,13 +186,10 @@ const CabinetInfoArea: React.FC<{
                 selectedCabinetInfo.lentType === "SHARE"
               }
             >
-              <ExtensionImg
-                stroke="var(--main-color)"
-                width={24}
-                height={24}
-                style={{ marginRight: "10px" }}
-              />
-              {"연장권 사용하기"}
+              <ExtensionImgStyled>
+                <ExtensionImg />
+              </ExtensionImgStyled>
+              <span>연장권 사용하기</span>
             </ButtonContainerStyled>
           )}
           {isExtensionVisible && isHoverBoxVisible && (
@@ -271,14 +262,6 @@ const CabinetInfoArea: React.FC<{
   );
 };
 
-const NotSelectedStyled = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 const CabinetDetailAreaStyled = styled.div`
   height: 100%;
   max-width: 330px;
@@ -288,26 +271,21 @@ const CabinetDetailAreaStyled = styled.div`
   align-items: center;
 `;
 
-const CabiLogoStyled = styled.div`
-  width: 35px;
-  height: 35px;
-  margin-bottom: 10px;
-  svg {
-    .logo_svg__currentPath {
-      fill: var(--main-color);
-    }
-  }
-`;
-
-const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
+const CabinetTypeIconStyled = styled.div`
   width: 24px;
   height: 24px;
   min-width: 24px;
   min-height: 24px;
   margin-bottom: 10px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
-  background-size: contain;
-  background-repeat: no-repeat;
+
+  & path {
+    stroke: var(--normal-text-color);
+  }
+
+  & > svg {
+    width: 24px;
+    height: 24px;
+  }
 `;
 
 const TextStyled = styled.p<{ fontSize: string; fontColor: string }>`
@@ -330,26 +308,26 @@ const CabinetRectangleStyled = styled.div<{
   margin-top: 15px;
   margin-bottom: 3vh;
   background-color: ${({ cabinetStatus, isMine }) =>
-    isMine ? "var(--mine)" : cabinetStatusColorMap[cabinetStatus]};
+    isMine ? "var(--mine-color)" : cabinetStatusColorMap[cabinetStatus]};
 
   font-size: 2rem;
   color: ${(props) =>
     props.isMine
-      ? cabinetLabelColorMap["MINE"]
+      ? "var(--mine-text-color)"
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
 
   ${({ cabinetStatus }) =>
     cabinetStatus === "IN_SESSION" &&
     css`
-      border: 2px solid var(--main-color);
+      border: 2px solid var(--sys-main-color);
     `}
 
   ${({ cabinetStatus }) =>
     cabinetStatus === "PENDING" &&
     css`
-      border: 2px double var(--main-color);
-      box-shadow: inset 0px 0px 0px 2px var(--white);
+      border: 2px double var(--sys-main-color);
+      box-shadow: inset 0px 0px 0px 2px var(--bg-color);
     `}
 `;
 
@@ -374,10 +352,9 @@ const HoverBox = styled.div<{
   padding: 10px;
   background-color: rgba(73, 73, 73, 0.99);
   border-radius: 10px;
-  box-shadow: 4px 4px 20px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 4px 4px 20px 0px var(--hover-box-shadow-color);
   font-size: 0.875rem;
   text-align: center;
-  color: white;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -431,6 +408,7 @@ const AvailableMessageStyled = styled.p`
   text-align: center;
   font-weight: 700;
   line-height: 26px;
+  color: var(--normal-text-color);
 `;
 
 const ButtonContainerStyled = styled.button`
@@ -443,6 +421,7 @@ const ButtonContainerStyled = styled.button`
   align-items: center;
   border-radius: 10px;
   margin-bottom: 15px;
+
   &:disabled {
     opacity: 0.3;
     cursor: not-allowed;
@@ -450,12 +429,27 @@ const ButtonContainerStyled = styled.button`
   ${(props) =>
     props.theme === "line" &&
     css`
-      background: var(--white);
-      color: var(--main-color);
-      border: 1px solid var(--main-color);
+      background: var(--bg-color);
+      color: var(--sys-main-color);
+      border: 1px solid var(--sys-main-color);
     `}
   @media (max-height: 745px) {
     margin-bottom: 8px;
+  }
+
+  & > span {
+    height: 20px;
+    line-height: 18px;
+  }
+`;
+
+const ExtensionImgStyled = styled.div`
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+
+  & > svg > path {
+    stroke: var(--sys-main-color);
   }
 `;
 

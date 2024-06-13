@@ -45,7 +45,7 @@ const PageButtonStyled = styled.div<{
   type: string;
 }>`
   cursor: pointer;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   position: absolute;
   display: ${({ page, totalPage, type }) => {
     if (type == "prev" && page == 1) return "none";
@@ -63,7 +63,7 @@ const PageButtonStyled = styled.div<{
 `;
 
 const GoBackButtonStyled = styled.div`
-  color: var(--sub-color);
+  color: var(--sys-sub-color);
   font-size: 0.875rem;
   text-decoration: underline;
   cursor: pointer;
@@ -103,11 +103,11 @@ const LentLogStyled = styled.div`
   z-index: 9;
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;
-  box-shadow: 0 0 40px 0 var(--bg-shadow);
+  box-shadow: 0 0 40px 0 var(--color-picker-border-shadow-color);
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--white);
+  background: var(--bg-color);
   &.on {
     transform: translateX(0);
   }

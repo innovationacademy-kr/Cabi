@@ -128,16 +128,16 @@ const AnimatedDropdownOptions = styled.ul<{
   left: 0;
   width: 100%;
   z-index: 1;
-  border: 1px solid var(--white);
+  border: 1px solid var(--card-content-bg-color);
   border-radius: 10px;
   text-align: left;
   padding: 10px;
-  color: var(--black);
-  background-color: var(--white);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  color: var(--normal-text-color);
+  background-color: var(--card-content-bg-color);
+  box-shadow: 0 0 10px 0 var(--table-border-shadow-color-100);
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #aaa #fff;
+  /* scrollbar-color: #aaa #fff; */
   opacity: ${(props) => (props.isVisible ? 1 : 0)};
   visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
   animation: ${(props) =>
@@ -162,7 +162,7 @@ const DropdownOption = styled.li`
   padding: 10px;
   cursor: pointer;
   &:hover {
-    background-color: #dce7ff;
+    background-color: var(--presentation-dropdown-select-color);
   }
 `;
 
@@ -175,10 +175,12 @@ const RegisterTimeInputStyled = styled.div<{
   padding-right: 10px;
   width: 100%;
   border-radius: 10px;
-  background-color: var(--white);
-  border: 2px solid ${(props) => (props.isFocused ? "#91B5FA" : "var(--white)")};
-  color: ${(props) =>
-    props.hasSelectedOption ? "var(--black)" : "var(--gray-color)"};
+  background-color: var(--card-content-bg-color);
+  border: 2px solid
+    ${(props) =>
+      props.isFocused
+        ? "var(--sys-sub-color)"
+        : "var(--card-content-bg-color)"};
   resize: none;
   outline: none;
   cursor: pointer;
@@ -188,8 +190,8 @@ const RegisterTimeInputStyled = styled.div<{
   padding-left: 10px;
   color: ${(props) =>
     props.isFocused || !props.hasSelectedOption
-      ? "var(--gray-color)"
-      : "var(--black)"};
+      ? "var(--gray-line-btn-color)"
+      : "var(--normal-text-color)"};
 `;
 
 const DropdownIcon = styled.img<{ rotated: boolean }>`

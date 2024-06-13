@@ -47,7 +47,7 @@ export default DetailTableBodyItemBottomTr;
 const BottomTrStyled = styled.tr<{
   itemStatus: itemType;
 }>`
-  background-color: #91b5fa;
+  background-color: var(--sys-sub-color);
   width: 100%;
 
   & > td {
@@ -56,17 +56,19 @@ const BottomTrStyled = styled.tr<{
   }
 
   & > td > div {
-    background-color: var(--white);
+    background-color: var(--white-text-with-bg-color);
     border-radius: 10px;
     margin: 24px;
     margin-top: 0;
     line-height: 24px;
     padding: 30px 50px;
     font-size: 18px;
+    color: var(--mine-text-color);
   }
 
   &:hover {
     cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
-    background-color: ${(props) => (props.itemStatus ? "" : "#91B5FA")};
+    background-color: ${(props) =>
+      props.itemStatus ? "" : "var(--sys-sub-color)"};
   }
 `;

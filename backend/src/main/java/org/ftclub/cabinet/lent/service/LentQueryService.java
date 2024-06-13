@@ -193,7 +193,8 @@ public class LentQueryService {
 	 * @param cabinetIds 찾으려는 cabinet id {@link List}
 	 * @return 기준 날짜보다 반납 기한이 나중인 대여 기록 {@link List}
 	 */
-	public List<LentHistory> findPendingLentHistoriesOnDate(LocalDate date, List<Long> cabinetIds) {
+	public List<LentHistory> findAvailableLentHistoriesOnDate(LocalDate date,
+			List<Long> cabinetIds) {
 		return lentRepository.findAllByCabinetIdsEndedAtEqualDate(date, cabinetIds);
 	}
 

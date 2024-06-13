@@ -54,7 +54,10 @@ const ItemStyled = styled.div<{
   padding: 3px;
   font-size: ${({ info }) => (info.type === "floorInfo" ? "1.8rem" : "0.8rem")};
   cursor: ${({ info }) => (info.type === "floorInfo" ? "default" : "pointer")};
-  color: ${({ info }) => (info.type === "floorInfo" ? "#bcb9b9" : "white")};
+  color: ${({ info }) =>
+    info.type === "floorInfo"
+      ? "var(--line-color)"
+      : "var(--white-text-with-bg-color)"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,10 +69,10 @@ const ItemStyled = styled.div<{
   grid-row-end: ${({ info }) => info.rowEnd};
   background: ${({ info }) =>
     info.type === "cabinet"
-      ? "var(--main-color)"
+      ? "var(--sys-main-color)"
       : info.type === "floorInfo"
       ? "transparent"
-      : "#bcb9b9"};
+      : "var(--line-color)"};
   &:hover {
     opacity: ${({ info }) => (info.type === "cabinet" ? 0.9 : 1)};
   }

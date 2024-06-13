@@ -7,7 +7,7 @@ import {
 } from "@/Cabinet/recoil/atoms";
 import {
   cabinetFilterMap,
-  cabinetIconSrcMap,
+  cabinetIconComponentMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/Cabinet/assets/data/maps";
@@ -17,6 +17,7 @@ import {
 } from "@/Cabinet/types/dto/cabinet.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import { axiosCabinetById } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
@@ -28,12 +29,13 @@ const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
-  const setSelectedTypeOnSearch = useSetRecoilState<string>(
+  const setSelectedTypeOnSearch = useSetRecoilState<CabinetDetailAreaType>(
     selectedTypeOnSearchState
   );
   const { openCabinet, closeCabinet } = useMenu();
   const { isMultiSelect, clickCabinetOnMultiSelectMode, containsCabinet } =
     useMultiSelect();
+  const CabinetIcon = cabinetIconComponentMap[props.lentType];
 
   let cabinetLabelText = "";
 
@@ -63,7 +65,7 @@ const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
     }
 
     setCurrentCabinetId(cabinetId);
-    setSelectedTypeOnSearch("CABINET");
+    setSelectedTypeOnSearch(CabinetDetailAreaType.CABINET);
     async function getData(cabinetId: number) {
       try {
         const { data } = await axiosCabinetById(cabinetId);
@@ -105,7 +107,9 @@ const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
           lentType={props.lentType}
           isMine={false}
           status={props.status}
-        />
+        >
+          <CabinetIcon />
+        </CabinetIconContainerStyled>
         <CabinetNumberStyled status={props.status} isMine={false}>
           {props.visibleNum}
         </CabinetNumberStyled>
@@ -155,29 +159,30 @@ const CabinetListItemStyled = styled.div<{
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
-        0px 4px 4px rgba(0, 0, 0, 0.25);
+      box-shadow: inset 5px 5px 5px var(--color-picker-border-shadow-color),
+        0px 4px 4px var(--color-picker-border-shadow-color);
     `}
   ${({ isMultiSelected }) =>
     isMultiSelected &&
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
-        0px 4px 4px rgba(0, 0, 0, 0.25);
+      box-shadow: inset 5px 5px 5px var(--color-picker-border-shadow-color),
+        0px 4px 4px var(--color-picker-border-shadow-color);
     `}
 
   ${({ status }) =>
     status === "PENDING" &&
     css`
-      border: 2px double var(--main-color);
-      box-shadow: inset 0px 0px 0px 2px var(--white);
+      border: 2px double var(--sys-main-color);
+      box-shadow: inset 0px 0px 0px 2px var(--bg-color);
+      // 테두리
     `}
 
     ${({ status }) =>
     status === "IN_SESSION" &&
     css`
-      border: 2px solid var(--main-color);
+      border: 2px solid var(--sys-main-color);
     `}
 
     .cabinetLabelTextWrap {
@@ -187,7 +192,7 @@ const CabinetListItemStyled = styled.div<{
   .clockIconStyled {
     width: 16px;
     height: 17px;
-    background-color: var(--main-color);
+    background-color: var(--sys-main-color);
     mask-image: url("data:image/svg+xml,%3Csvg width='16' height='17' viewBox='0 0 16 17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14.6668 8.49967C14.6668 12.1797 11.6802 15.1663 8.00016 15.1663C4.32016 15.1663 1.3335 12.1797 1.3335 8.49967C1.3335 4.81967 4.32016 1.83301 8.00016 1.83301C11.6802 1.83301 14.6668 4.81967 14.6668 8.49967Z' stroke='%239747FF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M10.4734 10.6202L8.40675 9.38684C8.04675 9.1735 7.75342 8.66017 7.75342 8.24017V5.50684' stroke='%239747FF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
     margin-right: 4px;
     display: ${(props) => (props.status === "IN_SESSION" ? "block" : "none")};
@@ -235,7 +240,7 @@ const CabinetNumberStyled = styled.p<{
   ${({ status }) =>
     status === "IN_SESSION" &&
     css`
-      color: black;
+      color: var(--normal-text-color);
     `}
 `;
 
@@ -246,9 +251,15 @@ const CabinetIconContainerStyled = styled.div<{
 }>`
   width: 16px;
   height: 16px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.lentType]});
-  background-size: contain;
-  filter: ${(props) => cabinetFilterMap[props.status]};
+
+  & > svg > path {
+    stroke: ${(props) => cabinetFilterMap[props.status]};
+  }
+
+  & > svg {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 export default AdminCabinetListItem;

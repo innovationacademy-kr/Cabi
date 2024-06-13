@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class LentExtensionCommandService {
 
+	private static final String LENT_EXTENSION_ITEM = "lentExtensionItem";
 	private final LentExtensionRepository lentExtensionRepository;
 	private final LentExtensionPolicy policy;
 
@@ -31,11 +32,19 @@ public class LentExtensionCommandService {
 	 * @return 생성된 연장권
 	 */
 	public LentExtension createLentExtension(Long userId, LentExtensionType type,
-			LocalDateTime expiredAt) {
+		LocalDateTime expiredAt) {
 		LentExtension lentExtension = LentExtension.of(policy.getDefaultName(),
-				policy.getDefaultExtensionTerm(),
-				policy.getExpiry(expiredAt),
-				type, userId);
+			policy.getDefaultExtensionTerm(),
+			policy.getExpiry(expiredAt),
+			type, userId);
+		return lentExtensionRepository.save(lentExtension);
+	}
+
+	public LentExtension createLentExtensionByItem(Long userId, LentExtensionType type,
+		Integer extensionDay) {
+		LentExtension lentExtension = LentExtension.of(LENT_EXTENSION_ITEM, extensionDay,
+			LocalDateTime.now().plusYears(100),
+			type, userId);
 		return lentExtensionRepository.save(lentExtension);
 	}
 
@@ -48,7 +57,7 @@ public class LentExtensionCommandService {
 	public void useLentExtension(LentExtension lentExtension, List<LentHistory> lentHistories) {
 		lentExtension.use();
 		lentHistories.forEach(lentHistory ->
-				lentHistory.setExpiredAt(
-						lentHistory.getExpiredAt().plusDays(lentExtension.getExtensionPeriod())));
+			lentHistory.setExpiredAt(
+				lentHistory.getExpiredAt().plusDays(lentExtension.getExtensionPeriod())));
 	}
 }

@@ -1,5 +1,5 @@
-import Button from "@/Cabinet/components/Common/Button";
 import styled from "styled-components";
+import Button from "@/Cabinet/components/Common/Button";
 
 const MAX_INPUT_LENGTH = 27;
 
@@ -58,7 +58,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -103,7 +103,7 @@ const ContentItemTitleStyled = styled.h3`
 `;
 
 const ContentItemInputStyled = styled.input`
-  border: 1px solid var(--line-color);
+  border: 1px solid var(--light-gray-line-btn-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -111,7 +111,7 @@ const ContentItemInputStyled = styled.input`
   text-indent: 20px;
   font-size: 1.125rem;
   cursor: "input";
-  color: "black";
+  color: "var(--normal-text-color)";
   &::placeholder {
     color: "var(--line-color)";
   }
@@ -123,7 +123,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--modal-bg-shadow-color);
   z-index: 1000;
 `;
 

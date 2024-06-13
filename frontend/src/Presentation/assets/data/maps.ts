@@ -1,3 +1,9 @@
+import { ReactComponent as AcademicIcon } from "@/Cabinet/assets/images/PresentationAcademic.svg";
+import { ReactComponent as DevelopIcon } from "@/Cabinet/assets/images/PresentationDevelop.svg";
+import { ReactComponent as EtcIcon } from "@/Cabinet/assets/images/PresentationEtc.svg";
+import { ReactComponent as FortyTwoIcon } from "@/Cabinet/assets/images/PresentationFortyTwo.svg";
+import { ReactComponent as HobbyIcon } from "@/Cabinet/assets/images/PresentationHobby.svg";
+import { ReactComponent as JobIcon } from "@/Cabinet/assets/images/PresentationJob.svg";
 import { PresentationTimeKey } from "@/Presentation/pages/RegisterPage";
 import {
   PresentationCategoryType,
@@ -45,17 +51,17 @@ export const PresentationCategoryTypeLabelMap = {
   [PresentationCategoryType.ETC]: "기타",
 };
 
+type presentationCategoryIconMap = {
+  [key in PresentationCategoryType]: React.ComponentType<
+    React.SVGProps<SVGSVGElement>
+  >;
+};
+
 export const presentationCategoryIconMap = {
-  [PresentationCategoryType.DEVELOP]:
-    "/src/Cabinet/assets/images/PresentationDevelop.svg",
-  [PresentationCategoryType.STUDY]:
-    "/src/Cabinet/assets/images/PresentationAcademic.svg",
-  [PresentationCategoryType.HOBBY]:
-    "/src/Cabinet/assets/images/PresentationHobby.svg",
-  [PresentationCategoryType.JOB]:
-    "/src/Cabinet/assets/images/PresentationJob.svg",
-  [PresentationCategoryType.TASK]:
-    "/src/Cabinet/assets/images/PresentationFortyTwo.svg",
-  [PresentationCategoryType.ETC]:
-    "/src/Cabinet/assets/images/PresentationEtc.svg",
+  [PresentationCategoryType.DEVELOP]: DevelopIcon,
+  [PresentationCategoryType.STUDY]: AcademicIcon,
+  [PresentationCategoryType.HOBBY]: HobbyIcon,
+  [PresentationCategoryType.JOB]: JobIcon,
+  [PresentationCategoryType.TASK]: FortyTwoIcon,
+  [PresentationCategoryType.ETC]: EtcIcon,
 };

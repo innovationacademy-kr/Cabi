@@ -25,12 +25,8 @@ const ClubMemberListItem = ({
       onClick={() => selectClubMemberOnClick(member)}
       isSelected={member.userId === targetClubUser.userId}
     >
-      <MemberListItemStyled>
-        {isMaster ? (
-          <CrownImg stroke="#f5f5f5" width={18} height={18} />
-        ) : (
-          <UserImg width={16} height={16} viewBox="0 0 24 24" />
-        )}
+      <MemberListItemStyled isMaster={isMaster}>
+        {isMaster ? <CrownImg /> : <UserImg />}
         <MemberNameStyled isMaster={isMaster}>
           {member.userName}
         </MemberNameStyled>
@@ -45,7 +41,8 @@ const MemberListItemContainerStyled = styled.div<{
 }>`
   width: 80px;
   height: 80px;
-  background-color: ${(props) => (props.bgColor ? props.bgColor : "#F5F5F5")};
+  background-color: ${(props) =>
+    props.bgColor ? props.bgColor : "var(--card-bg-color)"};
   border-radius: 1rem;
   margin: 7px;
   padding: 10px;
@@ -60,8 +57,8 @@ const MemberListItemContainerStyled = styled.div<{
     css`
       opacity: 0.9;
       transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
-        0px 4px 4px rgba(0, 0, 0, 0.25);
+      box-shadow: inset 5px 5px 5px var(--color-picker-border-shadow-color),
+        0px 4px 4px var(--color-picker-border-shadow-color);
     `}
 
   @media (hover: hover) and (pointer: fine) {
@@ -72,12 +69,24 @@ const MemberListItemContainerStyled = styled.div<{
   }
 `;
 
-const MemberListItemStyled = styled.div`
+const MemberListItemStyled = styled.div<{ isMaster: boolean }>`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  & > svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  & > svg > path {
+    stroke: ${(props) =>
+      props.isMaster
+        ? "var(--white-text-with-bg-color)"
+        : "var(--normal-text-color)"};
+  }
 `;
 
 const MemberNameStyled = styled.p<{
@@ -86,7 +95,8 @@ const MemberNameStyled = styled.p<{
   line-height: 28px;
   height: 28px;
   font-size: 14px;
-  color: ${(props) => (props.isMaster ? "var(--white)" : "")};
+  color: ${(props) =>
+    props.isMaster ? "var(--white-text-with-bg-color)" : ""};
 `;
 
 export default memo(ClubMemberListItem);

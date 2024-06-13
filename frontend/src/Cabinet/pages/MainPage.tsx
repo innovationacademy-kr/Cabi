@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -7,12 +7,18 @@ import {
   currentCabinetIdState,
   currentFloorNumberState,
   currentSectionNameState,
+  isCurrentSectionRenderState,
   targetCabinetInfoState,
 } from "@/Cabinet/recoil/atoms";
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import CabinetListContainer from "@/Cabinet/components/CabinetList/CabinetList.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import SectionAlertModal from "@/Cabinet/components/Modals/SectionAlertModal/SectionAlertModal";
 import SectionPaginationContainer from "@/Cabinet/components/SectionPagination/SectionPagination.container";
+import { clubSectionsData } from "@/Cabinet/assets/data/mapPositionData";
+import { ReactComponent as FilledHeartIcon } from "@/Cabinet/assets/images/filledHeart.svg";
+import { ReactComponent as LineHeartIcon } from "@/Cabinet/assets/images/lineHeart.svg";
+import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import SectionType from "@/Cabinet/types/enum/map.type.enum";
 import useCabinetListRefresh from "@/Cabinet/hooks/useCabinetListRefresh";
 import useMenu from "@/Cabinet/hooks/useMenu";
@@ -25,18 +31,26 @@ const MainPage = () => {
   const navigator = useNavigate();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
-  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
+  const sectionList: Array<ICurrentSectionInfo> = useRecoilValue<
+    Array<ICurrentSectionInfo>
+  >(currentFloorSectionState);
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
   );
   const currentSectionIndex = sectionList.findIndex(
-    (sectionName) => sectionName === currentSectionName
+    (section) => section.sectionName === currentSectionName
   );
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
   const currentFloor = useRecoilValue<number>(currentFloorNumberState);
   const { refreshCabinetList, isLoading } = useCabinetListRefresh(
     currentBuilding,
     currentFloor
+  );
+  const [isClubSection, setIsClubSection] = useState(false);
+  const [showSectionAlertModal, setShowSectionAlertModal] =
+    useState<boolean>(false);
+  const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
+    isCurrentSectionRenderState
   );
 
   useEffect(() => {
@@ -54,6 +68,15 @@ const MainPage = () => {
       resetCurrentCabinetId();
     };
   }, []);
+
+  useEffect(() => {
+    const clubSection = clubSectionsData.find((section) => {
+      return section === currentSectionName;
+    })
+      ? true
+      : false;
+    setIsClubSection(clubSection);
+  }, [currentSectionName]);
 
   const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
     const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
@@ -77,18 +100,23 @@ const MainPage = () => {
     if (direction === "left") {
       setCurrentSectionName(
         currentSectionIndex <= 0
-          ? sectionList[sectionList.length - 1]
-          : sectionList[currentSectionIndex - 1]
+          ? sectionList[sectionList.length - 1].sectionName
+          : sectionList[currentSectionIndex - 1].sectionName
       );
     } else if (direction === "right") {
       setCurrentSectionName(
         currentSectionIndex >= sectionList.length - 1
-          ? sectionList[0]
-          : sectionList[currentSectionIndex + 1]
+          ? sectionList[0].sectionName
+          : sectionList[currentSectionIndex + 1].sectionName
       );
     }
 
     mainWrapperRef.current?.scrollTo(0, 0);
+  };
+
+  const handleAlertIconBtn = () => {
+    setShowSectionAlertModal(true);
+    setIsCurrentSectionRender(false);
   };
 
   return (
@@ -107,6 +135,22 @@ const MainPage = () => {
           );
         }}
       >
+        <AlertStyled>
+          {!isClubSection && (
+            <IconWrapperStyled
+              onClick={handleAlertIconBtn}
+              disabled={
+                sectionList[currentSectionIndex]?.alarmRegistered ? true : false
+              }
+            >
+              {sectionList[currentSectionIndex]?.alarmRegistered === true ? (
+                <FilledHeartIcon />
+              ) : (
+                <LineHeartIcon />
+              )}
+            </IconWrapperStyled>
+          )}
+        </AlertStyled>
         <SectionPaginationContainer />
         <CabinetListWrapperStyled>
           <CabinetListContainer isAdmin={false} />
@@ -122,6 +166,14 @@ const MainPage = () => {
               </RefreshButtonStyled>
             )}
         </CabinetListWrapperStyled>
+        {showSectionAlertModal && (
+          <SectionAlertModal
+            currentSectionName={currentSectionName}
+            setShowSectionAlertModal={setShowSectionAlertModal}
+            currentBuilding={currentBuilding}
+            currentFloor={currentFloor}
+          />
+        )}
       </WrapperStyled>
     </>
   );
@@ -154,9 +206,28 @@ const RefreshButtonStyled = styled.button`
   font-size: 1rem;
   border-radius: 30px;
   margin: 30px;
+  color: var(--white-text-with-bg-color);
   @media (max-height: 745px) {
     margin-bottom: 8px;
   }
+`;
+
+const IconWrapperStyled = styled.div<{ disabled: boolean }>`
+  height: 16px;
+  width: 16px;
+  pointer-events: ${(props) => (props.disabled ? "none" : "inherit")};
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const AlertStyled = styled.div`
+  height: 30px;
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  padding-right: 14px;
 `;
 
 export default MainPage;

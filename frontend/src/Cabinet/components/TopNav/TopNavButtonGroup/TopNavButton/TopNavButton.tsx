@@ -1,9 +1,14 @@
 import React from "react";
 import styled from "styled-components";
+import { ReactComponent as HappyCcabiImg } from "@/Cabinet/assets/images/happyCcabi.svg";
+import { ReactComponent as MapImg } from "@/Cabinet/assets/images/map.svg";
+import { ReactComponent as MyCabinetIcon } from "@/Cabinet/assets/images/myCabinetIcon.svg";
+import { ReactComponent as SearchImg } from "@/Cabinet/assets/images/searchWhite.svg";
+import { ReactComponent as MyCoinImg } from "@/Cabinet/assets/images/storeCoinNav.svg";
 
 interface ITopNavButton {
   onClick: React.MouseEventHandler<HTMLDivElement>;
-  imgSrc: string;
+  type: string;
   disable?: boolean;
   width?: string;
   height?: string;
@@ -18,7 +23,11 @@ const TopNavButton = (props: ITopNavButton) => {
       onClick={props.onClick}
       disable={props.disable}
     >
-      <ImgStyled w={props.width} h={props.height} src={props.imgSrc} alt="" />
+      {props.type === "myCoin" && <MyCoinImg />}
+      {props.type === "happyCcabi" && <HappyCcabiImg />}
+      {props.type === "search" && <SearchImg />}
+      {props.type === "myCabinetIcon" && <MyCabinetIcon />}
+      {props.type === "map" && <MapImg />}
     </TopNavButtonStyled>
   );
 };
@@ -34,6 +43,9 @@ const TopNavButtonStyled = styled.div<{
   height: 32px;
   margin-right: 10px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   /* display: ${({ disable }) => (disable ? "none" : "block")}; */
   /* visibility: ${({ disable }) => (disable ? "hidden" : "visible")}; */
   @media (hover: hover) and (pointer: fine) {
@@ -41,11 +53,19 @@ const TopNavButtonStyled = styled.div<{
       opacity: 0.9;
     }
   }
-`;
 
-const ImgStyled = styled.img<{ w?: string; h?: string }>`
-  width: ${({ w }) => (w ? w : "100%")};
-  height: ${({ h }) => (h ? h : "100%")};
+  & svg > g {
+    fill: var(--bg-color);
+  }
+
+  & > svg {
+    width: ${(props) => (props.id === "searchButton" ? "26px" : "32px")};
+    height: ${(props) => (props.id === "searchButton" ? "26px" : "32px")};
+  }
+
+  & > svg > path {
+    stroke: var(--gray-line-btn-color);
+  }
 `;
 
 export default TopNavButton;

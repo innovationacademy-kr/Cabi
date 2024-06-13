@@ -29,7 +29,7 @@ const SearchDefaultStyled = styled.div`
   & > p {
     margin-top: 10px;
     font-size: 1.125rem;
-    color: var(--gray-color);
+    color: var(--gray-line-btn-color);
     text-align: center;
     line-height: 1.75rem;
   }
@@ -37,7 +37,7 @@ const SearchDefaultStyled = styled.div`
     width: 35px;
     height: 35px;
     .logo_svg__currentPath {
-      fill: var(--main-color);
+      fill: var(--sys-main-color);
     }
   }
 `;

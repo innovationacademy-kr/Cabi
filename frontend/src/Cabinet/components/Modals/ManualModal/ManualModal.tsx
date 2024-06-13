@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import styled, { css, keyframes } from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
@@ -51,12 +51,15 @@ const ManualModal: React.FC<ModalProps> = ({
       >
         <ModalContent contentStatus={contentStatus}>
           <CloseButton contentStatus={contentStatus} onClick={closeModal}>
-            <MoveBtnImg stroke="white" />
+            <MoveBtnImg className="moveButton" />
           </CloseButton>
           {hasImage && (
             <BasicInfo>
-              <img className="contentImg" src={contentData.imagePath} alt="" />
-
+              <ContentImgStyled contentStatus={contentStatus}>
+                {contentData.iconComponent && (
+                  <contentData.iconComponent className="contentImg" />
+                )}
+              </ContentImgStyled>
               {isCabinetType && (
                 <BoxInfoWrap>
                   <BoxInfo1>
@@ -141,13 +144,13 @@ const ModalWrapper = styled.div<{
   border-radius: 40px 40px 0 0;
   border: ${(props) =>
     props.contentStatus === ContentStatus.PENDING
-      ? "5px double var(--main-color)"
+      ? "5px double var(--sys-main-color)"
       : props.contentStatus === ContentStatus.IN_SESSION
-      ? "5px solid var(--main-color)"
+      ? "5px solid var(--sys-main-color)"
       : "none"};
   box-shadow: ${(props) =>
     props.contentStatus === ContentStatus.PENDING &&
-    "inset 0px 0px 0px 5px var(--white);"};
+    "inset 0px 0px 0px 5px var(--bg-color);"};
   border-bottom: none;
   @media screen and (max-width: 700px) {
     width: 100%;
@@ -164,27 +167,13 @@ const ModalContent = styled.div<{
   flex-direction: column;
   color: ${(props) =>
     props.contentStatus === ContentStatus.IN_SESSION
-      ? "var(--main-color)"
+      ? "var(--sys-main-color)"
       : props.contentStatus === ContentStatus.EXTENSION
-      ? "black"
-      : "white"};
+      ? "var(--normal-text-color)"
+      : "var(--white-text-with-bg-color)"};
   font-size: 2.5rem;
   font-weight: bold;
   align-items: flex-start;
-  .svg {
-    width: 80px;
-    height: 80px;
-  }
-  .contentImg {
-    width: 80px;
-    height: 80px;
-    filter: ${(props) =>
-      props.contentStatus === ContentStatus.EXTENSION
-        ? "brightness(0)"
-        : props.contentStatus === ContentStatus.PENDING
-        ? "brightness(0)"
-        : "brightness(100)"};
-  }
   @media screen and (max-width: 400px) {
     font-size: 1.5rem;
     .contentImg {
@@ -196,6 +185,14 @@ const ModalContent = styled.div<{
       width: 60px;
       height: 60px;
     }
+  }
+  .moveButton {
+    stroke: ${(props) =>
+      props.contentStatus === ContentStatus.IN_SESSION
+        ? "var(--sys-main-color)"
+        : props.contentStatus === ContentStatus.EXTENSION
+        ? "var(--normal-text-color)"
+        : "var(--white-text-with-bg-color)"};
   }
 `;
 
@@ -214,10 +211,10 @@ const CloseButton = styled.div<{
     transform: scaleX(-1);
     stroke: ${(props) =>
       props.contentStatus === ContentStatus.IN_SESSION
-        ? "var(--main-color)"
+        ? "var(--sys-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
-        ? "black"
-        : "white"};
+        ? "var(--normal-text-color)"
+        : "var(--bg-color)"};
   }
   :hover {
     transform: translateX(-16px);
@@ -239,7 +236,7 @@ const BoxInfoWrap = styled.div`
 const BoxInfo1 = styled.div`
   width: 100px;
   height: 80px;
-  border: 1px solid white;
+  border: 1px solid var(--white-text-with-bg-color);
   border-radius: 15px;
   font-size: 0.875rem;
   font-weight: 400;
@@ -257,7 +254,7 @@ const BoxInfo1 = styled.div`
 const BoxInfo2 = styled.div`
   width: 80px;
   height: 80px;
-  border: 1px solid white;
+  border: 1px solid var(--white-text-with-bg-color);
   border-radius: 15px;
   font-size: 0.875rem;
   font-weight: 400;
@@ -309,6 +306,26 @@ const ManualContentStyeld = styled.div<{
     margin-left: 3px;
     span {
       font-size: 1.2rem;
+    }
+  }
+`;
+
+const ContentImgStyled = styled.div<{
+  contentStatus: ContentStatus;
+}>`
+  width: 80px;
+  height: 80px;
+  display: flex;
+
+  & > svg {
+    width: 80px;
+    height: 80px;
+
+    & > path {
+      stroke: ${(props) =>
+        props.contentStatus === ContentStatus.EXTENSION
+          ? "var(--normal-text-color)"
+          : "var(--white-text-with-bg-color)"};
     }
   }
 `;

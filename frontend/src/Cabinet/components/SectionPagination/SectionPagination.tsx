@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import LeftSectionButton from "@/Cabinet/assets/images/LeftSectionButton.svg";
+import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
 const SectionPagination: React.FC<{
   currentSectionName: string;
   currentPositionName: string;
-  sectionList: Array<string>;
+  sectionList: Array<ICurrentSectionInfo>;
   changeSectionOnClickIndexButton: (index: number) => void;
   moveToLeftSection: React.MouseEventHandler;
   moveToRightSection: React.MouseEventHandler;
@@ -18,11 +19,13 @@ const SectionPagination: React.FC<{
     moveToRightSection,
   } = props;
 
-  const paginationIndexBar = sectionList.map((sectionName, index) => (
+  const paginationIndexBar = sectionList.map((section, index) => (
     <IndexRectangleStyled
-      key={sectionName}
+      key={section.sectionName}
       filledColor={
-        sectionName === currentSectionName ? "var(--main-color)" : "#D9D9D9"
+        section.sectionName === currentSectionName
+          ? "var(--sys-main-color)"
+          : "var(--service-man-title-border-btm-color)"
       }
       onClick={() => changeSectionOnClickIndexButton(index)}
       className="cabiButton"
@@ -52,14 +55,13 @@ const SectionPagination: React.FC<{
 
 const SectionPaginationStyled = styled.div`
   min-width: 360px;
-  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 10px 0;
   position: sticky;
   top: 0;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-color);
   z-index: 1;
 `;
 
@@ -92,7 +94,7 @@ const SectionNameTextStyled = styled.div`
   min-width: 220px;
   font-size: 1rem;
   text-align: center;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
 `;
 
 const SectionIndexStyled = styled.div`
@@ -112,7 +114,7 @@ const IndexRectangleStyled = styled.div<{ filledColor: string }>`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       transform: scale(1.3);
-      background-color: var(--sub-color);
+      background-color: var(--sys-sub-color);
     }
   }
 `;

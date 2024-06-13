@@ -1,19 +1,19 @@
+import React, { useRef, useState } from "react";
+import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import React, { useRef, useState } from "react";
-import styled from "styled-components";
 
 export interface MemoModalInterface {
   cabinetType: CabinetType;
-  cabinetTitle: string | null;
+  cabinetTitle: string;
   cabinetMemo: string;
 }
 
 interface MemoModalContainerInterface {
   memoModalObj: MemoModalInterface;
   onClose: React.MouseEventHandler;
-  onSave: (newTitle: string | null, newMemo: string) => void;
+  onSave: (newTitle: string, newMemo: string) => void;
 }
 
 const MAX_INPUT_LENGTH = 14;
@@ -33,6 +33,7 @@ const MemoModal = ({
       newTitle.current.select();
     }
   };
+
   const handleClickSave = (e: React.MouseEvent) => {
     //사물함 제목, 사물함 비밀메모 update api 호출
     // onClose(e);
@@ -40,7 +41,7 @@ const MemoModal = ({
     if (newTitle.current!.value) {
       onSave(newTitle.current!.value, newMemo.current!.value);
     } else {
-      onSave(null, newMemo.current!.value);
+      onSave("", newMemo.current!.value);
     }
     setMode("read");
   };
@@ -100,12 +101,12 @@ const MemoModal = ({
                 ? onClose
                 : () => {
                     setMode("read");
-                    if (cabinetTitle) newTitle.current!.value = cabinetTitle;
+                    newTitle.current!.value = cabinetTitle;
                     newMemo.current!.value = cabinetMemo;
                   }
             }
             text={mode === "read" ? "닫기" : "취소"}
-            theme={mode === "read" ? "lightGrayLine" : "line"}
+            theme={mode === "read" ? "grayLine" : "line"}
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>
@@ -118,7 +119,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   top: 50%;
   left: 50%;
   width: 360px;
-  background: white;
+  background: var(--bg-color);
   z-index: 1000;
   border-radius: 10px;
   transform: translate(-50%, -50%);
@@ -171,7 +172,7 @@ const ContentItemTitleStyled = styled.h3`
 const ContentItemInputStyled = styled.input<{
   mode: string;
 }>`
-  border: 1px solid var(--line-color);
+  border: 1px solid var(--light-gray-line-btn-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
@@ -179,10 +180,11 @@ const ContentItemInputStyled = styled.input<{
   text-indent: 20px;
   font-size: 1.125rem;
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
-  color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "black")};
+  color: ${({ mode }) =>
+    mode === "read" ? "var(--sys-main-color)" : "var(--normal-text-color)"};
   &::placeholder {
     color: ${({ mode }) =>
-      mode === "read" ? "var(--main-color)" : "var(--line-color)"};
+      mode === "read" ? "var(--sys-main-color)" : "var(--line-color)"};
   }
 `;
 
@@ -192,7 +194,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--modal-bg-shadow-color);
   z-index: 1000;
 `;
 
@@ -212,7 +214,7 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   background: none;
   cursor: pointer;
   text-decoration: underline;
-  color: var(--main-color);
+  color: var(--sys-main-color);
   &:hover {
     opacity: 0.8;
   }

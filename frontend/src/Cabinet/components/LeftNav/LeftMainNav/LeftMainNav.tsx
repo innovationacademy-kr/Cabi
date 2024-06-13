@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { ReactComponent as LogoutImg } from "@/Cabinet/assets/images/close-square.svg";
-import { ReactComponent as CulbImg } from "@/Cabinet/assets/images/clubIconGray.svg";
+import { ReactComponent as ClubImg } from "@/Cabinet/assets/images/clubIconGray.svg";
 import { ReactComponent as ProfileImg } from "@/Cabinet/assets/images/profile-circle.svg";
-import { ReactComponent as SearchImg } from "@/Cabinet/assets/images/search.svg";
 import { ReactComponent as SlackNotiImg } from "@/Cabinet/assets/images/slack-notification.svg";
 import { ReactComponent as SlackImg } from "@/Cabinet/assets/images/slack.svg";
+import { ReactComponent as StoreImg } from "@/Cabinet/assets/images/storeIconGray.svg";
 
 interface ILeftMainNav {
   pathname: string;
@@ -20,6 +20,7 @@ interface ILeftMainNav {
   onClickMainClubButton: React.MouseEventHandler;
   onClickProfileButton: React.MouseEventHandler;
   onClickAvailableButton: React.MouseEventHandler;
+  onClickStoreButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
@@ -32,11 +33,11 @@ const LeftMainNav = ({
   onClickFloorButton,
   onClickLogoutButton,
   onClickSlackNotiButton,
-  onClickSearchButton,
   onClickAdminClubButton,
   onClickMainClubButton,
   onClickProfileButton,
   onClickAvailableButton,
+  onClickStoreButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
@@ -89,25 +90,25 @@ const LeftMainNav = ({
             <>
               <BottomBtnStyled
                 className={
+                  pathname.includes("store")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                onClick={onClickStoreButton}
+              >
+                <StoreImg />
+                Store
+              </BottomBtnStyled>
+              <BottomBtnStyled
+                className={
                   pathname.includes("slack-notification")
                     ? "active cabiButton"
                     : " cabiButton"
                 }
                 onClick={onClickSlackNotiButton}
               >
-                <SlackNotiImg stroke="var(--gray-color)" />
+                <SlackNotiImg />
                 Noti
-              </BottomBtnStyled>
-              <BottomBtnStyled
-                className={
-                  pathname.includes("search")
-                    ? "active cabiButton"
-                    : " cabiButton"
-                }
-                onClick={onClickSearchButton}
-              >
-                <SearchImg stroke="var(--gray-color)" />
-                Search
               </BottomBtnStyled>
               <BottomBtnStyled className="cabiButton">
                 <a
@@ -115,7 +116,7 @@ const LeftMainNav = ({
                   target="_blank"
                   title="슬랙 캐비닛 채널 새창으로 열기"
                 >
-                  <SlackImg stroke="var(--gray-color)" />
+                  <SlackImg stroke="var(--gray-line-btn-color)" />
                   Contact
                 </a>
               </BottomBtnStyled>
@@ -127,14 +128,14 @@ const LeftMainNav = ({
                 }
                 onClick={onClickAdminClubButton}
               >
-                <CulbImg stroke="var(--gray-color)" />
+                <ClubImg />
                 Club
               </BottomBtnStyled>
               <BottomBtnStyled
                 className="cabiButton"
                 onClick={onClickLogoutButton}
               >
-                <LogoutImg stroke="var(--gray-color)" />
+                <LogoutImg />
                 Logout
               </BottomBtnStyled>
             </>
@@ -143,13 +144,24 @@ const LeftMainNav = ({
             <>
               <BottomBtnStyled
                 className={
+                  pathname.includes("store")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                onClick={onClickStoreButton}
+              >
+                <StoreImg />
+                Store
+              </BottomBtnStyled>
+              <BottomBtnStyled
+                className={
                   pathname.includes("clubs")
                     ? "active cabiButton"
                     : " cabiButton"
                 }
                 onClick={onClickMainClubButton}
               >
-                <CulbImg stroke="var(--gray-color)" />
+                <ClubImg />
                 Clubs
               </BottomBtnStyled>
               <BottomBtnStyled
@@ -160,7 +172,7 @@ const LeftMainNav = ({
                 }
                 onClick={onClickProfileButton}
               >
-                <ProfileImg stroke="var(--gray-color)" width={32} height={32} />
+                <ProfileImg />
                 Profile
               </BottomBtnStyled>
             </>
@@ -181,6 +193,7 @@ const LeftNavStyled = styled.nav`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  font-size: var(--size-base);
 `;
 
 const TopSectionStyled = styled.section`
@@ -197,18 +210,20 @@ const TopBtnStyled = styled.li`
   width: 100%;
   height: 48px;
   line-height: 48px;
+  /*   font-size: var(--size-base); */
+  font-size: var(--size-base);
   font-weight: 300;
   margin-bottom: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
   cursor: pointer;
   &:last-child {
     margin-bottom: 0;
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--white);
-      background-color: var(--main-color);
+      color: var(--white-text-with-bg-color);
+      background-color: var(--sys-main-color);
     }
   }
 `;
@@ -229,6 +244,7 @@ const BottomSectionStyled = styled.section`
     background-color: var(--line-color);
   }
 `;
+
 const BottomBtnsStyled = styled.ul`
   padding: 30px 10px;
   text-align: center;
@@ -238,19 +254,22 @@ const BottomBtnStyled = styled.li`
   width: 100%;
   min-height: 48px;
   line-height: 1.125rem;
+  font-size: var(--size-base);
   font-weight: 300;
   margin-top: 2.5vh;
   border-radius: 10px;
-  color: var(--gray-color);
+  color: var(--gray-line-btn-color);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+
   &:first-child {
     margin-top: 0;
   }
   & a {
-    color: var(--gray-color);
+    color: var(--gray-line-btn-color);
   }
   & div {
     width: 24px;
@@ -259,22 +278,25 @@ const BottomBtnStyled = styled.li`
     margin-bottom: 4px;
   }
   &.active {
-    color: var(--main-color);
+    color: var(--button-line-color);
     svg {
-      stroke: var(--main-color);
+      stroke: var(--button-line-color);
     }
   }
-  svg {
+  & > svg {
     margin: 0 auto;
+    width: 24px;
+    height: 24px;
+    stroke: var(--gray-line-btn-color);
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--main-color);
+      color: var(--button-line-color);
       svg {
-        stroke: var(--main-color);
+        stroke: var(--button-line-color);
       }
       a {
-        color: var(--main-color);
+        color: var(--button-line-color);
       }
     }
   }

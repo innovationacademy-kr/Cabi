@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import { CardContentWrapper } from "@/Cabinet/components/Card/CardStyles";
 import ClubMemoModalContainer from "@/Cabinet/components/Modals/ClubModal/ClubMemoModal.container";
+import { ReactComponent as EditIcon } from "@/Cabinet/assets/images/edit.svg";
 
 const ClubNoticeCard = ({
   notice,
@@ -30,16 +31,16 @@ const ClubNoticeCard = ({
             ? [
                 {
                   onClick: openModal,
-                  icon: "/src/Cabinet/assets/images/edit.svg",
+                  icon: EditIcon,
                   isClickable: true,
                 },
               ]
             : [
                 // NOTE: 이 부분은 레이아웃을 유지하기 위한 placeholder 버튼입니다.
                 {
-                  backgroundColor: "var(--lightgray-color)",
+                  backgroundColor: "var(--card-bg-color)",
                   onClick: () => {},
-                  icon: "",
+                  icon: null,
                   isClickable: false,
                 },
               ]

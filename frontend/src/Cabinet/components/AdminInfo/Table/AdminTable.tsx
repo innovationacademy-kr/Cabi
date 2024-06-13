@@ -80,18 +80,18 @@ const TableWrapperStyled = styled.div`
   width: 80%;
   height: 100%;
   margin: 0 auto;
-  background: var(--white);
+  background: var(--bg-color);
 `;
 
 const TableBorderStyled = styled.div`
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 10px 10px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 10px 0px var(--table-border-shadow-color-200);
 `;
 
 const TableStyled = styled.table`
   width: 100%;
-  background: var(--white);
+  background: var(--bg-color);
   overflow: scroll;
 
   @media screen and (max-width: 1300px) {
@@ -103,8 +103,8 @@ const TheadStyled = styled.thead`
   width: 100%;
   height: 45px;
   line-height: 45px;
-  background-color: var(--main-color);
-  color: var(--white);
+  background-color: var(--sys-main-color);
+  color: var(--white-text-with-bg-color);
 `;
 
 const TbodyStyled = styled.tbody`
@@ -117,7 +117,7 @@ const TbodyStyled = styled.tbody`
     line-height: 45px;
   }
   & > tr:nth-child(2n) {
-    background: #f9f6ff;
+    background: var(--table-even-row-bg-color);
   }
   cursor: pointer;
 

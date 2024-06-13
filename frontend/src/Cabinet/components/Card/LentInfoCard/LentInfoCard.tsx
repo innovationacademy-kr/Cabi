@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Card from "@/Cabinet/components/Card/Card";
+import Card, { IButtonProps } from "@/Cabinet/components/Card/Card";
 import {
   CardContentStyled,
   CardContentWrapper,
@@ -7,10 +7,11 @@ import {
   ContentInfoStyled,
 } from "@/Cabinet/components/Card/CardStyles";
 import { MyCabinetInfo } from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
-import { cabinetIconSrcMap } from "@/Cabinet/assets/data/maps";
+import { cabinetIconComponentMap } from "@/Cabinet/assets/data/maps";
+import { IItemTimeRemaining } from "@/Cabinet/types/dto/store.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
-import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
+import StoreBuyPenalty from "../../Modals/StoreModal/StoreBuyPenaltyModal";
 
 const calculateFontSize = (userCount: number): string => {
   const baseSize = 1;
@@ -27,94 +28,111 @@ const calculateFontSize = (userCount: number): string => {
 const LentInfoCard = ({
   cabinetInfo,
   unbannedAt,
+  button,
+  isModalOpen,
+  remainPenaltyPeriod,
+  onClose,
 }: {
   cabinetInfo: MyCabinetInfo;
   unbannedAt: Date | null | undefined;
+  button: IButtonProps | undefined;
+  isModalOpen: boolean;
+  remainPenaltyPeriod: IItemTimeRemaining | null;
+  onClose: () => void;
 }) => {
+  const CabinetIcon = cabinetIconComponentMap[cabinetInfo.lentType];
   return (
-    <Card
-      title={"대여정보"}
-      gridArea={"lentInfo"}
-      width={"350px"}
-      height={"366px"}
-    >
-      <>
-        <CabinetInfoWrapper>
-          <CabinetRectangleStyled
-            isLented={cabinetInfo.isLented}
-            status={cabinetInfo.status as CabinetStatus}
-            banned={!!unbannedAt}
-          >
-            {cabinetInfo.visibleNum !== 0
-              ? cabinetInfo.visibleNum
-              : !!unbannedAt
-              ? "!"
-              : "-"}
-          </CabinetRectangleStyled>
-          <CabinetInfoDetailStyled>
-            <CabinetInfoTextStyled
-              fontSize={cabinetInfo.floor !== 0 ? "1rem" : "0.9rem"}
-              fontColor="var(--gray-color)"
+    <>
+      <Card
+        title={"대여정보"}
+        gridArea={"lentInfo"}
+        width={"350px"}
+        height={"366px"}
+        buttons={button ? [button] : []}
+      >
+        <>
+          <CabinetInfoWrapper>
+            <CabinetRectangleStyled
+              isLented={cabinetInfo.isLented}
+              status={cabinetInfo.status as CabinetStatus}
+              banned={!!unbannedAt}
             >
-              {cabinetInfo.floor !== 0
-                ? cabinetInfo.floor + "층 - " + cabinetInfo.section
-                : "대여 중이 아닌 사용자"}
-            </CabinetInfoTextStyled>
-
-            <CabinetUserListWrapper>
-              <CabinetIconStyled
-                title={cabinetInfo.lentType}
-                cabinetType={cabinetInfo.lentType}
-              />
+              {cabinetInfo.visibleNum !== 0
+                ? cabinetInfo.visibleNum
+                : !!unbannedAt
+                ? "!"
+                : "-"}
+            </CabinetRectangleStyled>
+            <CabinetInfoDetailStyled>
               <CabinetInfoTextStyled
-                fontSize={calculateFontSize(cabinetInfo.userCount)}
-                fontColor="black"
+                fontSize={cabinetInfo.floor !== 0 ? "1rem" : "0.9rem"}
+                fontColor="var(--gray-line-btn-color)"
               >
-                {cabinetInfo.userNameList}
+                {cabinetInfo.floor !== 0
+                  ? cabinetInfo.floor + "층 - " + cabinetInfo.section
+                  : "대여 중이 아닌 사용자"}
               </CabinetInfoTextStyled>
-            </CabinetUserListWrapper>
-          </CabinetInfoDetailStyled>
-        </CabinetInfoWrapper>
-        <CardContentWrapper>
-          <CardContentStyled>
-            <ContentInfoStyled>사용 기간</ContentInfoStyled>
-            <ContentDetailStyled>
-              {cabinetInfo?.isLented && cabinetInfo.status != "IN_SESSION"
-                ? `${cabinetInfo.dateUsed}일`
-                : "-"}
-            </ContentDetailStyled>
-          </CardContentStyled>
-          <CardContentStyled>
-            <ContentInfoStyled>
-              {cabinetInfo?.status === "OVERDUE" ? "연체 기간" : "남은 기간"}
-            </ContentInfoStyled>
-            <ContentDetailStyled status={cabinetInfo.status as CabinetStatus}>
-              {cabinetInfo?.expireDate ? `${cabinetInfo.dateLeft}일` : "-"}
-            </ContentDetailStyled>
-          </CardContentStyled>
-          <CardContentStyled>
-            <ContentInfoStyled>
-              {!!unbannedAt ? "패널티 종료 일자" : "종료 일자"}
-            </ContentInfoStyled>
-            <ContentDetailStyled>
-              {!!unbannedAt
-                ? formatDate(new Date(unbannedAt), ".")
-                : cabinetInfo?.expireDate
-                ? formatDate(new Date(cabinetInfo?.expireDate), ".")
-                : "-"}
-            </ContentDetailStyled>
-          </CardContentStyled>
-        </CardContentWrapper>
-        <CardContentWrapper>
-          <CardContentStyled>
-            <ContentInfoStyled>이전 대여자</ContentInfoStyled>
-            <ContentDetailStyled>
-              {cabinetInfo?.previousUserName || "-"}
-            </ContentDetailStyled>
-          </CardContentStyled>
-        </CardContentWrapper>
-      </>
-    </Card>
+
+              <CabinetUserListWrapper>
+                <CabinetIconStyled title={cabinetInfo.lentType}>
+                  <CabinetIcon />
+                </CabinetIconStyled>
+                <CabinetInfoTextStyled
+                  fontSize={calculateFontSize(cabinetInfo.userCount)}
+                  fontColor="var(--normal-text-color)"
+                >
+                  {cabinetInfo.userNameList}
+                </CabinetInfoTextStyled>
+              </CabinetUserListWrapper>
+            </CabinetInfoDetailStyled>
+          </CabinetInfoWrapper>
+          <CardContentWrapper>
+            <CardContentStyled>
+              <ContentInfoStyled>사용 기간</ContentInfoStyled>
+              <ContentDetailStyled>
+                {cabinetInfo?.isLented && cabinetInfo.status != "IN_SESSION"
+                  ? `${cabinetInfo.dateUsed}일`
+                  : "-"}
+              </ContentDetailStyled>
+            </CardContentStyled>
+            <CardContentStyled>
+              <ContentInfoStyled>
+                {cabinetInfo?.status === "OVERDUE" ? "연체 기간" : "남은 기간"}
+              </ContentInfoStyled>
+              <ContentDetailStyled status={cabinetInfo.status as CabinetStatus}>
+                {cabinetInfo?.expireDate ? `${cabinetInfo.dateLeft}일` : "-"}
+              </ContentDetailStyled>
+            </CardContentStyled>
+            <CardContentStyled>
+              <ContentInfoStyled>
+                {!!unbannedAt ? "페널티 종료 일자" : "종료 일자"}
+              </ContentInfoStyled>
+              <ContentDetailStyled>
+                {!!unbannedAt
+                  ? formatDate(new Date(unbannedAt), ".")
+                  : cabinetInfo?.expireDate
+                  ? formatDate(new Date(cabinetInfo?.expireDate), ".")
+                  : "-"}
+              </ContentDetailStyled>
+            </CardContentStyled>
+          </CardContentWrapper>
+          <CardContentWrapper>
+            <CardContentStyled>
+              <ContentInfoStyled>이전 대여자</ContentInfoStyled>
+              <ContentDetailStyled>
+                {cabinetInfo?.previousUserName || "-"}
+              </ContentDetailStyled>
+            </CardContentStyled>
+          </CardContentWrapper>
+        </>
+      </Card>
+      {isModalOpen && (
+        <StoreBuyPenalty
+          onClose={onClose}
+          remainPenaltyPeriod={remainPenaltyPeriod}
+        />
+      )}
+    </>
   );
 };
 
@@ -134,21 +152,21 @@ const CabinetRectangleStyled = styled.div<{
   height: 60px;
   line-height: ${(props) => (props.status === "IN_SESSION" ? "56px" : "60px")};
   border: ${(props) =>
-    props.status === "IN_SESSION" && "2px solid var(--main-color);"};
+    props.status === "IN_SESSION" && "2px solid var(--sys-main-color);"};
   border-radius: 10px;
   margin-right: 20px;
   background-color: ${(props) =>
     props.banned
-      ? "var(--expired)"
+      ? "var(--expired-color)"
       : props.isLented
-      ? "var(--mine)"
-      : "var(--full)"};
+      ? "var(--mine-color)"
+      : "var(--full-color)"};
   color: ${(props) =>
     props.banned
-      ? "var(--white)"
+      ? "var(--white-text-with-bg-color)"
       : props.status === "IN_SESSION"
-      ? "var(--main-color)"
-      : "var(--black)"};
+      ? "var(--sys-main-color)"
+      : "var(--mine-text-color)"};
   font-size: 2rem;
   text-align: center;
 `;
@@ -177,13 +195,19 @@ const CabinetUserListWrapper = styled.div`
   align-items: center;
 `;
 
-const CabinetIconStyled = styled.div<{ cabinetType: CabinetType }>`
+const CabinetIconStyled = styled.div`
   width: 18px;
   height: 18px;
   margin-right: 10px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
-  background-size: contain;
-  background-repeat: no-repeat;
+
+  & > svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  & > svg > path {
+    stroke: var(--normal-text-color);
+  }
 `;
 
 export default LentInfoCard;
