@@ -15,9 +15,10 @@ import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.item.service.ItemCommandService;
 import org.ftclub.cabinet.item.service.ItemHistoryCommandService;
 import org.ftclub.cabinet.item.service.ItemHistoryQueryService;
-import org.ftclub.cabinet.item.service.ItemPolicyService;
 import org.ftclub.cabinet.item.service.ItemQueryService;
+import org.ftclub.cabinet.item.service.ItemRedisService;
 import org.ftclub.cabinet.mapper.ItemMapper;
+import org.ftclub.cabinet.utils.lock.LockUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,9 @@ public class AdminItemFacadeService {
 	private final ItemCommandService itemCommandService;
 	private final ItemHistoryCommandService itemHistoryCommandService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
-	private final ItemPolicyService itemPolicyService;
 	private final ItemMapper itemMapper;
+
+	private final ItemRedisService itemRedisService;
 
 	@Transactional
 	public void createItem(Integer Price, Sku sku, ItemType type) {
@@ -45,6 +47,13 @@ public class AdminItemFacadeService {
 		LocalDateTime now = null;
 		if (item.getPrice() > 0) {
 			now = LocalDateTime.now();
+			userIds.forEach(userId -> LockUtil.lockRedisCoin(userId, () -> {
+				long coinAmount = itemRedisService.getCoinAmount(userId);
+				itemRedisService.saveCoinCount(userId, coinAmount + item.getPrice());
+
+				long totalCoinSupply = itemRedisService.getTotalCoinSupply();
+				itemRedisService.saveTotalCoinSupply(totalCoinSupply + item.getPrice());
+			}));
 		}
 		itemHistoryCommandService.createItemHistories(userIds, item.getId(), now);
 	}
