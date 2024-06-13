@@ -712,7 +712,7 @@ CREATE TABLE `item`
 (
     `id`    bigint(20)  NOT NULL AUTO_INCREMENT,
     `price` bigint(20)  NOT NULL,
-    `sku`   varchar(64) NOT NULL,
+    `sku`   varchar(64) NOT NULL UNIQUE,
     `type`  varchar(64) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
@@ -737,7 +737,12 @@ VALUES (1, 0, 'EXTENSION_PREV', 'EXTENSION'),
        (12, 200, 'COIN_REWARD_200', 'COIN_REWARD'),
        (13, 500, 'COIN_REWARD_500', 'COIN_REWARD'),
        (14, 1000, 'COIN_REWARD_1000', 'COIN_REWARD'),
-       (15, 2000, 'COIN_REWARD_2000', 'COIN_REWARD');
+       (15, 2000, 'COIN_REWARD_2000', 'COIN_REWARD'),
+       (16, 100, 'ADMIN_REWARD_100', 'ADMIN_REWARD'),
+       (17, 200, 'ADMIN_REWARD_200', 'ADMIN_REWARD'),
+       (18, 500, 'ADMIN_REWARD_500', 'ADMIN_REWARD'),
+       (19, 1000, 'ADMIN_REWARD_1000', 'ADMIN_REWARD'),
+       (20, 2000, 'ADMIN_REWARD_2000', 'ADMIN_REWARD');
 /*!40000 ALTER TABLE `item`
     ENABLE KEYS */;
 UNLOCK TABLES;
