@@ -1,11 +1,11 @@
-import { useState } from "react";
+import {useState} from "react";
 import styled from "styled-components";
 import UnavailableDataInfo from "@/Cabinet/components/Common/UnavailableDataInfo";
-import { ItemIconMap, ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
+import {ItemIconMap, ItemTypeLabelMap} from "@/Cabinet/assets/data/maps";
 import CautionIcon from "@/Cabinet/assets/images/cautionSign.svg";
-import { ReactComponent as SelectIcon } from "@/Cabinet/assets/images/select.svg";
-import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
-import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
+import {ReactComponent as SelectIcon} from "@/Cabinet/assets/images/select.svg";
+import {IStoreItem} from "@/Cabinet/types/dto/store.dto";
+import {StoreItemType} from "@/Cabinet/types/enum/store.enum";
 
 const convertToItemTypeLabel = (itemType: string) => {
   switch (itemType) {
@@ -38,13 +38,13 @@ const convertToItemType = (itemType: string) => {
 const convertToItemTooltip = (itemType: string) => {
   switch (itemType) {
     case "extensionItems":
-      return "연장권은 사물함을 대여한 상태에서 우측 상단의 사물함 아이콘을 선택하면 연장권 사용하기 버튼이 있습니다";
+      return "사물함을 대여한 상태에서 우측 상단의 사물함 아이콘을 선택하면 연장권 사용하기 버튼이 있습니다";
     case "swapItems":
-      return "이사권은 사물함을 대여한 상태에서 다른 개인 사물함을 선택하면 대여버튼 대신에 이사하기 버튼이 있습니다";
+      return "사물함을 대여한 상태에서 다른 개인 사물함을 선택하면 대여버튼 대신에 이사하기 버튼이 있습니다";
     case "alarmItems":
-      return "알림 등록권은 동아리 사물함을 제외한 사물함들이 있는 페이지의 우측 상단에 하트를 누르면 사용할 수 있습니다";
+      return "사물함 페이지의 우측 상단에 하트를 눌러 사용합니다. 프로파일에서 설정한 경로로 알림을 받습니다";
     case "penaltyItems":
-      return "페널티 감면권은 페널티가 있는 상태에서 프로파일 -> 내 정보 -> 대여정보카드의 우측상단에 버튼이 있습니다.";
+      return "페널티가 있는 유저에 한해 프로파일 -> 내 정보 -> 대여정보카드의 우측상단에 버튼이 활성화 됩니다";
   }
 };
 
@@ -54,9 +54,9 @@ const extractNumber = (str: string) => {
 };
 
 const InventoryItem = ({
-  itemsType,
-  items,
-}: {
+                         itemsType,
+                         items,
+                       }: {
   itemsType: string;
   items: IStoreItem[];
 }) => {
@@ -83,69 +83,69 @@ const InventoryItem = ({
   };
 
   return (
-    <>
-      <ItemWrapperStyled>
-        <ItemTitleWrapperStyled
-          isToggled={isToggled}
-          onClick={onClickToggleBtn}
-        >
-          <ItemTitleStyled>
-            <h2>{convertToItemTypeLabel(itemsType)}</h2>
-            <CautionWrapperStyled>
-              <CautionIconStyled
-                src={CautionIcon}
-                alt="Notification Icon"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              />
-              {showTooltip && (
-                <TooltipBoxDateStyled
-                  onMouseEnter={() => handleMouseEnter()}
-                  onMouseLeave={() => handleMouseLeave()}
-                >
-                  {itemTooltip}
-                </TooltipBoxDateStyled>
-              )}
-            </CautionWrapperStyled>
-          </ItemTitleStyled>
-          <button>
-            <SelectIcon />
-          </button>
-        </ItemTitleWrapperStyled>
-        <ItemCardSectionStyled isToggled={isToggled}>
-          {sortedItems.length ? (
-            <>
-              {sortedItems.map((item, idx) => {
-                const hasTypes =
-                  item.itemDetails !== convertToItemTypeLabel(itemsType);
-                return (
-                  <ItemCardStyled key={idx} hasTypes={hasTypes}>
-                    <ItemIconStyled itemType={itemType}>
-                      <ItemIcon />
-                    </ItemIconStyled>
-                    <CardTextStyled hasTypes={hasTypes}>
+      <>
+        <ItemWrapperStyled>
+          <ItemTitleWrapperStyled
+              isToggled={isToggled}
+              onClick={onClickToggleBtn}
+          >
+            <ItemTitleStyled>
+              <h2>{convertToItemTypeLabel(itemsType)}</h2>
+              <CautionWrapperStyled>
+                <CautionIconStyled
+                    src={CautionIcon}
+                    alt="Notification Icon"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                />
+                {showTooltip && (
+                    <TooltipBoxDateStyled
+                        onMouseEnter={() => handleMouseEnter()}
+                        onMouseLeave={() => handleMouseLeave()}
+                    >
+                      {itemTooltip}
+                    </TooltipBoxDateStyled>
+                )}
+              </CautionWrapperStyled>
+            </ItemTitleStyled>
+            <button>
+              <SelectIcon/>
+            </button>
+          </ItemTitleWrapperStyled>
+          <ItemCardSectionStyled isToggled={isToggled}>
+            {sortedItems.length ? (
+                <>
+                  {sortedItems.map((item, idx) => {
+                    const hasTypes =
+                        item.itemDetails !== convertToItemTypeLabel(itemsType);
+                    return (
+                        <ItemCardStyled key={idx} hasTypes={hasTypes}>
+                          <ItemIconStyled itemType={itemType}>
+                            <ItemIcon/>
+                          </ItemIconStyled>
+                          <CardTextStyled hasTypes={hasTypes}>
                       <span id="title">
                         {convertToItemTypeLabel(itemsType)}
                       </span>
-                      {hasTypes && <span id="type">{item.itemDetails}</span>}
-                    </CardTextStyled>
-                  </ItemCardStyled>
-                );
-              })}
-            </>
-          ) : (
-            !isToggled && (
-              <UnavailableDataInfo
-                msg="해당 아이템을 보유하고 있지 않습니다"
-                fontSize="1rem"
-                iconWidth="24px"
-                iconHeight="24px"
-              />
-            )
-          )}
-        </ItemCardSectionStyled>
-      </ItemWrapperStyled>
-    </>
+                            {hasTypes && <span id="type">{item.itemDetails}</span>}
+                          </CardTextStyled>
+                        </ItemCardStyled>
+                    );
+                  })}
+                </>
+            ) : (
+                !isToggled && (
+                    <UnavailableDataInfo
+                        msg="해당 아이템을 보유하고 있지 않습니다"
+                        fontSize="1rem"
+                        iconWidth="24px"
+                        iconHeight="24px"
+                    />
+                )
+            )}
+          </ItemCardSectionStyled>
+        </ItemWrapperStyled>
+      </>
   );
 };
 
@@ -171,7 +171,7 @@ const ItemIconStyled = styled.div<{ itemType: StoreItemType }>`
   & > svg > path {
     stroke: var(--sys-main-color);
     stroke-width: ${(props) =>
-      props.itemType === StoreItemType.EXTENSION ? "2.8px" : "1.5px"};
+        props.itemType === StoreItemType.EXTENSION ? "2.8px" : "1.5px"};
   }
 `;
 
@@ -210,7 +210,7 @@ const ItemTitleWrapperStyled = styled.div<{ isToggled: boolean }>`
     z-index: 2;
     height: 30px;
     transform: ${(props) =>
-      props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
+        props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
   }
 
   & > button > svg > path {
@@ -248,6 +248,7 @@ const CautionIconStyled = styled.img`
   width: 16px;
   height: 16px;
   opacity: 0.6;
+
   :hover {
     cursor: pointer;
     opacity: 1;
@@ -288,9 +289,9 @@ const TooltipBoxDateStyled = styled.div`
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent var(--tooltip-shadow-color) transparent
-      transparent;
+    border-color: transparent var(--tooltip-shadow-color) transparent transparent;
   }
+
   ${ItemTitleStyled}:hover & {
     opacity: 1;
   }
