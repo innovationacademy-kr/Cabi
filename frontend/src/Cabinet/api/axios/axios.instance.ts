@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestHeaders } from "axios";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import { STATUS_401_UNAUTHORIZED } from "@/Cabinet/constants/StatusCode";
 
@@ -13,7 +13,7 @@ instance.interceptors.request.use(async (config) => {
   const token = getCookie("admin_access_token") ?? getCookie("access_token");
   config.headers = {
     Authorization: `Bearer ${token}`,
-  };
+  } as Partial<AxiosRequestHeaders>;
   return config;
 });
 
