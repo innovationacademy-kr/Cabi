@@ -2,7 +2,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import styled from "styled-components";
 import { ICoinCollectInfoDto } from "@/Cabinet/types/dto/store.dto";
 
-const keys = ["5회", "10회", "15회", "20회", "전체"];
+const keys = ["1~5회", "6~10회", "11~15회", "16~20회", "전체"];
 
 interface IConvertedData {
   cnt: string;
@@ -27,8 +27,8 @@ const convert = (data: ICoinCollectInfoDto[]) => {
       ary = [
         ...ary,
         {
-          cnt: cur.coinCount + "회",
-          [cur.coinCount + "회"]: userTotalPerCnt,
+          cnt: cur.coinCount - 4 + "~" + cur.coinCount + "회",
+          [cur.coinCount - 4 + "~" + cur.coinCount + "회"]: userTotalPerCnt,
         },
       ];
       userTotal += userTotalPerCnt;
@@ -68,7 +68,7 @@ const StoreHorizontalBarChart = ({ data }: { data: ICoinCollectInfoDto[] }) => {
           axis: { ticks: { text: { fontSize: "14px" } } },
           textColor: "var(--normal-text-color)",
         }}
-        margin={{ top: 20, right: 70, bottom: 80, left: 80 }}
+        margin={{ top: 20, right: 60, bottom: 80, left: 80 }}
         colors={[
           "var(--ref-purple-200)",
           "var(--ref-purple-300)",
@@ -113,7 +113,7 @@ const HalfPieChartStyled = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1100px) {
     width: 100%;
   }
 `;
