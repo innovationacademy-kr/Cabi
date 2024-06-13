@@ -42,7 +42,7 @@ public enum Sku {
 		if (this.equals(EXTENSION_3) || this.equals(PENALTY_3)) {
 			return 3;
 		}
-		if (this.equals(EXTENSION_31) || this.equals(PENALTY_31)) {
+		if (this.equals(EXTENSION_31) || this.equals(PENALTY_31) || this.equals(EXTENSION_PREV)) {
 			return 31;
 		}
 		if (this.equals(EXTENSION_15)) {
