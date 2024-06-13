@@ -11,12 +11,7 @@ import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg
 import { ReactComponent as Select } from "@/Cabinet/assets/images/selectMaincolor.svg";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import { axiosCoinLog } from "@/Cabinet/api/axios/axios.custom";
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-};
+import { formatDate } from "@/Cabinet/utils/dateUtils";
 
 const toggleList: toggleItem[] = [
   { name: "전체", key: CoinLogToggleType.ALL },
@@ -42,16 +37,14 @@ const CoinLog = () => {
     CoinLogToggleType.ALL
   );
   const [coinLogs, setCoinLogs] = useState<ICoinLog[] | null>(null);
-  const [logsLength, setLogsLength] = useState(0);
   const [page, setPage] = useState(0);
   const [moreButton, setMoreButton] = useState<boolean>(false);
   const [moreBtnIsLoading, setMoreBtnIsLoading] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userInfo] = useRecoilState(userState);
   const size = 5;
+  // NOTE : size 만큼 데이터 불러옴
 
   const getCoinLog = async (type: CoinLogToggleType) => {
-    setIsLoading(true);
     try {
       const response = await axiosCoinLog(type, page, size);
       if (page === 0) {
@@ -61,13 +54,11 @@ const CoinLog = () => {
           prev ? [...prev, ...response.data.result] : response.data.result
         );
       }
-      setLogsLength(response.data.totalLength);
       setMoreButton(response.data.result.length === size);
     } catch (error) {
       console.error("Error getting coin log:", error);
       setMoreButton(false);
     } finally {
-      setIsLoading(false);
       setMoreBtnIsLoading(false);
     }
   };
@@ -84,7 +75,6 @@ const CoinLog = () => {
   useEffect(() => {
     setPage(0);
     setCoinLogs(null);
-    setIsLoading(true);
   }, [toggleType]);
 
   return (
@@ -111,9 +101,7 @@ const CoinLog = () => {
           <LogItemWrapperStyled>
             {coinLogs.map((log, idx) => (
               <LogItemStyled isEarned={log.amount > 0} key={idx}>
-                <span id="date">
-                  {new Date(log.date).toLocaleString("ko-KR", dateOptions)}
-                </span>
+                <span id="date">{formatDate(new Date(log.date), ".")}</span>
                 <span id="history" title={log.history}>
                   {log.history}{" "}
                   {log.itemDetails !== log.history && "- " + log.itemDetails}
