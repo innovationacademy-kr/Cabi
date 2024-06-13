@@ -31,6 +31,7 @@ const extensionPeriod = [
   { sku: "EXTENSION_3", period: "3일", day: 3 },
   { sku: "EXTENSION_15", period: "15일", day: 15 },
   { sku: "EXTENSION_31", period: "31일", day: 31 },
+  { sku: "EXTENSION_PREV", period: "출석 연장권 보상", day: 30 },
 ];
 
 const ExtendModal: React.FC<{
@@ -89,7 +90,10 @@ const ExtendModal: React.FC<{
   const [selectedOption, setSelectedOption] = useState(0);
 
   const findMyExtension = (period: string) => {
-    return !myItems?.extensionItems.some((item) => item.itemDetails === period);
+    return !myItems?.extensionItems.some((item) => {
+      console.log("item : ", item);
+      return item.itemDetails === period;
+    });
   };
 
   // 연장권이 하나라도 없다면 true
@@ -97,7 +101,8 @@ const ExtendModal: React.FC<{
     return (
       findMyExtension("3일") &&
       findMyExtension("15일") &&
-      findMyExtension("31일")
+      findMyExtension("31일") &&
+      findMyExtension("출석 연장권 보상")
     );
   };
 
@@ -105,12 +110,14 @@ const ExtendModal: React.FC<{
     if (!findMyExtension(extensionPeriod[0].period)) return 3;
     if (!findMyExtension(extensionPeriod[1].period)) return 15;
     if (!findMyExtension(extensionPeriod[2].period)) return 31;
+    if (!findMyExtension(extensionPeriod[3].period)) return 30;
     else return 0;
   };
   const getDefaultOption = (option: number) => {
     if (option == 3) return 0;
     else if (option == 15) return 1;
-    else return 2;
+    else if (option == 31) return 2;
+    else return 3;
   };
 
   const getMyItems = async () => {
@@ -145,12 +152,12 @@ const ExtendModal: React.FC<{
     setSelectedOption(getDefaultOption(extensionDate));
   }, [extensionDate]);
 
-
   const handleDropdownChange = (option: number) => {
     setSelectedOption(option);
     setExtensionDate(extensionPeriod[option].day);
   };
 
+  console.log("!!! : ", extensionPeriod[2].period);
   const extensionDropdownProps = {
     options: [
       {
@@ -168,10 +175,17 @@ const ExtendModal: React.FC<{
         value: 2,
         isDisabled: findMyExtension(extensionPeriod[2].period),
       },
+      {
+        name: extensionPeriod[3].period,
+        value: 3,
+        isDisabled: findMyExtension(extensionPeriod[3].period),
+      },
     ],
     defaultValue: findMyExtension(extensionPeriod[0].period)
       ? findMyExtension(extensionPeriod[1].period)
-        ? extensionPeriod[2].period
+        ? findMyExtension(extensionPeriod[2].period)
+          ? extensionPeriod[3].period
+          : extensionPeriod[2].period
         : extensionPeriod[1].period
       : extensionPeriod[0].period,
     onChangeValue: handleDropdownChange,
@@ -227,8 +241,6 @@ const ExtendModal: React.FC<{
       setShowResponseModal(true);
     }
   };
-
-
 
   const extendModalContents: IModalContents = {
     type: myInfo.cabinetId === null ? "penaltyBtn" : "hasProceedBtn",
