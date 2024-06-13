@@ -34,9 +34,11 @@ const SearchPage = lazy(() => import("@/Cabinet/pages/admin/SearchPage"));
 const AdminClubPage = lazy(() => import("@/Cabinet/pages/admin/AdminClubPage"));
 const AdminLoginFailurePage = lazy(
   () => import("@/Cabinet/pages/admin/AdminLoginFailurePage")
-
 );
 const AdminHomePage = lazy(() => import("@/Cabinet/pages/admin/AdminHomePage"));
+const AdminSlackNotiPage = lazy(
+  () => import("@/Cabinet/pages/admin/AdminSlackNotiPage")
+);
 
 function App(): React.ReactElement {
   return (
