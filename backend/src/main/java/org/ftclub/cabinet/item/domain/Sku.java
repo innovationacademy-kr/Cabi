@@ -24,21 +24,18 @@ public enum Sku {
 	COIN_REWARD_500("동전 줍기 20일 보상"),
 	COIN_REWARD_1000("동전 줍기 20일 보상"),
 	COIN_REWARD_2000("동전 줍기 20일 보상"),
+
+	ADMIN_REWARD_100("보상"),
+	ADMIN_REWARD_200("보상"),
+	ADMIN_REWARD_500("보상"),
+	ADMIN_REWARD_1000("보상"),
+	ADMIN_REWARD_2000("보상"),
 	;
 
 	private final String details;
 
 	Sku(String details) {
 		this.details = details;
-	}
-
-	public boolean isValid() {
-		return this.equals(EXTENSION_3) || this.equals(EXTENSION_15) || this.equals(EXTENSION_31)
-				|| this.equals(PENALTY_3) || this.equals(PENALTY_7) || this.equals(PENALTY_31)
-				|| this.equals(SWAP) || this.equals(ALARM) || this.equals(COIN_COLLECT)
-				|| this.equals(COIN_FULL_TIME) || this.equals(COIN_REWARD_200)
-				|| this.equals(COIN_REWARD_500) || this.equals(COIN_REWARD_1000)
-				|| this.equals(COIN_REWARD_2000);
 	}
 
 	public Integer getDays() {
