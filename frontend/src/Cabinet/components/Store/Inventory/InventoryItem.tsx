@@ -247,7 +247,7 @@ const CautionIconStyled = styled.img`
   margin-left: 5px;
   width: 16px;
   height: 16px;
-  opacity: 0.6;
+  opacity: 1;
   :hover {
     cursor: pointer;
     opacity: 1;

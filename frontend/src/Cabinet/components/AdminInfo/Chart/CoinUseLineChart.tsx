@@ -41,14 +41,14 @@ const CoinUseLineChart = ({
 
   const yMin = Math.min(...filteredData[0].data.map((d) => d.y));
   const yMax = Math.max(...filteredData[0].data.map((d) => d.y));
-  console.log("ymin, yMax", yMin, yMax);
+
+  // NOTE : y축 scale을 log로 표현하기 위해 Y scale을 설정
+  // ex) 123 이면 100 ~ 1000 사이의 값이니 10^0 ~ 10^3 사이의 값으로 표현
   const getYTickValues = (yMax: number) => {
     let test = yMax;
     let exponent = 1;
 
     while (test >= 10) {
-      console.log("test", test);
-      console.log("exponent", exponent);
       test /= 10;
       exponent++;
     }
@@ -93,17 +93,18 @@ const CoinUseLineChart = ({
             type: "time",
             useUTC: false,
           }}
+          // NOTE : symlog -> log scale에 0 값이 있을때 사용
           yScale={{
             type: "symlog",
             min: yMin,
             max: yMax,
           }}
           yFormat=" >0"
-          // curve="cardinal"
           curve="monotoneX"
           axisTop={null}
           colors={["var(--sys-main-color)"]}
           axisRight={null}
+          // NOTE : x축은 날짜로 표현 -> xFormat가 time으로 되어 있어서  every 1 사용 가능
           axisBottom={{
             format: "%m.%d",
             legendOffset: -12,
