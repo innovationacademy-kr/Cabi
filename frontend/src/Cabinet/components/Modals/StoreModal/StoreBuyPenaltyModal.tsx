@@ -3,6 +3,12 @@ import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
 import Dropdown, { IDropdownProps } from "@/Cabinet/components/Common/Dropdown";
+import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import { IItemTimeRemaining, IStoreItem } from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { StorePenaltyType } from "@/Cabinet/types/enum/store.enum";
@@ -12,12 +18,6 @@ import {
   axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
 import { formatDate, formatDateTime } from "@/Cabinet/utils/dateUtils";
-import Modal, { IModalContents } from "../Modal";
-import ModalPortal from "../ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "../ResponseModal/ResponseModal";
 
 interface PenaltyModalProps {
   onClose: () => void;
