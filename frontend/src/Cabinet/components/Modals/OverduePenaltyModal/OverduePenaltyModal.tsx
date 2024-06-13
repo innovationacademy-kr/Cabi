@@ -23,14 +23,20 @@ const OverduePenaltyModal: React.FC<{
   const penaltyDateDetailStore = hasPenaltyItem
     ? `페널티 기간은 <strong>${formatDate(
         unbannedAtDate,
-        "/"
+        "/",
+        4,
+        2,
+        2
       )} ${formatDateTime(unbannedAtDate, ":")}</strong> 까지 입니다. 
       해당 기간까지 대여를 하실 수 없습니다.
       <strong>페널티 감면권</strong>은 <strong>프로필 페이지 - 대여정보</strong> 에서
       사용하실 수 있습니다`
     : `페널티 기간은 <strong>${formatDate(
         unbannedAtDate,
-        "/"
+        "/",
+        4,
+        2,
+        2
       )} ${formatDateTime(unbannedAtDate, ":")}</strong> 까지 입니다.
       해당 기간까지 대여를 하실 수 없습니다.
       <strong>페널티 감면권</strong>은 <strong>까비 상점</strong> 에서 구매하실수 있습니다`;

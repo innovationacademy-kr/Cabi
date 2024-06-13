@@ -109,9 +109,9 @@ const LentInfoCard = ({
               </ContentInfoStyled>
               <ContentDetailStyled>
                 {!!unbannedAt
-                  ? formatDate(new Date(unbannedAt), ".")
+                  ? formatDate(new Date(unbannedAt), ".", 4, 2, 2)
                   : cabinetInfo?.expireDate
-                  ? formatDate(new Date(cabinetInfo?.expireDate), ".")
+                  ? formatDate(new Date(cabinetInfo?.expireDate), ".", 4, 2, 2)
                   : "-"}
               </ContentDetailStyled>
             </CardContentStyled>

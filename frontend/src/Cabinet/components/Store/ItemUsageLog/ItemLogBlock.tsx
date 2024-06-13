@@ -17,12 +17,12 @@ export function mapItemNameToType(itemName: string): StoreItemType {
   }
 }
 
-const extractItemName = (item: string): string  => {
+const extractItemName = (item: string): string => {
   // 정규 표현식 패턴을 정의합니다. 숫자와 밑줄을 제외한 모든 부분을 추출합니다.
   const pattern = /^[^\d_\-\s]+/;
   const match = item.match(pattern);
   return match ? match[0] : item;
-}
+};
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("ko-KR", {

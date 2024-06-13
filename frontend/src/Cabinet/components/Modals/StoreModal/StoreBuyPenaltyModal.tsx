@@ -112,7 +112,10 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
         setModalContent(
           `해제 날짜 : <strong> ${formatDate(
             unbannedAtDate,
-            "."
+            ".",
+            4,
+            2,
+            2
           )} ${formatDateTime(unbannedAtDate, ":")}</strong> `
         );
       }

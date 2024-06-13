@@ -101,7 +101,9 @@ const CoinLog = () => {
           <LogItemWrapperStyled>
             {coinLogs.map((log, idx) => (
               <LogItemStyled isEarned={log.amount > 0} key={idx}>
-                <span id="date">{formatDate(new Date(log.date), ".")}</span>
+                <span id="date">
+                  {formatDate(new Date(log.date), ".", 4, 2, 2)}
+                </span>
                 <span id="history" title={log.history}>
                   {log.history}{" "}
                   {log.itemDetails !== log.history && "- " + log.itemDetails}
