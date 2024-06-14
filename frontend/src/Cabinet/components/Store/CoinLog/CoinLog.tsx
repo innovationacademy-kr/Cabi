@@ -332,6 +332,7 @@ const SelectIconWrapperStyled = styled.div`
   justify-content: center;
   align-items: center;
   padding-top: 3px;
+  margin-left: 10px;
 
   & > svg {
     width: 13px;
