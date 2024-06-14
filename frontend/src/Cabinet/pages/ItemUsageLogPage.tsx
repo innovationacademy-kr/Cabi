@@ -52,11 +52,11 @@ const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
   const [page, setPage] = useState<number>(0);
   const [hasAdditionalLogs, sethasAdditionalLogs] = useState<boolean>(true);
+  const [isMoreBtnLoading, setIsMoreBtnLoading] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const size = 5;
 
   const getItemUsageLog = async (page: number, size: number) => {
-    setIsLoading(true);
     try {
       const data = await axiosGetItemUsageHistory(page, size);
       const newLogs = createLogEntries(data);
@@ -65,51 +65,72 @@ const ItemUsageLogPage = () => {
     } catch (error) {
       console.error("Failed to fetch item usage history:", error);
     } finally {
+      setIsMoreBtnLoading(false);
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    getItemUsageLog(page, size);
+    setTimeout(() => {
+      getItemUsageLog(page, size);
+    }, 333);
   }, [page]);
 
   const handleMoreClick = () => {
     setPage((prev) => prev + 1);
+    setIsMoreBtnLoading(true);
   };
 
-  return itemUsageLogs.length > 0 ? (
-    <WrapperStyled>
-      <TitleWrapperStyled>아이템 사용내역</TitleWrapperStyled>
-      <ItemUsageLogWrapperStyled>
-        {itemUsageLogs.map((log, idx, logs) => {
-          const isNewMonth = idx === 0 || log.dateStr !== logs[idx - 1].dateStr;
-          return (
-            <LogItemStyled key={idx}>
-              {isNewMonth && (
-                <DateSectionStyled>
-                  <DateTitleStyled>{log.dateStr}</DateTitleStyled>
-                </DateSectionStyled>
+  return (
+    <>
+      {isLoading && (
+        <LoadingAnimationWrapperStyled>
+          <LoadingAnimation />
+        </LoadingAnimationWrapperStyled>
+      )}
+      {!isLoading &&
+        (itemUsageLogs.length > 0 ? (
+          <WrapperStyled>
+            <TitleWrapperStyled>아이템 사용내역</TitleWrapperStyled>
+            <ItemUsageLogWrapperStyled>
+              {itemUsageLogs.map((log, idx, logs) => {
+                const isNewMonth =
+                  idx === 0 || log.dateStr !== logs[idx - 1].dateStr;
+                return (
+                  <LogItemStyled key={idx}>
+                    {isNewMonth && (
+                      <DateSectionStyled>
+                        <DateTitleStyled>{log.dateStr}</DateTitleStyled>
+                      </DateSectionStyled>
+                    )}
+                    <ItemLogBlock log={log} />
+                  </LogItemStyled>
+                );
+              })}
+              {hasAdditionalLogs && (
+                <ButtonContainerStyled>
+                  <MoreButtonStyled
+                    onClick={handleMoreClick}
+                    disabled={isMoreBtnLoading}
+                    isMoreBtnLoading={isMoreBtnLoading}
+                  >
+                    {isMoreBtnLoading ? (
+                      <LoadingAnimation />
+                    ) : (
+                      <>
+                        더보기
+                        <DropdownChevron />
+                      </>
+                    )}
+                  </MoreButtonStyled>
+                </ButtonContainerStyled>
               )}
-              <ItemLogBlock log={log} />
-            </LogItemStyled>
-          );
-        })}
-        {hasAdditionalLogs && (
-          <ButtonContainerStyled>
-            <MoreButtonStyled
-              onClick={handleMoreClick}
-              disabled={isLoading}
-              isLoading={isLoading}
-            >
-              {isLoading ? <LoadingAnimation /> : "더보기"}
-              <DropdownChevron />
-            </MoreButtonStyled>
-          </ButtonContainerStyled>
-        )}
-      </ItemUsageLogWrapperStyled>
-    </WrapperStyled>
-  ) : (
-    <UnavailableDataInfo msg="아이템 사용내역이 없습니다." />
+            </ItemUsageLogWrapperStyled>
+          </WrapperStyled>
+        ) : (
+          <UnavailableDataInfo msg="아이템 사용내역이 없습니다." />
+        ))}
+    </>
   );
 };
 
@@ -162,7 +183,7 @@ const ButtonContainerStyled = styled.div`
 `;
 
 const MoreButtonStyled = styled.button<{
-  isLoading: boolean;
+  isMoreBtnLoading: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -183,6 +204,11 @@ const MoreButtonStyled = styled.button<{
     width: 13px;
     height: 9px;
   }
+`;
+
+const LoadingAnimationWrapperStyled = styled.div`
+  width: 100%;
+  height: 100%;
 `;
 
 export default ItemUsageLogPage;
