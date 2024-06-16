@@ -56,16 +56,6 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       cabinetInfo ? cabinetInfo.lentType : CabinetType.PRIVATE
     ];
 
-  const { closeStore } = useMenu();
-  const [logs, setLogs] = useState<ItemLogResponseType>({
-    itemHistories: [],
-    totalLength: 0,
-  });
-  const [page, setPage] = useState<number>(0);
-  const [totalPage, setTotalPage] = useState<number>(-1);
-  const [needsUpdate, setNeedsUpdate] = useState<boolean>(true);
-  const size = 8;
-
   const clickSearchItem = () => {
     if (
       currentIntraId === name &&
@@ -124,26 +114,12 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     });
     setSelectedTypeOnSearch(CabinetDetailAreaType.ITEM);
     setCurrentIntraId(name);
-    async function getData(page: number) {
-      try {
-        const paginatedData = await axiosGetUserItems(userId, page, size);
-        setLogs({
-          itemHistories: paginatedData.itemHistories,
-          totalLength: paginatedData.totalLength,
-        });
-        setTotalPage(Math.ceil(paginatedData.totalLength / size));
-      } catch {
-        setLogs({ itemHistories: [], totalLength: 0 });
-        setTotalPage(1);
-      }
+    if (cabinetInfo?.cabinetId) {
+      setCurrentCabinetId(cabinetInfo.cabinetId);
+    } else {
+      resetTargetCabinetInfo();
+      setCurrentCabinetId(null);
     }
-    getData(page);
-    // if (cabinetInfo?.cabinetId) {
-    //   setCurrentCabinetId(cabinetInfo.cabinetId);
-    // } else {
-    //   resetTargetCabinetInfo();
-    //   setCurrentCabinetId(null);
-    // }
     openCabinet();
   };
 
