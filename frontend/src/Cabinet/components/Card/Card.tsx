@@ -85,7 +85,7 @@ export const CardHeaderStyled = styled.div<{ cardType?: string }>`
   justify-content: space-between;
   align-items: center;
   padding: ${(props) =>
-    props.cardType === "store" ? "12px 18px 12px 18px" : "20px 20px 10px 30px"};
+    props.cardType === "store" ? "16px 18px 12px 18px" : "20px 20px 10px 30px"};
 `;
 
 const CardTitleWrapperStyled = styled.div`
