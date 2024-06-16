@@ -83,7 +83,9 @@ const CoinUseLineChart = ({
           isInteractive={true}
           animate={true}
           data={filteredData}
-          margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
+          // margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
+          margin={{ top: 80, right: 40, bottom: 50, left: 70 }}
+          // margin={{ top: 80, right: 30, bottom: 50, left: 40 }}
           // xFormat="time:%b %d"
           // %b -> 영어로 달 표시
           xFormat="time:%m.%d"
@@ -107,11 +109,13 @@ const CoinUseLineChart = ({
           // NOTE : x축은 날짜로 표현 -> xFormat가 time으로 되어 있어서  every 1 사용 가능
           axisBottom={{
             format: "%m.%d",
-            legendOffset: -12,
+            // legendOffset: -12,
+            tickPadding: 10, // tick padding
             tickValues: `every 1 ${toggleType.toLowerCase()}`,
           }}
           axisLeft={{
-            legendOffset: 12,
+            // legendOffset: 12,
+            // tickPadding: 5, // tick padding
             tickValues: yTickValues,
           }}
           gridYValues={yTickValues}
