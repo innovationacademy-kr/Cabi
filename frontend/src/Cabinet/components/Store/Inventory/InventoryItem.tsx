@@ -1,11 +1,11 @@
-import {useState} from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import UnavailableDataInfo from "@/Cabinet/components/Common/UnavailableDataInfo";
-import {ItemIconMap, ItemTypeLabelMap} from "@/Cabinet/assets/data/maps";
+import { ItemIconMap, ItemTypeLabelMap } from "@/Cabinet/assets/data/maps";
 import CautionIcon from "@/Cabinet/assets/images/cautionSign.svg";
-import {ReactComponent as SelectIcon} from "@/Cabinet/assets/images/select.svg";
-import {IStoreItem} from "@/Cabinet/types/dto/store.dto";
-import {StoreItemType} from "@/Cabinet/types/enum/store.enum";
+import { ReactComponent as SelectIcon } from "@/Cabinet/assets/images/select.svg";
+import { IStoreItem } from "@/Cabinet/types/dto/store.dto";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
 const convertToItemTypeLabel = (itemType: string) => {
   switch (itemType) {
@@ -54,9 +54,9 @@ const extractNumber = (str: string) => {
 };
 
 const InventoryItem = ({
-                         itemsType,
-                         items,
-                       }: {
+  itemsType,
+  items,
+}: {
   itemsType: string;
   items: IStoreItem[];
 }) => {
@@ -83,69 +83,69 @@ const InventoryItem = ({
   };
 
   return (
-      <>
-        <ItemWrapperStyled>
-          <ItemTitleWrapperStyled
-              isToggled={isToggled}
-              onClick={onClickToggleBtn}
-          >
-            <ItemTitleStyled>
-              <h2>{convertToItemTypeLabel(itemsType)}</h2>
-              <CautionWrapperStyled>
-                <CautionIconStyled
-                    src={CautionIcon}
-                    alt="Notification Icon"
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                />
-                {showTooltip && (
-                    <TooltipBoxDateStyled
-                        onMouseEnter={() => handleMouseEnter()}
-                        onMouseLeave={() => handleMouseLeave()}
-                    >
-                      {itemTooltip}
-                    </TooltipBoxDateStyled>
-                )}
-              </CautionWrapperStyled>
-            </ItemTitleStyled>
-            <button>
-              <SelectIcon/>
-            </button>
-          </ItemTitleWrapperStyled>
-          <ItemCardSectionStyled isToggled={isToggled}>
-            {sortedItems.length ? (
-                <>
-                  {sortedItems.map((item, idx) => {
-                    const hasTypes =
-                        item.itemDetails !== convertToItemTypeLabel(itemsType);
-                    return (
-                        <ItemCardStyled key={idx} hasTypes={hasTypes}>
-                          <ItemIconStyled itemType={itemType}>
-                            <ItemIcon/>
-                          </ItemIconStyled>
-                          <CardTextStyled hasTypes={hasTypes}>
+    <>
+      <ItemWrapperStyled>
+        <ItemTitleWrapperStyled
+          isToggled={isToggled}
+          onClick={onClickToggleBtn}
+        >
+          <ItemTitleStyled>
+            <h2>{convertToItemTypeLabel(itemsType)}</h2>
+            <CautionWrapperStyled>
+              <CautionIconStyled
+                src={CautionIcon}
+                alt="Notification Icon"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              />
+              {showTooltip && (
+                <TooltipBoxDateStyled
+                  onMouseEnter={() => handleMouseEnter()}
+                  onMouseLeave={() => handleMouseLeave()}
+                >
+                  {itemTooltip}
+                </TooltipBoxDateStyled>
+              )}
+            </CautionWrapperStyled>
+          </ItemTitleStyled>
+          <button>
+            <SelectIcon />
+          </button>
+        </ItemTitleWrapperStyled>
+        <ItemCardSectionStyled isToggled={isToggled}>
+          {sortedItems.length ? (
+            <>
+              {sortedItems.map((item, idx) => {
+                const hasTypes =
+                  item.itemDetails !== convertToItemTypeLabel(itemsType);
+                return (
+                  <ItemCardStyled key={idx} hasTypes={hasTypes}>
+                    <ItemIconStyled itemType={itemType}>
+                      <ItemIcon />
+                    </ItemIconStyled>
+                    <CardTextStyled hasTypes={hasTypes}>
                       <span id="title">
                         {convertToItemTypeLabel(itemsType)}
                       </span>
-                            {hasTypes && <span id="type">{item.itemDetails}</span>}
-                          </CardTextStyled>
-                        </ItemCardStyled>
-                    );
-                  })}
-                </>
-            ) : (
-                !isToggled && (
-                    <UnavailableDataInfo
-                        msg="해당 아이템을 보유하고 있지 않습니다"
-                        fontSize="1rem"
-                        iconWidth="24px"
-                        iconHeight="24px"
-                    />
-                )
-            )}
-          </ItemCardSectionStyled>
-        </ItemWrapperStyled>
-      </>
+                      {hasTypes && <span id="type">{item.itemDetails}</span>}
+                    </CardTextStyled>
+                  </ItemCardStyled>
+                );
+              })}
+            </>
+          ) : (
+            !isToggled && (
+              <UnavailableDataInfo
+                msg="해당 아이템을 보유하고 있지 않습니다"
+                fontSize="1rem"
+                iconWidth="24px"
+                iconHeight="24px"
+              />
+            )
+          )}
+        </ItemCardSectionStyled>
+      </ItemWrapperStyled>
+    </>
   );
 };
 
@@ -171,7 +171,7 @@ const ItemIconStyled = styled.div<{ itemType: StoreItemType }>`
   & > svg > path {
     stroke: var(--sys-main-color);
     stroke-width: ${(props) =>
-        props.itemType === StoreItemType.EXTENSION ? "2.8px" : "1.5px"};
+      props.itemType === StoreItemType.EXTENSION ? "2.8px" : "1.5px"};
   }
 `;
 
@@ -210,7 +210,7 @@ const ItemTitleWrapperStyled = styled.div<{ isToggled: boolean }>`
     z-index: 2;
     height: 30px;
     transform: ${(props) =>
-        props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
+      props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
   }
 
   & > button > svg > path {
@@ -281,6 +281,11 @@ const TooltipBoxDateStyled = styled.div`
   opacity: 0;
   transition: opacity 0.5s ease;
 
+  @media screen and (max-width: 420px) {
+    width: 185px;
+    left: 125px;
+  }
+
   &::after {
     content: "";
     position: absolute;
@@ -289,7 +294,8 @@ const TooltipBoxDateStyled = styled.div`
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent var(--tooltip-shadow-color) transparent transparent;
+    border-color: transparent var(--tooltip-shadow-color) transparent
+      transparent;
   }
 
   ${ItemTitleStyled}:hover & {
