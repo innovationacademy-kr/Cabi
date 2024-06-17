@@ -34,7 +34,7 @@ const CoinUseLineChart = ({
     },
   ];
 
-  // 발행코인, 미사용 코인, 사용코인 나눠서 보내주는 함수
+  // NOTE : 발행코인, 미사용 코인, 사용코인 나눠서 보내주는 함수
   const filteredData = formattedData.filter(
     (data) => data.id === coinToggleType
   );
@@ -45,11 +45,11 @@ const CoinUseLineChart = ({
   // NOTE : y축 scale을 log로 표현하기 위해 Y scale을 설정
   // ex) 123 이면 100 ~ 1000 사이의 값이니 10^0 ~ 10^3 사이의 값으로 표현
   const getYTickValues = (yMax: number) => {
-    let test = yMax;
+    let remain = yMax;
     let exponent = 1;
 
-    while (test >= 10) {
-      test /= 10;
+    while (remain >= 10) {
+      remain /= 10;
       exponent++;
     }
     const tickValues = [];
@@ -83,11 +83,8 @@ const CoinUseLineChart = ({
           isInteractive={true}
           animate={true}
           data={filteredData}
-          // margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
           margin={{ top: 80, right: 40, bottom: 50, left: 70 }}
-          // margin={{ top: 80, right: 30, bottom: 50, left: 40 }}
-          // xFormat="time:%b %d"
-          // %b -> 영어로 달 표시
+          //  NOTE : %b -> 영어로 달 표시
           xFormat="time:%m.%d"
           xScale={{
             format: "%Y-%m-%d",
@@ -109,13 +106,10 @@ const CoinUseLineChart = ({
           // NOTE : x축은 날짜로 표현 -> xFormat가 time으로 되어 있어서  every 1 사용 가능
           axisBottom={{
             format: "%m.%d",
-            // legendOffset: -12,
             tickPadding: 10, // tick padding
             tickValues: `every 1 ${toggleType.toLowerCase()}`,
           }}
           axisLeft={{
-            // legendOffset: 12,
-            // tickPadding: 5, // tick padding
             tickValues: yTickValues,
           }}
           gridYValues={yTickValues}
