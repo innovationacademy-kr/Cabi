@@ -31,6 +31,7 @@ import {
   axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
 import { getExtendedDateString } from "@/Cabinet/utils/dateUtils";
+
 const ExtendModal: React.FC<{
   onClose: () => void;
   cabinetId: Number;
@@ -90,7 +91,9 @@ const ExtendModal: React.FC<{
       setShowResponseModal(false);
       setHasErrorOnResponse(false);
       setMyExtensionItems(myItems?.extensionItems.reverse() || []);
-      setExtensionDate(getExtensionDate(myItems?.extensionItems[0].itemSku || ""));
+      setExtensionDate(
+        getExtensionDate(myItems?.extensionItems[0].itemSku || "")
+      );
       setSelectedOption(myItems?.extensionItems[0].itemSku || "");
     }
     if (items.length) {

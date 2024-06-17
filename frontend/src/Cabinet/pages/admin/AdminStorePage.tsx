@@ -254,7 +254,7 @@ const AdminStorePageStyled = styled.div`
   grid-template-rows: repeat(2, 1fr);
   place-items: center;
   min-height: 775px;
-  margin: 42px 0;
+  padding: 42px 0;
   & > :first-child {
     grid-column: span 3;
   }
@@ -274,6 +274,7 @@ const AdminStorePageStyled = styled.div`
     min-width: 300px;
     overflow: scroll;
     margin-bottom: 0;
+    padding-bottom: 0;
     & > :first-child {
       grid-column: span 1;
     }

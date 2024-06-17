@@ -114,8 +114,8 @@ const PieChartStyled = styled.div`
   justify-content: center;
   align-items: center;
   @media (max-width: 500px) {
-    width: 420px;
-    height: 420px;
+    width: 360px;
+    height: 360px;
   }
 `;
 export default PieChartCoin;
