@@ -5,6 +5,7 @@ import Dropdown from "@/Cabinet/components/Common/Dropdown";
 import WarningNotification, {
   WarningNotificationProps,
 } from "@/Cabinet/components/Common/WarningNotification";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
   cabinetIconComponentMap,
   cabinetIconSrcMap,
@@ -13,7 +14,6 @@ import {
 } from "@/Cabinet/assets/data/maps";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import ModalPortal from "../ModalPortal";
 
 export interface StatusModalInterface {
   cabinetType: CabinetType;

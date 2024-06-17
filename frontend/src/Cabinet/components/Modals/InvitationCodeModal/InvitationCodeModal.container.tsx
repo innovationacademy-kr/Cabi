@@ -1,16 +1,5 @@
-import {
-  axiosCabinetById,
-  axiosLentShareId,
-  axiosMyLentInfo,
-} from "@/Cabinet/api/axios/axios.custom";
-import { modalPropsMap } from "@/Cabinet/assets/data/maps";
-import { IModalContents } from "@/Cabinet/components/Modals/Modal";
-import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
-import PasswordContainer from "@/Cabinet/components/Modals/PasswordCheckModal/PasswordContainer";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import React, { useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
@@ -18,11 +7,22 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/Cabinet/recoil/atoms";
+import { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import PasswordCheckModal from "@/Cabinet/components/Modals/PasswordCheckModal/PasswordCheckModal";
+import PasswordContainer from "@/Cabinet/components/Modals/PasswordCheckModal/PasswordContainer";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import { modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
-import React, { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import PasswordCheckModal from "../PasswordCheckModal/PasswordCheckModal";
+import {
+  axiosCabinetById,
+  axiosLentShareId,
+  axiosMyLentInfo,
+} from "@/Cabinet/api/axios/axios.custom";
 
 const InvitationCodeModalContainer: React.FC<{
   onClose: () => void;

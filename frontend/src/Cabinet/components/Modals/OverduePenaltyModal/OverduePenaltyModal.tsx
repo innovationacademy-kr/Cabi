@@ -5,11 +5,7 @@ import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
-import {
-  formatDate,
-  formatDateTime,
-  getRemainingTime,
-} from "@/Cabinet/utils/dateUtils";
+import { formatDate, formatDateTime } from "@/Cabinet/utils/dateUtils";
 
 const OverduePenaltyModal: React.FC<{
   status: CabinetStatus | additionalModalType;

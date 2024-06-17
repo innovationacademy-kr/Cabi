@@ -12,7 +12,11 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
-import { IItemDetail, IItemTimeRemaining, IStoreItem } from "@/Cabinet/types/dto/store.dto";
+import {
+  IItemDetail,
+  IItemTimeRemaining,
+  IStoreItem,
+} from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { StorePenaltyType } from "@/Cabinet/types/enum/store.enum";
 import {
@@ -78,7 +82,9 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
 
   useEffect(() => {
     if (items.length && myItems) {
-      const penaltyItems = items.find((item) => item.itemName === "페널티 감면권");
+      const penaltyItems = items.find(
+        (item) => item.itemName === "페널티 감면권"
+      );
       if (penaltyItems) {
         const options = penaltyItems.items.map((item) => ({
           name: item.itemDetails,
@@ -88,7 +94,9 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
           ),
         }));
         setStatusOptions(options);
-        setSelectedOption(options.find((option) => !option.isDisabled)?.value || "");
+        setSelectedOption(
+          options.find((option) => !option.isDisabled)?.value || ""
+        );
 
         if (myItems.penaltyItems.length === 0) {
           setShowResponseModal(true);
@@ -106,13 +114,12 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
 
   const STATUS_DROP_DOWN_PROPS: IDropdownProps = {
     options: statusOptions,
-    defaultValue: statusOptions.find((option) => !option.isDisabled)?.name || "",
+    defaultValue:
+      statusOptions.find((option) => !option.isDisabled)?.name || "",
     onChangeValue: handleDropdownChange,
     isOpen: isOpen,
     setIsOpen: setIsOpen,
   };
-
-
 
   const tryGetPenaltyItem = async () => {
     try {
