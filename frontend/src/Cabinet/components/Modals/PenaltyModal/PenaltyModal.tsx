@@ -33,7 +33,7 @@ interface PenaltyModalProps {
   remainPenaltyPeriod: IItemTimeRemaining | null;
 }
 
-const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
+const PenaltyModal: React.FC<PenaltyModalProps> = ({
   onClose,
   remainPenaltyPeriod,
 }) => {
@@ -56,6 +56,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
   useEffect(() => {
     getItems();
     getMyItems();
+    tryPenaltyItemGet();
   }, []);
 
   const getItems = async () => {
@@ -121,7 +122,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     setIsOpen: setIsOpen,
   };
 
-  const tryGetPenaltyItem = async () => {
+  const tryPenaltyItemGet = async () => {
     try {
       const { data } = await axiosMyItems();
       const penaltyTypes = data.penaltyItems.map(
@@ -186,9 +187,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     }
   };
 
-  useEffect(() => {
-    tryGetPenaltyItem();
-  }, []);
+
 
   const modalContents: IModalContents = {
     type: "hasProceedBtn",
@@ -279,4 +278,4 @@ const ModalDetailContentStyled = styled.div`
   font-size: 0.8rem;
 `;
 
-export default StoreBuyPenalty;
+export default PenaltyModal;
