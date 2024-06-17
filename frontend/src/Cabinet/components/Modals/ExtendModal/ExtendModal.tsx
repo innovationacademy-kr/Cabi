@@ -91,7 +91,6 @@ const ExtendModal: React.FC<{
 
   const findMyExtension = (period: string) => {
     return !myItems?.extensionItems.some((item) => {
-      console.log("item : ", item);
       return item.itemDetails === period;
     });
   };
@@ -157,7 +156,6 @@ const ExtendModal: React.FC<{
     setExtensionDate(extensionPeriod[option].day);
   };
 
-  console.log("!!! : ", extensionPeriod[2].period);
   const extensionDropdownProps = {
     options: [
       {
