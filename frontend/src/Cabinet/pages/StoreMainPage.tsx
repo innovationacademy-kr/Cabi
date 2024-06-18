@@ -102,6 +102,9 @@ const StoreTitleStyled = styled.div`
   line-height: 1.1;
   font-size: 2.5rem;
   font-weight: 600;
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const StoreCoinGridWrapper = styled.div`
@@ -158,7 +161,7 @@ const HeaderStyled = styled.div`
 `;
 
 const WrapperStyled = styled.div`
-  padding-top: 80px;
+  padding-top: 60px;
   margin-bottom: 30px;
   display: flex;
   flex-direction: column;

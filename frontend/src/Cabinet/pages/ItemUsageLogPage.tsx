@@ -2,48 +2,61 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import UnavailableDataInfo from "@/Cabinet/components/Common/UnavailableDataInfo";
-import { mapItemNameToType } from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import ItemLogBlock from "@/Cabinet/components/Store/ItemUsageLog/ItemLogBlock";
 import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as DropdownChevron } from "@/Cabinet/assets/images/dropdownChevron.svg";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import { axiosGetItemUsageHistory } from "@/Cabinet/api/axios/axios.custom";
+
+const mapItemNameToType = (itemName: string): StoreItemType => {
+  switch (itemName) {
+    case "연장권":
+      return StoreItemType.EXTENSION;
+    case "이사권":
+      return StoreItemType.SWAP;
+    case "알림 등록권":
+      return StoreItemType.ALARM;
+    case "페널티 감면권":
+      return StoreItemType.PENALTY;
+    default:
+      return StoreItemType.PENALTY;
+  }
+};
 
 export interface IItemUsageLog {
   date: Date;
   dateStr?: string;
-  title: string;
+  titleWithDetails: string;
   logo: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  itemName: string;
 }
 
-
-
-function createLogEntries(data: { result: any[] }) {
+const createLogEntries = (data: { result: any[] }) => {
   return data.result.map((item) => {
     const itemDate = new Date(item.date);
-    // console.log("itemType : ",item.itemDto.itemName)
-    // console.log("itemType : ",extractItemName(item.itemDto.itemName))
-    // console.log("itemType : ",mapItemNameToType(extractItemName(item.itemDto.itemName)))
+
     return {
       date: itemDate,
       dateStr: `${itemDate.getFullYear()}년 ${itemDate.getMonth() + 1}월`,
-      title:
+      titleWithDetails:
         item.itemDto.itemName === item.itemDto.itemDetails
           ? item.itemDto.itemName
           : `${item.itemDto.itemName} - ${item.itemDto.itemDetails}`,
       logo: ItemIconMap[mapItemNameToType(item.itemDto.itemName)],
+      itemName: item.itemDto.itemName,
     };
   });
-}
+};
 
 const ItemUsageLogPage = () => {
   const [itemUsageLogs, setItemUsageLogs] = useState<IItemUsageLog[]>([]);
   const [page, setPage] = useState<number>(0);
   const [hasAdditionalLogs, sethasAdditionalLogs] = useState<boolean>(true);
+  const [isMoreBtnLoading, setIsMoreBtnLoading] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const size = 5;
 
   const getItemUsageLog = async (page: number, size: number) => {
-    setIsLoading(true);
     try {
       const data = await axiosGetItemUsageHistory(page, size);
       const newLogs = createLogEntries(data);
@@ -52,51 +65,72 @@ const ItemUsageLogPage = () => {
     } catch (error) {
       console.error("Failed to fetch item usage history:", error);
     } finally {
+      setIsMoreBtnLoading(false);
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    getItemUsageLog(page, size);
+    setTimeout(() => {
+      getItemUsageLog(page, size);
+    }, 333);
   }, [page]);
 
   const handleMoreClick = () => {
     setPage((prev) => prev + 1);
+    setIsMoreBtnLoading(true);
   };
 
-  return itemUsageLogs.length > 0 ? (
-    <WrapperStyled>
-      <TitleWrapperStyled>아이템 사용내역</TitleWrapperStyled>
-      <ItemUsageLogWrapperStyled>
-        {itemUsageLogs.map((log, idx, logs) => {
-          const isNewMonth = idx === 0 || log.dateStr !== logs[idx - 1].dateStr;
-          return (
-            <LogItemStyled key={idx}>
-              {isNewMonth && (
-                <DateSectionStyled>
-                  <DateTitleStyled>{log.dateStr}</DateTitleStyled>
-                </DateSectionStyled>
+  return (
+    <>
+      {isLoading && (
+        <LoadingAnimationWrapperStyled>
+          <LoadingAnimation />
+        </LoadingAnimationWrapperStyled>
+      )}
+      {!isLoading &&
+        (itemUsageLogs.length > 0 ? (
+          <WrapperStyled>
+            <TitleWrapperStyled>아이템 사용내역</TitleWrapperStyled>
+            <ItemUsageLogWrapperStyled>
+              {itemUsageLogs.map((log, idx, logs) => {
+                const isNewMonth =
+                  idx === 0 || log.dateStr !== logs[idx - 1].dateStr;
+                return (
+                  <LogItemStyled key={idx}>
+                    {isNewMonth && (
+                      <DateSectionStyled>
+                        <DateTitleStyled>{log.dateStr}</DateTitleStyled>
+                      </DateSectionStyled>
+                    )}
+                    <ItemLogBlock log={log} />
+                  </LogItemStyled>
+                );
+              })}
+              {hasAdditionalLogs && (
+                <ButtonContainerStyled>
+                  <MoreButtonStyled
+                    onClick={handleMoreClick}
+                    disabled={isMoreBtnLoading}
+                    isMoreBtnLoading={isMoreBtnLoading}
+                  >
+                    {isMoreBtnLoading ? (
+                      <LoadingAnimation />
+                    ) : (
+                      <>
+                        더보기
+                        <DropdownChevron />
+                      </>
+                    )}
+                  </MoreButtonStyled>
+                </ButtonContainerStyled>
               )}
-              <ItemLogBlock log={log} />
-            </LogItemStyled>
-          );
-        })}
-        {hasAdditionalLogs && (
-          <ButtonContainerStyled>
-            <MoreButtonStyled
-              onClick={handleMoreClick}
-              disabled={isLoading}
-              isLoading={isLoading}
-            >
-              {isLoading ? <LoadingAnimation /> : "더보기"}
-              <DropdownChevron />
-            </MoreButtonStyled>
-          </ButtonContainerStyled>
-        )}
-      </ItemUsageLogWrapperStyled>
-    </WrapperStyled>
-  ) : (
-    <UnavailableDataInfo msg="아이템 사용내역이 없습니다." />
+            </ItemUsageLogWrapperStyled>
+          </WrapperStyled>
+        ) : (
+          <UnavailableDataInfo msg="아이템 사용내역이 없습니다." />
+        ))}
+    </>
   );
 };
 
@@ -149,7 +183,7 @@ const ButtonContainerStyled = styled.div`
 `;
 
 const MoreButtonStyled = styled.button<{
-  isLoading: boolean;
+  isMoreBtnLoading: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -170,6 +204,11 @@ const MoreButtonStyled = styled.button<{
     width: 13px;
     height: 9px;
   }
+`;
+
+const LoadingAnimationWrapperStyled = styled.div`
+  width: 100%;
+  height: 100%;
 `;
 
 export default ItemUsageLogPage;

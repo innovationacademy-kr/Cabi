@@ -1,13 +1,8 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { LentLogResponseType } from "@/Cabinet/types/dto/lent.dto";
+import { formatDate } from "@/Cabinet/utils/dateUtils";
 import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "2-digit",
-  month: "2-digit",
-  day: "2-digit",
-};
 
 const AdminCabinetLogTable = ({
   lentLog,
@@ -33,7 +28,7 @@ const AdminCabinetLogTable = ({
                 <tr key={idx}>
                   <td title={`${floor}층 ${section}`}>{name}</td>
                   <td title={new Date(startedAt).toLocaleString("ko-KR")}>
-                    {new Date(startedAt).toLocaleString("ko-KR", dateOptions)}
+                    {formatDate(new Date(startedAt), ".", 2, 2, 2)}
                   </td>
                   <td
                     title={
@@ -41,7 +36,7 @@ const AdminCabinetLogTable = ({
                     }
                   >
                     {endedAt
-                      ? new Date(endedAt).toLocaleString("ko-KR", dateOptions)
+                      ? formatDate(new Date(endedAt), ".", 2, 2, 2)
                       : "-"}
                   </td>
                 </tr>

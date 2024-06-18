@@ -107,10 +107,10 @@ const SectionLinkStyled = styled.div`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       color: var(--sys-main-color);
-    }
-    &:hover img {
-      filter: invert(33%) sepia(55%) saturate(3554%) hue-rotate(230deg)
-        brightness(99%) contrast(107%);
+
+      #linknImg > path {
+        stroke: var(--sys-main-color);
+      }
     }
   }
 `;

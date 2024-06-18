@@ -2,77 +2,126 @@ import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
-import Dropdown, { IDropdownProps } from "@/Cabinet/components/Common/Dropdown";
-import { IItemTimeRemaining, IStoreItem } from "@/Cabinet/types/dto/store.dto";
-import { UserDto } from "@/Cabinet/types/dto/user.dto";
-import { StorePenaltyType } from "@/Cabinet/types/enum/store.enum";
+import Dropdown, {
+  IDropdownOptions,
+  IDropdownProps,
+} from "@/Cabinet/components/Common/Dropdown";
+import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import { IInventoryInfo } from "@/Cabinet/components/Store/Inventory/Inventory";
+import {
+  IItemDetail,
+  IItemTimeRemaining,
+  IStoreItem,
+} from "@/Cabinet/types/dto/store.dto";
+import { UserDto } from "@/Cabinet/types/dto/user.dto";
+import {
+  axiosItems,
   axiosMyInfo,
   axiosMyItems,
   axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
 import { formatDate, formatDateTime } from "@/Cabinet/utils/dateUtils";
-import Modal, { IModalContents } from "../Modal";
-import ModalPortal from "../ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "../ResponseModal/ResponseModal";
 
 interface PenaltyModalProps {
   onClose: () => void;
   remainPenaltyPeriod: IItemTimeRemaining | null;
 }
 
-const STATUS_OPTIONS = [
-  { name: "3일", value: StorePenaltyType.PENALTY_3, isDisabled: false },
-  { name: "7일", value: StorePenaltyType.PENALTY_7, isDisabled: false },
-  { name: "31일", value: StorePenaltyType.PENALTY_31, isDisabled: false },
-];
-
-const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
+const PenaltyModal: React.FC<PenaltyModalProps> = ({
   onClose,
   remainPenaltyPeriod,
 }) => {
-  const [selectedOption, setSelectedOption] = useState<StorePenaltyType>(
-    StorePenaltyType.PENALTY_3
-  );
+  const [selectedOption, setSelectedOption] = useState<string>("");
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const setMyInfo = useSetRecoilState<UserDto>(userState);
-  const [statusOptions, setStatusOptions] = useState(STATUS_OPTIONS);
+  const [statusOptions, setStatusOptions] = useState<IDropdownOptions[]>([]);
   const [isPenaltyItem, setIsPenaltyItem] = useState<boolean>(false);
   const [urlTitle, setUrlTitle] = useState<string>("");
   const [url, setUrl] = useState<string>("");
-  const [enabledOptions, setEnabledOptions] = useState(
-    STATUS_OPTIONS.find((option) => !option.isDisabled)
-  );
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleDropdownChange = (option: StorePenaltyType) => {
+  const [items, setItems] = useState<IItemDetail[]>([]);
+  const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
+
+  useEffect(() => {
+    getItems();
+    getMyItems();
+    tryPenaltyItemGet();
+  }, []);
+
+  const getItems = async () => {
+    try {
+      const response = await axiosItems();
+      setItems(response.data.items);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const getMyItems = async () => {
+    try {
+      const response = await axiosMyItems();
+      setMyItems(response.data);
+    } catch (error: any) {
+      console.error("Error getting inventory:", error);
+    }
+  };
+
+  const handleDropdownChange = (option: string) => {
     setSelectedOption(option);
   };
 
   useEffect(() => {
-    const enabledOption = statusOptions.find((option) => !option.isDisabled);
-    setEnabledOptions(enabledOption);
-    setSelectedOption(
-      enabledOption ? enabledOption.value : StorePenaltyType.PENALTY_3
-    );
-  }, [statusOptions]);
+    if (items.length && myItems) {
+      const penaltyItems = items.find(
+        (item) => item.itemName === "페널티 감면권"
+      );
+      if (penaltyItems) {
+        const options = penaltyItems.items.map((item) => ({
+          name: item.itemDetails,
+          value: item.itemSku,
+          isDisabled: !myItems.penaltyItems.some(
+            (myItem) => myItem.itemSku === item.itemSku
+          ),
+        }));
+        setStatusOptions(options);
+        setSelectedOption(
+          options.find((option) => !option.isDisabled)?.value || ""
+        );
+
+        if (myItems.penaltyItems.length === 0) {
+          setShowResponseModal(true);
+          setHasErrorOnResponse(true);
+          setModalTitle("페널티 감면권이 없습니다");
+          setModalContent("페널티 감면권은 까비상점에서 구매하실 수 있습니다.");
+          setUrlTitle("까비상점으로 이동");
+          setUrl("/store");
+        } else {
+          setIsPenaltyItem(true);
+        }
+      }
+    }
+  }, [items, myItems]);
 
   const STATUS_DROP_DOWN_PROPS: IDropdownProps = {
     options: statusOptions,
-    defaultValue: enabledOptions ? enabledOptions.name : "",
+    defaultValue:
+      statusOptions.find((option) => !option.isDisabled)?.name || "",
     onChangeValue: handleDropdownChange,
     isOpen: isOpen,
     setIsOpen: setIsOpen,
   };
 
-  const tryGetPenaltyItem = async () => {
+  const tryPenaltyItemGet = async () => {
     try {
       const { data } = await axiosMyItems();
       const penaltyTypes = data.penaltyItems.map(
@@ -99,7 +148,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     }
   };
 
-  const tryPenaltyItemUse = async (sku: StorePenaltyType) => {
+  const tryPenaltyItemUse = async (sku: string) => {
     try {
       await axiosUseItem(sku, null, null, null, null);
       const { data: myInfo } = await axiosMyInfo();
@@ -112,7 +161,10 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
         setModalContent(
           `해제 날짜 : <strong> ${formatDate(
             unbannedAtDate,
-            "."
+            ".",
+            4,
+            2,
+            2
           )} ${formatDateTime(unbannedAtDate, ":")}</strong> `
         );
       }
@@ -121,7 +173,7 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
     }
   };
 
-  const HandlePenaltyItemUse = async (sku: StorePenaltyType) => {
+  const HandlePenaltyItemUse = async (sku: string) => {
     setIsLoading(true);
     try {
       await tryPenaltyItemUse(sku);
@@ -133,10 +185,6 @@ const StoreBuyPenalty: React.FC<PenaltyModalProps> = ({
       setShowResponseModal(true);
     }
   };
-
-  useEffect(() => {
-    tryGetPenaltyItem();
-  }, []);
 
   const modalContents: IModalContents = {
     type: "hasProceedBtn",
@@ -227,4 +275,4 @@ const ModalDetailContentStyled = styled.div`
   font-size: 0.8rem;
 `;
 
-export default StoreBuyPenalty;
+export default PenaltyModal;
