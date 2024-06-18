@@ -34,7 +34,7 @@ public interface ItemHistoryRepository extends JpaRepository<ItemHistory, Long> 
 					+ "JOIN ih.item i "
 					+ "WHERE ih.userId = :userId "
 					+ "AND ih.usedAt IS NOT NULL "
-					+ "AND i.price < 0")
+					+ "AND i.price <= 0")
 	Page<ItemHistory> findAllByUserIdOnMinusPriceItemsWithSubQuery(
 			@Param("userId") Long userId, Pageable pageable);
 
