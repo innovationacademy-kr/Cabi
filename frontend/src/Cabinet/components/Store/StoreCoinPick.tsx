@@ -17,7 +17,7 @@ const StoreCoinPick = () => {
         <CoinAnimation />
         <CoinSummary>
           <p>누군가가 매일 흘리는 동전을 주워보세요💰</p>
-          <p>동전은 하루에 한 번씩 획득할 수 있습니다</p>
+          <p>동전은 하루에 한 번씩 주울 수 있습니다</p>
         </CoinSummary>
         <CoinCheckButton onClick={() => toggleStore()}>
           동전 주우러가기

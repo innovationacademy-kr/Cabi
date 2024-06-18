@@ -38,13 +38,13 @@ const convertToItemType = (itemType: string) => {
 const convertToItemTooltip = (itemType: string) => {
   switch (itemType) {
     case "extensionItems":
-      return "연장권은 사물함을 대여한 상태에서 우측 상단의 사물함 아이콘을 선택하면 연장권 사용하기 버튼이 있습니다";
+      return "사물함을 대여한 상태에서 우측 상단의 사물함 아이콘을 선택하면 연장권 사용하기 버튼이 있습니다";
     case "swapItems":
-      return "이사권은 사물함을 대여한 상태에서 다른 개인 사물함을 선택하면 대여버튼 대신에 이사하기 버튼이 있습니다";
+      return "사물함을 대여한 상태에서 다른 개인 사물함을 선택하면 대여버튼 대신에 이사하기 버튼이 있습니다";
     case "alarmItems":
-      return "알림 등록권은 동아리 사물함을 제외한 사물함들이 있는 페이지의 우측 상단에 하트를 누르면 사용할 수 있습니다";
+      return "사물함 페이지의 우측 상단에 하트를 눌러 사용합니다. 프로필에서 설정한 경로로 알림을 받습니다";
     case "penaltyItems":
-      return "페널티 감면권은 페널티가 있는 상태에서 프로파일 -> 내 정보 -> 대여정보카드의 우측상단에 버튼이 있습니다.";
+      return "페널티가 있는 유저에 한해 프로필 -> 내 정보 -> 대여정보카드의 우측상단에 버튼이 활성화 됩니다";
   }
 };
 
@@ -248,6 +248,7 @@ const CautionIconStyled = styled.img`
   width: 16px;
   height: 16px;
   opacity: 0.6;
+
   :hover {
     cursor: pointer;
     opacity: 1;
@@ -280,6 +281,11 @@ const TooltipBoxDateStyled = styled.div`
   opacity: 0;
   transition: opacity 0.5s ease;
 
+  @media screen and (max-width: 420px) {
+    width: 185px;
+    left: 125px;
+  }
+
   &::after {
     content: "";
     position: absolute;
@@ -291,6 +297,7 @@ const TooltipBoxDateStyled = styled.div`
     border-color: transparent var(--tooltip-shadow-color) transparent
       transparent;
   }
+
   ${ItemTitleStyled}:hover & {
     opacity: 1;
   }

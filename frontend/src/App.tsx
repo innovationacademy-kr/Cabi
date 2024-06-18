@@ -15,6 +15,7 @@ import PostLogin from "@/Cabinet/pages/PostLogin";
 import ProfilePage from "@/Cabinet/pages/ProfilePage";
 import StoreMainPage from "@/Cabinet/pages/StoreMainPage";
 import AdminMainPage from "@/Cabinet/pages/admin/AdminMainPage";
+import AdminSlackNotiPage from "@/Cabinet/pages/admin/AdminSlackNotiPage";
 import AdminStorePage from "@/Cabinet/pages/admin/AdminStorePage";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import DetailPage from "@/Presentation/pages/DetailPage";
@@ -36,9 +37,6 @@ const AdminLoginFailurePage = lazy(
   () => import("@/Cabinet/pages/admin/AdminLoginFailurePage")
 );
 const AdminHomePage = lazy(() => import("@/Cabinet/pages/admin/AdminHomePage"));
-const AdminSlackNotiPage = lazy(
-  () => import("@/Cabinet/pages/admin/AdminSlackNotiPage")
-);
 
 function App(): React.ReactElement {
   return (

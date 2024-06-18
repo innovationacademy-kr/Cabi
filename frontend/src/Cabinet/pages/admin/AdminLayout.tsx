@@ -108,7 +108,6 @@ const Layout = (): JSX.Element => {
             )}
           </DetailInfoContainerStyled>
           <MapInfoContainer />
-          <AdminItemUsageLogPage />
         </WrapperStyled>
       )}
     </React.Fragment>

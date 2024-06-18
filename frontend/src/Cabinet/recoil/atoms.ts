@@ -18,7 +18,7 @@ import {
 } from "@/Cabinet/types/dto/club.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import { UserDto, UserInfo } from "@/Cabinet/types/dto/user.dto";
-import CabinetDetailAreaType from "../types/enum/cabinetDetailArea.type.enum";
+import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 
 const { persistAtom } = recoilPersist();
 

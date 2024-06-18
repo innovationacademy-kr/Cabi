@@ -44,18 +44,23 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => {
       <ResponsiveBarStyled>
         <ResponsiveBar
           theme={{
-            legends: { text: { fontSize: "14px" } },
-            axis: { ticks: { text: { fontSize: "14px" } } },
-            labels: { text: { fontSize: "14px" } },
+            legends: { text: { fontSize: "10px" } },
+            axis: { ticks: { text: { fontSize: "12px" } } },
+            labels: { text: { fontSize: "10px" } },
             textColor: "var(--normal-text-color)",
-            tooltip: {
-              container: {
-                backgroundColor: "var(--bg-color)",
+          }}
+          tooltip={({ id, value, color, indexValue }) => (
+            <div
+              style={{
+                padding: 10,
+                background: "var(--bg-color)",
                 boxShadow: "var(--left-nav-border-shadow-color) 0 1px 2px",
                 color: "var(--normal-text-color)",
-              },
-            },
-          }}
+              }}
+            >
+              {id} : <strong>{value}</strong>
+            </div>
+          )}
           data={transformData(data)}
           keys={[
             "이사권",
