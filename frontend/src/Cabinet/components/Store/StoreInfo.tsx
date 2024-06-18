@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { userState } from "@/Cabinet/recoil/atoms";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import {
   FailResponseModal,
@@ -8,9 +10,11 @@ import {
 import StoreCoinCheckBox from "@/Cabinet/components/Store/StoreCoinCheckBox";
 import { ReactComponent as CloseIcon } from "@/Cabinet/assets/images/exitButton.svg";
 import { ReactComponent as StoreCoin } from "@/Cabinet/assets/images/storeCoin.svg";
+import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {
   axiosCoinCheckGet,
   axiosCoinCheckPost,
+  axiosMyInfo,
 } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
@@ -25,12 +29,15 @@ const StoreInfo = () => {
   const [monthlyCoinCount, setmonthlyCoinCount] = useState<number>(0);
   const [todayCoinCollection, setTodayCoinCollection] =
     useState<boolean>(false);
+  const setUser = useSetRecoilState<UserDto>(userState);
 
   const tryCoinCheckGet = async () => {
     try {
       const res = await axiosCoinCheckGet();
+      const { data: myInfo } = await axiosMyInfo();
       setTodayCoinCollection(res.data.todayCoinCollection);
       setmonthlyCoinCount(res.data.monthlyCoinCount);
+      setUser(myInfo);
     } catch (error: any) {
       throw error;
     }

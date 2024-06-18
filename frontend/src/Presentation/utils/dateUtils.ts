@@ -123,8 +123,8 @@ export const makeIDateObj = (date: Date): IDate => {
   };
 };
 
-const padTo2Digits = (num: number) => {
-  return `${Math.floor(Math.abs(num))}`.padStart(2, "0");
+const padToNDigits = (numToBePadded: number, maxLength: number) => {
+  return `${Math.floor(Math.abs(numToBePadded))}`.padStart(maxLength, "0");
 };
 
 /**
@@ -139,7 +139,9 @@ const getTimeZoneOffset = (date: Date): string => {
   // NOTE: offset 은 UTC 시간과의 차이를 분 단위로 나타냄
   const sign = offset > 0 ? "-" : "+";
   // NOTE: 시차를 시:분 형식으로 변환
-  return sign + padTo2Digits(offset / 60) + ":" + padTo2Digits(offset % 60);
+  return (
+    sign + padToNDigits(offset / 60, 2) + ":" + padToNDigits(offset % 60, 2)
+  );
 };
 
 /**
@@ -153,15 +155,15 @@ export const toISOStringwithTimeZone = (date: Date): string => {
   return (
     date.getFullYear() +
     "-" +
-    padTo2Digits(date.getMonth() + 1) +
+    padToNDigits(date.getMonth() + 1, 2) +
     "-" +
-    padTo2Digits(date.getDate()) +
+    padToNDigits(date.getDate(), 2) +
     "T" +
-    padTo2Digits(date.getHours()) +
+    padToNDigits(date.getHours(), 2) +
     ":" +
-    padTo2Digits(date.getMinutes()) +
+    padToNDigits(date.getMinutes(), 2) +
     ":" +
-    padTo2Digits(date.getSeconds()) +
+    padToNDigits(date.getSeconds(), 2) +
     getTimeZoneOffset(date)
   );
 };

@@ -37,7 +37,7 @@ const ExtensionCard = ({ extensionInfo, button }: ExtensionProps) => {
             <ContentInfoStyled>사용 기한</ContentInfoStyled>
             <ContentDetailStyled>
               {!!extensionInfo
-                ? formatDate(new Date(extensionInfo.expiredAt), ".")
+                ? formatDate(new Date(extensionInfo.expiredAt), ".", 4, 2, 2)
                 : "-"}
             </ContentDetailStyled>
           </CardContentStyled>

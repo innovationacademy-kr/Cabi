@@ -1,12 +1,13 @@
 /**
  * @description 해당 월, 일의 앞자리를 0으로 채워 두 자리로 만듦
  *
- * @param num 날짜
+ * @param numToBePadded 날짜
+ * @param maxLength 자리 수
  *
- * @returns 두 자리로 만들어진 날짜
+ * @returns 인수로 전달한 자리 수로 만들어진 날짜
  */
-export const padTo2Digits = (num: number) => {
-  return num.toString().padStart(2, "0");
+export const padToNDigits = (numToBePadded: number, maxLength: number) => {
+  return numToBePadded.toString().padStart(maxLength, "0");
 };
 
 /**
@@ -14,6 +15,9 @@ export const padTo2Digits = (num: number) => {
  *
  * @param date 날짜
  * @param divider 구분자
+ * @param yearLen 년도 길이
+ * @param monthLen 월 길이
+ * @param dayLen 일 길이
  *
  * @returns 구분자로 구분된 년, 월, 일
  *
@@ -21,12 +25,19 @@ export const padTo2Digits = (num: number) => {
  * const result = formatDate(new Date(), "-")
  * //=> "2023-04-14"
  */
-export const formatDate = (date: Date | null, divider: string) => {
+export const formatDate = (
+  date: Date | null,
+  divider: string,
+  yearLen: number,
+  monthLen: number,
+  dayLen: number
+) => {
   if (date === null) return "";
   return [
-    date.getFullYear(),
-    padTo2Digits(date.getMonth() + 1),
-    padTo2Digits(date.getDate()),
+    // date.getFullYear(),
+    padToNDigits(date.getFullYear(), yearLen),
+    padToNDigits(date.getMonth() + 1, monthLen),
+    padToNDigits(date.getDate(), dayLen),
   ].join(divider);
 };
 
@@ -44,7 +55,7 @@ export const formatDate = (date: Date | null, divider: string) => {
  */
 export const formatDateTime = (date: Date | null, divider: string) => {
   if (date === null) return "";
-  return [date.getHours(), date.getMinutes()].map(padTo2Digits).join(divider);
+  return [date.getHours(), date.getMinutes()].map(padToNDigits).join(divider);
 };
 /**
  * @description 주어진 lentType에 따라 대여 만료일을 구해 "YYYY/MM/DD" 형식으로 반환. 예정된 대여 만료일이 있다면 그 일자를 반환
@@ -66,7 +77,7 @@ export const getExpireDateString = (
 
   if (!existExpireDate)
     expireDate.setDate(expireDate.getDate() + parseInt(addDays));
-  return formatDate(expireDate, "/");
+  return formatDate(expireDate, "/", 4, 2, 2);
 };
 
 /**
@@ -91,7 +102,7 @@ export const getShortenedExpireDateString = (
   let dateRemainig =
     (daysUntilExpire * (currentNumUsers - 1)) / currentNumUsers;
   let newExpireDate = new Date().getTime() + dateRemainig * dayInMilisec;
-  return formatDate(new Date(newExpireDate), "/");
+  return formatDate(new Date(newExpireDate), "/", 4, 2, 2);
 };
 
 /**
@@ -109,7 +120,7 @@ export const getExtendedDateString = (
   if (!existExpireDate || dateToExtend === undefined) return;
   let expireDate = new Date(existExpireDate);
   expireDate.setDate(expireDate.getDate() + dateToExtend);
-  return formatDate(expireDate, "/");
+  return formatDate(expireDate, "/", 4, 2, 2);
 };
 
 /**

@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { isCurrentSectionRenderState } from "@/Cabinet/recoil/atoms";
+import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import { modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { ClubUserResponseDto } from "@/Cabinet/types/dto/club.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import { axiosMandateClubMember } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import Modal, { IModalContents } from "../Modal";
-import ModalPortal from "../ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "../ResponseModal/ResponseModal";
 
 const MandateClubMemberModal: React.FC<{
   closeModal: React.MouseEventHandler;

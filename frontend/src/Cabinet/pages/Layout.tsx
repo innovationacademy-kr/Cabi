@@ -15,6 +15,7 @@ import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import LeftNav from "@/Cabinet/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/Cabinet/components/MapInfo/MapInfo.container";
 import OverduePenaltyModal from "@/Cabinet/components/Modals/OverduePenaltyModal/OverduePenaltyModal";
+import StoreInfo from "@/Cabinet/components/Store/StoreInfo";
 import TopNavContainer from "@/Cabinet/components/TopNav/TopNav.container";
 import { additionalModalType } from "@/Cabinet/assets/data/maps";
 import {
@@ -29,7 +30,6 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import StoreInfo from "../components/Store/StoreInfo";
 
 const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;

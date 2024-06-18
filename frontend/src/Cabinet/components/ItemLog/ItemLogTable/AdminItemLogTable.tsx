@@ -1,13 +1,8 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { ItemLogResponseType } from "@/Cabinet/types/dto/admin.dto";
+import { formatDate } from "@/Cabinet/utils/dateUtils";
 import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "2-digit",
-  month: "2-digit",
-  day: "2-digit",
-};
 
 const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
   if (!itemLog) return <LoadingAnimation />;
@@ -30,10 +25,7 @@ const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
                     <td
                       title={new Date(purchaseAt ?? "").toLocaleString("ko-KR")}
                     >
-                      {new Date(purchaseAt ?? "").toLocaleString(
-                        "ko-KR",
-                        dateOptions
-                      )}
+                      {formatDate(new Date(purchaseAt ?? ""), ".", 2, 2, 2)}
                     </td>
                     <td>
                       {itemName !== itemDetails
@@ -46,7 +38,7 @@ const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
                       }
                     >
                       {usedAt
-                        ? new Date(usedAt).toLocaleString("ko-KR", dateOptions)
+                        ? formatDate(new Date(usedAt), ".", 2, 2, 2)
                         : "-"}
                     </td>
                   </tr>
