@@ -12,13 +12,13 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
+import { IInventoryInfo } from "@/Cabinet/components/Store/Inventory/Inventory";
 import {
   IItemDetail,
   IItemTimeRemaining,
   IStoreItem,
 } from "@/Cabinet/types/dto/store.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
-import { StorePenaltyType } from "@/Cabinet/types/enum/store.enum";
 import {
   axiosItems,
   axiosMyInfo,
@@ -26,7 +26,6 @@ import {
   axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
 import { formatDate, formatDateTime } from "@/Cabinet/utils/dateUtils";
-import { IInventoryInfo } from "../../Store/Inventory/Inventory";
 
 interface PenaltyModalProps {
   onClose: () => void;
@@ -186,8 +185,6 @@ const PenaltyModal: React.FC<PenaltyModalProps> = ({
       setShowResponseModal(true);
     }
   };
-
-
 
   const modalContents: IModalContents = {
     type: "hasProceedBtn",
