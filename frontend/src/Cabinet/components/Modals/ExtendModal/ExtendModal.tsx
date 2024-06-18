@@ -45,7 +45,6 @@ const ExtendModal: React.FC<{
   const [items, setItems] = useState<IItemDetail[]>([]);
   const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
   const [selectedOption, setSelectedOption] = useState("");
-  // const [extensionItems, setExtensionItems] = useState<IItemStore[]>([]);
   const [myExtensionItems, setMyExtensionItems] = useState<IItemStore[]>([]);
   const [itemDropdownOptions, setItemDropdownOptions] = useState<
     IDropdownOptions[]
@@ -74,7 +73,7 @@ const ExtendModal: React.FC<{
   연장권 사용은 취소할 수 없습니다.`;
   const extendInfoDetail = `사물함을 대여하시면 연장권 사용이 가능합니다.
 연장권은 <strong>${extensionExpiredDate} 23:59</strong> 이후 만료됩니다.`;
-  const noExtension = `현재 연장권을 보유하고 있지 않습니다.
+  const noExtensionMsg = `현재 연장권을 보유하고 있지 않습니다.
 연장권은 까비 상점에서 구매하실 수 있습니다.`;
 
   useEffect(() => {
@@ -85,7 +84,7 @@ const ExtendModal: React.FC<{
     if (myItems?.extensionItems.length === 0) {
       setShowResponseModal(true);
       setHasErrorOnResponse(true);
-      setModalContents(noExtension);
+      setModalContents(noExtensionMsg);
     } else {
       setShowResponseModal(false);
       setHasErrorOnResponse(false);
@@ -99,18 +98,15 @@ const ExtendModal: React.FC<{
       const sortedItems = sortItems(items);
       const dropdownOptions: IDropdownOptions[] = getItemDropDownOption(sortedItems[0]);
 
-// 새로운 항목 생성
-const newOption = {
+const extensionPrevOption = {
   name: "출석 연장권 보상",
   value: "EXTENSION_PREV",
   isDisabled: findMyItem("EXTENSION_PREV"),
 };
 
-// 새로운 항목을 dropdownOptions 배열의 마지막에 추가
-dropdownOptions.push(newOption);
+dropdownOptions.push(extensionPrevOption);
 
-      // setExtensionItems(sortedItems[0].items);
-      setItemDropdownOptions(dropdownOptions);
+setItemDropdownOptions(dropdownOptions);
 }
 }, [myItems]);
 
@@ -143,7 +139,6 @@ dropdownOptions.push(newOption);
     return [];
   };
 
-  // Modal related functions
   const getModalTitle = (cabinetId: number | null) => {
     return cabinetId === null
       ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].title
@@ -219,7 +214,7 @@ dropdownOptions.push(newOption);
       setHasErrorOnResponse(true);
       if (error.response.status === 400) {
         setModalTitle("연장권 사용실패");
-        setModalContents(noExtension);
+        setModalContents(noExtensionMsg);
       } else {
         setModalTitle(error.response?.data.message || error.data.message);
       }
