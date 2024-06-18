@@ -96,19 +96,21 @@ const ExtendModal: React.FC<{
     }
     if (items.length) {
       const sortedItems = sortItems(items);
-      const dropdownOptions: IDropdownOptions[] = getItemDropDownOption(sortedItems[0]);
+      const dropdownOptions: IDropdownOptions[] = getItemDropDownOption(
+        sortedItems[0]
+      );
 
-const extensionPrevOption = {
-  name: "출석 연장권 보상",
-  value: "EXTENSION_PREV",
-  isDisabled: findMyItem("EXTENSION_PREV"),
-};
+      const extensionPrevOption = {
+        name: "출석 연장권 보상",
+        value: "EXTENSION_PREV",
+        isDisabled: findMyItem("EXTENSION_PREV"),
+      };
 
-dropdownOptions.push(extensionPrevOption);
+      dropdownOptions.push(extensionPrevOption);
 
-setItemDropdownOptions(dropdownOptions);
-}
-}, [myItems]);
+      setItemDropdownOptions(dropdownOptions);
+    }
+  }, [myItems]);
 
   const fetchData = async () => {
     try {
@@ -124,9 +126,8 @@ setItemDropdownOptions(dropdownOptions);
   };
 
   const findMyItem = (period: string) => {
-      return !myItems?.extensionItems.some((item) => item.itemSku === period);
+    return !myItems?.extensionItems.some((item) => item.itemSku === period);
   };
-
 
   const getItemDropDownOption = (curItem: IItemDetail): IDropdownOptions[] => {
     if (curItem) {
