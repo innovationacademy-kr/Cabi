@@ -147,4 +147,8 @@ public class User {
 	public boolean isBlackholed() {
 		return blackholedAt != null && blackholedAt.isBefore(LocalDateTime.now());
 	}
+
+	public void addCoin(Long reward) {
+		this.coin += reward;
+	}
 }
