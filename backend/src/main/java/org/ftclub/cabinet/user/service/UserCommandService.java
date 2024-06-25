@@ -110,7 +110,7 @@ public class UserCommandService {
 		userRepository.save(user);
 	}
 
-	public void addCoinAmount(Long userId, int reward) {
+	public void updateCoinAmount(Long userId, Long reward) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 		user.addCoin(reward);
