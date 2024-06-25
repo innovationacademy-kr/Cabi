@@ -74,7 +74,6 @@ public class AdminLentFacadeService {
 		LocalDateTime now = LocalDateTime.now();
 		List<LentHistory> lentHistories =
 				lentQueryService.findUserActiveLentHistoriesInCabinetForUpdate(userIds.get(0));
-		System.out.println("lentHistories = " + lentHistories);
 		if (lentHistories.isEmpty()) {
 			Long cabinetId = lentRedisService.findCabinetJoinedUser(userIds.get(0));
 			if (cabinetId != null) {
