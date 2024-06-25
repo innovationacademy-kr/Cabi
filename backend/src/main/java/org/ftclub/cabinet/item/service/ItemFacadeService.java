@@ -209,7 +209,7 @@ public class ItemFacadeService {
 
 		// Redis에 코인 변화량 저장
 		saveCoinChangeOnRedis(userId, reward);
-		userCommandService.addCoinAmount(userId, reward);
+		userCommandService.updateCoinAmount(userId, (long) reward);
 
 		return new CoinCollectionRewardResponseDto(reward);
 	}
@@ -314,6 +314,7 @@ public class ItemFacadeService {
 			long totalCoinUsage = itemRedisService.getTotalCoinUsage();
 			itemRedisService.saveTotalCoinUsage(totalCoinUsage + price);
 		});
+		userCommandService.updateCoinAmount(userId, price);
 	}
 
 	@Transactional
