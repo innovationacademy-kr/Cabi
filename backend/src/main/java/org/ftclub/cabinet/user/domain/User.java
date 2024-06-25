@@ -61,6 +61,9 @@ public class User {
 	@Column(name = "PUSH_ALARM", columnDefinition = "boolean default false")
 	private boolean pushAlarm;
 
+	@NotNull
+	@Column(name = "COIN", columnDefinition = "bigint default 0")
+	private Long coin;
 
 	protected User(String name, String email, LocalDateTime blackholedAt) {
 		this.name = name;
