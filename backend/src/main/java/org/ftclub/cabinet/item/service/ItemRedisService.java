@@ -15,19 +15,6 @@ public class ItemRedisService {
 	private final ItemRedis itemRedis;
 	private final ItemHistoryRepository itemHistoryRepository;
 
-	public long getCoinAmount(Long userId) {
-		String userIdString = userId.toString();
-		String coinAmount = itemRedis.getCoinAmount(userIdString);
-		if (coinAmount == null) {
-			long coin = itemHistoryRepository.findAllByUserId(userId).stream()
-					.mapToLong(ih -> ih.getItem().getPrice())
-					.reduce(Long::sum).orElse(0L);
-			itemRedis.saveCoinAmount(userIdString, Long.toString(coin));
-			return coin;
-		}
-		return Integer.parseInt(coinAmount);
-	}
-
 	public void saveCoinCount(Long userId, long coinCount) {
 		itemRedis.saveCoinAmount(userId.toString(), String.valueOf(coinCount));
 	}

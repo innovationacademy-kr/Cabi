@@ -59,8 +59,8 @@ public class LentExtensionManager {
 	 */
 	private void saveCoinChangeOnRedis(Long userId, long price) {
 		// 유저 재화 변동량 Redis에 저장
-		long userCoinCount = itemRedisService.getCoinAmount(userId);
-		itemRedisService.saveCoinCount(userId, userCoinCount + price);
+//		long userCoinCount = itemRedisService.getCoinAmount(userId);
+//		itemRedisService.saveCoinCount(userId, userCoinCount + price);
 
 		// 전체 재화 변동량 Redis에 저장
 		long totalCoinSupply = itemRedisService.getTotalCoinSupply();
