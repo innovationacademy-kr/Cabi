@@ -43,6 +43,7 @@ import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
 import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.lock.LockUtil;
 import org.springframework.context.ApplicationEventPublisher;
@@ -67,6 +68,7 @@ public class ItemFacadeService {
 	private final ItemMapper itemMapper;
 	private final ItemPolicyService itemPolicyService;
 	private final ApplicationEventPublisher eventPublisher;
+	private final UserCommandService userCommandService;
 
 
 	/**
@@ -207,6 +209,7 @@ public class ItemFacadeService {
 
 		// Redis에 코인 변화량 저장
 		saveCoinChangeOnRedis(userId, reward);
+		userCommandService.addCoinAmount(userId, reward);
 
 		return new CoinCollectionRewardResponseDto(reward);
 	}
