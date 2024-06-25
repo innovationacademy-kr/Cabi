@@ -69,6 +69,7 @@ public class User {
 		this.name = name;
 		this.email = email;
 		this.blackholedAt = blackholedAt;
+		this.coin = 0L;
 //		this.role = userRole;
 		setDefaultAlarmStatus();
 	}
