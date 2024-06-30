@@ -1,12 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ToggleSwitch from "@/Cabinet/components/Common/ToggleSwitch";
 import { ReactComponent as CabiLogo } from "@/Cabinet/assets/images/logo.svg";
-import {
-  DisplayStyleToggleType,
-  DisplayStyleType,
-} from "@/Cabinet/types/enum/displayStyle.type.enum";
 import { ReactComponent as PresentationLogo } from "@/Presentation/assets/images/logo.svg";
 
 interface ITopNavDomain {
@@ -37,11 +33,22 @@ const domains: ITopNavDomain[] = [
 const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
   const navigator = useNavigate();
   const { pathname } = useLocation();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const mode = localStorage.getItem("display-style") || "LIGHT";
+    return mode === "DARK";
+  });
 
   const handleToggleChange = (checked: boolean) => {
     setIsDarkMode(checked);
+    const mode = checked ? "DARK" : "LIGHT";
+    localStorage.setItem("display-style", mode);
+    document.body.setAttribute("display-style", mode);
   };
+
+  useEffect(() => {
+    const mode = localStorage.getItem("display-style") || "LIGHT";
+    document.body.setAttribute("display-style", mode);
+  }, []);
 
   return (
     <DomainGroupContainerStyled>
@@ -103,6 +110,7 @@ const DomainWrapperStyled = styled.div`
 const DomainContainerStyled = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const LogoContainerStyled = styled.div<{
@@ -113,22 +121,12 @@ const LogoContainerStyled = styled.div<{
   align-items: center;
   width: 14px;
   height: 14px;
-  cursor: pointer;
 
   svg {
-    .logo_svg__currentPath {
-      fill: ${(props) =>
-        props.isCabi
-          ? "var(--sys-main-color);"
-          : " var(--sys-default-main-color);"};
-    }
+    fill: ${(props) =>
+      props.isCabi ? "var(--sys-main-color)" : "var(--sys-default-main-color)"};
     width: 14px;
     height: 14px;
-  }
-
-  & > svg > path {
-    transform: ${(props) =>
-      props.domainTitle === "수요지식회" ? "scale(1.08)" : "scale(1)"};
   }
 `;
 
@@ -138,7 +136,6 @@ const DomainTitleStyled = styled.div<{ fontWeight: string }>`
   font-size: 0.875rem;
   font-weight: ${(props) => props.fontWeight};
   margin-left: 4px;
-  cursor: pointer;
 `;
 
 const DomainSeparatorStyled = styled.div`
@@ -150,8 +147,9 @@ const DomainSeparatorStyled = styled.div`
 
 const ToggleContainerStyled = styled.div`
   position: absolute;
-  right: 0px;
+  right: 0;
   display: flex;
   align-items: center;
 `;
+
 export default TopNavDomainGroup;
