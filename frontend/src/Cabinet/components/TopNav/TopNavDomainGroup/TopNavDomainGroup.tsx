@@ -150,7 +150,7 @@ const DomainSeparatorStyled = styled.div`
 
 const ToggleContainerStyled = styled.div`
   position: absolute;
-  right: 10px;
+  right: 0px;
   display: flex;
   align-items: center;
 `;
