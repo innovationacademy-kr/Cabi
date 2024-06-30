@@ -1,6 +1,12 @@
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import ToggleSwitch from "@/Cabinet/components/Common/ToggleSwitch";
 import { ReactComponent as CabiLogo } from "@/Cabinet/assets/images/logo.svg";
+import {
+  DisplayStyleToggleType,
+  DisplayStyleType,
+} from "@/Cabinet/types/enum/displayStyle.type.enum";
 import { ReactComponent as PresentationLogo } from "@/Presentation/assets/images/logo.svg";
 
 interface ITopNavDomain {
@@ -31,6 +37,12 @@ const domains: ITopNavDomain[] = [
 const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
   const navigator = useNavigate();
   const { pathname } = useLocation();
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const handleToggleChange = (checked: boolean) => {
+    setIsDarkMode(checked);
+  };
+
   return (
     <DomainGroupContainerStyled>
       {domains.map((domain, index) => (
@@ -58,6 +70,15 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
           {index < domains.length - 1 && <DomainSeparatorStyled />}
         </DomainWrapperStyled>
       ))}
+      {pathname.includes("/admin") && (
+        <ToggleContainerStyled>
+          <ToggleSwitch
+            id="dark-mode-toggle"
+            checked={isDarkMode}
+            onChange={handleToggleChange}
+          />
+        </ToggleContainerStyled>
+      )}
     </DomainGroupContainerStyled>
   );
 };
@@ -127,4 +148,10 @@ const DomainSeparatorStyled = styled.div`
   background-color: var(--service-man-title-border-btm-color);
 `;
 
+const ToggleContainerStyled = styled.div`
+  position: absolute;
+  right: 10px;
+  display: flex;
+  align-items: center;
+`;
 export default TopNavDomainGroup;
