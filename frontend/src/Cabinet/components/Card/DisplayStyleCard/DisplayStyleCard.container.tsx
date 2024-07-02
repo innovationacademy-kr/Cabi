@@ -26,7 +26,7 @@ const DisplayStyleCardContainer = () => {
   const savedDisplayStyleToggle =
     (localStorage.getItem("display-style-toggle") as DisplayStyleToggleType) ||
     DisplayStyleToggleType.DEVICE;
-  var darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const initialDisplayStyle = getInitialDisplayStyle(
     savedDisplayStyleToggle,
     darkModeQuery
@@ -38,17 +38,12 @@ const DisplayStyleCardContainer = () => {
     savedDisplayStyleToggle
   );
 
-  const setColorsAndLocalStorage = (toggleType: DisplayStyleToggleType) => {
-    setToggleType(toggleType);
-    localStorage.setItem("display-style-toggle", toggleType);
-  };
-
   const handleDisplayStyleButtonClick = (displayStyleToggleType: string) => {
     if (toggleType === displayStyleToggleType) return;
     setToggleType(
       displayStyleToggleType as React.SetStateAction<DisplayStyleToggleType>
     );
-    setColorsAndLocalStorage(displayStyleToggleType as DisplayStyleToggleType);
+    localStorage.setItem("display-style-toggle", displayStyleToggleType);
   };
 
   useEffect(() => {
