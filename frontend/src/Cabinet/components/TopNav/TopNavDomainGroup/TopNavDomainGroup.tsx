@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import ToggleSwitch from "@/Cabinet/components/Common/ToggleSwitch";
+import DarkModeToggleSwitch from "@/Cabinet/components/Common/DarkModeToggleSwitch";
 import { ReactComponent as CabiLogo } from "@/Cabinet/assets/images/logo.svg";
 import { ReactComponent as PresentationLogo } from "@/Presentation/assets/images/logo.svg";
 
@@ -79,7 +79,7 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
       ))}
       {pathname.includes("/admin") && (
         <ToggleContainerStyled>
-          <ToggleSwitch
+          <DarkModeToggleSwitch
             id="dark-mode-toggle"
             checked={isDarkMode}
             onChange={handleToggleChange}
@@ -147,7 +147,7 @@ const DomainSeparatorStyled = styled.div`
 
 const ToggleContainerStyled = styled.div`
   position: absolute;
-  right: 0;
+  right: 20px;
   display: flex;
   align-items: center;
 `;
