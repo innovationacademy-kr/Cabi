@@ -1,11 +1,17 @@
 package org.ftclub.cabinet.ping;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.item.service.ItemCommandService;
+import org.ftclub.cabinet.item.service.ItemRedisService;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.LentExtensionManager;
+import org.ftclub.cabinet.user.service.UserCommandService;
+import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.overdue.manager.OverdueManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +26,11 @@ public class PingController {
 	private final LentFacadeService lentFacadeService;
 	private final OverdueManager overdueManager;
 	private final LentExtensionManager lentExtensionManager;
+
+	private final ItemRedisService itemRedisService;
+	private final ItemCommandService itemCommandService;
+	private final UserQueryService userQueryService;
+	private final UserCommandService userCommandService;
 
 	@RequestMapping
 	public String ping() {
@@ -44,4 +55,21 @@ public class PingController {
 		lentExtensionManager.issueLentExtension();
 		return "ok";
 	}
+
+	/**
+	 * 임시 메소드 (Redis to DB coin update)
+	 *
+	 * @return
+	 */
+	@GetMapping("/item")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public String ok2() {
+		List<User> allUsers = userQueryService.findAllUsers();
+		allUsers.stream().map(User::getId).forEach(userId -> {
+			long coinAmount = itemRedisService.getCoinAmount(userId);
+			userCommandService.overwriteCoinAmount(userId, coinAmount);
+		});
+		return "ok";
+	}
+
 }

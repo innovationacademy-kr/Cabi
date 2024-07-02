@@ -61,11 +61,15 @@ public class User {
 	@Column(name = "PUSH_ALARM", columnDefinition = "boolean default false")
 	private boolean pushAlarm;
 
+	@NotNull
+	@Column(name = "COIN", columnDefinition = "bigint default 0")
+	private Long coin;
 
 	protected User(String name, String email, LocalDateTime blackholedAt) {
 		this.name = name;
 		this.email = email;
 		this.blackholedAt = blackholedAt;
+		this.coin = 0L;
 //		this.role = userRole;
 		setDefaultAlarmStatus();
 	}
@@ -142,5 +146,16 @@ public class User {
 
 	public boolean isBlackholed() {
 		return blackholedAt != null && blackholedAt.isBefore(LocalDateTime.now());
+	}
+
+	public void addCoin(Long reward) {
+		this.coin += reward;
+	}
+
+	/**
+	 * 임시 메소드
+	 */
+	public void setCoin(Long coin) {
+		this.coin = coin;
 	}
 }

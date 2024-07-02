@@ -19,7 +19,7 @@ const mapItemNameToType = (itemName: string): StoreItemType => {
     case "페널티 감면권":
       return StoreItemType.PENALTY;
     default:
-      return StoreItemType.PENALTY;
+      return StoreItemType.EXTENSION;
   }
 };
 

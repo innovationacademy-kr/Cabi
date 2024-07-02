@@ -109,4 +109,20 @@ public class UserCommandService {
 		user.changeBlackholedAt(blackholedAt);
 		userRepository.save(user);
 	}
+
+	public void updateCoinAmount(Long userId, Long reward) {
+		User user = userRepository.findById(userId)
+				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+		user.addCoin(reward);
+	}
+
+	/**
+	 * 임시 메소드
+	 */
+	public void overwriteCoinAmount(Long userId, Long coin) {
+		User user = userRepository.findById(userId)
+				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+		user.setCoin(coin);
+	}
+
 }
