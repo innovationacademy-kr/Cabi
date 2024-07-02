@@ -152,10 +152,4 @@ public class User {
 		this.coin += reward;
 	}
 
-	/**
-	 * 임시 메소드
-	 */
-	public void setCoin(Long coin) {
-		this.coin = coin;
-	}
 }

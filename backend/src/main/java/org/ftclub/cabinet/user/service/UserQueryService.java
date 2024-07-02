@@ -158,8 +158,4 @@ public class UserQueryService {
 	}
 
 
-	public List<User> findAllUsers() {
-		return userRepository.findAllDeletedAtIsNull();
-	}
-
 }
