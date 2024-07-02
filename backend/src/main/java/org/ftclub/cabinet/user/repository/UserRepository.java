@@ -134,4 +134,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Query("SELECT u FROM User u WHERE u.id IN :userIds AND u.deletedAt IS NULL")
 	Page<User> findPaginationByIds(@Param("userIds") List<Long> userIds, Pageable pageable);
+
+	@Query("SELECT u FROM User u WHERE u.deletedAt IS NULL")
+	List<User> findAllDeletedAtIsNull();
 }
