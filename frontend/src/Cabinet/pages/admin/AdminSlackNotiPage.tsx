@@ -16,6 +16,12 @@ import {
   axiosSendSlackNotificationToUser,
 } from "@/Cabinet/api/axios/axios.custom";
 
+const hoverAndClickedBtnStyles = css`
+  background: var(--capsule-btn-hover-bg-color);
+  color: var(--sys-main-color);
+  border: 1px solid var(--sys-main-color);
+`;
+
 const AdminSlackNotiPage = () => {
   const receiverInputRef = useRef<HTMLInputElement>(null);
   const msgTextAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -235,17 +241,13 @@ const CapsuleButtonStyled = styled.span<{
   cursor: pointer;
 
   :hover {
-    background: var(--capsule-btn-hover-bg-color);
-    color: var(--sys-main-color);
-    border: 1px solid var(--sys-main-color);
+    ${hoverAndClickedBtnStyles}
   }
 
   ${({ channelBtnIsClicked, templateBtnIsClicked }) =>
     (channelBtnIsClicked || templateBtnIsClicked) &&
     css`
-      background: var(--capsule-btn-hover-bg-color);
-      color: var(--sys-main-color);
-      border: 1px solid var(--sys-main-color);
+      ${hoverAndClickedBtnStyles}
     `}
 `;
 
