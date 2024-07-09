@@ -114,7 +114,7 @@ const AdminSlackNotiPage = () => {
                   key={idx}
                   onClick={() => {
                     renderTemplateTextArea(template.title);
-                    if (channelBtnIdx !== idx) setTemplateBtnIdx(idx);
+                    if (templateBtnIdx !== idx) setTemplateBtnIdx(idx);
                   }}
                   templateBtnIsClicked={templateBtnIdx === idx}
                 >
