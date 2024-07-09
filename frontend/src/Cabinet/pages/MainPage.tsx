@@ -13,7 +13,7 @@ import {
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import CabinetListContainer from "@/Cabinet/components/CabinetList/CabinetList.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import SectionAlertModal from "@/Cabinet/components/Modals/SectionAlertModal/SectionAlertModal";
+import SectionAlertModal from "@/Cabinet/components/Modals/StoreModal/SectionAlertModal";
 import SectionPaginationContainer from "@/Cabinet/components/SectionPagination/SectionPagination.container";
 import { clubSectionsData } from "@/Cabinet/assets/data/mapPositionData";
 import { ReactComponent as FilledHeartIcon } from "@/Cabinet/assets/images/filledHeart.svg";
