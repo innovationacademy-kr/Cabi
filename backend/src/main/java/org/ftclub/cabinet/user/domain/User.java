@@ -62,7 +62,7 @@ public class User {
 	private boolean pushAlarm;
 
 	@NotNull
-	@Column(name = "COIN", columnDefinition = "bigint default 0")
+	@Column(name = "COIN")
 	private Long coin;
 
 	protected User(String name, String email, LocalDateTime blackholedAt) {
