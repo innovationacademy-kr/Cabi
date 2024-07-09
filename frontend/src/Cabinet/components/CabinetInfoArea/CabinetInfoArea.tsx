@@ -9,13 +9,13 @@ import CountTimeContainer from "@/Cabinet/components/CabinetInfoArea/CountTime/C
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import SelectInduction from "@/Cabinet/components/Common/SelectInduction";
 import CancelModal from "@/Cabinet/components/Modals/CancelModal/CancelModal";
-import ExtendModal from "@/Cabinet/components/Modals/ExtendModal/ExtendModal";
 import InvitationCodeModalContainer from "@/Cabinet/components/Modals/InvitationCodeModal/InvitationCodeModal.container";
 import LentModal from "@/Cabinet/components/Modals/LentModal/LentModal";
 import MemoModalContainer from "@/Cabinet/components/Modals/MemoModal/MemoModal.container";
 import PasswordCheckModalContainer from "@/Cabinet/components/Modals/PasswordCheckModal/PasswordCheckModal.container";
 import ReturnModal from "@/Cabinet/components/Modals/ReturnModal/ReturnModal";
-import SwapModal from "@/Cabinet/components/Modals/SwapModal/SwapModal";
+import ExtendModal from "@/Cabinet/components/Modals/StoreModal/ExtendModal";
+import SwapModal from "@/Cabinet/components/Modals/StoreModal/SwapModal";
 import UnavailableModal from "@/Cabinet/components/Modals/UnavailableModal/UnavailableModal";
 import {
   additionalModalType,
