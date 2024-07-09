@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
   FailResponseModal,
   SuccessResponseModal,
@@ -24,6 +24,8 @@ const AdminSlackNotiPage = () => {
   const [modalContent, setModalContent] = useState<string>("");
   const [modalTitle, setModalTitle] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [channelBtnIdx, setChannelBtnIdx] = useState<number>(-1);
+  const [templateBtnIdx, setTemplateBtnIdx] = useState<number>(-1);
 
   const renderReceiverInput = (title: string) => {
     if (receiverInputRef.current) receiverInputRef.current.value = title;
@@ -40,6 +42,8 @@ const AdminSlackNotiPage = () => {
   const initializeInputandTextArea = () => {
     if (receiverInputRef.current) receiverInputRef.current.value = "";
     if (msgTextAreaRef.current) msgTextAreaRef.current.value = "";
+    if (channelBtnIdx > -1) setChannelBtnIdx(-1);
+    if (templateBtnIdx > -1) setTemplateBtnIdx(-1);
   };
 
   const handleSubmitButton = async () => {
@@ -88,7 +92,11 @@ const AdminSlackNotiPage = () => {
             return (
               <CapsuleButtonStyled
                 key={idx}
-                onClick={() => renderReceiverInput(channel.title)}
+                onClick={() => {
+                  renderReceiverInput(channel.title);
+                  if (channelBtnIdx !== idx) setChannelBtnIdx(idx);
+                }}
+                channelBtnIsClicked={channelBtnIdx === idx}
               >
                 {channel.title}
               </CapsuleButtonStyled>
@@ -104,7 +112,11 @@ const AdminSlackNotiPage = () => {
               return (
                 <CapsuleButtonStyled
                   key={idx}
-                  onClick={() => renderTemplateTextArea(template.title)}
+                  onClick={() => {
+                    renderTemplateTextArea(template.title);
+                    if (channelBtnIdx !== idx) setTemplateBtnIdx(idx);
+                  }}
+                  templateBtnIsClicked={templateBtnIdx === idx}
                 >
                   {template.title}
                 </CapsuleButtonStyled>
@@ -209,7 +221,10 @@ const CapsuleWrappingStyled = styled.div`
   flex-wrap: wrap;
 `;
 
-const CapsuleButtonStyled = styled.span`
+const CapsuleButtonStyled = styled.span<{
+  channelBtnIsClicked?: boolean;
+  templateBtnIsClicked?: boolean;
+}>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -224,6 +239,14 @@ const CapsuleButtonStyled = styled.span`
     color: var(--sys-main-color);
     border: 1px solid var(--sys-main-color);
   }
+
+  ${({ channelBtnIsClicked, templateBtnIsClicked }) =>
+    (channelBtnIsClicked || templateBtnIsClicked) &&
+    css`
+      background: var(--capsule-btn-hover-bg-color);
+      color: var(--sys-main-color);
+      border: 1px solid var(--sys-main-color);
+    `}
 `;
 
 const FormWappingStyled = styled.div`
