@@ -46,7 +46,7 @@ public class LentExtensionManager {
 		users.forEach(user -> {
 			Long userId = user.getId();
 			user.addCoin(coinRewardItem.getPrice());
-			itemHistoryCommandService.createItemHistory(userId, coinRewardItem.getId());
+			itemHistoryCommandService.createCoinItemHistory(userId, coinRewardItem.getId());
 		});
 	}
 

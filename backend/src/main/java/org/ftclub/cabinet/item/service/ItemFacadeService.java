@@ -192,7 +192,7 @@ public class ItemFacadeService {
 		// DB에 코인 저장
 		Item coinCollect = itemQueryService.getBySku(Sku.COIN_COLLECT);
 		int reward = (int) (coinCollect.getPrice().longValue());
-		itemHistoryCommandService.createCoinCollectItemHistory(userId, coinCollect.getId());
+		itemHistoryCommandService.createCoinItemHistory(userId, coinCollect.getId());
 
 		// 출석 일자에 따른 랜덤 리워드 지급
 		Long coinCollectionCountInMonth =
@@ -203,7 +203,7 @@ public class ItemFacadeService {
 			Sku coinSku = itemPolicyService.getRewardSku(randomPercentage);
 			Item coinReward = itemQueryService.getBySku(coinSku);
 
-			itemHistoryCommandService.createCoinCollectItemHistory(userId, coinReward.getId());
+			itemHistoryCommandService.createCoinItemHistory(userId, coinReward.getId());
 			reward += coinReward.getPrice();
 		}
 
