@@ -109,7 +109,7 @@ const MoonWrapperStyled = styled.div`
   & > svg {
     width: 100%;
     height: 100%;
-    fill: var(--black-text-color);
+    fill: var(--ref-gray-900);
   }
 `;
 
