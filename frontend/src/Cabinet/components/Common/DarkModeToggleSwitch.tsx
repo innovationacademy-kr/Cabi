@@ -70,9 +70,9 @@ const ToggleKnobStyled = styled.span<{ checked: boolean }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: ${(props) => (props.checked ? "calc(100% - 19px)" : "3px")};
-  width: 16px;
-  height: 16px;
+  left: ${(props) => (props.checked ? "calc(100% - 21px)" : "3px")};
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: var(--white-text-with-bg-color);
   transition: left 0.2s;
