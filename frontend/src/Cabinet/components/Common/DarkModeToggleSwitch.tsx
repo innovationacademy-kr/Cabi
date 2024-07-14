@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import MoonIcon from "@/Cabinet/assets/images/moon.svg";
-import SunIcon from "@/Cabinet/assets/images/sun.svg";
+import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moonAdmin.svg";
+import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sunAdmin.svg";
 
 interface ToggleSwitchInterface {
   id: string;
@@ -31,6 +31,12 @@ const DarkModeToggleSwitch = ({
         disabled={disabled}
       />
       <ToggleSwitchStyled htmlFor={id} checked={checked} disabled={disabled}>
+        <SunWrapperStyled>
+          <SunIcon />
+        </SunWrapperStyled>
+        <MoonWrapperStyled>
+          <MoonIcon />
+        </MoonWrapperStyled>
         <ToggleKnobStyled checked={checked} />
       </ToggleSwitchStyled>
     </ToggleSwitchContainerStyled>
@@ -76,6 +82,35 @@ const ToggleKnobStyled = styled.span<{ checked: boolean }>`
   border-radius: 50%;
   background: var(--white-text-with-bg-color);
   transition: left 0.2s;
+`;
+
+const SunWrapperStyled = styled.div`
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+
+  & > svg {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+const MoonWrapperStyled = styled.div`
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+
+  & > svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--black-text-color);
+  }
 `;
 
 export default DarkModeToggleSwitch;
