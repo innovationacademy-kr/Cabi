@@ -175,6 +175,9 @@
 | [ 🐶 surlee](https://github.com/Elineely) | [ 🐣 hyowchoi](https://github.com/chyo1/) | [ 👽 sohyupar](https://github.com/saewoo1) | [🦝 jimchoi](https://github.com/jimchoi9) | [ 🛼 jeekim](https://github.com/jnkeniaem) | [🍾 miyu](https://github.com/Minkyu01) | [🧸 gykoh](https://github.com/gykoh42) |
 | ----------------------------------------- | ----------------------------------------- | ------------------------------------------ | ----------------------------------------- | ------------------------------------------ | -------------------------------------- | -------------------------------------- |
 
+| [ 🐰 jihykim2](https://github.com/jihyunk03) |
+| -------------------------------------------- |
+
 | <a href="https://github.com/innovationacademy-kr"><img src="https://img.shields.io/badge/42Seoul-000000?style=flat-square&logo=42&logoColor=white" /></a> |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
