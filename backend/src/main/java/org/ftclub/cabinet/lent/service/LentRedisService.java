@@ -160,6 +160,8 @@ public class LentRedisService {
 		lentRedis.deleteUserInCabinet(cabinetIdString, userIdString);
 		if (lentRedis.countUserInCabinet(cabinetIdString) == 0) {
 			lentRedis.deleteShadowKey(cabinetIdString);
+			clearCabinetSession(cabinetId);
+
 		}
 	}
 

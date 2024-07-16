@@ -29,7 +29,7 @@ public class ItemHistoryCommandService {
 		itemHistoryRepository.saveAll(itemHistories);
 	}
 
-	public void createCoinCollectItemHistory(Long userId, Long itemId) {
+	public void createCoinItemHistory(Long userId, Long itemId) {
 		ItemHistory coinCollectItemHistory = ItemHistory.of(userId, itemId, LocalDateTime.now());
 		itemHistoryRepository.save(coinCollectItemHistory);
 	}

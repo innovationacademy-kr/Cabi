@@ -1,0 +1,46 @@
+name: "UI 개선 건의"
+description: UI 개선 건의 작성 기본 양식입니다.
+labels: ["ui"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        작성 예시 : "[FE] 지도-E/V 버튼 눌렀을때 나타나는 로고 색 다크모드 적용"
+  - type: textarea
+    id: ui-description
+    attributes:
+      label: UI 문제점 설명
+      description: 문제가 언제/어떻게 발생했는지 명확하게 적어주세요.
+      placeholder: 설명을 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 재현 방법
+      description: 문제가 재현되는 상황을 설명해주세요.
+      placeholder: 설명을 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: improvement
+    attributes:
+      label: 기대하는 UI
+      description: 기대하는 UI에 대해서 설명해주세요.
+      placeholder: 설명을 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: system-info
+    attributes:
+      label: 시스템 환경 (선택 사항)
+      description: 현재 버그가 발생한 시스템 환경을 적어주세요.
+      render: shell
+      placeholder: OS, 브라우저 등을 적어주세요.
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 추가 건의사항
+      description: Cabi에 바라시는 점이나, 하시고 싶은 말씀을 적어주세요.

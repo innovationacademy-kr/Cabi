@@ -7,7 +7,7 @@ import {
   ContentInfoStyled,
 } from "@/Cabinet/components/Card/CardStyles";
 import { MyCabinetInfo } from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
-import PenaltyModal from "@/Cabinet/components/Modals//PenaltyModal/PenaltyModal";
+import PenaltyModal from "@/Cabinet/components/Modals/StoreModal/PenaltyModal";
 import { cabinetIconComponentMap } from "@/Cabinet/assets/data/maps";
 import { IItemTimeRemaining } from "@/Cabinet/types/dto/store.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
