@@ -1,5 +1,5 @@
-name: "UI 개선 창구"
-description: UI 개선점 작성 기본 양식입니다.
+name: "UI 개선 건의"
+description: UI 개선 건의 작성 기본 양식입니다.
 labels: ["ui"]
 body:
   - type: markdown
