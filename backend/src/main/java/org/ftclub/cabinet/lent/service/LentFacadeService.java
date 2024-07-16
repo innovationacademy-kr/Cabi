@@ -338,7 +338,6 @@ public class LentFacadeService {
 			Cabinet cabinet = cabinetQueryService.getCabinetForUpdate(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 		}
-		lentRedisService.clearCabinetSession(cabinetId);
 	}
 
 	/**
