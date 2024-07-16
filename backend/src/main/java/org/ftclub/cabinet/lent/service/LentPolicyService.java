@@ -59,10 +59,7 @@ public class LentPolicyService {
 				throw new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER,
 						unbannedAtString).asCustomServiceException();
 			case SHARE_BANNED_USER:
-				unbannedAtString = policyDate.format(
-						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				throw new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED,
-						unbannedAtString).asCustomServiceException();
+				throw ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED.asServiceException();
 			case BLACKHOLED_USER:
 				throw ExceptionStatus.BLACKHOLED_USER.asServiceException();
 			case PENDING_CABINET:
