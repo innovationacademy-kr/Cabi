@@ -110,7 +110,6 @@ const DomainWrapperStyled = styled.div`
 const DomainContainerStyled = styled.div`
   display: flex;
   align-items: center;
-  cursor: pointer;
 `;
 
 const LogoContainerStyled = styled.div<{
@@ -121,12 +120,22 @@ const LogoContainerStyled = styled.div<{
   align-items: center;
   width: 14px;
   height: 14px;
+  cursor: pointer;
 
   svg {
-    fill: ${(props) =>
-      props.isCabi ? "var(--sys-main-color)" : "var(--sys-default-main-color)"};
+    .logo_svg__currentPath {
+      fill: ${(props) =>
+        props.isCabi
+          ? "var(--sys-main-color);"
+          : " var(--sys-default-main-color);"};
+    }
     width: 14px;
     height: 14px;
+  }
+
+  & > svg > path {
+    transform: ${(props) =>
+      props.domainTitle === "수요지식회" ? "scale(1.08)" : "scale(1)"};
   }
 `;
 
@@ -136,6 +145,7 @@ const DomainTitleStyled = styled.div<{ fontWeight: string }>`
   font-size: 0.875rem;
   font-weight: ${(props) => props.fontWeight};
   margin-left: 4px;
+  cursor: pointer;
 `;
 
 const DomainSeparatorStyled = styled.div`
@@ -144,12 +154,10 @@ const DomainSeparatorStyled = styled.div`
   margin: 0 8px;
   background-color: var(--service-man-title-border-btm-color);
 `;
-
 const ToggleContainerStyled = styled.div`
   position: absolute;
   right: 20px;
   display: flex;
   align-items: center;
 `;
-
 export default TopNavDomainGroup;
