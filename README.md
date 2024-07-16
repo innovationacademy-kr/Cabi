@@ -75,8 +75,8 @@
 <br/>
 
 ## 🕸️ 인프라 구조도
-![Untitled](https://github.com/innovationacademy-kr/Cabi/assets/83565255/165c1529-6164-4988-9495-6bc2ba3ef0ab)
 
+![Untitled](https://github.com/innovationacademy-kr/Cabi/assets/83565255/165c1529-6164-4988-9495-6bc2ba3ef0ab)
 
 ## 🛠 기술 스택
 
@@ -174,6 +174,9 @@
 
 | [ 🐶 surlee](https://github.com/Elineely) | [ 🐣 hyowchoi](https://github.com/chyo1/) | [ 👽 sohyupar](https://github.com/saewoo1) | [🦝 jimchoi](https://github.com/jimchoi9) | [ 🛼 jeekim](https://github.com/jnkeniaem) | [🍾 miyu](https://github.com/Minkyu01) | [🧸 gykoh](https://github.com/gykoh42) |
 | ----------------------------------------- | ----------------------------------------- | ------------------------------------------ | ----------------------------------------- | ------------------------------------------ | -------------------------------------- | -------------------------------------- |
+
+| [ 🎱 junsbae ](https://github.com/wet6123) |
+| ------------------------------------------ |
 
 | <a href="https://github.com/innovationacademy-kr"><img src="https://img.shields.io/badge/42Seoul-000000?style=flat-square&logo=42&logoColor=white" /></a> |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
