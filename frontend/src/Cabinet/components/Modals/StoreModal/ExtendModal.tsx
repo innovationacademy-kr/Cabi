@@ -22,6 +22,7 @@ import { IInventoryInfo } from "@/Cabinet/components/Store/Inventory/Inventory";
 import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import { IItemDetail, IItemStore } from "@/Cabinet/types/dto/store.dto";
+import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
@@ -49,6 +50,7 @@ const ExtendModal: React.FC<{
   const [itemDropdownOptions, setItemDropdownOptions] = useState<
     IDropdownOptions[]
   >([]);
+  const [url, setUrl] = useState<string | null>(null);
   const [currentCabinetId] = useRecoilState(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myLentInfo, setMyLentInfo] =
@@ -187,7 +189,15 @@ const ExtendModal: React.FC<{
   const extensionItemUse = async (item: string) => {
     if (currentCabinetId === 0 || myInfo.cabinetId === null) {
       setHasErrorOnResponse(true);
-      setModalTitle("현재 대여중인 사물함이 없습니다.");
+      setModalTitle("연장권 사용실패");
+      setModalContents("현재 대여중인 사물함이 없습니다.");
+      setShowResponseModal(true);
+      return;
+    }
+    if (myLentInfo.status === CabinetStatus.OVERDUE) {
+      setHasErrorOnResponse(true);
+      setModalTitle("연장권 사용실패");
+      setModalContents(`연체 중에는 연장권을 사용하실 수 없습니다.`);
       setShowResponseModal(true);
       return;
     }
@@ -216,6 +226,7 @@ const ExtendModal: React.FC<{
       if (error.response.status === 400) {
         setModalTitle("연장권 사용실패");
         setModalContents(noExtensionMsg);
+        setUrl("/store");
       } else {
         setModalTitle(error.response?.data.message || error.data.message);
       }
@@ -259,7 +270,7 @@ const ExtendModal: React.FC<{
             modalTitle={modalTitle}
             modalContents={modalContents}
             closeModal={props.onClose}
-            url={"/store"}
+            url={url}
             urlTitle={"까비상점으로 이동"}
           />
         ) : (
