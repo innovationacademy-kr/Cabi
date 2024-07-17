@@ -43,6 +43,8 @@ public class LentPolicyService {
 				throw ExceptionStatus.LENT_FULL.asServiceException();
 			case OVERDUE_CABINET:
 				throw ExceptionStatus.LENT_EXPIRED.asServiceException();
+			case OVERDUE_CABINET_EXTEND:
+				throw ExceptionStatus.EXTENSION_LENT_DELAYED.asServiceException();
 			case LENT_CLUB:
 				throw ExceptionStatus.LENT_CLUB.asServiceException();
 			case LENT_NOT_CLUB:
@@ -306,5 +308,18 @@ public class LentPolicyService {
 		if (existSwapRecord) {
 			handlePolicyStatus(LentPolicyStatus.SWAP_LIMIT_EXCEEDED, swapExpiredAt);
 		}
+	}
+
+	/**
+	 * 연장권 사용 시, 연체된 사물함에 사용하는지 확인합니다
+	 *
+	 * @param expiredAt 대여만료 날짜
+	 */
+	public void verifyExtendable(LocalDateTime expiredAt) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
+		if (expiredAt.isBefore(LocalDateTime.now())) {
+			status = LentPolicyStatus.OVERDUE_CABINET_EXTEND;
+		}
+		handlePolicyStatus(status, null);
 	}
 }
