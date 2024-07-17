@@ -75,8 +75,10 @@ const ExtendModal: React.FC<{
   연장권 사용은 취소할 수 없습니다.`;
   const extendInfoDetail = `사물함을 대여하시면 연장권 사용이 가능합니다.
 연장권은 <strong>${extensionExpiredDate} 23:59</strong> 이후 만료됩니다.`;
-  const noExtensionMsg = `현재 연장권을 보유하고 있지 않습니다.
+  const noItemMsg = `현재 연장권을 보유하고 있지 않습니다.
 연장권은 까비 상점에서 구매하실 수 있습니다.`;
+  const overdueMsg = "연체 중에는 연장권을 사용하실 수 없습니다.";
+  const defaultFailureModalTitle = "연장권 사용실패";
 
   useEffect(() => {
     fetchData();
@@ -86,7 +88,7 @@ const ExtendModal: React.FC<{
     if (myItems?.extensionItems.length === 0) {
       setShowResponseModal(true);
       setHasErrorOnResponse(true);
-      setModalContents(noExtensionMsg);
+      setModalContents(noItemMsg);
     } else {
       setShowResponseModal(false);
       setHasErrorOnResponse(false);
@@ -189,15 +191,15 @@ const ExtendModal: React.FC<{
   const extensionItemUse = async (item: string) => {
     if (currentCabinetId === 0 || myInfo.cabinetId === null) {
       setHasErrorOnResponse(true);
-      setModalTitle("연장권 사용실패");
+      setModalTitle(defaultFailureModalTitle);
       setModalContents("현재 대여중인 사물함이 없습니다.");
       setShowResponseModal(true);
       return;
     }
     if (myLentInfo.status === CabinetStatus.OVERDUE) {
       setHasErrorOnResponse(true);
-      setModalTitle("연장권 사용실패");
-      setModalContents(`연체 중에는 연장권을 사용하실 수 없습니다.`);
+      setModalTitle(defaultFailureModalTitle);
+      setModalContents(overdueMsg);
       setShowResponseModal(true);
       return;
     }
@@ -224,9 +226,12 @@ const ExtendModal: React.FC<{
     } catch (error: any) {
       setHasErrorOnResponse(true);
       if (error.response.status === 400) {
-        setModalTitle("연장권 사용실패");
-        setModalContents(noExtensionMsg);
+        setModalTitle(defaultFailureModalTitle);
+        setModalContents(noItemMsg);
         setUrl("/store");
+      } else if (error.response.status === 403) {
+        setModalTitle(defaultFailureModalTitle);
+        setModalContents(overdueMsg);
       } else {
         setModalTitle(error.response?.data.message || error.data.message);
       }
