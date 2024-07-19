@@ -70,7 +70,7 @@ public class UserFacadeService {
 		AlarmTypeResponseDto userAlarmTypes = currentUser.getAlarmTypes();
 		boolean isDeviceTokenExpired = userAlarmTypes.isPush()
 				&& fcmTokenRedisService.findByUserName(user.getName()).isEmpty();
-		Long coins = itemRedisService.getCoinCount(userId);
+		Long coins = currentUser.getCoin();
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
 				lentExtensionResponseDto, userAlarmTypes, isDeviceTokenExpired, coins);
 	}

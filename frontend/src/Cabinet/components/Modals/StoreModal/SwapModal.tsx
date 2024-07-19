@@ -7,6 +7,12 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/Cabinet/recoil/atoms";
+import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import { modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
@@ -14,14 +20,7 @@ import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
 import {
   axiosCabinetById,
   axiosMyLentInfo,
-  axiosSwapId,
 } from "@/Cabinet/api/axios/axios.custom";
-import Modal, { IModalContents } from "../Modal";
-import ModalPortal from "../ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "../ResponseModal/ResponseModal";
 
 const SwapModal: React.FC<{
   lentType: string; // 현재 클릭한 사물함 종류
@@ -51,7 +50,6 @@ const SwapModal: React.FC<{
   const trySwapRequest = async () => {
     setIsLoading(true);
     try {
-      // await axiosSwapId(currentCabinetId);
       await axiosUseItem("SWAP", currentCabinetId, null, null, null);
 
       //userCabinetId 세팅

@@ -155,6 +155,7 @@ public class UserQueryService {
 	 */
 	public List<User> findAllUsersByNames(List<String> userNames) {
 		return userRepository.findAllUsersInNames(userNames);
-
 	}
+
+
 }

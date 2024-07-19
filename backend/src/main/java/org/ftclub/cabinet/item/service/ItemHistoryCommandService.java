@@ -28,4 +28,9 @@ public class ItemHistoryCommandService {
 				.collect(Collectors.toList());
 		itemHistoryRepository.saveAll(itemHistories);
 	}
+
+	public void createCoinItemHistory(Long userId, Long itemId) {
+		ItemHistory coinCollectItemHistory = ItemHistory.of(userId, itemId, LocalDateTime.now());
+		itemHistoryRepository.save(coinCollectItemHistory);
+	}
 }

@@ -43,6 +43,7 @@ import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
 import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.lock.LockUtil;
 import org.springframework.context.ApplicationEventPublisher;
@@ -67,6 +68,7 @@ public class ItemFacadeService {
 	private final ItemMapper itemMapper;
 	private final ItemPolicyService itemPolicyService;
 	private final ApplicationEventPublisher eventPublisher;
+	private final UserCommandService userCommandService;
 
 
 	/**
@@ -105,7 +107,7 @@ public class ItemFacadeService {
 
 		Map<ItemType, List<ItemDto>> itemMap = userItemHistories.stream()
 				.map(ItemHistory::getItem)
-				.filter(item -> item.getPrice() < 0)
+				.filter(item -> item.getPrice() <= 0)
 				.collect(groupingBy(Item::getType,
 						mapping(itemMapper::toItemDto, Collectors.toList())));
 
@@ -190,7 +192,7 @@ public class ItemFacadeService {
 		// DB에 코인 저장
 		Item coinCollect = itemQueryService.getBySku(Sku.COIN_COLLECT);
 		int reward = (int) (coinCollect.getPrice().longValue());
-		itemHistoryCommandService.createItemHistory(userId, coinCollect.getId());
+		itemHistoryCommandService.createCoinItemHistory(userId, coinCollect.getId());
 
 		// 출석 일자에 따른 랜덤 리워드 지급
 		Long coinCollectionCountInMonth =
@@ -201,12 +203,13 @@ public class ItemFacadeService {
 			Sku coinSku = itemPolicyService.getRewardSku(randomPercentage);
 			Item coinReward = itemQueryService.getBySku(coinSku);
 
-			itemHistoryCommandService.createItemHistory(userId, coinReward.getId());
+			itemHistoryCommandService.createCoinItemHistory(userId, coinReward.getId());
 			reward += coinReward.getPrice();
 		}
 
 		// Redis에 코인 변화량 저장
 		saveCoinChangeOnRedis(userId, reward);
+		userCommandService.updateCoinAmount(userId, (long) reward);
 
 		return new CoinCollectionRewardResponseDto(reward);
 	}
@@ -214,8 +217,8 @@ public class ItemFacadeService {
 	private void saveCoinChangeOnRedis(Long userId, final int reward) {
 		LockUtil.lockRedisCoin(userId, () -> {
 			// Redis에 유저 리워드 저장
-			long coins = itemRedisService.getCoinCount(userId);
-			itemRedisService.saveCoinCount(userId, coins + reward);
+//			long coins = itemRedisService.getCoinAmount(userId);
+//			itemRedisService.saveCoinCount(userId, coins + reward);
 
 			// Redis에 전체 코인 발행량 저장
 			long totalCoinSupply = itemRedisService.getTotalCoinSupply();
@@ -294,7 +297,11 @@ public class ItemFacadeService {
 
 		Item item = itemQueryService.getBySku(sku);
 		long price = item.getPrice();
-		long userCoin = itemRedisService.getCoinCount(userId);
+
+		// 유저의 보유 재화량
+//		long userCoin = itemRedisService.getCoinAmount(userId);
+		long userCoin = user.getCoin();
+
 
 		// 아이템 Policy 검증
 		itemPolicyService.verifyOnSale(price);
@@ -311,6 +318,7 @@ public class ItemFacadeService {
 			long totalCoinUsage = itemRedisService.getTotalCoinUsage();
 			itemRedisService.saveTotalCoinUsage(totalCoinUsage + price);
 		});
+		userCommandService.updateCoinAmount(userId, price);
 	}
 
 	@Transactional

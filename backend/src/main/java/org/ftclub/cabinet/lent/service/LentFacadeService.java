@@ -441,6 +441,9 @@ public class LentFacadeService {
 				userId, LentExtensionType.ALL, days);
 		List<LentHistory> lentHistories = lentQueryService.findCabinetActiveLentHistories(
 				cabinet.getId());
+		lentHistories.forEach(
+				lentHistory -> lentPolicyService.verifyExtendable(lentHistory.getExpiredAt())
+		);
 		lentExtensionCommandService.useLentExtension(lentExtensionByItem, lentHistories);
 	}
 }

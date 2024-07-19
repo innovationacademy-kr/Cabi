@@ -11,7 +11,7 @@ interface IStorePageItem {
 }
 
 const storePages: IStorePageItem[] = [
-  { name: "까비상점", route: "/store" },
+  { name: "까비 상점", route: "/store" },
   { name: "인벤토리", route: "/store/inventory" },
   { name: "아이템 사용내역", route: "/store/item-use-log" },
   { name: "코인 내역", route: "/store/coin-log" },

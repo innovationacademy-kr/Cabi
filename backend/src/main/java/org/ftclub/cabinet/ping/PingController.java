@@ -4,8 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.item.service.ItemCommandService;
+import org.ftclub.cabinet.item.service.ItemRedisService;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.LentExtensionManager;
+import org.ftclub.cabinet.user.service.UserCommandService;
+import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.overdue.manager.OverdueManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +24,11 @@ public class PingController {
 	private final LentFacadeService lentFacadeService;
 	private final OverdueManager overdueManager;
 	private final LentExtensionManager lentExtensionManager;
+
+	private final ItemRedisService itemRedisService;
+	private final ItemCommandService itemCommandService;
+	private final UserQueryService userQueryService;
+	private final UserCommandService userCommandService;
 
 	@RequestMapping
 	public String ping() {

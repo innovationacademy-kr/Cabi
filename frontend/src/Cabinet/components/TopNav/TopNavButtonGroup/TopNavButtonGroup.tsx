@@ -48,7 +48,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
 
   async function setTargetCabinetInfoToMyCabinet() {
     setCurrentCabinetId(myInfo.cabinetId);
-    setMyInfo((prev) => ({ ...prev, cabinetId: null }));
+    
     try {
       if (!myCabinetInfo?.cabinetId) return;
       const { data } = await axiosCabinetById(myCabinetInfo.cabinetId);

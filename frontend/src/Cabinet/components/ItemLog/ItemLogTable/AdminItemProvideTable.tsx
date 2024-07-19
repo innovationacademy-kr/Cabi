@@ -1,13 +1,8 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { ItemLogResponseType } from "@/Cabinet/types/dto/admin.dto";
+import { formatDate } from "@/Cabinet/utils/dateUtils";
 import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "2-digit",
-  month: "2-digit",
-  day: "2-digit",
-};
 
 const AdminItemProvideTable = ({
   itemLog,
@@ -38,10 +33,7 @@ const AdminItemProvideTable = ({
                     }
                   >
                     {issuedDate
-                      ? new Date(issuedDate).toLocaleString(
-                          "ko-KR",
-                          dateOptions
-                        )
+                      ? formatDate(new Date(issuedDate), ".", 2, 2, 2)
                       : ""}
                   </td>
                   <td>

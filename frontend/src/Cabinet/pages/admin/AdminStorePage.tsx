@@ -21,7 +21,7 @@ import {
   axiosStatisticsTotalItemUse,
 } from "@/Cabinet/api/axios/axios.custom";
 import { axiosStatisticsCoin } from "@/Cabinet/api/axios/axios.custom";
-import { padTo2Digits } from "@/Cabinet/utils/dateUtils";
+import { padToNDigits } from "@/Cabinet/utils/dateUtils";
 
 const dataToggleList: toggleItem[] = [
   { name: "발행 코인", key: CoinUseType.ISSUE },
@@ -194,7 +194,7 @@ const AdminStorePage = () => {
             <span>
               {coinCollectDate.getFullYear() +
                 "년 " +
-                padTo2Digits(coinCollectDate.getMonth() + 1) +
+                padToNDigits(coinCollectDate.getMonth() + 1, 2) +
                 "월"}
             </span>
             <MoveSectionButtonStyled
@@ -223,23 +223,20 @@ const HeaderStyled = styled.div`
   width: 90%;
   display: flex;
   margin-top: 10px;
-  margin-left: 110px;
   flex-direction: column;
   justify-content: start;
-  align-items: flex-start;
 `;
 
 const ToggleWrapperStyled = styled.div`
-  width: 90%;
+  width: 100%;
+  padding-right: 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
+  margin-left: 60px;
 
-  @media screen and (max-width: 1100px) {
-    width: 85%;
-  }
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 480px) {
     flex-direction: column;
     align-items: flex-start;
     & > :first-child {
@@ -257,7 +254,7 @@ const AdminStorePageStyled = styled.div`
   grid-template-rows: repeat(2, 1fr);
   place-items: center;
   min-height: 775px;
-  margin: 42px 0;
+  padding: 42px 0;
   & > :first-child {
     grid-column: span 3;
   }
@@ -277,6 +274,7 @@ const AdminStorePageStyled = styled.div`
     min-width: 300px;
     overflow: scroll;
     margin-bottom: 0;
+    padding-bottom: 0;
     & > :first-child {
       grid-column: span 1;
     }

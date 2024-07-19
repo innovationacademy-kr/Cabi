@@ -7,11 +7,11 @@ import {
   ContentInfoStyled,
 } from "@/Cabinet/components/Card/CardStyles";
 import { MyCabinetInfo } from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
+import PenaltyModal from "@/Cabinet/components/Modals/StoreModal/PenaltyModal";
 import { cabinetIconComponentMap } from "@/Cabinet/assets/data/maps";
 import { IItemTimeRemaining } from "@/Cabinet/types/dto/store.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import StoreBuyPenalty from "../../Modals/StoreModal/StoreBuyPenaltyModal";
 
 const calculateFontSize = (userCount: number): string => {
   const baseSize = 1;
@@ -109,9 +109,9 @@ const LentInfoCard = ({
               </ContentInfoStyled>
               <ContentDetailStyled>
                 {!!unbannedAt
-                  ? formatDate(new Date(unbannedAt), ".")
+                  ? formatDate(new Date(unbannedAt), ".", 4, 2, 2)
                   : cabinetInfo?.expireDate
-                  ? formatDate(new Date(cabinetInfo?.expireDate), ".")
+                  ? formatDate(new Date(cabinetInfo?.expireDate), ".", 4, 2, 2)
                   : "-"}
               </ContentDetailStyled>
             </CardContentStyled>
@@ -127,7 +127,7 @@ const LentInfoCard = ({
         </>
       </Card>
       {isModalOpen && (
-        <StoreBuyPenalty
+        <PenaltyModal
           onClose={onClose}
           remainPenaltyPeriod={remainPenaltyPeriod}
         />
