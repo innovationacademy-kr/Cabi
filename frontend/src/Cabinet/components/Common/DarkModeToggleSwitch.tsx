@@ -58,19 +58,27 @@ const DarkModeToggleSwitch = ({ id }: ToggleSwitchInterface) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newToggleType =
-      toggleType === DisplayStyleToggleType.LIGHT
+      darkMode === DisplayStyleType.LIGHT
         ? DisplayStyleToggleType.DARK
         : DisplayStyleToggleType.LIGHT;
     setColorsAndLocalStorage(newToggleType);
   };
 
   useEffect(() => {
-    darkModeQuery.addEventListener("change", (event) =>
-      setDarkMode(
-        event.matches ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
-      )
-    );
-  }, []);
+    const darkModeListener = (event: MediaQueryListEvent) => {
+      const newDisplayStyle = event.matches
+        ? DisplayStyleType.DARK
+        : DisplayStyleType.LIGHT;
+      setDarkMode(newDisplayStyle);
+      if (toggleType === DisplayStyleToggleType.DEVICE) {
+        setDarkMode(newDisplayStyle);
+      }
+    };
+
+    darkModeQuery.addEventListener("change", darkModeListener);
+
+    return () => darkModeQuery.removeEventListener("change", darkModeListener);
+  }, [darkModeQuery, toggleType]);
 
   useEffect(() => {
     document.body.setAttribute("display-style", darkMode);
