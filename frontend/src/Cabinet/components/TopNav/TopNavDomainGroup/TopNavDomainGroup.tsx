@@ -33,23 +33,6 @@ const domains: ITopNavDomain[] = [
 const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
   const navigator = useNavigate();
   const { pathname } = useLocation();
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const mode = localStorage.getItem("display-style") || "LIGHT";
-    return mode === "DARK";
-  });
-
-  const handleToggleChange = (checked: boolean) => {
-    setIsDarkMode(checked);
-    const mode = checked ? "DARK" : "LIGHT";
-    localStorage.setItem("display-style", mode);
-    document.body.setAttribute("display-style", mode);
-  };
-
-  useEffect(() => {
-    const mode = localStorage.getItem("display-style") || "LIGHT";
-    document.body.setAttribute("display-style", mode);
-  }, []);
-
   return (
     <DomainGroupContainerStyled>
       {domains.map((domain, index) => (
@@ -77,15 +60,9 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
           {index < domains.length - 1 && <DomainSeparatorStyled />}
         </DomainWrapperStyled>
       ))}
-      {pathname.includes("/admin") && (
-        <ToggleContainerStyled>
-          <DarkModeToggleSwitch
-            id="dark-mode-toggle"
-            checked={isDarkMode}
-            onChange={handleToggleChange}
-          />
-        </ToggleContainerStyled>
-      )}
+      <ToggleWrapperStyled>
+        <DarkModeToggleSwitch id="darkModeToggleSwitch" />
+      </ToggleWrapperStyled>
     </DomainGroupContainerStyled>
   );
 };
@@ -154,10 +131,12 @@ const DomainSeparatorStyled = styled.div`
   margin: 0 8px;
   background-color: var(--service-man-title-border-btm-color);
 `;
-const ToggleContainerStyled = styled.div`
+
+const ToggleWrapperStyled = styled.div`
   position: absolute;
-  right: 20px;
+  right: 18px;
   display: flex;
   align-items: center;
 `;
+
 export default TopNavDomainGroup;
