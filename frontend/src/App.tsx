@@ -48,54 +48,49 @@ function App(): React.ReactElement {
       <PageTracker />
       <Suspense fallback={<LoadingAnimation />}>
         <SentryRoutes>
-          <Routes>
-            <Route path="/post-login" element={<PostLogin />} />
-            <Route path="/" element={<Layout />}>
-              <Route path="login" element={<LoginPage />} />
-              <Route path="home" element={<HomePage />} />
-              <Route path="main" element={<MainPage />} />
-              <Route path="available" element={<AvailablePage />} />
-              <Route path="profile" element={<ProfilePage />} />
-              <Route path="profile/log" element={<LogPage />} />
-              <Route path="clubs" element={<ClubPage />} />
-              <Route path="store" element={<StoreMainPage />} />
-              <Route path="store/inventory" element={<InventoryPage />} />
-              <Route path="store/item-use-log" element={<ItemUsageLogPage />} />
-              <Route path="store/coin-log" element={<CoinLogPage />} />
-            </Route>
-            <Route path="/presentation/" element={<PresentationLayout />}>
-              <Route path="home" element={<PresentationHomePage />} />
-              <Route path="register" element={<RegisterPage />} />
-              <Route path="detail" element={<DetailPage />} />
-              <Route path="log" element={<PresentationLogPage />} />
-            </Route>
-            {/* admin용 라우터 */}
-            <Route path="/admin/" element={<AdminLayout />}>
-              <Route path="login" element={<AdminLoginPage />} />
-              <Route path="home" element={<AdminHomePage />} />
-              <Route path="main" element={<AdminMainPage />} />
-              <Route path="search" element={<SearchPage />} />
-              <Route path="club" element={<AdminClubPage />} />
-              <Route
-                path="slack-notification"
-                element={<AdminSlackNotiPage />}
-              />
-              <Route path="available" element={<AvailablePage />} />
-              <Route path="store" element={<AdminStorePage />} />
-            </Route>
-            <Route
-              path="/admin/presentation/"
-              element={<AdminPresentationLayout />}
-            >
-              <Route path="detail" element={<DetailPage />} />
-            </Route>
-            <Route path="/login/failure" element={<LoginFailurePage />} />
-            <Route
-              path="/admin/login/failure"
-              element={<AdminLoginFailurePage />}
-            />
-            <Route path="/*" element={<NotFoundPage />} />
-          </Routes>
+          <Route path="/post-login" element={<PostLogin />} />
+          <Route path="/" element={<Layout />}>
+            <Route path="login" element={<LoginPage />} />
+            <Route path="home" element={<HomePage />} />
+            <Route path="main" element={<MainPage />} />
+            <Route path="available" element={<AvailablePage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="profile/log" element={<LogPage />} />
+            <Route path="clubs" element={<ClubPage />} />
+            <Route path="store" element={<StoreMainPage />} />
+            <Route path="store/inventory" element={<InventoryPage />} />
+            <Route path="store/item-use-log" element={<ItemUsageLogPage />} />
+            <Route path="store/coin-log" element={<CoinLogPage />} />
+          </Route>
+          <Route path="/presentation/" element={<PresentationLayout />}>
+            <Route path="home" element={<PresentationHomePage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="detail" element={<DetailPage />} />
+            <Route path="log" element={<PresentationLogPage />} />
+          </Route>
+          {/* admin용 라우터 */}
+          <Route path="/admin/" element={<AdminLayout />}>
+            <Route path="login" element={<AdminLoginPage />} />
+            <Route path="home" element={<AdminHomePage />} />
+            <Route path="main" element={<AdminMainPage />} />
+            <Route path="search" element={<SearchPage />} />
+            <Route path="club" element={<AdminClubPage />} />
+            <Route path="slack-notification" element={<AdminSlackNotiPage />} />
+            <Route path="available" element={<AvailablePage />} />
+            <Route path="store" element={<AdminStorePage />} />
+          </Route>
+          <Route
+            path="/admin/presentation/"
+            element={<AdminPresentationLayout />}
+          >
+            <Route path="detail" element={<DetailPage />} />
+          </Route>
+          <Route path="/login/failure" element={<LoginFailurePage />} />
+          <Route
+            path="/admin/login/failure"
+            element={<AdminLoginFailurePage />}
+          />
+          <Route path="/*" element={<NotFoundPage />} />
         </SentryRoutes>
       </Suspense>
     </BrowserRouter>
