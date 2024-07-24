@@ -1,8 +1,5 @@
-import App from "@/App";
-import "@/index.css";
 import * as Sentry from "@sentry/react";
-import { useEffect } from "react";
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import {
   createRoutesFromChildren,
@@ -13,6 +10,8 @@ import {
 import { RecoilRoot } from "recoil";
 import "@/Cabinet/assets/css/media.css";
 import "@/Cabinet/assets/css/reset.css";
+import "@/index.css";
+import App from "@/App";
 import { GlobalStyle } from "@/Cabinet/assets/data/ColorTheme";
 
 Sentry.init({
