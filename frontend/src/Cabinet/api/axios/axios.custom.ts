@@ -1,3 +1,4 @@
+import { captureException } from "@sentry/react";
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
@@ -241,6 +242,10 @@ export const axiosLentId = async (cabinetId: number | null): Promise<any> => {
     const response = await instance.post(`${axiosLentIdURL}${cabinetId}`);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "대여 에러" },
+    });
     throw error;
   }
 };
@@ -251,6 +256,10 @@ export const axiosMyLentInfo = async (): Promise<any> => {
     const response = await instance.get(axiosMyLentInfoURL);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "대여 에러" },
+    });
     throw error;
   }
 };
@@ -262,6 +271,10 @@ export const axiosSwapId = async (cabinetId: number | null): Promise<any> => {
     const response = await instance.post(`${axiosSwapIdURL}${cabinetId}`);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "대여 에러" },
+    });
     throw error;
   }
 };
@@ -278,6 +291,10 @@ export const axiosUpdateMyCabinetInfo = async (
     });
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "대여 에러" },
+    });
     throw error;
   }
 };
@@ -288,6 +305,10 @@ export const axiosReturn = async (): Promise<any> => {
     const response = await instance.patch(axiosReturnURL);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "반납 에러" },
+    });
     throw error;
   }
 };
@@ -299,6 +320,10 @@ export const axiosSendCabinetPassword = async (password: string) => {
       cabinetMemo: password,
     });
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "반납 에러" },
+    });
     throw error;
   }
 };
@@ -311,6 +336,10 @@ export const axiosMyLentLog = async (page: number): Promise<any> => {
     });
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "대여 에러" },
+    });
     throw error;
   }
 };
@@ -321,6 +350,10 @@ export const axiosExtendLentPeriod = async (): Promise<any> => {
     const response = await instance.patch(axiosExtendLentPeriodURL);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "대여 에러" },
+    });
     throw error;
   }
 };
@@ -838,6 +871,10 @@ export const axiosLentShareId = async (
     });
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "대여 에러" },
+    });
     throw error;
   }
 };
@@ -851,6 +888,10 @@ export const axiosCancel = async (cabinetId: number | null): Promise<any> => {
     const response = await instance.patch(`${axiosCancelURL}${cabinetId}`);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "대여 에러" },
+    });
     throw error;
   }
 };
