@@ -43,7 +43,7 @@ instance.interceptors.response.use(
         extra: { type: "서버 에러" },
       });
     }
-    return Promise.reject(new Error(error));
+    return Promise.reject(error);
   }
 );
 
