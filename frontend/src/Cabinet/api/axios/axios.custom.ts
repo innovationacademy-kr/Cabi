@@ -364,6 +364,12 @@ export const axiosCoinCheckGet = async (): Promise<any> => {
     const response = await instance.get(axiosCoinCheck);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -373,6 +379,12 @@ export const axiosCoinCheckPost = async (): Promise<any> => {
     const response = await instance.post(axiosCoinCheck);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -389,6 +401,12 @@ export const axiosCoinLog = async (
     });
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -399,6 +417,12 @@ export const axiosMyItems = async (): Promise<any> => {
     const response = await instance.get(axiosMyItemsURL);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -415,6 +439,12 @@ export const axiosGetItemUsageHistory = async (
     });
     return response.data;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -425,6 +455,12 @@ export const axiosItems = async (): Promise<any> => {
     const response = await instance.get(axiosItemsURL);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -435,6 +471,12 @@ export const axiosBuyItem = async (sku: String): Promise<any> => {
     const response = await instance.post(axiosBuyItemURL + sku + "/purchase");
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -455,6 +497,12 @@ export const axiosUseItem = async (
     });
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -806,6 +854,12 @@ export const axiosStatisticsCoin = async () => {
     const response = await instance.get(axiosStatisticsCoinURL);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -821,6 +875,12 @@ export const axiosCoinUseStatistics = async (
     });
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -831,6 +891,12 @@ export const axiosStatisticsItem = async () => {
     const response = await instance.get(axiosStatisticsItemURL);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -840,6 +906,12 @@ export const axiosStatisticsTotalItemUse = async () => {
     const response = await instance.get(axiosStatisticsTotalItemUseURL);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
@@ -855,6 +927,12 @@ export const axiosCoinCollectStatistics = async (
     });
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: {
+        type: "재화 에러",
+      },
+    });
     throw error;
   }
 };
