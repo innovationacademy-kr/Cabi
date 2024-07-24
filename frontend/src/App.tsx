@@ -39,9 +39,8 @@ const AdminLoginFailurePage = lazy(
 );
 const AdminHomePage = lazy(() => import("@/Cabinet/pages/admin/AdminHomePage"));
 
-const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
-
 function App(): React.ReactElement {
+  const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
   return (
     <BrowserRouter>
       {/* GA4 Page Tracking Component */}
