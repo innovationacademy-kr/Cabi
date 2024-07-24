@@ -8,6 +8,8 @@
   "arrowParens": "always",
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
+    "^@/.*\\.css$",
+    "^@/App",
     "^@/Cabinet/recoil/(.*)$",
     "^@/Cabinet/pages/(.*)$",
     "^@/Cabinet/components/(.*)$",
