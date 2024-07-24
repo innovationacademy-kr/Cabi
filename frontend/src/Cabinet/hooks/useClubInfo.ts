@@ -1,3 +1,4 @@
+import { HttpStatusCode } from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
@@ -11,7 +12,6 @@ import {
 } from "@/Cabinet/types/dto/club.dto";
 import { axiosGetClubInfo } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const useClubInfo = () => {
   const [clubState, setClubState] = useState({ clubId: 0, page: 0 });
@@ -54,7 +54,7 @@ const useClubInfo = () => {
       }, 500);
     } catch {
       setTimeout(() => {
-        setClubInfo(STATUS_400_BAD_REQUEST);
+        setClubInfo(HttpStatusCode.BadRequest);
       }, 500);
     }
   };

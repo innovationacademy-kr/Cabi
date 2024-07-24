@@ -1,8 +1,8 @@
+import { HttpStatusCode } from "axios";
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { LentLogResponseType } from "@/Cabinet/types/dto/lent.dto";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
   if (lentHistory === undefined) return <LoadingAnimation />;
@@ -17,7 +17,7 @@ const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
             <th>반납일</th>
           </tr>
         </TheadStyled>
-        {lentHistory !== STATUS_400_BAD_REQUEST && (
+        {lentHistory !== HttpStatusCode.BadRequest && (
           <TbodyStyled>
             {lentHistory.map(
               ({ floor, section, visibleNum, startedAt, endedAt }, idx) => (
@@ -43,7 +43,7 @@ const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {lentHistory === STATUS_400_BAD_REQUEST ||
+      {lentHistory === HttpStatusCode.BadRequest ||
         (lentHistory.length === 0 && (
           <EmptyLogStyled>대여기록이 없습니다.</EmptyLogStyled>
         ))}

@@ -1,10 +1,10 @@
+import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import LogTable from "@/Cabinet/components/LentLog/LogTable/LogTable";
 import { LentHistoryDto } from "@/Cabinet/types/dto/lent.dto";
 import { LentLogResponseType } from "@/Cabinet/types/dto/lent.dto";
 import { axiosMyLentLog } from "@/Cabinet/api/axios/axios.custom";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const LogPage = () => {
   const [lentLog, setLentLog] = useState<LentLogResponseType>(undefined);
@@ -18,7 +18,7 @@ const LogPage = () => {
       }, 500);
     } catch {
       setTimeout(() => {
-        setLentLog(STATUS_400_BAD_REQUEST);
+        setLentLog(HttpStatusCode.BadRequest);
       }, 500);
     }
   };

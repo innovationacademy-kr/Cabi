@@ -1,4 +1,4 @@
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
+import { HttpStatusCode } from "axios";
 
 export interface BannedUserDto {
   userId: number;
@@ -78,7 +78,7 @@ export interface ItemLogResponse {
 
 export type ItemLogResponseType =
   | ItemLogResponse
-  | typeof STATUS_400_BAD_REQUEST
+  | HttpStatusCode.BadRequest
   | undefined;
 
 export interface IItemUseCountDto {

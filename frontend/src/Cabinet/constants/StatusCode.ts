@@ -1,2 +1,1 @@
-export const STATUS_400_BAD_REQUEST = 400;
 export const STATUS_401_UNAUTHORIZED = 401;

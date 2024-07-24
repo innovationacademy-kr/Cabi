@@ -1,7 +1,6 @@
 import { captureException } from "@sentry/react";
 import axios, { HttpStatusCode } from "axios";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
-import { STATUS_401_UNAUTHORIZED } from "@/Cabinet/constants/StatusCode";
 
 axios.defaults.withCredentials = true;
 

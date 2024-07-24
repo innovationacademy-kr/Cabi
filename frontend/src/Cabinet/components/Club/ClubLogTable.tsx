@@ -1,9 +1,9 @@
+import { HttpStatusCode } from "axios";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { selectedClubInfoState } from "@/Cabinet/recoil/atoms";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { ClubLogResponseType, ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
   const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(
@@ -20,7 +20,7 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
 
   return (
     <>
-      {ClubList !== STATUS_400_BAD_REQUEST && ClubList.length !== 0 ? (
+      {ClubList !== HttpStatusCode.BadRequest && ClubList.length !== 0 ? (
         <LogTableWrapperStyled>
           <LogTableStyled>
             <TheadStyled>
