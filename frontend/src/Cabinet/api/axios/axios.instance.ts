@@ -1,4 +1,5 @@
-import axios from "axios";
+import { captureException } from "@sentry/react";
+import axios, { HttpStatusCode } from "axios";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import { STATUS_401_UNAUTHORIZED } from "@/Cabinet/constants/StatusCode";
 
@@ -23,7 +24,7 @@ instance.interceptors.response.use(
   },
   (error) => {
     // access_token unauthorized
-    if (error.response?.status === STATUS_401_UNAUTHORIZED) {
+    if (error.response?.status === HttpStatusCode.Unauthorized) {
       if (import.meta.env.VITE_IS_LOCAL === "true") {
         removeCookie("admin_access_token", {
           path: "/",
@@ -39,8 +40,13 @@ instance.interceptors.response.use(
       }
       window.location.href = "login";
       alert(error.response.data.message);
+    } else if (error.response?.status === HttpStatusCode.InternalServerError) {
+      captureException(error, {
+        level: "error",
+        extra: { type: "서버 에러" },
+      });
     }
-    return Promise.reject(error);
+    return Promise.reject(new Error(error));
   }
 );
 
