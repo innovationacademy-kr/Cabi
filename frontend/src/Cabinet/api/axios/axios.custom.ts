@@ -3,8 +3,10 @@ import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import ErrorType from "@/Cabinet/types/enum/error.type.enum";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
+import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 
 const axiosLogoutUrl = "/v4/auth/logout";
 export const axiosLogout = async (): Promise<any> => {
@@ -242,10 +244,7 @@ export const axiosLentId = async (cabinetId: number | null): Promise<any> => {
     const response = await instance.post(`${axiosLentIdURL}${cabinetId}`);
     return response;
   } catch (error) {
-    captureException(error, {
-      level: "error",
-      extra: { type: "대여 에러" },
-    });
+    logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");
     throw error;
   }
 };
@@ -256,10 +255,7 @@ export const axiosMyLentInfo = async (): Promise<any> => {
     const response = await instance.get(axiosMyLentInfoURL);
     return response;
   } catch (error) {
-    captureException(error, {
-      level: "error",
-      extra: { type: "대여 에러" },
-    });
+    logAxiosError(error, ErrorType.LENT, "내 대여 정보 불러오는 중 오류 발생");
     throw error;
   }
 };
@@ -271,10 +267,7 @@ export const axiosSwapId = async (cabinetId: number | null): Promise<any> => {
     const response = await instance.post(`${axiosSwapIdURL}${cabinetId}`);
     return response;
   } catch (error) {
-    captureException(error, {
-      level: "error",
-      extra: { type: "대여 에러" },
-    });
+    logAxiosError(error, ErrorType.LENT, "이사하기 중 오류 발생");
     throw error;
   }
 };
@@ -291,10 +284,11 @@ export const axiosUpdateMyCabinetInfo = async (
     });
     return response;
   } catch (error) {
-    captureException(error, {
-      level: "error",
-      extra: { type: "대여 에러" },
-    });
+    logAxiosError(
+      error,
+      ErrorType.LENT,
+      "내 사물함 정보 업데이트 중 오류 발생"
+    );
     throw error;
   }
 };
@@ -305,10 +299,7 @@ export const axiosReturn = async (): Promise<any> => {
     const response = await instance.patch(axiosReturnURL);
     return response;
   } catch (error) {
-    captureException(error, {
-      level: "error",
-      extra: { type: "반납 에러" },
-    });
+    logAxiosError(error, ErrorType.RETURN, "사물함 반납 중 오류 발생");
     throw error;
   }
 };
@@ -320,10 +311,11 @@ export const axiosSendCabinetPassword = async (password: string) => {
       cabinetMemo: password,
     });
   } catch (error) {
-    captureException(error, {
-      level: "error",
-      extra: { type: "반납 에러" },
-    });
+    logAxiosError(
+      error,
+      ErrorType.RETURN,
+      "3층 사물함 비밀번호 재설정 & 반납 중 오류 발생"
+    );
     throw error;
   }
 };
@@ -336,10 +328,7 @@ export const axiosMyLentLog = async (page: number): Promise<any> => {
     });
     return response;
   } catch (error) {
-    captureException(error, {
-      level: "error",
-      extra: { type: "대여 에러" },
-    });
+    logAxiosError(error, ErrorType.LENT, "내 대여 기록 불러오는 중 오류 발생");
     throw error;
   }
 };
@@ -350,10 +339,7 @@ export const axiosExtendLentPeriod = async (): Promise<any> => {
     const response = await instance.patch(axiosExtendLentPeriodURL);
     return response;
   } catch (error) {
-    captureException(error, {
-      level: "error",
-      extra: { type: "대여 에러" },
-    });
+    logAxiosError(error, ErrorType.LENT, "연장권 사용 중 오류 발생");
     throw error;
   }
 };
