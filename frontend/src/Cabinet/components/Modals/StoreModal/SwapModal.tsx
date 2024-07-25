@@ -16,10 +16,10 @@ import {
 import { modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
-import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
 import {
   axiosCabinetById,
   axiosMyLentInfo,
+  axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
 
 const SwapModal: React.FC<{
