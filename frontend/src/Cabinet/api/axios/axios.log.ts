@@ -10,9 +10,10 @@ const userId = decodedPayload.name;
 export const logAxiosError = (
   error: any,
   type: ErrorType,
-  errorMsg: string
+  errorMsg: string,
+  isAdmin = false
 ) => {
-  error.message = errorMsg;
+  error.message = (isAdmin ? "[Admin] " : "") + errorMsg;
   captureException(error, {
     tags: {
       userId: userId,
