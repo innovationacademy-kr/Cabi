@@ -4,14 +4,14 @@ import ErrorType from "@/Cabinet/types/enum/error.type.enum";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const token = getCookie("admin_access_token") ?? getCookie("access_token");
-const decodedPayload = JSON.parse(atob(token.split(".")[1]));
+const decodedPayload = JSON.parse(window.atob(token.split(".")[1]));
 const user = decodedPayload.name;
 
-export function logAxiosError(
+export const logAxiosError = (
   error: AxiosError,
   type: ErrorType,
   errorMsg: string
-) {
+) => {
   error.message = "[Axios] " + errorMsg;
   captureException(error, {
     tags: {
@@ -23,4 +23,4 @@ export function logAxiosError(
     level: "error",
     extra: { type: type },
   });
-}
+};
