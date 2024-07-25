@@ -5,7 +5,7 @@ import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const token = getCookie("admin_access_token") ?? getCookie("access_token");
 const decodedPayload = JSON.parse(window.atob(token.split(".")[1]));
-const user = decodedPayload.name;
+const userId = decodedPayload.name;
 
 export const logAxiosError = (
   error: AxiosError,
@@ -15,7 +15,7 @@ export const logAxiosError = (
   error.message = "[Axios] " + errorMsg;
   captureException(error, {
     tags: {
-      user,
+      userId: userId,
       api: error.response?.config.url,
       httpMethod: error.config?.method?.toUpperCase(),
       httpStatusCode: (error.response?.status ?? "").toString(),
