@@ -8,7 +8,7 @@ const decodedPayload = JSON.parse(window.atob(token.split(".")[1]));
 const userId = decodedPayload.name;
 
 export const logAxiosError = (
-  error: AxiosError,
+  error: any,
   type: ErrorType,
   errorMsg: string
 ) => {
