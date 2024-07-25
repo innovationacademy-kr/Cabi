@@ -114,7 +114,7 @@ export const axiosGetClubInfo = async (
 const axiosAddClubMemberURL = "/v4/clubs";
 export const axiosAddClubMember = async (
   clubId: number,
-  name: String
+  name: string
 ): Promise<any> => {
   // TODO : 예외처리?
   try {
@@ -434,7 +434,7 @@ export const axiosItems = async (): Promise<any> => {
 };
 
 const axiosBuyItemURL = "/v5/items/";
-export const axiosBuyItem = async (sku: String): Promise<any> => {
+export const axiosBuyItem = async (sku: string): Promise<any> => {
   try {
     const response = await instance.post(axiosBuyItemURL + sku + "/purchase");
     return response;
@@ -445,7 +445,7 @@ export const axiosBuyItem = async (sku: String): Promise<any> => {
 };
 
 export const axiosUseItem = async (
-  sku: String,
+  sku: string,
   newCabinetId: number | null,
   building: string | null,
   floor: number | null,
@@ -815,7 +815,8 @@ export const axiosStatisticsCoin = async () => {
     logAxiosError(
       error,
       ErrorType.STORE,
-      "전체 재화 현황 데이터 불러오는중 오류 발생"
+      "전체 재화 현황 데이터 불러오는중 오류 발생",
+      true
     );
     throw error;
   }
@@ -835,7 +836,8 @@ export const axiosCoinUseStatistics = async (
     logAxiosError(
       error,
       ErrorType.STORE,
-      "재화 사용 통계 데이터 불러오는중 오류 발생"
+      "재화 사용 통계 데이터 불러오는중 오류 발생",
+      true
     );
     throw error;
   }
@@ -850,7 +852,8 @@ export const axiosStatisticsTotalItemUse = async () => {
     logAxiosError(
       error,
       ErrorType.STORE,
-      "아이템 사용 통계 데이터 불러오는중 오류 발생"
+      "아이템 사용 통계 데이터 불러오는중 오류 발생",
+      true
     );
     throw error;
   }
@@ -870,7 +873,8 @@ export const axiosCoinCollectStatistics = async (
     logAxiosError(
       error,
       ErrorType.STORE,
-      "동전 줍기 통계 데이터 불러오는중 오류 발생"
+      "동전 줍기 통계 데이터 불러오는중 오류 발생",
+      true
     );
     throw error;
   }
@@ -966,7 +970,7 @@ export const axiosItemAssign = async (
     });
     return response;
   } catch (error) {
-    logAxiosError(error, ErrorType.STORE, "아이템 지급 중 오류 발생");
+    logAxiosError(error, ErrorType.STORE, "아이템 지급 중 오류 발생", true);
     throw error;
   }
 };
@@ -986,7 +990,8 @@ export const axiosGetUserItems = async (
     logAxiosError(
       error,
       ErrorType.STORE,
-      "어드민에서 유저 아이템 내역 불러오는중 오류 발생"
+      "유저 아이템 내역 불러오는중 오류 발생",
+      true
     );
     throw error;
   }
