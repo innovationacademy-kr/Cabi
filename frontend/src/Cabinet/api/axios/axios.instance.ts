@@ -1,5 +1,6 @@
-import { captureException } from "@sentry/react";
 import axios, { HttpStatusCode } from "axios";
+import ErrorType from "@/Cabinet/types/enum/error.type.enum";
+import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 axios.defaults.withCredentials = true;
@@ -38,10 +39,7 @@ instance.interceptors.response.use(
       window.location.href = "login";
       alert(error.response.data.message);
     } else if (error.response?.status === HttpStatusCode.InternalServerError) {
-      captureException(error, {
-        level: "error",
-        extra: { type: "서버 에러" },
-      });
+      logAxiosError(error, ErrorType.INTERNAL_SERVER_ERROR, "서버 에러");
     }
     return Promise.reject(error);
   }
