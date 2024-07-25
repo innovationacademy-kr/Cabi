@@ -12,7 +12,7 @@ export const logAxiosError = (
   type: ErrorType,
   errorMsg: string
 ) => {
-  error.message = "[Axios] " + errorMsg;
+  error.message = errorMsg;
   captureException(error, {
     tags: {
       userId: userId,
