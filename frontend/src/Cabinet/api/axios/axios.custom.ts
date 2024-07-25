@@ -28,36 +28,6 @@ export const axiosMyInfo = async (): Promise<any> => {
   }
 };
 
-const axiosMyExtensionsInfoURL = "/v4/users/me/lent-extensions";
-export const axiosMyExtensionsInfo = async (): Promise<any> => {
-  try {
-    const response = await instance.get(axiosMyExtensionsInfoURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosActiveExtensionInfoURL = "/v4/users/me/lent-extensions/active";
-export const axiosActiveExtensionInfo = async (): Promise<any> => {
-  try {
-    const response = await instance.get(axiosActiveExtensionInfoURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosUseExtensionURL = "/v4/users/me/lent-extensions";
-export const axiosUseExtension = async (): Promise<any> => {
-  try {
-    const response = await instance.post(axiosUseExtensionURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
 const axiosUpdateAlarmURL = "/v4/users/me/alarms";
 export const axiosUpdateAlarm = async (alarm: AlarmInfo): Promise<any> => {
   try {
@@ -260,18 +230,6 @@ export const axiosMyLentInfo = async (): Promise<any> => {
   }
 };
 
-const axiosSwapIdURL = "/v4/lent/swap/";
-export const axiosSwapId = async (cabinetId: number | null): Promise<any> => {
-  if (cabinetId === null) return;
-  try {
-    const response = await instance.post(`${axiosSwapIdURL}${cabinetId}`);
-    return response;
-  } catch (error) {
-    logAxiosError(error, ErrorType.LENT, "이사하기 중 오류 발생");
-    throw error;
-  }
-};
-
 const axiosUpdateMyCabinetInfoURL = "/v4/lent/me/cabinet";
 export const axiosUpdateMyCabinetInfo = async (
   title: string | null,
@@ -329,17 +287,6 @@ export const axiosMyLentLog = async (page: number): Promise<any> => {
     return response;
   } catch (error) {
     logAxiosError(error, ErrorType.LENT, "내 대여 기록 불러오는 중 오류 발생");
-    throw error;
-  }
-};
-
-const axiosExtendLentPeriodURL = "/v4/lent/cabinets/extend";
-export const axiosExtendLentPeriod = async (): Promise<any> => {
-  try {
-    const response = await instance.patch(axiosExtendLentPeriodURL);
-    return response;
-  } catch (error) {
-    logAxiosError(error, ErrorType.LENT, "연장권 사용 중 오류 발생");
     throw error;
   }
 };
