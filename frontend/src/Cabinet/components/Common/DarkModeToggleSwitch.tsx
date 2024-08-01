@@ -172,6 +172,6 @@ const MoonWrapperStyled = styled.div`
     height: 100%;
     fill: var(--ref-gray-900);
   }
-`;
+`; 
 
 export default DarkModeToggleSwitch;
