@@ -1,4 +1,5 @@
 import PageTracker from "@/api/analytics/PageTracker";
+import * as Sentry from "@sentry/react";
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AvailablePage from "@/Cabinet/pages/AvailablePage";
@@ -39,12 +40,13 @@ const AdminLoginFailurePage = lazy(
 const AdminHomePage = lazy(() => import("@/Cabinet/pages/admin/AdminHomePage"));
 
 function App(): React.ReactElement {
+  const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
   return (
     <BrowserRouter>
       {/* GA4 Page Tracking Component */}
       <PageTracker />
       <Suspense fallback={<LoadingAnimation />}>
-        <Routes>
+        <SentryRoutes>
           <Route path="/post-login" element={<PostLogin />} />
           <Route path="/" element={<Layout />}>
             <Route path="login" element={<LoginPage />} />
@@ -88,7 +90,7 @@ function App(): React.ReactElement {
             element={<AdminLoginFailurePage />}
           />
           <Route path="/*" element={<NotFoundPage />} />
-        </Routes>
+        </SentryRoutes>
       </Suspense>
     </BrowserRouter>
   );

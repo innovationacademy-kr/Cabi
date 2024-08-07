@@ -1,10 +1,10 @@
+import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import LentLog from "@/Cabinet/components/LentLog/LentLog";
 import { LentLogResponseType } from "@/Cabinet/types/dto/lent.dto";
 import { axiosMyLentLog } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import { getTotalPage } from "@/Cabinet/utils/paginationUtils";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const LentLogContainer = () => {
   const { closeLent } = useMenu();
@@ -17,7 +17,7 @@ const LentLogContainer = () => {
       setTotalPage(getTotalPage(result.data.totalLength, 10));
       setLogs(result.data.result);
     } catch {
-      setLogs(STATUS_400_BAD_REQUEST);
+      setLogs(HttpStatusCode.BadRequest);
     }
   }
   useEffect(() => {

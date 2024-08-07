@@ -1,4 +1,4 @@
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
+import { HttpStatusCode } from "axios";
 import {
   PresentationCategoryType,
   PresentationLocation,
@@ -18,7 +18,7 @@ export interface PresentationHistoryDto {
 
 export type PresentationHistoryResponseType =
   | PresentationHistoryDto[]
-  | typeof STATUS_400_BAD_REQUEST
+  | HttpStatusCode.BadRequest
   | undefined;
 
 export interface IPresentationInfo {
