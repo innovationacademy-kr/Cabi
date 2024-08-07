@@ -15,7 +15,7 @@ import App from "@/App";
 import { GlobalStyle } from "@/Cabinet/assets/data/ColorTheme";
 
 Sentry.init({
-  dsn: "https://5e0e8ad22001254b0aabd23f79be09a4@o4507625901981696.ingest.us.sentry.io/4507625903489024",
+  dsn: import.meta.env.VITE_SENTRY_DSN,
   environment: "development",
   release: "^8.18.0",
   integrations: [
