@@ -3,8 +3,8 @@ import ErrorType from "@/Cabinet/types/enum/error.type.enum";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const token = getCookie("admin_access_token") ?? getCookie("access_token");
-const decodedPayload = JSON.parse(window.atob(token.split(".")[1]));
-const userId = decodedPayload.name;
+const payload = token?.split(".")[1];
+const userId = payload ? JSON.parse(window.atob(payload)).name : "Unknown";
 
 export const logAxiosError = (
   error: any,
