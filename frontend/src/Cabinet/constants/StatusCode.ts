@@ -1,1 +1,0 @@
-export const STATUS_401_UNAUTHORIZED = 401;
