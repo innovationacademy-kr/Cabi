@@ -16,7 +16,8 @@ import { GlobalStyle } from "@/Cabinet/assets/data/ColorTheme";
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
-  environment: "development",
+  environment:
+    import.meta.env.VITE_IS_LOCAL === "true" ? "local" : "production",
   release: "^8.18.0",
   integrations: [
     // See docs for support of different versions of variation of react router
