@@ -40,6 +40,7 @@ Sentry.init({
   // tracePropagationTargets: [/^\//, /^https:\/\/yourserver\.io\/api/],
   tracePropagationTargets: [
     "localhost",
+    /^https:\/\/dev\.cabi\.42seoul\.io/,
     /^https:\/\/api\.cabi\.42seoul\.io/,
     /^https:\/\/api-dev\.cabi\.42seoul\.io/,
   ],
