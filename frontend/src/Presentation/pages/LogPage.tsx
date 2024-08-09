@@ -1,6 +1,6 @@
+import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 import LogTable from "@/Presentation/components/PresentationLog/LogTable";
 import {
   PresentationHistoryDto,
@@ -21,7 +21,7 @@ const PresentationLogPage = () => {
       }, 500);
     } catch {
       setTimeout(() => {
-        setPresentationLog(STATUS_400_BAD_REQUEST);
+        setPresentationLog(HttpStatusCode.BadRequest);
       }, 500);
     }
   };

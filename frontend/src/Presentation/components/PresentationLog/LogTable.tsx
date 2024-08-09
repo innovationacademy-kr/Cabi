@@ -1,7 +1,7 @@
+import { HttpStatusCode } from "axios";
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 import {
   PresentationLocationLabelMap,
   PresentationStatusTypeLabelMap,
@@ -26,7 +26,7 @@ const LogTable = ({
             <th>상태</th>
           </tr>
         </TheadStyled>
-        {presentationHistory !== STATUS_400_BAD_REQUEST && (
+        {presentationHistory !== HttpStatusCode.BadRequest && (
           <TbodyStyled>
             {presentationHistory.map(
               (
@@ -50,7 +50,7 @@ const LogTable = ({
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {presentationHistory === STATUS_400_BAD_REQUEST ||
+      {presentationHistory === HttpStatusCode.BadRequest ||
         (presentationHistory.length === 0 && (
           <EmptyLogStyled>발표기록이 없습니다.</EmptyLogStyled>
         ))}
