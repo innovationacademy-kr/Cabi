@@ -19,8 +19,6 @@ export const logAxiosError = (
       api: error.response?.config.url,
       httpMethod: error.config?.method?.toUpperCase(),
       httpStatusCode: (error.response?.status ?? "").toString(),
-      environment:
-        import.meta.env.VITE_IS_LOCAL === "true" ? "local" : "production",
     },
     level: "error",
     extra: { type: type },
