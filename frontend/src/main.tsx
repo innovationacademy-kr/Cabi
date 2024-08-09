@@ -38,13 +38,13 @@ Sentry.init({
 
   // Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
   // tracePropagationTargets: [/^\//, /^https:\/\/yourserver\.io\/api/],
-  tracePropagationTargets: [
-    "localhost",
-    /^https:\/\/cabi\.42seoul\.io/,
-    /^https:\/\/dev\.cabi\.42seoul\.io/,
-    /^https:\/\/api\.cabi\.42seoul\.io/,
-    /^https:\/\/api-dev\.cabi\.42seoul\.io/,
-  ],
+  // tracePropagationTargets: [
+  //   "localhost",
+  //   /^https:\/\/cabi\.42seoul\.io/,
+  //   /^https:\/\/dev\.cabi\.42seoul\.io/,
+  //   /^https:\/\/api\.cabi\.42seoul\.io/,
+  //   /^https:\/\/api-dev\.cabi\.42seoul\.io/,
+  // ],
 
   // Capture Replay for 100% of all sessions,
   // plus for 100% of sessions with an error
