@@ -148,6 +148,10 @@ public class User {
 		return blackholedAt != null && blackholedAt.isBefore(LocalDateTime.now());
 	}
 
+	public boolean isSameBlackholedAt(LocalDateTime blackholedAt) {
+		return this.blackholedAt.isEqual(blackholedAt);
+	}
+
 	public void addCoin(Long reward) {
 		this.coin += reward;
 	}

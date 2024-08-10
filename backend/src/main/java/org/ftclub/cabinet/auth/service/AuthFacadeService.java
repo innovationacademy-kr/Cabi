@@ -81,6 +81,10 @@ public class AuthFacadeService {
 		FtProfile profile = userOauthService.getProfileByCode(code);
 		User user = userQueryService.findUser(profile.getIntraName())
 				.orElseGet(() -> userCommandService.createUserByFtProfile(profile));
+		// 블랙홀이 API에서 가져온 날짜와 다르다면 갱신
+		if (!user.isSameBlackholedAt(profile.getBlackHoledAt())) {
+			userCommandService.updateUserBlackholedAtById(user.getId(), profile.getBlackHoledAt());
+		}
 		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
 		Cookie cookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
 		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());

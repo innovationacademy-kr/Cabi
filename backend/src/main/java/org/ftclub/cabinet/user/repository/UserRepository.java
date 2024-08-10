@@ -46,7 +46,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param name 유저 이름
 	 * @return {@link User}
 	 */
-	@Query("SELECT u FROM User u WHERE u.name = :name AND u.deletedAt IS NULL")
+	@Query("SELECT u FROM User u WHERE u.name = :name")
 	Optional<User> findByName(@Param("name") String name);
 
 	/**
