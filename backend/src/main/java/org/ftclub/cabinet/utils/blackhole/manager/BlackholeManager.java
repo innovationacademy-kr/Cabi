@@ -70,7 +70,7 @@ public class BlackholeManager {
 			if (!userRecentIntraProfile.getRole().isInCursus()) {
 				terminateInvalidUser(dto, now);
 			}
-			userCommandService.updateUserBlackholedAtById(dto.getUserId(),
+			userCommandService.updateUserBlackholeStatus(dto.getUserId(),
 					userRecentIntraProfile.getBlackHoledAt());
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
