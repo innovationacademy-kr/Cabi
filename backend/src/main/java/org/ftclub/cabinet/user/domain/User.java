@@ -148,6 +148,21 @@ public class User {
 		return blackholedAt != null && blackholedAt.isBefore(LocalDateTime.now());
 	}
 
+	/**
+	 * this.blackholedAt과 전달인자 blackholedAt 중 어느 하나가 null인 경우 false를 반환
+	 *
+	 * @param blackholedAt
+	 * @return
+	 */
+	public boolean isSameBlackholedAt(LocalDateTime blackholedAt) {
+		if (this.blackholedAt == null || blackholedAt == null) {
+			return this.blackholedAt == null && blackholedAt == null;
+		}
+
+		return this.blackholedAt.isEqual(blackholedAt);
+	}
+
+
 	public void addCoin(Long reward) {
 		this.coin += reward;
 	}
