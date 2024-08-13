@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { targetClubUserInfoState, userState } from "@/Cabinet/recoil/atoms";
+import { useRecoilState } from "recoil";
+import { targetClubUserInfoState } from "@/Cabinet/recoil/atoms";
 import ClubMemberList from "@/Cabinet/components/Club/ClubMemberList/ClubMemberList";
 import {
   ClubInfoResponseDto,
   ClubUserResponseDto,
 } from "@/Cabinet/types/dto/club.dto";
+import useDebounce from "@/Cabinet/hooks/useDebounce";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
 export type TClubMemberModalState = "addModal";
@@ -36,12 +37,17 @@ const ClubMemberListContainer = ({
   const [targetClubUser, setTargetClubUser] = useRecoilState(
     targetClubUserInfoState
   );
+  const { debounce } = useDebounce();
 
   const clickMoreButton = () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setPage(page + 1);
-    }, 100);
+    debounce(
+      "clubMemberList",
+      () => {
+        setPage(page + 1);
+      },
+      100
+    );
   };
 
   const selectClubMemberOnClick = (member: ClubUserResponseDto) => {
