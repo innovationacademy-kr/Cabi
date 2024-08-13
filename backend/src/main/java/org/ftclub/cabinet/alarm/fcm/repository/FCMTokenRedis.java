@@ -2,6 +2,7 @@ package org.ftclub.cabinet.alarm.fcm.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,8 @@ public class FCMTokenRedis {
 	 */
 	public <T> Optional<T> findByKey(String key, Class<T> type) {
 		String serializedValue = redisTemplate.opsForValue().get(key + KEY_PREFIX);
-		if (serializedValue == null) {
+		final String NULL = "null";
+		if (Objects.isNull(serializedValue) || serializedValue.equals(NULL)) {
 			return Optional.empty();
 		}
 		try {
