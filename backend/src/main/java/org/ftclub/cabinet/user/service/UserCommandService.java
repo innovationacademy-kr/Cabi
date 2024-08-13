@@ -104,8 +104,7 @@ public class UserCommandService {
 	 * @param blackholedAt 변경할 blackholedAt
 	 */
 	public void updateUserBlackholeStatus(Long userId, LocalDateTime blackholedAt) {
-		User user = userRepository.getById(userId)
-				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+		User user = userRepository.getById(userId);
 		user.changeBlackholedAt(blackholedAt);
 		user.setDeletedAt(null);
 		userRepository.save(user);
