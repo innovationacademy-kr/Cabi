@@ -70,7 +70,7 @@ public class BlackholeManager {
 			if (!userRecentIntraProfile.getRole().isInCursus()) {
 				terminateInvalidUser(dto, now);
 			}
-			userCommandService.updateUserBlackholedAtById(dto.getUserId(),
+			userCommandService.updateUserBlackholeStatus(dto.getUserId(),
 					userRecentIntraProfile.getBlackHoledAt());
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
@@ -94,19 +94,21 @@ public class BlackholeManager {
 		}
 	}
 
-	private boolean isBlackholed(LocalDateTime blackholedAt) {
-		if (blackholedAt == null) {
-			return false;
-		}
-		return blackholedAt.isBefore(LocalDateTime.now());
-	}
 
 	public void blackholeUpdate(User user) {
-		if (isBlackholed(user.getBlackholedAt())) {
-			return;
-		}
 		FtProfile userRecentIntraProfile = getUserRecentIntraProfile(user.getName());
-		userCommandService.updateUserBlackholedAtById(user.getId(),
+		userCommandService.updateUserBlackholeStatus(user.getId(),
 				userRecentIntraProfile.getBlackHoledAt());
 	}
+
+	private boolean isBlackholeRemains(LocalDateTime blackholedAt) {
+		return blackholedAt == null || blackholedAt.isAfter(LocalDateTime.now());
+	}
+
+	public boolean isBlackholedUser(User user) {
+		FtProfile userRecentIntraProfile = getUserRecentIntraProfile(user.getName());
+		return isBlackholeRemains(userRecentIntraProfile.getBlackHoledAt());
+	}
+
+
 }
