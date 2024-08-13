@@ -15,6 +15,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+	@Query("SELECT u FROM User u WHERE u.id = :userId")
+	User getById(@Param("userId") Long userId);
+
 	/**
 	 * 유저 고유 아이디로 유저를 가져옵니다.
 	 *
