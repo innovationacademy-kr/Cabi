@@ -1,9 +1,12 @@
+import { captureException } from "@sentry/react";
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import ErrorType from "@/Cabinet/types/enum/error.type.enum";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
+import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 
 const axiosLogoutUrl = "/v4/auth/logout";
 export const axiosLogout = async (): Promise<any> => {
@@ -19,36 +22,6 @@ const axiosMyInfoURL = "/v4/users/me";
 export const axiosMyInfo = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosMyInfoURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosMyExtensionsInfoURL = "/v4/users/me/lent-extensions";
-export const axiosMyExtensionsInfo = async (): Promise<any> => {
-  try {
-    const response = await instance.get(axiosMyExtensionsInfoURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosActiveExtensionInfoURL = "/v4/users/me/lent-extensions/active";
-export const axiosActiveExtensionInfo = async (): Promise<any> => {
-  try {
-    const response = await instance.get(axiosActiveExtensionInfoURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosUseExtensionURL = "/v4/users/me/lent-extensions";
-export const axiosUseExtension = async (): Promise<any> => {
-  try {
-    const response = await instance.post(axiosUseExtensionURL);
     return response;
   } catch (error) {
     throw error;
@@ -111,7 +84,7 @@ export const axiosGetClubInfo = async (
 const axiosAddClubMemberURL = "/v4/clubs";
 export const axiosAddClubMember = async (
   clubId: number,
-  name: String
+  name: string
 ): Promise<any> => {
   // TODO : 예외처리?
   try {
@@ -241,6 +214,7 @@ export const axiosLentId = async (cabinetId: number | null): Promise<any> => {
     const response = await instance.post(`${axiosLentIdURL}${cabinetId}`);
     return response;
   } catch (error) {
+    logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");
     throw error;
   }
 };
@@ -251,17 +225,7 @@ export const axiosMyLentInfo = async (): Promise<any> => {
     const response = await instance.get(axiosMyLentInfoURL);
     return response;
   } catch (error) {
-    throw error;
-  }
-};
-
-const axiosSwapIdURL = "/v4/lent/swap/";
-export const axiosSwapId = async (cabinetId: number | null): Promise<any> => {
-  if (cabinetId === null) return;
-  try {
-    const response = await instance.post(`${axiosSwapIdURL}${cabinetId}`);
-    return response;
-  } catch (error) {
+    logAxiosError(error, ErrorType.LENT, "내 대여 정보 불러오는 중 오류 발생");
     throw error;
   }
 };
@@ -278,6 +242,11 @@ export const axiosUpdateMyCabinetInfo = async (
     });
     return response;
   } catch (error) {
+    logAxiosError(
+      error,
+      ErrorType.LENT,
+      "내 사물함 정보 업데이트 중 오류 발생"
+    );
     throw error;
   }
 };
@@ -288,6 +257,7 @@ export const axiosReturn = async (): Promise<any> => {
     const response = await instance.patch(axiosReturnURL);
     return response;
   } catch (error) {
+    logAxiosError(error, ErrorType.RETURN, "사물함 반납 중 오류 발생");
     throw error;
   }
 };
@@ -299,6 +269,11 @@ export const axiosSendCabinetPassword = async (password: string) => {
       cabinetMemo: password,
     });
   } catch (error) {
+    logAxiosError(
+      error,
+      ErrorType.RETURN,
+      "3층 사물함 비밀번호 재설정 & 반납 중 오류 발생"
+    );
     throw error;
   }
 };
@@ -311,16 +286,7 @@ export const axiosMyLentLog = async (page: number): Promise<any> => {
     });
     return response;
   } catch (error) {
-    throw error;
-  }
-};
-
-const axiosExtendLentPeriodURL = "/v4/lent/cabinets/extend";
-export const axiosExtendLentPeriod = async (): Promise<any> => {
-  try {
-    const response = await instance.patch(axiosExtendLentPeriodURL);
-    return response;
-  } catch (error) {
+    logAxiosError(error, ErrorType.LENT, "내 대여 기록 불러오는 중 오류 발생");
     throw error;
   }
 };
@@ -331,6 +297,11 @@ export const axiosCoinCheckGet = async (): Promise<any> => {
     const response = await instance.get(axiosCoinCheck);
     return response;
   } catch (error) {
+    logAxiosError(
+      error,
+      ErrorType.STORE,
+      "동전 줍기 정보 불러오는 중 오류 발생"
+    );
     throw error;
   }
 };
@@ -340,6 +311,7 @@ export const axiosCoinCheckPost = async (): Promise<any> => {
     const response = await instance.post(axiosCoinCheck);
     return response;
   } catch (error) {
+    logAxiosError(error, ErrorType.STORE, "동전 줍기 중 오류 발생");
     throw error;
   }
 };
@@ -356,6 +328,7 @@ export const axiosCoinLog = async (
     });
     return response;
   } catch (error) {
+    logAxiosError(error, ErrorType.STORE, "코인내역 불러오는중 오류 발생");
     throw error;
   }
 };
@@ -366,6 +339,7 @@ export const axiosMyItems = async (): Promise<any> => {
     const response = await instance.get(axiosMyItemsURL);
     return response;
   } catch (error) {
+    logAxiosError(error, ErrorType.STORE, "보유아이템 불러오는중 오류 발생");
     throw error;
   }
 };
@@ -382,6 +356,11 @@ export const axiosGetItemUsageHistory = async (
     });
     return response.data;
   } catch (error) {
+    logAxiosError(
+      error,
+      ErrorType.STORE,
+      "아이템 사용내역 불러오는중 오류 발생"
+    );
     throw error;
   }
 };
@@ -392,22 +371,28 @@ export const axiosItems = async (): Promise<any> => {
     const response = await instance.get(axiosItemsURL);
     return response;
   } catch (error) {
+    logAxiosError(
+      error,
+      ErrorType.STORE,
+      "상점 아이템 목록 불러오는중 오류 발생"
+    );
     throw error;
   }
 };
 
 const axiosBuyItemURL = "/v5/items/";
-export const axiosBuyItem = async (sku: String): Promise<any> => {
+export const axiosBuyItem = async (sku: string): Promise<any> => {
   try {
     const response = await instance.post(axiosBuyItemURL + sku + "/purchase");
     return response;
   } catch (error) {
+    logAxiosError(error, ErrorType.STORE, "아이템 구매중 오류 발생");
     throw error;
   }
 };
 
 export const axiosUseItem = async (
-  sku: String,
+  sku: string,
   newCabinetId: number | null,
   building: string | null,
   floor: number | null,
@@ -422,6 +407,7 @@ export const axiosUseItem = async (
     });
     return response;
   } catch (error) {
+    logAxiosError(error, ErrorType.STORE, "아이템 사용중 오류 발생");
     throw error;
   }
 };
@@ -773,6 +759,12 @@ export const axiosStatisticsCoin = async () => {
     const response = await instance.get(axiosStatisticsCoinURL);
     return response;
   } catch (error) {
+    logAxiosError(
+      error,
+      ErrorType.STORE,
+      "전체 재화 현황 데이터 불러오는중 오류 발생",
+      true
+    );
     throw error;
   }
 };
@@ -788,25 +780,28 @@ export const axiosCoinUseStatistics = async (
     });
     return response;
   } catch (error) {
+    logAxiosError(
+      error,
+      ErrorType.STORE,
+      "재화 사용 통계 데이터 불러오는중 오류 발생",
+      true
+    );
     throw error;
   }
 };
 
-const axiosStatisticsItemURL = "/v5/admin/statistics/coins";
-export const axiosStatisticsItem = async () => {
-  try {
-    const response = await instance.get(axiosStatisticsItemURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
 const axiosStatisticsTotalItemUseURL = "/v5/admin/statistics/items";
 export const axiosStatisticsTotalItemUse = async () => {
   try {
     const response = await instance.get(axiosStatisticsTotalItemUseURL);
     return response;
   } catch (error) {
+    logAxiosError(
+      error,
+      ErrorType.STORE,
+      "아이템 사용 통계 데이터 불러오는중 오류 발생",
+      true
+    );
     throw error;
   }
 };
@@ -822,6 +817,12 @@ export const axiosCoinCollectStatistics = async (
     });
     return response;
   } catch (error) {
+    logAxiosError(
+      error,
+      ErrorType.STORE,
+      "동전 줍기 통계 데이터 불러오는중 오류 발생",
+      true
+    );
     throw error;
   }
 };
@@ -838,6 +839,10 @@ export const axiosLentShareId = async (
     });
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "대여 에러" },
+    });
     throw error;
   }
 };
@@ -851,6 +856,10 @@ export const axiosCancel = async (cabinetId: number | null): Promise<any> => {
     const response = await instance.patch(`${axiosCancelURL}${cabinetId}`);
     return response;
   } catch (error) {
+    captureException(error, {
+      level: "error",
+      extra: { type: "대여 에러" },
+    });
     throw error;
   }
 };
@@ -908,22 +917,7 @@ export const axiosItemAssign = async (
     });
     return response;
   } catch (error) {
-    throw error;
-  }
-};
-
-const axiosItemAssignListURL = "/v5/admin/items/assign";
-export const axiosItemAssignList = async (
-  page: number,
-  size: number
-): Promise<any> => {
-  if (page === null || size === null) return;
-  try {
-    const response = await instance.get(axiosItemAssignListURL, {
-      params: { page: page, size: size },
-    });
-    return response.data;
-  } catch (error) {
+    logAxiosError(error, ErrorType.STORE, "아이템 지급 중 오류 발생", true);
     throw error;
   }
 };
@@ -940,6 +934,12 @@ export const axiosGetUserItems = async (
     });
     return response;
   } catch (error) {
+    logAxiosError(
+      error,
+      ErrorType.STORE,
+      "유저 아이템 내역 불러오는중 오류 발생",
+      true
+    );
     throw error;
   }
 };

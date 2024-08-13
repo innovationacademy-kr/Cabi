@@ -10,6 +10,7 @@ import {
   currentBuildingNameState,
   currentFloorCabinetState,
   currentFloorNumberState,
+  currentFloorSectionNamesState,
   currentMapFloorState,
   currentSectionNameState,
   isCurrentSectionRenderState,
@@ -52,6 +53,8 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const setSelectedTypeOnSearch = useSetRecoilState<CabinetDetailAreaType>(
     selectedTypeOnSearchState
   );
+  const [currentFloorSectionNames, setCurrentFloorSectionNames] =
+    useRecoilState(currentFloorSectionNamesState);
 
   useEffect(() => {
     if (currentFloor === undefined) {
@@ -64,6 +67,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
         const sections = response.data.map(
           (data: CabinetInfoByBuildingFloorDto) => data.section
         );
+        setCurrentFloorSectionNames(sections);
         let currentSectionFromPersist = undefined;
         const recoilPersist = localStorage.getItem("recoil-persist");
         if (recoilPersist) {
@@ -72,6 +76,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
             currentSectionFromPersist = recoilPersistObj.CurrentSection;
           }
         }
+
         currentSectionFromPersist &&
         sections.includes(currentSectionFromPersist)
           ? setCurrentSection(currentSectionFromPersist)

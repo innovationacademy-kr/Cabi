@@ -200,7 +200,9 @@ const useMenu = () => {
   };
 
   const closeUserStore = () => {
-    if (document.getElementById("itemInfo")?.classList.contains("on") == true) {
+    if (
+      document.getElementById("itemInfo")?.classList.contains("on") === true
+    ) {
       document.getElementById("itemInfo")?.classList.remove("on");
     }
   };

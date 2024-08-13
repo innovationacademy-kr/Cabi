@@ -1,3 +1,4 @@
+import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
@@ -10,7 +11,6 @@ import UnavailableDataInfo from "@/Cabinet/components/Common/UnavailableDataInfo
 import { ClubInfoResponseDto } from "@/Cabinet/types/dto/club.dto";
 import useClubInfo from "@/Cabinet/hooks/useClubInfo";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const ClubInfo = () => {
   const [myInfo] = useRecoilState(userState);
@@ -20,7 +20,7 @@ const ClubInfo = () => {
 
   useEffect(() => {
     closeAll();
-    if (clubInfo && clubInfo !== STATUS_400_BAD_REQUEST) {
+    if (clubInfo && clubInfo !== HttpStatusCode.BadRequest) {
       let clubInfoTest = clubInfo as ClubInfoResponseDto;
       if (clubInfoTest.clubMaster.userName === myInfo.name) setIsMaster(true);
     }
@@ -30,7 +30,7 @@ const ClubInfo = () => {
     <>
       {clubInfo === undefined ? (
         <LoadingAnimation />
-      ) : clubInfo === STATUS_400_BAD_REQUEST ? (
+      ) : clubInfo === HttpStatusCode.BadRequest ? (
         <>
           <UnavailableDataInfo msg="동아리 사물함이 없어요" />
         </>

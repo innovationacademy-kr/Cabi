@@ -14,7 +14,9 @@ const StoreCoinPick = () => {
       height={"320px"}
     >
       <>
-        <CoinAnimation />
+        <CoinAnimationStyled>
+          <CoinAnimation />
+        </CoinAnimationStyled>
         <CoinSummary>
           <p>누군가가 매일 흘리는 동전을 주워보세요💰</p>
           <p>동전은 하루에 한 번씩 주울 수 있습니다</p>
@@ -26,6 +28,11 @@ const StoreCoinPick = () => {
     </Card>
   );
 };
+
+const CoinAnimationStyled = styled.div`
+  min-width: 140px;
+  min-height: 140px;
+`;
 
 const CoinSummary = styled.div`
   background-color: var(--card-content-bg-color);

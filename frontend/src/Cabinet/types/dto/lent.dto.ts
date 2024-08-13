@@ -1,4 +1,4 @@
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
+import { HttpStatusCode } from "axios";
 
 /**
  * @interface
@@ -31,7 +31,7 @@ export interface LentHistoryDto {
 
 export type LentLogResponseType =
   | LentHistoryDto[]
-  | typeof STATUS_400_BAD_REQUEST
+  | HttpStatusCode.BadRequest
   | undefined;
 
 export interface ILentLog {
@@ -51,7 +51,7 @@ export interface ClubUserDto {
 
 export type ClubLogResponseType =
   | ClubUserDto[]
-  | typeof STATUS_400_BAD_REQUEST
+  | HttpStatusCode.BadRequest
   | undefined;
 
 export interface IClubLog {

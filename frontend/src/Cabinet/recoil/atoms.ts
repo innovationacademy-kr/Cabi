@@ -208,3 +208,8 @@ export const targetClubUserInfoState = atom<ClubUserResponseDto>({
     userName: "",
   },
 });
+
+export const currentFloorSectionNamesState = atom<string[]>({
+  key: "currentFloorSectionNames",
+  default: [],
+});

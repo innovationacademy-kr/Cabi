@@ -6,6 +6,7 @@ import {
   currentBuildingNameState,
   currentCabinetIdState,
   currentFloorNumberState,
+  currentFloorSectionNamesState,
   currentSectionNameState,
   isCurrentSectionRenderState,
   targetCabinetInfoState,
@@ -51,6 +52,9 @@ const MainPage = () => {
     useState<boolean>(false);
   const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
     isCurrentSectionRenderState
+  );
+  const [currentFloorSectionNames] = useRecoilState(
+    currentFloorSectionNamesState
   );
 
   useEffect(() => {
@@ -136,20 +140,23 @@ const MainPage = () => {
         }}
       >
         <AlertStyled>
-          {!isClubSection && (
-            <IconWrapperStyled
-              onClick={handleAlertIconBtn}
-              disabled={
-                sectionList[currentSectionIndex]?.alarmRegistered ? true : false
-              }
-            >
-              {sectionList[currentSectionIndex]?.alarmRegistered === true ? (
-                <FilledHeartIcon />
-              ) : (
-                <LineHeartIcon />
-              )}
-            </IconWrapperStyled>
-          )}
+          {currentFloorSectionNames.includes(currentSectionName) &&
+            !isClubSection && (
+              <IconWrapperStyled
+                onClick={handleAlertIconBtn}
+                disabled={
+                  sectionList[currentSectionIndex]?.alarmRegistered
+                    ? true
+                    : false
+                }
+              >
+                {sectionList[currentSectionIndex]?.alarmRegistered === true ? (
+                  <FilledHeartIcon />
+                ) : (
+                  <LineHeartIcon />
+                )}
+              </IconWrapperStyled>
+            )}
         </AlertStyled>
         <SectionPaginationContainer />
         <CabinetListWrapperStyled>

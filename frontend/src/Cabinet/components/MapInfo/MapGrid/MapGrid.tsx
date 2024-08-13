@@ -16,6 +16,7 @@ const MapGrid = ({ floor }: { floor: number }) => {
     setIsCurrentSectionRender(true);
     setSection(section);
   };
+
   return (
     <MapGridStyled>
       {floor &&

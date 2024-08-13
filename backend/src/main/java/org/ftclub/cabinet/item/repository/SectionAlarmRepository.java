@@ -36,4 +36,9 @@ public interface SectionAlarmRepository extends JpaRepository<SectionAlarm, Long
 			@Param("userId") Long userId,
 			@Param("building") String building,
 			@Param("floor") Integer floor);
+
+	List<SectionAlarm> findAllByUserIdAndCabinetPlaceIdOrderByIdDesc(
+			@Param("userId") Long userId,
+			@Param("cabinetPlaceId") Long cabinetPlaceId);
+
 }
