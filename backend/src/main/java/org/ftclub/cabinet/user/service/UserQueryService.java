@@ -20,8 +20,9 @@ public class UserQueryService {
 
 	private final UserRepository userRepository;
 
+
 	/**
-	 * 유저를 가져옵니다.
+	 * deletedAt 이 없는 활성화된 유저를 가져옵니다.
 	 *
 	 * @param userId 유저의 ID
 	 * @return 유저 객체를 반환합니다.

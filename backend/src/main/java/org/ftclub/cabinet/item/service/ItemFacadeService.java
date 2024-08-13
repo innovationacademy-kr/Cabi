@@ -45,6 +45,7 @@ import org.ftclub.cabinet.mapper.ItemMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
+import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
 import org.ftclub.cabinet.utils.lock.LockUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -69,6 +70,7 @@ public class ItemFacadeService {
 	private final CabinetQueryService cabinetQueryService;
 	private final SectionAlarmCommandService sectionAlarmCommandService;
 	private final SectionAlarmQueryService sectionAlarmQueryService;
+	private final BlackholeManager blackholeManager;
 
 	private final ApplicationEventPublisher eventPublisher;
 
@@ -239,11 +241,11 @@ public class ItemFacadeService {
 	public void useItem(Long userId, Sku sku, ItemUseRequestDto data) {
 		itemPolicyService.verifyDataFieldBySku(sku, data);
 		User user = userQueryService.getUser(userId);
+
 		if (user.isBlackholed()) {
-			// 이벤트를 발생시켰는데 동기로직이다..?
-			// TODO: 근데 그 이벤트가 뭘 하는지 이 코드 흐름에서는 알 수 없다..?
-			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
+			throw ExceptionStatus.BLACKHOLED_USER.asServiceException();
 		}
+
 		Item item = itemQueryService.getBySku(sku);
 		List<ItemHistory> itemInInventory =
 				itemHistoryQueryService.findUnusedItemsInUserInventory(user.getId(), item.getId());
