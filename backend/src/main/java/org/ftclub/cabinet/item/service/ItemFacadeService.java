@@ -58,18 +58,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Logging(level = LogLevel.DEBUG)
 public class ItemFacadeService {
 
+	private final ItemMapper itemMapper;
 	private final ItemQueryService itemQueryService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
 	private final ItemHistoryCommandService itemHistoryCommandService;
 	private final ItemRedisService itemRedisService;
-	private final UserQueryService userQueryService;
-	private final SectionAlarmCommandService sectionAlarmCommandService;
-	private final CabinetQueryService cabinetQueryService;
-	private final ItemMapper itemMapper;
 	private final ItemPolicyService itemPolicyService;
-	private final ApplicationEventPublisher eventPublisher;
+	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
+	private final CabinetQueryService cabinetQueryService;
+	private final SectionAlarmCommandService sectionAlarmCommandService;
+	private final SectionAlarmQueryService sectionAlarmQueryService;
 
+	private final ApplicationEventPublisher eventPublisher;
 
 	/**
 	 * 모든 아이템 리스트 반환
@@ -302,7 +303,6 @@ public class ItemFacadeService {
 //		long userCoin = itemRedisService.getCoinAmount(userId);
 		long userCoin = user.getCoin();
 
-
 		// 아이템 Policy 검증
 		itemPolicyService.verifyOnSale(price);
 		itemPolicyService.verifyIsAffordable(userCoin, price);
@@ -323,6 +323,14 @@ public class ItemFacadeService {
 
 	@Transactional
 	public void addSectionAlarm(Long userId, Long cabinetPlaceId) {
+		verifyDuplicateSection(userId, cabinetPlaceId);
 		sectionAlarmCommandService.addSectionAlarm(userId, cabinetPlaceId);
+	}
+
+	private void verifyDuplicateSection(Long userId, Long cabinetPlaceId) {
+		if (sectionAlarmQueryService.findUnsentAlarmDesc(userId,
+				cabinetPlaceId).isPresent()) {
+			throw ExceptionStatus.ITEM_USE_DUPLICATED.asServiceException();
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.item.service;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.item.domain.SectionAlarm;
 import org.ftclub.cabinet.item.repository.SectionAlarmRepository;
@@ -20,8 +21,15 @@ public class SectionAlarmQueryService {
 		return sectionAlarmRepository.findAllByAlarmedAtIsNull();
 	}
 
-	public List<SectionAlarm> getUnsentAlarm(Long userId, String building, Integer floor) {
+	public List<SectionAlarm> findUnsentAlarm(Long userId, String building, Integer floor) {
 		return sectionAlarmRepository.findAllByUserIdAndCabinetPlaceAndAlarmedAtIsNull(
 				userId, building, floor);
+	}
+
+	public Optional<SectionAlarm> findUnsentAlarmDesc(Long userId, Long cabinetPlaceId) {
+		return sectionAlarmRepository.findAllByUserIdAndCabinetPlaceIdOrderByIdDesc(
+						userId, cabinetPlaceId).stream()
+				.filter(sectionAlarm -> sectionAlarm.getAlarmedAt() == null).findFirst();
+
 	}
 }
