@@ -47,12 +47,13 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
 };
 
 const StoreCardCircle = styled.div`
-  width: 58px;
+  width: 40px;
   height: 58px;
   top: 110px;
-  left: -30px;
-  border-radius: 50%;
-  background-color: var(--bg-color);
+  left: -6px;
+  border-top-right-radius: 58px;
+  border-bottom-right-radius: 58px;
+  background-color: rgba(255, 255, 255, 1);
   position: absolute;
 `;
 
@@ -127,6 +128,7 @@ const MaunalContentBoxStyled = styled.div<{
       width: 100%; */
       width: 620px;
       color: var(--normal-text-color);
+      border: 5px solid var(--sys-main-color);
       @media screen and (max-width: 1000px) {
         width: 280px;
         .peopleImg {
