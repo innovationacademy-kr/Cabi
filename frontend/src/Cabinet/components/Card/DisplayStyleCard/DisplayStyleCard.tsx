@@ -75,7 +75,6 @@ const DisplayStyleCard = ({
 };
 
 const DisplayStyleCardWrapper = styled.div`
-  z-index: 1;
   align-self: start;
 `;
 
