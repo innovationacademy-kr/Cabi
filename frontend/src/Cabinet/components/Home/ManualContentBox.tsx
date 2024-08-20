@@ -23,17 +23,38 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
         contentData.iconComponent && (
           <contentData.iconComponent className="contentImg" />
         )}
+
       <ContentTextStyled>
-        {contentStatus === ContentStatus.IN_SESSION &&
+        {/* {contentStatus === ContentStatus.IN_SESSION &&
           contentData.iconComponent && (
             <contentData.iconComponent className="clockImg" />
-          )}
+          )} */}
+        {/* {contentStatus === ContentStatus.STORE && contentData.iconComponent && (
+          <span>
+            다양한 아이템을 구매하고 사물함을 더 편리하게 사용할 수 있습니다!
+          </span>
+          // <contentData.iconComponent className="clockImg" />
+        )} */}
         <p>{contentData.contentTitle}</p>
       </ContentTextStyled>
+      {contentStatus === ContentStatus.STORE && (
+        <StoreCardCircle></StoreCardCircle>
+      )}
+
       <MoveBtnImg className="moveButton" />
     </MaunalContentBoxStyled>
   );
 };
+
+const StoreCardCircle = styled.div`
+  width: 58px;
+  height: 58px;
+  top: 110px;
+  left: -30px;
+  border-radius: 50%;
+  background-color: var(--bg-color);
+  position: absolute;
+`;
 
 const Rotation = keyframes`
  to {
@@ -90,9 +111,37 @@ const MaunalContentBoxStyled = styled.div<{
   }
 
   ${({ contentStatus }) =>
+    contentStatus === ContentStatus.COIN &&
+    css`
+      border: 6px solid var(--sys-main-color);
+      color: var(--sys-main-color);
+      /* color: var(--custom-purple-200); */
+      /* box-shadow: inset 0px 0px 0px 5px var(--bg-color); */
+    `}
+
+  ${({ contentStatus }) =>
+    contentStatus === ContentStatus.STORE &&
+    css`
+      border: 6px solid var(--custom-purple-200);
+      /* max-width: 650px;
+      width: 100%; */
+      width: 620px;
+      color: var(--normal-text-color);
+      @media screen and (max-width: 1000px) {
+        width: 280px;
+        .peopleImg {
+          display: none;
+        }
+        font-size: 21px;
+      }
+      /* color: var(--custom-purple-200); */
+      /* box-shadow: inset 0px 0px 0px 5px var(--bg-color); */
+    `}
+
+  ${({ contentStatus }) =>
     contentStatus === ContentStatus.PENDING &&
     css`
-      border: 5px double var(--sys-main-color);
+      border: 6px double var(--sys-main-color);
       box-shadow: inset 0px 0px 0px 5px var(--bg-color);
     `}
 
@@ -174,6 +223,11 @@ const MaunalContentBoxStyled = styled.div<{
 const ContentTextStyled = styled.div`
   display: flex;
   align-items: center;
+
+  & > span {
+    font-weight: 400;
+    font-size: 1rem;
+  }
 `;
 
 export default MaunalContentBox;

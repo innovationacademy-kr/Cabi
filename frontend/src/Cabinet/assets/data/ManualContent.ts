@@ -153,4 +153,18 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     </div>`,
     pointColor: "var(--normal-text-color)",
   },
+  [ContentStatus.COIN]: {
+    contentTitle: `코인 안내서`,
+    iconComponent: ClockImg,
+    background: "var(--card-bg-color)",
+    contentText: ``,
+    pointColor: "var(--sys-main-color)",
+  },
+  [ContentStatus.STORE]: {
+    contentTitle: "까비 상점",
+    iconComponent: ClockImg,
+    background: "var(--sys-main-color)",
+    contentText: `dfgdfgd`,
+    pointColor: "var(--sys-main-color)",
+  },
 };

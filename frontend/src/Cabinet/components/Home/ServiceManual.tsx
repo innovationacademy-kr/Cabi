@@ -36,6 +36,29 @@ const ServiceManual = ({
 
       <WrapSectionStyled>
         <p className="subtitle">
+          당신의 사물함
+          <br />
+          당신의 방식으로,
+        </p>
+
+        <InfoSectionStyled className="section">
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.COIN)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.COIN} />
+            {/* <p className="redColor">new</p> */}
+          </article>
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.STORE)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.STORE} />
+            {/* <p className="redColor">new</p> */}
+          </article>
+        </InfoSectionStyled>
+
+        <p className="subtitle">
           가능성의 확장
           <br />
           개인, 공유, 동아리 사물함.
@@ -60,12 +83,8 @@ const ServiceManual = ({
             <MaunalContentBox contentStatus={ContentStatus.CLUB} />
           </article>
         </InfoSectionStyled>
-        <p className="subtitle">
-          공정한 대여를 위한
-          <br />
-          새로운 사물함 서비스.
-        </p>
-        <InfoSectionStyled className="section">
+
+        {/* <InfoSectionStyled className="section">
           <article
             className="article"
             onClick={() => openModal(ContentStatus.PENDING)}
@@ -80,8 +99,8 @@ const ServiceManual = ({
             <MaunalContentBox contentStatus={ContentStatus.IN_SESSION} />
             <p className="redColor">new</p>
           </article>
-        </InfoSectionStyled>
-        <p className="subtitle">
+        </InfoSectionStyled> */}
+        {/* <p className="subtitle">
           사물함을 더 오래
           <br />
           사용할 수 있는 방법.
@@ -93,7 +112,7 @@ const ServiceManual = ({
           >
             <MaunalContentBox contentStatus={ContentStatus.EXTENSION} />
           </article>
-        </InfoSectionStyled>
+        </InfoSectionStyled> */}
       </WrapSectionStyled>
 
       <button onClick={lentStartHandler}>시작하기</button>
