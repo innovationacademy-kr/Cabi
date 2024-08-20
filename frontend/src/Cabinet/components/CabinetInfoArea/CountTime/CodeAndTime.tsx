@@ -24,7 +24,7 @@ const CodeAndTime = ({ minutes, seconds, isTimeOver }: CountTimeProps) => {
     navigator.clipboard.writeText(code).then(() => {
       setCopySuccess(true);
       debounce(
-        "codeAndTimeCopyClick",
+        "codeCopyClick",
         () => {
           setCopySuccess(false);
         },
