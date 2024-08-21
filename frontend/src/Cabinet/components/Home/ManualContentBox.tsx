@@ -25,20 +25,13 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
         )}
 
       <ContentTextStyled>
-        {/* {contentStatus === ContentStatus.IN_SESSION &&
-          contentData.iconComponent && (
-            <contentData.iconComponent className="clockImg" />
-          )} */}
-        {/* {contentStatus === ContentStatus.STORE && contentData.iconComponent && (
-          <span>
-            다양한 아이템을 구매하고 사물함을 더 편리하게 사용할 수 있습니다!
-          </span>
-          // <contentData.iconComponent className="clockImg" />
-        )} */}
         <p>{contentData.contentTitle}</p>
       </ContentTextStyled>
       {contentStatus === ContentStatus.STORE && (
-        <StoreCardCircle></StoreCardCircle>
+        <>
+          <StoreCardCircle className="top"></StoreCardCircle>
+          <StoreCardCircle className="bottom"></StoreCardCircle>
+        </>
       )}
 
       <MoveBtnImg className="moveButton" />
@@ -47,14 +40,24 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
 };
 
 const StoreCardCircle = styled.div`
-  width: 40px;
-  height: 58px;
-  top: 110px;
-  left: -6px;
-  border-top-right-radius: 58px;
-  border-bottom-right-radius: 58px;
-  background-color: rgba(255, 255, 255, 1);
+  top: -12px;
+  right: 193px;
+  rotate: 45deg;
+  width: 0;
+  height: 0;
+  border-bottom: 24px solid white;
+  border-left: 24px solid transparent;
   position: absolute;
+
+  :hover {
+    transition: all 0.3s ease-in-out;
+    transform: translateY(-5px);
+  }
+  &.bottom {
+    border-bottom: 24px solid transparent;
+    border-left: 24px solid white;
+    top: 268px;
+  }
 `;
 
 const Rotation = keyframes`
@@ -93,10 +96,16 @@ const MaunalContentBoxStyled = styled.div<{
     width: 80px;
     height: 80px;
 
+    /* & > path {
+      stroke: ${(props) =>
+      props.contentStatus === ContentStatus.EXTENSION
+        ? "var(--normal-text-color)"
+        : "var(--white-text-with-bg-color)"};
+    } */
     & > path {
       stroke: ${(props) =>
-        props.contentStatus === ContentStatus.EXTENSION
-          ? "var(--normal-text-color)"
+        props.contentStatus === ContentStatus.COIN
+          ? "var(--sys-default-main-color)"
           : "var(--white-text-with-bg-color)"};
     }
   }
@@ -123,21 +132,36 @@ const MaunalContentBoxStyled = styled.div<{
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.STORE &&
     css`
-      border: 6px solid var(--custom-purple-200);
-      /* max-width: 650px;
-      width: 100%; */
       width: 620px;
-      color: var(--normal-text-color);
-      border: 5px solid var(--sys-main-color);
+      color: var(--white-text-with-bg-color);
+      position: relative; /* Added for positioning the pseudo-element */
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 66.67%; /* 3분의 2 지점 */
+        height: 100%;
+        width: 4px; /* 점선의 가로 너비 */
+        background-image: linear-gradient(
+          to bottom,
+          white 33%,
+          rgba(255, 255, 255, 0) 0%
+        );
+        background-position: right;
+        background-size: 10px 30px; /* 점의 세로 크기 10px, 간격 5px */
+        background-repeat: repeat-y;
+      }
       @media screen and (max-width: 1000px) {
         width: 280px;
         .peopleImg {
           display: none;
         }
         font-size: 21px;
+        &:after {
+          left: 186.67px; /* 280px의 3분의 2 지점 */
+        }
       }
-      /* color: var(--custom-purple-200); */
-      /* box-shadow: inset 0px 0px 0px 5px var(--bg-color); */
     `}
 
   ${({ contentStatus }) =>
@@ -185,8 +209,8 @@ const MaunalContentBoxStyled = styled.div<{
     right: 35px;
     bottom: 35px;
     stroke: ${(props) =>
-      props.contentStatus === ContentStatus.IN_SESSION
-        ? "var(--sys-main-color)"
+      props.contentStatus === ContentStatus.COIN
+        ? "var(--sys-default-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
         : "var(--white-text-with-bg-color)"};

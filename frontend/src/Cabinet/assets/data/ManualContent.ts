@@ -1,8 +1,10 @@
 import { ReactComponent as ClockImg } from "@/Cabinet/assets/images/clock.svg";
 import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
+import { ReactComponent as DollarImg } from "@/Cabinet/assets/images/coinDolar.svg";
 import { ReactComponent as ExtensionIcon } from "@/Cabinet/assets/images/extension.svg";
 import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
 import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
+import { ReactComponent as StoreImg } from "@/Cabinet/assets/images/storeIconGray.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
 interface ContentStatusData {
@@ -155,15 +157,17 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.COIN]: {
     contentTitle: `코인 안내서`,
-    iconComponent: ClockImg,
+    iconComponent: DollarImg,
     background: "var(--card-bg-color)",
     contentText: ``,
     pointColor: "var(--sys-main-color)",
   },
   [ContentStatus.STORE]: {
-    contentTitle: "까비 상점",
-    iconComponent: ClockImg,
-    background: "var(--sys-main-color)",
+    contentTitle: "까비 상점 open",
+    iconComponent: StoreImg,
+    // background: "var(--sys-main-color)",
+    background:
+      "linear-gradient(180deg, rgba(161,123,243,1) 0%, rgba(131,55,229,1) 100%);",
     contentText: `dfgdfgd`,
     pointColor: "var(--sys-main-color)",
   },
