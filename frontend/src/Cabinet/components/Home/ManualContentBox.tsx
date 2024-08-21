@@ -4,15 +4,15 @@ import { ReactComponent as ManualPeopleImg } from "@/Cabinet/assets/images/manua
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
-interface MaunalContentBoxProps {
+interface ManualContentBoxProps {
   contentStatus: ContentStatus;
 }
 
-const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
+const ManualContentBox = ({ contentStatus }: ManualContentBoxProps) => {
   const contentData = manualContentData[contentStatus];
 
   return (
-    <MaunalContentBoxStyled
+    <ManualContentBoxStyled
       background={contentData.background}
       contentStatus={contentStatus}
     >
@@ -42,7 +42,7 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
       )}
 
       <MoveBtnImg className="moveButton" />
-    </MaunalContentBoxStyled>
+    </ManualContentBoxStyled>
   );
 };
 
@@ -62,7 +62,7 @@ const Rotation = keyframes`
 	}
   `;
 
-const MaunalContentBoxStyled = styled.div<{
+const ManualContentBoxStyled = styled.div<{
   background: string;
   contentStatus: ContentStatus;
 }>`
@@ -110,11 +110,14 @@ const MaunalContentBoxStyled = styled.div<{
     fill: var(--sys-main-color);
   }
 
+  // 상자
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.COIN &&
     css`
-      border: 6px solid var(--sys-main-color);
-      color: var(--sys-main-color);
+    border: 5px solid var(--sys-main-color);
+    color: var(--sys-main-color);
+      // border: 6px solid var(--sys-main-color);
+      // color: var(--sys-main-color);
       /* color: var(--custom-purple-200); */
       /* box-shadow: inset 0px 0px 0px 5px var(--bg-color); */
     `}
@@ -183,11 +186,12 @@ const MaunalContentBoxStyled = styled.div<{
     right: 35px;
     bottom: 35px;
     stroke: ${(props) =>
-      props.contentStatus === ContentStatus.IN_SESSION
+      props.contentStatus === ContentStatus.IN_SESSION || 
+      props.contentStatus === ContentStatus.COIN
         ? "var(--sys-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
-        : "var(--white-text-with-bg-color)"};
+         :"var(--white-text-with-bg-color)"};
     cursor: pointer;
   }
 
@@ -207,8 +211,9 @@ const MaunalContentBoxStyled = styled.div<{
       transition: all 0.3s ease-in-out;
       transform: translateY(-5px);
       ${({ contentStatus }) =>
-        (contentStatus === ContentStatus.PENDING ||
-          contentStatus === ContentStatus.IN_SESSION) &&
+        (contentStatus === ContentStatus.PENDING || 
+          contentStatus === ContentStatus.COIN ||
+          contentStatus === ContentStatus.IN_SESSION) && 
         css`
           margin-top: 155px;
         `}
@@ -224,10 +229,11 @@ const ContentTextStyled = styled.div`
   display: flex;
   align-items: center;
 
+
   & > span {
     font-weight: 400;
     font-size: 1rem;
   }
 `;
 
-export default MaunalContentBox;
+export default ManualContentBox;

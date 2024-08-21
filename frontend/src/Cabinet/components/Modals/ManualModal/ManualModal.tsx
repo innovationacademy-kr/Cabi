@@ -77,11 +77,11 @@ const ManualModal: React.FC<ModalProps> = ({
             </BasicInfo>
           )}
           {contentData.contentTitle}
-          <ManualContentStyeld color={contentData.pointColor}>
+          <ManualContentStyled color={contentData.pointColor}>
             <div
               dangerouslySetInnerHTML={{ __html: contentData.contentText }}
             ></div>
-          </ManualContentStyeld>
+          </ManualContentStyled>
         </ModalContent>
       </ModalWrapper>
     </ModalOverlay>
@@ -145,7 +145,7 @@ const ModalWrapper = styled.div<{
   border: ${(props) =>
     props.contentStatus === ContentStatus.PENDING
       ? "5px double var(--sys-main-color)"
-      : props.contentStatus === ContentStatus.IN_SESSION
+      : props.contentStatus === ContentStatus.IN_SESSION || props.contentStatus === ContentStatus.COIN
       ? "5px solid var(--sys-main-color)"
       : "none"};
   box-shadow: ${(props) =>
@@ -166,7 +166,7 @@ const ModalContent = styled.div<{
   display: flex;
   flex-direction: column;
   color: ${(props) =>
-    props.contentStatus === ContentStatus.IN_SESSION
+    props.contentStatus === ContentStatus.IN_SESSION || props.contentStatus === ContentStatus.COIN
       ? "var(--sys-main-color)"
       : props.contentStatus === ContentStatus.EXTENSION
       ? "var(--normal-text-color)"
@@ -188,7 +188,7 @@ const ModalContent = styled.div<{
   }
   .moveButton {
     stroke: ${(props) =>
-      props.contentStatus === ContentStatus.IN_SESSION
+      props.contentStatus === ContentStatus.IN_SESSION || props.contentStatus === ContentStatus.COIN
         ? "var(--sys-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
@@ -210,7 +210,7 @@ const CloseButton = styled.div<{
   svg {
     transform: scaleX(-1);
     stroke: ${(props) =>
-      props.contentStatus === ContentStatus.IN_SESSION
+      props.contentStatus === ContentStatus.IN_SESSION || props.contentStatus === ContentStatus.COIN
         ? "var(--sys-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
@@ -269,7 +269,7 @@ const BoxInfo2 = styled.div`
   }
 `;
 
-const ManualContentStyeld = styled.div<{
+const ManualContentStyled = styled.div<{
   color: string;
 }>`
   margin: 40px 0 0 20px;
