@@ -156,19 +156,47 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     pointColor: "var(--normal-text-color)",
   },
   [ContentStatus.COIN]: {
-    contentTitle: `코인 안내서`,
+    contentTitle: `코인 사용법`,
     iconComponent: DollarImg,
     background: "var(--card-bg-color)",
-    contentText: ``,
+    contentText: `<span>◦ 160시간 출석하기</span><br/>
+    <div>
+    42 출석 <strong>160시간</strong>을 채운다면 <strong>2000까비</strong>가 지급됩니다.<br />
+    <br />
+    </div>
+    <span>◦ 동전줍기</span><br/>
+    <div>
+    Cabi 홈페이지에 접속해, <strong>하루에 한 번</strong> 동전을 주울 수 있습니다.<br />
+    한 달 동안 20개의 코인을 모두 줍는다면 <strong>랜덤 보상</strong>이 주어집니다.<br />
+    <br />
+    </div>
+    <span>◦ 수요지식회 발표하기</span><br/>
+    <div>
+    수요지식회 발표자 분께 <strong>1000까비</strong>를 지급해 드립니다.<br />
+    수요지식회 신청은 왼쪽 상단의<strong>수요지식회 홈페이지</strong>에서 신청할 수 있습니다.<br />
+    </div>
+
+    `,
     pointColor: "var(--sys-main-color)",
   },
   [ContentStatus.STORE]: {
     contentTitle: "까비 상점 open",
     iconComponent: StoreImg,
-    // background: "var(--sys-main-color)",
     background:
       "linear-gradient(180deg, rgba(161,123,243,1) 0%, rgba(131,55,229,1) 100%);",
-    contentText: `dfgdfgd`,
+    contentText: `<span>◦ 이용 방법</span><br/>
+    <div>
+    <strong>1인</strong>이 1개의 사물함을 사용합니다.<br />
+    최대 <strong>${
+      import.meta.env.VITE_PRIVATE_LENT_PERIOD
+    }일</strong>간 대여할 수 있습니다.<br/><br/>
+    </div>
+    <span>◦ 페널티</span><br/>
+    <div>
+    연체 시 연체되는 일의 <strong>제곱 수만큼</strong> 페널티가 부과됩니다.<br />
+    연체 페널티는 누적됩니다.
+    </div>
+  `,
     pointColor: "var(--sys-main-color)",
   },
 };

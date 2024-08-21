@@ -38,7 +38,7 @@ const ServiceManual = ({
         <p className="subtitle">
           당신의 사물함
           <br />
-          당신의 방식으로,
+        당신의 방식으로,
         </p>
 
         <InfoSectionStyled className="section">
@@ -78,20 +78,22 @@ const ServiceManual = ({
           </article>
           <article
             className="article"
-            onClick={() => openModal(ContentStatus.CLUB)}
+            onClick={() => openModal(ContentStatus.IN_SESSION)}
           >
-            <MaunalContentBox contentStatus={ContentStatus.CLUB} />
+            {/* <MaunalContentBox contentStatus={ContentStatus.CLUB} />
+             */}
+              <MaunalContentBox contentStatus={ContentStatus.IN_SESSION} />
           </article>
         </InfoSectionStyled>
 
-        {/* <InfoSectionStyled className="section">
-          <article
+        <InfoSectionStyled className="section">
+          {/* <article
             className="article"
             onClick={() => openModal(ContentStatus.PENDING)}
           >
             <MaunalContentBox contentStatus={ContentStatus.PENDING} />
             <p className="redColor">new</p>
-          </article>
+          </article> */}
           <article
             className="article"
             onClick={() => openModal(ContentStatus.IN_SESSION)}
@@ -99,7 +101,7 @@ const ServiceManual = ({
             <MaunalContentBox contentStatus={ContentStatus.IN_SESSION} />
             <p className="redColor">new</p>
           </article>
-        </InfoSectionStyled> */}
+        </InfoSectionStyled>
         {/* <p className="subtitle">
           사물함을 더 오래
           <br />

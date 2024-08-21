@@ -4,15 +4,15 @@ import { ReactComponent as ManualPeopleImg } from "@/Cabinet/assets/images/manua
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
-interface MaunalContentBoxProps {
+interface ManualContentBoxProps {
   contentStatus: ContentStatus;
 }
 
-const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
+const ManualContentBox = ({ contentStatus }: ManualContentBoxProps) => {
   const contentData = manualContentData[contentStatus];
 
   return (
-    <MaunalContentBoxStyled
+    <ManualContentBoxStyled
       background={contentData.background}
       contentStatus={contentStatus}
     >
@@ -35,7 +35,7 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
       )}
 
       <MoveBtnImg className="moveButton" />
-    </MaunalContentBoxStyled>
+    </ManualContentBoxStyled>
   );
 };
 
@@ -66,7 +66,7 @@ const Rotation = keyframes`
 	}
   `;
 
-const MaunalContentBoxStyled = styled.div<{
+const ManualContentBoxStyled = styled.div<{
   background: string;
   contentStatus: ContentStatus;
 }>`
@@ -120,11 +120,14 @@ const MaunalContentBoxStyled = styled.div<{
     fill: var(--sys-main-color);
   }
 
+  // 상자
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.COIN &&
     css`
-      border: 6px solid var(--sys-main-color);
+      border: 5px solid var(--sys-main-color);
       color: var(--sys-main-color);
+      // border: 6px solid var(--sys-main-color);
+      // color: var(--sys-main-color);
       /* color: var(--custom-purple-200); */
       /* box-shadow: inset 0px 0px 0px 5px var(--bg-color); */
     `}
@@ -234,6 +237,7 @@ const MaunalContentBoxStyled = styled.div<{
       transform: translateY(-5px);
       ${({ contentStatus }) =>
         (contentStatus === ContentStatus.PENDING ||
+          contentStatus === ContentStatus.COIN ||
           contentStatus === ContentStatus.IN_SESSION) &&
         css`
           margin-top: 155px;
@@ -256,4 +260,4 @@ const ContentTextStyled = styled.div`
   }
 `;
 
-export default MaunalContentBox;
+export default ManualContentBox;
