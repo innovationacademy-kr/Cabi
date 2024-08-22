@@ -6,7 +6,7 @@ import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIc
 import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 import { ReactComponent as StoreImg } from "@/Cabinet/assets/images/storeIconGray.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
-
+// import {StoreItemType} from "@/Cabinet/types/enum/store.enum"
 interface ContentStatusData {
   contentTitle: string;
   iconComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null;
@@ -16,6 +16,61 @@ interface ContentStatusData {
   contentText: string;
   pointColor: string;
 }
+export enum StoreItemType {
+  EXTENSION = "EXTENSION",
+  SWAP = "SWAP",
+  ALARM = "ALARM",
+  PENALTY = "PENALTY",
+}
+export const ItemContentsData: Record<StoreItemType,ContentStatusData>  = {
+  [StoreItemType.EXTENSION] : {
+    contentTitle: "개인 사물함",
+    iconComponent: PrivateIcon,
+    background:
+      "linear-gradient(to bottom, var(--ref-purple-400), var(--ref-purple-600))",
+    rentalPeriod: `${import.meta.env.VITE_PRIVATE_LENT_PERIOD}일`,
+    capacity: "1인",
+    contentText: `<span>◦ 이용 방법</span><br/>
+  `,
+    pointColor: "var(--white-text-with-bg-color)",
+  },
+  [StoreItemType.SWAP] : {
+    contentTitle: "개인 사물함",
+    iconComponent: PrivateIcon,
+    background:
+      "linear-gradient(to bottom, var(--ref-purple-400), var(--ref-purple-600))",
+    rentalPeriod: `${import.meta.env.VITE_PRIVATE_LENT_PERIOD}일`,
+    capacity: "1인",
+    contentText: `<span>◦ 이용 방법</span><br/>
+
+  `,
+    pointColor: "var(--white-text-with-bg-color)",
+  },
+  [StoreItemType.ALARM] : {
+    contentTitle: "개인 사물함",
+    iconComponent: PrivateIcon,
+    background:
+      "linear-gradient(to bottom, var(--ref-purple-400), var(--ref-purple-600))",
+    rentalPeriod: `${import.meta.env.VITE_PRIVATE_LENT_PERIOD}일`,
+    capacity: "1인",
+    contentText: `<span>◦ 이용 방법</span><br/>
+  
+  `,
+    pointColor: "var(--white-text-with-bg-color)",
+  },
+  [StoreItemType.PENALTY] : {
+    contentTitle: "개인 사물함",
+    iconComponent: PrivateIcon,
+    background:
+      "linear-gradient(to bottom, var(--ref-purple-400), var(--ref-purple-600))",
+    rentalPeriod: `${import.meta.env.VITE_PRIVATE_LENT_PERIOD}일`,
+    capacity: "1인",
+    contentText: `<span>◦ 이용 방법</span><br/>
+  `,
+    pointColor: "var(--white-text-with-bg-color)",
+  },
+}
+
 
 export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.PRIVATE]: {
@@ -161,7 +216,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     background: "var(--card-bg-color)",
     contentText: `<span>◦ 160시간 출석하기</span><br/>
     <div>
-    42 출석 <strong>160시간</strong>을 채운다면 <strong>2000까비</strong>가 지급됩니다.<br />
+    42 출석 <strong>160시간</strong>을 채운다면 다음달 2일에 <strong>2000까비</strong>가 지급됩니다.<br />
     <br />
     </div>
     <span>◦ 동전줍기</span><br/>
@@ -180,23 +235,12 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     pointColor: "var(--sys-main-color)",
   },
   [ContentStatus.STORE]: {
-    contentTitle: "까비 상점 open",
+    contentTitle: "까비 상점 OPEN!",
     iconComponent: StoreImg,
     background:
-      "linear-gradient(180deg, rgba(161,123,243,1) 0%, rgba(131,55,229,1) 100%);",
-    contentText: `<span>◦ 이용 방법</span><br/>
-    <div>
-    <strong>1인</strong>이 1개의 사물함을 사용합니다.<br />
-    최대 <strong>${
-      import.meta.env.VITE_PRIVATE_LENT_PERIOD
-    }일</strong>간 대여할 수 있습니다.<br/><br/>
-    </div>
-    <span>◦ 페널티</span><br/>
-    <div>
-    연체 시 연체되는 일의 <strong>제곱 수만큼</strong> 페널티가 부과됩니다.<br />
-    연체 페널티는 누적됩니다.
-    </div>
+    "linear-gradient(to bottom, var(--ref-purple-400), var(--ref-purple-600))",
+    contentText: `
   `,
-    pointColor: "var(--sys-main-color)",
+    pointColor: "var(--white-text-with-bg-color)",
   },
 };

@@ -2,7 +2,12 @@ import React from "react";
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
+//store Icons
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extension.svg";
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
+import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
+import { ReactComponent as SwapImg } from "@/Cabinet/assets/images/storeMove.svg";
+import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
 interface ModalProps {
@@ -27,6 +32,42 @@ const ManualModal: React.FC<ModalProps> = ({
     contentStatus === ContentStatus.PRIVATE ||
     contentStatus === ContentStatus.SHARE ||
     contentStatus === ContentStatus.CLUB;
+
+  const [selectedItem, setSelectedItem] = useState<number>(0);
+  const storeItems = [
+    { icon: ExtensionImg, title: "연장권", content: `
+    <strong></strong>
+    <strong>store</strong> 탭을 눌러 연장권 구매하기 버튼을 클릭 후 <strong>3일</strong>, <strong>15일</strong>, <strong>31일</strong> 단위로 구매할 수 있습니다.<br/>
+    구매한 아이템은 <strong>인벤토리</strong> 탭에서 확인할 수 있습니다.<br/>
+    <br/>
+    <span>◦ 사용방법</span><br/>
+    <div>
+    사물함을 대여한 상태로, 상단 오른쪽의 상자 아이콘을 누르면 현재 자신의 사물함의 정보를 볼 수 있습니다.<br/>
+    연장권 사용하기 버튼을 눌러 보유한 연장권 중 원하는 타입을 선택 후 사용합니다.<br/>
+    이미 사용한 연장권은 취소할 수 없습니다.<br/>
+    공유사물함의 모든 인원이 연장권을 사용할 수 있지만, 남은 인원이 한 명인 경우 연장권을 사용할 수 없습니다.
+    </div>
+    ` },
+    { icon: SwapImg, title: "이사권", content: `
+    <strong></strong>
+    기존 일주일에 한 번 가능했던 이사하기 기능을 <strong>제한 없이 자유롭게</strong> 사용할 수 있습니다.<br/>
+    현재 이용중인 사물함의 <strong>대여 기간을 유지</strong>한 채 다른 사물함으로 이사할 수 있습니다.<br/>
+    store 탭에서 구매할 수 있으며, 인벤토리 탭에서 구매한 아이템을 확인할 수 있습니다.
+    <br/>
+    <span>◦ 사용방법</span><br/>
+    <div>
+    개인 사물함을 이용중인 사용자만 이사권을 사용할 수 있습니다.<br/>
+    아이템을 보유한 상태로 비어있는 개인 사물함을 눌렀을 때 이사하기 버튼이 활성화됩니다.<br/>
+    이미 사용한 이사권은 취소할 수 없습니다.<br/>
+    
+    </div>
+    ` },
+    { icon: AlarmImg, title: "알림 등록권", content: "ALARM" },
+    { icon: PenaltyImg, title: "페널티 감면권", content: "PENALTY" },
+  ];
+  const handleIconClick = (index: number) => {
+    setSelectedItem(index);
+  };
 
   const closeModal = () => {
     if (modalIsOpen) {
@@ -76,12 +117,37 @@ const ManualModal: React.FC<ModalProps> = ({
               )}
             </BasicInfo>
           )}
-          {contentData.contentTitle}
-          <ManualContentStyled color={contentData.pointColor}>
-            <div
-              dangerouslySetInnerHTML={{ __html: contentData.contentText }}
-            ></div>
-          </ManualContentStyled>
+          {contentStatus === ContentStatus.STORE && (
+            <>
+              <ItemContentsStyled>
+                {storeItems.map((item, index) => (
+                  <ItemIconStyled
+                    key={index}
+                    onClick={() => handleIconClick(index)}
+                    className={selectedItem === index ? "selected" : ""}
+                  >
+                    <item.icon />
+                  </ItemIconStyled>
+                ))}
+              </ItemContentsStyled>
+              {storeItems[selectedItem].title}
+              <ManualContentStyled color={contentData.pointColor}>
+              <div
+                dangerouslySetInnerHTML={{ __html: storeItems[selectedItem].content }}
+                ></div>
+            </ManualContentStyled>
+            </>
+          )}
+          {contentStatus !== ContentStatus.STORE && (
+            <>
+            {contentData.contentTitle}
+            <ManualContentStyled color={contentData.pointColor}>
+              <div
+                dangerouslySetInnerHTML={{ __html: contentData.contentText }}
+                ></div>
+            </ManualContentStyled>
+                </>
+          )}
         </ModalContent>
       </ModalWrapper>
     </ModalOverlay>
@@ -145,7 +211,8 @@ const ModalWrapper = styled.div<{
   border: ${(props) =>
     props.contentStatus === ContentStatus.PENDING
       ? "5px double var(--sys-main-color)"
-      : props.contentStatus === ContentStatus.IN_SESSION || props.contentStatus === ContentStatus.COIN
+      : props.contentStatus === ContentStatus.IN_SESSION ||
+        props.contentStatus === ContentStatus.COIN
       ? "5px solid var(--sys-main-color)"
       : "none"};
   box-shadow: ${(props) =>
@@ -166,7 +233,8 @@ const ModalContent = styled.div<{
   display: flex;
   flex-direction: column;
   color: ${(props) =>
-    props.contentStatus === ContentStatus.IN_SESSION || props.contentStatus === ContentStatus.COIN
+    props.contentStatus === ContentStatus.IN_SESSION ||
+    props.contentStatus === ContentStatus.COIN
       ? "var(--sys-main-color)"
       : props.contentStatus === ContentStatus.EXTENSION
       ? "var(--normal-text-color)"
@@ -188,7 +256,8 @@ const ModalContent = styled.div<{
   }
   .moveButton {
     stroke: ${(props) =>
-      props.contentStatus === ContentStatus.IN_SESSION || props.contentStatus === ContentStatus.COIN
+      props.contentStatus === ContentStatus.IN_SESSION ||
+      props.contentStatus === ContentStatus.COIN
         ? "var(--sys-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
@@ -210,7 +279,8 @@ const CloseButton = styled.div<{
   svg {
     transform: scaleX(-1);
     stroke: ${(props) =>
-      props.contentStatus === ContentStatus.IN_SESSION || props.contentStatus === ContentStatus.COIN
+      props.contentStatus === ContentStatus.IN_SESSION ||
+      props.contentStatus === ContentStatus.COIN
         ? "var(--sys-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
@@ -328,6 +398,21 @@ const ContentImgStyled = styled.div<{
           : "var(--white-text-with-bg-color)"};
     }
   }
+`;
+
+const ItemContentsStyled = styled.div`
+  width: 400px;
+  height: 80px;
+  // background-color: red;
+  display: flex;
+  margin-bottom:20px;
+`;
+
+const ItemIconStyled = styled.div`
+  width: 80px;
+  height: 80px;
+  // background-color: blue;
+  margin-right: 10px;
 `;
 
 export default ManualModal;
