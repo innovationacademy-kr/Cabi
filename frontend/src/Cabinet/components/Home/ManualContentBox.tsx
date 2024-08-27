@@ -1,5 +1,6 @@
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
+import { ContentStatusStylesMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as ManualPeopleImg } from "@/Cabinet/assets/images/manualPeople.svg";
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
@@ -84,6 +85,8 @@ const ManualContentBoxStyled = styled.div<{
   font-weight: bold;
   cursor: pointer;
 
+  ${(props) => ContentStatusStylesMap[props.contentStatus]}
+
   .clockImg {
     width: 35px;
     margin-right: 10px;
@@ -120,82 +123,7 @@ const ManualContentBoxStyled = styled.div<{
     fill: var(--sys-main-color);
   }
 
-  // 상자
-  ${({ contentStatus }) =>
-    contentStatus === ContentStatus.COIN &&
-    css`
-      border: 5px solid var(--sys-main-color);
-      color: var(--sys-main-color);
-      // border: 6px solid var(--sys-main-color);
-      // color: var(--sys-main-color);
-      /* color: var(--custom-purple-200); */
-      /* box-shadow: inset 0px 0px 0px 5px var(--bg-color); */
-    `}
-
-  ${({ contentStatus }) =>
-    contentStatus === ContentStatus.STORE &&
-    css`
-      width: 620px;
-      color: var(--white-text-with-bg-color);
-      position: relative; /* Added for positioning the pseudo-element */
-
-      &:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 66.67%; /* 3분의 2 지점 */
-        height: 100%;
-        width: 4px; /* 점선의 가로 너비 */
-        background-image: linear-gradient(
-          to bottom,
-          white 33%,
-          rgba(255, 255, 255, 0) 0%
-        );
-        background-position: right;
-        background-size: 10px 30px; /* 점의 세로 크기 10px, 간격 5px */
-        background-repeat: repeat-y;
-      }
-      @media screen and (max-width: 1000px) {
-        width: 280px;
-        .peopleImg {
-          display: none;
-        }
-        font-size: 21px;
-        &:after {
-          left: 186.67px; /* 280px의 3분의 2 지점 */
-        }
-      }
-    `}
-
-  ${({ contentStatus }) =>
-    contentStatus === ContentStatus.PENDING &&
-    css`
-      border: 6px double var(--sys-main-color);
-      box-shadow: inset 0px 0px 0px 5px var(--bg-color);
-    `}
-
-  ${({ contentStatus }) =>
-    contentStatus === ContentStatus.IN_SESSION &&
-    css`
-      border: 5px solid var(--sys-main-color);
-      color: var(--sys-main-color);
-    `}
-
-  ${({ contentStatus }) =>
-    contentStatus === ContentStatus.EXTENSION &&
-    css`
-      width: 900px;
-      color: var(--normal-text-color);
-      @media screen and (max-width: 1000px) {
-        width: 280px;
-        .peopleImg {
-          display: none;
-        }
-        font-size: 21px;
-      }
-    `}
-  
-    p {
+  p {
     margin-top: 90px;
     ${({ contentStatus }) =>
       (contentStatus === ContentStatus.PENDING ||
@@ -220,7 +148,7 @@ const ManualContentBoxStyled = styled.div<{
     cursor: pointer;
   }
 
-  :hover {
+  &:hover {
     transition: all 0.3s ease-in-out;
     ${({ contentStatus }) =>
       contentStatus === ContentStatus.PENDING
