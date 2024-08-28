@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import MaunalContentBox from "@/Cabinet/components/Home/ManualContentBox";
+import ManualContentBox from "@/Cabinet/components/Home/ManualContentBox";
 import ManualModal from "@/Cabinet/components/Modals/ManualModal/ManualModal";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
@@ -46,14 +46,14 @@ const ServiceManual = ({
             className="article"
             onClick={() => openModal(ContentStatus.COIN)}
           >
-            <MaunalContentBox contentStatus={ContentStatus.COIN} />
+            <ManualContentBox contentStatus={ContentStatus.COIN} />
           </article>
           <TicketWrapperStyled>
             <article
               className="article"
               onClick={() => openModal(ContentStatus.STORE)}
             >
-              <MaunalContentBox contentStatus={ContentStatus.STORE} />
+              <ManualContentBox contentStatus={ContentStatus.STORE} />
             </article>
           </TicketWrapperStyled>
         </InfoSectionStyled>
@@ -68,19 +68,19 @@ const ServiceManual = ({
             className="article"
             onClick={() => openModal(ContentStatus.PRIVATE)}
           >
-            <MaunalContentBox contentStatus={ContentStatus.PRIVATE} />
+            <ManualContentBox contentStatus={ContentStatus.PRIVATE} />
           </article>
           <article
             className="article"
             onClick={() => openModal(ContentStatus.SHARE)}
           >
-            <MaunalContentBox contentStatus={ContentStatus.SHARE} />
+            <ManualContentBox contentStatus={ContentStatus.SHARE} />
           </article>
           <article
             className="article"
-            onClick={() => openModal(ContentStatus.IN_SESSION)}
+            onClick={() => openModal(ContentStatus.CLUB)}
           >
-            <MaunalContentBox contentStatus={ContentStatus.IN_SESSION} />
+            <ManualContentBox contentStatus={ContentStatus.CLUB} />
           </article>
         </InfoSectionStyled>
       </WrapSectionStyled>

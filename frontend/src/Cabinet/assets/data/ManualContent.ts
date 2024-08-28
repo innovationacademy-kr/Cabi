@@ -233,7 +233,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     </div>
 
     `,
-    pointColor: "var(--sys-main-color)",
+    pointColor: "var(--sys-default-main-color)",
   },
   [ContentStatus.STORE]: {
     contentTitle: "까비 상점 OPEN!",

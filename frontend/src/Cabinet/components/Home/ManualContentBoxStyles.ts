@@ -77,7 +77,7 @@ export const storeBoxStyles = css`
 `;
 
 export const coinBoxStyles = css`
-  border: 5px solid var(--sys-main-color);
+  border: 5px solid var(--sys-default-main-color);
   color: var(--sys-main-color);
 `;
 

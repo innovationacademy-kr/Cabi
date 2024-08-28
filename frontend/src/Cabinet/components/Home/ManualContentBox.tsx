@@ -65,7 +65,7 @@ const ManualContentBoxStyled = styled.div<{
     margin-right: 10px;
     margin-top: 160px;
     animation: ${Rotation} 1s linear infinite;
-    stroke: var(--sys-main-color);
+    stroke: var(--sys-default-main-color);
   }
 
   .contentImg {
@@ -87,16 +87,18 @@ const ManualContentBoxStyled = styled.div<{
     position: absolute;
     right: 100px;
     bottom: 30px;
-    fill: var(--sys-main-color);
+    fill: var(--sys-def-main-color);
   }
 
   p {
     margin-top: 90px;
     ${({ contentStatus }) =>
       (contentStatus === ContentStatus.PENDING ||
+        contentStatus === ContentStatus.COIN ||
         contentStatus === ContentStatus.IN_SESSION) &&
       css`
-        margin-top: 160px;
+        /* margin-top: 160px; */
+        color: var(--sys-default-main-color);
       `}
   }
 
@@ -120,7 +122,7 @@ const ManualContentBoxStyled = styled.div<{
     ${({ contentStatus }) =>
       contentStatus === ContentStatus.PENDING
         ? css`
-            border: 5px double var(--sys-main-color);
+            border: 5px double var(--sys-default-main-color);
             box-shadow: inset 0px 0px 0px 5px var(--bg-color);
             filter: drop-shadow(
               10px 10px 10px var(--left-nav-border-shadow-color)
@@ -139,9 +141,11 @@ const ManualContentBoxStyled = styled.div<{
       transform: translateY(-5px);
       ${({ contentStatus }) =>
         (contentStatus === ContentStatus.PENDING ||
+          contentStatus === ContentStatus.COIN ||
           contentStatus === ContentStatus.IN_SESSION) &&
         css`
-          margin-top: 155px;
+          /* margin-top: 155px; */
+          color: var(--sys-default-main-color);
         `}
     }
     .clockImg {
