@@ -370,7 +370,7 @@ const ContentImgStyled = styled.div<{
 `;
 
 const ItemContentsStyled = styled.div`
-  width: 40%;
+  width: 45%;
   height: 80px;
   display: flex;
   margin-bottom: 30px;
