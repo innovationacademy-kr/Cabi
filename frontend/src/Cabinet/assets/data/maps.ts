@@ -7,7 +7,7 @@ import {
   storeBoxStyles,
 } from "@/Cabinet/components/Home/ManualContentBoxStyles";
 import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
-import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extension.svg";
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
 import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
 import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
