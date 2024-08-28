@@ -2,12 +2,9 @@ import React from "react";
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
-//store Icons
-import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extension.svg";
+import { storeItems } from "@/Cabinet/assets/data/ManualContent";
+import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
-import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
-import { ReactComponent as SwapImg } from "@/Cabinet/assets/images/storeMove.svg";
-import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
 interface ModalProps {
@@ -34,37 +31,75 @@ const ManualModal: React.FC<ModalProps> = ({
     contentStatus === ContentStatus.CLUB;
 
   const [selectedItem, setSelectedItem] = useState<number>(0);
-  const storeItems = [
-    { icon: ExtensionImg, title: "연장권", content: `
-    <strong></strong>
-    <strong>store</strong> 탭을 눌러 연장권 구매하기 버튼을 클릭 후 <strong>3일</strong>, <strong>15일</strong>, <strong>31일</strong> 단위로 구매할 수 있습니다.<br/>
-    구매한 아이템은 <strong>인벤토리</strong> 탭에서 확인할 수 있습니다.<br/>
-    <br/>
-    <span>◦ 사용방법</span><br/>
-    <div>
-    사물함을 대여한 상태로, 상단 오른쪽의 상자 아이콘을 누르면 현재 자신의 사물함의 정보를 볼 수 있습니다.<br/>
-    연장권 사용하기 버튼을 눌러 보유한 연장권 중 원하는 타입을 선택 후 사용합니다.<br/>
-    이미 사용한 연장권은 취소할 수 없습니다.<br/>
-    공유사물함의 모든 인원이 연장권을 사용할 수 있지만, 남은 인원이 한 명인 경우 연장권을 사용할 수 없습니다.
-    </div>
-    ` },
-    { icon: SwapImg, title: "이사권", content: `
-    <strong></strong>
-    기존 일주일에 한 번 가능했던 이사하기 기능을 <strong>제한 없이 자유롭게</strong> 사용할 수 있습니다.<br/>
-    현재 이용중인 사물함의 <strong>대여 기간을 유지</strong>한 채 다른 사물함으로 이사할 수 있습니다.<br/>
-    store 탭에서 구매할 수 있으며, 인벤토리 탭에서 구매한 아이템을 확인할 수 있습니다.
-    <br/>
-    <span>◦ 사용방법</span><br/>
-    <div>
-    개인 사물함을 이용중인 사용자만 이사권을 사용할 수 있습니다.<br/>
-    아이템을 보유한 상태로 비어있는 개인 사물함을 눌렀을 때 이사하기 버튼이 활성화됩니다.<br/>
-    이미 사용한 이사권은 취소할 수 없습니다.<br/>
-    
-    </div>
-    ` },
-    { icon: AlarmImg, title: "알림 등록권", content: "ALARM" },
-    { icon: PenaltyImg, title: "페널티 감면권", content: "PENALTY" },
-  ];
+  // const storeItems = [
+  //   {
+  //     icon: ItemIconMap.EXTENSION,
+  //     title: "연장권",
+  //     content: `
+  //   <strong>store</strong> 탭을 눌러 연장권 구매하기 버튼을 클릭 후 <strong>3일</strong>, <strong>15일</strong>, <strong>31일</strong> 단위로 구매할 수 있습니다.<br/>
+  //   구매한 아이템은 <strong>인벤토리</strong> 탭에서 확인할 수 있습니다.<br/>
+  //   <br/>
+  //   <span>◦ 사용방법</span><br/>
+  //   <div>
+  //   사물함을 대여한 상태로, 상단 오른쪽의 상자 아이콘을 누르면 현재 자신의 사물함의 정보를 볼 수 있습니다.<br/>
+  //   연장권 사용하기 버튼을 눌러 보유한 연장권 중 원하는 타입을 선택 후 사용합니다.<br/>
+  //   이미 사용한 연장권은 취소할 수 없습니다.<br/>
+  //   공유사물함의 모든 인원이 연장권을 사용할 수 있지만, 남은 인원이 한 명인 경우 연장권을 사용할 수 없습니다.
+  //   </div>
+  //   `,
+  //   },
+  //   {
+  //     icon: ItemIconMap.SWAP,
+  //     title: "이사권",
+  //     content: `
+  //   <strong></strong>
+  //   기존 일주일에 한 번 가능했던 이사하기 기능을 <strong>제한 없이 자유롭게</strong> 사용할 수 있습니다.<br/>
+  //   현재 이용중인 사물함의 <strong>대여 기간을 유지</strong>한 채 다른 사물함으로 이사할 수 있습니다.<br/>
+  //   store 탭에서 구매할 수 있으며, 인벤토리 탭에서 구매한 아이템을 확인할 수 있습니다.
+  //   <br/>
+  //   <span>◦ 사용방법</span><br/>
+  //   <div>
+  //   개인 사물함을 이용중인 사용자만 이사권을 사용할 수 있습니다.<br/>
+  //   아이템을 보유한 상태로 비어있는 개인 사물함을 눌렀을 때 이사하기 버튼이 활성화됩니다.<br/>
+  //   이미 사용한 이사권은 취소할 수 없습니다.<br/>
+
+  //   </div>
+  //   `,
+  //   },
+  //   {
+  //     icon: ItemIconMap.ALARM,
+  //     title: "알림 등록권",
+  //     content: `
+  //   내가 원하는 섹션에 <strong>빈 자리</strong>가 나온다면 알림을 받을 수 있습니다.<br/>
+  //   <strong>개인사물함</strong>에 대해서만 알림을 받을 수 있습니다.<br/>
+  //   store 탭에서 구매할 수 있으며, 인벤토리 탭에서 구매한 아이템을 확인할 수 있습니다.<br/>
+  //   <br/>
+  //   <span>◦ 사용방법</span><br/>
+  //   <div>
+  //   아이템 구매 후 원하는 섹션으로 이동해 우측 상단의 <strong>하트 아이콘</strong>을 클릭합니다.<br/>
+  //   사용한 알림 등록권은 섹션을 변경하거나 취소할 수 없습니다.<br/>
+  //   알림등록권은 1화 알림 후 <strong>소멸</strong>됩니다.
+  //   </div>
+
+  //   `,
+  //   },
+  //   {
+  //     icon: ItemIconMap.PENALTY,
+  //     title: "페널티 감면권",
+  //     content: `
+  //   페널티 감면권은 <strong>7일</strong>, <strong>15일</strong>, <strong>31일</strong> 단위로 구매할 수 있습니다. <br/>
+  //   구매한 아이템은 <strong>인벤토리</strong> 탭에서 확인할 수 있습니다.<br/>
+  //   <br/>
+  //   <span>◦ 사용방법</span><br/>
+  //   <div>
+  //   사물함 대여 불가 페널티가 부과된 유저라면 Profile 탭을 눌러 대여정보 상자 상단의 <br/>
+  //   <strong>페널티 감면권 사용하기 버튼</strong>이 활성화됩니다.<br/>
+  //   버튼을 눌러 내가 보유한 페널티 감면권을 선택하면, 남은 페널티 기간을 확인하실 수 있습니다.<br/>
+  //   연체된 사물함을 아직 반납하지 않았다면, 우선 <strong>반납하기 버튼</strong>을 눌러야 사용 버튼이 활성화됩니다.
+  //   </div>
+  //   `,
+  //   },
+  // ];
   const handleIconClick = (index: number) => {
     setSelectedItem(index);
   };
@@ -125,6 +160,7 @@ const ManualModal: React.FC<ModalProps> = ({
                     key={index}
                     onClick={() => handleIconClick(index)}
                     className={selectedItem === index ? "selected" : ""}
+                    color={contentData.pointColor}
                   >
                     <item.icon />
                   </ItemIconStyled>
@@ -132,21 +168,23 @@ const ManualModal: React.FC<ModalProps> = ({
               </ItemContentsStyled>
               {storeItems[selectedItem].title}
               <ManualContentStyled color={contentData.pointColor}>
-              <div
-                dangerouslySetInnerHTML={{ __html: storeItems[selectedItem].content }}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: storeItems[selectedItem].content,
+                  }}
                 ></div>
-            </ManualContentStyled>
+              </ManualContentStyled>
             </>
           )}
           {contentStatus !== ContentStatus.STORE && (
             <>
-            {contentData.contentTitle}
-            <ManualContentStyled color={contentData.pointColor}>
-              <div
-                dangerouslySetInnerHTML={{ __html: contentData.contentText }}
+              {contentData.contentTitle}
+              <ManualContentStyled color={contentData.pointColor}>
+                <div
+                  dangerouslySetInnerHTML={{ __html: contentData.contentText }}
                 ></div>
-            </ManualContentStyled>
-                </>
+              </ManualContentStyled>
+            </>
           )}
         </ModalContent>
       </ModalWrapper>
@@ -403,16 +441,46 @@ const ContentImgStyled = styled.div<{
 const ItemContentsStyled = styled.div`
   width: 400px;
   height: 80px;
-  // background-color: red;
   display: flex;
-  margin-bottom:20px;
+  margin-bottom: 30px;
 `;
 
-const ItemIconStyled = styled.div`
+const ItemIconStyled = styled.div<{
+  color: string;
+}>`
   width: 80px;
   height: 80px;
-  // background-color: blue;
   margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &.selected > svg {
+    filter: drop-shadow(0px 6px 3px var(--hover-box-shadow-color));
+    width: 80px;
+    height: 80px;
+    & > path {
+      // stroke: red;
+      stroke: ${(props) => props.color};
+    }
+  }
+  & > svg {
+    width: 50px;
+    height: 50px;
+    // filter: drop-shadow(0px 3px 1px var(--hover-box-shadow-color));
+    & > path {
+      transition: all 0.3s ease;
+      stroke: var(--ref-purple-690);
+    }
+
+    &:hover {
+      filter: drop-shadow(0px 6px 3px var(--hover-box-shadow-color));
+      width: 80px;
+      height: 80px;
+      & > path {
+        stroke: ${(props) => props.color};
+      }
+    }
+  }
 `;
 
 export default ManualModal;
