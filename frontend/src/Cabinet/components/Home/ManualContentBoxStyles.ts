@@ -65,6 +65,15 @@ export const storeBoxStyles = css`
     background-size: 10px 30px;
     background-repeat: repeat-y;
   }
+  @media screen and (max-width: 1100px) {
+    width: 280px;
+    font-size: 21px;
+    clip-path: none;
+
+    &:after {
+      display: none;
+    }
+  }
 `;
 
 export const coinBoxStyles = css`

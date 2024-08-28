@@ -34,27 +34,6 @@ const ManualContentBox = ({ contentStatus }: ManualContentBoxProps) => {
   );
 };
 
-const StoreCardCircle = styled.div`
-  top: -12px;
-  right: 193px;
-  rotate: 45deg;
-  width: 0;
-  height: 0;
-  border-bottom: 24px solid white;
-  border-left: 24px solid transparent;
-  position: absolute;
-
-  :hover {
-    transition: all 0.3s ease-in-out;
-    transform: translateY(-5px);
-  }
-  &.bottom {
-    border-bottom: 24px solid transparent;
-    border-left: 24px solid white;
-    top: 268px;
-  }
-`;
-
 const Rotation = keyframes`
  to {
    transform : rotate(360deg)

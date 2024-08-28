@@ -41,17 +41,12 @@ const ServiceManual = ({
           당신의 방식으로,
         </p>
 
-        {/* <TicketWrapperStyled>
-          <TicketStyled />
-        </TicketWrapperStyled> */}
-
         <InfoSectionStyled className="section">
           <article
             className="article"
             onClick={() => openModal(ContentStatus.COIN)}
           >
             <MaunalContentBox contentStatus={ContentStatus.COIN} />
-            {/* <p className="redColor">new</p> */}
           </article>
           <TicketWrapperStyled>
             <article
@@ -59,7 +54,6 @@ const ServiceManual = ({
               onClick={() => openModal(ContentStatus.STORE)}
             >
               <MaunalContentBox contentStatus={ContentStatus.STORE} />
-              {/* <p className="redColor">new</p> */}
             </article>
           </TicketWrapperStyled>
         </InfoSectionStyled>
