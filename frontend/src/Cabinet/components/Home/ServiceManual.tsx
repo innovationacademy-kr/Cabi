@@ -47,6 +47,7 @@ const ServiceManual = ({
             onClick={() => openModal(ContentStatus.COIN)}
           >
             <ManualContentBox contentStatus={ContentStatus.COIN} />
+            <p className="redColor">new</p>
           </article>
           <TicketWrapperStyled>
             <article
@@ -54,6 +55,7 @@ const ServiceManual = ({
               onClick={() => openModal(ContentStatus.STORE)}
             >
               <ManualContentBox contentStatus={ContentStatus.STORE} />
+              <p className="redColor">new</p>
             </article>
           </TicketWrapperStyled>
         </InfoSectionStyled>
