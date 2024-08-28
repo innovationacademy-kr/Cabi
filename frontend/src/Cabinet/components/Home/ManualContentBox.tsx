@@ -28,12 +28,6 @@ const ManualContentBox = ({ contentStatus }: ManualContentBoxProps) => {
       <ContentTextStyled>
         <p>{contentData.contentTitle}</p>
       </ContentTextStyled>
-      {contentStatus === ContentStatus.STORE && (
-        <>
-          <StoreCardCircle className="top"></StoreCardCircle>
-          <StoreCardCircle className="bottom"></StoreCardCircle>
-        </>
-      )}
 
       <MoveBtnImg className="moveButton" />
     </ManualContentBoxStyled>
@@ -99,12 +93,6 @@ const ManualContentBoxStyled = styled.div<{
     width: 80px;
     height: 80px;
 
-    /* & > path {
-      stroke: ${(props) =>
-      props.contentStatus === ContentStatus.EXTENSION
-        ? "var(--normal-text-color)"
-        : "var(--white-text-with-bg-color)"};
-    } */
     & > path {
       stroke: ${(props) =>
         props.contentStatus === ContentStatus.COIN
@@ -154,18 +142,24 @@ const ManualContentBoxStyled = styled.div<{
       contentStatus === ContentStatus.PENDING
         ? css`
             border: 5px double var(--sys-main-color);
-            box-shadow: inset 0px 0px 0px 5px var(--bg-color),
-              10px 10px 25px 0 var(--left-nav-border-shadow-color);
+            box-shadow: inset 0px 0px 0px 5px var(--bg-color);
+            filter: drop-shadow(
+              10px 10px 10px var(--left-nav-border-shadow-color)
+            );
           `
+        : contentStatus === ContentStatus.STORE
+        ? css`` // No box-shadow or filter for STORE status
         : css`
-            box-shadow: 10px 10px 25px 0 var(--left-nav-border-shadow-color);
+            filter: drop-shadow(
+              10px 10px 10px var(--left-nav-border-shadow-color)
+            );
           `}
+
     p {
       transition: all 0.3s ease-in-out;
       transform: translateY(-5px);
       ${({ contentStatus }) =>
         (contentStatus === ContentStatus.PENDING ||
-          contentStatus === ContentStatus.COIN ||
           contentStatus === ContentStatus.IN_SESSION) &&
         css`
           margin-top: 155px;

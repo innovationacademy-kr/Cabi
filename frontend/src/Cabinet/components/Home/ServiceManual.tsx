@@ -41,9 +41,9 @@ const ServiceManual = ({
           당신의 방식으로,
         </p>
 
-        <TicketWrapperStyled>
+        {/* <TicketWrapperStyled>
           <TicketStyled />
-        </TicketWrapperStyled>
+        </TicketWrapperStyled> */}
 
         <InfoSectionStyled className="section">
           <article
@@ -53,13 +53,15 @@ const ServiceManual = ({
             <MaunalContentBox contentStatus={ContentStatus.COIN} />
             {/* <p className="redColor">new</p> */}
           </article>
-          <article
-            className="article"
-            onClick={() => openModal(ContentStatus.STORE)}
-          >
-            <MaunalContentBox contentStatus={ContentStatus.STORE} />
-            {/* <p className="redColor">new</p> */}
-          </article>
+          <TicketWrapperStyled>
+            <article
+              className="article"
+              onClick={() => openModal(ContentStatus.STORE)}
+            >
+              <MaunalContentBox contentStatus={ContentStatus.STORE} />
+              {/* <p className="redColor">new</p> */}
+            </article>
+          </TicketWrapperStyled>
         </InfoSectionStyled>
 
         <p className="subtitle">
@@ -84,41 +86,9 @@ const ServiceManual = ({
             className="article"
             onClick={() => openModal(ContentStatus.IN_SESSION)}
           >
-            {/* <MaunalContentBox contentStatus={ContentStatus.CLUB} />
-             */}
             <MaunalContentBox contentStatus={ContentStatus.IN_SESSION} />
           </article>
         </InfoSectionStyled>
-
-        <InfoSectionStyled className="section">
-          {/* <article
-            className="article"
-            onClick={() => openModal(ContentStatus.PENDING)}
-          >
-            <MaunalContentBox contentStatus={ContentStatus.PENDING} />
-            <p className="redColor">new</p>
-          </article> */}
-          <article
-            className="article"
-            onClick={() => openModal(ContentStatus.IN_SESSION)}
-          >
-            <MaunalContentBox contentStatus={ContentStatus.IN_SESSION} />
-            <p className="redColor">new</p>
-          </article>
-        </InfoSectionStyled>
-        {/* <p className="subtitle">
-          사물함을 더 오래
-          <br />
-          사용할 수 있는 방법.
-        </p>
-        <InfoSectionStyled className="section">
-          <article
-            className="article"
-            onClick={() => openModal(ContentStatus.EXTENSION)}
-          >
-            <MaunalContentBox contentStatus={ContentStatus.EXTENSION} />
-          </article>
-        </InfoSectionStyled> */}
       </WrapSectionStyled>
 
       <button onClick={lentStartHandler}>시작하기</button>
@@ -137,7 +107,8 @@ const TicketWrapperStyled = styled.div`
   &:hover {
     transition: all 0.3s ease-in-out;
     transform: translateY(-5px);
-    filter: drop-shadow(10px 10px 50px rgba(0, 0, 0, 0.2));
+    /* filter: drop-shadow(10px 10px 8px rgba(0, 0, 0, 0.2)); */
+    filter: drop-shadow(10px 10px 10px var(--left-nav-border-shadow-color));
   }
 `;
 // 16.794
