@@ -119,7 +119,7 @@ const InputStyled = styled.input.attrs({ type: "checkbox" })`
   position: absolute;
   width: 0;
   height: 0;
-`;
+`; 
 
 const ToggleSwitchStyled = styled.label<{ checked: boolean }>`
   cursor: pointer;
