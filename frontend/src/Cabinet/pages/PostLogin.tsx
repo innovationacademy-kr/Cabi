@@ -46,6 +46,7 @@ const PostLogin = (): JSX.Element => {
       let time = setTimeout(() => {
         navigate("/home");
       }, 600);
+
       return () => {
         clearTimeout(time);
       };

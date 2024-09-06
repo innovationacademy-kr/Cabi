@@ -5,6 +5,7 @@ import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
 import alertImg from "@/Cabinet/assets/images/cautionSign.svg";
 import { ReactComponent as ClockImg } from "@/Cabinet/assets/images/clock.svg";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
+import useDebounce from "@/Cabinet/hooks/useDebounce";
 
 interface CountTimeProps {
   minutes: string;
@@ -17,13 +18,18 @@ const CodeAndTime = ({ minutes, seconds, isTimeOver }: CountTimeProps) => {
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const code = myCabinetInfo.shareCode + "";
   const [copySuccess, setCopySuccess] = useState(false);
+  const { debounce } = useDebounce();
 
   const handleCopyClick = () => {
     navigator.clipboard.writeText(code).then(() => {
       setCopySuccess(true);
-      setTimeout(() => {
-        setCopySuccess(false);
-      }, 2000);
+      debounce(
+        "codeCopyClick",
+        () => {
+          setCopySuccess(false);
+        },
+        2000
+      );
     });
   };
 

@@ -145,7 +145,6 @@ const SearchNoCabinetDetails = (props: ISearchDetail) => {
   );
 };
 
-
 const WrapperStyled = styled.div`
   width: 350px;
   height: 110px;

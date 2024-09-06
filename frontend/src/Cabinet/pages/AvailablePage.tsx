@@ -98,10 +98,6 @@ const AvailablePage = () => {
 
   useEffect(() => {
     deleteRecoilPersistFloorSection();
-    setTimeout(() => {
-      // 새로고침 광클 방지를 위한 초기 로딩 딜레이
-      setIsLoaded(true);
-    }, 500);
   }, []);
 
   useEffect(() => {
@@ -156,7 +152,7 @@ const AvailablePage = () => {
         />
       </MultiToggleSwitchStyled>
 
-      {isLoaded && cabinets ? (
+      {Object.keys(cabinets).length ? (
         Object.entries(cabinets).map(([key, value]) => (
           <FloorContainer
             key={key}

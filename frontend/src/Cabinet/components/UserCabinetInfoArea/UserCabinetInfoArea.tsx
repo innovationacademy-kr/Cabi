@@ -59,7 +59,7 @@ const UserCabinetInfoArea: React.FC<{
       <CabinetTypeIconStyled>
         <CabinetTypeIcon />
       </CabinetTypeIconStyled>
-      <TextStyled fontSize="1rem" fontColor="var(--normal-text-color))">
+      <TextStyled fontSize="1rem" fontColor="var(--normal-text-color)">
         {selectedUserInfo.name}
       </TextStyled>
 
