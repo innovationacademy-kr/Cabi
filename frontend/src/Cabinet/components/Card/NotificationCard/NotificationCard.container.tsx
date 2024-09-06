@@ -20,6 +20,7 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [alarms, setAlarms] = useState({ current: alarm, original: alarm });
+  const [isLoading, setIsLoading] = useState(false);
   const isModified = useMemo(
     () => JSON.stringify(alarms.current) !== JSON.stringify(alarms.original),
     [alarms]
@@ -42,6 +43,7 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   };
 
   const handleSave = async () => {
+    setIsLoading(true);
     if (!alarms.current) return;
     try {
       await axiosUpdateAlarm(alarms.current);
@@ -60,6 +62,7 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
       setHasErrorOnResponse(true);
       setModalTitle(error.response.data.message);
     } finally {
+      setIsLoading(false);
       setShowResponseModal(true);
     }
   };
@@ -85,12 +88,14 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
                   onClick: handleSave,
                   fontColor: "var(--white-text-with-bg-color)",
                   backgroundColor: "var(--sys-main-color)",
-                  isClickable: true,
+                  isClickable: !isLoading,
+                  isLoading: isLoading,
                 },
                 {
                   label: "취소",
                   onClick: handleCancel,
-                  isClickable: true,
+                  isClickable: !isLoading,
+                  isLoading: isLoading,
                 },
               ]
             : [
