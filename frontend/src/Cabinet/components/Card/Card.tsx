@@ -9,6 +9,7 @@ export interface IButtonProps {
   icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null; // NOTE: icon 이 있을 경우, icon 을 표시
   isClickable: boolean;
   isExtensible?: boolean;
+  isLoading?: boolean;
 }
 
 interface CardProps {
@@ -41,21 +42,29 @@ const Card = ({
             {onClickToolTip && <ToolTipIcon onClick={onClickToolTip} />}
           </CardTitleWrapperStyled>
           {buttons.length > 0 && (
-            <CardButtonWrapper>
-              {buttons?.map((button, index) => (
-                <CardButtonStyled
-                  key={index}
-                  onClick={button.onClick}
-                  fontColor={button.fontColor}
-                  backgroundColor={button.backgroundColor}
-                  icon={button.icon}
-                  isClickable={button.isClickable}
-                  isExtensible={button.isExtensible}
-                >
-                  {!button.icon ? button.label : <button.icon />}
-                </CardButtonStyled>
-              ))}
-            </CardButtonWrapper>
+            <CardButtonsWrapper>
+              {buttons?.map((button, index) => {
+                return (
+                  <CardButtonWrapper
+                    icon={button.icon}
+                    isLoading={button.isLoading}
+                  >
+                    <CardButtonStyled
+                      key={index}
+                      onClick={button.onClick}
+                      fontColor={button.fontColor}
+                      backgroundColor={button.backgroundColor}
+                      icon={button.icon}
+                      isClickable={button.isClickable}
+                      isExtensible={button.isExtensible}
+                      isLoading={button.isLoading}
+                    >
+                      {!button.icon ? button.label : <button.icon />}
+                    </CardButtonStyled>
+                  </CardButtonWrapper>
+                );
+              })}
+            </CardButtonsWrapper>
           )}
         </CardHeaderStyled>
       )}
@@ -113,9 +122,17 @@ const ToolTipIcon = styled.div`
   }
 `;
 
-export const CardButtonWrapper = styled.div`
+export const CardButtonsWrapper = styled.div`
   display: flex;
   font-size: var(--size-base);
+`;
+
+const CardButtonWrapper = styled.div<{
+  icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null;
+  isLoading?: boolean;
+}>`
+  cursor: ${(props) => props.isLoading && "wait"};
+  margin-left: ${(props) => !props.icon && "10px"};
 `;
 
 export const CardButtonStyled = styled.div<{
@@ -124,6 +141,7 @@ export const CardButtonStyled = styled.div<{
   icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null;
   isClickable?: boolean;
   isExtensible?: boolean;
+  isLoading?: boolean;
 }>`
   ${(props) =>
     props.icon
@@ -146,12 +164,12 @@ export const CardButtonStyled = styled.div<{
           border: none;
           border-radius: 5px;
           font-weight: 350;
-          margin-left: 10px;
           &:hover {
             font-weight: ${props.isClickable && 400};
           }
         `}
   cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
+  pointer-events: ${(props) => props.isLoading && "none"};
 
   & > svg {
     height: 20px;
