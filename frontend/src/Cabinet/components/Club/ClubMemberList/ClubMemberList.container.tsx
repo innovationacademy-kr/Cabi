@@ -6,6 +6,7 @@ import {
   ClubInfoResponseDto,
   ClubUserResponseDto,
 } from "@/Cabinet/types/dto/club.dto";
+import useDebounce from "@/Cabinet/hooks/useDebounce";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
 export type TClubMemberModalState = "addModal";
@@ -27,7 +28,6 @@ const ClubMemberListContainer = ({
 }: ClubMemberListContainerProps) => {
   const [moreButton, setMoreButton] = useState<boolean>(true);
   const [members, setMembers] = useState<ClubUserResponseDto[]>([]);
-  // const [sortMembers, setSortMembers] = useState<ClubUserResponseDto[]>([]);
   const [clubModal, setClubModal] = useState<ICurrentClubMemberModalStateInfo>({
     addModal: false,
   });
@@ -36,10 +36,16 @@ const ClubMemberListContainer = ({
   const [targetClubUser, setTargetClubUser] = useRecoilState(
     targetClubUserInfoState
   );
-
+  const { debounce } = useDebounce();
   const clickMoreButton = () => {
     setIsLoading(true);
-    setPage(page + 1);
+    debounce(
+      "clubMemberList",
+      () => {
+        setPage(page + 1);
+      },
+      300
+    );
   };
 
   const selectClubMemberOnClick = (member: ClubUserResponseDto) => {
