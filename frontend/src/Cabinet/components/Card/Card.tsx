@@ -154,8 +154,14 @@ export const CardButtonStyled = styled.div<{
           }
           margin-left: 10px;
         `}
-  cursor: ${(props) =>
-    props.isClickable ? "pointer" : props.isLoading ? "wait" : "default"};
+  cursor: ${(props) => {
+    if (props.isClickable) {
+      if (props.isLoading) return "wait"; // ex) 프로필 - 알림 요청 후 응답 전까지 저장 버튼 hover시
+      return "pointer";
+    }
+    if (props.isLoading) return "not-allowed"; // ex) 프로필 - 알림 요청 후 응답 전까지 취소 버튼 hover시
+    return "default";
+  }};
 
   & > svg {
     height: 20px;
