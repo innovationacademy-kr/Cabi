@@ -1,15 +1,13 @@
+import React from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { displayStyleState } from "@/Cabinet/recoil/atoms";
 import Card from "@/Cabinet/components/Card/Card";
 import { CardContentWrapper } from "@/Cabinet/components/Card/CardStyles";
 import { ReactComponent as MonitorMobileIcon } from "@/Cabinet/assets/images/monitorMobile.svg";
 import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moon.svg";
 import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sun.svg";
 import { DisplayStyleToggleType } from "@/Cabinet/types/enum/displayStyle.type.enum";
-
-interface DisplayStyleProps {
-  displayStyleToggle: DisplayStyleToggleType;
-  handleDisplayStyleButtonClick: (DisplayStyleToggleType: string) => void;
-}
 
 interface IToggleItemSeparated {
   name: string;
@@ -35,10 +33,15 @@ const toggleList: IToggleItemSeparated[] = [
   },
 ];
 
-const DisplayStyleCard = ({
-  displayStyleToggle,
-  handleDisplayStyleButtonClick,
-}: DisplayStyleProps) => {
+const DisplayStyleCard = () => {
+  const [displayStyleToggle, setDisplayStyleToggle] =
+    useRecoilState(displayStyleState);
+
+  const handleButtonClick = (key: DisplayStyleToggleType) => {
+    localStorage.setItem("display-style-toggle", key);
+    setDisplayStyleToggle(key);
+  };
+
   return (
     <>
       <DisplayStyleCardWrapper>
@@ -58,9 +61,11 @@ const DisplayStyleCard = ({
                       key={item.key}
                       id={`${item.key}`}
                       isClicked={displayStyleToggle === item.key}
-                      onClick={() => handleDisplayStyleButtonClick(item.key)}
+                      onClick={() =>
+                        handleButtonClick(item.key as DisplayStyleToggleType)
+                      }
                     >
-                      {DisplayStyleIcon && <DisplayStyleIcon />}
+                      <DisplayStyleIcon />
                       {item.name}
                     </ButtonStyled>
                   );

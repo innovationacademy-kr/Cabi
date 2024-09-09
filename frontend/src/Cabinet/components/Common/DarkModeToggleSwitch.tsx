@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { displayStyleState } from "@/Cabinet/recoil/atoms";
 import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moonAdmin.svg";
 import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sunAdmin.svg";
 import {
@@ -11,98 +13,61 @@ interface ToggleSwitchInterface {
   id: string;
 }
 
-const getInitialDisplayStyle = (
-  savedDisplayStyleToggle: DisplayStyleToggleType,
-  darkModeQuery: MediaQueryList
-) => {
-  if (savedDisplayStyleToggle === DisplayStyleToggleType.LIGHT)
-    return DisplayStyleType.LIGHT;
-  else if (savedDisplayStyleToggle === DisplayStyleToggleType.DARK)
-    return DisplayStyleType.DARK;
-
-  if (darkModeQuery.matches) {
-    return DisplayStyleType.DARK;
-  }
-  return DisplayStyleType.LIGHT;
-};
-
 const DarkModeToggleSwitch = ({ id }: ToggleSwitchInterface) => {
-  const savedDisplayStyleToggle =
-    (localStorage.getItem("display-style-toggle") as DisplayStyleToggleType) ||
-    DisplayStyleToggleType.DEVICE;
+  const [displayStyleToggle, setDisplayStyleToggle] = useRecoilState(displayStyleState);
   const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-  const initialDisplayStyle = getInitialDisplayStyle(
-    savedDisplayStyleToggle,
-    darkModeQuery
-  );
-  const [darkMode, setDarkMode] = useState<DisplayStyleType>(
-    initialDisplayStyle as DisplayStyleType
-  );
-  const [toggleType, setToggleType] = useState<DisplayStyleToggleType>(
-    savedDisplayStyleToggle
-  );
-
-  const setColorsAndLocalStorage = (toggleType: DisplayStyleToggleType) => {
-    setToggleType(toggleType);
-    localStorage.setItem("display-style-toggle", toggleType);
-    setDarkMode(
-      toggleType === DisplayStyleToggleType.LIGHT
-        ? DisplayStyleType.LIGHT
-        : toggleType === DisplayStyleToggleType.DARK
-        ? DisplayStyleType.DARK
-        : darkModeQuery.matches
-        ? DisplayStyleType.DARK
-        : DisplayStyleType.LIGHT
-    );
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newToggleType =
-      darkMode === DisplayStyleType.LIGHT
-        ? DisplayStyleToggleType.DARK
-        : DisplayStyleToggleType.LIGHT;
-    setColorsAndLocalStorage(newToggleType);
-  };
 
   useEffect(() => {
-    const darkModeListener = (event: MediaQueryListEvent) => {
-      const newDisplayStyle = event.matches
-        ? DisplayStyleType.DARK
-        : DisplayStyleType.LIGHT;
-      setDarkMode(newDisplayStyle);
-      if (toggleType === DisplayStyleToggleType.DEVICE) {
-        setDarkMode(newDisplayStyle);
+    const savedDisplayStyle = localStorage.getItem("display-style-toggle") || DisplayStyleToggleType.DEVICE;
+    setDisplayStyleToggle(savedDisplayStyle as DisplayStyleToggleType);
+  }, []);
+
+  useEffect(() => {
+    const handleChange = (event: MediaQueryListEvent) => {
+      if (displayStyleToggle === DisplayStyleToggleType.DEVICE) {
+        const newDisplayStyle = event.matches
+          ? DisplayStyleType.DARK
+          : DisplayStyleType.LIGHT;
+        setDisplayStyleToggle(
+          newDisplayStyle === DisplayStyleType.DARK
+            ? DisplayStyleToggleType.DARK
+            : DisplayStyleToggleType.LIGHT
+        );
       }
     };
+    darkModeQuery.addEventListener("change", handleChange);
+    return () => darkModeQuery.removeEventListener("change", handleChange);
+  }, [darkModeQuery, displayStyleToggle]);
 
-    darkModeQuery.addEventListener("change", darkModeListener);
+  const handleToggle = () => {
+    const newToggleType =
+      displayStyleToggle === DisplayStyleToggleType.LIGHT
+        ? DisplayStyleToggleType.DARK
+        : DisplayStyleToggleType.LIGHT;
+    localStorage.setItem("display-style-toggle", newToggleType);
+    setDisplayStyleToggle(newToggleType);
+  };
 
-    return () => darkModeQuery.removeEventListener("change", darkModeListener);
-  }, [darkModeQuery, toggleType]);
-
-  useEffect(() => {
-    document.body.setAttribute("display-style", darkMode);
-  }, [darkMode]);
+  const isChecked =
+    displayStyleToggle === DisplayStyleToggleType.DARK ||
+    (displayStyleToggle === DisplayStyleToggleType.DEVICE && darkModeQuery.matches);
 
   return (
     <ToggleSwitchContainerStyled>
       <InputStyled
         type="checkbox"
         id={id}
-        checked={darkMode === DisplayStyleType.DARK}
-        onChange={handleChange}
+        checked={isChecked}
+        onChange={handleToggle}
       />
-      <ToggleSwitchStyled
-        htmlFor={id}
-        checked={darkMode === DisplayStyleType.DARK}
-      >
+      <ToggleSwitchStyled htmlFor={id} checked={isChecked}>
         <SunWrapperStyled>
           <SunIcon />
         </SunWrapperStyled>
         <MoonWrapperStyled>
           <MoonIcon />
         </MoonWrapperStyled>
-        <ToggleKnobStyled checked={darkMode === DisplayStyleType.DARK} />
+        <ToggleKnobStyled checked={isChecked} />
       </ToggleSwitchStyled>
     </ToggleSwitchContainerStyled>
   );
@@ -119,14 +84,13 @@ const InputStyled = styled.input.attrs({ type: "checkbox" })`
   position: absolute;
   width: 0;
   height: 0;
-`; 
+`;
 
 const ToggleSwitchStyled = styled.label<{ checked: boolean }>`
   cursor: pointer;
   display: inline-block;
-  position: relative;
-  background: ${(props) =>
-    props.checked ? "var(--sys-main-color)" : "var(--line-color)"};
+  position:relative;
+  background: ${(props) => props.checked ? "var(--sys-main-color)" : "var(--line-color)"};
   width: 46px;
   height: 24px;
   border-radius: 50px;
@@ -137,7 +101,7 @@ const ToggleKnobStyled = styled.span<{ checked: boolean }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: ${(props) => (props.checked ? "calc(100% - 21px)" : "3px")};
+  left: ${(props) => props.checked ? "calc(100% - 21px)" : "3px"};
   width: 18px;
   height: 18px;
   border-radius: 50%;
@@ -172,6 +136,6 @@ const MoonWrapperStyled = styled.div`
     height: 100%;
     fill: var(--ref-gray-900);
   }
-`; 
+`;
 
 export default DarkModeToggleSwitch;
