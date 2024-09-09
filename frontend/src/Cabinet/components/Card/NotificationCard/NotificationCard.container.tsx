@@ -74,7 +74,7 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   };
 
   const handleCancel = () => {
-    setAlarms((prev) => ({ ...prev, current: prev.original }));
+    !isLoading && setAlarms((prev) => ({ ...prev, current: prev.original }));
   };
 
   const handleCloseModal = () => {
@@ -94,7 +94,7 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
                   onClick: handleSave,
                   fontColor: "var(--white-text-with-bg-color)",
                   backgroundColor: "var(--sys-main-color)",
-                  isClickable: !isLoading,
+                  isClickable: true,
                   isLoading: isLoading,
                 },
                 {
