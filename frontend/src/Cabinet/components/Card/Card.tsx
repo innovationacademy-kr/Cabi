@@ -149,11 +149,12 @@ export const CardButtonStyled = styled.div<{
           border: none;
           border-radius: 5px;
           font-weight: 350;
+          margin-left: 10px;
           &:hover {
             font-weight: ${props.isClickable && 400};
           }
-          margin-left: 10px;
         `}
+
   cursor: ${(props) => {
     if (props.isClickable) {
       if (props.isLoading) return "wait"; // ex) 프로필 - 알림 요청 후 응답 전까지 저장 버튼 hover시
