@@ -19,6 +19,7 @@ import {
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import { UserDto, UserInfo } from "@/Cabinet/types/dto/user.dto";
 import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
+import { DisplayStyleToggleType } from "@/Cabinet/types/enum/displayStyle.type.enum";
 
 const { persistAtom } = recoilPersist();
 
@@ -207,4 +208,9 @@ export const targetClubUserInfoState = atom<ClubUserResponseDto>({
     userId: 0,
     userName: "",
   },
+});
+
+export const displayStyleState = atom<string>({
+  key: "displayStyleState",
+  default: DisplayStyleToggleType.DEVICE,
 });
