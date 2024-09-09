@@ -43,27 +43,20 @@ const Card = ({
           </CardTitleWrapperStyled>
           {buttons.length > 0 && (
             <CardButtonsWrapper>
-              {buttons?.map((button, index) => {
-                return (
-                  <CardButtonWrapper
-                    icon={button.icon}
-                    isLoading={button.isLoading}
-                  >
-                    <CardButtonStyled
-                      key={index}
-                      onClick={button.onClick}
-                      fontColor={button.fontColor}
-                      backgroundColor={button.backgroundColor}
-                      icon={button.icon}
-                      isClickable={button.isClickable}
-                      isExtensible={button.isExtensible}
-                      isLoading={button.isLoading}
-                    >
-                      {!button.icon ? button.label : <button.icon />}
-                    </CardButtonStyled>
-                  </CardButtonWrapper>
-                );
-              })}
+              {buttons?.map((button, index) => (
+                <CardButtonStyled
+                  key={index}
+                  onClick={button.onClick}
+                  fontColor={button.fontColor}
+                  backgroundColor={button.backgroundColor}
+                  icon={button.icon}
+                  isClickable={button.isClickable}
+                  isExtensible={button.isExtensible}
+                  isLoading={button.isLoading}
+                >
+                  {!button.icon ? button.label : <button.icon />}
+                </CardButtonStyled>
+              ))}
             </CardButtonsWrapper>
           )}
         </CardHeaderStyled>
@@ -127,14 +120,6 @@ export const CardButtonsWrapper = styled.div`
   font-size: var(--size-base);
 `;
 
-const CardButtonWrapper = styled.div<{
-  icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null;
-  isLoading?: boolean;
-}>`
-  cursor: ${(props) => props.isLoading && "wait"};
-  margin-left: ${(props) => !props.icon && "10px"};
-`;
-
 export const CardButtonStyled = styled.div<{
   backgroundColor?: string;
   fontColor?: string;
@@ -167,9 +152,10 @@ export const CardButtonStyled = styled.div<{
           &:hover {
             font-weight: ${props.isClickable && 400};
           }
+          margin-left: 10px;
         `}
-  cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
-  pointer-events: ${(props) => props.isLoading && "none"};
+  cursor: ${(props) =>
+    props.isClickable ? "pointer" : props.isLoading ? "wait" : "default"};
 
   & > svg {
     height: 20px;
