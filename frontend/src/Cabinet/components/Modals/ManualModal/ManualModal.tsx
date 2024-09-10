@@ -389,24 +389,25 @@ const ItemIconStyled = styled.div<{
     filter: drop-shadow(0px 6px 3px var(--hover-box-shadow-color));
     width: 80px;
     height: 80px;
+    transform-origin: center;
     & > path {
       stroke: ${(props) => props.color};
     }
   }
   & > svg {
-    width: 50px;
-    height: 50px;
-    // filter: drop-shadow(0px 3px 1px var(--hover-box-shadow-color));
-    /* transition: all 0.3s ease; */
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    transform-origin: center;
     & > path {
+      transform: scale(2);
       stroke: var(--ref-purple-690);
     }
 
     &:hover {
       transition: all 0.5s ease;
       filter: drop-shadow(0px 6px 3px var(--hover-box-shadow-color));
-      width: 80px;
-      height: 80px;
+      transform-origin: center;
       & > path {
         stroke: ${(props) => props.color};
       }
