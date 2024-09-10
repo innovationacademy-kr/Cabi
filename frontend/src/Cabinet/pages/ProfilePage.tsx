@@ -76,7 +76,7 @@ const CardGridWrapper = styled.div`
   grid-template-rows: 163px 183px 230px;
   grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "displayStyle lentInfo" // h: 183px
-    "pointColor notification"; // h: 230px h: 230px
+    "pointColor alarm"; // h: 230px h: 230px
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
@@ -86,7 +86,7 @@ const CardGridWrapper = styled.div`
       "lentInfo"
       "displayStyle"
       "pointColor"
-      "notification";
+      "alarm";
   }
 `;
 

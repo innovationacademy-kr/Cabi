@@ -22,7 +22,7 @@ const AlarmCard = ({ alarm, buttons, onToggleChange }: AlarmCardProps) => {
     <CardContentStyled>
       <ContentInfoStyled>{label}</ContentInfoStyled>
       <ToggleSwitch
-        id={`${type}-notification`}
+        id={`${type}-alarm`}
         checked={alarm[type]}
         onChange={handleToggle(type)}
       />
@@ -32,7 +32,7 @@ const AlarmCard = ({ alarm, buttons, onToggleChange }: AlarmCardProps) => {
   return (
     <Card
       title={"알림"}
-      gridArea="notification"
+      gridArea="alarm"
       width={"350px"}
       height={"230px"}
       buttons={buttons}
