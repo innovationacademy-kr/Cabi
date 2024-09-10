@@ -879,13 +879,13 @@ export const axiosGetAvailableCabinets = async (): Promise<any> => {
   }
 };
 
-const axiosSendSlackNotificationToUserURL = "/slack/send";
-export const axiosSendSlackNotificationToUser = async (
+const axiosSendSlackAlarmToUserURL = "/slack/send";
+export const axiosSendSlackAlarmToUser = async (
   receiverName: string,
   message: string
 ): Promise<any> => {
   try {
-    const response = await instance.post(axiosSendSlackNotificationToUserURL, {
+    const response = await instance.post(axiosSendSlackAlarmToUserURL, {
       receiverName: receiverName,
       message: message,
     });
@@ -895,13 +895,13 @@ export const axiosSendSlackNotificationToUser = async (
   }
 };
 
-export const axiosSendSlackNotificationToChannel = async (
+export const axiosSendSlackAlarmToChannel = async (
   receiverName: string,
   message: string,
   channel: string | undefined
 ): Promise<any> => {
   try {
-    await instance.post(axiosSendSlackNotificationToUserURL + `/${channel}`, {
+    await instance.post(axiosSendSlackAlarmToUserURL + `/${channel}`, {
       receiverName: receiverName,
       message: message,
     });

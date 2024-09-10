@@ -3,7 +3,7 @@ import {
   requestFcmAndGetDeviceToken,
 } from "@/Cabinet/firebase/firebase-messaging-sw";
 import { useEffect, useMemo, useState } from "react";
-import NotificationCard from "@/Cabinet/components/Card/NotificationCard/NotificationCard";
+import AlarmCard from "@/Cabinet/components/Card/AlarmCard/AlarmCard";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
   FailResponseModal,
@@ -16,7 +16,7 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import useDebounce from "@/Cabinet/hooks/useDebounce";
 
-const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
+const AlarmCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
@@ -83,7 +83,7 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
 
   return (
     <>
-      <NotificationCard
+      <AlarmCard
         key={JSON.stringify(alarms)}
         alarm={alarms.current ?? { email: false, push: false, slack: false }}
         buttons={
@@ -134,4 +134,4 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   );
 };
 
-export default NotificationCardContainer;
+export default AlarmCardContainer;

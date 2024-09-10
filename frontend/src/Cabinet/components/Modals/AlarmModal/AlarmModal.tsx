@@ -2,7 +2,7 @@ import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 
-export const NotificationModal = ({
+export const AlarmModal = ({
   title,
   detail,
   closeModal,

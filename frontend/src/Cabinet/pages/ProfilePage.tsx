@@ -7,9 +7,9 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
+import AlarmCardContainer from "@/Cabinet/components/Card/AlarmCard/AlarmCard.container";
 import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
-import NotificationCardContainer from "@/Cabinet/components/Card/NotificationCard/NotificationCard.container";
 import PointColorCardContainer from "@/Cabinet/components/Card/PointColorCard/PointColorCard.container";
 import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileCard.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
@@ -56,7 +56,7 @@ const ProfilePage = () => {
             name={myInfo.name}
             unbannedAt={myInfo.unbannedAt}
           />
-          <NotificationCardContainer alarm={myInfo.alarmTypes} />
+          <AlarmCardContainer alarm={myInfo.alarmTypes} />
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
         </CardGridWrapper>
