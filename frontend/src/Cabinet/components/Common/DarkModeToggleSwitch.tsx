@@ -38,6 +38,7 @@ const DarkModeToggleSwitch = ({ id }: ToggleSwitchInterface) => {
         );
       }
     };
+    document.body.setAttribute("display-style", displayStyleToggle);
     darkModeQuery.addEventListener("change", handleChange);
     return () => darkModeQuery.removeEventListener("change", handleChange);
   }, [darkModeQuery, displayStyleToggle]);
