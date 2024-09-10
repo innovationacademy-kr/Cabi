@@ -14,11 +14,14 @@ interface ToggleSwitchInterface {
 }
 
 const DarkModeToggleSwitch = ({ id }: ToggleSwitchInterface) => {
-  const [displayStyleToggle, setDisplayStyleToggle] = useRecoilState(displayStyleState);
+  const [displayStyleToggle, setDisplayStyleToggle] =
+    useRecoilState(displayStyleState);
   const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
   useEffect(() => {
-    const savedDisplayStyle = localStorage.getItem("display-style-toggle") || DisplayStyleToggleType.DEVICE;
+    const savedDisplayStyle =
+      localStorage.getItem("display-style-toggle") ||
+      DisplayStyleToggleType.DEVICE;
     setDisplayStyleToggle(savedDisplayStyle as DisplayStyleToggleType);
   }, []);
 
@@ -50,7 +53,8 @@ const DarkModeToggleSwitch = ({ id }: ToggleSwitchInterface) => {
 
   const isChecked =
     displayStyleToggle === DisplayStyleToggleType.DARK ||
-    (displayStyleToggle === DisplayStyleToggleType.DEVICE && darkModeQuery.matches);
+    (displayStyleToggle === DisplayStyleToggleType.DEVICE &&
+      darkModeQuery.matches);
 
   return (
     <ToggleSwitchContainerStyled>
@@ -89,8 +93,9 @@ const InputStyled = styled.input.attrs({ type: "checkbox" })`
 const ToggleSwitchStyled = styled.label<{ checked: boolean }>`
   cursor: pointer;
   display: inline-block;
-  position:relative;
-  background: ${(props) => props.checked ? "var(--sys-main-color)" : "var(--line-color)"};
+  position: relative;
+  background: ${(props) =>
+    props.checked ? "var(--sys-main-color)" : "var(--line-color)"};
   width: 46px;
   height: 24px;
   border-radius: 50px;
@@ -101,7 +106,7 @@ const ToggleKnobStyled = styled.span<{ checked: boolean }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: ${(props) => props.checked ? "calc(100% - 21px)" : "3px"};
+  left: ${(props) => (props.checked ? "calc(100% - 21px)" : "3px")};
   width: 18px;
   height: 18px;
   border-radius: 50%;

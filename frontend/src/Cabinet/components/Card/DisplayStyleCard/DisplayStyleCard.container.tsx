@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { displayStyleState } from "@/Cabinet/recoil/atoms";
 import DisplayStyleCard from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard";
 import {
   DisplayStyleToggleType,
@@ -23,20 +25,14 @@ export const getInitialDisplayStyle = (
 };
 
 const DisplayStyleCardContainer = () => {
-  const savedDisplayStyleToggle =
-    (localStorage.getItem("display-style-toggle") as DisplayStyleToggleType) ||
-    DisplayStyleToggleType.DEVICE;
   var darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const [toggleType, setToggleType] = useRecoilState(displayStyleState);
   const initialDisplayStyle = getInitialDisplayStyle(
-    savedDisplayStyleToggle,
+    toggleType as DisplayStyleToggleType,
     darkModeQuery
   );
-  const [darkMode, setDarkMode] = useState<DisplayStyleType>(
-    initialDisplayStyle as DisplayStyleType
-  );
-  const [toggleType, setToggleType] = useState<DisplayStyleToggleType>(
-    savedDisplayStyleToggle
-  );
+  const [darkMode, setDarkMode] =
+    useState<DisplayStyleType>(initialDisplayStyle);
 
   const setColorsAndLocalStorage = (toggleType: DisplayStyleToggleType) => {
     setToggleType(toggleType);
@@ -44,19 +40,19 @@ const DisplayStyleCardContainer = () => {
   };
 
   const handleDisplayStyleButtonClick = (displayStyleToggleType: string) => {
-    if (toggleType === displayStyleToggleType) return;
-    setToggleType(
-      displayStyleToggleType as React.SetStateAction<DisplayStyleToggleType>
-    );
-    setColorsAndLocalStorage(displayStyleToggleType as DisplayStyleToggleType);
+    const castedToggleType = displayStyleToggleType as DisplayStyleToggleType;
+    if (toggleType === castedToggleType) return;
+    setToggleType(castedToggleType);
+    setColorsAndLocalStorage(castedToggleType);
   };
 
   useEffect(() => {
-    darkModeQuery.addEventListener("change", (event) =>
+    darkModeQuery.addEventListener("change", (event) => {
       setDarkMode(
         event.matches ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
-      )
-    );
+      );
+    });
+    return () => darkModeQuery.removeEventListener("change", (event) => {});
   }, []);
 
   useEffect(() => {
