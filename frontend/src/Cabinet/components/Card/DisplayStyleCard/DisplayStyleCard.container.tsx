@@ -77,7 +77,6 @@ const DisplayStyleCardContainer = () => {
 
   return (
     <DisplayStyleCard
-      displayStyleToggle={toggleType}
       handleDisplayStyleButtonClick={handleDisplayStyleButtonClick}
     />
   );

@@ -15,6 +15,10 @@ interface IToggleItemSeparated {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
+interface DisplayStyleCardProps {
+  handleDisplayStyleButtonClick: (key: DisplayStyleToggleType) => void;
+}
+
 const toggleList: IToggleItemSeparated[] = [
   {
     name: "라이트",
@@ -33,13 +37,16 @@ const toggleList: IToggleItemSeparated[] = [
   },
 ];
 
-const DisplayStyleCard = () => {
+const DisplayStyleCard: React.FC<DisplayStyleCardProps> = ({
+  handleDisplayStyleButtonClick,
+}) => {
   const [displayStyleToggle, setDisplayStyleToggle] =
     useRecoilState(displayStyleState);
 
   const handleButtonClick = (key: DisplayStyleToggleType) => {
     localStorage.setItem("display-style-toggle", key);
     setDisplayStyleToggle(key);
+    handleDisplayStyleButtonClick(key);
   };
 
   return (
