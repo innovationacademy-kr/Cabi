@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Getter
 public class AlarmProperties {
 
-	@Value("${cabinet.production}")
-	private Boolean isProduction;
+//	@Value("${cabinet.production}")
+	private Boolean isProduction = true;
 
 	/*===================== lentSuccess =========================*/
 	@Value("${cabinet.alarm.mail.lentSuccess.subject}")
