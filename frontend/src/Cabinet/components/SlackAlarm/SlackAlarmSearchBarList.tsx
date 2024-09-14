@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import SlackNotiSearchListItem from "@/Cabinet/components/SlackNoti/SlackNotiSearchListItem";
+import SlackAlarmSearchListItem from "@/Cabinet/components/SlackAlarm/SlackAlarmSearchListItem";
 import { ISlackChannel } from "@/Cabinet/assets/data/SlackAlarm";
 
 interface ISearchListByIntraId {
@@ -7,7 +7,7 @@ interface ISearchListByIntraId {
   userId: number;
 }
 
-const SlackNotiSearchBarList = ({
+const SlackAlarmSearchBarList = ({
   searchListById,
   searchListByChannel,
   searchWord,
@@ -24,7 +24,7 @@ const SlackNotiSearchBarList = ({
     <UlStyled>
       {searchListById.map((item, index: number) => {
         return (
-          <SlackNotiSearchListItem
+          <SlackAlarmSearchListItem
             key={index}
             inputText={searchWord}
             resultText={item.name}
@@ -35,7 +35,7 @@ const SlackNotiSearchBarList = ({
       })}
       {searchListByChannel.map((item, index: number) => {
         return (
-          <SlackNotiSearchListItem
+          <SlackAlarmSearchListItem
             key={index}
             inputText={searchWord}
             resultText={item.title}
@@ -66,4 +66,4 @@ const UlStyled = styled.ul`
   }
 `;
 
-export default SlackNotiSearchBarList;
+export default SlackAlarmSearchBarList;

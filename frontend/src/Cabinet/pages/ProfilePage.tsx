@@ -7,9 +7,9 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
+import AlarmCardContainer from "@/Cabinet/components/Card/AlarmCard/AlarmCard.container";
 import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
-import NotificationCardContainer from "@/Cabinet/components/Card/NotificationCard/NotificationCard.container";
 import PointColorCardContainer from "@/Cabinet/components/Card/PointColorCard/PointColorCard.container";
 import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileCard.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
@@ -56,7 +56,7 @@ const ProfilePage = () => {
             name={myInfo.name}
             unbannedAt={myInfo.unbannedAt}
           />
-          <NotificationCardContainer alarm={myInfo.alarmTypes} />
+          <AlarmCardContainer alarm={myInfo.alarmTypes} />
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
         </CardGridWrapper>
@@ -76,7 +76,7 @@ const CardGridWrapper = styled.div`
   grid-template-rows: 163px 183px 230px;
   grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "displayStyle lentInfo" // h: 183px
-    "pointColor notification"; // h: 230px h: 230px
+    "pointColor alarm"; // h: 230px h: 230px
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
@@ -86,7 +86,7 @@ const CardGridWrapper = styled.div`
       "lentInfo"
       "displayStyle"
       "pointColor"
-      "notification";
+      "alarm";
   }
 `;
 

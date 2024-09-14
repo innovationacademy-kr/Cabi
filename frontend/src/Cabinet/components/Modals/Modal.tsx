@@ -95,7 +95,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         {detail && (
           <DetailStyled dangerouslySetInnerHTML={{ __html: detail }} />
         )}
-        {renderAdditionalComponent && renderAdditionalComponent()}
+        {renderAdditionalComponent?.()}
         {type === "hasProceedBtn" && (
           <ButtonWrapperStyled>
             <Button
