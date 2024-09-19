@@ -27,7 +27,7 @@ export const SlackAlarmTemplates: ISlackAlarmTemplate[] = [
 :happy_ccabi: 안녕하세요. Cabi 팀입니다! :happy_ccabi:
 :sad_ccabi: 서비스 개선을 위해, 서버를 점검하게 되었습니다. :sad_ccabi:
 :file_cabinet: 서비스 개선과 관련한 사항은  Cabi 채널 에서, :file_cabinet:
-:hammer_and_wrench: 보관물 관련 사항은 *데스크에 직접 문의*해주세요! :hammer_and_wrench:
+:hammer_and_wrench: 보관물 관련 사항은 *데스크에 직접 문의* 해주세요! :hammer_and_wrench:
 
 점검 일자 : 2024년 04월 02일 (화요일)
 점검 시간 : 15시 10분 ~ 완료 공지 시점까지
