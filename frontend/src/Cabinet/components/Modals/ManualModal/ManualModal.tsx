@@ -1,9 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
-import { storeItems } from "@/Cabinet/assets/data/ManualContent";
-import { ItemIconMap } from "@/Cabinet/assets/data/maps";
+import { manualContentData, manualItemsData } from "@/Cabinet/assets/data/ManualContent";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
@@ -17,6 +16,7 @@ const ManualModal: React.FC<ModalProps> = ({
   setIsModalOpen,
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
+  const [selectedItem, setSelectedItem] = useState<StoreItemType>(StoreItemType.EXTENSION);
   const contentData = manualContentData[contentStatus];
 
   const isCabinetType =
@@ -30,8 +30,7 @@ const ManualModal: React.FC<ModalProps> = ({
     contentStatus === ContentStatus.SHARE ||
     contentStatus === ContentStatus.CLUB;
 
-  const [selectedItem, setSelectedItem] = useState<number>(0);
-  const handleIconClick = (index: number) => {
+  const handleIconClick = (index: StoreItemType) => {
     setSelectedItem(index);
   };
 
@@ -86,25 +85,25 @@ const ManualModal: React.FC<ModalProps> = ({
           {contentStatus === ContentStatus.STORE && (
             <>
               <ItemContentsStyled>
-                {storeItems.map((item, index) => (
+                {Object.entries(manualItemsData).map(([key, item]) =>(
                   <ItemIconStyled
-                    key={index}
-                    onClick={() => handleIconClick(index)}
-                    className={selectedItem === index ? "selected" : ""}
-                    color={contentData.pointColor}
+                  key={key}
+                  onClick={() => handleIconClick(key as StoreItemType)}
+                  className={selectedItem === key ? "selected" : ""}
+                  color={contentData.pointColor}
                   >
                     <item.icon />
                   </ItemIconStyled>
                 ))}
               </ItemContentsStyled>
-              {storeItems[selectedItem].title}
+              {manualItemsData[selectedItem].title}
               <ManualContentStyled color={contentData.pointColor}>
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: storeItems[selectedItem].content,
+                    __html: manualItemsData[selectedItem].content,
                   }}
                 ></div>
-              </ManualContentStyled>
+                </ManualContentStyled>
             </>
           )}
           {contentStatus !== ContentStatus.STORE && (

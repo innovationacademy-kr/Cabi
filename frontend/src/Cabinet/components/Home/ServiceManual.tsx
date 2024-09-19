@@ -103,7 +103,6 @@ const TicketWrapperStyled = styled.div`
   &:hover {
     transition: all 0.3s ease-in-out;
     transform: translateY(-5px);
-    /* filter: drop-shadow(10px 10px 8px rgba(0, 0, 0, 0.2)); */
     filter: drop-shadow(10px 10px 10px var(--left-nav-border-shadow-color));
   }
 `;

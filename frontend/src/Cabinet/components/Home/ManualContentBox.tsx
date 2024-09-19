@@ -97,7 +97,6 @@ const ManualContentBoxStyled = styled.div<{
         contentStatus === ContentStatus.COIN ||
         contentStatus === ContentStatus.IN_SESSION) &&
       css`
-        /* margin-top: 160px; */
         color: var(--sys-default-main-color);
       `}
   }
@@ -144,7 +143,6 @@ const ManualContentBoxStyled = styled.div<{
           contentStatus === ContentStatus.COIN ||
           contentStatus === ContentStatus.IN_SESSION) &&
         css`
-          /* margin-top: 155px; */
           color: var(--sys-default-main-color);
         `}
     }
