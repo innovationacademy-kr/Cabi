@@ -245,7 +245,7 @@ export const manualItemsData: Record<StoreItemType, ItemStatusData> = {
   <div>
   아이템 구매 후 원하는 섹션으로 이동해 우측 상단의 <strong>하트 아이콘</strong>을 클릭합니다.<br/>
   사용한 알림 등록권은 섹션을 변경하거나 취소할 수 없습니다.<br/>
-  알림등록권은 1화 알림 후 <strong>소멸</strong>됩니다.
+  알림등록권은 1회 알림 후 <strong>소멸</strong>됩니다.
   </div>
 
   `,

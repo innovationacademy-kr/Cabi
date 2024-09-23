@@ -1,10 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { manualContentData, manualItemsData } from "@/Cabinet/assets/data/ManualContent";
-import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
+import {
+  manualContentData,
+  manualItemsData,
+} from "@/Cabinet/assets/data/ManualContent";
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
 interface ModalProps {
   contentStatus: ContentStatus;
@@ -16,7 +19,9 @@ const ManualModal: React.FC<ModalProps> = ({
   setIsModalOpen,
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
-  const [selectedItem, setSelectedItem] = useState<StoreItemType>(StoreItemType.EXTENSION);
+  const [selectedItem, setSelectedItem] = useState<StoreItemType>(
+    StoreItemType.EXTENSION
+  );
   const contentData = manualContentData[contentStatus];
 
   const isCabinetType =
@@ -85,12 +90,12 @@ const ManualModal: React.FC<ModalProps> = ({
           {contentStatus === ContentStatus.STORE && (
             <>
               <ItemContentsStyled>
-                {Object.entries(manualItemsData).map(([key, item]) =>(
+                {Object.entries(manualItemsData).map(([key, item]) => (
                   <ItemIconStyled
-                  key={key}
-                  onClick={() => handleIconClick(key as StoreItemType)}
-                  className={selectedItem === key ? "selected" : ""}
-                  color={contentData.pointColor}
+                    key={key}
+                    onClick={() => handleIconClick(key as StoreItemType)}
+                    className={selectedItem === key ? "selected" : ""}
+                    color={contentData.pointColor}
                   >
                     <item.icon />
                   </ItemIconStyled>
@@ -103,7 +108,7 @@ const ManualModal: React.FC<ModalProps> = ({
                     __html: manualItemsData[selectedItem].content,
                   }}
                 ></div>
-                </ManualContentStyled>
+              </ManualContentStyled>
             </>
           )}
           {contentStatus !== ContentStatus.STORE && (
@@ -370,7 +375,7 @@ const ContentImgStyled = styled.div<{
 
 const ItemContentsStyled = styled.div`
   width: 45%;
-  height: 80px;
+  height: 90px;
   display: flex;
   margin-bottom: 30px;
 `;
@@ -384,32 +389,27 @@ const ItemIconStyled = styled.div<{
   display: flex;
   justify-content: center;
   align-items: center;
-  &.selected > svg {
-    filter: drop-shadow(0px 6px 3px var(--hover-box-shadow-color));
-    width: 80px;
-    height: 80px;
-    transform-origin: center;
-    & > path {
-      stroke: ${(props) => props.color};
-    }
-  }
+
   & > svg {
+    padding: 4px;
     width: 80px;
     height: 80px;
     cursor: pointer;
-    transform-origin: center;
+    stroke-width: 50px;
     & > path {
       transform: scale(2);
       stroke: var(--ref-purple-690);
     }
+  }
 
-    &:hover {
-      transition: all 0.5s ease;
-      filter: drop-shadow(0px 6px 3px var(--hover-box-shadow-color));
-      transform-origin: center;
-      & > path {
-        stroke: ${(props) => props.color};
-      }
+  &:hover:not(.selected),
+  &.selected > svg {
+    width: 80px;
+    height: 80px;
+    filter: drop-shadow(0px 5px 3px var(--hover-box-shadow-color));
+    transition: all 0.2s ease;
+    & > path {
+      stroke: ${(props) => props.color};
     }
   }
 `;
