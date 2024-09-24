@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
@@ -9,39 +9,57 @@ import {
   DisplayStyleType,
 } from "@/Cabinet/types/enum/displayStyle.type.enum";
 
-interface ToggleSwitchInterface {
-  id: string;
-}
-
-const DarkModeToggleSwitch = ({ id }: ToggleSwitchInterface) => {
+const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   const [displayStyleToggle, setDisplayStyleToggle] =
     useRecoilState(displayStyleState);
-  const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const [displayStyleType, setDisplayStyleType] = useState<DisplayStyleType>(
+    DisplayStyleType.LIGHT
+  );
 
   useEffect(() => {
-    const savedDisplayStyle =
-      localStorage.getItem("display-style-toggle") ||
-      DisplayStyleToggleType.DEVICE;
-    setDisplayStyleToggle(savedDisplayStyle as DisplayStyleToggleType);
-  }, []);
+    const savedToggleType =
+      (localStorage.getItem(
+        "display-style-toggle"
+      ) as DisplayStyleToggleType) || DisplayStyleToggleType.DEVICE;
+    setDisplayStyleToggle(savedToggleType);
+  }, [setDisplayStyleToggle]);
 
   useEffect(() => {
-    const handleChange = (event: MediaQueryListEvent) => {
-      if (displayStyleToggle === DisplayStyleToggleType.DEVICE) {
-        const newDisplayStyle = event.matches
-          ? DisplayStyleType.DARK
-          : DisplayStyleType.LIGHT;
-        setDisplayStyleToggle(
-          newDisplayStyle === DisplayStyleType.DARK
-            ? DisplayStyleToggleType.DARK
-            : DisplayStyleToggleType.LIGHT
+    const updateDisplayStyleType = () => {
+      if (displayStyleToggle === DisplayStyleToggleType.LIGHT) {
+        setDisplayStyleType(DisplayStyleType.LIGHT);
+      } else if (displayStyleToggle === DisplayStyleToggleType.DARK) {
+        setDisplayStyleType(DisplayStyleType.DARK);
+      } else {
+        const isSystemDarkMode =
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches;
+        setDisplayStyleType(
+          isSystemDarkMode ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
         );
       }
     };
-    document.body.setAttribute("display-style", displayStyleToggle);
-    darkModeQuery.addEventListener("change", handleChange);
-    return () => darkModeQuery.removeEventListener("change", handleChange);
-  }, [darkModeQuery, displayStyleToggle]);
+    updateDisplayStyleType();
+
+    const handleSystemThemeChange = (event: MediaQueryListEvent) => {
+      if (displayStyleToggle === DisplayStyleToggleType.DEVICE) {
+        setDisplayStyleType(
+          event.matches ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
+        );
+      }
+    };
+    if (window.matchMedia) {
+      const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      darkModeQuery.addEventListener("change", handleSystemThemeChange);
+      return () => {
+        darkModeQuery.removeEventListener("change", handleSystemThemeChange);
+      };
+    }
+  }, [displayStyleToggle]);
+
+  useEffect(() => {
+    document.body.setAttribute("display-style", displayStyleType);
+  }, [displayStyleType]);
 
   const handleToggle = () => {
     const newToggleType =
@@ -52,62 +70,54 @@ const DarkModeToggleSwitch = ({ id }: ToggleSwitchInterface) => {
     setDisplayStyleToggle(newToggleType);
   };
 
-  const isChecked =
-    displayStyleToggle === DisplayStyleToggleType.DARK ||
-    (displayStyleToggle === DisplayStyleToggleType.DEVICE &&
-      darkModeQuery.matches);
+  const isDarkMode = displayStyleType === DisplayStyleType.DARK;
 
   return (
-    <ToggleSwitchContainerStyled>
-      <InputStyled
-        type="checkbox"
-        id={id}
-        checked={isChecked}
-        onChange={handleToggle}
-      />
-      <ToggleSwitchStyled htmlFor={id} checked={isChecked}>
-        <SunWrapperStyled>
-          <SunIcon />
-        </SunWrapperStyled>
-        <MoonWrapperStyled>
+    <ToggleSwitchContainer>
+      <CheckboxStyled id={id} checked={isDarkMode} onChange={handleToggle} />
+      <ToggleSwitchStyled htmlFor={id} isChecked={isDarkMode}>
+        <MoonIconWrapper>
           <MoonIcon />
-        </MoonWrapperStyled>
-        <ToggleKnobStyled checked={isChecked} />
+        </MoonIconWrapper>
+        <SunIconWrapper>
+          <SunIcon />
+        </SunIconWrapper>
+        <ToggleKnobStyled isChecked={isDarkMode} />
       </ToggleSwitchStyled>
-    </ToggleSwitchContainerStyled>
+    </ToggleSwitchContainer>
   );
 };
 
-const ToggleSwitchContainerStyled = styled.div`
+const ToggleSwitchContainer = styled.div`
   display: inline-block;
   position: relative;
   margin-right: 10px;
 `;
 
-const InputStyled = styled.input.attrs({ type: "checkbox" })`
+const CheckboxStyled = styled.input.attrs({ type: "checkbox" })`
   opacity: 0;
   position: absolute;
   width: 0;
   height: 0;
 `;
 
-const ToggleSwitchStyled = styled.label<{ checked: boolean }>`
+const ToggleSwitchStyled = styled.label<{ isChecked: boolean }>`
   cursor: pointer;
   display: inline-block;
   position: relative;
   background: ${(props) =>
-    props.checked ? "var(--sys-main-color)" : "var(--line-color)"};
+    props.isChecked ? "var(--sys-main-color)" : "var(--line-color)"};
   width: 46px;
   height: 24px;
   border-radius: 50px;
   transition: background-color 0.2s ease;
 `;
 
-const ToggleKnobStyled = styled.span<{ checked: boolean }>`
+const ToggleKnobStyled = styled.span<{ isChecked: boolean }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: ${(props) => (props.checked ? "calc(100% - 21px)" : "3px")};
+  left: ${(props) => (props.isChecked ? "calc(100% - 21px)" : "3px")};
   width: 18px;
   height: 18px;
   border-radius: 50%;
@@ -115,21 +125,7 @@ const ToggleKnobStyled = styled.span<{ checked: boolean }>`
   transition: left 0.2s;
 `;
 
-const SunWrapperStyled = styled.div`
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
-
-  & > svg {
-    width: 100%;
-    height: 100%;
-  }
-`;
-
-const MoonWrapperStyled = styled.div`
+const MoonIconWrapper = styled.div`
   position: absolute;
   left: 5px;
   top: 50%;
@@ -141,6 +137,20 @@ const MoonWrapperStyled = styled.div`
     width: 100%;
     height: 100%;
     fill: var(--ref-gray-900);
+  }
+`;
+
+const SunIconWrapper = styled.div`
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+
+  & > svg {
+    width: 100%;
+    height: 100%;
   }
 `;
 
