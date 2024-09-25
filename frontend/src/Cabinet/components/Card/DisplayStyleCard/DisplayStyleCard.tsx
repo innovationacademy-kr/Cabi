@@ -16,7 +16,7 @@ interface IToggleItemSeparated {
 }
 
 interface DisplayStyleCardProps {
-  handleDisplayStyleButtonClick: (key: DisplayStyleToggleType) => void;
+  handleButtonClick: (key: DisplayStyleToggleType) => void;
 }
 
 const toggleList: IToggleItemSeparated[] = [
@@ -38,49 +38,38 @@ const toggleList: IToggleItemSeparated[] = [
 ];
 
 const DisplayStyleCard: React.FC<DisplayStyleCardProps> = ({
-  handleDisplayStyleButtonClick,
+  handleButtonClick,
 }) => {
-  const [displayStyleToggle, setDisplayStyleToggle] =
-    useRecoilState(displayStyleState);
-
-  const handleButtonClick = (key: DisplayStyleToggleType) => {
-    localStorage.setItem("display-style-toggle", key);
-    setDisplayStyleToggle(key);
-    handleDisplayStyleButtonClick(key);
-  };
+  const [displayStyleToggle] = useRecoilState(displayStyleState);
 
   return (
-    <>
-      <DisplayStyleCardWrapper>
-        <Card
-          title={"화면 스타일"}
-          gridArea={"displayStyle"}
-          width={"350px"}
-          height={"183px"}
-        >
-          <>
-            <CardContentWrapper>
-              <ButtonsWrapperStyled>
-                {toggleList.map((item) => {
-                  const DisplayStyleIcon = item.icon;
-                  return (
-                    <ButtonStyled
-                      key={item.key}
-                      id={`${item.key}`}
-                      isClicked={displayStyleToggle === item.key}
-                      onClick={() => handleButtonClick(item.key)}
-                    >
-                      <DisplayStyleIcon />
-                      {item.name}
-                    </ButtonStyled>
-                  );
-                })}
-              </ButtonsWrapperStyled>
-            </CardContentWrapper>
-          </>
-        </Card>
-      </DisplayStyleCardWrapper>
-    </>
+    <DisplayStyleCardWrapper>
+      <Card
+        title={"화면 스타일"}
+        gridArea={"displayStyle"}
+        width={"350px"}
+        height={"183px"}
+      >
+        <CardContentWrapper>
+          <ButtonsWrapperStyled>
+            {toggleList.map((item) => {
+              const DisplayStyleIcon = item.icon;
+              return (
+                <ButtonStyled
+                  key={item.key}
+                  id={`${item.key}`}
+                  isClicked={displayStyleToggle === item.key}
+                  onClick={() => handleButtonClick(item.key)}
+                >
+                  <DisplayStyleIcon />
+                  {item.name}
+                </ButtonStyled>
+              );
+            })}
+          </ButtonsWrapperStyled>
+        </CardContentWrapper>
+      </Card>
+    </DisplayStyleCardWrapper>
   );
 };
 

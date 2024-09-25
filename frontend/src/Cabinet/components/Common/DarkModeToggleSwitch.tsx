@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
+import { getInitialDisplayStyle } from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
 import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moonIcon.svg";
 import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sunIcon.svg";
 import {
@@ -12,6 +13,7 @@ import {
 const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   const [displayStyleToggle, setDisplayStyleToggle] =
     useRecoilState(displayStyleState);
+  const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const [displayStyleType, setDisplayStyleType] = useState<DisplayStyleType>(
     () => {
       const savedToggleType =
@@ -19,20 +21,10 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
           "display-style-toggle"
         ) as DisplayStyleToggleType) || DisplayStyleToggleType.DEVICE;
 
-      if (savedToggleType === DisplayStyleToggleType.LIGHT) {
-        return DisplayStyleType.LIGHT;
-      } else if (savedToggleType === DisplayStyleToggleType.DARK) {
-        return DisplayStyleType.DARK;
-      } else {
-        const isSystemDarkMode =
-          window.matchMedia &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches;
-        return isSystemDarkMode
-          ? DisplayStyleType.DARK
-          : DisplayStyleType.LIGHT;
-      }
+      return getInitialDisplayStyle(savedToggleType, darkModeQuery);
     }
   );
+  const isDarkMode = displayStyleType === DisplayStyleType.DARK;
 
   useEffect(() => {
     const savedToggleType =
@@ -44,35 +36,29 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
 
   useEffect(() => {
     const updateDisplayStyleType = () => {
-      if (displayStyleToggle === DisplayStyleToggleType.LIGHT) {
-        setDisplayStyleType(DisplayStyleType.LIGHT);
-      } else if (displayStyleToggle === DisplayStyleToggleType.DARK) {
-        setDisplayStyleType(DisplayStyleType.DARK);
-      } else {
-        const isSystemDarkMode =
-          window.matchMedia &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches;
-        setDisplayStyleType(
-          isSystemDarkMode ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
-        );
-      }
+      const newDisplayStyleType = getInitialDisplayStyle(
+        displayStyleToggle,
+        darkModeQuery
+      );
+      setDisplayStyleType(newDisplayStyleType);
     };
     updateDisplayStyleType();
 
     const handleSystemThemeChange = (event: MediaQueryListEvent) => {
       if (displayStyleToggle === DisplayStyleToggleType.DEVICE) {
-        setDisplayStyleType(
-          event.matches ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
+        const newDisplayStyleType = getInitialDisplayStyle(
+          displayStyleToggle,
+          darkModeQuery
         );
+        setDisplayStyleType(newDisplayStyleType);
       }
     };
-    if (window.matchMedia) {
-      const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      darkModeQuery.addEventListener("change", handleSystemThemeChange);
-      return () => {
-        darkModeQuery.removeEventListener("change", handleSystemThemeChange);
-      };
-    }
+
+    darkModeQuery.addEventListener("change", handleSystemThemeChange);
+
+    return () => {
+      darkModeQuery.removeEventListener("change", handleSystemThemeChange);
+    };
   }, [displayStyleToggle]);
 
   useEffect(() => {
@@ -87,8 +73,6 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
     localStorage.setItem("display-style-toggle", newToggleType);
     setDisplayStyleToggle(newToggleType);
   };
-
-  const isDarkMode = displayStyleType === DisplayStyleType.DARK;
 
   return (
     <ToggleWrapperStyled>
