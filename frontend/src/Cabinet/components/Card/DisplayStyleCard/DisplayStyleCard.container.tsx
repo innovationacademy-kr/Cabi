@@ -25,7 +25,7 @@ export const getInitialDisplayStyle = (
 };
 
 const DisplayStyleCardContainer = () => {
-  var darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const [toggleType, setToggleType] = useRecoilState(displayStyleState);
   const initialDisplayStyle = getInitialDisplayStyle(
     toggleType as DisplayStyleToggleType,
@@ -42,18 +42,22 @@ const DisplayStyleCardContainer = () => {
   const handleDisplayStyleButtonClick = (displayStyleToggleType: string) => {
     const castedToggleType = displayStyleToggleType as DisplayStyleToggleType;
     if (toggleType === castedToggleType) return;
-    setToggleType(castedToggleType);
     setColorsAndLocalStorage(castedToggleType);
   };
 
   useEffect(() => {
-    darkModeQuery.addEventListener("change", (event) => {
-      setDarkMode(
-        event.matches ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
-      );
-    });
-    return () => darkModeQuery.removeEventListener("change", (event) => {});
-  }, []);
+    const handleSystemThemeChange = (event: MediaQueryListEvent) => {
+      if (toggleType === DisplayStyleToggleType.DEVICE) {
+        setDarkMode(
+          event.matches ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
+        );
+      }
+    };
+    darkModeQuery.addEventListener("change", handleSystemThemeChange);
+    return () => {
+      darkModeQuery.removeEventListener("change", handleSystemThemeChange);
+    };
+  }, [toggleType]);
 
   useEffect(() => {
     document.body.setAttribute("display-style", darkMode);
@@ -69,7 +73,7 @@ const DisplayStyleCardContainer = () => {
         darkModeQuery.matches ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
       );
     }
-  }, [toggleType]);
+  }, [toggleType, darkModeQuery.matches]);
 
   return (
     <DisplayStyleCard
