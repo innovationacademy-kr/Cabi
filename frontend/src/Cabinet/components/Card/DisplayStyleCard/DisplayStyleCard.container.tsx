@@ -27,10 +27,7 @@ export const getInitialDisplayStyle = (
 const DisplayStyleCardContainer = () => {
   const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const [toggleType, setToggleType] = useRecoilState(displayStyleState);
-  const initialDisplayStyle = getInitialDisplayStyle(
-    toggleType as DisplayStyleToggleType,
-    darkModeQuery
-  );
+  const initialDisplayStyle = getInitialDisplayStyle(toggleType, darkModeQuery);
   const [darkMode, setDarkMode] =
     useState<DisplayStyleType>(initialDisplayStyle);
 
@@ -39,8 +36,10 @@ const DisplayStyleCardContainer = () => {
     localStorage.setItem("display-style-toggle", toggleType);
   };
 
-  const handleDisplayStyleButtonClick = (displayStyleToggleType: string) => {
-    const castedToggleType = displayStyleToggleType as DisplayStyleToggleType;
+  const handleDisplayStyleButtonClick = (
+    displayStyleToggleType: DisplayStyleToggleType
+  ) => {
+    const castedToggleType = displayStyleToggleType;
     if (toggleType === castedToggleType) return;
     setColorsAndLocalStorage(castedToggleType);
   };
@@ -73,7 +72,7 @@ const DisplayStyleCardContainer = () => {
         darkModeQuery.matches ? DisplayStyleType.DARK : DisplayStyleType.LIGHT
       );
     }
-  }, [toggleType, darkModeQuery.matches]);
+  }, [toggleType]);
 
   return (
     <DisplayStyleCard
