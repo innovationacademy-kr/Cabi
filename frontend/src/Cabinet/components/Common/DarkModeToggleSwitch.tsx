@@ -73,22 +73,22 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   const isDarkMode = displayStyleType === DisplayStyleType.DARK;
 
   return (
-    <ToggleSwitchContainer>
+    <ToggleWrapperStyled>
       <CheckboxStyled id={id} checked={isDarkMode} onChange={handleToggle} />
       <ToggleSwitchStyled htmlFor={id} isChecked={isDarkMode}>
-        <MoonIconWrapper>
+        <MoonIconWrapperStyled>
           <MoonIcon />
-        </MoonIconWrapper>
-        <SunIconWrapper>
+        </MoonIconWrapperStyled>
+        <SunIconWrapperStyled>
           <SunIcon />
-        </SunIconWrapper>
+        </SunIconWrapperStyled>
         <ToggleKnobStyled isChecked={isDarkMode} />
       </ToggleSwitchStyled>
-    </ToggleSwitchContainer>
+    </ToggleWrapperStyled>
   );
 };
 
-const ToggleSwitchContainer = styled.div`
+const ToggleWrapperStyled = styled.div`
   display: inline-block;
   position: relative;
   margin-right: 10px;
@@ -125,7 +125,7 @@ const ToggleKnobStyled = styled.span<{ isChecked: boolean }>`
   transition: left 0.2s;
 `;
 
-const MoonIconWrapper = styled.div`
+const MoonIconWrapperStyled = styled.div`
   position: absolute;
   left: 5px;
   top: 50%;
@@ -140,7 +140,7 @@ const MoonIconWrapper = styled.div`
   }
 `;
 
-const SunIconWrapper = styled.div`
+const SunIconWrapperStyled = styled.div`
   position: absolute;
   right: 5px;
   top: 50%;
