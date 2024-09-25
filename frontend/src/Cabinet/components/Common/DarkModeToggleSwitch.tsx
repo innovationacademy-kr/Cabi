@@ -13,7 +13,25 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   const [displayStyleToggle, setDisplayStyleToggle] =
     useRecoilState(displayStyleState);
   const [displayStyleType, setDisplayStyleType] = useState<DisplayStyleType>(
-    DisplayStyleType.LIGHT
+    () => {
+      const savedToggleType =
+        (localStorage.getItem(
+          "display-style-toggle"
+        ) as DisplayStyleToggleType) || DisplayStyleToggleType.DEVICE;
+
+      if (savedToggleType === DisplayStyleToggleType.LIGHT) {
+        return DisplayStyleType.LIGHT;
+      } else if (savedToggleType === DisplayStyleToggleType.DARK) {
+        return DisplayStyleType.DARK;
+      } else {
+        const isSystemDarkMode =
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches;
+        return isSystemDarkMode
+          ? DisplayStyleType.DARK
+          : DisplayStyleType.LIGHT;
+      }
+    }
   );
 
   useEffect(() => {
