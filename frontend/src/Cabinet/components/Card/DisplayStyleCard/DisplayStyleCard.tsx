@@ -11,7 +11,7 @@ import { DisplayStyleToggleType } from "@/Cabinet/types/enum/displayStyle.type.e
 
 interface IToggleItemSeparated {
   name: string;
-  key: string;
+  key: DisplayStyleToggleType;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
@@ -68,9 +68,7 @@ const DisplayStyleCard: React.FC<DisplayStyleCardProps> = ({
                       key={item.key}
                       id={`${item.key}`}
                       isClicked={displayStyleToggle === item.key}
-                      onClick={() =>
-                        handleButtonClick(item.key as DisplayStyleToggleType)
-                      }
+                      onClick={() => handleButtonClick(item.key)}
                     >
                       <DisplayStyleIcon />
                       {item.name}
