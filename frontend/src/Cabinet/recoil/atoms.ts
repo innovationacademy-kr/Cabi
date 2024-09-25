@@ -211,6 +211,6 @@ export const targetClubUserInfoState = atom<ClubUserResponseDto>({
 });
 
 export const displayStyleState = atom<string>({
-  key: "displayStyleState",
+  key: "displayStyle",
   default: DisplayStyleToggleType.DEVICE,
 });
