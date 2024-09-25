@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
-import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moonAdmin.svg";
-import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sunAdmin.svg";
+import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moonIcon.svg";
+import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sunIcon.svg";
 import {
   DisplayStyleToggleType,
   DisplayStyleType,
