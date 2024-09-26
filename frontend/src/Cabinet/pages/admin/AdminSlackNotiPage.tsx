@@ -250,6 +250,7 @@ const FormSubTitleStyled = styled.h3`
 `;
 
 const FormTextareaStyled = styled.textarea`
+  color: var(--normal-text-color);
   box-sizing: border-box;
   width: 100%;
   min-height: 200px;
