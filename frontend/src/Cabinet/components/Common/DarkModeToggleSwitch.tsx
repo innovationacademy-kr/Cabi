@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
@@ -10,27 +10,27 @@ import {
   DisplayStyleType,
 } from "@/Cabinet/types/enum/displayStyle.type.enum";
 
+const getSavedToggleType = (): DisplayStyleToggleType => {
+  return (
+    (localStorage.getItem("display-style-toggle") as DisplayStyleToggleType) ||
+    DisplayStyleToggleType.DEVICE
+  );
+};
+
 const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   const [displayStyleToggle, setDisplayStyleToggle] =
     useRecoilState(displayStyleState);
   const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const [displayStyleType, setDisplayStyleType] = useState<DisplayStyleType>(
     () => {
-      const savedToggleType =
-        (localStorage.getItem(
-          "display-style-toggle"
-        ) as DisplayStyleToggleType) || DisplayStyleToggleType.DEVICE;
-
+      const savedToggleType = getSavedToggleType();
       return getInitialDisplayStyle(savedToggleType, darkModeQuery);
     }
   );
   const isDarkMode = displayStyleType === DisplayStyleType.DARK;
 
   useEffect(() => {
-    const savedToggleType =
-      (localStorage.getItem(
-        "display-style-toggle"
-      ) as DisplayStyleToggleType) || DisplayStyleToggleType.DEVICE;
+    const savedToggleType = getSavedToggleType();
     setDisplayStyleToggle(savedToggleType);
   }, [setDisplayStyleToggle]);
 
@@ -42,37 +42,29 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
       );
       setDisplayStyleType(newDisplayStyleType);
     };
+
     updateDisplayStyleType();
-
-    const handleSystemThemeChange = (event: MediaQueryListEvent) => {
-      if (displayStyleToggle === DisplayStyleToggleType.DEVICE) {
-        const newDisplayStyleType = getInitialDisplayStyle(
-          displayStyleToggle,
-          darkModeQuery
-        );
-        setDisplayStyleType(newDisplayStyleType);
-      }
-    };
-
-    darkModeQuery.addEventListener("change", handleSystemThemeChange);
-
-    return () => {
-      darkModeQuery.removeEventListener("change", handleSystemThemeChange);
-    };
-  }, [displayStyleToggle]);
+    if (displayStyleToggle === DisplayStyleToggleType.DEVICE) {
+      darkModeQuery.addEventListener("change", updateDisplayStyleType);
+      return () => {
+        darkModeQuery.removeEventListener("change", updateDisplayStyleType);
+      };
+    }
+  }, [displayStyleToggle, darkModeQuery]);
 
   useEffect(() => {
     document.body.setAttribute("display-style", displayStyleType);
   }, [displayStyleType]);
 
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
     const newToggleType =
       displayStyleToggle === DisplayStyleToggleType.LIGHT
         ? DisplayStyleToggleType.DARK
         : DisplayStyleToggleType.LIGHT;
+
     localStorage.setItem("display-style-toggle", newToggleType);
     setDisplayStyleToggle(newToggleType);
-  };
+  }, [displayStyleToggle, setDisplayStyleToggle]);
 
   return (
     <ToggleWrapperStyled>
