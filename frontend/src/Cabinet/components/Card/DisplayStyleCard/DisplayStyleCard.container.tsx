@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
 import DisplayStyleCard from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard";
 import {
@@ -12,7 +12,7 @@ export const getInitialDisplayStyle = (
   displayStyleToggle: DisplayStyleToggleType,
   darkModeQuery: MediaQueryList
 ): DisplayStyleType => {
-  //라이트 / 다크 버튼
+  // 라이트 / 다크 버튼
   if (displayStyleToggle === DisplayStyleToggleType.LIGHT) {
     return DisplayStyleType.LIGHT;
   } else if (displayStyleToggle === DisplayStyleToggleType.DARK) {
@@ -27,13 +27,7 @@ export const getInitialDisplayStyle = (
 
 const DisplayStyleCardContainer = () => {
   const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-  const [toggleType, setToggleType] = useRecoilState(displayStyleState);
-
-  const handleButtonClick = (key: DisplayStyleToggleType) => {
-    if (toggleType === key) return;
-    setToggleType(key);
-    localStorage.setItem("display-style-toggle", key);
-  };
+  const toggleType = useRecoilValue(displayStyleState);
 
   useEffect(() => {
     const applyDisplayStyle = () => {
@@ -43,19 +37,15 @@ const DisplayStyleCardContainer = () => {
 
     applyDisplayStyle();
 
-    const handleSystemThemeChange = () => {
-      if (toggleType === DisplayStyleToggleType.DEVICE) {
-        applyDisplayStyle();
-      }
-    };
-
-    darkModeQuery.addEventListener("change", handleSystemThemeChange);
-    return () => {
-      darkModeQuery.removeEventListener("change", handleSystemThemeChange);
-    };
+    if (toggleType === DisplayStyleToggleType.DEVICE) {
+      darkModeQuery.addEventListener("change", applyDisplayStyle);
+      return () => {
+        darkModeQuery.removeEventListener("change", applyDisplayStyle);
+      };
+    }
   }, [toggleType]);
 
-  return <DisplayStyleCard handleButtonClick={handleButtonClick} />;
+  return <DisplayStyleCard />;
 };
 
 export default DisplayStyleCardContainer;
