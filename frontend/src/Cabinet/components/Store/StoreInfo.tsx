@@ -87,6 +87,10 @@ const StoreInfo = () => {
         />
       </HeaderStyled>
       <StoreIconContainer>
+        {/* <img
+          src="/src/Cabinet/assets/images/webp/storeCoin.webp"
+          alt="storeIcon"
+        /> */}
         <StoreCoin />
       </StoreIconContainer>
       <StoreCoinCheckBox monthlyCoinCount={monthlyCoinCount} />

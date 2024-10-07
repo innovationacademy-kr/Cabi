@@ -1,19 +1,69 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <script
-      type="module"
-      src="/src/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer.ts"
-    ></script>
     <meta charset="UTF-8" />
     <link
       rel="icon"
       href="/src/Cabinet/assets/images/logo.ico"
       type="image/x-icon"
     />
-    <link rel="shortcut icon" href="/src/Cabinet/assets/images/logo.png" />
-    <link rel="apple-touch-icon" href="/src/Cabinet/assets/images/logo.png" />
+
+    <!-- <link rel="shortcut icon" href="/src/Cabinet/assets/images/logo.png" />
+    <link rel="apple-touch-icon" href="/src/Cabinet/assets/images/logo.png" /> -->
+
+    <!-- Favicon (shortcut icon) -->
+    <!-- WebP 형식을 사용하는 Favicon -->
+    <!-- <link
+      rel="shortcut icon"
+      type="image/webp"
+      href="/src/Cabinet/assets/images/webp/logo.webp"
+    /> -->
+    <!-- Fallback for older browsers (PNG/ICO) -->
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="/src/Cabinet/assets/images/logo.png"
+    />
+
+    <!-- Apple Touch Icon -->
+    <!-- <link
+      rel="apple-touch-icon"
+      type="image/webp"
+      href="/src/Cabinet/assets/images/webp/logo.webp"
+    /> -->
+    <!-- Fallback for older browsers (PNG/ICO) -->
+    <link
+      rel="apple-touch-icon"
+      type="image/png"
+      href="/src/Cabinet/assets/images/logo.png"
+    />
+
     <link rel="manifest" href="/manifest.json" />
+
+    <!-- Apple Touch Icons with different sizes -->
+    <!-- WebP 형식의 Apple Touch Icon -->
+    <!-- <link
+      rel="apple-touch-icon"
+      sizes="192x192"
+      href="/icons/icon-192x192.webp"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="256x256"
+      href="/icons/icon-256x256.webp"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="384x384"
+      href="/icons/icon-384x384.webp"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="512x512"
+      href="/icons/icon-512x512.webp"
+    /> -->
+
+    <!-- Fallback for older browsers and devices (PNG) -->
     <link
       rel="apple-touch-icon"
       sizes="192x192"
@@ -34,6 +84,20 @@
       sizes="512x512"
       href="/icons/icon-512x512.png"
     />
+
+    <!-- Preconnect to the fonts server -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> -->
+
+    <!-- Preload the actual font files -->
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@300;400;700&display=swap"
+      as="style"
+      crossorigin
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
@@ -42,10 +106,19 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://cabi.42seoul.io" />
     <meta property="og:title" content="Cabi" />
+
+    <!-- Open Graph Image -->
+    <!-- WebP 이미지 -->
+    <!-- <meta
+      property="og:image"
+      content="https://dev.cabi.42seoul.io/src/assets/images/webp/desktopLogo.webp"
+    /> -->
+    <!-- Fallback for older platforms -->
     <meta
       property="og:image"
       content="https://dev.cabi.42seoul.io/src/assets/images/desktopLogo.png"
     />
+
     <meta
       property="og:description"
       content="42서울 캐비닛 서비스: 여러분의 일상을 가볍게"
@@ -57,6 +130,11 @@
   <body>
     <div id="root"></div>
     <div id="modal-portal"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" defer src="/src/main.tsx"></script>
+    <script
+      type="module"
+      defer
+      src="/src/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer.ts"
+    ></script>
   </body>
 </html>
