@@ -11,6 +11,7 @@ import { ReactComponent as CoinIcon } from "@/Cabinet/assets/images/coinIcon.svg
 import { ReactComponent as Select } from "@/Cabinet/assets/images/selectMaincolor.svg";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import { axiosCoinLog } from "@/Cabinet/api/axios/axios.custom";
+import useDebounce from "@/Cabinet/hooks/useDebounce";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
 
 const toggleList: toggleItem[] = [
@@ -44,10 +45,11 @@ const CoinLog = () => {
   const [userInfo] = useRecoilState(userState);
   const size = 5;
   // NOTE : size 만큼 데이터 불러옴
+  const { debounce } = useDebounce();
 
-  const getCoinLog = async (type: CoinLogToggleType) => {
+  const getCoinLog = async () => {
     try {
-      const response = await axiosCoinLog(type, page, size);
+      const response = await axiosCoinLog(toggleType, page, size);
       if (page === 0) {
         setCoinLogs(response.data.result);
       } else {
@@ -71,9 +73,7 @@ const CoinLog = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      getCoinLog(toggleType);
-    }, 333);
+    debounce("coinLog", getCoinLog, 100);
   }, [page, toggleType]);
 
   useEffect(() => {
