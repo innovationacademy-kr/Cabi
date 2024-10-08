@@ -2,32 +2,34 @@ import PageTracker from "@/api/analytics/PageTracker";
 import * as Sentry from "@sentry/react";
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AvailablePage from "@/Cabinet/pages/AvailablePage";
-import ClubPage from "@/Cabinet/pages/ClubPage";
-import CoinLogPage from "@/Cabinet/pages/CoinLogPage";
 import HomePage from "@/Cabinet/pages/HomePage";
-import InventoryPage from "@/Cabinet/pages/InventoryPage";
-import ItemUsageLogPage from "@/Cabinet/pages/ItemUsageLogPage";
 import Layout from "@/Cabinet/pages/Layout";
-import LogPage from "@/Cabinet/pages/LogPage";
 import LoginPage from "@/Cabinet/pages/LoginPage";
-import MainPage from "@/Cabinet/pages/MainPage";
 import PostLogin from "@/Cabinet/pages/PostLogin";
-import ProfilePage from "@/Cabinet/pages/ProfilePage";
-import StoreMainPage from "@/Cabinet/pages/StoreMainPage";
-import AdminMainPage from "@/Cabinet/pages/admin/AdminMainPage";
-import AdminSlackNotiPage from "@/Cabinet/pages/admin/AdminSlackNotiPage";
-import AdminStorePage from "@/Cabinet/pages/admin/AdminStorePage";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import DetailPage from "@/Presentation/pages/DetailPage";
-import PresentationHomePage from "@/Presentation/pages/HomePage";
-import PresentationLayout from "@/Presentation/pages/Layout";
-import PresentationLogPage from "@/Presentation/pages/LogPage";
-import RegisterPage from "@/Presentation/pages/RegisterPage";
-import AdminPresentationLayout from "@/Presentation/pages/admin/AdminLayout";
 
-const NotFoundPage = lazy(() => import("@/Cabinet/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/Cabinet/pages/LoginFailurePage"));
+const NotFoundPage = lazy(() => import("@/Cabinet/pages/NotFoundPage"));
+const AvailablePage = lazy(() => import("@/Cabinet/pages/AvailablePage"));
+const ClubPage = lazy(() => import("@/Cabinet/pages/ClubPage"));
+const CoinLogPage = lazy(() => import("@/Cabinet/pages/CoinLogPage"));
+const InventoryPage = lazy(() => import("@/Cabinet/pages/InventoryPage"));
+const ItemUsageLogPage = lazy(() => import("@/Cabinet/pages/ItemUsageLogPage"));
+const LogPage = lazy(() => import("@/Cabinet/pages/LogPage"));
+const MainPage = lazy(() => import("@/Cabinet/pages/MainPage"));
+const ProfilePage = lazy(() => import("@/Cabinet/pages/ProfilePage"));
+const StoreMainPage = lazy(() => import("@/Cabinet/pages/StoreMainPage"));
+
+// NOTE : 수요지식회
+const PresentationHomePage = lazy(
+  () => import("@/Presentation/pages/HomePage")
+);
+const PresentationLayout = lazy(() => import("@/Presentation/pages/Layout"));
+const DetailPage = lazy(() => import("@/Presentation/pages/DetailPage"));
+const PresentationLogPage = lazy(() => import("@/Presentation/pages/LogPage"));
+const RegisterPage = lazy(() => import("@/Presentation/pages/RegisterPage"));
+
+// NOTE : admin
 const AdminLayout = lazy(() => import("@/Cabinet/pages/admin/AdminLayout"));
 const AdminLoginPage = lazy(
   () => import("@/Cabinet/pages/admin/AdminLoginPage")
@@ -38,6 +40,16 @@ const AdminLoginFailurePage = lazy(
   () => import("@/Cabinet/pages/admin/AdminLoginFailurePage")
 );
 const AdminHomePage = lazy(() => import("@/Cabinet/pages/admin/AdminHomePage"));
+const AdminMainPage = lazy(() => import("@/Cabinet/pages/admin/AdminMainPage"));
+const AdminSlackNotiPage = lazy(
+  () => import("@/Cabinet/pages/admin/AdminSlackNotiPage")
+);
+const AdminStorePage = lazy(
+  () => import("@/Cabinet/pages/admin/AdminStorePage")
+);
+const AdminPresentationLayout = lazy(
+  () => import("@/Presentation/pages/admin/AdminLayout")
+);
 
 function App(): React.ReactElement {
   const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);

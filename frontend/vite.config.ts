@@ -7,26 +7,6 @@ import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            if (id.includes("recoil")) {
-              return "recoil"; // Recoil 라이브러리를 recoil 청크로 분리
-            }
-            if (id.includes("@sentry")) {
-              return "sentry"; // Sentry 라이브러리를 sentry 청크로 분리
-            }
-            return "vendor"; // 나머지 외부 라이브러리를 vendor 청크로 분리
-          }
-          if (id.includes("Admin")) {
-            return "admin"; // Admin 관련 모듈을 분리
-          }
-        },
-      },
-    },
-  },
   plugins: [
     react({
       babel: {
