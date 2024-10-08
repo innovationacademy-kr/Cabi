@@ -13,6 +13,7 @@ const LoadingAnimationWrapperStyled = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  overflow-y: hidden;
   justify-content: center;
   align-items: center;
 `;
