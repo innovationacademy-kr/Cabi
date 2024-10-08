@@ -5,6 +5,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
@@ -23,17 +24,17 @@ public class PresentationQueryService {
 
 	public List<Presentation> getRegisteredPresentations(LocalDateTime start, LocalDateTime end) {
 		List<Presentation> presentations =
-			presentationRepository.findAllByDateTimeBetween(start, end);
+				presentationRepository.findAllByDateTimeBetween(start, end);
 
 		return presentations.stream()
-			.filter(presentation ->
-				!presentation.getPresentationStatus().equals(PresentationStatus.CANCEL))
-			.collect(Collectors.toList());
+				.filter(presentation ->
+						!presentation.getPresentationStatus().equals(PresentationStatus.CANCEL))
+				.collect(Collectors.toList());
 	}
 
 	public List<Presentation> getPresentationsBetweenWithPageRequest(LocalDateTime start,
-		LocalDateTime end,
-		PageRequest pageRequest) {
+			LocalDateTime end,
+			PageRequest pageRequest) {
 		return presentationRepository.findByDateTimeBetween(start, end, pageRequest);
 	}
 
@@ -42,11 +43,23 @@ public class PresentationQueryService {
 		LocalDateTime endDayDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
 
 		return presentationRepository.findAllByDateTimeBetweenOrderByDateTime(startDate,
-			endDayDate);
+				endDayDate);
 	}
 
 	public Page<Presentation> getPresentationsById(Long id, Pageable pageable) {
 		return presentationRepository.findPaginationById(id, pageable);
 	}
 
+	public List<Presentation> getDummyDateBetweenMonth(
+			LocalDateTime now,
+			LocalDateTime localDateTime) {
+		
+		List<Presentation> presentations =
+				presentationRepository.findAllByDateTimeBetween(now, localDateTime);
+
+		return presentations.stream()
+				.filter(presentation ->
+						presentation.getCategory().equals(Category.DUMMY))
+				.collect(Collectors.toList());
+	}
 }
