@@ -1,9 +1,13 @@
 package org.ftclub.cabinet.presentation.service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +21,10 @@ import org.ftclub.cabinet.dto.PresentationMyPagePaginationDto;
 import org.ftclub.cabinet.dto.PresentationUpdateDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
+import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationStatus;
+import org.ftclub.cabinet.presentation.domain.PresentationTime;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -225,5 +231,51 @@ public class PresentationService {
 				.collect(Collectors.toList());
 
 		return new PresentationMyPagePaginationDto(result, presentations.getTotalElements());
+	}
+
+	/*
+		현재 달 기준 3달 앞까지 (ex.현재 1월 : 1, 2, 3월 dummy form 생성)
+		2, 4주인 수요일의 form 만들기
+		category Dummy로 만들기
+	 */
+	@Transactional
+	public void generatePresentationFormsEveryThreeMonth(LocalDate nowDate) {
+		List<LocalDateTime> wednesdays = new ArrayList<>();
+
+		for (int monthOffset = 0; monthOffset < 3; monthOffset++) {
+			// 해당 월의 첫째 날을 구한다
+			LocalDate firstDayOfMonth = LocalDate.of(nowDate.getYear(), nowDate.getMonth().plus(monthOffset), 1);
+
+			// 해당 월의 첫 번째 수요일을 찾는다
+			LocalDate firstWednesday = firstDayOfMonth.with(
+					TemporalAdjusters.nextOrSame(DayOfWeek.WEDNESDAY));
+
+			// 2번째 수요일은 첫 번째 수요일에서 1주 후
+			LocalDate secondWednesday = firstWednesday.plusWeeks(1);
+
+			// 4번째 수요일은 첫 번째 수요일에서 3주 후
+			LocalDate fourthWednesday = firstWednesday.plusWeeks(3);
+
+			wednesdays.add(secondWednesday.atStartOfDay());
+			wednesdays.add(fourthWednesday.atStartOfDay());
+		}
+
+		User dummy = userQueryService.getUserByName("hyowchoi");
+		List<Presentation> presentations = wednesdays.stream()
+				.map(wednesday -> {
+					Presentation presentation = Presentation.of(
+							Category.DUMMY,
+							wednesday,
+							PresentationTime.HALF,
+							"dummy",
+							"dummy",
+							"dummy"
+					);
+					presentation.setUser(dummy);
+					return presentation;
+				})
+				.collect(Collectors.toList());
+
+		presentationRepository.saveAll(presentations);
 	}
 }
