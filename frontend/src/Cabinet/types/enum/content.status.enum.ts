@@ -5,6 +5,8 @@ export enum ContentStatus {
   PENDING = "PENDING",
   IN_SESSION = "IN_SESSION",
   EXTENSION = "EXTENSION",
+  COIN = "COIN",
+  STORE = "STORE",
 }
 
 export default ContentStatus;

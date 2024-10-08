@@ -1,9 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
+import {
+  manualContentData,
+  manualItemsData,
+} from "@/Cabinet/assets/data/ManualContent";
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
+import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 
 interface ModalProps {
   contentStatus: ContentStatus;
@@ -15,6 +19,9 @@ const ManualModal: React.FC<ModalProps> = ({
   setIsModalOpen,
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
+  const [selectedItem, setSelectedItem] = useState<StoreItemType>(
+    StoreItemType.EXTENSION
+  );
   const contentData = manualContentData[contentStatus];
 
   const isCabinetType =
@@ -27,6 +34,10 @@ const ManualModal: React.FC<ModalProps> = ({
     contentStatus === ContentStatus.PRIVATE ||
     contentStatus === ContentStatus.SHARE ||
     contentStatus === ContentStatus.CLUB;
+
+  const handleIconClick = (index: StoreItemType) => {
+    setSelectedItem(index);
+  };
 
   const closeModal = () => {
     if (modalIsOpen) {
@@ -76,12 +87,40 @@ const ManualModal: React.FC<ModalProps> = ({
               )}
             </BasicInfo>
           )}
-          {contentData.contentTitle}
-          <ManualContentStyeld color={contentData.pointColor}>
-            <div
-              dangerouslySetInnerHTML={{ __html: contentData.contentText }}
-            ></div>
-          </ManualContentStyeld>
+          {contentStatus === ContentStatus.STORE && (
+            <>
+              <ItemContentsStyled>
+                {Object.entries(manualItemsData).map(([key, item]) => (
+                  <ItemIconStyled
+                    key={key}
+                    onClick={() => handleIconClick(key as StoreItemType)}
+                    className={selectedItem === key ? "selected" : ""}
+                    color={contentData.pointColor}
+                  >
+                    <item.icon />
+                  </ItemIconStyled>
+                ))}
+              </ItemContentsStyled>
+              {manualItemsData[selectedItem].title}
+              <ManualContentStyled color={contentData.pointColor}>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: manualItemsData[selectedItem].content,
+                  }}
+                ></div>
+              </ManualContentStyled>
+            </>
+          )}
+          {contentStatus !== ContentStatus.STORE && (
+            <>
+              {contentData.contentTitle}
+              <ManualContentStyled color={contentData.pointColor}>
+                <div
+                  dangerouslySetInnerHTML={{ __html: contentData.contentText }}
+                ></div>
+              </ManualContentStyled>
+            </>
+          )}
         </ModalContent>
       </ModalWrapper>
     </ModalOverlay>
@@ -144,9 +183,10 @@ const ModalWrapper = styled.div<{
   border-radius: 40px 40px 0 0;
   border: ${(props) =>
     props.contentStatus === ContentStatus.PENDING
-      ? "5px double var(--sys-main-color)"
-      : props.contentStatus === ContentStatus.IN_SESSION
-      ? "5px solid var(--sys-main-color)"
+      ? "5px double var(--sys-default-main-color)"
+      : props.contentStatus === ContentStatus.IN_SESSION ||
+        props.contentStatus === ContentStatus.COIN
+      ? "5px solid var(--sys-default-main-color)"
       : "none"};
   box-shadow: ${(props) =>
     props.contentStatus === ContentStatus.PENDING &&
@@ -166,8 +206,9 @@ const ModalContent = styled.div<{
   display: flex;
   flex-direction: column;
   color: ${(props) =>
-    props.contentStatus === ContentStatus.IN_SESSION
-      ? "var(--sys-main-color)"
+    props.contentStatus === ContentStatus.IN_SESSION ||
+    props.contentStatus === ContentStatus.COIN
+      ? "var(--sys-default-main-color)"
       : props.contentStatus === ContentStatus.EXTENSION
       ? "var(--normal-text-color)"
       : "var(--white-text-with-bg-color)"};
@@ -188,8 +229,9 @@ const ModalContent = styled.div<{
   }
   .moveButton {
     stroke: ${(props) =>
-      props.contentStatus === ContentStatus.IN_SESSION
-        ? "var(--sys-main-color)"
+      props.contentStatus === ContentStatus.IN_SESSION ||
+      props.contentStatus === ContentStatus.COIN
+        ? "var(--sys-default-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
         : "var(--white-text-with-bg-color)"};
@@ -210,8 +252,9 @@ const CloseButton = styled.div<{
   svg {
     transform: scaleX(-1);
     stroke: ${(props) =>
-      props.contentStatus === ContentStatus.IN_SESSION
-        ? "var(--sys-main-color)"
+      props.contentStatus === ContentStatus.IN_SESSION ||
+      props.contentStatus === ContentStatus.COIN
+        ? "var(--sys-default-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
         : "var(--bg-color)"};
@@ -269,7 +312,7 @@ const BoxInfo2 = styled.div`
   }
 `;
 
-const ManualContentStyeld = styled.div<{
+const ManualContentStyled = styled.div<{
   color: string;
 }>`
   margin: 40px 0 0 20px;
@@ -326,6 +369,47 @@ const ContentImgStyled = styled.div<{
         props.contentStatus === ContentStatus.EXTENSION
           ? "var(--normal-text-color)"
           : "var(--white-text-with-bg-color)"};
+    }
+  }
+`;
+
+const ItemContentsStyled = styled.div`
+  width: 45%;
+  height: 90px;
+  display: flex;
+  margin-bottom: 30px;
+`;
+
+const ItemIconStyled = styled.div<{
+  color: string;
+}>`
+  width: 80px;
+  height: 80px;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > svg {
+    padding: 4px;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    stroke-width: 50px;
+    & > path {
+      transform: scale(2);
+      stroke: var(--ref-purple-690);
+    }
+  }
+
+  &:hover:not(.selected),
+  &.selected > svg {
+    width: 80px;
+    height: 80px;
+    filter: drop-shadow(0px 5px 3px var(--hover-box-shadow-color));
+    transition: all 0.2s ease;
+    & > path {
+      stroke: ${(props) => props.color};
     }
   }
 `;

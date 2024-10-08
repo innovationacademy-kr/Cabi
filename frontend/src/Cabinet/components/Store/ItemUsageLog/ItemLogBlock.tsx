@@ -50,14 +50,13 @@ const IconBlockStyled = styled.div<{ itemName: string }>`
   svg {
     width: 40px;
     height: 40px;
+    transform-origin: center;
   }
 
-  & > svg > path {
+  & > svg > * {
+    transform: scale(1.25);
     stroke: var(--white-text-with-bg-color);
-    stroke-width: ${(props) =>
-      props.itemName === ItemTypeLabelMap[StoreItemType.EXTENSION]
-        ? "3px"
-        : "1.5px"};
+    stroke-width: "1.5px";
   }
 `;
 
