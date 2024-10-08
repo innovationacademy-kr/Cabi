@@ -30,9 +30,9 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
 
   const onClickPresentationDetailButton = () => {
     if (isAdmin) {
-      navigator("/presentation/detail");
+      navigator("/admin/presentation/detail");
     } else {
-      navigator("detail");
+      navigator("/presentation/detail");
     }
     closeAll();
   };
