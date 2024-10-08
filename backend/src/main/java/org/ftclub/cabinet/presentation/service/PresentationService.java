@@ -7,10 +7,10 @@ import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.dto.AbleDateResponseDto;
 import org.ftclub.cabinet.dto.InvalidDateResponseDto;
 import org.ftclub.cabinet.dto.PresentationFormData;
 import org.ftclub.cabinet.dto.PresentationFormRequestDto;
@@ -111,7 +111,9 @@ public class PresentationService {
 
 		return presentations.stream()
 				.filter(presentation ->
-						presentation.getPresentationStatus().equals(PresentationStatus.DONE))
+						presentation.getPresentationStatus().equals(PresentationStatus.DONE)
+								&& !presentation.getCategory().equals(Category.DUMMY)
+				)
 				.collect(Collectors.toList());
 	}
 
@@ -133,7 +135,9 @@ public class PresentationService {
 
 		return presentations.stream()
 				.filter(presentation ->
-						presentation.getPresentationStatus().equals(PresentationStatus.EXPECTED))
+						presentation.getPresentationStatus().equals(PresentationStatus.EXPECTED)
+								&& !presentation.getCategory().equals(Category.DUMMY)
+				)
 				.collect(Collectors.toList());
 	}
 
@@ -244,7 +248,8 @@ public class PresentationService {
 
 		for (int monthOffset = 0; monthOffset < 3; monthOffset++) {
 			// 해당 월의 첫째 날을 구한다
-			LocalDate firstDayOfMonth = LocalDate.of(nowDate.getYear(), nowDate.getMonth().plus(monthOffset), 1);
+			LocalDate firstDayOfMonth = LocalDate.of(nowDate.getYear(),
+					nowDate.getMonth().plus(monthOffset), 1);
 
 			// 해당 월의 첫 번째 수요일을 찾는다
 			LocalDate firstWednesday = firstDayOfMonth.with(
@@ -277,5 +282,18 @@ public class PresentationService {
 				.collect(Collectors.toList());
 
 		presentationRepository.saveAll(presentations);
+	}
+
+	public AbleDateResponseDto getAbleDate() {
+		LocalDateTime now = LocalDateTime.now();
+		List<Presentation> dummyDates =
+				presentationQueryService.getDummyDateBetweenMonth(now, now.plusMonths(3));
+
+		List<LocalDateTime> result =
+				dummyDates.stream()
+						.map(Presentation::getDateTime)
+						.collect(Collectors.toList());
+
+		return new AbleDateResponseDto(result);
 	}
 }
