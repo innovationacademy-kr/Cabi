@@ -93,44 +93,43 @@ const AdminMainPage = () => {
     else moveToRightSection();
   };
 
-  return (
-    <>
-      {isLoading && <LoadingAnimation />}
-      <WrapperStyled
-        ref={mainWrapperRef}
-        onTouchStart={(e: React.TouchEvent) => {
-          touchStartPosX.current = e.changedTouches[0].screenX;
-          touchStartPosY.current = e.changedTouches[0].screenY;
-        }}
-        onTouchEnd={(e: React.TouchEvent) => {
-          swipeSection(
-            e.changedTouches[0].screenX,
-            e.changedTouches[0].screenY
-          );
-        }}
-      >
-        <SectionPaginationContainer />
-        <MultiSelectButtonWrapperStyled isMultiSelect={isMultiSelect}>
-          <MultiSelectButton
-            theme={isMultiSelect ? "fill" : "line"}
-            text="다중 선택 모드"
-            onClick={toggleMultiSelectMode}
-          />
-        </MultiSelectButtonWrapperStyled>
-        <CabinetListWrapperStyled>
-          <CabinetListContainer isAdmin={true} />
+  return isLoading ? (
+    <LoadingAnimation />
+  ) : (
+    <WrapperStyled
+      ref={mainWrapperRef}
+      onTouchStart={(e: React.TouchEvent) => {
+        touchStartPosX.current = e.changedTouches[0].screenX;
+        touchStartPosY.current = e.changedTouches[0].screenY;
+      }}
+      onTouchEnd={(e: React.TouchEvent) => {
+        swipeSection(
+          e.changedTouches[0].screenX,
+          e.changedTouches[0].screenY
+        );
+      }}
+    >
+      <SectionPaginationContainer />
+      <MultiSelectButtonWrapperStyled isMultiSelect={isMultiSelect}>
+        <MultiSelectButton
+          theme={isMultiSelect ? "fill" : "line"}
+          text="다중 선택 모드"
+          onClick={toggleMultiSelectMode}
+        />
+      </MultiSelectButtonWrapperStyled>
+      <CabinetListWrapperStyled>
+        <CabinetListContainer isAdmin={true} />
 
-          <RefreshButtonStyled
-            className="cabiButton"
-            title="새로고침"
-            id="refreshButton"
-            onClick={refreshCabinetList}
-          >
-            새로고침
-          </RefreshButtonStyled>
-        </CabinetListWrapperStyled>
-      </WrapperStyled>
-    </>
+        <RefreshButtonStyled
+          className="cabiButton"
+          title="새로고침"
+          id="refreshButton"
+          onClick={refreshCabinetList}
+        >
+          새로고침
+        </RefreshButtonStyled>
+      </CabinetListWrapperStyled>
+    </WrapperStyled>
   );
 };
 
