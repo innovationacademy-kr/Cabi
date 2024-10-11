@@ -244,6 +244,25 @@ public class PresentationService {
 	 */
 	@Transactional
 	public void generatePresentationFormsEveryThreeMonth(LocalDate nowDate) {
+		List<LocalDateTime> wednesdays = getDummyPresentationFormsDate(nowDate);
+		List<Presentation> presentations = wednesdays.stream()
+				.map(wednesday -> {
+					Presentation presentation = Presentation.of(
+							Category.DUMMY,
+							wednesday,
+							PresentationTime.HALF,
+							"dummy",
+							"dummy",
+							"dummy"
+					);
+					return presentation;
+				})
+				.collect(Collectors.toList());
+
+		presentationRepository.saveAll(presentations);
+	}
+
+	public List<LocalDateTime> getDummyPresentationFormsDate(LocalDate nowDate) {
 		List<LocalDateTime> wednesdays = new ArrayList<>();
 
 		for (int monthOffset = 0; monthOffset < 3; monthOffset++) {
@@ -264,22 +283,7 @@ public class PresentationService {
 			wednesdays.add(secondWednesday.atStartOfDay());
 			wednesdays.add(fourthWednesday.atStartOfDay());
 		}
-
-		List<Presentation> presentations = wednesdays.stream()
-				.map(wednesday -> {
-					Presentation presentation = Presentation.of(
-							Category.DUMMY,
-							wednesday,
-							PresentationTime.HALF,
-							"dummy",
-							"dummy",
-							"dummy"
-					);
-					return presentation;
-				})
-				.collect(Collectors.toList());
-
-		presentationRepository.saveAll(presentations);
+		return wednesdays;
 	}
 
 	public AbleDateResponseDto getAbleDate() {
