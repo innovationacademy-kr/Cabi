@@ -265,7 +265,6 @@ public class PresentationService {
 			wednesdays.add(fourthWednesday.atStartOfDay());
 		}
 
-		User dummy = userQueryService.getUserByName("hyowchoi");
 		List<Presentation> presentations = wednesdays.stream()
 				.map(wednesday -> {
 					Presentation presentation = Presentation.of(
@@ -276,7 +275,6 @@ public class PresentationService {
 							"dummy",
 							"dummy"
 					);
-					presentation.setUser(dummy);
 					return presentation;
 				})
 				.collect(Collectors.toList());
