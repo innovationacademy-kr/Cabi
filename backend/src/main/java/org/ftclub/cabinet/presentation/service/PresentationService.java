@@ -41,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class PresentationService {
 
-	private static final Integer START_DAY = 1;
+	private static final Integer PRESENTATION_PERIOD = 3;
 	private static final Integer DEFAULT_PAGE = 0;
 	// 쿼리로 받?
 	private static final Integer MAX_MONTH = 3;
@@ -287,9 +287,10 @@ public class PresentationService {
 	}
 
 	public AbleDateResponseDto getAbleDate() {
-		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime firstDateOfMonth = generateFirstLocalDateTime();
 		List<Presentation> dummyDates =
-				presentationQueryService.getDummyDateBetweenMonth(now, now.plusMonths(3));
+				presentationQueryService.getDummyDateBetweenMonth(firstDateOfMonth,
+						firstDateOfMonth.plusMonths(PRESENTATION_PERIOD));
 
 		List<LocalDateTime> result =
 				dummyDates.stream()
@@ -297,5 +298,13 @@ public class PresentationService {
 						.collect(Collectors.toList());
 
 		return new AbleDateResponseDto(result);
+	}
+
+	private LocalDateTime generateFirstLocalDateTime() {
+		return LocalDateTime.now()
+				.withDayOfMonth(1)
+				.withHour(0)
+				.withMinute(0)
+				.withSecond(0);
 	}
 }
