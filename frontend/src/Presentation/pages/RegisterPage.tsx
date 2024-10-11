@@ -1,3 +1,4 @@
+import { HttpStatusCode } from "axios";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -27,6 +28,7 @@ import {
   MAX_SUMMARY_LENGTH,
   MAX_TITLE_LENGTH,
 } from "@/Presentation/constants/policy";
+import { axiosGetPresentationAbleDates } from "../api/axios/axios.custom";
 
 export type PresentationTimeKey =
   | ""
@@ -143,17 +145,28 @@ const RegisterPage = () => {
   };
 
   useEffect(() => {
-    const availableDates: Date[] = calculateAvailableDaysInWeeks(
-      new Date(),
-      AVAILABLE_WEEKS,
-      WEDNESDAY,
-      FUTURE_MONTHS_TO_DISPLAY,
-      true
-    );
-    const formattedAvailableDates = availableDates.map((date) =>
-      format(date, "M/d")
-    );
-    setAvailableDates(formattedAvailableDates);
+    const fetchPresentationAbleDates = async () => {
+      try {
+        // TODO: 추후에 API 로 변경하기
+        // const response = await axiosGetPresentationAbleDates();
+        // const availableDates = response.data.results;
+        const availableDates = [
+          {
+            dateTime: "2024-10-23T12:04:59",
+          },
+          {
+            dateTime: "2024-10-30T12:04:59",
+          },
+        ];
+        const formattedAvailableDates = availableDates.map(({ dateTime }) => {
+          return format(new Date(dateTime), "M/d");
+        });
+        setAvailableDates(formattedAvailableDates);
+      } catch (error) {
+        console.error("Failed to get able dates", error);
+      }
+    };
+    fetchPresentationAbleDates();
   }, []);
 
   return (
