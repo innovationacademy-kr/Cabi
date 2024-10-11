@@ -784,6 +784,38 @@ CREATE TABLE `section_alarm`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `presentation`;
+CREATE TABLE `presentation`
+(
+    `id`                   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `category`              VARCHAR(255) NULL,
+    `date_time`             DATETIME(6) NULL,
+    `detail`                VARCHAR(500) NULL,
+    `presentation_location` VARCHAR(255) NULL,
+    `presentation_status`   VARCHAR(255) NULL,
+    `presentation_time`     VARCHAR(255) NULL,
+    `subject`               VARCHAR(25) NULL,
+    `summary`               VARCHAR(40) NULL,
+    `user_id`               BIGINT NULL,
+    CONSTRAINT `presentation_user_id`
+        FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+
+LOCK TABLES `presentation` WRITE;
+/*!40000 ALTER TABLE `presentation`
+    DISABLE KEYS */;
+INSERT INTO `presentation`
+VALUES (1, 'DUMMY', '2023-10-09 22:56:47', 'DUMMY', 'FIRST', 'EXPECTED', 'HALF', 'DUMMY', 'DUMMY', NULL),
+       (2, 'DUMMY', '2023-10-23 22:56:47', 'DUMMY', 'FIRST', 'EXPECTED', 'HALF', 'DUMMY', 'DUMMY', NULL),
+       (3, 'DUMMY', '2023-11-05 22:56:47', 'DUMMY', 'FIRST', 'EXPECTED', 'HALF', 'DUMMY', 'DUMMY', NULL),
+       (4, 'DUMMY', '2023-11-19 22:56:47', 'DUMMY', 'FIRST', 'EXPECTED', 'HALF', 'DUMMY', 'DUMMY', NULL),
+       (5, 'DUMMY', '2023-12-11 22:56:47', 'DUMMY', 'FIRST', 'EXPECTED', 'HALF', 'DUMMY', 'DUMMY', NULL),
+       (6, 'DUMMY', '2023-12-25 22:56:47', 'DUMMY', 'FIRST', 'EXPECTED', 'HALF', 'DUMMY', 'DUMMY', NULL);
+/*!40000 ALTER TABLE `presentation`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
 /*!40103 SET TIME_ZONE = @OLD_TIME_ZONE */;
 
