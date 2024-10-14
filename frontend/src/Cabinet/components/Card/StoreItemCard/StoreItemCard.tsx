@@ -137,8 +137,6 @@ const ItemIconStyled = styled.div<{ itemType: StoreItemType }>`
 
   & > svg > path {
     stroke: var(--white-text-with-bg-color);
-    stroke-width: ${(props) =>
-      props.itemType === StoreItemType.EXTENSION ? "2.8px" : "1.5px"};
   }
 `;
 

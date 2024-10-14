@@ -1,5 +1,13 @@
+import { css } from "styled-components";
+import {
+  coinBoxStyles,
+  extensionBoxStyles,
+  inSessionBoxStyles,
+  pendingBoxStyles,
+  storeBoxStyles,
+} from "@/Cabinet/components/Home/ManualContentBoxStyles";
 import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
-import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extension.svg";
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
 import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
 import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
@@ -7,6 +15,7 @@ import { ReactComponent as SwapImg } from "@/Cabinet/assets/images/storeMove.svg
 import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 import {
   StoreExtensionType,
   StoreItemType,
@@ -266,4 +275,17 @@ export const ItemTypeExtensionMap = {
   [StoreExtensionType.EXTENSION_3]: "3일",
   [StoreExtensionType.EXTENSION_15]: "15일",
   [StoreExtensionType.EXTENSION_31]: "31일",
+};
+
+export const ContentStatusStylesMap: {
+  [key in ContentStatus]: any;
+} = {
+  [ContentStatus.EXTENSION]: extensionBoxStyles,
+  [ContentStatus.STORE]: storeBoxStyles,
+  [ContentStatus.COIN]: coinBoxStyles,
+  [ContentStatus.PENDING]: pendingBoxStyles,
+  [ContentStatus.IN_SESSION]: inSessionBoxStyles,
+  [ContentStatus.PRIVATE]: css``,
+  [ContentStatus.SHARE]: css``,
+  [ContentStatus.CLUB]: css``,
 };

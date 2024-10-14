@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import MaunalContentBox from "@/Cabinet/components/Home/ManualContentBox";
+import ManualContentBox from "@/Cabinet/components/Home/ManualContentBox";
 import ManualModal from "@/Cabinet/components/Modals/ManualModal/ManualModal";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
@@ -36,6 +36,31 @@ const ServiceManual = ({
 
       <WrapSectionStyled>
         <p className="subtitle">
+          당신의 사물함
+          <br />
+          당신의 방식으로,
+        </p>
+
+        <InfoSectionStyled className="section">
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.COIN)}
+          >
+            <ManualContentBox contentStatus={ContentStatus.COIN} />
+            <p className="redColor">new</p>
+          </article>
+          <TicketWrapperStyled>
+            <article
+              className="article"
+              onClick={() => openModal(ContentStatus.STORE)}
+            >
+              <ManualContentBox contentStatus={ContentStatus.STORE} />
+              <p className="redColor">new</p>
+            </article>
+          </TicketWrapperStyled>
+        </InfoSectionStyled>
+
+        <p className="subtitle">
           가능성의 확장
           <br />
           개인, 공유, 동아리 사물함.
@@ -45,53 +70,19 @@ const ServiceManual = ({
             className="article"
             onClick={() => openModal(ContentStatus.PRIVATE)}
           >
-            <MaunalContentBox contentStatus={ContentStatus.PRIVATE} />
+            <ManualContentBox contentStatus={ContentStatus.PRIVATE} />
           </article>
           <article
             className="article"
             onClick={() => openModal(ContentStatus.SHARE)}
           >
-            <MaunalContentBox contentStatus={ContentStatus.SHARE} />
+            <ManualContentBox contentStatus={ContentStatus.SHARE} />
           </article>
           <article
             className="article"
             onClick={() => openModal(ContentStatus.CLUB)}
           >
-            <MaunalContentBox contentStatus={ContentStatus.CLUB} />
-          </article>
-        </InfoSectionStyled>
-        <p className="subtitle">
-          공정한 대여를 위한
-          <br />
-          새로운 사물함 서비스.
-        </p>
-        <InfoSectionStyled className="section">
-          <article
-            className="article"
-            onClick={() => openModal(ContentStatus.PENDING)}
-          >
-            <MaunalContentBox contentStatus={ContentStatus.PENDING} />
-            <p className="redColor">new</p>
-          </article>
-          <article
-            className="article"
-            onClick={() => openModal(ContentStatus.IN_SESSION)}
-          >
-            <MaunalContentBox contentStatus={ContentStatus.IN_SESSION} />
-            <p className="redColor">new</p>
-          </article>
-        </InfoSectionStyled>
-        <p className="subtitle">
-          사물함을 더 오래
-          <br />
-          사용할 수 있는 방법.
-        </p>
-        <InfoSectionStyled className="section">
-          <article
-            className="article"
-            onClick={() => openModal(ContentStatus.EXTENSION)}
-          >
-            <MaunalContentBox contentStatus={ContentStatus.EXTENSION} />
+            <ManualContentBox contentStatus={ContentStatus.CLUB} />
           </article>
         </InfoSectionStyled>
       </WrapSectionStyled>
@@ -106,6 +97,15 @@ const ServiceManual = ({
     </WrapperStyled>
   );
 };
+
+const TicketWrapperStyled = styled.div`
+  width: 620px;
+  &:hover {
+    transition: all 0.3s ease-in-out;
+    transform: translateY(-5px);
+    filter: drop-shadow(10px 10px 10px var(--left-nav-border-shadow-color));
+  }
+`;
 
 const WrapperStyled = styled.div`
   display: flex;

@@ -27,7 +27,7 @@ export const SlackAlarmTemplates: ISlackAlarmTemplate[] = [
 :happy_ccabi: 안녕하세요. Cabi 팀입니다! :happy_ccabi:
 :sad_ccabi: 서비스 개선을 위해, 서버를 점검하게 되었습니다. :sad_ccabi:
 :file_cabinet: 서비스 개선과 관련한 사항은  Cabi 채널 에서, :file_cabinet:
-:hammer_and_wrench: 보관물 관련 사항은 *데스크에 직접 문의*해주세요! :hammer_and_wrench:
+:hammer_and_wrench: 보관물 관련 사항은 *데스크에 직접 문의* 해주세요! :hammer_and_wrench:
 
 점검 일자 : 2024년 04월 02일 (화요일)
 점검 시간 : 15시 10분 ~ 완료 공지 시점까지
@@ -179,9 +179,9 @@ export const SlackAlarmTemplates: ISlackAlarmTemplate[] = [
   {
     title: "연체",
     content: `[CABI] 안녕하세요! :embarrassed_cabi:
-현재 이용 중이신 사물함이 연체인 것으로 확인되어 연락드립니다.
-장기간 연체시 서비스 이용에 대한 페널티, 혹은 :tig:가 부여될 수 있음을 인지해주세요!
-사물함의 대여 기간을 확인하신 후 반납 부탁드립니다.
-항상 저희 서비스를 이용해 주셔서 감사합니다:)`,
+    현재 이용 중이신 사물함이 *연체* 된 것으로 확인되어 연락드립니다.
+    *3주(21일) 이상 연체 시 미회수된 개인 물품은 폐기될 수 있음을 인지해 주세요!*
+    사물함의 대여 기간을 확인하신 후 반납 부탁드립니다.
+    항상 저희 서비스를 이용해 주셔서 감사합니다:)`,
   },
 ];
