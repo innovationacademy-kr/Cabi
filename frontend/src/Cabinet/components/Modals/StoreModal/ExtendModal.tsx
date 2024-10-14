@@ -1,3 +1,4 @@
+import { HttpStatusCode } from "axios";
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -32,7 +33,6 @@ import {
   axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
 import { getExtendedDateString } from "@/Cabinet/utils/dateUtils";
-import { HttpStatusCode } from "axios";
 
 const ExtendModal: React.FC<{
   onClose: () => void;
@@ -230,7 +230,7 @@ const ExtendModal: React.FC<{
         setModalTitle(defaultFailureModalTitle);
         setModalContents(noItemMsg);
         setUrl("/store");
-      } else if (error.response.status === 403) {
+      } else if (error.response.status === HttpStatusCode.Forbidden) {
         setModalTitle(defaultFailureModalTitle);
         setModalContents(overdueMsg);
       } else {

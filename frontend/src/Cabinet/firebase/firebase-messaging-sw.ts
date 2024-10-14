@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import {
+  Messaging,
   deleteToken,
   getMessaging,
   getToken,
@@ -18,7 +19,11 @@ export const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+// const messaging = getMessaging(app);
+let messaging: null | Messaging = null;
+if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
+  messaging = getMessaging(app);
+}
 
 // FCM APP을 등록 후 브라우저 알림 권한을 요청하고, 토큰을 반환
 export const requestFcmAndGetDeviceToken = async (): Promise<string | null> => {
@@ -32,6 +37,10 @@ export const requestFcmAndGetDeviceToken = async (): Promise<string | null> => {
 
   console.log("알림 권한이 허용됨");
 
+  if (!messaging) {
+    console.log("브라우저 환경이 아닙니다."); // TODO :
+    return null;
+  }
   const token = await getToken(messaging, {
     vapidKey: import.meta.env.VITE_FIREBASE_APP_VAPID_KEY,
   });
@@ -49,6 +58,11 @@ export const requestFcmAndGetDeviceToken = async (): Promise<string | null> => {
 
 // FCM 토큰 제거 및 브라우저 알람 권한 해제
 export const deleteFcmToken = async (): Promise<void> => {
+  if (!messaging) {
+    console.log("브라우저 환경이 아닙니다."); // TODO :
+    return;
+  }
+  
   await deleteToken(messaging);
   console.log("Token deleted.");
 };
