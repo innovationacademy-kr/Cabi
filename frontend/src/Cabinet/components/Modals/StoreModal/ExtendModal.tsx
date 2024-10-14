@@ -32,6 +32,7 @@ import {
   axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
 import { getExtendedDateString } from "@/Cabinet/utils/dateUtils";
+import { HttpStatusCode } from "axios";
 
 const ExtendModal: React.FC<{
   onClose: () => void;
@@ -225,7 +226,7 @@ const ExtendModal: React.FC<{
       setMyLentInfo(myLentInfoData.data);
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      if (error.response.status === 400) {
+      if (error.response.status === HttpStatusCode.BadRequest) {
         setModalTitle(defaultFailureModalTitle);
         setModalContents(noItemMsg);
         setUrl("/store");
