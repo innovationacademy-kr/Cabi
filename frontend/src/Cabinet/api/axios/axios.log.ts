@@ -1,4 +1,5 @@
 import { captureException } from "@sentry/react";
+import { HttpStatusCode } from "axios";
 import ErrorType from "@/Cabinet/types/enum/error.type.enum";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
@@ -12,6 +13,7 @@ export const logAxiosError = (
   errorMsg: string,
   isAdmin = false
 ) => {
+  if (error.response?.status === HttpStatusCode.BadRequest) return;
   error.message = (isAdmin ? "[Admin] " : "") + errorMsg;
   captureException(error, {
     tags: {

@@ -62,7 +62,7 @@ export const deleteFcmToken = async (): Promise<void> => {
     console.log("브라우저 환경이 아닙니다."); // TODO :
     return;
   }
-  
+
   await deleteToken(messaging);
   console.log("Token deleted.");
 };
