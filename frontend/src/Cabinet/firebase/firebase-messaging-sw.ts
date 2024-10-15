@@ -37,7 +37,7 @@ export const requestFcmAndGetDeviceToken = async (): Promise<string | null> => {
   console.log("알림 권한이 허용됨");
 
   if (!messaging) {
-    console.log("브라우저 환경이 아닙니다."); // TODO :
+    console.log("토큰 생성 또는 갱신 실패");
     return null;
   }
   const token = await getToken(messaging, {
@@ -58,7 +58,7 @@ export const requestFcmAndGetDeviceToken = async (): Promise<string | null> => {
 // FCM 토큰 제거 및 브라우저 알람 권한 해제
 export const deleteFcmToken = async (): Promise<void> => {
   if (!messaging) {
-    console.log("브라우저 환경이 아닙니다."); // TODO :
+    console.log("토큰 제거 실패");
     return;
   }
 
