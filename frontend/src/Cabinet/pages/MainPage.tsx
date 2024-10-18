@@ -123,66 +123,65 @@ const MainPage = () => {
     setIsCurrentSectionRender(false);
   };
 
-  return (
-    <>
-      {isLoading && <LoadingAnimation />}
-      <WrapperStyled
-        ref={mainWrapperRef}
-        onTouchStart={(e: React.TouchEvent) => {
-          touchStartPosX.current = e.changedTouches[0].screenX;
-          touchStartPosY.current = e.changedTouches[0].screenY;
-        }}
-        onTouchEnd={(e: React.TouchEvent) => {
-          swipeSection(
-            e.changedTouches[0].screenX,
-            e.changedTouches[0].screenY
-          );
-        }}
-      >
-        <AlertStyled>
-          {currentFloorSectionNames.includes(currentSectionName) &&
-            !isClubSection && (
-              <IconWrapperStyled
-                onClick={handleAlertIconBtn}
-                disabled={
-                  sectionList[currentSectionIndex]?.alarmRegistered
-                    ? true
-                    : false
-                }
-              >
-                {sectionList[currentSectionIndex]?.alarmRegistered === true ? (
-                  <FilledHeartIcon />
-                ) : (
-                  <LineHeartIcon />
-                )}
-              </IconWrapperStyled>
-            )}
-        </AlertStyled>
-        <SectionPaginationContainer />
-        <CabinetListWrapperStyled>
-          <CabinetListContainer isAdmin={false} />
-          {currentSectionName !== SectionType.elevator &&
-            currentSectionName !== SectionType.stairs && (
-              <RefreshButtonStyled
-                className="cabiButton"
-                title="새로고침"
-                id="refreshButton"
-                onClick={refreshCabinetList}
-              >
-                새로고침
-              </RefreshButtonStyled>
-            )}
-        </CabinetListWrapperStyled>
-        {showSectionAlertModal && (
-          <SectionAlertModal
-            currentSectionName={currentSectionName}
-            setShowSectionAlertModal={setShowSectionAlertModal}
-            currentBuilding={currentBuilding}
-            currentFloor={currentFloor}
-          />
-        )}
-      </WrapperStyled>
-    </>
+  return isLoading ? (
+    <LoadingAnimation />
+  ) : (
+    <WrapperStyled
+      ref={mainWrapperRef}
+      onTouchStart={(e: React.TouchEvent) => {
+        touchStartPosX.current = e.changedTouches[0].screenX;
+        touchStartPosY.current = e.changedTouches[0].screenY;
+      }}
+      onTouchEnd={(e: React.TouchEvent) => {
+        swipeSection(
+          e.changedTouches[0].screenX,
+          e.changedTouches[0].screenY
+        );
+      }}
+    >
+      <AlertStyled>
+        {currentFloorSectionNames.includes(currentSectionName) &&
+          !isClubSection && (
+            <IconWrapperStyled
+              onClick={handleAlertIconBtn}
+              disabled={
+                sectionList[currentSectionIndex]?.alarmRegistered
+                  ? true
+                  : false
+              }
+            >
+              {sectionList[currentSectionIndex]?.alarmRegistered === true ? (
+                <FilledHeartIcon />
+              ) : (
+                <LineHeartIcon />
+              )}
+            </IconWrapperStyled>
+          )}
+      </AlertStyled>
+      <SectionPaginationContainer />
+      <CabinetListWrapperStyled>
+        <CabinetListContainer isAdmin={false} />
+        {currentSectionName !== SectionType.elevator &&
+          currentSectionName !== SectionType.stairs && (
+            <RefreshButtonStyled
+              className="cabiButton"
+              title="새로고침"
+              id="refreshButton"
+              onClick={refreshCabinetList}
+            >
+              새로고침
+            </RefreshButtonStyled>
+          )}
+      </CabinetListWrapperStyled>
+      {showSectionAlertModal && (
+        <SectionAlertModal
+          currentSectionName={currentSectionName}
+          setShowSectionAlertModal={setShowSectionAlertModal}
+          currentBuilding={currentBuilding}
+          currentFloor={currentFloor}
+        />
+      )}
+    </WrapperStyled>
   );
 };
 
