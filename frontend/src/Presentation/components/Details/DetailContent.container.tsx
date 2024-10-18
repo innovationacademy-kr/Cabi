@@ -10,15 +10,10 @@ import {
   getAdminPresentationSchedule,
 } from "@/Presentation/api/axios/axios.custom";
 import {
-  calculateAvailableDaysInWeeks,
   makeIDateObj,
   toISOStringwithTimeZone,
 } from "@/Presentation/utils/dateUtils";
-import { WEDNESDAY } from "@/Presentation/constants/dayOfTheWeek";
-import {
-  AVAILABLE_WEEKS,
-  FUTURE_MONTHS_TO_DISPLAY,
-} from "@/Presentation/constants/policy";
+import { FUTURE_MONTHS_TO_DISPLAY } from "@/Presentation/constants/policy";
 
 export interface IDate {
   year: string;
@@ -38,30 +33,6 @@ const createEmptyPresentation = (day: Date) => ({
   presentationStatus: null,
   presentationLocation: null,
 });
-
-const findExistingPresentation = (
-  presentations: IPresentationScheduleDetailInfo[],
-  day: Date
-) => {
-  return presentations.find((p) => {
-    const presentationDate = new Date(p.dateTime);
-    return (
-      presentationDate.getFullYear() === day.getFullYear() &&
-      presentationDate.getMonth() === day.getMonth() &&
-      presentationDate.getDate() === day.getDate()
-    );
-  });
-};
-
-const mergePresentationsWithDays = (
-  presentations: IPresentationScheduleDetailInfo[],
-  days: Date[]
-) => {
-  return days.map((day) => {
-    const existingPresentation = findExistingPresentation(presentations, day);
-    return existingPresentation || createEmptyPresentation(day);
-  });
-};
 
 const DetailContentContainer = () => {
   const [currentDate, setCurrentDate] = useState<IDate | null>(null);
@@ -105,21 +76,13 @@ const DetailContentContainer = () => {
         requestDate.year,
         requestDate.month
       );
-      const availableDays = calculateAvailableDaysInWeeks(
-        new Date(
-          parseInt(requestDate.year),
-          parseInt(requestDate.month) - 1,
-          1
-        ),
-        AVAILABLE_WEEKS,
-        WEDNESDAY,
-        1
+      const presentationInfo = response.data.forms.map(
+        (info: IPresentationScheduleDetailInfo) =>
+          info.category === "DUMMY"
+            ? createEmptyPresentation(new Date(info.dateTime))
+            : info
       );
-      const mergedPresentationInfo = mergePresentationsWithDays(
-        response.data.forms as IPresentationScheduleDetailInfo[],
-        availableDays
-      );
-      setPresentationDetailInfo(mergedPresentationInfo);
+      setPresentationDetailInfo(presentationInfo);
     } catch (error) {
       console.error("Error fetching presentation schedule:", error);
     }
