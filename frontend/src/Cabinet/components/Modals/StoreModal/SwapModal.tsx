@@ -21,6 +21,7 @@ import {
   axiosMyLentInfo,
   axiosUseItem,
 } from "@/Cabinet/api/axios/axios.custom";
+import { HttpStatusCode } from "axios";
 
 const SwapModal: React.FC<{
   lentType: string; // 현재 클릭한 사물함 종류
@@ -74,7 +75,7 @@ const SwapModal: React.FC<{
       }
     } catch (error: any) {
       setModalTitle("이사권 사용실패");
-      if (error.response.status === 400) {
+      if (error.response.status === HttpStatusCode.BadRequest) {
         setModalContent(
           "현재 이사권을 보유하고 있지 않습니다.\n이사권은 까비상점에서 구매하실 수 있습니다."
         );

@@ -2,9 +2,9 @@ import {
   deleteFcmToken,
   requestFcmAndGetDeviceToken,
 } from "@/Cabinet/firebase/firebase-messaging-sw";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import AnnounceTemplate from "@/Cabinet/components/Announce/AnnounceTemplate";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
@@ -15,10 +15,7 @@ import {
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const PostLogin = (): JSX.Element => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isValidToken, setIsValidToken] = useState<boolean>(false);
-  const [myInfo, setMyInfo] = useRecoilState(userState);
-
+  const setMyInfo = useSetRecoilState(userState);
   const setUser = useSetRecoilState<UserDto>(userState);
   const navigate = useNavigate();
   const token = getCookie("access_token");
@@ -27,7 +24,6 @@ const PostLogin = (): JSX.Element => {
     try {
       const { data: myInfo } = await axiosMyInfo();
       setUser(myInfo);
-      setIsValidToken(true);
       if (myInfo.alarmTypes?.push && myInfo.isDeviceTokenExpired) {
         await deleteFcmToken();
         const deviceToken = await requestFcmAndGetDeviceToken();

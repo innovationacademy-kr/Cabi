@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import SlackNotiSearchBarList from "@/Cabinet/components/SlackNoti/SlackNotiSearchBarList";
+import SlackAlarmSearchBarList from "@/Cabinet/components/SlackAlarm/SlackAlarmSearchBarList";
 import { ISlackChannel, SlackChannels } from "@/Cabinet/assets/data/SlackAlarm";
 import { axiosSearchByIntraId } from "@/Cabinet/api/axios/axios.custom";
 import useDebounce from "@/Cabinet/hooks/useDebounce";
 import useOutsideClick from "@/Cabinet/hooks/useOutsideClick";
 
-const SlackNotiSearchBar = ({
+const SlackAlarmSearchBar = ({
   searchInput,
   renderReceiverInput,
 }: {
@@ -119,12 +119,12 @@ const SlackNotiSearchBar = ({
           onFocus={() => {
             setOnFocus(true);
           }}
-          onChange={() => debounce("slackNotiSearch", typeSearchInput, 300)}
+          onChange={() => debounce("SlackAlarmSearch", typeSearchInput, 300)}
           onKeyDown={handleInputKey}
         />
         {onFocus && searchInput.current?.value && totalLength > 0 && (
           <>
-            <SlackNotiSearchBarList
+            <SlackAlarmSearchBarList
               searchListById={searchListById}
               searchListByChannel={searchListByChannel}
               searchWord={searchValue}
@@ -158,4 +158,4 @@ const FormInputStyled = styled.input`
   }
 `;
 
-export default SlackNotiSearchBar;
+export default SlackAlarmSearchBar;

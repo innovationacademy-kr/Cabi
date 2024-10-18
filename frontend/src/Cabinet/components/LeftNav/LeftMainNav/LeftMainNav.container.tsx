@@ -128,8 +128,8 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
-  const onClickSlackNotiButton = () => {
-    navigator("slack-notification");
+  const onClickSlackAlarmButton = () => {
+    navigator("slack-alarm");
     closeAll();
   };
 
@@ -182,7 +182,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickFloorButton={onClickFloorButton}
       onClickSearchButton={onClickSearchButton}
       onClickLogoutButton={onClickLogoutButton}
-      onClickSlackNotiButton={onClickSlackNotiButton}
+      onClickSlackAlarmButton={onClickSlackAlarmButton}
       onClickAdminClubButton={onClickAdminClubButton}
       onClickMainClubButton={onClickMainClubButton}
       onClickProfileButton={onClickProfileButton}
