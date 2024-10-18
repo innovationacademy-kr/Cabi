@@ -21,9 +21,9 @@ const RecentPresentation = ({
         ...response.data.upcoming,
       ]);
     } catch (error: any) {
-      // TODO
+      // TODO: 추가해야함^^
     } finally {
-      // TODO
+      // TODO: 추가해야함^^
     }
   };
 

@@ -118,9 +118,11 @@ const DropdownSelectionBoxStyled = styled.div`
 
 const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
   width: 100%;
+  height: 400%;
   display: flex;
   flex-direction: column;
   position: absolute;
+  overflow-y: auto;
   top: 110%;
   z-index: 99;
   ${({ isVisible }) =>
@@ -143,9 +145,8 @@ const DropdownItemStyled = styled.div<{
   border: 1px solid var(--line-color);
   border-width: 0px 1px 1px 1px;
   width: 100%;
-  height: 60px;
   text-align: start;
-  padding-left: 20px;
+  padding: 15px 20px;
   font-size: 1.125rem;
   color: ${(
     { isSelected, isDisabled } // 비활성화 된 항목은 --capsule-btn-border-color 로 띄우고 클릭 못하게

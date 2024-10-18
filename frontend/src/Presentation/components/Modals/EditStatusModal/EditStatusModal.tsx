@@ -1,8 +1,9 @@
-import { format } from "date-fns";
+import { format, startOfMonth, endOfMonth, differenceInDays, addDays } from "date-fns";
 import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
+import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import Dropdown, {
   IDropdownOptions,
   IDropdownProps,
@@ -25,16 +26,11 @@ import {
   axiosUpdatePresentationStatus,
 } from "@/Presentation/api/axios/axios.custom";
 import {
-  calculateAvailableDaysInWeeks,
   filterInvalidDates,
 } from "@/Presentation/utils/dateUtils";
-import { WEDNESDAY } from "@/Presentation/constants/dayOfTheWeek";
-import {
-  AVAILABLE_WEEKS,
-  FUTURE_MONTHS_TO_DISPLAY,
-} from "@/Presentation/constants/policy";
 
 interface EditStatusModalProps {
+  list: IPresentationScheduleDetailInfo[] | null;
   closeModal: React.MouseEventHandler;
 }
 
@@ -50,7 +46,7 @@ const floorOptions: IDropdownOptions[] = [
   { name: "3층", value: PresentationLocation.THIRD },
 ];
 
-const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
+const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
   const [currentPresentation, setCurrentPresentation] = useRecoilState(
     currentPresentationState
   );
@@ -158,6 +154,19 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
     }
   };
 
+  const getMonthlyDates = (): Date[] => {
+    const result: Date[] = [];
+    const now = new Date(list?.[0]?.dateTime || Date.now());
+    const start = startOfMonth(now);
+    const end = endOfMonth(now);
+    const numberOfDays = differenceInDays(end, start) + 1;
+    for (let i = 0; i < numberOfDays; i++) {
+      const currentDate = addDays(start, i);
+      result.push(currentDate);
+    }
+    return result;
+  }
+
   useEffect(() => {
     getInvalidDates();
   }, []);
@@ -165,12 +174,7 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   useEffect(() => {
     if (!currentPresentation) return;
     // NOTE: 발표 가능한 날짜들을 계산
-    const availableDates: Date[] = calculateAvailableDaysInWeeks(
-      new Date(),
-      AVAILABLE_WEEKS,
-      WEDNESDAY,
-      FUTURE_MONTHS_TO_DISPLAY
-    );
+    const availableDates: Date[] = getMonthlyDates();
     // NOTE: 발표 가능한 날짜 중 유효하지 않은 날짜를 필터링
     const availableDatesFiltered: Date[] = filterInvalidDates(
       availableDates,
