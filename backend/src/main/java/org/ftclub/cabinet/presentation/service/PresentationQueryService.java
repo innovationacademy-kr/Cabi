@@ -28,7 +28,9 @@ public class PresentationQueryService {
 
 		return presentations.stream()
 				.filter(presentation ->
-						!presentation.getPresentationStatus().equals(PresentationStatus.CANCEL))
+						!presentation.getPresentationStatus().equals(PresentationStatus.CANCEL)
+								&& !presentation.getCategory().equals(Category.DUMMY)
+				)
 				.collect(Collectors.toList());
 	}
 
@@ -53,7 +55,7 @@ public class PresentationQueryService {
 	public List<Presentation> getDummyDateBetweenMonth(
 			LocalDateTime now,
 			LocalDateTime localDateTime) {
-		
+
 		List<Presentation> presentations =
 				presentationRepository.findAllByDateTimeBetween(now, localDateTime);
 
