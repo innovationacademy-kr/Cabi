@@ -1,4 +1,3 @@
-import { HttpStatusCode } from "axios";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -19,11 +18,7 @@ import {
 import { PresentationCategoryType } from "@/Presentation/types/enum/presentation.type.enum";
 import useInput, { IValidationResult } from "@/Presentation/hooks/useInput";
 import useInvalidDates from "@/Presentation/hooks/useInvalidDates";
-import { calculateAvailableDaysInWeeks } from "@/Presentation/utils/dateUtils";
-import { WEDNESDAY } from "@/Presentation/constants/dayOfTheWeek";
 import {
-  AVAILABLE_WEEKS,
-  FUTURE_MONTHS_TO_DISPLAY,
   MAX_CONTENT_LENGTH,
   MAX_SUMMARY_LENGTH,
   MAX_TITLE_LENGTH,
@@ -147,20 +142,15 @@ const RegisterPage = () => {
   useEffect(() => {
     const fetchPresentationAbleDates = async () => {
       try {
-        // TODO: 추후에 API 로 변경하기
-        // const response = await axiosGetPresentationAbleDates();
-        // const availableDates = response.data.results;
-        const availableDates = [
-          {
-            dateTime: "2024-10-23T12:04:59",
-          },
-          {
-            dateTime: "2024-10-30T12:04:59",
-          },
-        ];
-        const formattedAvailableDates = availableDates.map(({ dateTime }) => {
-          return format(new Date(dateTime), "M/d");
-        });
+        // TODO: BE(ableDates -> results) 변경 요청
+        const response = await axiosGetPresentationAbleDates();
+        const availableDates = response.data.ableDates;
+        const formattedAvailableDates = availableDates.map(
+          (dateTime: string) => {
+            console.log(dateTime);
+            return format(new Date(dateTime), "M/d");
+          }
+        );
         setAvailableDates(formattedAvailableDates);
       } catch (error) {
         console.error("Failed to get able dates", error);

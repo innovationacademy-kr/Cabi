@@ -104,7 +104,10 @@ const DetailTableContainer = ({
         tableHeadEntries={tableHeadEntries}
       />
       {adminModal.statusModal && (
-        <EditStatusModal closeModal={() => closeAdminModal("statusModal")} />
+        <EditStatusModal
+          list={list}
+          closeModal={() => closeAdminModal("statusModal")}
+        />
       )}
     </>
   );

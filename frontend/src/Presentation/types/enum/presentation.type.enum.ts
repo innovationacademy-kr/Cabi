@@ -25,4 +25,5 @@ export enum PresentationCategoryType {
   ETC = "ETC",
   TASK = "TASK",
   STUDY = "STUDY",
+  DUMMY = "DUMMY",
 }
