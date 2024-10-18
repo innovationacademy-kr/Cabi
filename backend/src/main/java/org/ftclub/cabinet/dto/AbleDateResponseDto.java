@@ -9,5 +9,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AbleDateResponseDto {
 
-	private List<LocalDateTime> ableDates;
+	private List<LocalDateTime> results;
 }
