@@ -287,10 +287,13 @@ public class PresentationService {
 	}
 
 	public AbleDateResponseDto getAbleDate() {
-		LocalDateTime firstDateOfMonth = generateFirstLocalDateTime();
+		LocalDateTime now = LocalDateTime.now()
+				.withHour(0)
+				.withMinute(0)
+				.withSecond(0);
 		List<Presentation> dummyDates =
-				presentationQueryService.getDummyDateBetweenMonth(firstDateOfMonth,
-						firstDateOfMonth.plusMonths(PRESENTATION_PERIOD));
+				presentationQueryService.getDummyDateBetweenMonth(now,
+						now.plusMonths(PRESENTATION_PERIOD));
 
 		List<LocalDateTime> result =
 				dummyDates.stream()
@@ -298,13 +301,5 @@ public class PresentationService {
 						.collect(Collectors.toList());
 
 		return new AbleDateResponseDto(result);
-	}
-
-	private LocalDateTime generateFirstLocalDateTime() {
-		return LocalDateTime.now()
-				.withDayOfMonth(1)
-				.withHour(0)
-				.withMinute(0)
-				.withSecond(0);
 	}
 }
