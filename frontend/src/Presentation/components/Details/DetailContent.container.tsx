@@ -4,10 +4,7 @@ import { useRecoilState } from "recoil";
 import { padToNDigits } from "@/Cabinet/utils/dateUtils";
 import { isCurrentModalState } from "@/Presentation/recoil/atoms";
 import DetailContent from "@/Presentation/components/Details/DetailContent";
-import {
-  IExtendedPresentationScheduleDetailInfo,
-  IPresentationScheduleDetailInfo,
-} from "@/Presentation/types/dto/presentation.dto";
+import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import {
   axiosGetPresentationSchedule,
   getAdminPresentationSchedule,
@@ -23,19 +20,6 @@ export interface IDate {
   month: string;
   day: string;
 }
-
-const createEmptyPresentation = (day: Date) => ({
-  id: null,
-  subject: null,
-  summary: null,
-  detail: null,
-  dateTime: toISOStringwithTimeZone(day),
-  category: null,
-  userName: null,
-  presentationTime: null,
-  presentationStatus: null,
-  presentationLocation: null,
-});
 
 const DetailContentContainer = () => {
   const [currentDate, setCurrentDate] = useState<IDate | null>(null);
@@ -79,12 +63,7 @@ const DetailContentContainer = () => {
         requestDate.year,
         requestDate.month
       );
-      const presentationInfo = response.data.forms.map(
-        (info: IExtendedPresentationScheduleDetailInfo) =>
-          info.category === "DUMMY"
-            ? createEmptyPresentation(new Date(info.dateTime))
-            : info
-      );
+      const presentationInfo = response.data.forms;
       setPresentationDetailInfo(presentationInfo);
     } catch (error) {
       console.error("Error fetching presentation schedule:", error);

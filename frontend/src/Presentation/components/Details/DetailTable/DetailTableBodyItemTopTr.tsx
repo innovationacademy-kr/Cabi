@@ -79,10 +79,13 @@ const DetailTableBodyItemTopTr = ({
   return (
     <>
       <TopTrStyled
+        isAdmin={isAdmin}
         itemStatus={itemInfo.itemStatus}
         id={isItemOpen ? "selected" : ""}
         onClick={() => {
-          !itemInfo.itemStatus && handleItemClick(itemInfo.item);
+          ((isAdmin && itemInfo.itemStatus !== itemType.NO_EVENT_PAST) ||
+            (!isAdmin && !itemInfo.itemStatus)) &&
+            handleItemClick(itemInfo.item);
         }}
         open={isItemOpen}
       >
@@ -156,6 +159,7 @@ const DetailTableBodyItemTopTr = ({
 export default DetailTableBodyItemTopTr;
 
 const TopTrStyled = styled.tr<{
+  isAdmin: boolean;
   itemStatus: itemType;
   open?: boolean;
 }>`
@@ -203,8 +207,16 @@ const TopTrStyled = styled.tr<{
       font-size: 1rem;
     }
     &:hover {
-      cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
-      background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
+      cursor: ${(props) => {
+        if (props.isAdmin)
+          return props.itemStatus === itemType.NO_EVENT_PAST ? "" : "pointer";
+        else return props.itemStatus ? "" : "pointer";
+      }};
+      background-color: ${(props) => {
+        if (props.isAdmin)
+          return props.itemStatus === itemType.NO_EVENT_PAST ? "" : "#91B5FB";
+        else return props.itemStatus ? "" : "#91B5FB";
+      }};
     }
   }
   @media (max-width: 1150px) {
