@@ -4,7 +4,10 @@ import { useRecoilState } from "recoil";
 import { padToNDigits } from "@/Cabinet/utils/dateUtils";
 import { isCurrentModalState } from "@/Presentation/recoil/atoms";
 import DetailContent from "@/Presentation/components/Details/DetailContent";
-import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
+import {
+  IExtendedPresentationScheduleDetailInfo,
+  IPresentationScheduleDetailInfo,
+} from "@/Presentation/types/dto/presentation.dto";
 import {
   axiosGetPresentationSchedule,
   getAdminPresentationSchedule,
@@ -77,7 +80,7 @@ const DetailContentContainer = () => {
         requestDate.month
       );
       const presentationInfo = response.data.forms.map(
-        (info: IPresentationScheduleDetailInfo) =>
+        (info: IExtendedPresentationScheduleDetailInfo) =>
           info.category === "DUMMY"
             ? createEmptyPresentation(new Date(info.dateTime))
             : info
