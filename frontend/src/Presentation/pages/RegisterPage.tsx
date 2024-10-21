@@ -146,7 +146,6 @@ const RegisterPage = () => {
         const availableDates = response.data.results;
         const formattedAvailableDates = availableDates.map(
           (dateTime: string) => {
-            console.log(dateTime);
             return format(new Date(dateTime), "M/d");
           }
         );
