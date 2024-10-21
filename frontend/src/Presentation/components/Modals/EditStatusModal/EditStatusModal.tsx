@@ -1,9 +1,14 @@
-import { format, startOfMonth, endOfMonth, differenceInDays, addDays } from "date-fns";
+import {
+  addDays,
+  differenceInDays,
+  endOfMonth,
+  format,
+  startOfMonth,
+} from "date-fns";
 import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Button from "@/Cabinet/components/Common/Button";
-import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import Dropdown, {
   IDropdownOptions,
   IDropdownProps,
@@ -17,6 +22,7 @@ import {
   currentPresentationState,
   isCurrentModalState,
 } from "@/Presentation/recoil/atoms";
+import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import {
   PresentationLocation,
   PresentationStatusType,
@@ -25,9 +31,7 @@ import {
   axiosGetInvalidDates,
   axiosUpdatePresentationStatus,
 } from "@/Presentation/api/axios/axios.custom";
-import {
-  filterInvalidDates,
-} from "@/Presentation/utils/dateUtils";
+import { filterInvalidDates } from "@/Presentation/utils/dateUtils";
 
 interface EditStatusModalProps {
   list: IPresentationScheduleDetailInfo[] | null;
@@ -88,9 +92,12 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
       setIsLocationDropdownOpen(false);
     },
   };
+
   const datesDropdownProps = {
     options: datesDropdownOptions,
-    defaultValue: datesDropdownOptions[0]?.name,
+    defaultValue: currentPresentation?.dateTime
+      ? format(currentPresentation?.dateTime, "M월 d일")
+      : "",
     defaultImageSrc: "",
     onChangeValue: (val: string) => {
       setPresentationDate(val);
@@ -102,6 +109,7 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
       setIsLocationDropdownOpen(false);
     },
   };
+
   const locationDropdownProps = {
     options: floorOptions,
     defaultValue:
@@ -122,14 +130,14 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
 
   const tryEditPresentationStatus = async (e: React.MouseEvent) => {
     if (!currentPresentation || !currentPresentation.id) return;
-    const data = new Date(presentationDate);
+    const date = new Date(presentationDate);
     // NOTE: Date 객체의 시간은 UTC 기준이므로 한국 시간 (GMT + 9) 으로 변환, 이후 발표 시작 시간인 14시를 더해줌
-    data.setHours(9 + 14);
+    date.setHours(9 + 14);
 
     try {
       await axiosUpdatePresentationStatus(
         currentPresentation.id,
-        data.toISOString(),
+        date.toISOString(),
         presentationStatus,
         location
       );
@@ -146,7 +154,11 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
   const getInvalidDates = async () => {
     try {
       const response = await axiosGetInvalidDates();
-      setInvalidDates(response.data.invalidDateList);
+      setInvalidDates(
+        response.data.invalidDateList.filter(
+          (date: string) => date !== currentPresentation?.dateTime
+        )
+      );
     } catch (error: any) {
       setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
@@ -165,7 +177,7 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
       result.push(currentDate);
     }
     return result;
-  }
+  };
 
   useEffect(() => {
     getInvalidDates();
