@@ -12,6 +12,7 @@ import DetailTableBodyItemBottomTr from "@/Presentation/components/Details/Detai
 import DetailTableBodyItemMiddleTr from "@/Presentation/components/Details/DetailTable/DetailTableBodyItemMiddleTr";
 import DetailTableBodyItemTopTr from "@/Presentation/components/Details/DetailTable/DetailTableBodyItemTopTr";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
+import { PresentationStatusType } from "@/Presentation/types/enum/presentation.type.enum";
 
 export interface IItem {
   item: IPresentationScheduleDetailInfo;
@@ -56,7 +57,11 @@ const DetailTableBodyItem = ({
   }, [clickedItem]);
 
   const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
-    if (isAdmin && itemInfo.itemStatus !== itemType.NO_EVENT_PAST) {
+    if (
+      isAdmin &&
+      itemInfo.itemStatus !== itemType.NO_EVENT_PAST &&
+      itemInfo.item.presentationStatus !== PresentationStatusType.CANCEL
+    ) {
       setCurrentPresentation({
         id: item.id,
         dateTime: item.dateTime,

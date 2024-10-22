@@ -10,6 +10,7 @@ import {
   PresentationStatusTypeLabelMap,
 } from "@/Presentation/assets/data/maps";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
+import { PresentationStatusType } from "@/Presentation/types/enum/presentation.type.enum";
 
 const noEventPhraseDesktop = {
   noEventPast: "수요지식회가 열리지 않았습니다",
@@ -82,9 +83,12 @@ const DetailTableBodyItemTopTr = ({
         isAdmin={isAdmin}
         itemStatus={itemInfo.itemStatus}
         id={isItemOpen ? "selected" : ""}
+        presentationStatus={itemInfo.item.presentationStatus}
         onClick={() => {
           ((isAdmin && itemInfo.itemStatus !== itemType.NO_EVENT_PAST) ||
             (!isAdmin && !itemInfo.itemStatus)) &&
+            itemInfo.item.presentationStatus !==
+              PresentationStatusType.CANCEL &&
             handleItemClick(itemInfo.item);
         }}
         open={isItemOpen}
@@ -162,6 +166,7 @@ const TopTrStyled = styled.tr<{
   isAdmin: boolean;
   itemStatus: itemType;
   open?: boolean;
+  presentationStatus: PresentationStatusType | null;
 }>`
   width: 100%;
   text-align: center;
@@ -208,12 +213,16 @@ const TopTrStyled = styled.tr<{
     }
     &:hover {
       cursor: ${(props) => {
-        if (props.isAdmin)
+        if (props.presentationStatus === PresentationStatusType.CANCEL)
+          return "";
+        else if (props.isAdmin)
           return props.itemStatus === itemType.NO_EVENT_PAST ? "" : "pointer";
         else return props.itemStatus ? "" : "pointer";
       }};
       background-color: ${(props) => {
-        if (props.isAdmin)
+        if (props.presentationStatus === PresentationStatusType.CANCEL)
+          return "";
+        else if (props.isAdmin)
           return props.itemStatus === itemType.NO_EVENT_PAST ? "" : "#91B5FB";
         else return props.itemStatus ? "" : "#91B5FB";
       }};
