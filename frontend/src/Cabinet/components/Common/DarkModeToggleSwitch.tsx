@@ -50,13 +50,22 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   }, [displayStyleType]);
 
   const handleToggleChange = useCallback(() => {
-    const newToggleType =
-      displayStyleToggle === DisplayStyleToggleType.LIGHT
-        ? DisplayStyleToggleType.DARK
-        : DisplayStyleToggleType.LIGHT;
+    let newToggleType;
+    if (displayStyleToggle === DisplayStyleToggleType.DEVICE) {
+      newToggleType =
+        displayStyleType === DisplayStyleType.LIGHT
+          ? DisplayStyleToggleType.DARK
+          : DisplayStyleToggleType.LIGHT;
+    } else {
+      newToggleType =
+        displayStyleToggle === DisplayStyleToggleType.LIGHT
+          ? DisplayStyleToggleType.DARK
+          : DisplayStyleToggleType.LIGHT;
+    }
+
     localStorage.setItem("display-style-toggle", newToggleType);
     setDisplayStyleToggle(newToggleType);
-  }, [displayStyleToggle]);
+  }, [displayStyleType]);
 
   return (
     <ToggleWrapperStyled>
