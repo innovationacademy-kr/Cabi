@@ -75,6 +75,8 @@ public class ItemHistory {
 	@Column(name = "USER_ID", nullable = false)
 	private Long userId;
 
+	@Column(name = "AMOUNT", nullable = true)
+	private Long amount;
 
 	protected ItemHistory(long userId, long itemId, LocalDateTime usedAt) {
 		this.userId = userId;
