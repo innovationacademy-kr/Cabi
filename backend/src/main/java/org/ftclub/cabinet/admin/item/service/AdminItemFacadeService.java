@@ -63,6 +63,16 @@ public class AdminItemFacadeService {
 		itemHistoryCommandService.createItemHistories(userIds, item.getId(), now);
 	}
 
+	@Transactional
+	public void assignCoin(List<Long> userIds, Sku sku, Long amount) {
+		Item item = itemQueryService.getBySku(sku);
+		LocalDateTime now = LocalDateTime.now();
+		userIds.forEach(userId -> {
+			userCommandService.updateCoinAmount(userId, amount);
+		});
+		itemHistoryCommandService.createCoinAssignHistory(userIds, item.getId(), now, amount);
+	}
+
 	@Transactional(readOnly = true)
 	public AdminItemHistoryPaginationDto getUserItemHistories(Long userId, Pageable pageable) {
 		Page<ItemHistory> itemHistoryWithItem =

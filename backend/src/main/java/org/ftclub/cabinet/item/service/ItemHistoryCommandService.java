@@ -33,4 +33,21 @@ public class ItemHistoryCommandService {
 		ItemHistory coinCollectItemHistory = ItemHistory.of(userId, itemId, LocalDateTime.now());
 		itemHistoryRepository.save(coinCollectItemHistory);
 	}
+
+	/**
+	 * 관리자가 코인 지급 시 ItemHistory에 기록을 남깁니다
+	 *
+	 * @param userIds
+	 * @param itemId
+	 * @param usedAt
+	 * @param amount
+	 */
+	public void createCoinAssignHistory(List<Long> userIds, Long itemId, LocalDateTime usedAt,
+			Long amount) {
+		List<ItemHistory> itemHistories = userIds.stream()
+				.map(userId -> ItemHistory.coin(userId, itemId, usedAt, amount))
+				.collect(Collectors.toList());
+
+		itemHistoryRepository.saveAll(itemHistories);
+	}
 }
