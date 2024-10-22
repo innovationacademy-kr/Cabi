@@ -142,12 +142,10 @@ const RegisterPage = () => {
   useEffect(() => {
     const fetchPresentationAbleDates = async () => {
       try {
-        // TODO: BE(ableDates -> results) 변경 요청
         const response = await axiosGetPresentationAbleDates();
-        const availableDates = response.data.ableDates;
+        const availableDates = response.data.results;
         const formattedAvailableDates = availableDates.map(
           (dateTime: string) => {
-            console.log(dateTime);
             return format(new Date(dateTime), "M/d");
           }
         );

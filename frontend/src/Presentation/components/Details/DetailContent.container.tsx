@@ -21,19 +21,6 @@ export interface IDate {
   day: string;
 }
 
-const createEmptyPresentation = (day: Date) => ({
-  id: null,
-  subject: null,
-  summary: null,
-  detail: null,
-  dateTime: toISOStringwithTimeZone(day),
-  category: null,
-  userName: null,
-  presentationTime: null,
-  presentationStatus: null,
-  presentationLocation: null,
-});
-
 const DetailContentContainer = () => {
   const [currentDate, setCurrentDate] = useState<IDate | null>(null);
   const [todayDate, setTodayDate] = useState<IDate | null>(null);
@@ -76,12 +63,7 @@ const DetailContentContainer = () => {
         requestDate.year,
         requestDate.month
       );
-      const presentationInfo = response.data.forms.map(
-        (info: IPresentationScheduleDetailInfo) =>
-          info.category === "DUMMY"
-            ? createEmptyPresentation(new Date(info.dateTime))
-            : info
-      );
+      const presentationInfo = response.data.forms;
       setPresentationDetailInfo(presentationInfo);
     } catch (error) {
       console.error("Error fetching presentation schedule:", error);

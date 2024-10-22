@@ -43,6 +43,11 @@ export interface IPresentationScheduleDetailInfo {
   presentationLocation: PresentationLocation | null;
 }
 
+export interface IExtendedPresentationScheduleDetailInfo
+  extends Omit<IPresentationScheduleDetailInfo, "category"> {
+  category: PresentationCategoryType | "DUMMY" | null;
+}
+
 export interface IAnimation {
   min_width: number;
   min_height: number;

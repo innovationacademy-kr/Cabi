@@ -56,7 +56,7 @@ const DetailTableBodyItem = ({
   }, [clickedItem]);
 
   const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
-    if (isAdmin && !itemInfo.itemStatus) {
+    if (isAdmin && itemInfo.itemStatus !== itemType.NO_EVENT_PAST) {
       setCurrentPresentation({
         id: item.id,
         dateTime: item.dateTime,
