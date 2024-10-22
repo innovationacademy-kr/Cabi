@@ -5,6 +5,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationStatus;
@@ -46,6 +47,14 @@ public class PresentationQueryService {
 
 		return presentationRepository.findAllByDateTimeBetweenOrderByDateTime(startDate,
 				endDayDate);
+	}
+
+	public Presentation getPresentationsByDate(LocalDateTime dateTime) {
+		LocalDateTime startOfDate = dateTime.withHour(0).withMinute(0).withSecond(0);
+		LocalDateTime endOfDate = dateTime.withHour(23).withMinute(59).withSecond(59);
+		return presentationRepository.findPresentationByDateTimeBetween(startOfDate,
+						endOfDate)
+				.orElseThrow(ExceptionStatus.INVALID_PRESENTATION_DATE::asServiceException);
 	}
 
 	public Page<Presentation> getPresentationsById(Long id, Pageable pageable) {

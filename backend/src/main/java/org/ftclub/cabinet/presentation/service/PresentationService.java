@@ -62,15 +62,15 @@ public class PresentationService {
 	public void createPresentationForm(Long userId, PresentationFormRequestDto dto) {
 		presentationPolicyService.verifyReservationDate(dto.getDateTime());
 
-		Presentation presentation =
-				Presentation.of(dto.getCategory(), dto.getDateTime(),
-						dto.getPresentationTime(), dto.getSubject(), dto.getSummary(),
-						dto.getDetail());
+		Presentation presentation = presentationQueryService.getPresentationsByDate(
+				dto.getDateTime());
+
+		presentation.updateDummyToUserForm(dto.getCategory(),
+				dto.getPresentationTime(), dto.getDateTime(),
+				dto.getSubject(), dto.getSummary(), dto.getDetail());
+
 		User user = userQueryService.getUser(userId);
-
 		presentation.setUser(user);
-
-		presentationRepository.save(presentation);
 	}
 
 	/**

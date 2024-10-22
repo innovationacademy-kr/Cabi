@@ -85,4 +85,15 @@ public class Presentation {
 		this.dateTime = newDateTime;
 		this.presentationLocation = newLocation;
 	}
+
+	public void updateDummyToUserForm(Category category,
+			PresentationTime presentationTime, LocalDateTime presentationDateTime,
+			String subject, String summary, String detail) {
+		this.category = category;
+		this.presentationTime = presentationTime;
+		this.dateTime = presentationDateTime;
+		this.subject = subject;
+		this.summary = summary;
+		this.detail = detail;
+	}
 }
