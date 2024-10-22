@@ -84,6 +84,13 @@ public class ItemHistory {
 		this.usedAt = usedAt;
 	}
 
+	protected ItemHistory(long userId, long itemId, LocalDateTime assignedAt, Long amount) {
+		this.userId = userId;
+		this.itemId = itemId;
+		this.usedAt = assignedAt;
+		this.amount = amount;
+	}
+
 	/**
 	 * @param userId 아이템을 사용한 유저 ID
 	 * @param itemId 사용된 아이템 ID
@@ -94,6 +101,15 @@ public class ItemHistory {
 		ItemHistory itemHistory = new ItemHistory(userId, itemId, usedAt);
 		if (!itemHistory.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		return itemHistory;
+	}
+
+	public static ItemHistory coin(Long userId, Long itemId, LocalDateTime assignedAt,
+			Long amount) {
+		ItemHistory itemHistory = new ItemHistory(userId, itemId, assignedAt, amount);
+		if (!itemHistory.isValid()) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asControllerException();
 		}
 		return itemHistory;
 	}
