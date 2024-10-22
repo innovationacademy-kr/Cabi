@@ -211,9 +211,17 @@ public class PresentationService {
 		Presentation presentationToUpdate =
 				presentationRepository.findById(formId)
 						.orElseThrow(ExceptionStatus.INVALID_FORM_ID::asServiceException);
-		//날짜 변경시에만 유효성 검증
+
+		// 날짜 변경시에만 유효성 검증
 		if (!presentationToUpdate.getDateTime().isEqual(dto.getDateTime())) {
 			presentationPolicyService.verifyReservationDate(dto.getDateTime());
+		}
+
+		// 발표 취소 시 해당 날짜에 더미 폼 생성
+		if (dto.getStatus() == PresentationStatus.CANCEL) {
+			Presentation presentation = Presentation.of(Category.DUMMY, dto.getDateTime(),
+					PresentationTime.HALF, "dummy", "dummy", "dummy");
+			presentationRepository.save(presentation);
 		}
 
 		presentationToUpdate.adminUpdate(dto.getStatus(), dto.getDateTime(), dto.getLocation());
