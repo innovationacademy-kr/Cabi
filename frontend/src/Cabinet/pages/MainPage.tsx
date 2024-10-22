@@ -12,6 +12,7 @@ import {
   targetCabinetInfoState,
 } from "@/Cabinet/recoil/atoms";
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
+import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 import CabinetListContainer from "@/Cabinet/components/CabinetList/CabinetList.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import SectionAlertModal from "@/Cabinet/components/Modals/StoreModal/SectionAlertModal";
@@ -74,11 +75,9 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    const clubSection = clubSectionsData.find((section) => {
+    const clubSection = !!clubSectionsData.find((section) => {
       return section === currentSectionName;
-    })
-      ? true
-      : false;
+    });
     setIsClubSection(clubSection);
   }, [currentSectionName]);
 
@@ -123,66 +122,58 @@ const MainPage = () => {
     setIsCurrentSectionRender(false);
   };
 
-  return (
-    <>
-      {isLoading && <LoadingAnimation />}
-      <WrapperStyled
-        ref={mainWrapperRef}
-        onTouchStart={(e: React.TouchEvent) => {
-          touchStartPosX.current = e.changedTouches[0].screenX;
-          touchStartPosY.current = e.changedTouches[0].screenY;
-        }}
-        onTouchEnd={(e: React.TouchEvent) => {
-          swipeSection(
-            e.changedTouches[0].screenX,
-            e.changedTouches[0].screenY
-          );
-        }}
-      >
-        <AlertStyled>
-          {currentFloorSectionNames.includes(currentSectionName) &&
-            !isClubSection && (
-              <IconWrapperStyled
-                onClick={handleAlertIconBtn}
-                disabled={
-                  sectionList[currentSectionIndex]?.alarmRegistered
-                    ? true
-                    : false
-                }
-              >
-                {sectionList[currentSectionIndex]?.alarmRegistered === true ? (
-                  <FilledHeartIcon />
-                ) : (
-                  <LineHeartIcon />
-                )}
-              </IconWrapperStyled>
-            )}
-        </AlertStyled>
-        <SectionPaginationContainer />
-        <CabinetListWrapperStyled>
-          <CabinetListContainer isAdmin={false} />
-          {currentSectionName !== SectionType.elevator &&
-            currentSectionName !== SectionType.stairs && (
-              <RefreshButtonStyled
-                className="cabiButton"
-                title="새로고침"
-                id="refreshButton"
-                onClick={refreshCabinetList}
-              >
-                새로고침
-              </RefreshButtonStyled>
-            )}
-        </CabinetListWrapperStyled>
-        {showSectionAlertModal && (
-          <SectionAlertModal
-            currentSectionName={currentSectionName}
-            setShowSectionAlertModal={setShowSectionAlertModal}
-            currentBuilding={currentBuilding}
-            currentFloor={currentFloor}
-          />
-        )}
-      </WrapperStyled>
-    </>
+  return isLoading ? (
+    <LoadingAnimation />
+  ) : (
+    <WrapperStyled
+      ref={mainWrapperRef}
+      onTouchStart={(e: React.TouchEvent) => {
+        touchStartPosX.current = e.changedTouches[0].screenX;
+        touchStartPosY.current = e.changedTouches[0].screenY;
+      }}
+      onTouchEnd={(e: React.TouchEvent) => {
+        swipeSection(e.changedTouches[0].screenX, e.changedTouches[0].screenY);
+      }}
+    >
+      <AlertStyled currentFloor={currentFloor}>
+        {currentFloorSectionNames.includes(currentSectionName) &&
+          !isClubSection && (
+            <IconWrapperStyled
+              onClick={handleAlertIconBtn}
+              disabled={!!sectionList[currentSectionIndex]?.alarmRegistered}
+            >
+              {sectionList[currentSectionIndex]?.alarmRegistered === true ? (
+                <FilledHeartIcon />
+              ) : (
+                <LineHeartIcon />
+              )}
+            </IconWrapperStyled>
+          )}
+      </AlertStyled>
+      <SectionPaginationContainer />
+      <CabinetListWrapperStyled>
+        <CabinetListContainer isAdmin={false} />
+        {currentSectionName !== SectionType.elevator &&
+          currentSectionName !== SectionType.stairs && (
+            <RefreshButtonStyled
+              className="cabiButton"
+              title="새로고침"
+              id="refreshButton"
+              onClick={refreshCabinetList}
+            >
+              새로고침
+            </RefreshButtonStyled>
+          )}
+      </CabinetListWrapperStyled>
+      {showSectionAlertModal && (
+        <SectionAlertModal
+          currentSectionName={currentSectionName}
+          setShowSectionAlertModal={setShowSectionAlertModal}
+          currentBuilding={currentBuilding}
+          currentFloor={currentFloor}
+        />
+      )}
+    </WrapperStyled>
   );
 };
 
@@ -229,7 +220,11 @@ const IconWrapperStyled = styled.div<{ disabled: boolean }>`
   }
 `;
 
-const AlertStyled = styled.div`
+const AlertStyled = styled.div<{ currentFloor: number }>`
+  visibility: ${(props) =>
+    DISABLED_FLOOR.includes(props.currentFloor.toString())
+      ? "hidden"
+      : "visible"};
   height: 30px;
   display: flex;
   justify-content: end;

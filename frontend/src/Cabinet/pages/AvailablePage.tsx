@@ -29,6 +29,9 @@ const toggleList: toggleItem[] = [
   { name: "공유", key: AvailableCabinetsType.SHARE },
 ];
 
+/* TODO: DISABLED_FLOOR 을 환경변수로 넣기 */
+export const DISABLED_FLOOR = ["4"];
+
 const AvailablePage = () => {
   const [toggleType, setToggleType] = useState<AvailableCabinetsType>(
     AvailableCabinetsType.ALL
@@ -98,10 +101,6 @@ const AvailablePage = () => {
 
   useEffect(() => {
     deleteRecoilPersistFloorSection();
-    setTimeout(() => {
-      // 새로고침 광클 방지를 위한 초기 로딩 딜레이
-      setIsLoaded(true);
-    }, 500);
   }, []);
 
   useEffect(() => {
@@ -156,14 +155,16 @@ const AvailablePage = () => {
         />
       </MultiToggleSwitchStyled>
 
-      {isLoaded && cabinets ? (
-        Object.entries(cabinets).map(([key, value]) => (
-          <FloorContainer
-            key={key}
-            floorNumber={key} // 2층부터 시작
-            pendingCabinetsList={value}
-          />
-        ))
+      {Object.keys(cabinets).length ? (
+        Object.entries(cabinets)
+          .filter(([key, _]) => !DISABLED_FLOOR.includes(key))
+          .map(([key, value]) => (
+            <FloorContainer
+              key={key}
+              floorNumber={key} // 2층부터 시작
+              pendingCabinetsList={value}
+            />
+          ))
       ) : (
         <LoadingAnimation />
       )}
