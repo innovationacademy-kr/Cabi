@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
 import { getInitialDisplayStyle } from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
+import { savedDisplayStyleToggle } from "@/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer";
 import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moonIcon.svg";
 import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sunIcon.svg";
 import {
@@ -10,28 +11,21 @@ import {
   DisplayStyleType,
 } from "@/Cabinet/types/enum/displayStyle.type.enum";
 
-const getSavedToggleType = (): DisplayStyleToggleType => {
-  return (
-    (localStorage.getItem("display-style-toggle") as DisplayStyleToggleType) ||
-    DisplayStyleToggleType.DEVICE
-  );
-};
-
 const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   const [displayStyleToggle, setDisplayStyleToggle] =
     useRecoilState(displayStyleState);
   const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const [displayStyleType, setDisplayStyleType] = useState<DisplayStyleType>(
     () => {
-      return getInitialDisplayStyle(getSavedToggleType(), darkModeQuery);
+      return getInitialDisplayStyle(savedDisplayStyleToggle, darkModeQuery);
     }
   );
+
   const isDarkMode = displayStyleType === DisplayStyleType.DARK;
 
   useEffect(() => {
-    const savedToggleType = getSavedToggleType();
-    setDisplayStyleToggle(savedToggleType);
-  }, [displayStyleToggle]);
+    setDisplayStyleToggle(savedDisplayStyleToggle);
+  }, []);
 
   useEffect(() => {
     const updateDisplayStyleType = () => {

@@ -4,14 +4,13 @@ import {
   DisplayStyleType,
 } from "@/Cabinet/types/enum/displayStyle.type.enum";
 
+export const savedDisplayStyleToggle =
+  (localStorage.getItem("display-style-toggle") as DisplayStyleToggleType) ||
+  DisplayStyleToggleType.DEVICE;
+
 (function () {
   const isClient = typeof window !== "undefined";
   if (isClient) {
-    const savedDisplayStyleToggle =
-      (localStorage.getItem(
-        "display-style-toggle"
-      ) as DisplayStyleToggleType) || DisplayStyleToggleType.DEVICE;
-
     const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const colorMode = getInitialDisplayStyle(
