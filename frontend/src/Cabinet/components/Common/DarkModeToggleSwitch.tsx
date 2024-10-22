@@ -23,8 +23,7 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const [displayStyleType, setDisplayStyleType] = useState<DisplayStyleType>(
     () => {
-      const savedToggleType = getSavedToggleType();
-      return getInitialDisplayStyle(savedToggleType, darkModeQuery);
+      return getInitialDisplayStyle(getSavedToggleType(), darkModeQuery);
     }
   );
   const isDarkMode = displayStyleType === DisplayStyleType.DARK;
@@ -32,7 +31,7 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   useEffect(() => {
     const savedToggleType = getSavedToggleType();
     setDisplayStyleToggle(savedToggleType);
-  }, [setDisplayStyleToggle]);
+  }, [displayStyleToggle]);
 
   useEffect(() => {
     const updateDisplayStyleType = () => {
@@ -50,25 +49,28 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
         darkModeQuery.removeEventListener("change", updateDisplayStyleType);
       };
     }
-  }, [displayStyleToggle, darkModeQuery]);
+  }, [displayStyleToggle]);
 
   useEffect(() => {
     document.body.setAttribute("display-style", displayStyleType);
   }, [displayStyleType]);
 
-  const handleToggle = useCallback(() => {
+  const handleToggleChange = useCallback(() => {
     const newToggleType =
       displayStyleToggle === DisplayStyleToggleType.LIGHT
         ? DisplayStyleToggleType.DARK
         : DisplayStyleToggleType.LIGHT;
-
     localStorage.setItem("display-style-toggle", newToggleType);
     setDisplayStyleToggle(newToggleType);
-  }, [displayStyleToggle, setDisplayStyleToggle]);
+  }, [displayStyleToggle]);
 
   return (
     <ToggleWrapperStyled>
-      <CheckboxStyled id={id} checked={isDarkMode} onChange={handleToggle} />
+      <CheckboxStyled
+        id={id}
+        checked={isDarkMode}
+        onChange={handleToggleChange}
+      />
       <ToggleSwitchStyled htmlFor={id} isChecked={isDarkMode}>
         <MoonIconWrapperStyled>
           <MoonIcon />
