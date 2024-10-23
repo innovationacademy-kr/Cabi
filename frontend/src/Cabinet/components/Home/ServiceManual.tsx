@@ -20,7 +20,7 @@ const ServiceManual = ({
   };
 
   const openNotionLink = () => {
-    window.open("https://cabi.oopy.io/0bbb08a2-241c-444b-8a96-6b33c3796451");
+    window.open("https://cabi.oopy.io/115f29ec-ef8e-4748-a8a6-0d0341def33c");
   };
 
   return (
