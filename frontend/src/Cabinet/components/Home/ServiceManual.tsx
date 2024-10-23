@@ -31,8 +31,7 @@ const ServiceManual = ({
           Cabi <span>이용 안내서</span>
         </h1>
         <NotionBtn className="button" onClick={openNotionLink}>
-          상세보기
-          {/* <span>상세보기</span> */}
+          <span>상세보기</span>
           <LinkImg id="linknImg" stroke="var(--notion-btn-text-color)" />
         </NotionBtn>
       </TitleContainerStyled>
@@ -151,9 +150,9 @@ const NotionBtn = styled.button`
   color: var(--notion-btn-text-color);
   background: var(--bg-color);
   border: 1px solid var(--line-color);
-  /* display: flex;
+  display: flex;
   align-items: center;
-  justify-content: center; */
+  justify-content: center;
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       color: var(--normal-text-color);
@@ -166,10 +165,10 @@ const NotionBtn = styled.button`
     }
   }
 
-  /* & > span {
+  & > span {
     line-height: 14px;
     height: 16px;
-  } */
+  }
 
   & > #linknImg {
     width: 12px;
