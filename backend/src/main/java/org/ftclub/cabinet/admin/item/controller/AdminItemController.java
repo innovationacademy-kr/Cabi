@@ -1,9 +1,9 @@
 package org.ftclub.cabinet.admin.item.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.admin.dto.AdminCoinAssignRequestDto;
 import org.ftclub.cabinet.admin.dto.AdminItemHistoryPaginationDto;
 import org.ftclub.cabinet.admin.item.service.AdminItemFacadeService;
-import org.ftclub.cabinet.admin.statistics.service.AdminStatisticsFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.ItemAssignRequestDto;
@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminItemController {
 
 	private final AdminItemFacadeService adminItemFacadeService;
-	private final AdminStatisticsFacadeService adminStatisticsFacadeService;
-
 
 	@PostMapping("")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
@@ -39,6 +37,13 @@ public class AdminItemController {
 	public void assignItem(@RequestBody ItemAssignRequestDto itemAssignRequestDto) {
 		adminItemFacadeService.assignItem(itemAssignRequestDto.getUserIds(),
 				itemAssignRequestDto.getItemSku());
+	}
+
+	@PostMapping("/assign/coin")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void assignCoin(@RequestBody AdminCoinAssignRequestDto coinAssignRequestDto) {
+		adminItemFacadeService.assignCoin(coinAssignRequestDto.getUserIds(),
+				coinAssignRequestDto.getSku(), coinAssignRequestDto.getAmount());
 	}
 
 	/**
