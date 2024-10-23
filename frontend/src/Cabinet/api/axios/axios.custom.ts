@@ -28,10 +28,15 @@ export const axiosMyInfo = async (): Promise<any> => {
   }
 };
 
-const axiosUpdateAlarmURL = "/v4/users/me/alarms";
-export const axiosUpdateAlarm = async (alarm: AlarmInfo): Promise<any> => {
+const axiosUpdateAlarmReceptionPathURL = "/v4/users/me/alarms";
+export const axiosUpdateAlarmReceptionPath = async (
+  alarm: AlarmInfo
+): Promise<any> => {
   try {
-    const response = await instance.put(axiosUpdateAlarmURL, alarm);
+    const response = await instance.put(
+      axiosUpdateAlarmReceptionPathURL,
+      alarm
+    );
     return response;
   } catch (error) {
     throw error;
@@ -874,13 +879,13 @@ export const axiosGetAvailableCabinets = async (): Promise<any> => {
   }
 };
 
-const axiosSendSlackNotificationToUserURL = "/slack/send";
-export const axiosSendSlackNotificationToUser = async (
+const axiosSendSlackAlarmToUserURL = "/slack/send";
+export const axiosSendSlackAlarmToUser = async (
   receiverName: string,
   message: string
 ): Promise<any> => {
   try {
-    const response = await instance.post(axiosSendSlackNotificationToUserURL, {
+    const response = await instance.post(axiosSendSlackAlarmToUserURL, {
       receiverName: receiverName,
       message: message,
     });
@@ -890,13 +895,13 @@ export const axiosSendSlackNotificationToUser = async (
   }
 };
 
-export const axiosSendSlackNotificationToChannel = async (
+export const axiosSendSlackAlarmToChannel = async (
   receiverName: string,
   message: string,
   channel: string | undefined
 ): Promise<any> => {
   try {
-    await instance.post(axiosSendSlackNotificationToUserURL + `/${channel}`, {
+    await instance.post(axiosSendSlackAlarmToUserURL + `/${channel}`, {
       receiverName: receiverName,
       message: message,
     });
