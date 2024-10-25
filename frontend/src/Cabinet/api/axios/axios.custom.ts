@@ -371,6 +371,23 @@ export const axiosItems = async (): Promise<any> => {
     const response = await instance.get(axiosItemsURL);
     return response;
   } catch (error) {
+    console.log(error);
+    logAxiosError(
+      error,
+      ErrorType.STORE,
+      "상점 아이템 목록 불러오는중 오류 발생"
+    );
+    throw error;
+  }
+};
+
+const axiosAdminItemsURL = "/v5/admin/items";
+export const axiosAdminItems = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosAdminItemsURL);
+    return response;
+  } catch (error) {
+    console.log(error);
     logAxiosError(
       error,
       ErrorType.STORE,
@@ -743,9 +760,9 @@ export const axiosLentClubCabinet = async (
   try {
     const response = await instance.post(
       axiosLentClubCabinetURL +
-        clubId.toString() +
-        "/cabinets/" +
-        cabinetId.toString()
+      clubId.toString() +
+      "/cabinets/" +
+      cabinetId.toString()
     );
     return response;
   } catch (error) {
@@ -905,6 +922,7 @@ export const axiosSendSlackNotificationToChannel = async (
   }
 };
 
+// TODO: 확인하고 필요없으면 지우기
 const axiosItemAssignURL = "v5/admin/items/assign";
 export const axiosItemAssign = async (
   itemSku: string,
@@ -922,7 +940,7 @@ export const axiosItemAssign = async (
   }
 };
 
-const axiosCoinAssignURL = "v5/admin/items/assign/coin";
+const axiosCoinAssignURL = "v5/admin/items/assign";
 export const axiosCoinAssign = async (
   itemSku: string,
   userIds: number[],

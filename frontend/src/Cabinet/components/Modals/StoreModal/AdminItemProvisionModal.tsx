@@ -15,8 +15,8 @@ import {
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import {
-  axiosCoinAssign, // axiosItemAssign,
-  axiosItems,
+  axiosCoinAssign,
+  axiosAdminItems,
 } from "@/Cabinet/api/axios/axios.custom";
 
 interface IPenaltyModalProps {
@@ -44,7 +44,6 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
     coinRefVal = coinRefVal == "" ? "0" : String(coinRefVal);
     setIsLoading(true);
     try {
-      // await axiosItemAssign(selectedItemSku, [targetUserInfo.userId!]);
       await axiosCoinAssign(
         selectedItemSku,
         [targetUserInfo.userId!],
@@ -53,7 +52,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
       setModalTitle("아이템 지급완료");
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      if (error.response.ststus === 400) setModalTitle("아이템 지급실패");
+      if (error.response.status === 400) setModalTitle("아이템 지급실패");
       else
         error.response
           ? setModalTitle(error.response.data.message)
@@ -82,7 +81,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
 
   const getItems = async () => {
     try {
-      const response = await axiosItems();
+      const response = await axiosAdminItems();
       setItems(response.data.items);
     } catch (error) {
       throw error;
@@ -126,17 +125,19 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   }, []);
 
   const getItemTypeOptions = (item: IItemDetail) => {
+    console.log(item.items);
+
     return item.items.length === 1
       ? [
-          {
-            name: "타입이 없습니다",
-            value: item.items[0].itemSku,
-            hasNoOptions: true,
-          },
-        ]
+        {
+          name: "타입이 없습니다",
+          value: item.items[0].itemSku,
+          hasNoOptions: true,
+        },
+      ]
       : item.items.map((item) => {
-          return { name: item.itemDetails, value: item.itemSku };
-        });
+        return { name: item.itemDetails, value: item.itemSku };
+      });
   };
 
   const modalContents: IModalContents = {
