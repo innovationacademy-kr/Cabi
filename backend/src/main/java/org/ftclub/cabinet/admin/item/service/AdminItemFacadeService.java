@@ -15,6 +15,7 @@ import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.item.service.ItemCommandService;
 import org.ftclub.cabinet.item.service.ItemHistoryCommandService;
 import org.ftclub.cabinet.item.service.ItemHistoryQueryService;
+import org.ftclub.cabinet.item.service.ItemPolicyService;
 import org.ftclub.cabinet.item.service.ItemQueryService;
 import org.ftclub.cabinet.mapper.ItemMapper;
 import org.ftclub.cabinet.user.service.UserCommandService;
@@ -31,6 +32,7 @@ public class AdminItemFacadeService {
 	private final ItemCommandService itemCommandService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
 	private final ItemHistoryCommandService itemHistoryCommandService;
+	private final ItemPolicyService itemPolicyService;
 	private final ItemMapper itemMapper;
 
 	private final UserCommandService userCommandService;
@@ -58,6 +60,7 @@ public class AdminItemFacadeService {
 		LocalDateTime now = null;
 		Long coinAmount = item.getPrice();
 		if (sku.equals(Sku.ADMIN_REWARD_COIN)) {
+			itemPolicyService.verifyCoinAmount(amount);
 			coinAmount = amount;
 		}
 		if (coinAmount > 0) {
