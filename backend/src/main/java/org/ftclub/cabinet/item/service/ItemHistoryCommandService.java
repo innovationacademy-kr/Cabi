@@ -17,20 +17,22 @@ public class ItemHistoryCommandService {
 
 	private final ItemHistoryRepository itemHistoryRepository;
 
-	public void createItemHistory(Long userId, Long itemId) {
-		ItemHistory itemHistory = ItemHistory.of(userId, itemId, null);
+	public void createItemHistory(Long userId, Long itemId, Long amount) {
+		ItemHistory itemHistory = ItemHistory.of(userId, itemId, null, amount);
 		itemHistoryRepository.save(itemHistory);
 	}
 
-	public void createItemHistories(List<Long> userIds, Long itemId, LocalDateTime usedAt) {
+	public void createItemHistories(List<Long> userIds, Long itemId, LocalDateTime usedAt,
+			Long amount) {
 		List<ItemHistory> itemHistories = userIds.stream()
-				.map(userId -> ItemHistory.of(userId, itemId, usedAt))
+				.map(userId -> ItemHistory.of(userId, itemId, usedAt, amount))
 				.collect(Collectors.toList());
 		itemHistoryRepository.saveAll(itemHistories);
 	}
 
-	public void createCoinItemHistory(Long userId, Long itemId) {
-		ItemHistory coinCollectItemHistory = ItemHistory.of(userId, itemId, LocalDateTime.now());
+	public void createCoinItemHistory(Long userId, Long itemId, Long amount) {
+		ItemHistory coinCollectItemHistory = ItemHistory.of(userId, itemId, LocalDateTime.now(),
+				amount);
 		itemHistoryRepository.save(coinCollectItemHistory);
 	}
 
@@ -45,7 +47,7 @@ public class ItemHistoryCommandService {
 	public void createCoinAssignHistory(List<Long> userIds, Long itemId, LocalDateTime usedAt,
 			Long amount) {
 		List<ItemHistory> itemHistories = userIds.stream()
-				.map(userId -> ItemHistory.coin(userId, itemId, usedAt, amount))
+				.map(userId -> ItemHistory.of(userId, itemId, usedAt, amount))
 				.collect(Collectors.toList());
 
 		itemHistoryRepository.saveAll(itemHistories);
