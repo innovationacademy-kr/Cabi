@@ -210,6 +210,11 @@ export const targetClubUserInfoState = atom<ClubUserResponseDto>({
   },
 });
 
+export const currentFloorSectionNamesState = atom<string[]>({
+  key: "currentFloorSectionNames",
+  default: [],
+});
+
 export const displayStyleState = atom<DisplayStyleToggleType>({
   key: "displayStyle",
   default: DisplayStyleToggleType.DEVICE,
