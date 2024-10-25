@@ -15,11 +15,10 @@ import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.item.service.ItemCommandService;
 import org.ftclub.cabinet.item.service.ItemHistoryCommandService;
 import org.ftclub.cabinet.item.service.ItemHistoryQueryService;
+import org.ftclub.cabinet.item.service.ItemPolicyService;
 import org.ftclub.cabinet.item.service.ItemQueryService;
-import org.ftclub.cabinet.item.service.ItemRedisService;
 import org.ftclub.cabinet.mapper.ItemMapper;
 import org.ftclub.cabinet.user.service.UserCommandService;
-import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,11 +32,10 @@ public class AdminItemFacadeService {
 	private final ItemCommandService itemCommandService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
 	private final ItemHistoryCommandService itemHistoryCommandService;
+	private final ItemPolicyService itemPolicyService;
 	private final ItemMapper itemMapper;
 
-	private final ItemRedisService itemRedisService;
 	private final UserCommandService userCommandService;
-	private final UserQueryService userQueryService;
 
 	@Transactional
 	public void createItem(Integer Price, Sku sku, ItemType type) {
@@ -45,22 +43,19 @@ public class AdminItemFacadeService {
 	}
 
 	@Transactional
-	public void assignItem(List<Long> userIds, Sku sku) {
+	public void assignItem(List<Long> userIds, Sku sku, Long amount) {
 		Item item = itemQueryService.getBySku(sku);
-		Long price = item.getPrice();
 		LocalDateTime now = null;
-		if (price > 0) {
-			now = LocalDateTime.now();
-			userIds.forEach(userId -> {
-				long coinAmount = userQueryService.getUser(userId).getCoin();
-				itemRedisService.saveCoinCount(userId, coinAmount + item.getPrice());
-
-				long totalCoinSupply = itemRedisService.getTotalCoinSupply();
-				itemRedisService.saveTotalCoinSupply(totalCoinSupply + item.getPrice());
-				userCommandService.updateCoinAmount(userId, price);
-			});
+		Long coinAmount = item.getPrice();
+		if (sku.equals(Sku.ADMIN_REWARD_COIN)) {
+			itemPolicyService.verifyCoinAmount(amount);
+			coinAmount = amount;
 		}
-		itemHistoryCommandService.createItemHistories(userIds, item.getId(), now);
+		if (coinAmount > 0) {
+			now = LocalDateTime.now();
+			userCommandService.addBulkCoin(userIds, coinAmount);
+		}
+		itemHistoryCommandService.createItemHistories(userIds, item.getId(), now, coinAmount);
 	}
 
 	@Transactional(readOnly = true)

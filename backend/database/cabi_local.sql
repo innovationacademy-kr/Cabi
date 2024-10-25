@@ -742,7 +742,8 @@ VALUES (1, 0, 'EXTENSION_PREV', 'EXTENSION'),
        (17, 200, 'ADMIN_REWARD_200', 'ADMIN_REWARD'),
        (18, 500, 'ADMIN_REWARD_500', 'ADMIN_REWARD'),
        (19, 1000, 'ADMIN_REWARD_1000', 'ADMIN_REWARD'),
-       (20, 2000, 'ADMIN_REWARD_2000', 'ADMIN_REWARD');
+       (20, 2000, 'ADMIN_REWARD_2000', 'ADMIN_REWARD'),
+       (21, 10, 'ADMIN_REWARD_COIN', 'ADMIN_REWARD');
 /*!40000 ALTER TABLE `item`
     ENABLE KEYS */;
 UNLOCK TABLES;
@@ -758,6 +759,7 @@ CREATE TABLE `item_history`
     `user_id`     bigint(20)  NOT NULL,
     `purchase_at` datetime(6) NOT NULL,
     `used_at`     datetime(6) DEFAULT NULL,
+    `amount`       bigint(20)  DEFAULT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `item_history_item_id` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`),
     CONSTRAINT `item_history_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
