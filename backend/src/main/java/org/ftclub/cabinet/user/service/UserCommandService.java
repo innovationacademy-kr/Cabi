@@ -117,7 +117,7 @@ public class UserCommandService {
 		user.addCoin(reward);
 	}
 
-	public void addBulkUserCoin(List<Long> userIds, Long amount) {
+	public void addBulkCoin(List<Long> userIds, Long amount) {
 		userRepository.updateBulkUserCoin(userIds, amount);
 	}
 }

@@ -67,7 +67,7 @@ public class AdminItemFacadeService {
 	public void assignCoin(List<Long> userIds, Sku sku, Long amount) {
 		Item item = itemQueryService.getBySku(sku);
 		LocalDateTime now = LocalDateTime.now();
-		userCommandService.addBulkUserCoin(userIds, amount);
+		userCommandService.addBulkCoin(userIds, amount);
 		itemHistoryCommandService.createCoinAssignHistory(userIds, item.getId(), now, amount);
 	}
 
