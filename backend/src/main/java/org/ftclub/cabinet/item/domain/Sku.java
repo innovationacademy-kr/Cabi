@@ -30,6 +30,7 @@ public enum Sku {
 	ADMIN_REWARD_500("보상"),
 	ADMIN_REWARD_1000("보상"),
 	ADMIN_REWARD_2000("보상"),
+	ADMIN_REWARD_COIN("보상"),
 	;
 
 	private final String details;
