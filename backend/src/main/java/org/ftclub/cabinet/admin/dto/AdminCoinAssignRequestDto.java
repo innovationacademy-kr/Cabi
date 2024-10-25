@@ -10,6 +10,6 @@ import org.ftclub.cabinet.item.domain.Sku;
 public class AdminCoinAssignRequestDto {
 
 	private List<Long> userIds;
-	private Sku sku;
+	private Sku itemSku;
 	private Long amount;
 }

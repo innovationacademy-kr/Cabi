@@ -55,9 +55,16 @@ public class AdminItemFacadeService {
 	@Transactional
 	public void assignCoin(List<Long> userIds, Sku sku, Long amount) {
 		Item item = itemQueryService.getBySku(sku);
-		LocalDateTime now = LocalDateTime.now();
-		userCommandService.addBulkCoin(userIds, amount);
-		itemHistoryCommandService.createCoinAssignHistory(userIds, item.getId(), now, amount);
+		LocalDateTime now = null;
+		Long coinAmount = item.getPrice();
+		if (sku.equals(Sku.ADMIN_REWARD_COIN)) {
+			coinAmount = amount;
+		}
+		if (coinAmount > 0) {
+			now = LocalDateTime.now();
+			userCommandService.addBulkCoin(userIds, coinAmount);
+		}
+		itemHistoryCommandService.createItemHistories(userIds, item.getId(), now, coinAmount);
 	}
 
 	@Transactional(readOnly = true)
