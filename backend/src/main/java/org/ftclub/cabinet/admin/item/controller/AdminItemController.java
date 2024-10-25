@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.admin.dto.AdminCoinAssignRequestDto;
 import org.ftclub.cabinet.admin.dto.AdminItemHistoryPaginationDto;
 import org.ftclub.cabinet.admin.item.service.AdminItemFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
@@ -69,14 +68,7 @@ public class AdminItemController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void assignItem(@RequestBody ItemAssignRequestDto itemAssignRequestDto) {
 		adminItemFacadeService.assignItem(itemAssignRequestDto.getUserIds(),
-				itemAssignRequestDto.getItemSku());
-	}
-
-	@PostMapping("/assign/coin")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void assignCoin(@RequestBody AdminCoinAssignRequestDto coinAssignRequestDto) {
-		adminItemFacadeService.assignCoin(coinAssignRequestDto.getUserIds(),
-				coinAssignRequestDto.getItemSku(), coinAssignRequestDto.getAmount());
+				itemAssignRequestDto.getItemSku(), itemAssignRequestDto.getAmount());
 	}
 
 	/**

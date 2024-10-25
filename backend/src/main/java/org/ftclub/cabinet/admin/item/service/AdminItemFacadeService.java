@@ -43,19 +43,7 @@ public class AdminItemFacadeService {
 	}
 
 	@Transactional
-	public void assignItem(List<Long> userIds, Sku sku) {
-		Item item = itemQueryService.getBySku(sku);
-		Long price = item.getPrice();
-		LocalDateTime now = null;
-		if (price > 0) {
-			now = LocalDateTime.now();
-			userCommandService.addBulkCoin(userIds, price);
-		}
-		itemHistoryCommandService.createItemHistories(userIds, item.getId(), now, price);
-	}
-
-	@Transactional
-	public void assignCoin(List<Long> userIds, Sku sku, Long amount) {
+	public void assignItem(List<Long> userIds, Sku sku, Long amount) {
 		Item item = itemQueryService.getBySku(sku);
 		LocalDateTime now = null;
 		Long coinAmount = item.getPrice();

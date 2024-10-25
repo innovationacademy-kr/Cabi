@@ -15,4 +15,5 @@ public class ItemAssignRequestDto {
 
 	private Sku itemSku;
 	private List<Long> userIds;
+	private Long amount;
 }
