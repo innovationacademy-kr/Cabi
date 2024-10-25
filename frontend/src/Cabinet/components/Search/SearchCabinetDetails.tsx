@@ -49,9 +49,7 @@ const SearchCabinetDetails = (props: ISearchDetail) => {
   );
   const { openCabinet, closeCabinet } = useMenu();
   const CabinetIcon =
-    cabinetIconComponentMap[
-      cabinetInfo?.lentType || CabinetType.PRIVATE
-    ];
+    cabinetIconComponentMap[cabinetInfo?.lentType || CabinetType.PRIVATE];
 
   const clickSearchItem = () => {
     if (
@@ -149,7 +147,6 @@ const SearchCabinetDetails = (props: ISearchDetail) => {
     </WrapperStyled>
   );
 };
-
 
 const WrapperStyled = styled.div`
   width: 350px;
@@ -252,4 +249,3 @@ const ButtonWrapper = styled.div`
 `;
 
 export default SearchCabinetDetails;
-

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
-import MaunalContentBox from "@/Cabinet/components/Home/ManualContentBox";
+import ManualContentBox from "@/Cabinet/components/Home/ManualContentBox";
 import ManualModal from "@/Cabinet/components/Modals/ManualModal/ManualModal";
+import { ReactComponent as LinkImg } from "@/Cabinet/assets/images/link.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
 const ServiceManual = ({
@@ -20,7 +21,7 @@ const ServiceManual = ({
   };
 
   const openNotionLink = () => {
-    window.open("https://cabi.oopy.io/0bbb08a2-241c-444b-8a96-6b33c3796451");
+    window.open("https://cabi.oopy.io/115f29ec-ef8e-4748-a8a6-0d0341def33c");
   };
 
   return (
@@ -30,11 +31,37 @@ const ServiceManual = ({
           Cabi <span>이용 안내서</span>
         </h1>
         <NotionBtn className="button" onClick={openNotionLink}>
-          상세보기
+          <span>상세보기</span>
+          <LinkImg id="linknImg" stroke="var(--notion-btn-text-color)" />
         </NotionBtn>
       </TitleContainerStyled>
 
       <WrapSectionStyled>
+        <p className="subtitle">
+          당신의 사물함
+          <br />
+          당신의 방식으로,
+        </p>
+
+        <InfoSectionStyled className="section">
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.COIN)}
+          >
+            <ManualContentBox contentStatus={ContentStatus.COIN} />
+            <p className="redColor">new</p>
+          </article>
+          <TicketWrapperStyled>
+            <article
+              className="article"
+              onClick={() => openModal(ContentStatus.STORE)}
+            >
+              <ManualContentBox contentStatus={ContentStatus.STORE} />
+              <p className="redColor">new</p>
+            </article>
+          </TicketWrapperStyled>
+        </InfoSectionStyled>
+
         <p className="subtitle">
           가능성의 확장
           <br />
@@ -45,53 +72,19 @@ const ServiceManual = ({
             className="article"
             onClick={() => openModal(ContentStatus.PRIVATE)}
           >
-            <MaunalContentBox contentStatus={ContentStatus.PRIVATE} />
+            <ManualContentBox contentStatus={ContentStatus.PRIVATE} />
           </article>
           <article
             className="article"
             onClick={() => openModal(ContentStatus.SHARE)}
           >
-            <MaunalContentBox contentStatus={ContentStatus.SHARE} />
+            <ManualContentBox contentStatus={ContentStatus.SHARE} />
           </article>
           <article
             className="article"
             onClick={() => openModal(ContentStatus.CLUB)}
           >
-            <MaunalContentBox contentStatus={ContentStatus.CLUB} />
-          </article>
-        </InfoSectionStyled>
-        <p className="subtitle">
-          공정한 대여를 위한
-          <br />
-          새로운 사물함 서비스.
-        </p>
-        <InfoSectionStyled className="section">
-          <article
-            className="article"
-            onClick={() => openModal(ContentStatus.PENDING)}
-          >
-            <MaunalContentBox contentStatus={ContentStatus.PENDING} />
-            <p className="redColor">new</p>
-          </article>
-          <article
-            className="article"
-            onClick={() => openModal(ContentStatus.IN_SESSION)}
-          >
-            <MaunalContentBox contentStatus={ContentStatus.IN_SESSION} />
-            <p className="redColor">new</p>
-          </article>
-        </InfoSectionStyled>
-        <p className="subtitle">
-          사물함을 더 오래
-          <br />
-          사용할 수 있는 방법.
-        </p>
-        <InfoSectionStyled className="section">
-          <article
-            className="article"
-            onClick={() => openModal(ContentStatus.EXTENSION)}
-          >
-            <MaunalContentBox contentStatus={ContentStatus.EXTENSION} />
+            <ManualContentBox contentStatus={ContentStatus.CLUB} />
           </article>
         </InfoSectionStyled>
       </WrapSectionStyled>
@@ -106,6 +99,15 @@ const ServiceManual = ({
     </WrapperStyled>
   );
 };
+
+const TicketWrapperStyled = styled.div`
+  width: 620px;
+  &:hover {
+    transition: all 0.3s ease-in-out;
+    transform: translateY(-5px);
+    filter: drop-shadow(10px 10px 10px var(--left-nav-border-shadow-color));
+  }
+`;
 
 const WrapperStyled = styled.div`
   display: flex;
@@ -148,9 +150,30 @@ const NotionBtn = styled.button`
   color: var(--notion-btn-text-color);
   background: var(--bg-color);
   border: 1px solid var(--line-color);
-  :hover {
-    color: var(--normal-text-color);
-    font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--normal-text-color);
+      font-weight: 400;
+
+      #linknImg > path {
+        stroke: var(--normal-text-color);
+        stroke-width: 1.2px;
+      }
+    }
+  }
+
+  & > span {
+    line-height: 14px;
+    height: 16px;
+  }
+
+  & > #linknImg {
+    width: 12px;
+    height: 12px;
+    margin-left: 4px;
   }
 `;
 

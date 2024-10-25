@@ -144,7 +144,7 @@ public class CabinetFacadeService {
 
 		// 층, 건물에 따른 유저가 알람 등록한 section 조회
 		Set<String> unsetAlarmSection =
-				sectionAlarmQueryService.getUnsentAlarm(userId, building, floor).stream()
+				sectionAlarmQueryService.findUnsentAlarm(userId, building, floor).stream()
 						.map(alarm -> alarm.getCabinetPlace().getLocation().getSection())
 						.collect(Collectors.toSet());
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AdminClubLog from "@/Cabinet/components/Club/AdminClubLog";
 import { ClubLogResponseType, ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import { axiosGetClubUserLog } from "@/Cabinet/api/axios/axios.custom";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
+import { HttpStatusCode } from "axios";
 
 const AdminClubLogContainer = (props: any) => {
   const [logs, setLogs] = useState<ClubLogResponseType>(undefined);
@@ -20,7 +20,7 @@ const AdminClubLogContainer = (props: any) => {
       } else setTotalPage(Math.ceil(result.data.totalLength / size));
       setLogs(result.data.result);
     } catch {
-      setLogs(STATUS_400_BAD_REQUEST);
+      setLogs(HttpStatusCode.BadRequest);
       setTotalPage(1);
     }
   };

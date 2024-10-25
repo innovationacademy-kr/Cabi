@@ -43,7 +43,9 @@ import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ItemMapper;
 import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
+import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
 import org.ftclub.cabinet.utils.lock.LockUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -57,17 +59,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Logging(level = LogLevel.DEBUG)
 public class ItemFacadeService {
 
+	private final ItemMapper itemMapper;
 	private final ItemQueryService itemQueryService;
 	private final ItemHistoryQueryService itemHistoryQueryService;
 	private final ItemHistoryCommandService itemHistoryCommandService;
 	private final ItemRedisService itemRedisService;
-	private final UserQueryService userQueryService;
-	private final SectionAlarmCommandService sectionAlarmCommandService;
-	private final CabinetQueryService cabinetQueryService;
-	private final ItemMapper itemMapper;
 	private final ItemPolicyService itemPolicyService;
-	private final ApplicationEventPublisher eventPublisher;
+	private final UserQueryService userQueryService;
+	private final UserCommandService userCommandService;
+	private final CabinetQueryService cabinetQueryService;
+	private final SectionAlarmCommandService sectionAlarmCommandService;
+	private final SectionAlarmQueryService sectionAlarmQueryService;
+	private final BlackholeManager blackholeManager;
 
+	private final ApplicationEventPublisher eventPublisher;
 
 	/**
 	 * 모든 아이템 리스트 반환
@@ -190,7 +195,7 @@ public class ItemFacadeService {
 		// DB에 코인 저장
 		Item coinCollect = itemQueryService.getBySku(Sku.COIN_COLLECT);
 		int reward = (int) (coinCollect.getPrice().longValue());
-		itemHistoryCommandService.createItemHistory(userId, coinCollect.getId());
+		itemHistoryCommandService.createCoinItemHistory(userId, coinCollect.getId());
 
 		// 출석 일자에 따른 랜덤 리워드 지급
 		Long coinCollectionCountInMonth =
@@ -201,12 +206,13 @@ public class ItemFacadeService {
 			Sku coinSku = itemPolicyService.getRewardSku(randomPercentage);
 			Item coinReward = itemQueryService.getBySku(coinSku);
 
-			itemHistoryCommandService.createItemHistory(userId, coinReward.getId());
+			itemHistoryCommandService.createCoinItemHistory(userId, coinReward.getId());
 			reward += coinReward.getPrice();
 		}
 
 		// Redis에 코인 변화량 저장
 		saveCoinChangeOnRedis(userId, reward);
+		userCommandService.updateCoinAmount(userId, (long) reward);
 
 		return new CoinCollectionRewardResponseDto(reward);
 	}
@@ -214,8 +220,8 @@ public class ItemFacadeService {
 	private void saveCoinChangeOnRedis(Long userId, final int reward) {
 		LockUtil.lockRedisCoin(userId, () -> {
 			// Redis에 유저 리워드 저장
-			long coins = itemRedisService.getCoinAmount(userId);
-			itemRedisService.saveCoinCount(userId, coins + reward);
+//			long coins = itemRedisService.getCoinAmount(userId);
+//			itemRedisService.saveCoinCount(userId, coins + reward);
 
 			// Redis에 전체 코인 발행량 저장
 			long totalCoinSupply = itemRedisService.getTotalCoinSupply();
@@ -235,11 +241,11 @@ public class ItemFacadeService {
 	public void useItem(Long userId, Sku sku, ItemUseRequestDto data) {
 		itemPolicyService.verifyDataFieldBySku(sku, data);
 		User user = userQueryService.getUser(userId);
+
 		if (user.isBlackholed()) {
-			// 이벤트를 발생시켰는데 동기로직이다..?
-			// TODO: 근데 그 이벤트가 뭘 하는지 이 코드 흐름에서는 알 수 없다..?
-			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
+			throw ExceptionStatus.BLACKHOLED_USER.asServiceException();
 		}
+
 		Item item = itemQueryService.getBySku(sku);
 		List<ItemHistory> itemInInventory =
 				itemHistoryQueryService.findUnusedItemsInUserInventory(user.getId(), item.getId());
@@ -294,7 +300,10 @@ public class ItemFacadeService {
 
 		Item item = itemQueryService.getBySku(sku);
 		long price = item.getPrice();
-		long userCoin = itemRedisService.getCoinAmount(userId);
+
+		// 유저의 보유 재화량
+//		long userCoin = itemRedisService.getCoinAmount(userId);
+		long userCoin = user.getCoin();
 
 		// 아이템 Policy 검증
 		itemPolicyService.verifyOnSale(price);
@@ -311,10 +320,19 @@ public class ItemFacadeService {
 			long totalCoinUsage = itemRedisService.getTotalCoinUsage();
 			itemRedisService.saveTotalCoinUsage(totalCoinUsage + price);
 		});
+		userCommandService.updateCoinAmount(userId, price);
 	}
 
 	@Transactional
 	public void addSectionAlarm(Long userId, Long cabinetPlaceId) {
+		verifyDuplicateSection(userId, cabinetPlaceId);
 		sectionAlarmCommandService.addSectionAlarm(userId, cabinetPlaceId);
+	}
+
+	private void verifyDuplicateSection(Long userId, Long cabinetPlaceId) {
+		if (sectionAlarmQueryService.findUnsentAlarmDesc(userId,
+				cabinetPlaceId).isPresent()) {
+			throw ExceptionStatus.ITEM_USE_DUPLICATED.asServiceException();
+		}
 	}
 }

@@ -1,8 +1,8 @@
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
+import { HttpStatusCode } from "axios";
 
 export type ClubListReponseType =
   | ClubPaginationResponseDto
-  | typeof STATUS_400_BAD_REQUEST
+  | HttpStatusCode.BadRequest
   | undefined;
 
 export interface ClubPaginationResponseDto {
@@ -18,7 +18,7 @@ export interface ClubResponseDto {
 
 export type ClubInfoResponseType =
   | ClubInfoResponseDto
-  | typeof STATUS_400_BAD_REQUEST
+  | HttpStatusCode.BadRequest
   | undefined;
 
 export interface ClubCabinetInfo {

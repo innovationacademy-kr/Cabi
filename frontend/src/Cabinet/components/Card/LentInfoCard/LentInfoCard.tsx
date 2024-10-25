@@ -7,11 +7,11 @@ import {
   ContentInfoStyled,
 } from "@/Cabinet/components/Card/CardStyles";
 import { MyCabinetInfo } from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
+import PenaltyModal from "@/Cabinet/components/Modals/StoreModal/PenaltyModal";
 import { cabinetIconComponentMap } from "@/Cabinet/assets/data/maps";
 import { IItemTimeRemaining } from "@/Cabinet/types/dto/store.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import PenaltyModal from "@/Cabinet/components/Modals//PenaltyModal/PenaltyModal";
 
 const calculateFontSize = (userCount: number): string => {
   const baseSize = 1;

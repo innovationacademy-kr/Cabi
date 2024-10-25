@@ -1,9 +1,34 @@
 package org.ftclub.cabinet.user.domain;
 
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 @RequiredArgsConstructor
 public class UserTest {
+
+	@Test
+	void isSameBlackholedAt_test_both_null() {
+		User test = User.of("test", "aewf@naver.com", null);
+		boolean sameBlackholedAt = test.isSameBlackholedAt(null);
+		Assertions.assertTrue(sameBlackholedAt);
+	}
+
+	@Test
+	void isSameBlackholedAt_test_one_null() {
+		User test = User.of("test", "aewf@naver.com", null);
+		boolean sameBlackholedAt = test.isSameBlackholedAt(LocalDateTime.now());
+		Assertions.assertFalse(sameBlackholedAt);
+	}
+
+	@Test
+	void isSameBlackholedAt_test_same() {
+		LocalDateTime now = LocalDateTime.now();
+		User test = User.of("test", "aewf@naver.com", now);
+		boolean sameBlackholedAt = test.isSameBlackholedAt(now);
+		Assertions.assertTrue(sameBlackholedAt);
+	}
 
 //	@Test
 //	@DisplayName("유저 생성 성공 - 일반적인 이메일 형식")

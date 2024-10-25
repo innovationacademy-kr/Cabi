@@ -1,6 +1,7 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
+  currentFloorSectionNamesState,
   currentSectionNameState,
   isMultiSelectState,
 } from "@/Cabinet/recoil/atoms";
@@ -30,6 +31,10 @@ const CabinetListContainer = ({
   const currentSectionName = useRecoilValue<string>(currentSectionNameState);
   const isMultiSelect = useRecoilValue<boolean>(isMultiSelectState);
   const { handleSelectAll, containsAllCabinets } = useMultiSelect();
+  const [currentFloorSectionNames] = useRecoilState(
+    currentFloorSectionNamesState
+  );
+
   return (
     <React.Fragment>
       {isMultiSelect && (
@@ -45,7 +50,9 @@ const CabinetListContainer = ({
           />
         </div>
       )}
-      <RealViewNotification colNum={colNum as number} />
+      {currentFloorSectionNames.includes(currentSectionName) && (
+        <RealViewNotification colNum={colNum as number} />
+      )}
       <CabinetList
         colNum={colNum as number}
         cabinetInfo={currentSectionCabinets}

@@ -14,7 +14,6 @@ import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.utils.lock.LockUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,11 +42,11 @@ public class LentExtensionManager {
 
 		List<User> users = userQueryService.findAllUsersByNames(userNames);
 		Item coinRewardItem = itemQueryService.getBySku(Sku.COIN_FULL_TIME);
+
 		users.forEach(user -> {
 			Long userId = user.getId();
-			LockUtil.lockRedisCoin(userId, () ->
-					saveCoinChangeOnRedis(userId, coinRewardItem.getPrice()));
-			itemHistoryCommandService.createItemHistory(userId, coinRewardItem.getId());
+			user.addCoin(coinRewardItem.getPrice());
+			itemHistoryCommandService.createCoinItemHistory(userId, coinRewardItem.getId());
 		});
 	}
 
@@ -59,8 +58,8 @@ public class LentExtensionManager {
 	 */
 	private void saveCoinChangeOnRedis(Long userId, long price) {
 		// 유저 재화 변동량 Redis에 저장
-		long userCoinCount = itemRedisService.getCoinAmount(userId);
-		itemRedisService.saveCoinCount(userId, userCoinCount + price);
+//		long userCoinCount = itemRedisService.getCoinAmount(userId);
+//		itemRedisService.saveCoinCount(userId, userCoinCount + price);
 
 		// 전체 재화 변동량 Redis에 저장
 		long totalCoinSupply = itemRedisService.getTotalCoinSupply();

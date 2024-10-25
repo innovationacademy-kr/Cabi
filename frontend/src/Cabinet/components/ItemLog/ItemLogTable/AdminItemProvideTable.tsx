@@ -1,8 +1,8 @@
+import { HttpStatusCode } from "axios";
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { ItemLogResponseType } from "@/Cabinet/types/dto/admin.dto";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const AdminItemProvideTable = ({
   itemLog,
@@ -20,7 +20,7 @@ const AdminItemProvideTable = ({
             <th>아이템</th>
           </tr>
         </TheadStyled>
-        {itemLog !== STATUS_400_BAD_REQUEST && (
+        {itemLog !== HttpStatusCode.BadRequest && (
           <TbodyStyled>
             {itemLog.itemHistories.map(
               ({ issuedDate, itemName, itemDetails, usedAt }, idx) => (
@@ -47,7 +47,7 @@ const AdminItemProvideTable = ({
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {itemLog === STATUS_400_BAD_REQUEST && (
+      {itemLog === HttpStatusCode.BadRequest && (
         <EmptyLogStyled>아이템 사용기록이 없습니다.</EmptyLogStyled>
       )}
     </LogTableWrapperstyled>

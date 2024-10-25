@@ -1,8 +1,8 @@
+import { HttpStatusCode } from "axios";
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { LentLogResponseType } from "@/Cabinet/types/dto/lent.dto";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const AdminCabinetLogTable = ({
   lentLog,
@@ -21,7 +21,7 @@ const AdminCabinetLogTable = ({
             <th>반납일</th>
           </tr>
         </TheadStyled>
-        {lentLog !== STATUS_400_BAD_REQUEST && (
+        {lentLog !== HttpStatusCode.BadRequest && (
           <TbodyStyled>
             {lentLog.map(
               ({ floor, section, name, startedAt, endedAt }, idx) => (
@@ -45,7 +45,7 @@ const AdminCabinetLogTable = ({
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {(lentLog === STATUS_400_BAD_REQUEST || lentLog.length === 0) && (
+      {(lentLog === HttpStatusCode.BadRequest || lentLog.length === 0) && (
         <EmptyLogStyled>대여기록이 없습니다.</EmptyLogStyled>
       )}
     </LogTableWrapperstyled>

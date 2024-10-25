@@ -22,6 +22,7 @@ import { IInventoryInfo } from "@/Cabinet/components/Store/Inventory/Inventory";
 import { additionalModalType, modalPropsMap } from "@/Cabinet/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import { IItemDetail, IItemStore } from "@/Cabinet/types/dto/store.dto";
+import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
@@ -45,11 +46,11 @@ const ExtendModal: React.FC<{
   const [items, setItems] = useState<IItemDetail[]>([]);
   const [myItems, setMyItems] = useState<IInventoryInfo | null>(null);
   const [selectedOption, setSelectedOption] = useState("");
-  // const [extensionItems, setExtensionItems] = useState<IItemStore[]>([]);
   const [myExtensionItems, setMyExtensionItems] = useState<IItemStore[]>([]);
   const [itemDropdownOptions, setItemDropdownOptions] = useState<
     IDropdownOptions[]
   >([]);
+  const [url, setUrl] = useState<string | null>(null);
   const [currentCabinetId] = useRecoilState(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myLentInfo, setMyLentInfo] =
@@ -74,8 +75,10 @@ const ExtendModal: React.FC<{
   연장권 사용은 취소할 수 없습니다.`;
   const extendInfoDetail = `사물함을 대여하시면 연장권 사용이 가능합니다.
 연장권은 <strong>${extensionExpiredDate} 23:59</strong> 이후 만료됩니다.`;
-  const noExtension = `현재 연장권을 보유하고 있지 않습니다.
+  const noItemMsg = `현재 연장권을 보유하고 있지 않습니다.
 연장권은 까비 상점에서 구매하실 수 있습니다.`;
+  const overdueMsg = "연체 중에는 연장권을 사용하실 수 없습니다.";
+  const defaultFailureModalTitle = "연장권 사용실패";
 
   useEffect(() => {
     fetchData();
@@ -85,7 +88,7 @@ const ExtendModal: React.FC<{
     if (myItems?.extensionItems.length === 0) {
       setShowResponseModal(true);
       setHasErrorOnResponse(true);
-      setModalContents(noExtension);
+      setModalContents(noItemMsg);
     } else {
       setShowResponseModal(false);
       setHasErrorOnResponse(false);
@@ -97,22 +100,21 @@ const ExtendModal: React.FC<{
     }
     if (items.length) {
       const sortedItems = sortItems(items);
-      const dropdownOptions: IDropdownOptions[] = getItemDropDownOption(sortedItems[0]);
+      const dropdownOptions: IDropdownOptions[] = getItemDropDownOption(
+        sortedItems[0]
+      );
 
-// 새로운 항목 생성
-const newOption = {
-  name: "출석 연장권 보상",
-  value: "EXTENSION_PREV",
-  isDisabled: findMyItem("EXTENSION_PREV"),
-};
+      const extensionPrevOption = {
+        name: "출석 연장권 보상",
+        value: "EXTENSION_PREV",
+        isDisabled: findMyItem("EXTENSION_PREV"),
+      };
 
-// 새로운 항목을 dropdownOptions 배열의 마지막에 추가
-dropdownOptions.push(newOption);
+      dropdownOptions.push(extensionPrevOption);
 
-      // setExtensionItems(sortedItems[0].items);
       setItemDropdownOptions(dropdownOptions);
-}
-}, [myItems]);
+    }
+  }, [myItems]);
 
   const fetchData = async () => {
     try {
@@ -128,9 +130,8 @@ dropdownOptions.push(newOption);
   };
 
   const findMyItem = (period: string) => {
-      return !myItems?.extensionItems.some((item) => item.itemSku === period);
+    return !myItems?.extensionItems.some((item) => item.itemSku === period);
   };
-
 
   const getItemDropDownOption = (curItem: IItemDetail): IDropdownOptions[] => {
     if (curItem) {
@@ -143,7 +144,6 @@ dropdownOptions.push(newOption);
     return [];
   };
 
-  // Modal related functions
   const getModalTitle = (cabinetId: number | null) => {
     return cabinetId === null
       ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].title
@@ -191,7 +191,15 @@ dropdownOptions.push(newOption);
   const extensionItemUse = async (item: string) => {
     if (currentCabinetId === 0 || myInfo.cabinetId === null) {
       setHasErrorOnResponse(true);
-      setModalTitle("현재 대여중인 사물함이 없습니다.");
+      setModalTitle(defaultFailureModalTitle);
+      setModalContents("현재 대여중인 사물함이 없습니다.");
+      setShowResponseModal(true);
+      return;
+    }
+    if (myLentInfo.status === CabinetStatus.OVERDUE) {
+      setHasErrorOnResponse(true);
+      setModalTitle(defaultFailureModalTitle);
+      setModalContents(overdueMsg);
       setShowResponseModal(true);
       return;
     }
@@ -218,8 +226,12 @@ dropdownOptions.push(newOption);
     } catch (error: any) {
       setHasErrorOnResponse(true);
       if (error.response.status === 400) {
-        setModalTitle("연장권 사용실패");
-        setModalContents(noExtension);
+        setModalTitle(defaultFailureModalTitle);
+        setModalContents(noItemMsg);
+        setUrl("/store");
+      } else if (error.response.status === 403) {
+        setModalTitle(defaultFailureModalTitle);
+        setModalContents(overdueMsg);
       } else {
         setModalTitle(error.response?.data.message || error.data.message);
       }
@@ -263,7 +275,7 @@ dropdownOptions.push(newOption);
             modalTitle={modalTitle}
             modalContents={modalContents}
             closeModal={props.onClose}
-            url={"/store"}
+            url={url}
             urlTitle={"까비상점으로 이동"}
           />
         ) : (

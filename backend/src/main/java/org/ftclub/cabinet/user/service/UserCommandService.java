@@ -103,10 +103,16 @@ public class UserCommandService {
 	 * @param userId       유저의 ID
 	 * @param blackholedAt 변경할 blackholedAt
 	 */
-	public void updateUserBlackholedAtById(Long userId, LocalDateTime blackholedAt) {
+	public void updateUserBlackholeStatus(Long userId, LocalDateTime blackholedAt) {
+		User user = userRepository.getById(userId);
+		user.changeBlackholedAt(blackholedAt);
+		user.setDeletedAt(null);
+		userRepository.save(user);
+	}
+
+	public void updateCoinAmount(Long userId, Long reward) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
-		user.changeBlackholedAt(blackholedAt);
-		userRepository.save(user);
+		user.addCoin(reward);
 	}
 }

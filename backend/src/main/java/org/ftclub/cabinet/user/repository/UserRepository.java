@@ -15,6 +15,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+	@Query("SELECT u FROM User u WHERE u.id = :userId")
+	User getById(@Param("userId") Long userId);
+
 	/**
 	 * 유저 고유 아이디로 유저를 가져옵니다.
 	 *
@@ -46,7 +49,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param name 유저 이름
 	 * @return {@link User}
 	 */
-	@Query("SELECT u FROM User u WHERE u.name = :name AND u.deletedAt IS NULL")
+	@Query("SELECT u FROM User u WHERE u.name = :name")
 	Optional<User> findByName(@Param("name") String name);
 
 	/**
@@ -134,4 +137,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Query("SELECT u FROM User u WHERE u.id IN :userIds AND u.deletedAt IS NULL")
 	Page<User> findPaginationByIds(@Param("userIds") List<Long> userIds, Pageable pageable);
+
+	@Query("SELECT u FROM User u WHERE u.deletedAt IS NULL")
+	List<User> findAllDeletedAtIsNull();
 }

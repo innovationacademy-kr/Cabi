@@ -7,6 +7,7 @@ import { ItemIconMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as DropdownChevron } from "@/Cabinet/assets/images/dropdownChevron.svg";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
 import { axiosGetItemUsageHistory } from "@/Cabinet/api/axios/axios.custom";
+import useDebounce from "@/Cabinet/hooks/useDebounce";
 
 const mapItemNameToType = (itemName: string): StoreItemType => {
   switch (itemName) {
@@ -19,7 +20,7 @@ const mapItemNameToType = (itemName: string): StoreItemType => {
     case "페널티 감면권":
       return StoreItemType.PENALTY;
     default:
-      return StoreItemType.PENALTY;
+      return StoreItemType.EXTENSION;
   }
 };
 
@@ -55,8 +56,9 @@ const ItemUsageLogPage = () => {
   const [isMoreBtnLoading, setIsMoreBtnLoading] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const size = 5;
+  const { debounce } = useDebounce();
 
-  const getItemUsageLog = async (page: number, size: number) => {
+  const getItemUsageLog = async () => {
     try {
       const data = await axiosGetItemUsageHistory(page, size);
       const newLogs = createLogEntries(data);
@@ -72,13 +74,19 @@ const ItemUsageLogPage = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      getItemUsageLog(page, size);
+      getItemUsageLog();
     }, 333);
   }, [page]);
 
   const handleMoreClick = () => {
-    setPage((prev) => prev + 1);
     setIsMoreBtnLoading(true);
+    debounce(
+      "itemUsageLog",
+      () => {
+        setPage((prev) => prev + 1);
+      },
+      333
+    );
   };
 
   return (
@@ -111,7 +119,6 @@ const ItemUsageLogPage = () => {
                 <ButtonContainerStyled>
                   <MoreButtonStyled
                     onClick={handleMoreClick}
-                    disabled={isMoreBtnLoading}
                     isMoreBtnLoading={isMoreBtnLoading}
                   >
                     {isMoreBtnLoading ? (

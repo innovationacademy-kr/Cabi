@@ -5,7 +5,6 @@ import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
 import AdminItemUsageLogPage from "@/Cabinet/pages/admin/AdminItemUsageLogPage";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import SelectInduction from "@/Cabinet/components/Common/SelectInduction";
-import AdminLentLog from "@/Cabinet/components/LentLog/AdminLentLog";
 import AdminItemProvisionModal from "@/Cabinet/components/Modals/StoreModal/AdminItemProvisionModal";
 import { ReactComponent as LogoIcon } from "@/Cabinet/assets/images/logo.svg";
 import useMenu from "@/Cabinet/hooks/useMenu";

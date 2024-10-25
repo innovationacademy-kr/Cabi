@@ -55,8 +55,8 @@ public enum ExceptionStatus {
 	CLUB_HAS_LENT_CABINET(HttpStatus.NOT_ACCEPTABLE, "대여 중인 사물함을 반납 후 삭제할 수 있습니다."),
 	HANEAPI_ERROR(HttpStatus.BAD_GATEWAY, "24HANE API 통신에 에러가 있습니다."),
 	EXTENSION_NOT_FOUND(HttpStatus.BAD_REQUEST, "연장권이 존재하지 않습니다."),
+	EXTENSION_LENT_DELAYED(HttpStatus.FORBIDDEN, "연장권은 연체된 사물함에 사용할 수 없습니다."),
 	EXTENSION_SOLO_IN_SHARE_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "연장권은 1명일 때 사용할 수 없습니다."),
-	EXTENSION_LENT_DELAYED(HttpStatus.UNAUTHORIZED, "연장권은 연체된 사물함에 사용할 수 없습니다."),
 	MAIL_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "메일 전송 중 에러가 발생했습니다"),
 	SLACK_REQUEST_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "슬랙 인증 중 에러가 발생했습니다."),
 	SLACK_MESSAGE_SEND_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "슬랙 메세지 전송 중 에러가 발생했습니다."),
@@ -83,7 +83,8 @@ public enum ExceptionStatus {
 	NOT_ENOUGH_COIN(HttpStatus.BAD_REQUEST, "보유한 코인이 아이템 가격보다 적습니다."),
 	INVALID_JWT_TOKEN(HttpStatus.BAD_REQUEST, "토큰이 없거나, 유효하지 않은 JWT 토큰입니다."),
 	NOT_FOUND_SECTION(HttpStatus.BAD_REQUEST, "사물함 구역 정보를 찾을 수 없습니다."),
-	ITEM_NOT_OWNED(HttpStatus.BAD_REQUEST, "해당 아이템을 보유하고 있지 않습니다");
+	ITEM_NOT_OWNED(HttpStatus.BAD_REQUEST, "해당 아이템을 보유하고 있지 않습니다"),
+	ITEM_USE_DUPLICATED(HttpStatus.FORBIDDEN, "아이템이 중복 사용되었습니다.");
 
 	final private int statusCode;
 	final private String message;

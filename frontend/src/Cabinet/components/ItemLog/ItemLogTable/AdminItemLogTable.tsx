@@ -1,8 +1,8 @@
+import { HttpStatusCode } from "axios";
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { ItemLogResponseType } from "@/Cabinet/types/dto/admin.dto";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import { STATUS_400_BAD_REQUEST } from "@/Cabinet/constants/StatusCode";
 
 const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
   if (!itemLog) return <LoadingAnimation />;
@@ -16,7 +16,7 @@ const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
             <th>사용일</th>
           </tr>
         </TheadStyled>
-        {itemLog !== STATUS_400_BAD_REQUEST &&
+        {itemLog !== HttpStatusCode.BadRequest &&
           Array.isArray(itemLog.itemHistories) && (
             <TbodyStyled>
               {itemLog.itemHistories.map(
@@ -47,7 +47,7 @@ const AdminItemLogTable = ({ itemLog }: { itemLog: ItemLogResponseType }) => {
             </TbodyStyled>
           )}
       </LogTableStyled>
-      {(itemLog === STATUS_400_BAD_REQUEST ||
+      {(itemLog === HttpStatusCode.BadRequest ||
         itemLog.totalLength === undefined ||
         itemLog.totalLength === 0) && (
         <EmptyLogStyled>아이템 내역이 없습니다.</EmptyLogStyled>
