@@ -76,7 +76,7 @@ public class AdminItemController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void assignCoin(@RequestBody AdminCoinAssignRequestDto coinAssignRequestDto) {
 		adminItemFacadeService.assignCoin(coinAssignRequestDto.getUserIds(),
-				coinAssignRequestDto.getSku(), coinAssignRequestDto.getAmount());
+				coinAssignRequestDto.getItemSku(), coinAssignRequestDto.getAmount());
 	}
 
 	/**
