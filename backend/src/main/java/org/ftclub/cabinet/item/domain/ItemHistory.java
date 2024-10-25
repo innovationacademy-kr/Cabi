@@ -78,13 +78,7 @@ public class ItemHistory {
 	@Column(name = "AMOUNT", nullable = true)
 	private Long amount;
 
-	protected ItemHistory(long userId, long itemId, LocalDateTime usedAt) {
-		this.userId = userId;
-		this.itemId = itemId;
-		this.usedAt = usedAt;
-	}
-
-	protected ItemHistory(long userId, long itemId, LocalDateTime assignedAt, Long amount) {
+	protected ItemHistory(Long userId, Long itemId, LocalDateTime assignedAt, Long amount) {
 		this.userId = userId;
 		this.itemId = itemId;
 		this.usedAt = assignedAt;
@@ -97,17 +91,8 @@ public class ItemHistory {
 	 * @param usedAt 아이템 사용일자
 	 * @return 아이템 히스토리 객체 {@link ItemHistory}
 	 */
-	public static ItemHistory of(long userId, long itemId, LocalDateTime usedAt) {
-		ItemHistory itemHistory = new ItemHistory(userId, itemId, usedAt);
-		if (!itemHistory.isValid()) {
-			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
-		}
-		return itemHistory;
-	}
-
-	public static ItemHistory coin(Long userId, Long itemId, LocalDateTime assignedAt,
-			Long amount) {
-		ItemHistory itemHistory = new ItemHistory(userId, itemId, assignedAt, amount);
+	public static ItemHistory of(Long userId, Long itemId, LocalDateTime usedAt, Long amount) {
+		ItemHistory itemHistory = new ItemHistory(userId, itemId, usedAt, amount);
 		if (!itemHistory.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
