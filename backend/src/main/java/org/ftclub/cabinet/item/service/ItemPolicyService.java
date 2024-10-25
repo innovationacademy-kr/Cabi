@@ -64,4 +64,10 @@ public class ItemPolicyService {
 			return Sku.COIN_REWARD_2000;
 		}
 	}
+
+	public void verifyCoinAmount(Long amount) {
+		if (amount == null) {
+			throw ExceptionStatus.INVALID_AMOUNT.asServiceException();
+		}
+	}
 }
