@@ -109,7 +109,7 @@ public class ItemHistory {
 			Long amount) {
 		ItemHistory itemHistory = new ItemHistory(userId, itemId, assignedAt, amount);
 		if (!itemHistory.isValid()) {
-			throw ExceptionStatus.INVALID_ARGUMENT.asControllerException();
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
 		return itemHistory;
 	}
