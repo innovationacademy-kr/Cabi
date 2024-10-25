@@ -922,6 +922,25 @@ export const axiosItemAssign = async (
   }
 };
 
+const axiosCoinAssignURL = "v5/admin/items/assign/coin";
+export const axiosCoinAssign = async (
+  itemSku: string,
+  userIds: number[],
+  amount: number
+): Promise<any> => {
+  try {
+    const response = await instance.post(axiosCoinAssignURL, {
+      itemSku,
+      userIds,
+      amount,
+    });
+    return response;
+  } catch (error) {
+    logAxiosError(error, ErrorType.STORE, "아이템 지급 중 오류 발생", true);
+    throw error;
+  }
+};
+
 const axiosGetUserItemsURL = "/v5/admin/items/users/";
 export const axiosGetUserItems = async (
   userId: number,
