@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
@@ -14,7 +14,10 @@ import {
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
-import { axiosItemAssign, axiosItems } from "@/Cabinet/api/axios/axios.custom";
+import {
+  axiosCoinAssign, // axiosItemAssign,
+  axiosItems,
+} from "@/Cabinet/api/axios/axios.custom";
 
 interface IPenaltyModalProps {
   onClose: () => void;
@@ -35,11 +38,18 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   const [isItemDropdownOpen, setIsItemDropdownOpen] = useState(false);
   const [isItemTypeDropdownOpen, setIsItemTypeDropdownOpen] = useState(false);
   const [targetUserInfo] = useRecoilState(targetUserInfoState);
-
+  const coinRef = useRef<HTMLInputElement>(null);
   const HandleItemProvisionBtn = async () => {
+    let coinRefVal = coinRef.current!.value;
+    coinRefVal = coinRefVal == "" ? "0" : String(coinRefVal);
     setIsLoading(true);
     try {
-      await axiosItemAssign(selectedItemSku, [targetUserInfo.userId!]);
+      // await axiosItemAssign(selectedItemSku, [targetUserInfo.userId!]);
+      await axiosCoinAssign(
+        selectedItemSku,
+        [targetUserInfo.userId!],
+        Number(coinRefVal)
+      );
       setModalTitle("아이템 지급완료");
     } catch (error: any) {
       setHasErrorOnResponse(true);
@@ -152,6 +162,18 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
           <ModalDropdownNameStyled>아이템 타입</ModalDropdownNameStyled>
           <Dropdown {...itemTypeDropDownProps} />
         </ModalWrapperStyled>
+
+        <ModalWrapperStyled>
+          <ModalDropdownNameStyled>코인</ModalDropdownNameStyled>
+          <CoinInputStyled
+            onKeyUp={(e: any) => {
+              if (e.key === "Enter") HandleItemProvisionBtn();
+            }}
+            ref={coinRef}
+            maxLength={10}
+            id="input"
+          ></CoinInputStyled>
+        </ModalWrapperStyled>
       </>
     ),
   };
@@ -177,6 +199,21 @@ const ModalDropdownNameStyled = styled.div`
   display: flex;
   margin: 10px 10px 15px 5px;
   font-size: 18px;
+`;
+
+const CoinInputStyled = styled.input`
+  border: 1px solid var(--light-gray-line-btn-color);
+  width: 100%;
+  height: 60px;
+  border-radius: 10px;
+  text-align: start;
+  text-indent: 20px;
+  font-size: 1.125rem;
+  cursor: "input";
+  color: "var(--normal-text-color)";
+  &::placeholder {
+    color: "var(--line-color)";
+  }
 `;
 
 export default AdminItemProvisionModal;
