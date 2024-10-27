@@ -28,6 +28,7 @@ export interface IPresentationInfo {
   presentationTime: PresentationPeriodType | null;
   presentationLocation?: string | null;
   detail: string | null;
+  category: PresentationCategoryType | "DUMMY" | null;
 }
 
 export interface IPresentationScheduleDetailInfo {

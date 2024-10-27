@@ -76,7 +76,14 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
     IDropdownOptions[]
   >([]);
   const statusDropdownProps = {
-    options: statusOptions,
+    options: statusOptions.map((option) => ({
+      ...option,
+      isDisabled:
+        currentPresentation?.category === "DUMMY" &&
+        option.value === PresentationStatusType.CANCEL
+          ? true
+          : false,
+    })),
     defaultValue:
       statusOptions.find(
         (option) => option.value === currentPresentation?.presentationStatus
