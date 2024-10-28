@@ -15,6 +15,7 @@ const CoinUseLineChart = ({
   if (totalCoinUseData === undefined) {
     return null;
   }
+
   const formattedData = [
     {
       id: "issuedCoin",
@@ -39,7 +40,7 @@ const CoinUseLineChart = ({
     (data) => data.id === coinToggleType
   );
 
-  const yMin = Math.min(...filteredData[0].data.map((d) => d.y));
+  const yMin = 0;
   const yMax = Math.max(...filteredData[0].data.map((d) => d.y));
 
   // NOTE : y축 scale을 log로 표현하기 위해 Y scale을 설정

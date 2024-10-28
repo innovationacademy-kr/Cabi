@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import DarkModeToggleSwitch from "@/Cabinet/components/Common/DarkModeToggleSwitch";
 import { ReactComponent as CabiLogo } from "@/Cabinet/assets/images/logo.svg";
 import { ReactComponent as PresentationLogo } from "@/Presentation/assets/images/logo.svg";
 
@@ -58,6 +59,9 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
           {index < domains.length - 1 && <DomainSeparatorStyled />}
         </DomainWrapperStyled>
       ))}
+      <ToggleWrapperStyled>
+        <DarkModeToggleSwitch id="darkModeToggleSwitch" />
+      </ToggleWrapperStyled>
     </DomainGroupContainerStyled>
   );
 };
@@ -125,6 +129,13 @@ const DomainSeparatorStyled = styled.div`
   height: 20px;
   margin: 0 8px;
   background-color: var(--service-man-title-border-btm-color);
+`;
+
+const ToggleWrapperStyled = styled.div`
+  position: absolute;
+  right: 18px;
+  display: flex;
+  align-items: center;
 `;
 
 export default TopNavDomainGroup;
