@@ -220,9 +220,9 @@ const IconWrapperStyled = styled.div<{ disabled: boolean }>`
   }
 `;
 
-const AlertStyled = styled.div<{ currentFloor: number }>`
-  visibility: ${(props) =>
-    DISABLED_FLOOR.includes(props.currentFloor.toString())
+const AlertStyled = styled.div<{ currentFloor: number | undefined }>`
+  visibility: ${({ currentFloor }) =>
+    currentFloor && DISABLED_FLOOR.includes(currentFloor.toString())
       ? "hidden"
       : "visible"};
   height: 30px;
