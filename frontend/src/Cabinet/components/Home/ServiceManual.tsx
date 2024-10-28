@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import ManualContentBox from "@/Cabinet/components/Home/ManualContentBox";
 import ManualModal from "@/Cabinet/components/Modals/ManualModal/ManualModal";
+import { ReactComponent as LinkImg } from "@/Cabinet/assets/images/link.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
 const ServiceManual = ({
@@ -20,7 +21,7 @@ const ServiceManual = ({
   };
 
   const openNotionLink = () => {
-    window.open("https://cabi.oopy.io/0bbb08a2-241c-444b-8a96-6b33c3796451");
+    window.open("https://cabi.oopy.io/115f29ec-ef8e-4748-a8a6-0d0341def33c");
   };
 
   return (
@@ -30,7 +31,8 @@ const ServiceManual = ({
           Cabi <span>이용 안내서</span>
         </h1>
         <NotionBtn className="button" onClick={openNotionLink}>
-          상세보기
+          <span>상세보기</span>
+          <LinkImg id="linknImg" stroke="var(--notion-btn-text-color)" />
         </NotionBtn>
       </TitleContainerStyled>
 
@@ -148,9 +150,30 @@ const NotionBtn = styled.button`
   color: var(--notion-btn-text-color);
   background: var(--bg-color);
   border: 1px solid var(--line-color);
-  :hover {
-    color: var(--normal-text-color);
-    font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--normal-text-color);
+      font-weight: 400;
+
+      #linknImg > path {
+        stroke: var(--normal-text-color);
+        stroke-width: 1.2px;
+      }
+    }
+  }
+
+  & > span {
+    line-height: 14px;
+    height: 16px;
+  }
+
+  & > #linknImg {
+    width: 12px;
+    height: 12px;
+    margin-left: 4px;
   }
 `;
 
