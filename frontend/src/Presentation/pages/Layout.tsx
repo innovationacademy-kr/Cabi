@@ -12,7 +12,6 @@ import useMenu from "@/Cabinet/hooks/useMenu";
 import LeftNav from "@/Presentation/components/LeftNav/LeftNav";
 import TopNavContainer from "@/Presentation/components/TopNav/TopNav.container";
 
-const token = getCookie("access_token");
 const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
 
@@ -23,6 +22,8 @@ const Layout = (): JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
   const { closeAll } = useMenu();
+
+  const token = getCookie("access_token");
 
   const isRootPath: boolean = location.pathname === "/presentation/";
   const isLoginPage: boolean = location.pathname === "/login";
