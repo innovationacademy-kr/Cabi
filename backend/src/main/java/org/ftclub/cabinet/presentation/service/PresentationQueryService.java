@@ -35,12 +35,6 @@ public class PresentationQueryService {
 				.collect(Collectors.toList());
 	}
 
-	public List<Presentation> getPresentationsBetweenWithPageRequest(LocalDateTime start,
-			LocalDateTime end,
-			PageRequest pageRequest) {
-		return presentationRepository.findByDateTimeBetween(start, end, pageRequest);
-	}
-
 	public List<Presentation> getPresentationsByYearMonth(YearMonth yearMonth) {
 		LocalDateTime startDate = yearMonth.atDay(START_DAY).atStartOfDay();
 		LocalDateTime endDayDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
@@ -73,5 +67,13 @@ public class PresentationQueryService {
 				.filter(presentation ->
 						presentation.getCategory().equals(Category.DUMMY))
 				.collect(Collectors.toList());
+	}
+
+	public List<Presentation> findPresentationsWithStatusWithinPeriod(
+			PresentationStatus status,
+			LocalDateTime start,
+			LocalDateTime end, PageRequest pageRequest) {
+		return presentationRepository.findPresentationsWithinPeriod(status,
+				start, end, pageRequest);
 	}
 }
