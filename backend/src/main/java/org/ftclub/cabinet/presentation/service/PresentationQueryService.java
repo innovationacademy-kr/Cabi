@@ -44,13 +44,12 @@ public class PresentationQueryService {
 				endDayDate);
 	}
 
-	public Presentation getOneByDate(LocalDateTime dateTime) {
+	public Presentation getOneDummyByDate(LocalDateTime dateTime) {
 		LocalDateTime startOfDate = dateTime.withHour(0).withMinute(0).withSecond(0);
 		LocalDateTime endOfDate = dateTime.withHour(23).withMinute(59).withSecond(59);
 		return presentationRepository.findAllByDateTimeBetween(startOfDate, endOfDate)
 				.stream()
-				.filter(p -> p.getPresentationStatus() != PresentationStatus.CANCEL)
-				.filter(p -> p.getPresentationStatus() != PresentationStatus.DUMMY)
+				.filter(p -> p.getPresentationStatus() == PresentationStatus.DUMMY)
 				.findFirst()
 				.orElseThrow(ExceptionStatus.INVALID_PRESENTATION_DATE::asServiceException);
 	}

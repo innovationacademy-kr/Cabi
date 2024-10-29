@@ -98,5 +98,6 @@ public class Presentation {
 		this.subject = subject;
 		this.summary = summary;
 		this.detail = detail;
+		this.presentationStatus = PresentationStatus.EXPECTED;
 	}
 }
