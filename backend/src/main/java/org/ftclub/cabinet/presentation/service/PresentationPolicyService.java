@@ -5,9 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Presentation;
-import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.springframework.stereotype.Service;
@@ -34,8 +32,7 @@ public class PresentationPolicyService {
 		LocalDateTime endOfDay = startOfDay.plusDays(1);
 
 		if (isOverRangeDate(reservationDate, now)
-				|| isAlreadyRegisteredDate(startOfDay,
-				endOfDay)) {
+				|| isAlreadyRegisteredDate(startOfDay, endOfDay)) {
 			throw ExceptionStatus.INVALID_DATE.asServiceException();
 		}
 	}
@@ -46,8 +43,9 @@ public class PresentationPolicyService {
 
 		return presentations.stream()
 				.anyMatch(presentation ->
-						!presentation.getPresentationStatus().equals(PresentationStatus.CANCEL)
-								&& !presentation.getCategory().equals(Category.DUMMY));
+						presentation.getPresentationStatus().equals(PresentationStatus.EXPECTED)
+								|| presentation.getPresentationStatus()
+								.equals(PresentationStatus.DONE));
 	}
 
 	private boolean isOverRangeDate(LocalDate reservationDate, LocalDate now) {

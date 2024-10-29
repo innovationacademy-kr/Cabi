@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
@@ -48,7 +47,7 @@ public class PresentationQueryService {
 		LocalDateTime endOfDate = dateTime.withHour(23).withMinute(59).withSecond(59);
 		return presentationRepository.findAllByDateTimeBetween(startOfDate, endOfDate)
 				.stream()
-				.filter(p -> p.getCategory() == Category.DUMMY)
+				.filter(p -> p.getUser() == null)
 				.findFirst()
 				.orElseThrow(ExceptionStatus.INVALID_PRESENTATION_DATE::asServiceException);
 	}

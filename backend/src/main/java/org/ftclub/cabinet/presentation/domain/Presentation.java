@@ -61,9 +61,8 @@ public class Presentation {
 	@JoinColumn(name = "USER_ID", nullable = true)
 	private User user;
 
-	protected Presentation(Category category, LocalDateTime dateTime,
+	protected Presentation(LocalDateTime dateTime,
 			PresentationTime presentationTime, String subject, String summary, String detail) {
-		this.category = category;
 		this.dateTime = dateTime;
 		this.presentationTime = presentationTime;
 		this.subject = subject;
@@ -73,10 +72,10 @@ public class Presentation {
 		this.presentationLocation = PresentationLocation.BASEMENT;
 	}
 
-	public static Presentation of(Category category, LocalDateTime dateTime,
+	public static Presentation of(LocalDateTime dateTime,
 			PresentationTime presentationTime, String subject, String summary, String detail) {
 
-		return new Presentation(category, dateTime, presentationTime, subject, summary, detail);
+		return new Presentation(dateTime, presentationTime, subject, summary, detail);
 	}
 
 	public void adminUpdate(PresentationStatus newStatus, LocalDateTime newDateTime,

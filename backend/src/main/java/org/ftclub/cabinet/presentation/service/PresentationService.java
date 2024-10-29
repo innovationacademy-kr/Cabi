@@ -21,7 +21,6 @@ import org.ftclub.cabinet.dto.PresentationMyPagePaginationDto;
 import org.ftclub.cabinet.dto.PresentationUpdateDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
-import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.domain.PresentationTime;
@@ -205,7 +204,7 @@ public class PresentationService {
 		// 발표 취소 시 해당 날짜에 더미 폼 생성
 		if (dto.getStatus() == PresentationStatus.CANCEL) {
 			Presentation presentation =
-					Presentation.of(Category.DUMMY,
+					Presentation.of(
 							dto.getDateTime(),
 							PresentationTime.HALF,
 							"dummy",
@@ -245,7 +244,7 @@ public class PresentationService {
 		List<LocalDateTime> wednesdays = getDummyPresentationFormsDate(nowDate);
 		List<Presentation> presentations = wednesdays.stream()
 				.map(wednesday -> Presentation.of(
-						Category.DUMMY,
+
 						wednesday,
 						PresentationTime.HALF,
 						"dummy",
