@@ -204,8 +204,14 @@ public class PresentationService {
 
 		// 발표 취소 시 해당 날짜에 더미 폼 생성
 		if (dto.getStatus() == PresentationStatus.CANCEL) {
-			Presentation presentation = Presentation.of(Category.DUMMY, dto.getDateTime(),
-					PresentationTime.HALF, "dummy", "dummy", "dummy");
+			Presentation presentation =
+					Presentation.of(Category.DUMMY,
+							dto.getDateTime(),
+							PresentationTime.HALF,
+							"dummy",
+							"dummy",
+							"dummy",
+							PresentationStatus.DUMMY);
 			presentationRepository.save(presentation);
 		}
 
@@ -239,17 +245,15 @@ public class PresentationService {
 	public void generatePresentationFormsEveryThreeMonth(LocalDate nowDate) {
 		List<LocalDateTime> wednesdays = getDummyPresentationFormsDate(nowDate);
 		List<Presentation> presentations = wednesdays.stream()
-				.map(wednesday -> {
-					Presentation presentation = Presentation.of(
-							Category.DUMMY,
-							wednesday,
-							PresentationTime.HALF,
-							"dummy",
-							"dummy",
-							"dummy"
-					);
-					return presentation;
-				})
+				.map(wednesday -> Presentation.of(
+						Category.DUMMY,
+						wednesday,
+						PresentationTime.HALF,
+						"dummy",
+						"dummy",
+						"dummy",
+						PresentationStatus.DUMMY
+				))
 				.collect(Collectors.toList());
 
 		presentationRepository.saveAll(presentations);

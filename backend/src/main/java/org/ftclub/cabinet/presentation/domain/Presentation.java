@@ -62,21 +62,24 @@ public class Presentation {
 	private User user;
 
 	protected Presentation(Category category, LocalDateTime dateTime,
-			PresentationTime presentationTime, String subject, String summary, String detail) {
+			PresentationTime presentationTime, String subject, String summary, String detail,
+			PresentationStatus status) {
 		this.category = category;
 		this.dateTime = dateTime;
 		this.presentationTime = presentationTime;
 		this.subject = subject;
 		this.detail = detail;
 		this.summary = summary;
-		this.presentationStatus = PresentationStatus.EXPECTED;
+		this.presentationStatus = status;
 		this.presentationLocation = PresentationLocation.BASEMENT;
 	}
 
 	public static Presentation of(Category category, LocalDateTime dateTime,
-			PresentationTime presentationTime, String subject, String summary, String detail) {
+			PresentationTime presentationTime, String subject, String summary, String detail,
+			PresentationStatus status) {
 
-		return new Presentation(category, dateTime, presentationTime, subject, summary, detail);
+		return new Presentation(category, dateTime, presentationTime, subject, summary, detail,
+				status);
 	}
 
 	public void adminUpdate(PresentationStatus newStatus, LocalDateTime newDateTime,
