@@ -20,6 +20,7 @@ export interface IDropdownProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   closeOtherDropdown?: () => void;
+  isDisabledOption: boolean;
 }
 
 const Dropdown = ({
@@ -30,6 +31,7 @@ const Dropdown = ({
   isOpen,
   setIsOpen,
   closeOtherDropdown,
+  isDisabledOption,
 }: IDropdownProps) => {
   const [currentName, setCurrentName] = useState(defaultValue);
   const idx: number = options.findIndex((op) => op.name === currentName);
@@ -41,14 +43,16 @@ const Dropdown = ({
   useEffect(() => {
     setCurrentName(defaultValue);
   }, [defaultValue]);
+
   return (
-    <DropdownContainerStyled>
+    <DropdownContainerStyled isDisabled={isDisabledOption}>
       <DropdownSelectionBoxStyled
         onClick={() => {
           if (options[selectedIdx].isDisabled) return;
           setIsOpen(!isOpen);
           closeOtherDropdown && closeOtherDropdown();
         }}
+        isDisabled={isDisabledOption}
       >
         {DefaultOptionIcon && (
           <OptionsImgStyled>
@@ -94,15 +98,15 @@ const Dropdown = ({
   );
 };
 
-const DropdownContainerStyled = styled.div`
+const DropdownContainerStyled = styled.div<{ isDisabled: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
   position: relative;
-  cursor: pointer;
+  cursor: ${({ isDisabled }) => (isDisabled ? "" : "pointer")};
 `;
 
-const DropdownSelectionBoxStyled = styled.div`
+const DropdownSelectionBoxStyled = styled.div<{ isDisabled: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
@@ -113,7 +117,8 @@ const DropdownSelectionBoxStyled = styled.div`
   text-align: start;
   padding-left: 20px;
   font-size: 1.125rem;
-  color: var(--sys-main-color);
+  color: ${({ isDisabled }) =>
+    isDisabled ? "var(--capsule-btn-border-color)" : "var(--sys-main-color)"};
 `;
 
 const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
