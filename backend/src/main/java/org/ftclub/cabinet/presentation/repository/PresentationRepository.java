@@ -20,7 +20,7 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 
 	List<Presentation> findAllByDateTimeBetween(LocalDateTime start, LocalDateTime end);
 
-	Optional<Presentation> findPresentationByDateTimeBetween(LocalDateTime startOfDate,
+	List<Presentation> findPresentationByDateTimeBetween(LocalDateTime startOfDate,
 			LocalDateTime endOfDate);
 
 	@EntityGraph(attributePaths = "user")
