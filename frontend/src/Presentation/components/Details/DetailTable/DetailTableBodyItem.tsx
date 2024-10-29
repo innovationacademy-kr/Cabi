@@ -68,7 +68,7 @@ const DetailTableBodyItem = ({
         presentationStatus: item.presentationStatus,
         presentationLocation: item.presentationLocation,
         detail: item.detail,
-        category: item.category,
+        userName: item.userName,
       });
       openAdminModal("statusModal");
     } else {

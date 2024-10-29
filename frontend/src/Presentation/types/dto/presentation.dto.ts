@@ -28,7 +28,7 @@ export interface IPresentationInfo {
   presentationTime: PresentationPeriodType | null;
   presentationLocation?: string | null;
   detail: string | null;
-  category: PresentationCategoryType | "DUMMY" | null;
+  userName: string | null;
 }
 
 export interface IPresentationScheduleDetailInfo {
@@ -42,11 +42,6 @@ export interface IPresentationScheduleDetailInfo {
   presentationStatus: PresentationStatusType | null;
   presentationTime: PresentationPeriodType | null;
   presentationLocation: PresentationLocation | null;
-}
-
-export interface IExtendedPresentationScheduleDetailInfo
-  extends Omit<IPresentationScheduleDetailInfo, "category"> {
-  category: PresentationCategoryType | "DUMMY" | null;
 }
 
 export interface IAnimation {

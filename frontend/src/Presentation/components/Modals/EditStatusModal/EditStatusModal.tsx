@@ -78,7 +78,7 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
   const statusDropdownProps = {
     options: statusOptions.map((option) => ({
       ...option,
-      isDisabled: currentPresentation?.category === "DUMMY" ? true : false,
+      isDisabled: !currentPresentation?.userName ? true : false,
     })),
     defaultValue:
       statusOptions.find(
@@ -94,7 +94,6 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
       setIsDatesDropdownOpen(false);
       setIsLocationDropdownOpen(false);
     },
-    isDisabledOption: currentPresentation?.category === "DUMMY",
   };
 
   const datesDropdownProps = {
@@ -112,7 +111,6 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
       setIsStatusDropdownOpen(false);
       setIsLocationDropdownOpen(false);
     },
-    isDisabledOption: false,
   };
 
   const locationDropdownProps = {
@@ -131,7 +129,6 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
       setIsStatusDropdownOpen(false);
       setIsDatesDropdownOpen(false);
     },
-    isDisabledOption: false,
   };
 
   const tryEditPresentationStatus = async (e: React.MouseEvent) => {
@@ -187,8 +184,8 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
 
   useEffect(() => {
     getInvalidDates();
-    if (currentPresentation?.category === "DUMMY") {
-      setPresentationStatus(PresentationStatusType.DUMMY);
+    if (!currentPresentation?.userName) {
+      setPresentationStatus(PresentationStatusType.EXPECTED);
     }
   }, []);
 
