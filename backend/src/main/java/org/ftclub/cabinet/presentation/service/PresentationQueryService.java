@@ -52,8 +52,9 @@ public class PresentationQueryService {
 	public Presentation getPresentationsByDate(LocalDateTime dateTime) {
 		LocalDateTime startOfDate = dateTime.withHour(0).withMinute(0).withSecond(0);
 		LocalDateTime endOfDate = dateTime.withHour(23).withMinute(59).withSecond(59);
-		return presentationRepository.findPresentationByDateTimeBetween(startOfDate,
-						endOfDate)
+		return presentationRepository.findPresentationByDateTimeBetween(startOfDate, endOfDate)
+				.stream().filter(p -> p.getPresentationStatus() != PresentationStatus.CANCEL)
+				.findFirst()
 				.orElseThrow(ExceptionStatus.INVALID_PRESENTATION_DATE::asServiceException);
 	}
 
