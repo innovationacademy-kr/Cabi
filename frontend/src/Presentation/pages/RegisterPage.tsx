@@ -144,6 +144,7 @@ const RegisterPage = () => {
       try {
         const response = await axiosGetPresentationAbleDates();
         const availableDates = response.data.results;
+        availableDates.sort();
         const formattedAvailableDates = availableDates.map(
           (dateTime: string) => {
             return format(new Date(dateTime), "M/d");
