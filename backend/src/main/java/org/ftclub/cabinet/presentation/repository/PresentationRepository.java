@@ -28,8 +28,7 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 	@Query("SELECT p "
 			+ "FROM Presentation p "
 			+ "WHERE p.presentationStatus = :status AND "
-			+ "p.dateTime BETWEEN :start AND :end "
-			+ "ORDER BY p.dateTime ASC")
+			+ "p.dateTime BETWEEN :start AND :end")
 	List<Presentation> findPresentationsWithinPeriod(
 			@Param("status") PresentationStatus status,
 			@Param("start") LocalDateTime start,
