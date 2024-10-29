@@ -105,8 +105,8 @@ public class PresentationService {
 		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
 				Sort.by(DATE_TIME).descending());
 
-		return presentationQueryService.findPresentationsWithStatusWithinPeriod(
-				PresentationStatus.DONE, start, limit, pageRequest);
+		return presentationQueryService.findPresentationsWithStatusWithinPeriod(start, limit,
+				pageRequest);
 	}
 
 	/**
@@ -122,8 +122,8 @@ public class PresentationService {
 		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
 				Sort.by(DATE_TIME).ascending());
 
-		return presentationQueryService.findPresentationsWithStatusWithinPeriod(
-				PresentationStatus.EXPECTED, start, end, pageRequest);
+		return presentationQueryService.findPresentationsWithStatusWithinPeriod(start, end,
+				pageRequest);
 	}
 
 	/**

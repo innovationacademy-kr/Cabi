@@ -72,10 +72,8 @@ public class PresentationQueryService {
 	}
 
 	public List<Presentation> findPresentationsWithStatusWithinPeriod(
-			PresentationStatus status,
 			LocalDateTime start,
 			LocalDateTime end, PageRequest pageRequest) {
-		return presentationRepository.findPresentationsWithinPeriod(status,
-				start, end, pageRequest);
+		return presentationRepository.findDummiesWithinPeriod(start, end, pageRequest);
 	}
 }

@@ -34,4 +34,13 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 			@Param("start") LocalDateTime start,
 			@Param("end") LocalDateTime end,
 			Pageable pageable);
+
+	@Query("SELECT p "
+			+ "FROM Presentation p "
+			+ "WHERE p.user IS NULL AND "
+			+ "p.dateTime BETWEEN :start AND :end")
+	List<Presentation> findDummiesWithinPeriod(
+			@Param("start") LocalDateTime start,
+			@Param("end") LocalDateTime end,
+			Pageable pageable);
 }
