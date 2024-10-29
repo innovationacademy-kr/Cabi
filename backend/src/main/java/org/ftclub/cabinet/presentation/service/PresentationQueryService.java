@@ -29,9 +29,8 @@ public class PresentationQueryService {
 
 		return presentations.stream()
 				.filter(presentation ->
-						!presentation.getPresentationStatus().equals(PresentationStatus.CANCEL)
-								&& !presentation.getPresentationStatus()
-								.equals(PresentationStatus.DUMMY)
+						presentation.getPresentationStatus().equals(PresentationStatus.EXPECTED)
+								&& presentation.getUser() != null
 				)
 				.collect(Collectors.toList());
 	}
@@ -49,7 +48,7 @@ public class PresentationQueryService {
 		LocalDateTime endOfDate = dateTime.withHour(23).withMinute(59).withSecond(59);
 		return presentationRepository.findAllByDateTimeBetween(startOfDate, endOfDate)
 				.stream()
-				.filter(p -> p.getPresentationStatus() == PresentationStatus.DUMMY)
+				.filter(p -> p.getCategory() == Category.DUMMY)
 				.findFirst()
 				.orElseThrow(ExceptionStatus.INVALID_PRESENTATION_DATE::asServiceException);
 	}
@@ -63,11 +62,10 @@ public class PresentationQueryService {
 			LocalDateTime localDateTime) {
 
 		List<Presentation> presentations =
-				presentationRepository.findAllByDateTimeBetween(now, localDateTime);
+				presentationRepository.findAllByDateTimeBetweenOrderByDateTime(now, localDateTime);
 
 		return presentations.stream()
-				.filter(presentation ->
-						presentation.getCategory().equals(Category.DUMMY))
+				.filter(presentation -> presentation.getUser() == null)
 				.collect(Collectors.toList());
 	}
 

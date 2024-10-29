@@ -210,8 +210,7 @@ public class PresentationService {
 							PresentationTime.HALF,
 							"dummy",
 							"dummy",
-							"dummy",
-							PresentationStatus.DUMMY);
+							"dummy");
 			presentationRepository.save(presentation);
 		}
 
@@ -251,8 +250,7 @@ public class PresentationService {
 						PresentationTime.HALF,
 						"dummy",
 						"dummy",
-						"dummy",
-						PresentationStatus.DUMMY
+						"dummy"
 				))
 				.collect(Collectors.toList());
 
