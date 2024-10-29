@@ -77,6 +77,16 @@ const DetailTableBodyItemTopTr = ({
   tableHeadEntriesWithoutDate: [string, string][];
   tableHeadEntriesWithoutDateAndSubject: [string, string][];
 }) => {
+  const isClickable = (function checkClickable() {
+    if (itemInfo.item.presentationStatus !== PresentationStatusType.CANCEL) {
+      if (isAdmin) {
+        return true;
+      } else {
+        return !itemInfo.itemStatus;
+      }
+    }
+  })();
+
   return (
     <>
       <TopTrStyled
@@ -85,11 +95,7 @@ const DetailTableBodyItemTopTr = ({
         id={isItemOpen ? "selected" : ""}
         presentationStatus={itemInfo.item.presentationStatus}
         onClick={() => {
-          ((isAdmin && itemInfo.itemStatus !== itemType.NO_EVENT_PAST) ||
-            (!isAdmin && !itemInfo.itemStatus)) &&
-            itemInfo.item.presentationStatus !==
-              PresentationStatusType.CANCEL &&
-            handleItemClick(itemInfo.item);
+          isClickable && handleItemClick(itemInfo.item);
         }}
         open={isItemOpen}
       >
@@ -215,15 +221,13 @@ const TopTrStyled = styled.tr<{
       cursor: ${(props) => {
         if (props.presentationStatus === PresentationStatusType.CANCEL)
           return "";
-        else if (props.isAdmin)
-          return props.itemStatus === itemType.NO_EVENT_PAST ? "" : "pointer";
+        else if (props.isAdmin) return "pointer";
         else return props.itemStatus ? "" : "pointer";
       }};
       background-color: ${(props) => {
         if (props.presentationStatus === PresentationStatusType.CANCEL)
           return "";
-        else if (props.isAdmin)
-          return props.itemStatus === itemType.NO_EVENT_PAST ? "" : "#91B5FB";
+        else if (props.isAdmin) return "#91B5FB";
         else return props.itemStatus ? "" : "#91B5FB";
       }};
     }

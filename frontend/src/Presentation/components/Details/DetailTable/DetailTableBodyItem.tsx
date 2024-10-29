@@ -59,7 +59,6 @@ const DetailTableBodyItem = ({
   const handleItemClick = (item: IPresentationScheduleDetailInfo) => {
     if (
       isAdmin &&
-      itemInfo.itemStatus !== itemType.NO_EVENT_PAST &&
       itemInfo.item.presentationStatus !== PresentationStatusType.CANCEL
     ) {
       setCurrentPresentation({
