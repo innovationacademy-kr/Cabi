@@ -30,7 +30,8 @@ public class PresentationQueryService {
 		return presentations.stream()
 				.filter(presentation ->
 						!presentation.getPresentationStatus().equals(PresentationStatus.CANCEL)
-								&& !presentation.getCategory().equals(Category.DUMMY)
+								&& !presentation.getPresentationStatus()
+								.equals(PresentationStatus.DUMMY)
 				)
 				.collect(Collectors.toList());
 	}
@@ -43,11 +44,13 @@ public class PresentationQueryService {
 				endDayDate);
 	}
 
-	public Presentation getPresentationsByDate(LocalDateTime dateTime) {
+	public Presentation getOneByDate(LocalDateTime dateTime) {
 		LocalDateTime startOfDate = dateTime.withHour(0).withMinute(0).withSecond(0);
 		LocalDateTime endOfDate = dateTime.withHour(23).withMinute(59).withSecond(59);
-		return presentationRepository.findPresentationByDateTimeBetween(startOfDate, endOfDate)
-				.stream().filter(p -> p.getPresentationStatus() != PresentationStatus.CANCEL)
+		return presentationRepository.findAllByDateTimeBetween(startOfDate, endOfDate)
+				.stream()
+				.filter(p -> p.getPresentationStatus() != PresentationStatus.CANCEL)
+				.filter(p -> p.getPresentationStatus() != PresentationStatus.DUMMY)
 				.findFirst()
 				.orElseThrow(ExceptionStatus.INVALID_PRESENTATION_DATE::asServiceException);
 	}
