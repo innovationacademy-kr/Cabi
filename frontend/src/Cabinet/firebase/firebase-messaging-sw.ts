@@ -20,17 +20,21 @@ export const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const isApiSupported = await isSupported(); // NOTE : 사용자 브라우저가 푸시 알림 기능을 지원하는지 확인
 let messaging: null | Messaging = null;
-if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
+if (
+  typeof window !== "undefined" &&
+  typeof window.navigator !== "undefined" &&
+  isApiSupported
+) {
   messaging = getMessaging(app);
 }
-const isApiSupported = await isSupported();
 const unsupportedMsg = `사용 중인 환경에서는 푸시 알림 기능이
 지원되지 않습니다.
 데스크탑 이용을 권장드립니다.`;
 
 const checkBrowserSupport = () => {
-  if (isApiSupported) {
+  if (!isApiSupported) {
     let error = new Error(unsupportedMsg);
     error.name = "브라우저 알림 지원 제한";
     throw error;
@@ -50,18 +54,14 @@ export const requestFcmAndGetDeviceToken = async (): Promise<string | null> => {
 
   console.log("알림 권한이 허용됨");
 
-  if (!messaging) {
-    console.log("토큰 생성 또는 갱신 실패");
-    return null;
-  }
-  const token = await getToken(messaging, {
+  const token = await getToken(messaging!, {
     vapidKey: import.meta.env.VITE_FIREBASE_APP_VAPID_KEY,
   });
 
   if (token) console.log("token: ", token);
   else console.log("Can not get Token");
 
-  onMessage(messaging, (payload) => {
+  onMessage(messaging!, (payload) => {
     console.log("메시지가 도착했습니다.", payload);
     // ...
   });
@@ -73,11 +73,6 @@ export const requestFcmAndGetDeviceToken = async (): Promise<string | null> => {
 export const deleteFcmToken = async (): Promise<void> => {
   checkBrowserSupport();
 
-  if (!messaging) {
-    console.log("토큰 제거 실패");
-    return;
-  }
-
-  await deleteToken(messaging);
+  await deleteToken(messaging!);
   console.log("Token deleted.");
 };
