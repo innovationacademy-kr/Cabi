@@ -20,6 +20,7 @@ const AlarmCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
+  const [modalContents, setModalContents] = useState<string | null>(null);
   const [alarms, setAlarms] = useState({ current: alarm, original: alarm });
   const [isLoading, setIsLoading] = useState(false);
   const isModified = useMemo(
@@ -34,7 +35,6 @@ const AlarmCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
 
   const updateAlarmReceptionPath = async () => {
     try {
-      await axiosUpdateAlarmReceptionPath(alarms.current!);
       // 푸쉬 알림 설정이 변경되었을 경우, 토큰을 요청하거나 삭제합니다.
       if (alarms.current!.push) {
         const deviceToken = await requestFcmAndGetDeviceToken();
@@ -43,12 +43,17 @@ const AlarmCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
         await deleteFcmToken();
         await axiosUpdateDeviceToken(null);
       }
+      await axiosUpdateAlarmReceptionPath(alarms.current!);
       setAlarms({ current: alarms.current, original: alarms.current });
       setModalTitle("설정이 저장되었습니다");
     } catch (error: any) {
       setAlarms((prev) => ({ ...prev, current: prev.original }));
       setHasErrorOnResponse(true);
-      setModalTitle(error.response.data.message);
+      if (error.response) setModalTitle(error.response.data.message);
+      else {
+        setModalTitle(error.name);
+        setModalContents(error.message);
+      }
     } finally {
       setIsLoading(false);
       setShowResponseModal(true);
@@ -121,11 +126,13 @@ const AlarmCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
           (hasErrorOnResponse ? (
             <FailResponseModal
               modalTitle={modalTitle}
+              modalContents={modalContents}
               closeModal={handleCloseModal}
             />
           ) : (
             <SuccessResponseModal
               modalTitle={modalTitle}
+              modalContents={modalContents}
               closeModal={handleCloseModal}
             />
           ))}
