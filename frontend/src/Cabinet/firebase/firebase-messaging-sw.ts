@@ -20,15 +20,19 @@ export const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const isApiSupported = await isSupported(); // NOTE : 사용자 브라우저가 푸시 알림 기능을 지원하는지 확인
 let messaging: null | Messaging = null;
-if (
-  typeof window !== "undefined" &&
-  typeof window.navigator !== "undefined" &&
-  isApiSupported
-) {
-  messaging = getMessaging(app);
-}
+let isApiSupported = false;
+isSupported().then((result) => {
+  isApiSupported = result;
+  if (
+    typeof window !== "undefined" &&
+    typeof window.navigator !== "undefined" &&
+    isApiSupported
+  ) {
+    messaging = getMessaging(app);
+  }
+}); // NOTE : 사용자 브라우저가 푸시 알림 기능을 지원하는지 확인
+
 const unsupportedMsg = `사용 중인 환경에서는 푸시 알림 기능이
 지원되지 않습니다.
 데스크탑 이용을 권장드립니다.`;
