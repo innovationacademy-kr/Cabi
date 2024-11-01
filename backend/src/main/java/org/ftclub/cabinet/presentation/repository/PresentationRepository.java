@@ -3,7 +3,6 @@ package org.ftclub.cabinet.presentation.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.ftclub.cabinet.presentation.domain.Presentation;
-import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -27,12 +26,10 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 	@Query("SELECT p "
 			+ "FROM Presentation p "
 			+ "WHERE p.user IS NOT NULL "
-			+ "AND p.presentationStatus = :status "
 			+ "AND p.dateTime BETWEEN :start AND :end")
 	List<Presentation> findAllBetweenAndNotNullUser(
 			@Param("start") LocalDateTime start,
 			@Param("end") LocalDateTime end,
-			@Param("status") PresentationStatus status,
 			Pageable pageable
 	);
 }

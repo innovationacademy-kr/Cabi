@@ -68,12 +68,10 @@ public class PresentationQueryService {
 				.collect(Collectors.toList());
 	}
 
-	public List<Presentation> findUserFormsWithStatusWithinPeriod(
+	public List<Presentation> findUserFormsWithinPeriod(
 			LocalDateTime start,
 			LocalDateTime end,
-			PageRequest pageRequest,
-			PresentationStatus status) {
-		return presentationRepository.findAllBetweenAndNotNullUser(
-				start, end, status, pageRequest);
+			PageRequest pageRequest) {
+		return presentationRepository.findAllBetweenAndNotNullUser(start, end, pageRequest);
 	}
 }

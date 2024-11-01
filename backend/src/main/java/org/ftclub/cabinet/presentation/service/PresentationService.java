@@ -42,8 +42,8 @@ public class PresentationService {
 
 	private static final Integer PRESENTATION_PERIOD = 3;
 	private static final Integer DEFAULT_PAGE = 0;
-	// 쿼리로 받?
 	private static final Integer MAX_MONTH = 3;
+	private static final Integer FETCH_MULTIPLIER = 2;
 	private static final String DATE_TIME = "dateTime";
 	private final PresentationRepository presentationRepository;
 	private final PresentationPolicyService presentationPolicyService;
@@ -101,11 +101,16 @@ public class PresentationService {
 		LocalDate now = LocalDate.now();
 		LocalDateTime limit = now.atStartOfDay();
 		LocalDateTime start = limit.minusYears(10);
-		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
+		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count * FETCH_MULTIPLIER,
 				Sort.by(DATE_TIME).descending());
 
-		return presentationQueryService.findUserFormsWithStatusWithinPeriod(start, limit,
-				pageRequest, status);
+		List<Presentation> userForms = presentationQueryService.findUserFormsWithinPeriod(
+				start, limit, pageRequest);
+
+		return userForms.stream()
+				.filter(p -> p.getPresentationStatus().equals(status))
+				.limit(count)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -119,11 +124,15 @@ public class PresentationService {
 		LocalDate now = LocalDate.now();
 		LocalDateTime start = now.atStartOfDay();
 		LocalDateTime end = start.plusMonths(MAX_MONTH);
-		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
+		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count * FETCH_MULTIPLIER,
 				Sort.by(DATE_TIME).ascending());
 
-		return presentationQueryService.findUserFormsWithStatusWithinPeriod(start, end,
-				pageRequest, status);
+		List<Presentation> userForms = presentationQueryService.findUserFormsWithinPeriod(
+				start, end, pageRequest);
+		return userForms.stream()
+				.filter(p -> p.getPresentationStatus().equals(status))
+				.limit(count)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -135,11 +144,15 @@ public class PresentationService {
 	 */
 	public PresentationMainData getPastAndUpcomingPresentations(
 			int pastFormCount, int upcomingFormCount) {
+		log.info("과거 자료 가져오기 시작");
 		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount,
 				PresentationStatus.DONE);
+		log.info("미래 자료 가져오기 시작");
+
 		List<Presentation> upcomingPresentations =
 				getLatestUpcomingPresentationsByCount(upcomingFormCount,
 						PresentationStatus.EXPECTED);
+		log.info("---------------끝-------------");
 
 		List<PresentationFormData> past = pastPresentations.stream()
 				.map(presentationMapper::toPresentationFormDataDto)
@@ -148,6 +161,7 @@ public class PresentationService {
 				.map(presentationMapper::toPresentationFormDataDto)
 				.collect(Collectors.toList());
 
+		log.info("맵퍼 탈 때 유저 건드나?");
 		return presentationMapper.toPresentationMainData(past, upcoming);
 	}
 
