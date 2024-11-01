@@ -37,7 +37,7 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 
 	@Query("SELECT p "
 			+ "FROM Presentation p "
-			+ "WHERE p.user IS NULL AND "
+			+ "WHERE p.user IS NOT NULL AND "
 			+ "p.dateTime BETWEEN :start AND :end")
 	List<Presentation> findDummiesWithinPeriod(
 			@Param("start") LocalDateTime start,

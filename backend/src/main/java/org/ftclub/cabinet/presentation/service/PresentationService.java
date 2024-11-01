@@ -244,7 +244,6 @@ public class PresentationService {
 		List<LocalDateTime> wednesdays = getDummyPresentationFormsDate(nowDate);
 		List<Presentation> presentations = wednesdays.stream()
 				.map(wednesday -> Presentation.of(
-
 						wednesday,
 						PresentationTime.HALF,
 						"dummy",
