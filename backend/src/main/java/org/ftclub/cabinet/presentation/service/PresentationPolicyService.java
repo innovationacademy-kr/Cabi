@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
+import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,9 @@ public class PresentationPolicyService {
 				presentationRepository.findAllByDateTimeBetween(startOfDay, endOfDay);
 
 		return presentations.stream()
-				.anyMatch(presentation -> presentation.getUser() != null);
+				.anyMatch(presentation -> presentation.getUser() != null
+						&& presentation.getPresentationStatus()
+						.equals(PresentationStatus.EXPECTED));
 	}
 
 	private boolean isOverRangeDate(LocalDate reservationDate, LocalDate now) {
