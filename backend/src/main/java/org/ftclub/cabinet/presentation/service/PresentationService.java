@@ -97,15 +97,15 @@ public class PresentationService {
 	 * @param count
 	 * @return
 	 */
-	public List<Presentation> getLatestPastPresentations(int count) {
+	public List<Presentation> getLatestPastPresentations(int count, PresentationStatus status) {
 		LocalDate now = LocalDate.now();
 		LocalDateTime limit = now.atStartOfDay();
 		LocalDateTime start = limit.minusYears(10);
 		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
 				Sort.by(DATE_TIME).descending());
 
-		return presentationQueryService.findPresentationsWithStatusWithinPeriod(start, limit,
-				pageRequest);
+		return presentationQueryService.findUserFormsWithStatusWithinPeriod(start, limit,
+				pageRequest, status);
 	}
 
 	/**
@@ -114,15 +114,16 @@ public class PresentationService {
 	 * @param count
 	 * @return
 	 */
-	public List<Presentation> getLatestUpcomingPresentationsByCount(int count) {
+	public List<Presentation> getLatestUpcomingPresentationsByCount(int count,
+			PresentationStatus status) {
 		LocalDate now = LocalDate.now();
 		LocalDateTime start = now.atStartOfDay();
 		LocalDateTime end = start.plusMonths(MAX_MONTH);
 		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
 				Sort.by(DATE_TIME).ascending());
 
-		return presentationQueryService.findPresentationsWithStatusWithinPeriod(start, end,
-				pageRequest);
+		return presentationQueryService.findUserFormsWithStatusWithinPeriod(start, end,
+				pageRequest, status);
 	}
 
 	/**
@@ -134,9 +135,11 @@ public class PresentationService {
 	 */
 	public PresentationMainData getPastAndUpcomingPresentations(
 			int pastFormCount, int upcomingFormCount) {
-		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount);
+		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount,
+				PresentationStatus.DONE);
 		List<Presentation> upcomingPresentations =
-				getLatestUpcomingPresentationsByCount(upcomingFormCount);
+				getLatestUpcomingPresentationsByCount(upcomingFormCount,
+						PresentationStatus.EXPECTED);
 
 		List<PresentationFormData> past = pastPresentations.stream()
 				.map(presentationMapper::toPresentationFormDataDto)

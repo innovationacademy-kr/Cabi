@@ -68,9 +68,17 @@ public class PresentationQueryService {
 				.collect(Collectors.toList());
 	}
 
-	public List<Presentation> findPresentationsWithStatusWithinPeriod(
+	public List<Presentation> findUserFormsWithStatusWithinPeriod(
 			LocalDateTime start,
-			LocalDateTime end, PageRequest pageRequest) {
-		return presentationRepository.findDummiesWithinPeriod(start, end, pageRequest);
+			LocalDateTime end,
+			PageRequest pageRequest,
+			PresentationStatus presentationStatus) {
+		List<Presentation> userForms = presentationRepository.findAllBetweenAndNotNullUser(
+				start, end, pageRequest);
+
+		return userForms.stream()
+				.filter(form ->
+						form.getPresentationStatus().equals(presentationStatus))
+				.collect(Collectors.toList());
 	}
 }
