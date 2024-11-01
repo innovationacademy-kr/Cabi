@@ -72,13 +72,8 @@ public class PresentationQueryService {
 			LocalDateTime start,
 			LocalDateTime end,
 			PageRequest pageRequest,
-			PresentationStatus presentationStatus) {
-		List<Presentation> userForms = presentationRepository.findAllBetweenAndNotNullUser(
-				start, end, pageRequest);
-
-		return userForms.stream()
-				.filter(form ->
-						form.getPresentationStatus().equals(presentationStatus))
-				.collect(Collectors.toList());
+			PresentationStatus status) {
+		return presentationRepository.findAllBetweenAndNotNullUser(
+				start, end, status, pageRequest);
 	}
 }
