@@ -86,7 +86,7 @@ const DetailContentContainer = () => {
     } else {
       if (currentDateMonth === 12) {
         requestDate.year = (currentDateYear + 1).toString();
-        requestDate.month = (1).toString();
+        requestDate.month = padToNDigits(1, 2);
       } else {
         requestDate.month = padToNDigits(currentDateMonth + 1, 2);
       }
