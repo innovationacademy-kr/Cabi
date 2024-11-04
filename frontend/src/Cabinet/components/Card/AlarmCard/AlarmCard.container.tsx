@@ -120,6 +120,7 @@ const AlarmCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
               ]
         }
         onToggleChange={handleToggleChange}
+        isLoading={isLoading}
       />
       <ModalPortal>
         {showResponseModal &&

@@ -11,9 +11,15 @@ interface AlarmCardProps {
   alarm: AlarmInfo;
   buttons: IButtonProps[];
   onToggleChange: (type: keyof AlarmInfo, checked: boolean) => void;
+  isLoading: boolean;
 }
 
-const AlarmCard = ({ alarm, buttons, onToggleChange }: AlarmCardProps) => {
+const AlarmCard = ({
+  alarm,
+  buttons,
+  onToggleChange,
+  isLoading,
+}: AlarmCardProps) => {
   const handleToggle = (type: keyof AlarmInfo) => (checked: boolean) => {
     onToggleChange(type, checked);
   };
@@ -25,6 +31,7 @@ const AlarmCard = ({ alarm, buttons, onToggleChange }: AlarmCardProps) => {
         id={`${type}-alarm`}
         checked={alarm[type]}
         onChange={handleToggle(type)}
+        disabled={isLoading}
       />
     </CardContentStyled>
   );
