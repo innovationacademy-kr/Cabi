@@ -9,10 +9,7 @@ import {
   axiosGetPresentationSchedule,
   getAdminPresentationSchedule,
 } from "@/Presentation/api/axios/axios.custom";
-import {
-  makeIDateObj,
-  toISOStringwithTimeZone,
-} from "@/Presentation/utils/dateUtils";
+import { makeIDateObj } from "@/Presentation/utils/dateUtils";
 import { FUTURE_MONTHS_TO_DISPLAY } from "@/Presentation/constants/policy";
 
 export interface IDate {
@@ -95,6 +92,25 @@ const DetailContentContainer = () => {
     setCurrentDate(requestDate);
   };
 
+  const compareDates = (date1: IDate, date2: IDate): number => {
+    const d1 = new Date(parseInt(date1.year), parseInt(date1.month) - 1);
+    const d2 = new Date(parseInt(date2.year), parseInt(date2.month) - 1);
+    return d1.getTime() - d2.getTime();
+  };
+
+  const getMaxDate = (baseDate: IDate, monthsToAdd: number): IDate => {
+    const date = new Date(
+      parseInt(baseDate.year),
+      parseInt(baseDate.month) - 1
+    );
+    date.setMonth(date.getMonth() + monthsToAdd);
+    return {
+      year: date.getFullYear().toString(),
+      month: (date.getMonth() + 1).toString(),
+      day: baseDate.day,
+    };
+  };
+
   return (
     <DetailContent
       moveMonth={moveMonth}
@@ -102,13 +118,15 @@ const DetailContentContainer = () => {
       presentationDetailInfo={presentationDetailInfo}
       canMoveLeft={
         currentDate
-          ? parseInt(currentDate.month) > parseInt(firstPresentationDate.month)
+          ? compareDates(currentDate, firstPresentationDate) > 0
           : false
       }
       canMoveRight={
         currentDate && todayDate
-          ? parseInt(currentDate.month) <
-            parseInt(todayDate.month) + FUTURE_MONTHS_TO_DISPLAY - 1
+          ? compareDates(
+              currentDate,
+              getMaxDate(todayDate, FUTURE_MONTHS_TO_DISPLAY - 1)
+            ) < 0
           : false
       }
     />
