@@ -41,8 +41,8 @@ const AdminLoginFailurePage = lazy(
 );
 const AdminHomePage = lazy(() => import("@/Cabinet/pages/admin/AdminHomePage"));
 const AdminMainPage = lazy(() => import("@/Cabinet/pages/admin/AdminMainPage"));
-const AdminSlackNotiPage = lazy(
-  () => import("@/Cabinet/pages/admin/AdminSlackNotiPage")
+const AdminSlackAlarmPage = lazy(
+  () => import("@/Cabinet/pages/admin/AdminSlackAlarmPage")
 );
 const AdminStorePage = lazy(
   () => import("@/Cabinet/pages/admin/AdminStorePage")
@@ -86,7 +86,7 @@ function App(): React.ReactElement {
             <Route path="main" element={<AdminMainPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="club" element={<AdminClubPage />} />
-            <Route path="slack-notification" element={<AdminSlackNotiPage />} />
+            <Route path="slack-alarm" element={<AdminSlackAlarmPage />} />
             <Route path="available" element={<AvailablePage />} />
             <Route path="store" element={<AdminStorePage />} />
           </Route>

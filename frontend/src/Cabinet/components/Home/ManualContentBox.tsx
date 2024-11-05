@@ -1,18 +1,19 @@
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/Cabinet/assets/data/ManualContent";
+import { ContentStatusStylesMap } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as ManualPeopleImg } from "@/Cabinet/assets/images/manualPeople.svg";
 import { ReactComponent as MoveBtnImg } from "@/Cabinet/assets/images/moveButton.svg";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
 
-interface MaunalContentBoxProps {
+interface ManualContentBoxProps {
   contentStatus: ContentStatus;
 }
 
-const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
+const ManualContentBox = ({ contentStatus }: ManualContentBoxProps) => {
   const contentData = manualContentData[contentStatus];
 
   return (
-    <MaunalContentBoxStyled
+    <ManualContentBoxStyled
       background={contentData.background}
       contentStatus={contentStatus}
     >
@@ -23,15 +24,13 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
         contentData.iconComponent && (
           <contentData.iconComponent className="contentImg" />
         )}
+
       <ContentTextStyled>
-        {contentStatus === ContentStatus.IN_SESSION &&
-          contentData.iconComponent && (
-            <contentData.iconComponent className="clockImg" />
-          )}
         <p>{contentData.contentTitle}</p>
       </ContentTextStyled>
+
       <MoveBtnImg className="moveButton" />
-    </MaunalContentBoxStyled>
+    </ManualContentBoxStyled>
   );
 };
 
@@ -41,7 +40,7 @@ const Rotation = keyframes`
 	}
   `;
 
-const MaunalContentBoxStyled = styled.div<{
+const ManualContentBoxStyled = styled.div<{
   background: string;
   contentStatus: ContentStatus;
 }>`
@@ -59,12 +58,14 @@ const MaunalContentBoxStyled = styled.div<{
   font-weight: bold;
   cursor: pointer;
 
+  ${(props) => ContentStatusStylesMap[props.contentStatus]}
+
   .clockImg {
     width: 35px;
     margin-right: 10px;
     margin-top: 160px;
     animation: ${Rotation} 1s linear infinite;
-    stroke: var(--sys-main-color);
+    stroke: var(--sys-default-main-color);
   }
 
   .contentImg {
@@ -73,8 +74,8 @@ const MaunalContentBoxStyled = styled.div<{
 
     & > path {
       stroke: ${(props) =>
-        props.contentStatus === ContentStatus.EXTENSION
-          ? "var(--normal-text-color)"
+        props.contentStatus === ContentStatus.COIN
+          ? "var(--sys-default-main-color)"
           : "var(--white-text-with-bg-color)"};
     }
   }
@@ -86,44 +87,17 @@ const MaunalContentBoxStyled = styled.div<{
     position: absolute;
     right: 100px;
     bottom: 30px;
-    fill: var(--sys-main-color);
+    fill: var(--sys-def-main-color);
   }
 
-  ${({ contentStatus }) =>
-    contentStatus === ContentStatus.PENDING &&
-    css`
-      border: 5px double var(--sys-main-color);
-      box-shadow: inset 0px 0px 0px 5px var(--bg-color);
-    `}
-
-  ${({ contentStatus }) =>
-    contentStatus === ContentStatus.IN_SESSION &&
-    css`
-      border: 5px solid var(--sys-main-color);
-      color: var(--sys-main-color);
-    `}
-
-  ${({ contentStatus }) =>
-    contentStatus === ContentStatus.EXTENSION &&
-    css`
-      width: 900px;
-      color: var(--normal-text-color);
-      @media screen and (max-width: 1000px) {
-        width: 280px;
-        .peopleImg {
-          display: none;
-        }
-        font-size: 21px;
-      }
-    `}
-  
-    p {
+  p {
     margin-top: 90px;
     ${({ contentStatus }) =>
       (contentStatus === ContentStatus.PENDING ||
+        contentStatus === ContentStatus.COIN ||
         contentStatus === ContentStatus.IN_SESSION) &&
       css`
-        margin-top: 160px;
+        color: var(--sys-default-main-color);
       `}
   }
 
@@ -134,34 +108,42 @@ const MaunalContentBoxStyled = styled.div<{
     right: 35px;
     bottom: 35px;
     stroke: ${(props) =>
-      props.contentStatus === ContentStatus.IN_SESSION
-        ? "var(--sys-main-color)"
+      props.contentStatus === ContentStatus.COIN
+        ? "var(--sys-default-main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "var(--normal-text-color)"
         : "var(--white-text-with-bg-color)"};
     cursor: pointer;
   }
 
-  :hover {
+  &:hover {
     transition: all 0.3s ease-in-out;
     ${({ contentStatus }) =>
       contentStatus === ContentStatus.PENDING
         ? css`
-            border: 5px double var(--sys-main-color);
-            box-shadow: inset 0px 0px 0px 5px var(--bg-color),
-              10px 10px 25px 0 var(--left-nav-border-shadow-color);
+            border: 5px double var(--sys-default-main-color);
+            box-shadow: inset 0px 0px 0px 5px var(--bg-color);
+            filter: drop-shadow(
+              10px 10px 10px var(--left-nav-border-shadow-color)
+            );
           `
+        : contentStatus === ContentStatus.STORE
+        ? css`` // No box-shadow or filter for STORE status
         : css`
-            box-shadow: 10px 10px 25px 0 var(--left-nav-border-shadow-color);
+            filter: drop-shadow(
+              10px 10px 10px var(--left-nav-border-shadow-color)
+            );
           `}
+
     p {
       transition: all 0.3s ease-in-out;
       transform: translateY(-5px);
       ${({ contentStatus }) =>
         (contentStatus === ContentStatus.PENDING ||
+          contentStatus === ContentStatus.COIN ||
           contentStatus === ContentStatus.IN_SESSION) &&
         css`
-          margin-top: 155px;
+          color: var(--sys-default-main-color);
         `}
     }
     .clockImg {
@@ -174,6 +156,11 @@ const MaunalContentBoxStyled = styled.div<{
 const ContentTextStyled = styled.div`
   display: flex;
   align-items: center;
+
+  & > span {
+    font-weight: 400;
+    font-size: 1rem;
+  }
 `;
 
-export default MaunalContentBox;
+export default ManualContentBox;

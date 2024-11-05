@@ -20,7 +20,7 @@ public class BanPolicyService {
 
 	public LocalDateTime getUnBannedAt(LocalDateTime endedAt, LocalDateTime expiredAt) {
 		long recentBanDays = DateUtil.calculateTwoDateDiffCeil(expiredAt, endedAt);
-		double squaredBanDays = Math.pow(recentBanDays, 2);
+		double squaredBanDays = Math.min(Math.pow(recentBanDays, 2), 180);
 		return endedAt.plusDays((long) squaredBanDays);
 	}
 }

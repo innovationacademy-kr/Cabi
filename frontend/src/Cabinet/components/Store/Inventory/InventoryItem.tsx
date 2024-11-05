@@ -70,7 +70,7 @@ const InventoryItem = ({
     setIsToggled((prev) => !prev);
   };
 
-  const sortedItems = items.sort((a, b) => {
+  const sortedItems = [...items].sort((a, b) => {
     return extractNumber(a.itemDetails) - extractNumber(b.itemDetails);
   });
 
@@ -83,69 +83,62 @@ const InventoryItem = ({
   };
 
   return (
-    <>
-      <ItemWrapperStyled>
-        <ItemTitleWrapperStyled
-          isToggled={isToggled}
-          onClick={onClickToggleBtn}
-        >
-          <ItemTitleStyled>
-            <h2>{convertToItemTypeLabel(itemsType)}</h2>
-            <CautionWrapperStyled>
-              <CautionIconStyled
-                src={CautionIcon}
-                alt="Notification Icon"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              />
-              {showTooltip && (
-                <TooltipBoxDateStyled
-                  onMouseEnter={() => handleMouseEnter()}
-                  onMouseLeave={() => handleMouseLeave()}
-                >
-                  {itemTooltip}
-                </TooltipBoxDateStyled>
-              )}
-            </CautionWrapperStyled>
-          </ItemTitleStyled>
-          <button>
-            <SelectIcon />
-          </button>
-        </ItemTitleWrapperStyled>
-        <ItemCardSectionStyled isToggled={isToggled}>
-          {sortedItems.length ? (
-            <>
-              {sortedItems.map((item, idx) => {
-                const hasTypes =
-                  item.itemDetails !== convertToItemTypeLabel(itemsType);
-                return (
-                  <ItemCardStyled key={idx} hasTypes={hasTypes}>
-                    <ItemIconStyled itemType={itemType}>
-                      <ItemIcon />
-                    </ItemIconStyled>
-                    <CardTextStyled hasTypes={hasTypes}>
-                      <span id="title">
-                        {convertToItemTypeLabel(itemsType)}
-                      </span>
-                      {hasTypes && <span id="type">{item.itemDetails}</span>}
-                    </CardTextStyled>
-                  </ItemCardStyled>
-                );
-              })}
-            </>
-          ) : (
-            !isToggled && (
-              <UnavailableDataInfo
-                msg="해당 아이템을 보유하고 있지 않습니다"
-                fontSize="1rem"
-                iconWidth="24px"
-                iconHeight="24px"
-              />
-            )
-          )}
-        </ItemCardSectionStyled>
-      </ItemWrapperStyled>
-    </>
+    <ItemWrapperStyled>
+      <ItemTitleWrapperStyled isToggled={isToggled} onClick={onClickToggleBtn}>
+        <ItemTitleStyled>
+          <h2>{convertToItemTypeLabel(itemsType)}</h2>
+          <CautionWrapperStyled>
+            <CautionIconStyled
+              src={CautionIcon}
+              alt="Alarm Icon"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            />
+            {showTooltip && (
+              <TooltipBoxDateStyled
+                onMouseEnter={() => handleMouseEnter()}
+                onMouseLeave={() => handleMouseLeave()}
+              >
+                {itemTooltip}
+              </TooltipBoxDateStyled>
+            )}
+          </CautionWrapperStyled>
+        </ItemTitleStyled>
+        <button>
+          <SelectIcon />
+        </button>
+      </ItemTitleWrapperStyled>
+      <ItemCardSectionStyled isToggled={isToggled}>
+        {sortedItems.length ? (
+          <>
+            {sortedItems.map((item, idx) => {
+              const hasTypes =
+                item.itemDetails !== convertToItemTypeLabel(itemsType);
+              return (
+                <ItemCardStyled key={idx} hasTypes={hasTypes}>
+                  <ItemIconStyled itemType={itemType}>
+                    <ItemIcon />
+                  </ItemIconStyled>
+                  <CardTextStyled hasTypes={hasTypes}>
+                    <span id="title">{convertToItemTypeLabel(itemsType)}</span>
+                    {hasTypes && <span id="type">{item.itemDetails}</span>}
+                  </CardTextStyled>
+                </ItemCardStyled>
+              );
+            })}
+          </>
+        ) : (
+          !isToggled && (
+            <UnavailableDataInfo
+              msg="해당 아이템을 보유하고 있지 않습니다"
+              fontSize="1rem"
+              iconWidth="24px"
+              iconHeight="24px"
+            />
+          )
+        )}
+      </ItemCardSectionStyled>
+    </ItemWrapperStyled>
   );
 };
 
@@ -170,8 +163,7 @@ const ItemIconStyled = styled.div<{ itemType: StoreItemType }>`
 
   & > svg > path {
     stroke: var(--sys-main-color);
-    stroke-width: ${(props) =>
-      props.itemType === StoreItemType.EXTENSION ? "2.8px" : "1.5px"};
+    stroke-width: "1.5px";
   }
 `;
 

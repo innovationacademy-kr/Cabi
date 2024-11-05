@@ -6,6 +6,7 @@ import Button from "@/Cabinet/components/Common/Button";
 import { ReactComponent as CheckIcon } from "@/Cabinet/assets/images/checkIcon.svg";
 import { ReactComponent as ErrorIcon } from "@/Cabinet/assets/images/errorIcon.svg";
 import { ReactComponent as NotificationIcon } from "@/Cabinet/assets/images/notificationSign.svg";
+import useMenu from "@/Cabinet/hooks/useMenu";
 import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
 
 /**
@@ -63,6 +64,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
   } = props.modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
   const navigator = useNavigate();
+  const { closeAll } = useMenu();
 
   return (
     <>
@@ -95,7 +97,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         {detail && (
           <DetailStyled dangerouslySetInnerHTML={{ __html: detail }} />
         )}
-        {renderAdditionalComponent && renderAdditionalComponent()}
+        {renderAdditionalComponent?.()}
         {type === "hasProceedBtn" && (
           <ButtonWrapperStyled>
             <Button
@@ -127,6 +129,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         {url && urlTitle && (
           <UrlSectionStyled
             onClick={() => {
+              closeAll();
               navigator(url);
             }}
           >

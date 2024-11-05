@@ -1,19 +1,15 @@
-package org.ftclub.cabinet.dto;
+package org.ftclub.cabinet.admin.dto;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.ftclub.cabinet.item.domain.Sku;
 
 @Getter
-@ToString
-@NoArgsConstructor
 @AllArgsConstructor
-public class ItemAssignRequestDto {
+public class AdminCoinAssignRequestDto {
 
-	private Sku itemSku;
 	private List<Long> userIds;
+	private Sku itemSku;
 	private Long amount;
 }
