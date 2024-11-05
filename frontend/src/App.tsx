@@ -16,7 +16,7 @@ import PostLogin from "@/Cabinet/pages/PostLogin";
 import ProfilePage from "@/Cabinet/pages/ProfilePage";
 import StoreMainPage from "@/Cabinet/pages/StoreMainPage";
 import AdminMainPage from "@/Cabinet/pages/admin/AdminMainPage";
-import AdminSlackNotiPage from "@/Cabinet/pages/admin/AdminSlackNotiPage";
+import AdminSlackAlarmPage from "@/Cabinet/pages/admin/AdminSlackAlarmPage";
 import AdminStorePage from "@/Cabinet/pages/admin/AdminStorePage";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import DetailPage from "@/Presentation/pages/DetailPage";
@@ -74,7 +74,7 @@ function App(): React.ReactElement {
             <Route path="main" element={<AdminMainPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="club" element={<AdminClubPage />} />
-            <Route path="slack-notification" element={<AdminSlackNotiPage />} />
+            <Route path="slack-alarm" element={<AdminSlackAlarmPage />} />
             <Route path="available" element={<AvailablePage />} />
             <Route path="store" element={<AdminStorePage />} />
           </Route>

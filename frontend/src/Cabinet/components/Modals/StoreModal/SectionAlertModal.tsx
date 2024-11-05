@@ -10,6 +10,7 @@ import {
 import { modalPropsMap } from "@/Cabinet/assets/data/maps";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import { axiosUseItem } from "@/Cabinet/api/axios/axios.custom";
+import { HttpStatusCode } from "axios";
 
 const SectionAlertModal = ({
   currentSectionName,
@@ -52,7 +53,7 @@ const SectionAlertModal = ({
       setModalTitle("알림 등록권 사용완료");
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      if (error.response.status === 400) {
+      if (error.response.status === HttpStatusCode.BadRequest) {
         setModalTitle("알림 등록권 사용실패");
         setModalContent(`현재 알림 등록권을 보유하고 있지 않습니다.
 알림 등록권은 까비 상점에서 구매하실 수 있습니다.`);

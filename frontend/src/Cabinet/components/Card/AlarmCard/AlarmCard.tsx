@@ -7,17 +7,19 @@ import {
 import ToggleSwitch from "@/Cabinet/components/Common/ToggleSwitch";
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 
-interface NotificationCardProps {
+interface AlarmCardProps {
   alarm: AlarmInfo;
   buttons: IButtonProps[];
   onToggleChange: (type: keyof AlarmInfo, checked: boolean) => void;
+  isLoading: boolean;
 }
 
-const NotificationCard = ({
+const AlarmCard = ({
   alarm,
   buttons,
   onToggleChange,
-}: NotificationCardProps) => {
+  isLoading,
+}: AlarmCardProps) => {
   const handleToggle = (type: keyof AlarmInfo) => (checked: boolean) => {
     onToggleChange(type, checked);
   };
@@ -26,9 +28,10 @@ const NotificationCard = ({
     <CardContentStyled>
       <ContentInfoStyled>{label}</ContentInfoStyled>
       <ToggleSwitch
-        id={`${type}-notification`}
+        id={`${type}-alarm`}
         checked={alarm[type]}
         onChange={handleToggle(type)}
+        disabled={isLoading}
       />
     </CardContentStyled>
   );
@@ -36,7 +39,7 @@ const NotificationCard = ({
   return (
     <Card
       title={"알림"}
-      gridArea="notification"
+      gridArea="alarm"
       width={"350px"}
       height={"230px"}
       buttons={buttons}
@@ -50,4 +53,4 @@ const NotificationCard = ({
   );
 };
 
-export default NotificationCard;
+export default AlarmCard;
