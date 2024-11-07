@@ -41,9 +41,9 @@ Sentry.init({
   tracePropagationTargets: [
     "localhost",
     /^https:\/\/cabi\.42seoul\.io/,
-    // /^https:\/\/dev\.cabi\.42seoul\.io/,
-    // /^https:\/\/api\.cabi\.42seoul\.io/,
-    // /^https:\/\/api-dev\.cabi\.42seoul\.io/,
+    /^https:\/\/dev\.cabi\.42seoul\.io/,
+    /^https:\/\/api\.cabi\.42seoul\.io/,
+    /^https:\/\/api-dev\.cabi\.42seoul\.io/,
   ],
 
   // Capture Replay for 100% of all sessions,
@@ -53,10 +53,10 @@ Sentry.init({
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  // <React.StrictMode>
-  <RecoilRoot>
-    <GlobalStyle />
-    <App />
-  </RecoilRoot>
-  // </React.StrictMode>
+  <React.StrictMode>
+    <RecoilRoot>
+      <GlobalStyle />
+      <App />
+    </RecoilRoot>
+  </React.StrictMode>
 );
