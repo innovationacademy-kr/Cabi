@@ -34,7 +34,7 @@ Sentry.init({
 
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for tracing.
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.05,
 
   // Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
   // tracePropagationTargets: [/^\//, /^https:\/\/yourserver\.io\/api/],
@@ -48,8 +48,8 @@ Sentry.init({
 
   // Capture Replay for 100% of all sessions,
   // plus for 100% of sessions with an error
-  replaysSessionSampleRate: 1.0,
-  replaysOnErrorSampleRate: 1.0,
+  replaysSessionSampleRate: 0.2,
+  replaysOnErrorSampleRate: 0.2,
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

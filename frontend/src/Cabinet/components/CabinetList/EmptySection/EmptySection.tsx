@@ -3,10 +3,20 @@ import styled from "styled-components";
 const EmptySection = ({ message }: { message: string }): JSX.Element => {
   return (
     <EmptySectionStyled>
-      <CabiImageStyled
+      {/* <CabiImageStyled
         src="/src/Cabinet/assets/images/happyCcabi.png"
         alt="happy cabi"
-      />
+      /> */}
+      <picture>
+        <source
+          type="image/webp"
+          srcSet="/src/Cabinet/assets/images/webp/happyCcabi.webp"
+        />
+        <CabiImageStyled
+          src="/src/Cabinet/assets/images/happyCcabi.png"
+          alt="happy cabi"
+        />
+      </picture>
       <ContentStyled>{message}</ContentStyled>
     </EmptySectionStyled>
   );
