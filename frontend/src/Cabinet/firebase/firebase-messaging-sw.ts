@@ -34,6 +34,7 @@ isSupported().then((result) => {
   }
 });
 // NOTE : 사용자 브라우저가 푸시 알림 기능을 지원하는지 확인
+messaging = getMessaging(app);
 
 const unsupportedMsg = `사용 중인 환경에서는 푸시 알림 기능이
 지원되지 않습니다.
