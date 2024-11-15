@@ -6,20 +6,6 @@ const EmptySection = ({ message }: { message: string }): JSX.Element => {
     <EmptySectionStyled>
       <CabinetTypeIconStyled>
         <CabiImage />
-        {/* <CabiImageStyled
-          src="/src/Cabinet/assets/images/happyCcabi.svg"
-          alt="happy cabi"
-        /> */}
-        {/* <picture>
-        <source
-          type="image/webp"
-          srcSet="/src/Cabinet/assets/images/webp/happyCcabi.webp"
-        />
-        <CabiImageStyled
-          src="/src/Cabinet/assets/images/happyCcabi.png"
-          alt="happy cabi"
-        />
-      </picture> */}
       </CabinetTypeIconStyled>
       <ContentStyled>{message}</ContentStyled>
     </EmptySectionStyled>
@@ -30,8 +16,8 @@ const CabinetTypeIconStyled = styled.div`
   width: 200px;
   height: 200px;
 
-  & path {
-    stroke: var(--normal-text-color);
+  & g {
+    fill: var(--normal-text-color);
   }
 
   & > svg {
