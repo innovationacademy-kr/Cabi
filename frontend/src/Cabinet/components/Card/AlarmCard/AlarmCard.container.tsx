@@ -3,7 +3,7 @@ import {
   requestFcmAndGetDeviceToken,
 } from "@/Cabinet/firebase/firebase-messaging-sw";
 import { useEffect, useMemo, useState } from "react";
-import NotificationCard from "@/Cabinet/components/Card/NotificationCard/NotificationCard";
+import AlarmCard from "@/Cabinet/components/Card/AlarmCard/AlarmCard";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
   FailResponseModal,
@@ -11,23 +11,54 @@ import {
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import {
-  axiosUpdateAlarm,
+  axiosUpdateAlarmReceptionPath,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
+import useDebounce from "@/Cabinet/hooks/useDebounce";
 
-const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
+const AlarmCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
+  const [modalContents, setModalContents] = useState<string | null>(null);
   const [alarms, setAlarms] = useState({ current: alarm, original: alarm });
+  const [isLoading, setIsLoading] = useState(false);
   const isModified = useMemo(
     () => JSON.stringify(alarms.current) !== JSON.stringify(alarms.original),
     [alarms]
   );
+  const { debounce } = useDebounce();
 
   useEffect(() => {
     setAlarms({ current: alarm, original: alarm });
   }, [alarm]);
+
+  const updateAlarmReceptionPath = async () => {
+    try {
+      // 푸쉬 알림 설정이 변경되었을 경우, 토큰을 요청하거나 삭제합니다.
+      if (alarms.current!.push) {
+        const deviceToken = await requestFcmAndGetDeviceToken();
+        await axiosUpdateDeviceToken(deviceToken);
+      } else {
+        await deleteFcmToken();
+        await axiosUpdateDeviceToken(null);
+      }
+      await axiosUpdateAlarmReceptionPath(alarms.current!);
+      setAlarms({ current: alarms.current, original: alarms.current });
+      setModalTitle("설정이 저장되었습니다");
+    } catch (error: any) {
+      setAlarms((prev) => ({ ...prev, current: prev.original }));
+      setHasErrorOnResponse(true);
+      if (error.response) setModalTitle(error.response.data.message);
+      else {
+        setModalTitle(error.name);
+        setModalContents(error.message);
+      }
+    } finally {
+      setIsLoading(false);
+      setShowResponseModal(true);
+    }
+  };
 
   const handleToggleChange = (type: keyof AlarmInfo, checked: boolean) => {
     setAlarms((prev) => {
@@ -42,30 +73,13 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   };
 
   const handleSave = async () => {
+    setIsLoading(true);
     if (!alarms.current) return;
-    try {
-      await axiosUpdateAlarm(alarms.current);
-      // 푸쉬 알림 설정이 변경되었을 경우, 토큰을 요청하거나 삭제합니다.
-      if (alarms.current.push) {
-        const deviceToken = await requestFcmAndGetDeviceToken();
-        await axiosUpdateDeviceToken(deviceToken);
-      } else {
-        await deleteFcmToken();
-        await axiosUpdateDeviceToken(null);
-      }
-      setAlarms({ current: alarms.current, original: alarms.current });
-      setModalTitle("설정이 저장되었습니다");
-    } catch (error: any) {
-      setAlarms((prev) => ({ ...prev, current: prev.original }));
-      setHasErrorOnResponse(true);
-      setModalTitle(error.response.data.message);
-    } finally {
-      setShowResponseModal(true);
-    }
+    debounce("alarmReceptionPath", updateAlarmReceptionPath, 300);
   };
 
   const handleCancel = () => {
-    setAlarms((prev) => ({ ...prev, current: prev.original }));
+    !isLoading && setAlarms((prev) => ({ ...prev, current: prev.original }));
   };
 
   const handleCloseModal = () => {
@@ -74,7 +88,7 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
 
   return (
     <>
-      <NotificationCard
+      <AlarmCard
         key={JSON.stringify(alarms)}
         alarm={alarms.current ?? { email: false, push: false, slack: false }}
         buttons={
@@ -86,11 +100,13 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
                   fontColor: "var(--white-text-with-bg-color)",
                   backgroundColor: "var(--sys-main-color)",
                   isClickable: true,
+                  isLoading: isLoading,
                 },
                 {
                   label: "취소",
                   onClick: handleCancel,
-                  isClickable: true,
+                  isClickable: !isLoading,
+                  isLoading: isLoading,
                 },
               ]
             : [
@@ -104,17 +120,20 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
               ]
         }
         onToggleChange={handleToggleChange}
+        isLoading={isLoading}
       />
       <ModalPortal>
         {showResponseModal &&
           (hasErrorOnResponse ? (
             <FailResponseModal
               modalTitle={modalTitle}
+              modalContents={modalContents}
               closeModal={handleCloseModal}
             />
           ) : (
             <SuccessResponseModal
               modalTitle={modalTitle}
+              modalContents={modalContents}
               closeModal={handleCloseModal}
             />
           ))}
@@ -123,4 +142,4 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   );
 };
 
-export default NotificationCardContainer;
+export default AlarmCardContainer;
