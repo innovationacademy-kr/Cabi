@@ -58,17 +58,19 @@ const LeftMainNav = ({
               </TopBtnStyled>
               {floors &&
                 floors.map((floor, index) => (
-                  <TopBtnStyled
-                    className={
-                      pathname.includes("main") && floor === currentFloor
-                        ? "leftNavButtonActive cabiButton"
-                        : "cabiButton"
-                    }
-                    onClick={() => onClickFloorButton(floor)}
-                    key={index}
-                  >
-                    {floor + "층"}
-                  </TopBtnStyled>
+                  floor !== 4 && (
+                    <TopBtnStyled
+                      className={
+                        pathname.includes("main") && floor === currentFloor
+                          ? "leftNavButtonActive cabiButton"
+                          : "cabiButton"
+                      }
+                      onClick={() => onClickFloorButton(floor)}
+                      key={index}
+                    >
+                      {floor + "층"}
+                    </TopBtnStyled>
+                  )
                 ))}
               <TopBtnStyled
                 className={
