@@ -51,7 +51,7 @@ const CabinetListContainer = ({
           />
         </div>
       )}
-      {currentFloorSectionNames.includes(currentSectionName) && (
+      {currentFloorSectionNames.includes(currentSectionName) && (currentFloor !== 4) && (
         <RealViewNotification colNum={colNum as number} />
       )}
       {(!isAdmin && currentFloor === 4) ? (
