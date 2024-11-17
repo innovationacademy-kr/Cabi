@@ -57,8 +57,8 @@ const LeftMainNav = ({
                 Home
               </TopBtnStyled>
               {floors &&
-                floors.map((floor, index) => (
-                  floor !== 4 && (
+                floors.map((floor, index) =>
+                  !(!isAdmin && floor === 4) ? (
                     <TopBtnStyled
                       className={
                         pathname.includes("main") && floor === currentFloor
@@ -70,8 +70,8 @@ const LeftMainNav = ({
                     >
                       {floor + "층"}
                     </TopBtnStyled>
-                  )
-                ))}
+                  ) : null
+                )}
               <TopBtnStyled
                 className={
                   pathname.includes("available")

@@ -54,7 +54,7 @@ const CabinetListContainer = ({
       {currentFloorSectionNames.includes(currentSectionName) && (
         <RealViewNotification colNum={colNum as number} />
       )}
-      {currentFloor === 4 ? (
+      {(!isAdmin && currentFloor === 4) ? (
         <EmptySection message={"4층은 현재 이용 불가입니다!"} />
       ) : (
         <>
