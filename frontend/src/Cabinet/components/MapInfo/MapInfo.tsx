@@ -33,8 +33,8 @@ const MapInfo = ({
           style={{ width: "24px", cursor: "pointer" }}
         />
       </HeaderStyled>
-      <MapFloorSelect floor={floor} setFloor={setFloor} floorInfo={floorInfo} />
-      <MapGrid floor={floor} />
+      <MapFloorSelect floor={floor === 4 ? 2 : floor} setFloor={setFloor} floorInfo={floorInfo} />
+      <MapGrid floor={floor === 4 ? 2 : floor} />
     </MapInfoContainerStyled>
   );
 };
