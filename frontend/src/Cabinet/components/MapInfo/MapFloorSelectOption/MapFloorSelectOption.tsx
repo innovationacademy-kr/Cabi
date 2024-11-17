@@ -7,6 +7,7 @@ const MapFloorSelectOption: React.FC<{
   return (
     <OptionWrapperStyled id="mapFloorOptionBox">
       {floorInfo.map((info, idx) => (
+        (info !== 4) &&
         <OptionStyled
           className="cabiButton"
           onClick={() => selectFloor(info)}
