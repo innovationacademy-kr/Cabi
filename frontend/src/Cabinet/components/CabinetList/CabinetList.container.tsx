@@ -19,10 +19,11 @@ import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
 
 interface ICabinetListContainer {
   isAdmin: boolean;
+  currentFloor: number;
 }
 
 const CabinetListContainer = ({
-  isAdmin,
+  isAdmin, currentFloor
 }: ICabinetListContainer): JSX.Element => {
   const colNum = useRecoilValue(currentSectionColNumState);
   const currentSectionCabinets = useRecoilValue<CabinetPreviewInfo[]>(
@@ -53,14 +54,20 @@ const CabinetListContainer = ({
       {currentFloorSectionNames.includes(currentSectionName) && (
         <RealViewNotification colNum={colNum as number} />
       )}
-      <CabinetList
-        colNum={colNum as number}
-        cabinetInfo={currentSectionCabinets}
-        isAdmin={isAdmin}
-      />
-      {(currentSectionName === SectionType.elevator ||
-        currentSectionName === SectionType.stairs) && (
-        <EmptySection message={"여기엔 사물함이 없어요!"} />
+      {currentFloor === 4 ? (
+        <EmptySection message={"4층은 현재 이용 불가입니다!"} />
+      ) : (
+        <>
+          <CabinetList
+            colNum={colNum as number}
+            cabinetInfo={currentSectionCabinets}
+            isAdmin={isAdmin}
+          />
+          {(currentSectionName === SectionType.elevator ||
+            currentSectionName === SectionType.stairs) && (
+              <EmptySection message={"여기엔 사물함이 없어요!"} />
+            )}
+        </>
       )}
     </React.Fragment>
   );
