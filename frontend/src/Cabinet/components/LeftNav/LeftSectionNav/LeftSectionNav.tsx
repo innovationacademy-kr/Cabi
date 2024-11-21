@@ -3,6 +3,7 @@ import { useRecoilValue } from "recoil";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { currentSectionNameState, currentFloorNumberState } from "@/Cabinet/recoil/atoms";
+import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import CabinetColorTable from "@/Cabinet/components/LeftNav/CabinetColorTable/CabinetColorTable";
 import { clubSectionsData } from "@/Cabinet/assets/data/mapPositionData";
@@ -46,7 +47,7 @@ const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
             <IconWrapperStyled>
               {!isAdmin &&
                 !isClubSection &&
-                currentFloorNumber !== 4 &&
+                !DISABLED_FLOOR.includes(currentFloorNumber.toString()) &&
                 (section.alarmRegistered ? (
                   <FilledHeartIcon />
                 ) : (

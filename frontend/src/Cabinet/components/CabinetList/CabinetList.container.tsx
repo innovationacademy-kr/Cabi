@@ -9,6 +9,7 @@ import {
   currentSectionCabinetState,
   currentSectionColNumState,
 } from "@/Cabinet/recoil/selectors";
+import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 import CabinetList from "@/Cabinet/components/CabinetList/CabinetList";
 import EmptySection from "@/Cabinet/components/CabinetList/EmptySection/EmptySection";
 import RealViewNotification from "@/Cabinet/components/CabinetList/RealViewNotification/RealViewNotification";
@@ -51,11 +52,11 @@ const CabinetListContainer = ({
           />
         </div>
       )}
-      {currentFloorSectionNames.includes(currentSectionName) && (currentFloor !== 4) && (
+      {currentFloorSectionNames.includes(currentSectionName) && !(DISABLED_FLOOR.includes(currentFloor.toString())) && (
         <RealViewNotification colNum={colNum as number} />
       )}
-      {(!isAdmin && currentFloor === 4) ? (
-        <EmptySection message={"4층은 현재 이용 불가입니다!"} />
+      {(!isAdmin && DISABLED_FLOOR.includes(currentFloor.toString())) ? (
+        <EmptySection message={`${currentFloor}층은 현재 이용 불가입니다!`} />
       ) : (
         <>
           <CabinetList

@@ -5,6 +5,7 @@ import { ReactComponent as ProfileImg } from "@/Cabinet/assets/images/profile-ci
 import { ReactComponent as SlackAlarmImg } from "@/Cabinet/assets/images/slack-alarm.svg";
 import { ReactComponent as SlackImg } from "@/Cabinet/assets/images/slack.svg";
 import { ReactComponent as StoreImg } from "@/Cabinet/assets/images/storeIconGray.svg";
+import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 
 interface ILeftMainNav {
   pathname: string;
@@ -58,7 +59,7 @@ const LeftMainNav = ({
               </TopBtnStyled>
               {floors &&
                 floors.map((floor, index) =>
-                  !(!isAdmin && floor === 4) ? (
+                  !(!isAdmin && DISABLED_FLOOR.includes(floor.toString())) ? (
                     <TopBtnStyled
                       className={
                         pathname.includes("main") && floor === currentFloor

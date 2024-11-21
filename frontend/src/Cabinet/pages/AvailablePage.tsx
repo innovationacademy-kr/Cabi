@@ -29,7 +29,6 @@ const toggleList: toggleItem[] = [
   { name: "공유", key: AvailableCabinetsType.SHARE },
 ];
 
-/* TODO: DISABLED_FLOOR 을 환경변수로 넣기 */
 export const DISABLED_FLOOR = ["4"];
 
 const AvailablePage = () => {
