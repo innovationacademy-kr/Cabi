@@ -152,9 +152,10 @@ const MainPage = () => {
       </AlertStyled>
       <SectionPaginationContainer />
       <CabinetListWrapperStyled>
-        <CabinetListContainer isAdmin={false} />
+        <CabinetListContainer isAdmin={false} currentFloor={currentFloor} />
         {currentSectionName !== SectionType.elevator &&
-          currentSectionName !== SectionType.stairs && (
+          currentSectionName !== SectionType.stairs &&
+          !DISABLED_FLOOR.includes(currentFloor.toString()) && (
             <RefreshButtonStyled
               className="cabiButton"
               title="새로고침"

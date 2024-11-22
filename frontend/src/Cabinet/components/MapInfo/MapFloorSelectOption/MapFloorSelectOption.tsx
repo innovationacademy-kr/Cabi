@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 
 const MapFloorSelectOption: React.FC<{
   selectFloor: Function;
@@ -7,6 +8,7 @@ const MapFloorSelectOption: React.FC<{
   return (
     <OptionWrapperStyled id="mapFloorOptionBox">
       {floorInfo.map((info, idx) => (
+        !(DISABLED_FLOOR.includes(info.toString())) &&
         <OptionStyled
           className="cabiButton"
           onClick={() => selectFloor(info)}
