@@ -9,6 +9,7 @@ import {
   currentSectionCabinetState,
   currentSectionColNumState,
 } from "@/Cabinet/recoil/selectors";
+import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 import CabinetList from "@/Cabinet/components/CabinetList/CabinetList";
 import EmptySection from "@/Cabinet/components/CabinetList/EmptySection/EmptySection";
 import RealViewNotification from "@/Cabinet/components/CabinetList/RealViewNotification/RealViewNotification";
@@ -19,10 +20,11 @@ import useMultiSelect from "@/Cabinet/hooks/useMultiSelect";
 
 interface ICabinetListContainer {
   isAdmin: boolean;
+  currentFloor: number;
 }
 
 const CabinetListContainer = ({
-  isAdmin,
+  isAdmin, currentFloor
 }: ICabinetListContainer): JSX.Element => {
   const colNum = useRecoilValue(currentSectionColNumState);
   const currentSectionCabinets = useRecoilValue<CabinetPreviewInfo[]>(
@@ -50,17 +52,23 @@ const CabinetListContainer = ({
           />
         </div>
       )}
-      {currentFloorSectionNames.includes(currentSectionName) && (
+      {currentFloorSectionNames.includes(currentSectionName) && !(DISABLED_FLOOR.includes(currentFloor.toString())) && (
         <RealViewNotification colNum={colNum as number} />
       )}
-      <CabinetList
-        colNum={colNum as number}
-        cabinetInfo={currentSectionCabinets}
-        isAdmin={isAdmin}
-      />
-      {(currentSectionName === SectionType.elevator ||
-        currentSectionName === SectionType.stairs) && (
-        <EmptySection message={"여기엔 사물함이 없어요!"} />
+      {(!isAdmin && DISABLED_FLOOR.includes(currentFloor.toString())) ? (
+        <EmptySection message={`${currentFloor}층은 현재 이용 불가입니다!`} />
+      ) : (
+        <>
+          <CabinetList
+            colNum={colNum as number}
+            cabinetInfo={currentSectionCabinets}
+            isAdmin={isAdmin}
+          />
+          {(currentSectionName === SectionType.elevator ||
+            currentSectionName === SectionType.stairs) && (
+              <EmptySection message={"여기엔 사물함이 없어요!"} />
+            )}
+        </>
       )}
     </React.Fragment>
   );
