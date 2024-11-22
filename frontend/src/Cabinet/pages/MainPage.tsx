@@ -155,7 +155,7 @@ const MainPage = () => {
         <CabinetListContainer isAdmin={false} currentFloor={currentFloor} />
         {currentSectionName !== SectionType.elevator &&
           currentSectionName !== SectionType.stairs &&
-          currentFloor !== 4 && (
+          !DISABLED_FLOOR.includes(currentFloor.toString()) && (
             <RefreshButtonStyled
               className="cabiButton"
               title="새로고침"
