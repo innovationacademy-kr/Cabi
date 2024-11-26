@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap&text=새롬관로그인중수요지식회여기엔사물함이없어");
+@import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap&text=새롬관로그인중수요지식회여기엔사물함이없어4층은현재용불가입니다!");
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap");
 
 :root {
@@ -224,6 +224,7 @@ input {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .noScrollbar::-webkit-scrollbar {
   display: none;
 }
