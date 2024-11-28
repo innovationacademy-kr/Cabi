@@ -5,16 +5,16 @@
   /* white, gray, black */
   --ref-white: #ffffff;
   --ref-gray-100: #f5f5f5;
-  --ref-gray-200: #eeeeee;
-  --ref-gray-300: #d9d9d9;
-  --ref-gray-400: #bcbcbc;
-  --ref-gray-450: #8c8c8c;
+  --ref-gray-150: #eeeeee;
+  --ref-gray-200: #d9d9d9;
+  --ref-gray-300: #bcbcbc;
+  --ref-gray-400: #8c8c8c;
   --ref-gray-500: #7b7b7b;
-  --ref-gray-530: #505354;
-  --ref-gray-550: #3d3f40;
-  --ref-gray-600: #3c3c3c;
-  --ref-gray-700: #313233;
-  --ref-gray-800: #262626;
+  --ref-gray-600: #505354;
+  --ref-gray-650: #3d3f40;
+  --ref-gray-700: #3c3c3c;
+  --ref-gray-800: #313233;
+  --ref-gray-850: #262626;
   --ref-gray-900: #1f1f1f;
   --ref-black: #181818;
 
@@ -77,10 +77,10 @@
   --ref-black-shadow-400: rgba(0, 0, 0, 0.8);
 
   /* cabinet */
-  --full-color: var(--ref-gray-200);
-  --banned-color: var(--ref-gray-600);
-  --broken-color: var(--ref-gray-600);
-  --session-color: var(--ref-gray-200);
+  --full-color: var(--ref-gray-150);
+  --banned-color: var(--ref-gray-700);
+  --broken-color: var(--ref-gray-700);
+  --session-color: var(--ref-gray-150);
 
   /* custom color */
   --custom-blue-100: var(--ref-blue-350);
@@ -97,7 +97,7 @@
   --custom-green-200: var(--ref-green-400);
 
   /* component variable */
-  --color-picker-hash-color: var(--ref-gray-450);
+  --color-picker-hash-color: var(--ref-gray-400);
   --sys-sub-color: var(--ref-purple-300);
   --sys-default-sub-color: var(--ref-purple-300);
   --sys-presentation-sub-color: var(--ref-blue-250);
@@ -107,11 +107,10 @@
   --presentation-blue-pagination-btn-color: var(--ref-blue-500);
   --mine-text-color: var(--ref-black);
 
-  --size-base: 14px;
-
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;
   --building-font: "Do Hyeon", sans-serif;
+  --size-base: 14px;
 
   /* default setting */
   font-family: "Noto Sans KR", Inter, Avenir, Helvetica, Arial, sans-serif;

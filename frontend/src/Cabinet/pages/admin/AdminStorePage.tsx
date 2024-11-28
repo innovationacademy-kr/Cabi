@@ -341,7 +341,7 @@ const CoinCollectTitleWrapperStyled = styled.div`
   }
 
   & > div > span {
-    color: var(--ref-gray-400);
+    color: var(--ref-gray-300);
     height: 20px;
     line-height: 18px;
   }
