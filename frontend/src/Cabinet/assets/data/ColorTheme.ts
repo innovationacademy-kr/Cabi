@@ -12,18 +12,17 @@ const lightValues = css`
   --card-content-bg-color: var(--ref-white);
   --bg-color: var(--ref-white);
   --card-bg-color: var(--ref-gray-100);
-  --color-picker-hash-bg-color: var(--ref-gray-150);
-  --capsule-btn-border-color: var(--ref-gray-150);
-  --map-floor-color: var(--ref-gray-150);
-  --presentation-no-event-past-color: var(--ref-gray-150);
-  --inventory-item-title-border-btm-color: var(--ref-gray-200);
-  --service-man-title-border-btm-color: var(--ref-gray-200);
-  --line-color: var(--ref-gray-300);
-  --light-gray-line-btn-color: var(--ref-gray-300);
+  --color-picker-hash-bg-color: var(--ref-gray-200);
+  --capsule-btn-border-color: var(--ref-gray-200);
+  --map-floor-color: var(--ref-gray-200);
+  --presentation-no-event-past-color: var(--ref-gray-200);
+  --inventory-item-title-border-btm-color: var(--ref-gray-300);
+  --service-man-title-border-btm-color: var(--ref-gray-300);
+  --line-color: var(--ref-gray-400);
+  --light-gray-line-btn-color: var(--ref-gray-400);
   --gray-line-btn-color: var(--ref-gray-500);
-  --coin-log-date-color: var(--ref-gray-600);
   --pie-chart-label-text-color: var(--ref-gray-700);
-  --notion-btn-text-color: var(--ref-gray-850);
+  --notion-btn-text-color: var(--ref-gray-900);
   --normal-text-color: var(--ref-black);
 
   --button-line-color: var(--sys-main-color);
@@ -31,10 +30,12 @@ const lightValues = css`
   --presentation-no-event-cur-color: var(--bg-color);
   --color-picker-bg-color: var(--bg-color);
   --extension-card-active-btn-color: var(--sys-main-color);
-  --presentation-card-speaker-name-color: var(--ref-gray-400);
+  --presentation-card-speaker-name-color: var(--ref-gray-500);
+  --presentation-card-sub-title-color: var(--ref-gray-800);
   --table-even-row-bg-color: var(--ref-purple-100);
   --presentation-table-even-row-bg-color: var(--ref-blue-100);
   --presentation-dropdown-select-color: var(--ref-blue-200);
+  --color-picker-hash-color: var(--ref-gray-400);
 
   /* cabinet */
   --mine-color: var(--ref-green-100);
@@ -66,10 +67,10 @@ const darkValues = css`
 
   /* component variable */
   --white-text-with-bg-color: var(--ref-gray-100);
-  --card-content-bg-color: var(--ref-gray-650);
+  --card-content-bg-color: var(--ref-gray-700);
   --bg-color: var(--ref-gray-900);
   --card-bg-color: var(--ref-gray-800);
-  --color-picker-hash-bg-color: var(--ref-gray-650);
+  --color-picker-hash-bg-color: var(--ref-gray-700);
   --capsule-btn-border-color: var(--ref-gray-700);
   --map-floor-color: var(--ref-gray-800);
   --presentation-no-event-past-color: var(--ref-gray-900);
@@ -77,10 +78,9 @@ const darkValues = css`
   --line-color: var(--ref-gray-500);
   --service-man-title-border-btm-color: var(--ref-gray-700);
   --light-gray-line-btn-color: var(--ref-gray-700);
-  --gray-line-btn-color: var(--ref-gray-300);
-  --coin-log-date-color: var(--ref-gray-300);
-  --pie-chart-label-text-color: var(--ref-gray-200);
-  --notion-btn-text-color: var(--ref-gray-150);
+  --gray-line-btn-color: var(--ref-gray-400);
+  --pie-chart-label-text-color: var(--ref-gray-300);
+  --notion-btn-text-color: var(--ref-gray-200);
   --normal-text-color: var(--ref-gray-100);
 
   --button-line-color: var(--sys-main-color);
@@ -89,9 +89,11 @@ const darkValues = css`
   --color-picker-bg-color: var(--ref-gray-600);
   --extension-card-active-btn-color: var(--gray-line-btn-color);
   --presentation-card-speaker-name-color: var(--ref-gray-400);
+  --presentation-card-sub-title-color: var(--ref-gray-300);
   --table-even-row-bg-color: var(--ref-purple-900);
   --presentation-table-even-row-bg-color: var(--ref-blue-900);
   --presentation-dropdown-select-color: var(--ref-blue-800);
+  --color-picker-hash-color: var(--ref-gray-500);
 
   /* cabinet */
   --mine-color: var(--ref-green-200);
