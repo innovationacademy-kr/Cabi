@@ -67,8 +67,8 @@
 
   /* pink */
   --ref-pink-100: #f473b1;
-  --ref-pink-150: #ff4589;
-  --ref-pink-200: #d72766;
+  --ref-pink-200: #ff4589;
+  --ref-pink-300: #d72766;
 
   /* shadow color */
   --ref-black-shadow-100: rgba(0, 0, 0, 0.1);
@@ -87,8 +87,8 @@
   --custom-blue-200: var(--ref-blue-400);
   --custom-blue-300: var(--ref-blue-800);
   --custom-pink-100: var(--ref-pink-100);
-  --custom-pink-200: var(--ref-pink-150);
-  --custom-pink-300: var(--ref-pink-200);
+  --custom-pink-200: var(--ref-pink-200);
+  --custom-pink-300: var(--ref-pink-300);
   --custom-purple-100: var(--ref-purple-350);
   --custom-purple-200: var(--ref-purple-500);
   --custom-orange: var(--ref-orange-100);

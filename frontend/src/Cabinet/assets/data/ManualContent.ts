@@ -82,7 +82,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     contentTitle: "동아리 사물함",
     iconComponent: ClubIcon,
     background:
-      "linear-gradient(to bottom, var(--ref-pink-100), var(--ref-pink-200))",
+      "linear-gradient(to bottom, var(--ref-pink-100), var(--ref-pink-300))",
     rentalPeriod: "상세내용 참조",
     capacity: "동아리",
     contentText: `<span>◦ 이용 방법</span><br/>
