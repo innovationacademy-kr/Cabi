@@ -50,9 +50,8 @@
   --ref-purple-100: #f9f6ff;
   --ref-purple-200: #dfd0fe;
   --ref-purple-300: #b18cff;
-  --ref-purple-350: #a29bfe;
-  --ref-purple-400: #a17bf3;
-  --ref-purple-500: hsl(266, 100%, 64%);
+  --ref-purple-400: #a29bfe;
+  --ref-purple-500: #9747ff;
   --ref-purple-600: #8337e5;
   --ref-purple-700: #6931b2;
   --ref-purple-800: #3c1c66;
@@ -85,7 +84,7 @@
   --custom-pink-100: var(--ref-pink-100);
   --custom-pink-200: var(--ref-pink-200);
   --custom-pink-300: var(--ref-pink-300);
-  --custom-purple-100: var(--ref-purple-350);
+  --custom-purple-100: var(--ref-purple-400);
   --custom-purple-200: var(--ref-purple-500);
   --custom-orange: var(--ref-orange-100);
   --custom-yellow: var(--ref-yellow);

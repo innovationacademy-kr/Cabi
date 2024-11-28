@@ -30,7 +30,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     contentTitle: "개인 사물함",
     iconComponent: PrivateIcon,
     background:
-      "linear-gradient(to bottom, var(--ref-purple-400), var(--ref-purple-600))",
+      "linear-gradient(to bottom, var(--ref-purple-300), var(--ref-purple-600))",
     rentalPeriod: `${import.meta.env.VITE_PRIVATE_LENT_PERIOD}일`,
     capacity: "1인",
     contentText: `<span>◦ 이용 방법</span><br/>
@@ -191,7 +191,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     contentTitle: "까비 상점 OPEN!",
     iconComponent: StoreImg,
     background:
-      "linear-gradient(to bottom, var(--ref-purple-400), var(--ref-purple-600))",
+      "linear-gradient(to bottom, var(--ref-purple-300), var(--ref-purple-600))",
     contentText: `
   `,
     pointColor: "var(--white-text-with-bg-color)",
