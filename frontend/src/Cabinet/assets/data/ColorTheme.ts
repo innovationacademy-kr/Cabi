@@ -5,7 +5,7 @@ const lightValues = css`
   --sys-main-color: var(--ref-purple-500);
   --sys-default-main-color: var(--ref-purple-500);
   --sys-default-mine-color: var(--ref-green-100);
-  --sys-presentation-main-color: var(--ref-blue-650);
+  --sys-presentation-main-color: var(--ref-blue-600);
 
   /* component variable */
   --white-text-with-bg-color: var(--ref-white);
@@ -91,7 +91,7 @@ const darkValues = css`
   --presentation-card-speaker-name-color: var(--ref-gray-400);
   --table-even-row-bg-color: var(--ref-purple-900);
   --presentation-table-even-row-bg-color: var(--ref-blue-900);
-  --presentation-dropdown-select-color: var(--ref-blue-850);
+  --presentation-dropdown-select-color: var(--ref-blue-800);
 
   /* cabinet */
   --mine-color: var(--ref-green-200);
