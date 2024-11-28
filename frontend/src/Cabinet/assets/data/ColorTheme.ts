@@ -89,7 +89,7 @@ const darkValues = css`
   --color-picker-bg-color: var(--ref-gray-530);
   --extension-card-active-btn-color: var(--gray-line-btn-color);
   --presentation-card-speaker-name-color: var(--ref-gray-450);
-  --table-even-row-bg-color: var(--ref-purple-700);
+  --table-even-row-bg-color: var(--ref-purple-900);
   --presentation-table-even-row-bg-color: var(--ref-blue-500);
   --presentation-dropdown-select-color: var(--ref-blue-470);
 

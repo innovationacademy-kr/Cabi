@@ -73,8 +73,8 @@ const StoreHorizontalBarChart = ({ data }: { data: ICoinCollectInfoDto[] }) => {
           "var(--ref-purple-200)",
           "var(--ref-purple-300)",
           "var(--sys-main-color)",
-          "var(--ref-purple-650)",
-          "var(--ref-purple-690)",
+          "var(--ref-purple-700)",
+          "var(--ref-purple-800)",
           "var(--ref-purple-200)",
         ]}
         legends={[
