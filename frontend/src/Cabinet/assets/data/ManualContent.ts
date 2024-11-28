@@ -52,7 +52,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     contentTitle: "공유 사물함",
     iconComponent: ShareIcon,
     background:
-      "linear-gradient(to bottom, var(--ref-blue-200), var(--ref-blue-300))",
+      "linear-gradient(to bottom, var(--ref-blue-300), var(--ref-blue-600))",
     rentalPeriod: `${import.meta.env.VITE_SHARE_LENT_PERIOD}일 + n * ${
       import.meta.env.VITE_SHARE_BONUS_PER_PERSON
     }`,

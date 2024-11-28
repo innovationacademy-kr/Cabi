@@ -5,7 +5,7 @@ const lightValues = css`
   --sys-main-color: var(--ref-purple-500);
   --sys-default-main-color: var(--ref-purple-500);
   --sys-default-mine-color: var(--ref-green-100);
-  --sys-presentation-main-color: var(--ref-blue-400);
+  --sys-presentation-main-color: var(--ref-blue-650);
 
   /* component variable */
   --white-text-with-bg-color: var(--ref-white);
@@ -34,7 +34,7 @@ const lightValues = css`
   --presentation-card-speaker-name-color: var(--ref-gray-450);
   --table-even-row-bg-color: var(--ref-purple-100);
   --presentation-table-even-row-bg-color: var(--ref-blue-100);
-  --presentation-dropdown-select-color: var(--ref-blue-150);
+  --presentation-dropdown-select-color: var(--ref-blue-200);
 
   /* cabinet */
   --mine-color: var(--ref-green-100);
@@ -62,7 +62,7 @@ const darkValues = css`
   --sys-main-color: var(--ref-purple-600);
   --sys-default-main-color: var(--ref-purple-600);
   --sys-default-mine-color: var(--ref-green-200);
-  --sys-presentation-main-color: var(--ref-blue-430);
+  --sys-presentation-main-color: var(--ref-blue-700);
 
   /* component variable */
   --white-text-with-bg-color: var(--ref-gray-100);
@@ -90,8 +90,8 @@ const darkValues = css`
   --extension-card-active-btn-color: var(--gray-line-btn-color);
   --presentation-card-speaker-name-color: var(--ref-gray-450);
   --table-even-row-bg-color: var(--ref-purple-900);
-  --presentation-table-even-row-bg-color: var(--ref-blue-500);
-  --presentation-dropdown-select-color: var(--ref-blue-470);
+  --presentation-table-even-row-bg-color: var(--ref-blue-900);
+  --presentation-dropdown-select-color: var(--ref-blue-850);
 
   /* cabinet */
   --mine-color: var(--ref-green-200);
