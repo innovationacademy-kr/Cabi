@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import org.ftclub.cabinet.user.domain.User;
 
 @Entity
 @Getter
+@Table(name = "PRESENTATION")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Presentation {
 
@@ -56,12 +58,11 @@ public class Presentation {
 
 	@Setter
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_ID")
+	@JoinColumn(name = "USER_ID", nullable = true)
 	private User user;
 
-	protected Presentation(Category category, LocalDateTime dateTime,
+	protected Presentation(LocalDateTime dateTime,
 			PresentationTime presentationTime, String subject, String summary, String detail) {
-		this.category = category;
 		this.dateTime = dateTime;
 		this.presentationTime = presentationTime;
 		this.subject = subject;
@@ -71,10 +72,10 @@ public class Presentation {
 		this.presentationLocation = PresentationLocation.BASEMENT;
 	}
 
-	public static Presentation of(Category category, LocalDateTime dateTime,
+	public static Presentation of(LocalDateTime dateTime,
 			PresentationTime presentationTime, String subject, String summary, String detail) {
 
-		return new Presentation(category, dateTime, presentationTime, subject, summary, detail);
+		return new Presentation(dateTime, presentationTime, subject, summary, detail);
 	}
 
 	public void adminUpdate(PresentationStatus newStatus, LocalDateTime newDateTime,
@@ -82,5 +83,17 @@ public class Presentation {
 		this.presentationStatus = newStatus;
 		this.dateTime = newDateTime;
 		this.presentationLocation = newLocation;
+	}
+
+	public void updateDummyToUserForm(Category category,
+			PresentationTime presentationTime, LocalDateTime presentationDateTime,
+			String subject, String summary, String detail) {
+		this.category = category;
+		this.presentationTime = presentationTime;
+		this.dateTime = presentationDateTime;
+		this.subject = subject;
+		this.summary = summary;
+		this.detail = detail;
+		this.presentationStatus = PresentationStatus.EXPECTED;
 	}
 }

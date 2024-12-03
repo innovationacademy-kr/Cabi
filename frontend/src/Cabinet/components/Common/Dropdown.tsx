@@ -41,6 +41,7 @@ const Dropdown = ({
   useEffect(() => {
     setCurrentName(defaultValue);
   }, [defaultValue]);
+
   return (
     <DropdownContainerStyled>
       <DropdownSelectionBoxStyled
@@ -113,14 +114,18 @@ const DropdownSelectionBoxStyled = styled.div`
   text-align: start;
   padding-left: 20px;
   font-size: 1.125rem;
-  color: var(--sys-main-color);
+  color: "var(--sys-main-color)";
 `;
 
 const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
   width: 100%;
+  height: 400%;
   display: flex;
   flex-direction: column;
   position: absolute;
+  overflow-y: auto;
+  border-radius: 10px;
+  border: 1px solid var(--line-color);
   top: 110%;
   z-index: 99;
   ${({ isVisible }) =>
@@ -140,29 +145,27 @@ const DropdownItemStyled = styled.div<{
   align-items: center;
   background-color: ${({ isSelected }) =>
     isSelected ? "var(--map-floor-color)" : "var(--bg-color)"};
-  border: 1px solid var(--line-color);
-  border-width: 0px 1px 1px 1px;
+  border-top: 1px solid var(--line-color);
   width: 100%;
-  height: 60px;
+  min-height: 60px;
   text-align: start;
-  padding-left: 20px;
+  padding: 15px 20px;
   font-size: 1.125rem;
   color: ${(
-    { isSelected, isDisabled } // 비활성화 된 항목은 --capsule-btn-border-color 로 띄우고 클릭 못하게
-  ) =>
+      { isSelected, isDisabled } // 비활성화 된 항목은 --capsule-btn-border-color 로 띄우고 클릭 못하게
+    ) =>
     isDisabled
       ? "var(--capsule-btn-border-color)"
       : isSelected
-      ? "var(--sys-main-color)"
-      : "var(--normal-text-color)"};
+        ? "var(--sys-main-color)"
+        : "var(--normal-text-color)"};
   cursor: ${({ isDisabled }) => (isDisabled ? "not-allowed" : "pointer")};
   &:first-child {
-    border-radius: 10px 10px 0px 0px;
-    border-width: 1px 1px 1px 1px;
+    border: none;
   }
   &:last-child {
     border-radius: ${(props) =>
-      props.hasNoOptions ? "10px" : "0px 0px 10px 10px"};
+    props.hasNoOptions ? "10px" : "0px 0px 10px 10px"};
   }
 
   &:hover {
