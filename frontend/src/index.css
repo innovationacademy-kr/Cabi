@@ -33,14 +33,14 @@
   --ref-green-400: #00c2ab;
 
   /* blue */
-  --ref-blue-100: hsl(228, 100%, 98%);
-  --ref-blue-200: hsl(220, 89%, 93%);
-  --ref-blue-300: hsl(219, 91%, 77%);
-  --ref-blue-400: hsl(209, 94%, 74%);
-  --ref-blue-500: hsl(227, 98%, 66%);
-  --ref-blue-600: hsl(227, 98%, 62%);
-  --ref-blue-700: hsl(227, 98%, 58%);
-  --ref-blue-800: rgb(38, 67, 126);
+  --ref-blue-100: #f5f7ff;
+  --ref-blue-200: #dce7fd;
+  --ref-blue-300: #91b5fa;
+  --ref-blue-400: #7ebffb;
+  --ref-blue-500: #5278fd;
+  --ref-blue-600: #3f69fd;
+  --ref-blue-700: #2c5afd;
+  --ref-blue-800: #26447e;
   --ref-blue-900: #252526;
 
   /* purple */
