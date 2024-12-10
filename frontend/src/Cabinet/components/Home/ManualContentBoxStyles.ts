@@ -15,7 +15,7 @@ export const storeBoxStyles = css`
   position: relative;
   background: linear-gradient(
     to bottom,
-    var(--ref-purple-300),
+    var(--ref-purple-400),
     var(--ref-purple-600)
   );
   border-radius: 40px;

@@ -71,7 +71,7 @@ const StoreHorizontalBarChart = ({ data }: { data: ICoinCollectInfoDto[] }) => {
         margin={{ top: 20, right: 56, bottom: 80, left: 70 }}
         colors={[
           "var(--ref-purple-200)",
-          "var(--ref-purple-300)",
+          "var(--ref-purple-400)",
           "var(--sys-main-color)",
           "var(--ref-purple-700)",
           "var(--ref-purple-800)",
