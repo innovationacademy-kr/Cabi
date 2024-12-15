@@ -114,7 +114,7 @@ const DropdownSelectionBoxStyled = styled.div`
   text-align: start;
   padding-left: 20px;
   font-size: 1.125rem;
-  color: "var(--sys-main-color)";
+  color: var(--sys-main-color);
 `;
 
 const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`

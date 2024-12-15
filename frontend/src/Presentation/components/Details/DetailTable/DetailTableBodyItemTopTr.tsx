@@ -77,15 +77,12 @@ const DetailTableBodyItemTopTr = ({
   tableHeadEntriesWithoutDate: [string, string][];
   tableHeadEntriesWithoutDateAndSubject: [string, string][];
 }) => {
-  const isClickable = (function checkClickable() {
+  const isClickable = (): boolean => {
     if (itemInfo.item.presentationStatus !== PresentationStatusType.CANCEL) {
-      if (isAdmin) {
-        return true;
-      } else {
-        return !itemInfo.itemStatus;
-      }
+      return isAdmin || !itemInfo.itemStatus;
     }
-  })();
+    return false;
+  };
 
   return (
     <>
@@ -95,7 +92,7 @@ const DetailTableBodyItemTopTr = ({
         id={isItemOpen ? "selected" : ""}
         presentationStatus={itemInfo.item.presentationStatus}
         onClick={() => {
-          isClickable && handleItemClick(itemInfo.item);
+          isClickable() && handleItemClick(itemInfo.item);
         }}
         open={isItemOpen}
       >
