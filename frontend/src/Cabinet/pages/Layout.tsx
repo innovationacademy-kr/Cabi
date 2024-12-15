@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 import {
+  buildingsFloorState,
+  myCabinetInfoState,
   myClubListState,
   serverTimeState,
   targetClubInfoState,
@@ -18,15 +20,18 @@ import OverduePenaltyModal from "@/Cabinet/components/Modals/OverduePenaltyModal
 import StoreInfo from "@/Cabinet/components/Store/StoreInfo";
 import TopNavContainer from "@/Cabinet/components/TopNav/TopNav.container";
 import { additionalModalType } from "@/Cabinet/assets/data/maps";
+import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import {
   ClubPaginationResponseDto,
   ClubResponseDto,
 } from "@/Cabinet/types/dto/club.dto";
 import { UserDto, UserInfo } from "@/Cabinet/types/dto/user.dto";
 import {
+  axiosBuildingFloor,
   axiosMyClubList,
   axiosMyInfo,
   axiosMyItems,
+  axiosMyLentInfo,
 } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
@@ -38,7 +43,6 @@ const token = getCookie("access_token");
 const Layout = (): JSX.Element => {
   const [hasPenaltyItem, setHasPenaltyItem] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isValidToken, setIsValidToken] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [myInfoData, setMyInfoData] = useState<UserInfo | null>(null);
   const setServerTime = useSetRecoilState<Date>(serverTimeState);
@@ -47,6 +51,9 @@ const Layout = (): JSX.Element => {
     useSetRecoilState<ClubPaginationResponseDto>(myClubListState);
   const setTargetClubInfo =
     useSetRecoilState<ClubResponseDto>(targetClubInfoState);
+  const setBuildingsFloor = useSetRecoilState(buildingsFloorState);
+  const setMyLentInfo =
+    useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const navigate = useNavigate();
   const location = useLocation();
   const { closeAll } = useMenu();
@@ -79,7 +86,6 @@ const Layout = (): JSX.Element => {
       setServerTime(new Date(formattedServerTime)); // 접속 후 최초 서버 시간을 가져옴
       setMyInfoData(myInfo);
       setUser(myInfo);
-      setIsValidToken(true);
       if (data.penaltyItems.length == 0) {
         setHasPenaltyItem(false);
       }
@@ -108,11 +114,33 @@ const Layout = (): JSX.Element => {
     }
   };
 
+  const getBuildingsData = async () => {
+    try {
+      const buildingsFloorData = await axiosBuildingFloor();
+      setBuildingsFloor([...buildingsFloorData.data]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  async function getMyLentInfo() {
+    try {
+      const { data: myLentInfo } = await axiosMyLentInfo();
+
+      setMyLentInfo(myLentInfo);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   useEffect(() => {
     deleteOldPointColors();
     if (!token && !isLoginPage) navigate("/login");
     else if (token) {
       getMyInfo();
+      Promise.all([getBuildingsData(), getMyLentInfo()]).then(() =>
+        setIsLoading(false)
+      );
       getMyClubList();
       // 서버 시간
       const serverTimer = setInterval(() => {
@@ -152,34 +180,40 @@ const Layout = (): JSX.Element => {
     <Outlet />
   ) : (
     <React.Fragment>
-      {isValidToken && <TopNavContainer setIsLoading={setIsLoading} />}
       {isLoading ? (
-        <LoadingAnimation />
+        <LoadingAnimationWrapper>
+          <LoadingAnimation />
+        </LoadingAnimationWrapper>
       ) : (
-        <WrapperStyled>
-          <LeftNav isVisible={isMainPage} />
-          <MainStyled>
-            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
-            <Outlet />
-          </MainStyled>
-          <DetailInfoContainerStyled
-            id="cabinetDetailArea"
-            isHomePage={!isMainPage}
-          >
-            <CabinetInfoAreaContainer />
-          </DetailInfoContainerStyled>
-          <ClubMemberInfoAreaContainer />
-          <MapInfoContainer />
-          <StoreInfo />
-          {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
-            <OverduePenaltyModal
-              status={additionalModalType.MODAL_OVERDUE_PENALTY}
-              closeModal={closeModal}
-              unbannedAt={myInfoData.unbannedAt}
-              hasPenaltyItem={hasPenaltyItem}
-            />
-          )}
-        </WrapperStyled>
+        <>
+          <TopNavContainer />
+          <WrapperStyled>
+            <LeftNav isVisible={isMainPage} />
+            <MainStyled>
+              <MenuBgStyled onClick={handleClickBg} id="menuBg" />
+              <Outlet />
+            </MainStyled>
+            <DetailInfoContainerStyled
+              id="cabinetDetailArea"
+              isHomePage={!isMainPage}
+            >
+              <CabinetInfoAreaContainer />
+            </DetailInfoContainerStyled>
+            <ClubMemberInfoAreaContainer />
+            <MapInfoContainer />
+            <StoreInfo />
+            {isModalOpen &&
+              myInfoData &&
+              myInfoData.unbannedAt !== undefined && (
+                <OverduePenaltyModal
+                  status={additionalModalType.MODAL_OVERDUE_PENALTY}
+                  closeModal={closeModal}
+                  unbannedAt={myInfoData.unbannedAt}
+                  hasPenaltyItem={hasPenaltyItem}
+                />
+              )}
+          </WrapperStyled>
+        </>
       )}
     </React.Fragment>
   );
@@ -225,6 +259,10 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
 
 const MenuBgStyled = styled.div`
   position: none;
+`;
+
+const LoadingAnimationWrapper = styled.div`
+  height: 100vh;
 `;
 
 export default Layout;

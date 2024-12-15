@@ -17,6 +17,7 @@ import {
   axiosMyInfo,
 } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
+import { HttpStatusCode } from "axios";
 
 const StoreInfo = () => {
   // 처음 날개 열었을 때 get요청 로딩 함수
@@ -58,7 +59,7 @@ const StoreInfo = () => {
         setTodayCoinCollection(true);
       }
     } catch (error: any) {
-      if (error.response && error.response.status === 400) {
+      if (error.response && error.response.status === HttpStatusCode.BadRequest) {
         setModalTitle("동전 줍기 실패");
       } else {
         setModalTitle(error.data.message || error.response.data.message);

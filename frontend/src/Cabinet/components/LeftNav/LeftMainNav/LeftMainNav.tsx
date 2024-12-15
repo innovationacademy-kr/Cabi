@@ -2,9 +2,10 @@ import styled from "styled-components";
 import { ReactComponent as LogoutImg } from "@/Cabinet/assets/images/close-square.svg";
 import { ReactComponent as ClubImg } from "@/Cabinet/assets/images/clubIconGray.svg";
 import { ReactComponent as ProfileImg } from "@/Cabinet/assets/images/profile-circle.svg";
-import { ReactComponent as SlackNotiImg } from "@/Cabinet/assets/images/slack-notification.svg";
+import { ReactComponent as SlackAlarmImg } from "@/Cabinet/assets/images/slack-alarm.svg";
 import { ReactComponent as SlackImg } from "@/Cabinet/assets/images/slack.svg";
 import { ReactComponent as StoreImg } from "@/Cabinet/assets/images/storeIconGray.svg";
+import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 
 interface ILeftMainNav {
   pathname: string;
@@ -14,7 +15,7 @@ interface ILeftMainNav {
   currentFloor: number;
   onClickFloorButton: Function;
   onClickLogoutButton: React.MouseEventHandler;
-  onClickSlackNotiButton: React.MouseEventHandler;
+  onClickSlackAlarmButton: React.MouseEventHandler;
   onClickSearchButton: React.MouseEventHandler;
   onClickAdminClubButton: React.MouseEventHandler;
   onClickMainClubButton: React.MouseEventHandler;
@@ -32,7 +33,7 @@ const LeftMainNav = ({
   onClickHomeButton,
   onClickFloorButton,
   onClickLogoutButton,
-  onClickSlackNotiButton,
+  onClickSlackAlarmButton,
   onClickAdminClubButton,
   onClickMainClubButton,
   onClickProfileButton,
@@ -57,19 +58,21 @@ const LeftMainNav = ({
                 Home
               </TopBtnStyled>
               {floors &&
-                floors.map((floor, index) => (
-                  <TopBtnStyled
-                    className={
-                      pathname.includes("main") && floor === currentFloor
-                        ? "leftNavButtonActive cabiButton"
-                        : "cabiButton"
-                    }
-                    onClick={() => onClickFloorButton(floor)}
-                    key={index}
-                  >
-                    {floor + "층"}
-                  </TopBtnStyled>
-                ))}
+                floors.map((floor, index) =>
+                  !(!isAdmin && DISABLED_FLOOR.includes(floor.toString())) ? (
+                    <TopBtnStyled
+                      className={
+                        pathname.includes("main") && floor === currentFloor
+                          ? "leftNavButtonActive cabiButton"
+                          : "cabiButton"
+                      }
+                      onClick={() => onClickFloorButton(floor)}
+                      key={index}
+                    >
+                      {floor + "층"}
+                    </TopBtnStyled>
+                  ) : null
+                )}
               <TopBtnStyled
                 className={
                   pathname.includes("available")
@@ -101,14 +104,14 @@ const LeftMainNav = ({
               </BottomBtnStyled>
               <BottomBtnStyled
                 className={
-                  pathname.includes("slack-notification")
+                  pathname.includes("slack-alarm")
                     ? "active cabiButton"
                     : " cabiButton"
                 }
-                onClick={onClickSlackNotiButton}
+                onClick={onClickSlackAlarmButton}
               >
-                <SlackNotiImg />
-                Noti
+                <SlackAlarmImg />
+                Alarm
               </BottomBtnStyled>
               <BottomBtnStyled className="cabiButton">
                 <a

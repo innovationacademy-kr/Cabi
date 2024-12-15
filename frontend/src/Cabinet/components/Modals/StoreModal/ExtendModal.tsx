@@ -1,3 +1,4 @@
+import { HttpStatusCode } from "axios";
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -225,11 +226,11 @@ const ExtendModal: React.FC<{
       setMyLentInfo(myLentInfoData.data);
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      if (error.response.status === 400) {
+      if (error.response.status === HttpStatusCode.BadRequest) {
         setModalTitle(defaultFailureModalTitle);
         setModalContents(noItemMsg);
         setUrl("/store");
-      } else if (error.response.status === 403) {
+      } else if (error.response.status === HttpStatusCode.Forbidden) {
         setModalTitle(defaultFailureModalTitle);
         setModalContents(overdueMsg);
       } else {

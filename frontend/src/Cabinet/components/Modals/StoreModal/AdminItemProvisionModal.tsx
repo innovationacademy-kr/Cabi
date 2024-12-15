@@ -18,6 +18,7 @@ import {
   axiosCoinAssign,
   axiosAdminItems,
 } from "@/Cabinet/api/axios/axios.custom";
+import { HttpStatusCode } from "axios";
 
 interface IPenaltyModalProps {
   onClose: () => void;
@@ -52,7 +53,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
       setModalTitle("아이템 지급완료");
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      if (error.response.status === 400) setModalTitle("아이템 지급실패");
+      if (error.response.status === HttpStatusCode.BadRequest) setModalTitle("아이템 지급실패");
       else
         error.response
           ? setModalTitle(error.response.data.message)
