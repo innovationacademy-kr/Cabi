@@ -118,7 +118,7 @@ const AdminMainPage = () => {
         />
       </MultiSelectButtonWrapperStyled>
       <CabinetListWrapperStyled>
-        <CabinetListContainer isAdmin={true} />
+        <CabinetListContainer isAdmin={true} currentFloor={currentFloorNumber} />
 
         <RefreshButtonStyled
           className="cabiButton"

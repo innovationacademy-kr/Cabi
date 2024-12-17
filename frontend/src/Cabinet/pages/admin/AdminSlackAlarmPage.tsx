@@ -4,7 +4,7 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
-import SlackNotiSearchBar from "@/Cabinet/components/SlackNoti/SlackNotiSearchBar";
+import SlackAlarmSearchBar from "@/Cabinet/components/SlackAlarm/SlackAlarmSearchBar";
 import {
   ISlackAlarmTemplate,
   ISlackChannel,
@@ -12,8 +12,8 @@ import {
   SlackChannels,
 } from "@/Cabinet/assets/data/SlackAlarm";
 import {
-  axiosSendSlackNotificationToChannel,
-  axiosSendSlackNotificationToUser,
+  axiosSendSlackAlarmToChannel,
+  axiosSendSlackAlarmToUser,
 } from "@/Cabinet/api/axios/axios.custom";
 
 const hoverAndClickedBtnStyles = css`
@@ -22,7 +22,7 @@ const hoverAndClickedBtnStyles = css`
   border: 1px solid var(--sys-main-color);
 `;
 
-const AdminSlackNotiPage = () => {
+const AdminSlackAlarmPage = () => {
   const receiverInputRef = useRef<HTMLInputElement>(null);
   const msgTextAreaRef = useRef<HTMLTextAreaElement>(null);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
@@ -65,13 +65,13 @@ const AdminSlackNotiPage = () => {
         let channelId = SlackChannels.find((channel) => {
           return receiverInputRef.current!.value === channel.title;
         })?.channelId;
-        await axiosSendSlackNotificationToChannel(
+        await axiosSendSlackAlarmToChannel(
           receiverInputRef.current.value,
           msgTextAreaRef.current!.value,
           channelId
         );
       } else {
-        await axiosSendSlackNotificationToUser(
+        await axiosSendSlackAlarmToUser(
           receiverInputRef.current.value,
           msgTextAreaRef.current!.value
         );
@@ -138,7 +138,7 @@ const AdminSlackNotiPage = () => {
             <FormSubTitleStyled>
               받는이(Intra ID/ Channel)<span>*</span>
             </FormSubTitleStyled>
-            <SlackNotiSearchBar
+            <SlackAlarmSearchBar
               searchInput={receiverInputRef}
               renderReceiverInput={renderReceiverInput}
             />
@@ -320,4 +320,4 @@ const FormButtonStyled = styled.button<{ primary?: boolean }>`
   }
 `;
 
-export default AdminSlackNotiPage;
+export default AdminSlackAlarmPage;

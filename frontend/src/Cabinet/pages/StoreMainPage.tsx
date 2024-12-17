@@ -117,7 +117,7 @@ const StoreCoinGridWrapper = styled.div`
   grid-template-rows: 150px 150px;
   grid-template-areas:
     "coinPick EXTENSION SWAP"
-    "coinPick ALERT PENALTY";
+    "coinPick ALARM PENALTY";
 
   padding-bottom: 30px;
 
@@ -127,7 +127,7 @@ const StoreCoinGridWrapper = styled.div`
     grid-template-areas:
       "coinPick EXTENSION "
       "coinPick SWAP"
-      "ALERT PENALTY";
+      "ALARM PENALTY";
   }
 
   // 나중에 고치기
@@ -139,7 +139,7 @@ const StoreCoinGridWrapper = styled.div`
       "coinPick"
       "EXTENSION"
       "SWAP"
-      "ALERT"
+      "ALARM"
       "PENALTY";
   }
 `;
