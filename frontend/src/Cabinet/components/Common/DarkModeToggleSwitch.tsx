@@ -22,9 +22,12 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   );
 
   const isDarkMode = displayStyleType === DisplayStyleType.DARK;
+  const toggleType =
+    (localStorage.getItem("display-style-toggle") as DisplayStyleToggleType) ||
+    DisplayStyleToggleType.DEVICE;
 
   useEffect(() => {
-    setDisplayStyleToggle(savedDisplayStyleToggle);
+    setDisplayStyleToggle(toggleType);
   }, []);
 
   useEffect(() => {
