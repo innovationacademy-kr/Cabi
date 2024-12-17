@@ -218,14 +218,14 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
               <ContentSectionStyled>
                 <ContentItemSectionStyled>
                   <ContentItemWrapperStyled isVisible={true}>
-                    <CntentItemTitleStyled>
+                    <ContentItemTitleWrapperStyled>
                       <ContentItemTitleStyled>발표 상태</ContentItemTitleStyled>
                       {presentationStatus === PresentationStatusType.CANCEL && (
                         <ContentItemCancleAlertStyled>
                           발표를 취소하면 되돌릴 수 없습니다
                         </ContentItemCancleAlertStyled>
                       )}
-                    </CntentItemTitleStyled>
+                    </ContentItemTitleWrapperStyled>
                     <Dropdown {...statusDropdownProps} />
                   </ContentItemWrapperStyled>
                   <ContentItemWrapperStyled isVisible={true}>
@@ -325,7 +325,7 @@ const ContentItemWrapperStyled = styled.div<{
   margin-bottom: 25px;
 `;
 
-const CntentItemTitleStyled = styled.div`
+const ContentItemTitleWrapperStyled = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
