@@ -144,15 +144,12 @@ public class PresentationService {
 	 */
 	public PresentationMainData getPastAndUpcomingPresentations(
 			int pastFormCount, int upcomingFormCount) {
-		log.info("과거 자료 가져오기 시작");
 		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount,
 				PresentationStatus.DONE);
-		log.info("미래 자료 가져오기 시작");
 
 		List<Presentation> upcomingPresentations =
 				getLatestUpcomingPresentationsByCount(upcomingFormCount,
 						PresentationStatus.EXPECTED);
-		log.info("---------------끝-------------");
 
 		List<PresentationFormData> past = pastPresentations.stream()
 				.map(presentationMapper::toPresentationFormDataDto)
@@ -161,7 +158,6 @@ public class PresentationService {
 				.map(presentationMapper::toPresentationFormDataDto)
 				.collect(Collectors.toList());
 
-		log.info("맵퍼 탈 때 유저 건드나?");
 		return presentationMapper.toPresentationMainData(past, upcoming);
 	}
 
@@ -272,27 +268,31 @@ public class PresentationService {
 		presentationRepository.saveAll(presentations);
 	}
 
+	/**
+	 * 스케줄링이 도는 날짜 기준으로 2개월 후의 더미 데이터를 1개 작성한다.
+	 *
+	 * @param nowDate
+	 * @return
+	 */
 	public List<LocalDateTime> getDummyPresentationFormsDate(LocalDate nowDate) {
 		List<LocalDateTime> wednesdays = new ArrayList<>();
 
-		for (int monthOffset = 0; monthOffset < 3; monthOffset++) {
-			// 해당 월의 첫째 날을 구한다
-			LocalDate firstDayOfMonth = LocalDate.of(nowDate.getYear(),
-					nowDate.getMonth().plus(monthOffset), 1);
+		// 2개월 뒤의 첫째 날을 구한다
+		LocalDate firstDayOfMonth =
+				nowDate.plusMonths(2).withDayOfMonth(1);
 
-			// 해당 월의 첫 번째 수요일을 찾는다
-			LocalDate firstWednesday = firstDayOfMonth.with(
-					TemporalAdjusters.nextOrSame(DayOfWeek.WEDNESDAY));
+		// 해당 월의 첫 번째 수요일을 찾는다
+		LocalDate firstWednesday = firstDayOfMonth.with(
+				TemporalAdjusters.nextOrSame(DayOfWeek.WEDNESDAY));
 
-			// 2번째 수요일은 첫 번째 수요일에서 1주 후
-			LocalDate secondWednesday = firstWednesday.plusWeeks(1);
+		// 2번째 수요일은 첫 번째 수요일에서 1주 후
+		LocalDate secondWednesday = firstWednesday.plusWeeks(1);
 
-			// 4번째 수요일은 첫 번째 수요일에서 3주 후
-			LocalDate fourthWednesday = firstWednesday.plusWeeks(3);
+		// 4번째 수요일은 첫 번째 수요일에서 3주 후
+		LocalDate fourthWednesday = firstWednesday.plusWeeks(3);
 
-			wednesdays.add(secondWednesday.atStartOfDay());
-			wednesdays.add(fourthWednesday.atStartOfDay());
-		}
+		wednesdays.add(secondWednesday.atStartOfDay().withHour(14));
+		wednesdays.add(fourthWednesday.atStartOfDay().withHour(14));
 		return wednesdays;
 	}
 
