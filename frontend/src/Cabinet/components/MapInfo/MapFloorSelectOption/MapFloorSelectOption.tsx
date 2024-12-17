@@ -40,6 +40,9 @@ const OptionStyled = styled.div`
   width: 65px;
   height: 40px;
   border-bottom: 1px solid var(--map-floor-color);
+  &:last-child {
+    border-bottom: none;
+  }
   display: flex;
   justify-content: center;
   align-items: center;
