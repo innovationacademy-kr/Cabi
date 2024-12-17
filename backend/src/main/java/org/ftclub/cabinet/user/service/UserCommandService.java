@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.FtProfile;
@@ -114,5 +115,9 @@ public class UserCommandService {
 		User user = userRepository.findById(userId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 		user.addCoin(reward);
+	}
+
+	public void addBulkCoin(List<Long> userIds, Long amount) {
+		userRepository.updateBulkUserCoin(userIds, amount);
 	}
 }

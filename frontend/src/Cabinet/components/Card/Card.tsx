@@ -9,6 +9,7 @@ export interface IButtonProps {
   icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null; // NOTE: icon 이 있을 경우, icon 을 표시
   isClickable: boolean;
   isExtensible?: boolean;
+  isLoading?: boolean;
 }
 
 interface CardProps {
@@ -41,7 +42,7 @@ const Card = ({
             {onClickToolTip && <ToolTipIcon onClick={onClickToolTip} />}
           </CardTitleWrapperStyled>
           {buttons.length > 0 && (
-            <CardButtonWrapper>
+            <CardButtonsWrapper>
               {buttons?.map((button, index) => (
                 <CardButtonStyled
                   key={index}
@@ -51,11 +52,12 @@ const Card = ({
                   icon={button.icon}
                   isClickable={button.isClickable}
                   isExtensible={button.isExtensible}
+                  isLoading={button.isLoading}
                 >
                   {!button.icon ? button.label : <button.icon />}
                 </CardButtonStyled>
               ))}
-            </CardButtonWrapper>
+            </CardButtonsWrapper>
           )}
         </CardHeaderStyled>
       )}
@@ -113,7 +115,7 @@ const ToolTipIcon = styled.div`
   }
 `;
 
-export const CardButtonWrapper = styled.div`
+export const CardButtonsWrapper = styled.div`
   display: flex;
   font-size: var(--size-base);
 `;
@@ -124,6 +126,7 @@ export const CardButtonStyled = styled.div<{
   icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null;
   isClickable?: boolean;
   isExtensible?: boolean;
+  isLoading?: boolean;
 }>`
   ${(props) =>
     props.icon
@@ -151,7 +154,15 @@ export const CardButtonStyled = styled.div<{
             font-weight: ${props.isClickable && 400};
           }
         `}
-  cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
+
+  cursor: ${(props) => {
+    if (props.isClickable) {
+      if (props.isLoading) return "wait"; // ex) 프로필 - 알림 요청 후 응답 전까지 저장 버튼 hover시
+      return "pointer";
+    }
+    if (props.isLoading) return "not-allowed"; // ex) 프로필 - 알림 요청 후 응답 전까지 취소 버튼 hover시
+    return "default";
+  }};
 
   & > svg {
     height: 20px;

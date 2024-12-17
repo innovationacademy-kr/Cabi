@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { targetUserInfoState } from "@/Cabinet/recoil/atoms";
@@ -14,7 +14,11 @@ import {
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import { IItemDetail } from "@/Cabinet/types/dto/store.dto";
 import { StoreItemType } from "@/Cabinet/types/enum/store.enum";
-import { axiosItemAssign, axiosItems } from "@/Cabinet/api/axios/axios.custom";
+import {
+  axiosCoinAssign,
+  axiosAdminItems,
+} from "@/Cabinet/api/axios/axios.custom";
+import { HttpStatusCode } from "axios";
 
 interface IPenaltyModalProps {
   onClose: () => void;
@@ -35,15 +39,21 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   const [isItemDropdownOpen, setIsItemDropdownOpen] = useState(false);
   const [isItemTypeDropdownOpen, setIsItemTypeDropdownOpen] = useState(false);
   const [targetUserInfo] = useRecoilState(targetUserInfoState);
-
+  const coinRef = useRef<HTMLInputElement>(null);
   const HandleItemProvisionBtn = async () => {
+    let coinRefVal = coinRef.current!.value;
+    coinRefVal = coinRefVal == "" ? "0" : String(coinRefVal);
     setIsLoading(true);
     try {
-      await axiosItemAssign(selectedItemSku, [targetUserInfo.userId!]);
+      await axiosCoinAssign(
+        selectedItemSku,
+        [targetUserInfo.userId!],
+        Number(coinRefVal)
+      );
       setModalTitle("아이템 지급완료");
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      if (error.response.ststus === 400) setModalTitle("아이템 지급실패");
+      if (error.response.status === HttpStatusCode.BadRequest) setModalTitle("아이템 지급실패");
       else
         error.response
           ? setModalTitle(error.response.data.message)
@@ -72,7 +82,7 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
 
   const getItems = async () => {
     try {
-      const response = await axiosItems();
+      const response = await axiosAdminItems();
       setItems(response.data.items);
     } catch (error) {
       throw error;
@@ -116,17 +126,19 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
   }, []);
 
   const getItemTypeOptions = (item: IItemDetail) => {
+    console.log(item.items);
+
     return item.items.length === 1
       ? [
-          {
-            name: "타입이 없습니다",
-            value: item.items[0].itemSku,
-            hasNoOptions: true,
-          },
-        ]
+        {
+          name: "타입이 없습니다",
+          value: item.items[0].itemSku,
+          hasNoOptions: true,
+        },
+      ]
       : item.items.map((item) => {
-          return { name: item.itemDetails, value: item.itemSku };
-        });
+        return { name: item.itemDetails, value: item.itemSku };
+      });
   };
 
   const modalContents: IModalContents = {
@@ -151,6 +163,18 @@ const AdminItemProvisionModal: React.FC<IPenaltyModalProps> = ({ onClose }) => {
         <ModalWrapperStyled>
           <ModalDropdownNameStyled>아이템 타입</ModalDropdownNameStyled>
           <Dropdown {...itemTypeDropDownProps} />
+        </ModalWrapperStyled>
+
+        <ModalWrapperStyled>
+          <ModalDropdownNameStyled>코인</ModalDropdownNameStyled>
+          <CoinInputStyled
+            onKeyUp={(e: any) => {
+              if (e.key === "Enter") HandleItemProvisionBtn();
+            }}
+            ref={coinRef}
+            maxLength={10}
+            id="input"
+          ></CoinInputStyled>
         </ModalWrapperStyled>
       </>
     ),
@@ -177,6 +201,21 @@ const ModalDropdownNameStyled = styled.div`
   display: flex;
   margin: 10px 10px 15px 5px;
   font-size: 18px;
+`;
+
+const CoinInputStyled = styled.input`
+  border: 1px solid var(--light-gray-line-btn-color);
+  width: 100%;
+  height: 60px;
+  border-radius: 10px;
+  text-align: start;
+  text-indent: 20px;
+  font-size: 1.125rem;
+  cursor: "input";
+  color: "var(--normal-text-color)";
+  &::placeholder {
+    color: "var(--line-color)";
+  }
 `;
 
 export default AdminItemProvisionModal;

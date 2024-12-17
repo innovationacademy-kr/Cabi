@@ -195,7 +195,8 @@ public class ItemFacadeService {
 		// DB에 코인 저장
 		Item coinCollect = itemQueryService.getBySku(Sku.COIN_COLLECT);
 		int reward = (int) (coinCollect.getPrice().longValue());
-		itemHistoryCommandService.createCoinItemHistory(userId, coinCollect.getId());
+		itemHistoryCommandService.createCoinItemHistory(userId, coinCollect.getId(),
+				coinCollect.getPrice());
 
 		// 출석 일자에 따른 랜덤 리워드 지급
 		Long coinCollectionCountInMonth =
@@ -206,7 +207,8 @@ public class ItemFacadeService {
 			Sku coinSku = itemPolicyService.getRewardSku(randomPercentage);
 			Item coinReward = itemQueryService.getBySku(coinSku);
 
-			itemHistoryCommandService.createCoinItemHistory(userId, coinReward.getId());
+			itemHistoryCommandService.createCoinItemHistory(userId, coinReward.getId(),
+					coinReward.getPrice());
 			reward += coinReward.getPrice();
 		}
 
@@ -310,7 +312,7 @@ public class ItemFacadeService {
 		itemPolicyService.verifyIsAffordable(userCoin, price);
 
 		// 아이템 구매 처리
-		itemHistoryCommandService.createItemHistory(user.getId(), item.getId());
+		itemHistoryCommandService.createItemHistory(user.getId(), item.getId(), price);
 
 		LockUtil.lockRedisCoin(userId, () -> {
 			// 코인 차감

@@ -140,4 +140,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT u FROM User u WHERE u.deletedAt IS NULL")
 	List<User> findAllDeletedAtIsNull();
+
+	@Modifying(clearAutomatically = true)
+	@Query("UPDATE User u "
+			+ "SET u.coin = u.coin + :amount "
+			+ "WHERE u.id IN :userIds")
+	void updateBulkUserCoin(@Param("userIds") List<Long> userIds, @Param("amount") Long amount);
 }

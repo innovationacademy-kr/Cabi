@@ -1,16 +1,30 @@
 import styled from "styled-components";
+import { ReactComponent as CabiImage } from "@/Cabinet/assets/images/happyCcabi.svg";
 
 const EmptySection = ({ message }: { message: string }): JSX.Element => {
   return (
     <EmptySectionStyled>
-      <CabiImageStyled
-        src="/src/Cabinet/assets/images/happyCcabi.png"
-        alt="happy cabi"
-      />
+      <CabinetTypeIconStyled>
+        <CabiImage />
+      </CabinetTypeIconStyled>
       <ContentStyled>{message}</ContentStyled>
     </EmptySectionStyled>
   );
 };
+
+const CabinetTypeIconStyled = styled.div`
+  width: 200px;
+  height: 200px;
+
+  & g {
+    fill: var(--normal-text-color);
+  }
+
+  & > svg {
+    width: 200px;
+    height: 200px;
+  }
+`;
 
 const EmptySectionStyled = styled.div`
   display: flex;

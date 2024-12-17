@@ -29,6 +29,9 @@ const toggleList: toggleItem[] = [
   { name: "공유", key: AvailableCabinetsType.SHARE },
 ];
 
+/* TODO: DISABLED_FLOOR 을 환경변수로 넣기 */
+export const DISABLED_FLOOR = ["4"];
+
 const AvailablePage = () => {
   const [toggleType, setToggleType] = useState<AvailableCabinetsType>(
     AvailableCabinetsType.ALL
@@ -153,13 +156,15 @@ const AvailablePage = () => {
       </MultiToggleSwitchStyled>
 
       {Object.keys(cabinets).length ? (
-        Object.entries(cabinets).map(([key, value]) => (
-          <FloorContainer
-            key={key}
-            floorNumber={key} // 2층부터 시작
-            pendingCabinetsList={value}
-          />
-        ))
+        Object.entries(cabinets)
+          .filter(([key, _]) => !DISABLED_FLOOR.includes(key))
+          .map(([key, value]) => (
+            <FloorContainer
+              key={key}
+              floorNumber={key} // 2층부터 시작
+              pendingCabinetsList={value}
+            />
+          ))
       ) : (
         <LoadingAnimation />
       )}
