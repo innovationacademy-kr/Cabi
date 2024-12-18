@@ -122,7 +122,7 @@ const DropdownSelectionBoxStyled = styled.div<{ isDisabled: boolean }>`
 
 const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
   width: 100%;
-  height: 300%;
+  max-height: 400%;
   display: flex;
   flex-direction: column;
   position: absolute;
