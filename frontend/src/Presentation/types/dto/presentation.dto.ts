@@ -28,6 +28,7 @@ export interface IPresentationInfo {
   presentationTime: PresentationPeriodType | null;
   presentationLocation?: string | null;
   detail: string | null;
+  userName: string | null;
 }
 
 export interface IPresentationScheduleDetailInfo {
