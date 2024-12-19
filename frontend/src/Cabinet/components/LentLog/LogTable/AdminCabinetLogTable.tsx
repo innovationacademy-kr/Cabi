@@ -111,3 +111,4 @@ const EmptyLogStyled = styled.div`
 `;
 
 export default AdminCabinetLogTable;
+ 
