@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
 import DisplayStyleCard from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard";
+import { updateBodyDisplayStyle } from "@/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer";
 import {
   DisplayStyleToggleType,
   DisplayStyleType,
@@ -32,7 +33,7 @@ const DisplayStyleCardContainer = () => {
   useEffect(() => {
     const applyDisplayStyle = () => {
       const newDarkMode = getInitialDisplayStyle(toggleType, darkModeQuery);
-      document.body.setAttribute("display-style", newDarkMode);
+      updateBodyDisplayStyle(newDarkMode);
     };
 
     applyDisplayStyle();

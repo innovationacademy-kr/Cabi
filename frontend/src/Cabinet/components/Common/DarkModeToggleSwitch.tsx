@@ -3,7 +3,10 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
 import { getInitialDisplayStyle } from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
-import { getDisplayStyleFromLocalStorage } from "@/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer";
+import {
+  getDisplayStyleFromLocalStorage,
+  updateBodyDisplayStyle,
+} from "@/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer";
 import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moonIcon.svg";
 import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sunIcon.svg";
 import {
@@ -49,7 +52,7 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   }, [displayStyleToggle]);
 
   useEffect(() => {
-    document.body.setAttribute("display-style", displayStyleType);
+    updateBodyDisplayStyle(displayStyleType);
   }, [displayStyleType]);
 
   const handleToggleChange = useCallback(() => {

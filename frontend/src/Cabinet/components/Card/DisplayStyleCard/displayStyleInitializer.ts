@@ -13,6 +13,10 @@ export const getDisplayStyleFromLocalStorage: () => DisplayStyleToggleType =
     );
   };
 
+export const updateBodyDisplayStyle = (style: DisplayStyleType) => {
+  document.body.setAttribute("display-style", style);
+};
+
 (function () {
   const isClient = typeof window !== "undefined";
   if (isClient) {
@@ -31,7 +35,7 @@ export const getDisplayStyleFromLocalStorage: () => DisplayStyleToggleType =
     //   이 코드가 실행중일땐 전역변수가 아직 정의가 안된 상태라 전역변수 대신 hex code 사용
 
     document.addEventListener("DOMContentLoaded", function () {
-      document.body.setAttribute("display-style", colorMode);
+      updateBodyDisplayStyle(colorMode);
     });
   }
 })();
