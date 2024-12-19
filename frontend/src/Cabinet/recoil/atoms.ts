@@ -19,6 +19,7 @@ import {
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import { UserDto, UserInfo } from "@/Cabinet/types/dto/user.dto";
 import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
+import { DisplayStyleToggleType } from "@/Cabinet/types/enum/displayStyle.type.enum";
 
 const { persistAtom } = recoilPersist();
 
@@ -212,4 +213,9 @@ export const targetClubUserInfoState = atom<ClubUserResponseDto>({
 export const currentFloorSectionNamesState = atom<string[]>({
   key: "currentFloorSectionNames",
   default: [],
+});
+
+export const displayStyleState = atom<DisplayStyleToggleType>({
+  key: "displayStyle",
+  default: DisplayStyleToggleType.DEVICE,
 });
