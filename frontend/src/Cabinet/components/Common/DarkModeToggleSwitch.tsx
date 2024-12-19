@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
 import { getInitialDisplayStyle } from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
-import { savedDisplayStyleToggle } from "@/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer";
+import { getDisplayStyleFromLocalStorage } from "@/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer";
 import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moonIcon.svg";
 import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sunIcon.svg";
 import {
@@ -17,17 +17,17 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const [displayStyleType, setDisplayStyleType] = useState<DisplayStyleType>(
     () => {
-      return getInitialDisplayStyle(savedDisplayStyleToggle, darkModeQuery);
+      return getInitialDisplayStyle(
+        getDisplayStyleFromLocalStorage(),
+        darkModeQuery
+      );
     }
   );
 
   const isDarkMode = displayStyleType === DisplayStyleType.DARK;
-  const toggleType =
-    (localStorage.getItem("display-style-toggle") as DisplayStyleToggleType) ||
-    DisplayStyleToggleType.DEVICE;
 
   useEffect(() => {
-    setDisplayStyleToggle(toggleType);
+    setDisplayStyleToggle(getDisplayStyleFromLocalStorage());
   }, []);
 
   useEffect(() => {
