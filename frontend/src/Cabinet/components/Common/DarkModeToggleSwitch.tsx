@@ -6,6 +6,7 @@ import { updateLocalStorageDisplayStyleToggle } from "@/Cabinet/components/Card/
 import { getInitialDisplayStyle } from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
 import {
   getDisplayStyleFromLocalStorage,
+  isDeviceDarkMode,
   updateBodyDisplayStyle,
 } from "@/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer";
 import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moonIcon.svg";
@@ -18,7 +19,7 @@ import {
 const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   const [displayStyleToggle, setDisplayStyleToggle] =
     useRecoilState(displayStyleState);
-  const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const darkModeQuery = isDeviceDarkMode();
   const [displayStyleType, setDisplayStyleType] = useState<DisplayStyleType>(
     () => {
       return getInitialDisplayStyle(

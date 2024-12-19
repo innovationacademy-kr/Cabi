@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
 import DisplayStyleCard from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard";
-import { updateBodyDisplayStyle } from "@/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer";
+import {
+  isDeviceDarkMode,
+  updateBodyDisplayStyle,
+} from "@/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer";
 import {
   DisplayStyleToggleType,
   DisplayStyleType,
@@ -27,7 +30,7 @@ export const getInitialDisplayStyle = (
 };
 
 const DisplayStyleCardContainer = () => {
-  const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const darkModeQuery = isDeviceDarkMode();
   const toggleType = useRecoilValue(displayStyleState);
 
   useEffect(() => {

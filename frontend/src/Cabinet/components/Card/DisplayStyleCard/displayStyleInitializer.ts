@@ -17,10 +17,14 @@ export const updateBodyDisplayStyle = (style: DisplayStyleType) => {
   document.body.setAttribute("display-style", style);
 };
 
+export const isDeviceDarkMode = () => {
+  return window.matchMedia("(prefers-color-scheme: dark)");
+};
+
 (function () {
   const isClient = typeof window !== "undefined";
   if (isClient) {
-    const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const darkModeQuery = isDeviceDarkMode();
 
     const colorMode = getInitialDisplayStyle(
       getDisplayStyleFromLocalStorage(),
