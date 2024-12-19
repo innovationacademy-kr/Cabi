@@ -6,6 +6,7 @@ import {
   DisplayStyleToggleType,
   DisplayStyleType,
 } from "@/Cabinet/types/enum/displayStyle.type.enum";
+import useDisplayStyleToggle from "@/Cabinet/hooks/useDisplayStyleToggle";
 import {
   isDeviceDarkMode,
   updateBodyDisplayStyle,
@@ -32,6 +33,7 @@ export const getInitialDisplayStyle = (
 const DisplayStyleCardContainer = () => {
   const darkModeQuery = isDeviceDarkMode();
   const toggleType = useRecoilValue(displayStyleState);
+  const { addDarkModeListener } = useDisplayStyleToggle();
 
   useEffect(() => {
     const applyDisplayStyle = () => {
@@ -40,13 +42,7 @@ const DisplayStyleCardContainer = () => {
     };
 
     applyDisplayStyle();
-
-    if (toggleType === DisplayStyleToggleType.DEVICE) {
-      darkModeQuery.addEventListener("change", applyDisplayStyle);
-      return () => {
-        darkModeQuery.removeEventListener("change", applyDisplayStyle);
-      };
-    }
+    addDarkModeListener(darkModeQuery, applyDisplayStyle);
   }, [toggleType]);
 
   return <DisplayStyleCard />;

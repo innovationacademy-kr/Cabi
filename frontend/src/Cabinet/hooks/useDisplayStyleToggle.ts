@@ -11,7 +11,18 @@ export const useDisplayStyleToggle = () => {
     updateLocalStorageDisplayStyleToggle(newToggleType);
   };
 
-  return { updateToggleType };
+  const addDarkModeListener = (
+    darkModeQuery: MediaQueryList,
+    callback: () => void
+  ) => {
+    if (toggleType === DisplayStyleToggleType.DEVICE) {
+      darkModeQuery.addEventListener("change", callback);
+      return () => {
+        darkModeQuery.removeEventListener("change", callback);
+      };
+    }
+  };
+  return { updateToggleType, addDarkModeListener };
 };
 
 export default useDisplayStyleToggle;

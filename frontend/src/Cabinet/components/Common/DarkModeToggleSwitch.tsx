@@ -29,7 +29,7 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   );
 
   const isDarkMode = displayStyleType === DisplayStyleType.DARK;
-  const { updateToggleType } = useDisplayStyleToggle();
+  const { updateToggleType, addDarkModeListener } = useDisplayStyleToggle();
 
   useEffect(() => {
     setToggleType(getDisplayStyleFromLocalStorage());
@@ -45,12 +45,7 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
     };
 
     updateDisplayStyleType();
-    if (toggleType === DisplayStyleToggleType.DEVICE) {
-      darkModeQuery.addEventListener("change", updateDisplayStyleType);
-      return () => {
-        darkModeQuery.removeEventListener("change", updateDisplayStyleType);
-      };
-    }
+    addDarkModeListener(darkModeQuery, updateDisplayStyleType);
   }, [toggleType]);
 
   useEffect(() => {
