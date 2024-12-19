@@ -2,19 +2,19 @@ import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
-import { updateLocalStorageDisplayStyleToggle } from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard";
 import { getInitialDisplayStyle } from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
-import {
-  getDisplayStyleFromLocalStorage,
-  isDeviceDarkMode,
-  updateBodyDisplayStyle,
-} from "@/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer";
 import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moonIcon.svg";
 import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sunIcon.svg";
 import {
   DisplayStyleToggleType,
   DisplayStyleType,
 } from "@/Cabinet/types/enum/displayStyle.type.enum";
+import useDisplayStyleToggle from "@/Cabinet/hooks/useDisplayStyleToggle";
+import {
+  getDisplayStyleFromLocalStorage,
+  isDeviceDarkMode,
+  updateBodyDisplayStyle,
+} from "@/Cabinet/utils/displayStyleUtils";
 
 const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   const [toggleType, setToggleType] = useRecoilState(displayStyleState);
@@ -29,6 +29,7 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   );
 
   const isDarkMode = displayStyleType === DisplayStyleType.DARK;
+  const { updateToggleType } = useDisplayStyleToggle();
 
   useEffect(() => {
     setToggleType(getDisplayStyleFromLocalStorage());
@@ -70,8 +71,7 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
           : DisplayStyleToggleType.LIGHT;
     }
 
-    updateLocalStorageDisplayStyleToggle(newToggleType);
-    setToggleType(newToggleType);
+    updateToggleType(newToggleType);
   }, [displayStyleType]);
 
   return (

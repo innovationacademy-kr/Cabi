@@ -8,6 +8,7 @@ import { ReactComponent as MonitorMobileIcon } from "@/Cabinet/assets/images/mon
 import { ReactComponent as MoonIcon } from "@/Cabinet/assets/images/moon.svg";
 import { ReactComponent as SunIcon } from "@/Cabinet/assets/images/sun.svg";
 import { DisplayStyleToggleType } from "@/Cabinet/types/enum/displayStyle.type.enum";
+import useDisplayStyleToggle from "@/Cabinet/hooks/useDisplayStyleToggle";
 
 interface IToggleItemSeparated {
   name: string;
@@ -41,11 +42,10 @@ export const updateLocalStorageDisplayStyleToggle = (
 
 const DisplayStyleCard = () => {
   const [toggleType, setToggleType] = useRecoilState(displayStyleState);
-
+  const { updateToggleType } = useDisplayStyleToggle();
   const handleButtonClick = (key: DisplayStyleToggleType) => {
     if (toggleType === key) return;
-    setToggleType(key);
-    updateLocalStorageDisplayStyleToggle(key);
+    updateToggleType(key);
   };
 
   return (

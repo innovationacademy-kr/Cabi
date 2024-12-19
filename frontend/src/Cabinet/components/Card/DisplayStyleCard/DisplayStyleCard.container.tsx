@@ -3,13 +3,13 @@ import { useRecoilValue } from "recoil";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
 import DisplayStyleCard from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard";
 import {
-  isDeviceDarkMode,
-  updateBodyDisplayStyle,
-} from "@/Cabinet/components/Card/DisplayStyleCard/displayStyleInitializer";
-import {
   DisplayStyleToggleType,
   DisplayStyleType,
 } from "@/Cabinet/types/enum/displayStyle.type.enum";
+import {
+  isDeviceDarkMode,
+  updateBodyDisplayStyle,
+} from "@/Cabinet/utils/displayStyleUtils";
 
 // 로컬스토리지의 display-style-toggle 값에 따라 DisplayStyleType 반환
 export const getInitialDisplayStyle = (
