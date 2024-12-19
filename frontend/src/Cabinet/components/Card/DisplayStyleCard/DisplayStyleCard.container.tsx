@@ -42,7 +42,11 @@ const DisplayStyleCardContainer = () => {
     };
 
     applyDisplayStyle();
-    addDarkModeListener(darkModeQuery, applyDisplayStyle);
+    const removeListener = addDarkModeListener(
+      darkModeQuery,
+      applyDisplayStyle
+    );
+    return removeListener;
   }, [toggleType]);
 
   return <DisplayStyleCard />;

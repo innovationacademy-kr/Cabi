@@ -45,7 +45,11 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
     };
 
     updateDisplayStyleType();
-    addDarkModeListener(darkModeQuery, updateDisplayStyleType);
+    const removeListener = addDarkModeListener(
+      darkModeQuery,
+      updateDisplayStyleType
+    );
+    return removeListener;
   }, [toggleType]);
 
   useEffect(() => {
