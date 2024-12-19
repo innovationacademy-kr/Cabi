@@ -17,8 +17,7 @@ import {
 } from "@/Cabinet/types/enum/displayStyle.type.enum";
 
 const DarkModeToggleSwitch = ({ id }: { id: string }) => {
-  const [displayStyleToggle, setDisplayStyleToggle] =
-    useRecoilState(displayStyleState);
+  const [toggleType, setToggleType] = useRecoilState(displayStyleState);
   const darkModeQuery = isDeviceDarkMode();
   const [displayStyleType, setDisplayStyleType] = useState<DisplayStyleType>(
     () => {
@@ -32,26 +31,26 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
   const isDarkMode = displayStyleType === DisplayStyleType.DARK;
 
   useEffect(() => {
-    setDisplayStyleToggle(getDisplayStyleFromLocalStorage());
+    setToggleType(getDisplayStyleFromLocalStorage());
   }, []);
 
   useEffect(() => {
     const updateDisplayStyleType = () => {
       const newDisplayStyleType = getInitialDisplayStyle(
-        displayStyleToggle,
+        toggleType,
         darkModeQuery
       );
       setDisplayStyleType(newDisplayStyleType);
     };
 
     updateDisplayStyleType();
-    if (displayStyleToggle === DisplayStyleToggleType.DEVICE) {
+    if (toggleType === DisplayStyleToggleType.DEVICE) {
       darkModeQuery.addEventListener("change", updateDisplayStyleType);
       return () => {
         darkModeQuery.removeEventListener("change", updateDisplayStyleType);
       };
     }
-  }, [displayStyleToggle]);
+  }, [toggleType]);
 
   useEffect(() => {
     updateBodyDisplayStyle(displayStyleType);
@@ -59,20 +58,20 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
 
   const handleToggleChange = useCallback(() => {
     let newToggleType;
-    if (displayStyleToggle === DisplayStyleToggleType.DEVICE) {
+    if (toggleType === DisplayStyleToggleType.DEVICE) {
       newToggleType =
         displayStyleType === DisplayStyleType.LIGHT
           ? DisplayStyleToggleType.DARK
           : DisplayStyleToggleType.LIGHT;
     } else {
       newToggleType =
-        displayStyleToggle === DisplayStyleToggleType.LIGHT
+        toggleType === DisplayStyleToggleType.LIGHT
           ? DisplayStyleToggleType.DARK
           : DisplayStyleToggleType.LIGHT;
     }
 
     updateLocalStorageDisplayStyleToggle(newToggleType);
-    setDisplayStyleToggle(newToggleType);
+    setToggleType(newToggleType);
   }, [displayStyleType]);
 
   return (
