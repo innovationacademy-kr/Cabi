@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { displayStyleState } from "@/Cabinet/recoil/atoms";
+import { updateLocalStorageDisplayStyleToggle } from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard";
 import { getInitialDisplayStyle } from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
 import {
   getDisplayStyleFromLocalStorage,
@@ -69,7 +70,7 @@ const DarkModeToggleSwitch = ({ id }: { id: string }) => {
           : DisplayStyleToggleType.LIGHT;
     }
 
-    localStorage.setItem("display-style-toggle", newToggleType);
+    updateLocalStorageDisplayStyleToggle(newToggleType);
     setDisplayStyleToggle(newToggleType);
   }, [displayStyleType]);
 

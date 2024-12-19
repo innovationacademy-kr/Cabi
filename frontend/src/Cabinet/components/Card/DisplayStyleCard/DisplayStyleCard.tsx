@@ -33,13 +33,19 @@ const toggleList: IToggleItemSeparated[] = [
   },
 ];
 
+export const updateLocalStorageDisplayStyleToggle = (
+  toggleType: DisplayStyleToggleType
+) => {
+  localStorage.setItem("display-style-toggle", toggleType);
+};
+
 const DisplayStyleCard = () => {
   const [toggleType, setToggleType] = useRecoilState(displayStyleState);
 
   const handleButtonClick = (key: DisplayStyleToggleType) => {
     if (toggleType === key) return;
     setToggleType(key);
-    localStorage.setItem("display-style-toggle", key);
+    updateLocalStorageDisplayStyleToggle(key);
   };
 
   return (
