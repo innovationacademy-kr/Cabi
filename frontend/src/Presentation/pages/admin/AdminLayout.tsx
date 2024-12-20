@@ -7,7 +7,6 @@ import useMenu from "@/Cabinet/hooks/useMenu";
 import LeftNav from "@/Presentation/components/LeftNav/LeftNav";
 import AdminTopNavContainer from "@/Presentation/components/TopNav/AdminTopNav.container";
 
-const token = getCookie("admin_access_token");
 const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
 
@@ -17,6 +16,8 @@ const Layout = (): JSX.Element => {
   const isLoginPage: boolean = location.pathname === "/admin/login";
   const isMainPage: boolean = location.pathname === "/admin/main";
   const { closeAll } = useMenu();
+
+  const token = getCookie("admin_access_token");
 
   const checkPath = () => {
     if (location.pathname === "/admin") return true;

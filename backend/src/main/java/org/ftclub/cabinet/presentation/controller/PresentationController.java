@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.dto.AbleDateResponseDto;
 import org.ftclub.cabinet.dto.InvalidDateResponseDto;
 import org.ftclub.cabinet.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.dto.PresentationFormResponseDto;
@@ -37,6 +38,11 @@ public class PresentationController {
 			@UserSession UserSessionDto user,
 			@Valid @RequestBody PresentationFormRequestDto dto) {
 		presentationService.createPresentationForm(user.getUserId(), dto);
+	}
+
+	@GetMapping("/able-date")
+	public AbleDateResponseDto getAbleDate() {
+		return presentationService.getAbleDate();
 	}
 
 	@GetMapping("/form/invalid-date")

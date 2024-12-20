@@ -1,4 +1,10 @@
-import { format } from "date-fns";
+import {
+  addDays,
+  differenceInDays,
+  endOfMonth,
+  format,
+  startOfMonth,
+} from "date-fns";
 import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -16,6 +22,7 @@ import {
   currentPresentationState,
   isCurrentModalState,
 } from "@/Presentation/recoil/atoms";
+import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
 import {
   PresentationLocation,
   PresentationStatusType,
@@ -24,17 +31,10 @@ import {
   axiosGetInvalidDates,
   axiosUpdatePresentationStatus,
 } from "@/Presentation/api/axios/axios.custom";
-import {
-  calculateAvailableDaysInWeeks,
-  filterInvalidDates,
-} from "@/Presentation/utils/dateUtils";
-import { WEDNESDAY } from "@/Presentation/constants/dayOfTheWeek";
-import {
-  AVAILABLE_WEEKS,
-  FUTURE_MONTHS_TO_DISPLAY,
-} from "@/Presentation/constants/policy";
+import { filterInvalidDates } from "@/Presentation/utils/dateUtils";
 
 interface EditStatusModalProps {
+  list: IPresentationScheduleDetailInfo[] | null;
   closeModal: React.MouseEventHandler;
 }
 
@@ -50,7 +50,7 @@ const floorOptions: IDropdownOptions[] = [
   { name: "3층", value: PresentationLocation.THIRD },
 ];
 
-const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
+const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
   const [currentPresentation, setCurrentPresentation] = useRecoilState(
     currentPresentationState
   );
@@ -76,7 +76,10 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
     IDropdownOptions[]
   >([]);
   const statusDropdownProps = {
-    options: statusOptions,
+    options: statusOptions.map((option) => ({
+      ...option,
+      isDisabled: !currentPresentation?.userName ? true : false,
+    })),
     defaultValue:
       statusOptions.find(
         (option) => option.value === currentPresentation?.presentationStatus
@@ -92,9 +95,12 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
       setIsLocationDropdownOpen(false);
     },
   };
+
   const datesDropdownProps = {
     options: datesDropdownOptions,
-    defaultValue: datesDropdownOptions[0]?.name,
+    defaultValue: currentPresentation?.dateTime
+      ? format(currentPresentation?.dateTime, "M월 d일")
+      : "",
     defaultImageSrc: "",
     onChangeValue: (val: string) => {
       setPresentationDate(val);
@@ -106,6 +112,7 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
       setIsLocationDropdownOpen(false);
     },
   };
+
   const locationDropdownProps = {
     options: floorOptions,
     defaultValue:
@@ -126,14 +133,14 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
 
   const tryEditPresentationStatus = async (e: React.MouseEvent) => {
     if (!currentPresentation || !currentPresentation.id) return;
-    const data = new Date(presentationDate);
+    const date = new Date(presentationDate);
     // NOTE: Date 객체의 시간은 UTC 기준이므로 한국 시간 (GMT + 9) 으로 변환, 이후 발표 시작 시간인 14시를 더해줌
-    data.setHours(9 + 14);
+    date.setHours(9 + 14);
 
     try {
       await axiosUpdatePresentationStatus(
         currentPresentation.id,
-        data.toISOString(),
+        date.toISOString(),
         presentationStatus,
         location
       );
@@ -150,7 +157,12 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
   const getInvalidDates = async () => {
     try {
       const response = await axiosGetInvalidDates();
-      setInvalidDates(response.data.invalidDateList);
+      // invalidDates: 현재 기준 이전 날짜들 및 발표 신청된 날짜들
+      setInvalidDates(
+        response.data.invalidDateList.filter(
+          (date: string) => date !== currentPresentation?.dateTime
+        )
+      );
     } catch (error: any) {
       setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
@@ -158,19 +170,30 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
     }
   };
 
+  const getMonthlyDates = (): Date[] => {
+    const result: Date[] = [];
+    const now = new Date(list?.[0]?.dateTime || Date.now());
+    const start = startOfMonth(now);
+    const end = endOfMonth(now);
+    const numberOfDays = differenceInDays(end, start) + 1;
+    for (let i = 0; i < numberOfDays; i++) {
+      const currentDate = addDays(start, i);
+      result.push(currentDate);
+    }
+    return result;
+  };
+
   useEffect(() => {
     getInvalidDates();
+    if (!currentPresentation?.userName) {
+      setPresentationStatus(PresentationStatusType.EXPECTED);
+    }
   }, []);
 
   useEffect(() => {
     if (!currentPresentation) return;
     // NOTE: 발표 가능한 날짜들을 계산
-    const availableDates: Date[] = calculateAvailableDaysInWeeks(
-      new Date(),
-      AVAILABLE_WEEKS,
-      WEDNESDAY,
-      FUTURE_MONTHS_TO_DISPLAY
-    );
+    const availableDates: Date[] = getMonthlyDates();
     // NOTE: 발표 가능한 날짜 중 유효하지 않은 날짜를 필터링
     const availableDatesFiltered: Date[] = filterInvalidDates(
       availableDates,
@@ -196,7 +219,14 @@ const EditStatusModal = ({ closeModal }: EditStatusModalProps) => {
               <ContentSectionStyled>
                 <ContentItemSectionStyled>
                   <ContentItemWrapperStyled isVisible={true}>
-                    <ContentItemTitleStyled>발표 상태</ContentItemTitleStyled>
+                    <ContentItemTitleWrapperStyled>
+                      <ContentItemTitleStyled>발표 상태</ContentItemTitleStyled>
+                      {presentationStatus === PresentationStatusType.CANCEL && (
+                        <ContentItemCancleAlertStyled>
+                          발표를 취소하면 되돌릴 수 없습니다
+                        </ContentItemCancleAlertStyled>
+                      )}
+                    </ContentItemTitleWrapperStyled>
                     <Dropdown {...statusDropdownProps} />
                   </ContentItemWrapperStyled>
                   <ContentItemWrapperStyled isVisible={true}>
@@ -296,9 +326,23 @@ const ContentItemWrapperStyled = styled.div<{
   margin-bottom: 25px;
 `;
 
+const ContentItemTitleWrapperStyled = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 const ContentItemTitleStyled = styled.h3`
+  display: inline;
   font-size: 1.125rem;
   margin-bottom: 8px;
+`;
+
+const ContentItemCancleAlertStyled = styled.span`
+  font-size: 12px;
+  color: var(--expired-color);
+  padding-right: 10px;
 `;
 
 const ButtonWrapperStyled = styled.div`

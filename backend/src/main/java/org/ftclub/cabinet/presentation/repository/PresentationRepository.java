@@ -14,16 +14,22 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 
 	@EntityGraph(attributePaths = "user")
 	List<Presentation> findAllByDateTimeBetweenOrderByDateTime(LocalDateTime start,
-		LocalDateTime end);
+			LocalDateTime end);
 
 	List<Presentation> findAllByDateTimeBetween(LocalDateTime start, LocalDateTime end);
 
-	@EntityGraph(attributePaths = "user")
-	List<Presentation> findByDateTimeBetween(@Param("start") LocalDateTime start,
-		@Param("end") LocalDateTime end, Pageable pageable);
+	@Query("SELECT p "
+			+ "FROM Presentation p "
+			+ "WHERE p.user.id = :userId")
+	Page<Presentation> findPaginationById(@Param("userId") Long userId, Pageable pageable);
 
 	@Query("SELECT p "
-		+ "FROM Presentation p "
-		+ "WHERE p.user.id = :userId")
-	Page<Presentation> findPaginationById(@Param("userId") Long userId, Pageable pageable);
+			+ "FROM Presentation p "
+			+ "WHERE p.user IS NOT NULL "
+			+ "AND p.dateTime BETWEEN :start AND :end")
+	List<Presentation> findAllBetweenAndNotNullUser(
+			@Param("start") LocalDateTime start,
+			@Param("end") LocalDateTime end,
+			Pageable pageable
+	);
 }

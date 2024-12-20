@@ -76,7 +76,7 @@ cabinet:
     lentSuccess:
       template: "%s 자리의 사물함 대여에 성공했습니다."
     soonOverdue:
-      template: "대여한 사물함이 %d일 후에 연체됩니다."
+      template: "사물함 대여 기간이 %d일 남았습니다."
     overdue:
       template: "대여한 사물함이 %d일 연체되었습니다."
     extensionIssuance:
@@ -121,7 +121,7 @@ cabinet:
       lentSuccess:
         template: "%s 자리의 사물함 대여에 성공했습니다."
       soonOverdue:
-        template: "대여한 사물함이 %d일 후에 연체됩니다."
+        template: "사물함 대여 기간이 %d일 남았습니다."
       overdue:
         template: "대여한 사물함이 %d일 연체되었습니다."
       extensionIssuance:
@@ -156,7 +156,7 @@ cabinet:
       lentSuccess:
         template: "%s 자리의 사물함 대여에 성공했습니다."
       soonOverdue:
-        template: "대여한 사물함이 %d일 후에 연체됩니다."
+        template: "사물함 대여 기간이 %d일 남았습니다."
       overdue:
         template: "대여한 사물함이 %d일 연체되었습니다."
       extensionIssuance:
