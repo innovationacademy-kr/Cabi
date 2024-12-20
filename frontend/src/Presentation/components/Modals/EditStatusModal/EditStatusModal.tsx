@@ -157,6 +157,7 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
   const getInvalidDates = async () => {
     try {
       const response = await axiosGetInvalidDates();
+      // invalidDates: 현재 기준 이전 날짜들 및 발표 신청된 날짜들
       setInvalidDates(
         response.data.invalidDateList.filter(
           (date: string) => date !== currentPresentation?.dateTime
