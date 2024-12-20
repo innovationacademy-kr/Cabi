@@ -21,9 +21,9 @@ const RecentPresentation = ({
         ...response.data.upcoming,
       ]);
     } catch (error: any) {
-      // TODO
+      // TODO: 추가해야함^^
     } finally {
-      // TODO
+      // TODO: 추가해야함^^
     }
   };
 
@@ -130,7 +130,7 @@ const RegisterButtonStyled = styled.button`
   background-color: var(--sys-main-color);
   width: 150px;
   height: 50px;
-  @media screen and (max-width: 425px) {
+  @media screen and (max-width: 430px) {
     display: none;
   }
 `;
@@ -141,7 +141,7 @@ const MobileRegisertButtonStyled = styled.button`
   height: 50px;
   margin-bottom: 30px;
   margin-top: 30px;
-  @media screen and (min-width: 425px) {
+  @media screen and (min-width: 430px) {
     display: none;
   }
 `;

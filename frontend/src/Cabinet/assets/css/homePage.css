@@ -15,7 +15,7 @@
   }
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 460px) {
   #infoWrap .title {
     font-size: 1.5rem;
   }

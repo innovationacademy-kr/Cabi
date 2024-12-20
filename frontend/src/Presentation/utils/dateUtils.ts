@@ -1,29 +1,4 @@
-import { addDays, addMonths, getDay, startOfMonth } from "date-fns";
 import { IDate } from "@/Presentation/components/Details/DetailContent.container";
-
-/**
- * @description 주어진 날짜부터 주어진 요일 이 되는 첫번째 날짜를 구함
- * (Sunday: 0, Monday: 1, ..., Saturday: 6)
- *
- * @param date 해당 요일을 찾기 시작할 날짜
- * @param dayOfTheWeek 찾고자 하는 요일 (0-6)
- *
- * @returns 주어진 날짜(date) 부터 주어진 요일(dayOfTheWeek) 이 되는 첫번째 날짜
- *
- * @example
- * // 2024년 3월 2일부터 금요일 (5) 이 되는 첫번째 날짜를 구함
- * const result = calculateFirstDayEncountered(new Date(2024, 2, 2), 5)
- * //=> Fri Mar 08 2024 00:00:00
- */
-export const calculateFirstDayEncountered = (
-  date: Date,
-  dayOfTheWeek: number
-) => {
-  let firstOccurrence = date;
-  while (getDay(firstOccurrence) !== dayOfTheWeek)
-    firstOccurrence = addDays(firstOccurrence, 1);
-  return firstOccurrence;
-};
 
 /**
  * @description 주어진 날짜 목록 (배열) 에서 유효하지 않은 날짜 (배열) 들을 필터링
@@ -58,58 +33,6 @@ export const filterInvalidDates = (
           date.getFullYear() === invalidDate.getFullYear()
       )
   );
-};
-
-/**
- * @description 기준 날짜 (baseDate) 부터 최대 maxMonthOffset 개월 내에서, 주어진 주차 (availableWeeks) 중 주어진 요일 (dayOfTheWeek) 에 해당하는 날짜들을 구함
- * (Sunday: 0, Monday: 1, ..., Saturday: 6)
- *
- * @param baseDate 기준 날짜
- * @param availableWeeks 보여줄 주차 목록
- * @param dayOfTheWeek 보여줄 요일 (0-6)
- * @param maxMonthOffset 계산할 최대 개월 수
- * @param filterPastDates 과거 날짜를 필터링할지 여부
- *
- * @returns maxMonthOffset 개월 내의 주어진 주차 중 주어진 요일 에 해당하는 날짜들
- *
- * @example
- * // 2024년 3월 4일부터 2개월 내에서, 매 달의 1, 3 주차 중 수요일 (3) 에 해당하는 날짜들을 구함
- * const result = calculateAvailableDaysInWeeks(new Date(2024, 2, 4), [1, 3], 3, 2, false)
- * //=> [Wed Mar 06 2024 00:00:00, Wed Mar 20 2024 00:00:00, Wed Apr 03 2024 00:00:00, Wed Apr 17 2024 00:00:00]
- */
-export const calculateAvailableDaysInWeeks = (
-  baseDate: Date,
-  availableWeeks: number[],
-  dayOfTheWeek: number,
-  maxMonthOffset: number,
-  filterPastDates: boolean = false
-) => {
-  let availableDates: Date[] = [];
-  const today = new Date();
-  // NOTE: KST (UTC+9) 기준으로 시간을 설정
-  today.setHours(today.getHours() + 9);
-  // NOTE: baseDate부터 maxMonthOffset 달 만큼, availableWeeks 에 해당하는 주차 중 dayOfTheWeek 요일에 해당하는 날짜를 구함
-  for (let monthOffset = 0; monthOffset < maxMonthOffset; monthOffset++) {
-    // NOTE: baseDate부터 monthOffset 만큼의 달을 더한 달의 첫번째 날을 구함
-    const monthStart = startOfMonth(addMonths(baseDate, monthOffset));
-    // NOTE: 해당 월의 첫번째 요일 (dayOfTheWeek) 을 구함
-    const firstOccurrence = calculateFirstDayEncountered(
-      monthStart,
-      dayOfTheWeek
-    );
-    availableWeeks.forEach((week) => {
-      // NOTE: firstOccurrence 로부터 며칠을 더해야 해당 주 (week) 의 dayOfTheWeek 요일이 되는지 구함
-      const weekOffset = (week - 1) * 7;
-      const nextOccurrence = addDays(firstOccurrence, weekOffset);
-      // NOTE: nextOccurrence 가 해당 월의 첫번째 날짜 (monthStart) 와 같은 달인지 확인
-      if (
-        nextOccurrence.getMonth() === monthStart.getMonth() &&
-        (!filterPastDates || nextOccurrence >= today)
-      )
-        availableDates.push(nextOccurrence);
-    });
-  }
-  return availableDates;
 };
 
 export const makeIDateObj = (date: Date): IDate => {

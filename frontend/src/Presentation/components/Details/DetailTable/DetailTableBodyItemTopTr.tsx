@@ -10,6 +10,7 @@ import {
   PresentationStatusTypeLabelMap,
 } from "@/Presentation/assets/data/maps";
 import { IPresentationScheduleDetailInfo } from "@/Presentation/types/dto/presentation.dto";
+import { PresentationStatusType } from "@/Presentation/types/enum/presentation.type.enum";
 
 const noEventPhraseDesktop = {
   noEventPast: "수요지식회가 열리지 않았습니다",
@@ -76,13 +77,22 @@ const DetailTableBodyItemTopTr = ({
   tableHeadEntriesWithoutDate: [string, string][];
   tableHeadEntriesWithoutDateAndSubject: [string, string][];
 }) => {
+  const isClickable = (): boolean => {
+    if (itemInfo.item.presentationStatus !== PresentationStatusType.CANCEL) {
+      return isAdmin || !itemInfo.itemStatus;
+    }
+    return false;
+  };
+
   return (
     <>
       <TopTrStyled
+        isAdmin={isAdmin}
         itemStatus={itemInfo.itemStatus}
         id={isItemOpen ? "selected" : ""}
+        presentationStatus={itemInfo.item.presentationStatus}
         onClick={() => {
-          !itemInfo.itemStatus && handleItemClick(itemInfo.item);
+          isClickable() && handleItemClick(itemInfo.item);
         }}
         open={isItemOpen}
       >
@@ -156,8 +166,10 @@ const DetailTableBodyItemTopTr = ({
 export default DetailTableBodyItemTopTr;
 
 const TopTrStyled = styled.tr<{
+  isAdmin: boolean;
   itemStatus: itemType;
   open?: boolean;
+  presentationStatus: PresentationStatusType | null;
 }>`
   width: 100%;
   text-align: center;
@@ -203,8 +215,18 @@ const TopTrStyled = styled.tr<{
       font-size: 1rem;
     }
     &:hover {
-      cursor: ${(props) => (props.itemStatus ? "" : "pointer")};
-      background-color: ${(props) => (props.itemStatus ? "" : "#91B5FB")};
+      cursor: ${(props) => {
+        if (props.presentationStatus === PresentationStatusType.CANCEL)
+          return "";
+        else if (props.isAdmin) return "pointer";
+        else return props.itemStatus ? "" : "pointer";
+      }};
+      background-color: ${(props) => {
+        if (props.presentationStatus === PresentationStatusType.CANCEL)
+          return "";
+        else if (props.isAdmin) return "#91B5FB";
+        else return props.itemStatus ? "" : "#91B5FB";
+      }};
     }
   }
   @media (max-width: 1150px) {

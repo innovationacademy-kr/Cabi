@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
-import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.springframework.stereotype.Service;
@@ -33,23 +32,23 @@ public class PresentationPolicyService {
 		LocalDateTime endOfDay = startOfDay.plusDays(1);
 
 		if (isOverRangeDate(reservationDate, now)
-			|| isAlreadyRegisteredDate(startOfDay,
-			endOfDay)) {
+				|| isAlreadyRegisteredDate(startOfDay, endOfDay)) {
 			throw ExceptionStatus.INVALID_DATE.asServiceException();
 		}
 	}
 
 	private boolean isAlreadyRegisteredDate(LocalDateTime startOfDay, LocalDateTime endOfDay) {
 		List<Presentation> presentations =
-			presentationRepository.findAllByDateTimeBetween(startOfDay, endOfDay);
+				presentationRepository.findAllByDateTimeBetween(startOfDay, endOfDay);
 
 		return presentations.stream()
-			.anyMatch(presentation ->
-				!presentation.getPresentationStatus().equals(PresentationStatus.CANCEL));
+				.anyMatch(presentation -> presentation.getUser() != null
+						&& presentation.getPresentationStatus()
+						.equals(PresentationStatus.EXPECTED));
 	}
 
 	private boolean isOverRangeDate(LocalDate reservationDate, LocalDate now) {
 		return reservationDate.isBefore(now) ||
-			reservationDate.isAfter(now.plusMonths(MAXIMUM_MONTH));
+				reservationDate.isAfter(now.plusMonths(MAXIMUM_MONTH));
 	}
 }

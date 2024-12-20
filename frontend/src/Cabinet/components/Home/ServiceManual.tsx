@@ -30,10 +30,10 @@ const ServiceManual = ({
         <h1 className="title">
           Cabi <span>이용 안내서</span>
         </h1>
-        <NotionBtn className="button" onClick={openNotionLink}>
+        <NotionBtnStyled className="button" onClick={openNotionLink}>
           <span>상세보기</span>
           <LinkImg id="linknImg" stroke="var(--notion-btn-text-color)" />
-        </NotionBtn>
+        </NotionBtnStyled>
       </TitleContainerStyled>
 
       <WrapSectionStyled>
@@ -114,6 +114,7 @@ const WrapperStyled = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow-x: hidden;
   padding: 60px 0;
 `;
 
@@ -142,7 +143,7 @@ const TitleContainerStyled = styled.div`
   }
 `;
 
-const NotionBtn = styled.button`
+const NotionBtnStyled = styled.button`
   width: 120px;
   height: 40px;
   border-radius: 8px;
