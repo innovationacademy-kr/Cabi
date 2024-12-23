@@ -66,7 +66,7 @@ const EditStatusModal = ({ list, closeModal }: EditStatusModalProps) => {
   const [presentationStatus, setPresentationStatus] =
     useState<PresentationStatusType>(PresentationStatusType.EXPECTED);
   const [location, setLocation] = useState<PresentationLocation>(
-    PresentationLocation.THIRD
+    PresentationLocation.BASEMENT
   );
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const [isDatesDropdownOpen, setIsDatesDropdownOpen] = useState(false);
