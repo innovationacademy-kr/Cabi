@@ -809,12 +809,22 @@ LOCK TABLES `presentation` WRITE;
 /*!40000 ALTER TABLE `presentation`
     DISABLE KEYS */;
 INSERT INTO `presentation`
-VALUES (1, 'JOB', '2024-10-09 14:00:00', 'DUMMY', 'FIRST', 'EXPECTED', 'HALF', 'DUMMY', 'DUMMY', NULL),
-       (2, NULL, '2024-10-23 14:00:00', 'DUMMY', 'FIRST', 'CANCEL', 'HALF', 'DUMMY', 'DUMMY', NULL),
-       (3, NULL, '2024-11-05 14:00:00', 'DUMMY', 'FIRST', 'EXPECTED', 'HALF', 'DUMMY', 'DUMMY', NULL),
-       (4, 'JOB', '2024-11-19 14:00:00', 'DUMMY', 'FIRST', 'EXPECTED', 'HALF', 'DUMMY', 'DUMMY', NULL),
-       (5, NULL, '2024-12-11 14:00:00', 'DUMMY', 'FIRST', 'EXPECTED', 'HALF', 'DUMMY', 'DUMMY', NULL),
-       (6, 'JOB', '2024-12-25 14:00:00', 'DUMMY', 'FIRST', 'EXPECTED', 'HALF', 'DUMMY', 'DUMMY', NULL);
+VALUES (1, 'JOB', '2024-10-09 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (2, NULL, '2024-10-23 14:00:00', 'dummy', 'BASEMENT', 'CANCEL', 'HALF', 'dummy', 'dummy', NULL),
+       (3, NULL, '2024-11-05 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (4, 'JOB', '2024-11-19 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (5, NULL, '2024-12-11 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (6, 'JOB', '2024-12-25 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (7, NULL, '2025-01-08 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (8, NULL, '2025-01-22 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (9, NULL, '2025-02-12 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (10, NULL, '2025-02-26 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (11, NULL, '2025-03-12 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (12, NULL, '2025-03-26 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
+       (12, NULL, '2025-04-09 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
+       (12, NULL, '2025-04-23 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
+       (12, NULL, '2025-05-07 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
+       (12, NULL, '2025-05-21 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
 /*!40000 ALTER TABLE `presentation`
     ENABLE KEYS */;
 UNLOCK TABLES;
