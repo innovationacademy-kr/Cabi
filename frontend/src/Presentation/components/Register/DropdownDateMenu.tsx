@@ -31,8 +31,8 @@ const DropdownDateMenu = ({
   });
 
   const handleOptionSelect = useCallback(
-    (option: string) => {
-      setSelectedOption(option);
+    (option: string, displayOption: string) => {
+      setSelectedOption(displayOption);
       setDropdownState((prev) => ({
         ...prev,
         isVisible: false,
@@ -72,15 +72,18 @@ const DropdownDateMenu = ({
         isVisible={dropdownState.isVisible}
         clickCount={clickCount}
       >
-        {data.map((time) => (
-          <DropdownOption
-            key={time}
-            onClick={() => handleOptionSelect(time)}
-            invalid={invalidDates?.includes(time)}
-          >
-            {time}
-          </DropdownOption>
-        ))}
+        {data.map((time) => {
+          const displayTime = time.split("/").slice(1).join("/");
+          return (
+            <DropdownOption
+              key={time}
+              onClick={() => handleOptionSelect(time, displayTime)}
+              invalid={invalidDates?.includes(time)}
+            >
+              {displayTime}
+            </DropdownOption>
+          );
+        })}
       </AnimatedDropdownOptions>
     </DropdownContainer>
   );

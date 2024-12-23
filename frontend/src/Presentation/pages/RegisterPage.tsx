@@ -94,7 +94,7 @@ const RegisterPage = () => {
   );
 
   const invalidDates: string[] = useInvalidDates()?.map((date) =>
-    format(date, "M/d")
+    format(date, "y/M/d")
   );
 
   const handleFocus = (sectionName: string) => {
@@ -145,9 +145,10 @@ const RegisterPage = () => {
         const response = await axiosGetPresentationAbleDates();
         const availableDates = response.data.results;
         availableDates.sort();
+        console.log(availableDates);
         const formattedAvailableDates = availableDates.map(
           (dateTime: string) => {
-            return format(new Date(dateTime), "M/d");
+            return format(new Date(dateTime), "y/M/d");
           }
         );
         setAvailableDates(formattedAvailableDates);

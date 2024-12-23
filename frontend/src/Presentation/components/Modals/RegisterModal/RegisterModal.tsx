@@ -32,12 +32,13 @@ const RegisterModal = ({
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [year, month, day] = date.split("/");
   const navigate = useNavigate();
 
   const registerDetail = `발표를 신청한 후에는 내용 수정이 <strong>불가능</strong>합니다.
 발표 날짜와 시간을 수정하고 싶으시다면
 Cabi 슬랙 채널로 문의해주세요.
-<strong>${date}</strong> 에 수요지식회 발표를 신청하시겠습니까?`;
+<strong>${month}/${day}</strong> 에 수요지식회 발표를 신청하시겠습니까?`;
 
   const closeResponseModal = (e: React.MouseEvent) => {
     closeModal(e);
@@ -45,12 +46,7 @@ Cabi 슬랙 채널로 문의해주세요.
 
   const tryRegister = async () => {
     try {
-      const [month, day] = date.split("/");
-      const data = new Date(
-        Number(new Date().getFullYear()),
-        Number(month) - 1,
-        Number(day)
-      );
+      const data = new Date(Number(year), Number(month) - 1, Number(day));
       // NOTE: Date 객체의 시간은 UTC 기준이므로 한국 시간 (GMT + 9) 으로 변환, 이후 발표 시작 시간인 14시를 더해줌
       data.setHours(9 + 14);
       await axiosPostPresentationForm(
@@ -68,7 +64,7 @@ Cabi 슬랙 채널로 문의해주세요.
       }, 1500);
       setIsFinished(true);
     } catch (error: any) {
-      setModalTitle(error.response.data.message);
+      setModalTitle(error.response);
       setHasErrorOnResponse(true);
     } finally {
       setShowResponseModal(true);
