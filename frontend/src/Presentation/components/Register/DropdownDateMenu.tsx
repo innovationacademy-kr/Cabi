@@ -68,7 +68,7 @@ const DropdownDateMenu = ({
           rotated={dropdownState.isFocused}
         />
       </RegisterTimeInputStyled>
-      <AnimatedDropdownOptions
+      <AnimatedDropdownOptionsStyled
         isVisible={dropdownState.isVisible}
         clickCount={clickCount}
       >
@@ -84,7 +84,7 @@ const DropdownDateMenu = ({
             </DropdownOption>
           );
         })}
-      </AnimatedDropdownOptions>
+      </AnimatedDropdownOptionsStyled>
     </DropdownContainer>
   );
 };
@@ -119,7 +119,7 @@ const DropdownContainer = styled.div`
   position: relative;
 `;
 
-const AnimatedDropdownOptions = styled.ul<{
+const AnimatedDropdownOptionsStyled = styled.ul<{
   isVisible: boolean;
   clickCount: number;
 }>`

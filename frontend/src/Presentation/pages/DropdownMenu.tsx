@@ -48,13 +48,16 @@ const DropdownMenu = () => {
         {selectedOption || "시간을 선택해주세요"}
       </RegisterTimeInputStyled>
       {isVisible && (
-        <DropdownOptions>
+        <DropdownOptionsStyled>
           {Object.values(PresentationTime).map((time) => (
-            <DropdownOption key={time} onClick={() => handleOptionSelect(time)}>
+            <DropdownOptionStyled
+              key={time}
+              onClick={() => handleOptionSelect(time)}
+            >
               {time}
-            </DropdownOption>
+            </DropdownOptionStyled>
           ))}
-        </DropdownOptions>
+        </DropdownOptionsStyled>
       )}
     </DropdownContainer>
   );
@@ -64,7 +67,7 @@ const DropdownContainer = styled.div`
   position: relative;
 `;
 
-const DropdownOptions = styled.ul`
+const DropdownOptionsStyled = styled.ul`
   position: absolute;
   top: 52px;
   left: 0;
@@ -82,7 +85,7 @@ const DropdownOptions = styled.ul`
   }
 `;
 
-const DropdownOption = styled.li`
+const DropdownOptionStyled = styled.li`
   font-size: 0.875rem;
   color: var(--gray-line-btn-color);
   padding: 10px;

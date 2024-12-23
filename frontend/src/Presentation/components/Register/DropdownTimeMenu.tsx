@@ -60,13 +60,13 @@ const DropdownTimeMenu = ({
         hasSelectedOption={selectedOption !== ""}
       >
         {selectedOption || "시간을 선택해주세요"}
-        <DropdownIcon
+        <DropdownIconStyled
           src={chevronIcon}
           alt="Dropdown Icon"
           rotated={dropdownState.isFocused}
         />{" "}
       </RegisterTimeInputStyled>
-      <AnimatedDropdownOptions
+      <AnimatedDropdownOptionsStyled
         isVisible={dropdownState.isVisible}
         clickCount={clickCount}
       >
@@ -75,15 +75,15 @@ const DropdownTimeMenu = ({
           .map((timeKey) => {
             const time = timeKey as PresentationTimeKey;
             return (
-              <DropdownOption
+              <DropdownOptionStyled
                 key={time}
                 onClick={() => handleOptionSelect(time)}
               >
                 {time}
-              </DropdownOption>
+              </DropdownOptionStyled>
             );
           })}
-      </AnimatedDropdownOptions>
+      </AnimatedDropdownOptionsStyled>
     </DropdownContainer>
   );
 };
@@ -118,7 +118,7 @@ const DropdownContainer = styled.div`
   position: relative;
 `;
 
-const AnimatedDropdownOptions = styled.ul<{
+const AnimatedDropdownOptionsStyled = styled.ul<{
   isVisible: boolean;
   clickCount: number;
 }>`
@@ -152,12 +152,13 @@ const AnimatedDropdownOptions = styled.ul<{
   }
 `;
 
-const DropdownOptions = styled.ul`
-  list-style-type: none;
-  padding: 0;
-`;
+// TODO: 확인 후 삭제
+// const DropdownOptions = styled.ul`
+//   list-style-type: none;
+//   padding: 0;
+// `;
 
-const DropdownOption = styled.li`
+const DropdownOptionStyled = styled.li`
   font-size: 0.875rem;
   padding: 10px;
   cursor: pointer;
@@ -194,7 +195,7 @@ const RegisterTimeInputStyled = styled.div<{
       : "var(--normal-text-color)"};
 `;
 
-const DropdownIcon = styled.img<{ rotated: boolean }>`
+const DropdownIconStyled = styled.img<{ rotated: boolean }>`
   width: 14px;
   height: 8px;
   transform: ${(props) => (props.rotated ? "rotate(180deg)" : "rotate(0deg)")};
