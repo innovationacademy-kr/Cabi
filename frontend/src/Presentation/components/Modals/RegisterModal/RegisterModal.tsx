@@ -64,7 +64,7 @@ Cabi 슬랙 채널로 문의해주세요.
       }, 1500);
       setIsFinished(true);
     } catch (error: any) {
-      setModalTitle(error.response);
+      setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
     } finally {
       setShowResponseModal(true);
