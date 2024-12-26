@@ -51,7 +51,25 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
 		log.info("Called startLentCabinet: {}, {}", userId, cabinetId);
-		lentRepository.deleteAll();
+		LocalDateTime now = LocalDateTime.now();
+        Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
+        User user = userOptionalFetcher.getUser(userId);
+        int userActiveLentCount = lentRepository.countUserActiveLent(userId);
+        List<BanHistory> userActiveBanList = banHistoryRepository.findUserActiveBanList(userId,
+                now);
+        // 대여 가능한 유저인지 확인
+        lentPolicy.handlePolicyStatus(
+                lentPolicy.verifyUserForLent(user, cabinet, userActiveLentCount, userActiveBanList),
+                userActiveBanList);
+        // 대여 가능한 캐비넷인지 확인
+        lentPolicy.handlePolicyStatus(lentPolicy.verifyCabinetForLent(cabinet), userActiveBanList);
+        // 캐비넷 상태 변경
+        cabinet.specifyStatus(CabinetStatus.FULL);
+        // 만료 시간 적용
+        LocalDateTime expiredAt = lentPolicy.generateExpirationDate(now, cabinet);
+        LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
+        lentPolicy.applyExpirationDate(lentHistory, expiredAt);
+        lentRepository.save(lentHistory);
 	}
 
 	@Override
