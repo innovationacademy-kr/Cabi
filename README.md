@@ -178,7 +178,7 @@
 | [ 🌑 daewoole](https://github.com/LeeDaeWook) | [🐝 hyungnoh](https://github.com/YESHYUNGSEOK) | [🐻‍❄️ jpark2](https://github.com/Z1park) | [🎨 jusohn](https://github.com/junyoung2015) | [🤓 seonghmo ](https://github.com/seong-hui) | [🚀 wchae](https://github.com/enaenen) |
 | --------------------------------------------- | ---------------------------------------------- | -------------------------------------- | -------------------------------------------- | -------------------------------------------- | -------------------------------------- |
 
-| [ 🐶 surlee](https://github.com/Elineely) | [ 🐣 hyowchoi](https://github.com/chyo1/) | [ 👽 sohyupar](https://github.com/saewoo1) | [🦝 jimchoi](https://github.com/jimchoi9) | [ 🛼 jeekim](https://github.com/jnkeniaem) | [🍾 miyu](https://github.com/Minkyu01) | [🧸 gykoh](https://github.com/gykoh42) |
+| [ 🐶 surlee](https://github.com/Elineely) | [ 🐣 hyowchoi](https://github.com/chyo1/) | [ 👽 sohyupar](https://github.com/saewoo1) | [🦝jimchoi](https://github.com/jimchoi9) | [ 🛼 jeekim](https://github.com/jnkeniaem) | [🍾 miyu](https://github.com/Minkyu01) | [🧸 gykoh](https://github.com/gykoh42) |
 | ----------------------------------------- | ----------------------------------------- | ------------------------------------------ | ----------------------------------------- | ------------------------------------------ | -------------------------------------- | -------------------------------------- |
 
 | [ 🐰 jihykim2](https://github.com/jihyunk03) | [⛄️ seonmiki](https://github.com/seonmiki) | [ 🎱 junsbae ](https://github.com/wet6123) |
