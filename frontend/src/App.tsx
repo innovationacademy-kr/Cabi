@@ -73,6 +73,7 @@ function App(): React.ReactElement {
             <Route path="store/item-use-log" element={<ItemUsageLogPage />} />
             <Route path="store/coin-log" element={<CoinLogPage />} />
           </Route>
+          메롱메롱👅
           <Route path="/presentation/" element={<PresentationLayout />}>
             <Route path="home" element={<PresentationHomePage />} />
             <Route path="register" element={<RegisterPage />} />
