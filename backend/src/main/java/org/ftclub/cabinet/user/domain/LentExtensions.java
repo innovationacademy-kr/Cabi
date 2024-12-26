@@ -1,16 +1,13 @@
 package org.ftclub.cabinet.user.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.extern.log4j.Log4j2;
-
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 
-@Getter
 @ToString
 @Log4j2
 @AllArgsConstructor
@@ -19,37 +16,39 @@ public class LentExtensions {
 
 	private final List<LentExtension> lentExtensions;
 
-	private void filterActiveLentExtensions() {
+	public boolean isEmpty() {
+		return lentExtensions == null || lentExtensions.isEmpty();
+	}
+
+	public LentExtensions sortLentExtensions() {
+		lentExtensions.sort(Comparator.comparing(LentExtension::getExpiredAt));
+		return this;
+	}
+
+	public LentExtensions filterActiveLentExtensions() {
 		LocalDateTime currentTime = LocalDateTime.now();
 
 		lentExtensions.removeIf(lentExtension ->
 				lentExtension.getUsedAt() != null ||
 						lentExtension.isExpiredBefore(currentTime)
 		);
-	}
-
-	private void sortImminentASC() {
-		lentExtensions.sort(Comparator.comparing(LentExtension::getExpiredAt));
-	}
-
-	public boolean isEmpty() {
-		return lentExtensions == null || lentExtensions.isEmpty();
-	}
-
-	public LentExtension findImminentActiveLentExtension() {
-		filterActiveLentExtensions();
-		sortImminentASC();
-		return lentExtensions.get(0);
-	}
-
-	public List<LentExtension> getActiveLentExtensions() {
-		filterActiveLentExtensions();
-		return lentExtensions;
+		return this;
 	}
 
 	public boolean hasActiveLentExtension() {
 		return !this.isEmpty()
 				&& lentExtensions.parallelStream()
 				.anyMatch(e -> !e.isExpiredBefore(LocalDateTime.now()) && !e.isUsed());
+	}
+
+	public List<LentExtension> get() {
+		return lentExtensions;
+	}
+
+	public LentExtension getOne() {
+		if (lentExtensions == null || lentExtensions.isEmpty() || lentExtensions.get(0) == null) {
+			return null;
+		}
+		return lentExtensions.get(0);
 	}
 }

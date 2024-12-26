@@ -10,13 +10,17 @@ import org.ftclub.cabinet.dto.ActiveCabinetInfoDto;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
+import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetSimpleDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
@@ -42,6 +46,7 @@ public interface CabinetMapper {
 
 	/*------------------------------------DTO------------------------------------*/
 
+	@Mapping(target = "cabinetId", source = "cabinet.id")
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	CabinetDto toCabinetDto(Cabinet cabinet);
 
@@ -55,6 +60,7 @@ public interface CabinetMapper {
 	//To do : CabinetPlace로 바꾸기?
 	BuildingFloorsDto toBuildingFloorsDto(String building, List<Integer> floors);
 
+	@Mapping(target = "lentHistoryId", source = "lentHistory.id")
 	@Mapping(target = "cabinetId", source = "lentHistory.cabinetId")
 	@Mapping(target = "userId", source = "lentHistory.userId")
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
@@ -71,8 +77,10 @@ public interface CabinetMapper {
 
 	//TO do : cabinetPlace러 바꾸기
 	CabinetsPerSectionResponseDto toCabinetsPerSectionResponseDto(String section,
-			List<CabinetPreviewDto> cabinets);
+			List<CabinetPreviewDto> cabinets,
+			boolean alarmRegistered);
 
+	@Mapping(target = "cabinetId", source = "cabinet.id")
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	CabinetInfoResponseDto toCabinetInfoResponseDto(Cabinet cabinet, List<LentDto> lents,
 			LocalDateTime sessionExpiredAt);
@@ -87,16 +95,32 @@ public interface CabinetMapper {
 	UserCabinetPaginationDto toUserCabinetPaginationDto(List<UserCabinetDto> result,
 			Long totalLength);
 
+	@Mapping(target = "cabinetId", source = "cabinet.id")
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	@Mapping(target = "shareCode", source = "sessionShareCode")
 	MyCabinetResponseDto toMyCabinetResponseDto(Cabinet cabinet, List<LentDto> lents,
 			String sessionShareCode, LocalDateTime sessionExpiredAt, String previousUserName);
 
+	@Mapping(target = "cabinetId", source = "cabinet.id")
 	CabinetPreviewDto toCabinetPreviewDto(Cabinet cabinet, Integer userCount, String name);
 
+	@Mapping(target = "cabinetId", source = "cabinet.id")
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	CabinetSimpleDto toCabinetSimpleDto(Cabinet cabinet);
 
+	CabinetSimplePaginationDto toCabinetSimplePaginationDto(
+			List<CabinetSimpleDto> result, Long totalLength);
+
+	CabinetInfoPaginationDto toCabinetInfoPaginationDto(
+			List<CabinetInfoResponseDto> result, Long totalLength);
+
+	@Mapping(target = "cabinetInfoResponseDtos", source = "cabinetInfoResponseDtos")
 	CabinetPendingResponseDto toCabinetPendingResponseDto(
 			Map<Integer, List<CabinetPreviewDto>> cabinetInfoResponseDtos);
+
+	CabinetFloorStatisticsResponseDto toCabinetFloorStatisticsResponseDto(Integer floor,
+			Integer total, Integer used, Integer overdue, Integer unused, Integer disabled);
+
+	LentsStatisticsResponseDto toLentsStatisticsResponseDto(LocalDateTime startDate,
+			LocalDateTime endDate, int lentStartCount, int lentEndCount);
 }

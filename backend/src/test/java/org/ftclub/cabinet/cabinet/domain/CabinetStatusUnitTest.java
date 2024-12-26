@@ -1,11 +1,11 @@
 package org.ftclub.cabinet.cabinet.domain;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 public class CabinetStatusUnitTest {
@@ -16,7 +16,6 @@ public class CabinetStatusUnitTest {
 		CabinetStatus cabinetStatusAvailable = CabinetStatus.AVAILABLE;
 		CabinetStatus cabinetStatusFull = CabinetStatus.FULL;
 		CabinetStatus cabinetStatusBroken = CabinetStatus.BROKEN;
-		CabinetStatus cabinetStatusLimitedAvailable = CabinetStatus.LIMITED_AVAILABLE;
 		CabinetStatus cabinetStatusOverdue = CabinetStatus.OVERDUE;
 		CabinetStatus cabinetStatusPending = CabinetStatus.PENDING;
 		CabinetStatus cabinetStatusInSession = CabinetStatus.IN_SESSION;
@@ -24,7 +23,6 @@ public class CabinetStatusUnitTest {
 		assertTrue(cabinetStatusAvailable.isValid());
 		assertTrue(cabinetStatusFull.isValid());
 		assertTrue(cabinetStatusBroken.isValid());
-		assertTrue(cabinetStatusLimitedAvailable.isValid());
 		assertTrue(cabinetStatusOverdue.isValid());
 		assertTrue(cabinetStatusPending.isValid());
 		assertTrue(cabinetStatusInSession.isValid());

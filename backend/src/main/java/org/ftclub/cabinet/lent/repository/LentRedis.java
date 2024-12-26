@@ -1,185 +1,300 @@
 package org.ftclub.cabinet.lent.repository;
 
-import lombok.extern.log4j.Log4j2;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
 @Component
-@Log4j2
+@Logging(level = LogLevel.DEBUG)
 public class LentRedis {
 
-	private static final String MAX_SHARE_CODE_TRY = "3";
 	private static final String USER_ENTERED = "entered";
-	private static final String SHADOW_KEY_SUFFIX = ":shadow";
-	private static final String VALUE_KEY_SUFFIX = ":user";
-	private static final String PREVIOUS_USER_SUFFIX = ":previousUser";
+	private static final String USER_SWAPPED = "swapped";
 
-	private final HashOperations<String, String, String> valueHashOperations;
-	private final ValueOperations<String, String> valueOperations;
-	private final RedisTemplate<String, String> shadowKeyRedisTemplate;
-	private final ValueOperations<String, String> previousUserRedisTemplate;
+	private static final String SHADOW_KEY_SUFFIX = ":shadow";
+	private static final String CABINET_KEY_SUFFIX = ":cabinetSession";
+	private static final String VALUE_KEY_SUFFIX = ":userSession";
+
+	private static final String PREVIOUS_USER_SUFFIX = ":previousUser";
+	private static final String PREVIOUS_ENDED_AT_SUFFIX = ":previousEndedAt";
+
+	private static final String SWAP_KEY_SUFFIX = ":swap";
+
+	private final HashOperations<String, String, String> shareCabinetTemplate;
+	private final ValueOperations<String, String> userCabinetTemplate;
+	private final RedisTemplate<String, String> shadowKeyTemplate; //조금 더 많은 기능을 지원
+
+	private final ValueOperations<String, String> previousTemplate; // 조회랑 생성 한정 기능
+
+
+	private final RedisTemplate<String, String> swapTemplate;
 	private final CabinetProperties cabinetProperties;
 
 	@Autowired
 	public LentRedis(RedisTemplate<String, Object> valueHashRedisTemplate,
 			RedisTemplate<String, String> valueRedisTemplate,
-			RedisTemplate<String, String> shadowKeyRedisTemplate,
-			RedisTemplate<String, String> previousUserRedisTemplate,
+			RedisTemplate<String, String> shadowKeyTemplate,
+			RedisTemplate<String, String> previousTemplate,
+			RedisTemplate<String, String> swapTemplate,
 			CabinetProperties cabinetProperties) {
-		this.valueOperations = valueRedisTemplate.opsForValue();
-		this.valueHashOperations = valueHashRedisTemplate.opsForHash();
-		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
-		this.previousUserRedisTemplate = previousUserRedisTemplate.opsForValue();
+		this.userCabinetTemplate = valueRedisTemplate.opsForValue();
+		this.shareCabinetTemplate = valueHashRedisTemplate.opsForHash();
+		this.shadowKeyTemplate = shadowKeyTemplate;
+		this.previousTemplate = previousTemplate.opsForValue();
+		this.swapTemplate = swapTemplate;
 		this.cabinetProperties = cabinetProperties;
 	}
 
+
+	/*-------------------------------------  Share Cabinet  --------------------------------------*/
+
 	/**
-	 * @param cabinetId    : cabinetId
-	 * @param userId       : userId
-	 * @param shareCode    : 초대코드
-	 * @param hasShadowKey : 최초 대여인지 아닌지 여부
+	 * 공유 사물함에 대한 대여를 시도합니다.
+	 *
+	 * @param cabinetId 공유 사물함 cabinet id
+	 * @param userId    대여하려는 user id
+	 * @param shareCode 공유 사물함 공유 코드
 	 */
-	public void saveUserInRedis(String cabinetId, String userId, String shareCode,
-			boolean hasShadowKey) {
-		log.debug("called saveUserInRedis: {}, {}, {}, {}", cabinetId, userId, shareCode,
-				hasShadowKey);
-		if (!hasShadowKey || isValidShareCode(Long.valueOf(cabinetId),
-				shareCode)) { // 방장이거나 초대코드를 맞게 입력한 경우
-			valueHashOperations.put(cabinetId, userId,
-					USER_ENTERED);    // userId를 hashKey로 하여 -1을 value로 저장 // TODO: -1 대신 새로운 플래그값 넣어도 될듯?
-			valueOperations.set(userId + VALUE_KEY_SUFFIX,
-					cabinetId);    // userId를 key로 하여 cabinetId를 value로 저장
-		} else { // 초대코드가 틀린 경우
-			if (valueHashOperations.hasKey(cabinetId, userId)) { // 이미 존재하는 유저인 경우
-				valueHashOperations.increment(cabinetId, userId, 1L);    // trialCount를 1 증가시켜서 저장
-			} else { // 존재하지 않는 유저인 경우
-				valueHashOperations.put(cabinetId, userId, "1");    // trialCount를 1로 저장
+	public void attemptJoinCabinet(String cabinetId, String userId, String shareCode) {
+		String savedCode = shadowKeyTemplate.opsForValue().get(cabinetId + SHADOW_KEY_SUFFIX);
+		String cabinetKey = cabinetId + CABINET_KEY_SUFFIX;
+		if (Objects.equals(savedCode, shareCode)) {
+			shareCabinetTemplate.put(cabinetKey, userId, USER_ENTERED);
+			userCabinetTemplate.set(userId + VALUE_KEY_SUFFIX, cabinetId);
+		} else {
+			if (shareCabinetTemplate.hasKey(cabinetKey, userId)) {
+				shareCabinetTemplate.increment(cabinetKey, userId, 1L);
+			} else {
+				shareCabinetTemplate.put(cabinetKey, userId, "1");
 			}
-			throw new ServiceException(ExceptionStatus.WRONG_SHARE_CODE);
+			throw ExceptionStatus.WRONG_SHARE_CODE.asServiceException();
 		}
 	}
 
-	public boolean isValidShareCode(Long cabinetId, String shareCode) {
-		log.debug("called isValidShareCode: {}, {}", cabinetId, shareCode);
-		return Objects.equals(
-				shadowKeyRedisTemplate.opsForValue().get(cabinetId + SHADOW_KEY_SUFFIX),
-				shareCode);
+	/**
+	 * 공유 사물함에 유저가 참여 중인지 확인합니다.
+	 *
+	 * @param cabinetId 공유 사물함 cabinet id
+	 * @param userId    확인하려는 user id
+	 * @return 유저가 공유 사물함 세션에 있는지 여부
+	 */
+	public boolean isUserInCabinet(String cabinetId, String userId) {
+		return shareCabinetTemplate.hasKey(cabinetId + CABINET_KEY_SUFFIX, userId);
 	}
 
-	public boolean checkPwTrialCount(String cabinetId, String userId) {
-		log.debug("called checkPwTrialCount: {}, {}", cabinetId, userId);
-		return Objects.equals(valueHashOperations.get(cabinetId, userId), MAX_SHARE_CODE_TRY);
+	/**
+	 * 공유 사물함에 참여 중인 유저 수를 가져옵니다.
+	 *
+	 * @param cabinetId 공유 사물함 cabinet id
+	 * @return 공유 사물함 세션에 참여 중인 유저 수
+	 */
+	public Long countUserInCabinet(String cabinetId) {
+		String cabinetKey = cabinetId + CABINET_KEY_SUFFIX;
+		Collection<String> joinUsers = shareCabinetTemplate.entries(cabinetKey).values();
+		return joinUsers.stream()
+				.filter(value -> Objects.nonNull(value) && value.equals(USER_ENTERED)).count();
 	}
 
-	public Boolean isUserInRedis(String cabinetId, String userId) {
-		log.debug("called isUserInRedis: {}, {}", cabinetId, userId);
-		return valueHashOperations.hasKey(cabinetId, userId);
+	/**
+	 * 공유 사물함에 대한 특정 유저의 대여 시도 횟수를 가져옵니다.
+	 *
+	 * @param cabinetId 공유 사물함 cabinet id
+	 * @param userId    확인하려는 user id
+	 * @return 대여 시도 횟수
+	 */
+	public String getAttemptCountInCabinet(String cabinetId, String userId) {
+		return shareCabinetTemplate.get(cabinetId + CABINET_KEY_SUFFIX, userId);
 	}
 
-	public Long getSizeOfUsersInSession(String cabinetId) {
-		log.debug("called getSizeOfUsersInSession: {}", cabinetId);
-		Map<String, String> entries = valueHashOperations.entries(cabinetId);
-		return entries.values().stream().filter(Objects::nonNull)
-				.filter(value -> value.equals(USER_ENTERED))
-				.count();
+	/**
+	 * 공유 사물함 세션이 존재하는지 확인합니다.
+	 *
+	 * @param cabinetId 공유 사물함 cabinet id
+	 * @return 공유 사물함 세션이 존재하는지 여부
+	 */
+	public boolean isExistShadowKey(String cabinetId) {
+		Boolean isExist = shadowKeyTemplate.hasKey(cabinetId + SHADOW_KEY_SUFFIX);
+		return Objects.nonNull(isExist) && isExist;
 	}
 
-	public String getPwTrialCountInRedis(String cabinetId, String userId) {
-		log.debug("called getPwTrialCountInRedis: {}, {}", cabinetId, userId);
-		return valueHashOperations.get(cabinetId, userId);
+	/**
+	 * 공유 사물함의 초대 코드를 가져옵니다.
+	 *
+	 * @param cabinetId 공유 사물함 cabinet id
+	 * @return 공유 사물함 초대 코드
+	 */
+	public String getShareCode(String cabinetId) {
+		return shadowKeyTemplate.opsForValue().get(cabinetId + SHADOW_KEY_SUFFIX);
 	}
 
-	public String getShareCode(Long cabinetId) {
-		log.debug("called getShareCode: {}", cabinetId);
-		return shadowKeyRedisTemplate.opsForValue().get(cabinetId + SHADOW_KEY_SUFFIX);
-	}
-
-	public void setShadowKey(Long cabinetId) {
+	/**
+	 * 공유 사물함 세션과 초대 코드를 새로 생성하고 생성된 초대 코드를 반환합니다.
+	 *
+	 * @param cabinetId 공유 사물함 cabinet id
+	 * @return 생성된 초대 코드
+	 */
+	public String setShadowKey(String cabinetId) {
 		Random rand = new Random();
-		Integer shareCode = 1000 + rand.nextInt(9000);
+		String shareCode = Integer.toString(1000 + rand.nextInt(9000));
 		String shadowKey = cabinetId + SHADOW_KEY_SUFFIX;
-		shadowKeyRedisTemplate.opsForValue().set(shadowKey, shareCode.toString());
-		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
-		log.debug("called setShadowKey: {}, shareCode: {}", shadowKey, shareCode);
-		shadowKeyRedisTemplate.expire(shadowKey, cabinetProperties.getInSessionTerm(), TimeUnit.MINUTES);
-//		shadowKeyRedisTemplate.expire(shadowKey, 30, TimeUnit.SECONDS);
+		shadowKeyTemplate.opsForValue().set(shadowKey, shareCode);
+		shadowKeyTemplate.expire(shadowKey, cabinetProperties.getInSessionTerm(), TimeUnit.MINUTES);
+		return shareCode;
 	}
 
-	public Boolean isShadowKey(Long cabinetId) {
-		log.debug("called isShadowKey: {}", cabinetId);
-		// 해당 키가 존재하는지 확인
-		return shadowKeyRedisTemplate.hasKey(cabinetId + SHADOW_KEY_SUFFIX);
+	/**
+	 * 공유 사물함 세션을 삭제합니다.
+	 *
+	 * @param cabinetId 삭제할 공유 사물함 cabinet id
+	 */
+	public void deleteShadowKey(String cabinetId) {
+		shadowKeyTemplate.delete(cabinetId + SHADOW_KEY_SUFFIX);
 	}
 
-	public void deleteShadowKey(Long cabinetId) {
-		log.debug("called deleteShadowKey: {}", cabinetId);
-		shadowKeyRedisTemplate.delete(cabinetId + SHADOW_KEY_SUFFIX);
+	/**
+	 * 특정 공유 사물함에 참여 중인 유저를 삭제합니다.
+	 *
+	 * @param cabinetId 공유 사물함 cabinet id
+	 * @param userId    삭제할 user id
+	 */
+	public void deleteUserInCabinet(String cabinetId, String userId) {
+		shareCabinetTemplate.delete(cabinetId + CABINET_KEY_SUFFIX, userId);
+		userCabinetTemplate.getOperations().delete(userId + VALUE_KEY_SUFFIX);
 	}
 
-	public void deleteUserInRedis(String cabinetId, String userId) { // user를 지우는 delete
-		log.debug("called deleteUserInRedis: {}, {}", cabinetId, userId);
-		valueHashOperations.delete(cabinetId, userId);
-		valueOperations.getOperations().delete(userId + VALUE_KEY_SUFFIX);
+	/**
+	 * 공유 사물함을 삭제합니다.
+	 *
+	 * @param cabinetId 삭제할 공유 사물함 cabinet id
+	 */
+	public void deleteCabinet(String cabinetId) {
+		shareCabinetTemplate.getOperations().delete(cabinetId + CABINET_KEY_SUFFIX);
 	}
 
-	public void deleteCabinetIdInRedis(String cabinetId) {
-		log.debug("called deleteCabinetIdInRedis: {}", cabinetId);
-		valueHashOperations.getOperations().delete(cabinetId);
+	/**
+	 * 유저를 삭제합니다.
+	 *
+	 * @param userId 삭제할 user id
+	 */
+	public void deleteUser(String userId) {
+		userCabinetTemplate.getOperations().delete(userId + VALUE_KEY_SUFFIX);
 	}
 
-	public void deleteUserIdInRedis(Long userId) {
-		log.debug("called deleteUserIdInRedis: {}", userId);
-		valueOperations.getOperations().delete(userId + VALUE_KEY_SUFFIX);
+	/**
+	 * 유저가 빌린 사물함을 가져옵니다.
+	 *
+	 * @param userId 유저 id
+	 * @return 유저가 빌린 사물함 id
+	 */
+	public String findCabinetByUser(String userId) {
+		return userCabinetTemplate.get(userId + VALUE_KEY_SUFFIX);
 	}
 
-	public Long findCabinetIdByUserIdInRedis(Long userId) {
-		log.debug("Called findCabinetIdByUserIdInRedis: {}", userId);
-		String cabinetId = valueOperations.get(userId + VALUE_KEY_SUFFIX);
-		if (cabinetId == null) {
-			log.info("cabinetId is null");
+	/**
+	 * 공유 사물함에 참여 중인 유저를 모두 가져옵니다.
+	 *
+	 * @param cabinetId 공유 사물함 id
+	 * @return 공유 사물함에 참여 중인 유저 id
+	 */
+	public List<String> getAllUserInCabinet(String cabinetId) {
+		Map<String, String> entries = shareCabinetTemplate.entries(cabinetId + CABINET_KEY_SUFFIX);
+		return entries.entrySet().stream()
+				.filter(entry -> entry.getValue().equals(USER_ENTERED))
+				.map(Map.Entry::getKey).collect(Collectors.toList());
+	}
+
+	/**
+	 * 공유 사물함의 만료 시간을 가져옵니다.
+	 *
+	 * @param cabinetId 공유 사물함 id
+	 * @return 공유 사물함의 만료 시간
+	 */
+	public LocalDateTime getCabinetExpiredAt(String cabinetId) {
+		if (!this.isExistShadowKey(cabinetId)) {
 			return null;
 		}
-		return Long.valueOf(cabinetId);
+		String shadowKey = cabinetId + SHADOW_KEY_SUFFIX;
+		@SuppressWarnings("ConstantConditions")
+		long expire = shadowKeyTemplate.getExpire(shadowKey, TimeUnit.SECONDS);
+		return LocalDateTime.now().plusSeconds(expire);
 	}
 
-	public ArrayList<String> getUserIdsByCabinetIdInRedis(String cabinetId) {
-		log.debug("Called getUserIdsByCabinetIdInRedis: {}", cabinetId);
-		Map<String, String> entries = valueHashOperations.entries(cabinetId);
-		return entries.entrySet().stream().filter(entry -> entry.getValue().equals(USER_ENTERED))
-				.map(Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
+	/*----------------------------------------  Caching  -----------------------------------------*/
+
+	/**
+	 * 특정 사물함에 대한 이전 대여 유저 이름을 설정합니다.
+	 *
+	 * @param cabinetId 사물함 id
+	 * @param userName  유저 이름
+	 */
+	public void setPreviousUserName(String cabinetId, String userName) {
+		previousTemplate.set(cabinetId + PREVIOUS_USER_SUFFIX, userName);
 	}
 
-	public LocalDateTime getSessionExpiredAtInRedis(Long cabinetId) {
-		log.debug("Called getSessionExpiredAtInRedis: {}", cabinetId);
-		if (isShadowKey(cabinetId)) {
-			return LocalDateTime.now().plusSeconds(
-					shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX,
-							TimeUnit.SECONDS).longValue());
-		}
-		return null;
-	}
-
-	public void setPreviousUser(String cabinetId, String userName) {
-		log.debug("Called setPreviousUser: {}, {}", cabinetId, userName);
-		previousUserRedisTemplate.set(cabinetId + PREVIOUS_USER_SUFFIX, userName);
-	}
-
+	/**
+	 * 특정 사물함에 대한 이전 대여 유저 이름을 가져옵니다.
+	 *
+	 * @param cabinetId 사물함 id
+	 * @return 유저 이름
+	 */
 	public String getPreviousUserName(String cabinetId) {
-		log.debug("Called getPreviousUser: {}", cabinetId);
-		return previousUserRedisTemplate.get(cabinetId + PREVIOUS_USER_SUFFIX);
+		return previousTemplate.get(cabinetId + PREVIOUS_USER_SUFFIX);
+	}
+
+	/**
+	 * 특정 사물함에 대한 이전 대여 종료 시각을 설정합니다.
+	 *
+	 * @param cabinetId 사물함 id
+	 * @param endedAt   종료 시각
+	 */
+	public void setPreviousEndedAt(String cabinetId, String endedAt) {
+		previousTemplate.set(cabinetId + PREVIOUS_ENDED_AT_SUFFIX, endedAt);
+	}
+
+	/**
+	 * 특정 사물함에 대한 이전 대여 종료 시각을 가져옵니다.
+	 *
+	 * @param cabinetId 사물함 id
+	 * @return 종료 시각
+	 */
+	public String getPreviousEndedAt(String cabinetId) {
+		return previousTemplate.get(cabinetId + PREVIOUS_ENDED_AT_SUFFIX);
+	}
+
+	/*-----------------------------------SWAP-----------------------------------*/
+
+	public boolean isExistSwapRecord(String userId) {
+		Boolean isExist = swapTemplate.hasKey(userId + SWAP_KEY_SUFFIX);
+		return Objects.nonNull(isExist) && isExist;
+	}
+
+	public LocalDateTime getSwapExpiredAt(String userId) {
+		if (!this.isExistSwapRecord(userId)) {
+			return null;
+		}
+		String swapKey = userId + SWAP_KEY_SUFFIX;
+		@SuppressWarnings("ConstantConditions")
+		long expire = swapTemplate.getExpire(swapKey, TimeUnit.SECONDS);
+		return LocalDateTime.now().plusSeconds(expire);
+	}
+
+	public void setSwap(String userId) {
+		final String swapKey = userId + SWAP_KEY_SUFFIX;
+		swapTemplate.opsForValue().set(swapKey, USER_SWAPPED);
+		swapTemplate.expire(swapKey, cabinetProperties.getSwapTermPrivateDays(), TimeUnit.DAYS);
 	}
 }

@@ -2,7 +2,6 @@ package org.ftclub.cabinet.cabinet.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
@@ -10,7 +9,10 @@ import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ControllerException;
+import org.ftclub.cabinet.log.Logging;
+import org.ftclub.cabinet.user.domain.UserSession;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v4/cabinets")
-@Log4j2
+@Logging
 public class CabinetController {
 
 	private final CabinetFacadeService cabinetFacadeService;
@@ -35,7 +37,6 @@ public class CabinetController {
 	@GetMapping("/buildings/floors")
 	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
-		log.info("Called getBuildingFloorsResponse");
 		return cabinetFacadeService.getBuildingFloorsResponse();
 	}
 
@@ -50,9 +51,11 @@ public class CabinetController {
 	@GetMapping("/buildings/{building}/floors/{floor}")
 	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
+			@UserSession UserSessionDto user,
 			@PathVariable("building") String building,
 			@PathVariable("floor") Integer floor) {
-		return cabinetFacadeService.getCabinetsPerSectionDSL(building, floor);
+		return cabinetFacadeService.getCabinetsPerSection(building, floor,
+				(user == null ? null : user.getUserId()));
 	}
 
 	/**
@@ -66,7 +69,6 @@ public class CabinetController {
 	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public CabinetInfoResponseDto getCabinetInfo(
 			@PathVariable("cabinetId") Long cabinetId) {
-		log.info("Called getCabinetInfo {}", cabinetId);
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
 	}
 
@@ -75,10 +77,10 @@ public class CabinetController {
 	 *
 	 * @return 오픈 예정인 사물함들의 정보를 반환합니다.
 	 */
-	@GetMapping("/pending")
+	@GetMapping("/buildings/{building}/available")
 	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
-	public CabinetPendingResponseDto getPendingCabinets() {
-		log.info("Called getPendingCabinets");
-		return cabinetFacadeService.getPendingCabinets();
+	public CabinetPendingResponseDto getAvailableCabinets(
+			@PathVariable("building") String building) {
+		return cabinetFacadeService.getAvailableCabinets(building);
 	}
 }

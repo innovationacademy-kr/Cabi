@@ -22,10 +22,10 @@
         ]
       },
       {
-        "name": "assets/ErrorTemplate-d9af0d10.js",
+        "name": "assets/AnnounceTemplate-d9af0d10.js",
         "children": [
           {
-            "name": "src/components/Error/ErrorTemplate.tsx",
+            "name": "src/components/Error/AnnounceTemplate.tsx",
             "uid": "a9f3-5"
           }
         ]
@@ -101,15 +101,15 @@
                     "uid": "a9f3-23"
                   },
                   {
-                    "name": "UserInfoArea",
+                    "name": "UserCabinetInfoArea",
                     "children": [
                       {
                         "uid": "a9f3-25",
-                        "name": "UserInfoArea.tsx"
+                        "name": "UserCabinetInfoArea.tsx"
                       },
                       {
                         "uid": "a9f3-31",
-                        "name": "UserInfoArea.container.tsx"
+                        "name": "UserCabinetInfoArea.container.tsx"
                       }
                     ]
                   },
@@ -6639,9 +6639,9 @@
       ]
     },
     "a9f3-4": {
-      "id": "/src/components/Error/ErrorTemplate.tsx",
+      "id": "/src/components/Error/AnnounceTemplate.tsx",
       "moduleParts": {
-        "assets/ErrorTemplate-d9af0d10.js": "a9f3-5"
+        "assets/AnnounceTemplate-d9af0d10.js": "a9f3-5"
       },
       "imported": [
         {
@@ -6952,7 +6952,7 @@
       ]
     },
     "a9f3-24": {
-      "id": "/src/components/UserInfoArea/UserInfoArea.tsx",
+      "id": "/src/components/UserCabinetInfoArea/UserCabinetInfoArea.tsx",
       "moduleParts": {
         "assets/AdminLayout-3a741fe3.js": "a9f3-25"
       },
@@ -7060,7 +7060,7 @@
       ]
     },
     "a9f3-30": {
-      "id": "/src/components/UserInfoArea/UserInfoArea.container.tsx",
+      "id": "/src/components/UserCabinetInfoArea/UserCabinetInfoArea.container.tsx",
       "moduleParts": {
         "assets/AdminLayout-3a741fe3.js": "a9f3-31"
       },

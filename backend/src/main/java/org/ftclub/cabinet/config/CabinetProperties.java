@@ -8,22 +8,29 @@ import org.springframework.stereotype.Component;
 @Getter
 public class CabinetProperties {
 
-	@Value("${spring.cabinet.lent.term.private}")
+	@Value("${cabinet.policy.lent.term.private}")
 	private Integer lentTermPrivate;
-	@Value("${spring.cabinet.lent.term.share}")
+	@Value("${cabinet.policy.lent.term.share}")
 	private Integer lentTermShare;
-	@Value("${spring.cabinet.lent.term.share-basic}")
+	@Value("${cabinet.policy.lent.term.share-basic}")
 	private Integer lentTermShareBasic;
-	@Value("${spring.cabinet.lent.term.extend}")
+	@Value("${cabinet.policy.lent.term.extend}")
 	private Integer lentExtendTerm;
-	@Value("${spring.cabinet.penalty.day.share}")
+	@Value("${cabinet.policy.penalty.day.share}")
 	private Integer penaltyDayShare;
-	@Value("${spring.cabinet.penalty.day.padding}")
+	@Value("${cabinet.policy.penalty.day.padding}")
 	private Integer penaltyDayPadding;
-	@Value("${spring.cabinet.lent.limit.share.min-user-count}")
+	@Value("${cabinet.policy.lent.limit.share.min-user-count}")
 	private Long shareMinUserCount;
-	@Value("${spring.cabinet.lent.limit.share.max-user-count}")
+	@Value("${cabinet.policy.lent.limit.share.max-user-count}")
 	private Long shareMaxUserCount;
-	@Value("${spring.cabinet.in-session.term}")
+	@Value("${cabinet.policy.in-session.term}")
 	private Integer inSessionTerm;
+	@Value("${cabinet.policy.lent.limit.share.max-attempt-count}")
+	private Long shareMaxAttemptCount;
+	@Value("${cabinet.policy.swap.term.private}")
+	private Integer swapTermPrivateDays;
+	@Value(("${cabinet.policy.swap.minimum-require-days}"))
+	private Integer requireSwapMinimumDays;
+
 }

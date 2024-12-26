@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,78 +22,15 @@ import org.springframework.stereotype.Repository;
 public interface LentRepository extends JpaRepository<LentHistory, Long> {
 
 	/**
-	 * 사물함을 기준으로 아직 반납하지 않은 {@link LentHistory}중 하나를 가져옵니다.
-	 *
-	 * @param cabinetId 찾으려는 cabinet id
-	 * @return 반납하지 않은 {@link LentHistory}의 {@link Optional}
-	 */
-	Optional<LentHistory> findFirstByCabinetIdAndEndedAtIsNull(@Param("cabinetId") Long cabinetId);
-
-	/**
-	 * 유저를 기준으로 아직 반납하지 않은 {@link LentHistory}중 하나를 가져옵니다.
+	 * 유저가 지금까지 빌렸던 사물함의 개수를 가져옵니다.
 	 *
 	 * @param userId 찾으려는 user id
-	 * @return 반납하지 않은 {@link LentHistory}의 {@link Optional}
+	 * @return 유저가 빌렸던 사물함의 개수
 	 */
-	Optional<LentHistory> findFirstByUserIdAndEndedAtIsNull(@Param("userId") Long userId);
-
-	/**
-	 * 유저를 기준으로 아직 반납하지 않은 {@link LentHistory}중 하나를 가져옵니다. X Lock을 걸어서 가져옵니다.
-	 *
-	 * @param userId 찾으려는 user id
-	 * @return 반납하지 않은 {@link LentHistory}의 {@link Optional}
-	 */
-	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	@Query("SELECT lh " +
-			"FROM LentHistory lh " +
-			"WHERE lh.userId = :userId AND lh.endedAt is null")
-	Optional<LentHistory> findFirstByUserIdAndEndedAtIsNullForUpdate(@Param("userId") Long userId);
-
-
-	/**
-	 * 유저가 지금까지 빌렸던 {@link LentHistory}들을 가져옵니다. {@link Pageable}이 적용되었습니다.
-	 *
-	 * @param userId   찾으려는 user id
-	 * @param pageable pagination 정보
-	 * @return {@link LentHistory}들의 정보
-	 */
-	List<LentHistory> findByUserId(@Param("userId") Long userId, Pageable pageable);
-
-	/**
-	 * 유저가 지금까지 빌렸던 {@link LentHistory}들을 가져옵니다.(현재 빌리고 반납하지 않은 기록은 표시하지 않습니다.) {@link Pageable}이
-	 * 적용되었습니다.
-	 *
-	 * @param userId   찾으려는 user id
-	 * @param pageable pagination 정보
-	 * @return
-	 */
-	List<LentHistory> findByUserIdAndEndedAtNotNull(@Param("userId") Long userId,
-			Pageable pageable);
-
-	/**
-	 * 캐비넷의 {@link LentHistory}들을 가져옵니다. {@link Pageable}이 적용되었습니다.
-	 *
-	 * @param cabinetId 찾으려는 cabinet id
-	 * @param pageable  pagination 정보
-	 * @return {@link LentHistory}들의 정보
-	 */
-	List<LentHistory> findByCabinetId(@Param("cabinetId") Long cabinetId, Pageable pageable);
-
-	/**
-	 * 캐비넷의 대여 중인 {@link LentHistory}들을 가져옵니다.(공유 사물함의 경우를 포함하여 리스트로 반환)
-	 *
-	 * @param cabinetId 찾으려는 cabinet id
-	 * @return {@link LentHistory}들의 정보
-	 */
-	List<LentHistory> findLentHistoriesByCabinetIdAndEndedAtIsNull(@Param("cabinetId") Long cabinetId);
-
-	/***
-	 * 사물함을 기준으로 가장 최근에 반납한 {@link LentHistory} 를 가져옵니다.
-	 * @param cabinetId 찾으려는 cabinet id
-	 * @return 반납한 {@link LentHistory}의 {@link Optional}
-	 */
-	Optional<LentHistory> findFirstByCabinetIdAndEndedAtIsNotNullOrderByEndedAtDesc(
-			@Param("cabinetId") Long cabinetId);
+	@Query("SELECT count(lh) "
+			+ "FROM LentHistory lh "
+			+ "WHERE lh.userId = :userId")
+	int countByUserId(@Param("userId") Long userId);
 
 	/**
 	 * 유저가 빌리고 있는 사물함의 개수를 가져옵니다.
@@ -99,32 +38,10 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 * @param userId 찾으려는 user id
 	 * @return 유저가 빌리고 있는 사물함 개수
 	 */
-	@Query("SELECT count(lh) " +
-			"FROM LentHistory lh " +
-			"WHERE lh.endedAt = null and lh.userId = :userId")
-	int countUserActiveLent(@Param("userId") Long userId);
-
-	/**
-	 * 사물함을 빌리고 있는 유저의 수를 가져옵니다.
-	 *
-	 * @param cabinetId 찾으려는 cabinet id
-	 * @return 사물함을 빌리고 있는 유저의 수
-	 */
-	@Query("SELECT count(lh) " +
-			"FROM LentHistory lh " +
-			"WHERE lh.endedAt = null and lh.cabinetId = :cabinetId")
-	int countCabinetActiveLent(@Param("cabinetId") Long cabinetId);
-
-	/**
-	 * 유저가 지금까지 빌렸던 사물함의 개수를 가져옵니다.
-	 *
-	 * @param userId 찾으려는 user id
-	 * @return 유저가 빌렸던 사물함의 개수
-	 */
-	@Query("SELECT count(lh) " +
-			"FROM LentHistory lh " +
-			"WHERE lh.userId = :userId")
-	int countUserAllLent(@Param("userId") Long userId);
+	@Query("SELECT count(lh) "
+			+ "FROM LentHistory lh "
+			+ "WHERE lh.endedAt = null and lh.userId = :userId")
+	int countByUserIdAndEndedAtIsNull(@Param("userId") Long userId);
 
 	/**
 	 * 사물함을 빌렸던 유저의 수를 가져옵니다.
@@ -132,84 +49,316 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 * @param cabinetId 찾으려는 cabinet id
 	 * @return 사물함을 빌렸던 유저의 수
 	 */
-	@Query("SELECT count(lh)" +
-			"FROM LentHistory lh " +
-			"WHERE lh.cabinetId = :cabinetId")
-	int countCabinetAllLent(@Param("cabinetId") Long cabinetId);
-
+	@Query("SELECT count(lh)"
+			+ "FROM LentHistory lh "
+			+ "WHERE lh.cabinetId = :cabinetId")
+	int countByCabinetId(@Param("cabinetId") Long cabinetId);
 
 	/**
-	 * 사물함을 기준으로 아직 반납하지 않은 {@link LentHistory}를 모두 가져옵니다..
+	 * 사물함을 빌리고 있는 유저의 수를 가져옵니다.
+	 *
+	 * @param cabinetId 찾으려는 cabinet id
+	 * @return 사물함을 빌리고 있는 유저의 수
+	 */
+	@Query("SELECT count(lh) "
+			+ "FROM LentHistory lh "
+			+ "WHERE lh.endedAt = null and lh.cabinetId = :cabinetId")
+	int countByCabinetIdAndEndedAtIsNull(@Param("cabinetId") Long cabinetId);
+
+	/**
+	 * 특정 기간 사이에 사물함을 빌렸던 유저의 수를 가져옵니다.
+	 *
+	 * @param startDate 시작 날짜
+	 * @param endDate   끝 날짜
+	 * @return 특정 기간 사이에 사물함을 빌렸던 유저의 수
+	 */
+	@Query("SELECT count(lh) "
+			+ "FROM LentHistory lh "
+			+ "WHERE lh.startedAt < :endDate AND lh.startedAt >= :startDate")
+	int countLentFromStartDateToEndDate(@Param("startDate") LocalDateTime startDate,
+			@Param("endDate") LocalDateTime endDate);
+
+	/**
+	 * 특정 기간 사이에 사물함을 반납한 유저의 수를 가져옵니다.
+	 *
+	 * @param startDate 시작 날짜
+	 * @param endDate   끝 날짜
+	 * @return 특정 기간 사이에 사물함을 반납한 유저의 수
+	 */
+	@Query("SELECT count(lh) "
+			+ "FROM LentHistory lh "
+			+ "WHERE lh.endedAt < :endDate AND lh.endedAt >= :startDate")
+	int countReturnFromStartDateToEndDate(@Param("startDate") LocalDateTime startDate,
+			@Param("endDate") LocalDateTime endDate);
+
+	/**
+	 * 특정 사물함의 아직 반납하지 않은 대여기록을 가져옵니다.
+	 *
+	 * @param cabinetId 찾으려는 cabinet id
+	 * @return 반납하지 않은 {@link LentHistory}의 {@link Optional}
+	 */
+	Optional<LentHistory> findByCabinetIdAndEndedAtIsNull(@Param("cabinetId") Long cabinetId);
+
+	/***
+	 * 특정 사물함의 반납된 대여 기록들을 가져옵니다.
+	 *
+	 * @param cabinetId 찾으려는 cabinet id
+	 * @return 반납한 {@link LentHistory}의 {@link List}
+	 */
+	List<LentHistory> findByCabinetIdAndEndedAtIsNotNull(@Param("cabinetId") Long cabinetId);
+
+	/**
+	 * 특정 유저의 아직 반납하지 않은 대여 기록을 가져옵니다.
+	 *
+	 * @param userId 찾으려는 user id
+	 * @return 반납하지 않은 {@link LentHistory}의 {@link Optional}
+	 */
+	Optional<LentHistory> findByUserIdAndEndedAtIsNull(@Param("userId") Long userId);
+
+	/**
+	 * 특정 유저의 아직 반납하지 않은 대여 기록을 가져옵니다.
+	 * <p>
+	 * X Lock을 걸어서 가져옵니다.
+	 * </p>
+	 * <p>
+	 * user 정보를 Join하여 가져옵니다.
+	 * </p>
+	 *
+	 * @param userId 찾으려는 user id
+	 * @return 반납하지 않은 {@link LentHistory}의 {@link Optional}
+	 */
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.user u "
+			+ "WHERE lh.userId = :userId AND lh.endedAt is null")
+	Optional<LentHistory> findByUserIdAndEndedAtIsNullForUpdate(@Param("userId") Long userId);
+
+	/**
+	 * 유저가 빌리고 있는 사물함의 아직 반납하지 않은 대여 기록들을 가져옵니다.
+	 * <p>
+	 * X Lock을 걸어서 가져옵니다.
+	 * </p>
+	 * <p>
+	 * subQuery를 사용하여 가져옵니다.
+	 * </p>
+	 *
+	 * @param userId 찾으려는 user id
+	 * @return 유저가 빌리고 있는 사물함의 아직 반납하지 않은 {@link LentHistory}의 {@link List}
+	 */
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.user u "
+			+ "WHERE lh.endedAt IS NULL "
+			+ "AND lh.cabinetId = ("
+			+ "     SELECT lh2.cabinetId FROM LentHistory lh2 "
+			+ "     WHERE lh2.userId = :userId AND lh2.endedAt IS NULL)")
+	List<LentHistory> findAllByCabinetIdWithSubQueryWithXLock(@Param("userId") Long userId);
+
+	/**
+	 * 특정 사물함의 대여기록들을 모두 가져옵니다.
+	 * <p>
+	 * {@link Pageable}이 적용되었습니다.
+	 * </p>
+	 * <p>
+	 * cabinet 정보와 user 정보를 Join하여 가져옵니다.
+	 * </p>
+	 *
+	 * @param cabinetId 찾으려는 cabinet id
+	 * @param pageable  pagination 정보
+	 * @return {@link LentHistory}의 {@link Page}
+	 */
+	@Query(value = "SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.user u "
+			+ "LEFT JOIN FETCH lh.cabinet c "
+			+ "LEFT JOIN FETCH c.cabinetPlace cp "
+			+ "WHERE lh.cabinetId = :cabinetId "
+			+ "ORDER BY lh.startedAt DESC",
+			countQuery = "SELECT count(lh) "
+					+ "FROM LentHistory lh "
+					+ "WHERE lh.cabinetId = :cabinetId ")
+	Page<LentHistory> findPaginationByCabinetIdJoinCabinetAndUser(
+			@Param("cabinetId") Long cabinetId, Pageable pageable);
+
+	/**
+	 * 특정 유저가 지금까지 빌렸던 대여기록들을 모두 가져옵니다.
+	 * <p>
+	 * {@link Pageable}이 적용되었습니다.
+	 * </p>
+	 *
+	 * @param userId   찾으려는 user id
+	 * @param pageable pagination 정보
+	 * @return {@link LentHistory}의 {@link Page}
+	 */
+	Page<LentHistory> findPaginationByUserIdOrderByStartedAtDesc(
+			@Param("userId") Long userId, Pageable pageable);
+
+	/**
+	 * 특정 사물함의 아직 반납하지 않은 대여기록들를 모두 가져옵니다.
 	 *
 	 * @param cabinetId 찾으려는 cabinet id
 	 * @return 반납하지 않은 {@link LentHistory}의 {@link List}
 	 */
-	@Query("SELECT lh " +
-			"FROM LentHistory lh " +
-			"WHERE lh.cabinetId = :cabinetId and lh.endedAt is null")
-	List<LentHistory> findAllActiveLentByCabinetId(@Param("cabinetId") Long cabinetId);
+	List<LentHistory> findAllByCabinetIdAndEndedAtIsNull(@Param("cabinetId") Long cabinetId);
 
-	@Query("SELECT lh " +
-			"FROM LentHistory lh " +
-			"LEFT JOIN FETCH lh.user " +
-			"WHERE lh.cabinetId = :cabinetId and lh.endedAt is null")
-	List<LentHistory> findActiveLentHistoriesByCabinetIdWithUser(
-			@Param("cabinetId") Long cabinetId);
+	/**
+	 * 여러 사물함의 아직 반납하지 않은 대여기록들을 모두 가져옵니다.
+	 * <p>
+	 * 유저 정보를 Join하여 가져옵니다.
+	 * </p>
+	 *
+	 * @param cabinetIds 찾으려는 cabinet id {@link List}
+	 * @return 반납하지 않은 {@link LentHistory}의 {@link List}
+	 */
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.user u "
+			+ "WHERE lh.cabinetId IN (:cabinetIds) "
+			+ "AND lh.endedAt IS NULL ")
+	List<LentHistory> findAllByCabinetIdInAndEndedAtIsNullJoinUser(
+			@Param("cabinetIds") List<Long> cabinetIds);
 
-	@Query("SELECT lh " +
-			"FROM LentHistory lh " +
-			"WHERE lh.cabinetId = :cabinetId")
-	Page<LentHistory> findPaginationByCabinetId(@Param("cabinetId") Long cabinetId,
-			Pageable pageable);
+	/**
+	 * 현재 대여 중인 대여 기록들을 모두 가져옵니다.
+	 * <p>
+	 * cabinet 정보와 user 정보를 Join하여 가져옵니다.
+	 * </p>
+	 *
+	 * @return 연체되어 있는 {@link LentHistory}의 {@link List}
+	 */
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.user u "
+			+ "LEFT JOIN FETCH lh.cabinet c "
+			+ "LEFT JOIN FETCH c.cabinetPlace cp "
+			+ "WHERE lh.endedAt IS NULL")
+	List<LentHistory> findAllByEndedAtIsNullJoinCabinetAndUser();
 
-	@Query("SELECT lh " +
-			"FROM LentHistory lh " +
-			"WHERE lh.userId = :userId")
-	Page<LentHistory> findPaginationByUserId(@Param("userId") Long userId,
-			Pageable pageable);
+	/**
+	 * 기준 날짜보다 반납 기한이 나중인 모든 사물함들의 대여 기록을 가져옵니다.
+	 *
+	 * @param cabinetIds 조회하고자 하는 사물함의 Id {@link List}
+	 * @param date       조회하고자 하는 날짜(시간 제외)
+	 * @return 조회하고자 하는 사물함들 {@link LentHistory}의 {@link List}
+	 */
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "WHERE lh.cabinetId IN :cabinetIds "
+			+ "AND DATE(lh.endedAt) = DATE(:date)")
+	List<LentHistory> findAllByCabinetIdsEndedAtEqualDate(@Param("date") LocalDate date,
+			@Param("cabinetIds") List<Long> cabinetIds);
+
+	/**
+	 * 특정 유저의 아직 반납하지 않은 대여 기록을 가져옵니다.
+	 * <p>
+	 * cabinet 정보를 Join하여 가져옵니다.
+	 * </p>
+	 *
+	 * @param userId 찾으려는 user id
+	 * @return 반납하지 않은 {@link LentHistory}의 {@link Optional}
+	 */
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.cabinet c "
+			+ "LEFT JOIN FETCH c.cabinetPlace cp "
+			+ "WHERE lh.userId = :userId AND lh.endedAt IS NULL")
+	Optional<LentHistory> findByUserIdAndEndedAtIsNullJoinCabinet(@Param("userId") Long userId);
+
+	Optional<LentHistory> findFirstByCabinetIdOrderByEndedAtDesc(Long cabinetId);
+
+	/**
+	 * 특정 유저들의 아직 반납하지 않은 대여 기록을 가져옵니다.
+	 * <p>
+	 * cabinet 정보를 Join하여 가져옵니다.
+	 * </p>
+	 *
+	 * @param userIds 찾으려는 user id {@link List}
+	 * @return 반납하지 않은 {@link LentHistory}의 {@link List}
+	 */
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.cabinet c "
+			+ "LEFT JOIN FETCH c.cabinetPlace cp "
+			+ "WHERE lh.userId IN (:userIds) AND lh.endedAt IS NULL")
+	List<LentHistory> findByUserIdsAndEndedAtIsNullJoinCabinet(
+			@Param("userIds") List<Long> userIds);
+
+	/**
+	 * 특정 사물함들의 대여 기록을 가져옵니다.
+	 *
+	 * @param cabinetIds 찾으려는 cabinet id {@link List}
+	 * @return {@link LentHistory}의 {@link List}
+	 */
+	List<LentHistory> findAllByCabinetIdIn(List<Long> cabinetIds);
+
+	/**
+	 * 특정 사물함들의 대여 기록을 가져옵니다.
+	 * <p>
+	 * cabinet 정보를 Join하여 가져옵니다.
+	 * </p>
+	 *
+	 * @param cabinetId 찾으려는 cabinet id
+	 * @return {@link LentHistory}의 {@link List}
+	 */
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.cabinet c "
+			+ "LEFT JOIN FETCH c.cabinetPlace cp "
+			+ "WHERE lh.cabinetId = :cabinetId")
+	List<LentHistory> findAllByCabinetIdJoinCabinet(Long cabinetId);
 
 	/**
 	 * 연체되어 있는 사물함을 모두 가져옵니다.
+	 * <p>
+	 * {@link Pageable}이 적용되었습니다.
+	 * </p>
+	 * <p>
+	 * cabinet 정보와 user 정보를 Join하여 가져옵니다.
+	 * </p>
 	 *
 	 * @param date 연체의 기준 날짜/시간
 	 * @return 연체되어 있는 {@link LentHistory}의 {@link List}
 	 */
-	@Query("SELECT lh " +
-			"FROM LentHistory lh " +
-			"WHERE lh.expiredAt < :date " +
-			"AND YEAR(lh.expiredAt) <> 9999 " +
-			"AND lh.endedAt is null " +
-			"ORDER BY lh.expiredAt ASC")
-	List<LentHistory> findAllOverdueLent(@Param("date") LocalDateTime date, Pageable pageable);
-
-	@Query("SELECT count(lh) " +
-			"FROM LentHistory lh " +
-			"WHERE lh.startedAt < :endDate AND lh.startedAt >= :startDate")
-	Integer countLentByTimeDuration(@Param("startDate") LocalDateTime startDate,
-			@Param("endDate") LocalDateTime endDate);
-
-	@Query("SELECT count(lh) " +
-			"FROM LentHistory lh " +
-			"WHERE lh.endedAt < :endDate AND lh.endedAt >= :startDate")
-	Integer countReturnByTimeDuration(@Param("startDate") LocalDateTime startDate,
-			@Param("endDate") LocalDateTime endDate);
-
-	@Query("SELECT count(lh) " +
-			"FROM LentHistory lh " +
-			"WHERE lh.cabinetId = :cabinetId AND lh.endedAt IS NULL")
-	Integer countCabinetAllActiveLent(@Param("cabinetId") Long cabinetId);
-
-	@Query("SELECT lh " +
-			"FROM LentHistory lh " +
-			"WHERE lh.endedAt IS NULL")
-	List<LentHistory> findAllActiveLentHistories();
-
-	@Query("SELECT lh "
+	@Query(value = "SELECT lh "
 			+ "FROM LentHistory lh "
-			+ "WHERE lh.endedAt IS NULL "
-			+ "AND lh.cabinetId "
-			+ "IN (SELECT lh2.cabinetId "
-			+ "FROM LentHistory lh2 WHERE lh2.userId = :userId AND lh2.endedAt IS NULL)")
-	List<LentHistory> findAllActiveLentHistoriesByUserId(@Param("userId") Long userId);
+			+ "LEFT JOIN FETCH lh.user u "
+			+ "LEFT JOIN FETCH lh.cabinet c "
+			+ "LEFT JOIN FETCH c.cabinetPlace cp "
+			+ "WHERE lh.expiredAt < :date AND lh.endedAt IS NULL",
+			countQuery = "SELECT count(lh) FROM LentHistory lh "
+					+ "WHERE lh.expiredAt < :date AND lh.endedAt IS NULL")
+	Page<LentHistory> findAllExpiredAtBeforeAndEndedAtIsNullJoinUserAndCabinet(
+			@Param("date") LocalDateTime date, Pageable pageable);
 
+	/**
+	 * 여러 유저들의 반납 날짜를 수정합니다.
+	 * <p>
+	 * {@link Modifying}과 {@link Query}를 사용하여 여러 대여 기록을 한번에 업데이트합니다.
+	 * </p>
+	 *
+	 * @param userIds 찾으려는 user id {@link List}
+	 * @param endedAt 반납 날짜
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("UPDATE LentHistory lh "
+			+ "SET lh.endedAt = :endedAt "
+			+ "WHERE lh.userId IN (:userIds) "
+			+ "AND lh.endedAt IS NULL")
+	void updateEndedAtByUserIdIn(@Param("userIds") List<Long> userIds,
+			@Param("endedAt") LocalDateTime endedAt);
+
+	/**
+	 * 여러 대여 기록의 만료 시간을 수정합니다.
+	 *
+	 * @param lentHistoryIds 대여 기록 id {@link List}
+	 * @param expiredAt      만료 시간
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("UPDATE LentHistory lh "
+			+ "SET lh.expiredAt = :expiredAt "
+			+ "WHERE lh.id IN (:lentHistoryIds)")
+	void updateExpiredAtByIdIn(@Param("lentHistoryIds") List<Long> lentHistoryIds,
+			@Param("expiredAt") LocalDateTime expiredAt);
 }

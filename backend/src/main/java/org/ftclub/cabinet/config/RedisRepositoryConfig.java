@@ -18,8 +18,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @EnableRedisRepositories // Redis Repository 활성화
 public class RedisRepositoryConfig {
 
-	private final String PATTERN = "__keyevent@*__:expired";
-
 	@Value("${spring.redis.host}")
 	private String host;
 	@Value("${spring.redis.port}")
@@ -28,6 +26,7 @@ public class RedisRepositoryConfig {
 	@Bean
 	public RedisMessageListenerContainer redisMessageListenerContainer(
 			RedisConnectionFactory redisConnectionFactory) {
+
 		RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
 		redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
 		return redisMessageListenerContainer;
@@ -47,9 +46,9 @@ public class RedisRepositoryConfig {
 	@Bean
 	public RedisTemplate<?, ?> redisTemplate() {
 		RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
-//		GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
-		StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 		redisTemplate.setConnectionFactory(redisConnectionFactory());
+		StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+
 		redisTemplate.setKeySerializer(stringRedisSerializer);
 		redisTemplate.setValueSerializer(stringRedisSerializer);
 		redisTemplate.setHashKeySerializer(stringRedisSerializer);

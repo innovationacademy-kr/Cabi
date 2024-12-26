@@ -13,8 +13,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.http.Cookie;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -53,7 +52,7 @@ public class CookieManagerUnitTest {
 
 		String result = cookieManager.getCookieValue(request, "name2");
 
-		assertEquals(null, result);
+		assertNull(result);
 	}
 
 	@Test
@@ -70,7 +69,7 @@ public class CookieManagerUnitTest {
 		assertEquals(60 * 60 * 24 * jwtProperties.getExpiryDays(), cookie.getMaxAge());
 		assertEquals(path, cookie.getPath());
 		assertEquals(domainProperties.getLocal(), cookie.getDomain());
-		assertTrue(response.getCookie("name") != null);
+		assertNotNull(response.getCookie("name"));
 	}
 
 	@Test
@@ -88,7 +87,7 @@ public class CookieManagerUnitTest {
 		assertEquals(60 * 60 * 24 * jwtProperties.getExpiryDays(), cookie.getMaxAge());
 		assertEquals(path, cookie.getPath());
 		assertEquals(domainProperties.getCookieDomain(), cookie.getDomain());
-		assertTrue(response.getCookie("name") != null);
+		assertNotNull(response.getCookie("name"));
 	}
 
 	@Test
@@ -98,6 +97,6 @@ public class CookieManagerUnitTest {
 		Cookie cookie = response.getCookie("name");
 
 		assertEquals(0, cookie.getMaxAge());
-		assertEquals(null, cookie.getValue());
+		assertNull(cookie.getValue());
 	}
 }

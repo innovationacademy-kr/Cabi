@@ -3,6 +3,7 @@ package org.ftclub.cabinet.cabinet.service;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 import javax.transaction.Transactional;
@@ -39,7 +40,7 @@ public class CabinetFacadeServiceTest {
 		assertEquals(LentType.PRIVATE, cabinet.getLentType());
 		assertEquals(1, cabinet.getVisibleNum().intValue());
 		assertEquals(Location.of("새롬관", 2, "Oasis"), cabinet.getLocation());
-		assertEquals(null, cabinet.getTitle());
+		assertNull(cabinet.getTitle());
 	}
 
 	@Test
@@ -65,9 +66,9 @@ public class CabinetFacadeServiceTest {
 		assertEquals("user7", lentsOfCabinet.get(0).getName());
 	}
 
-	@Test
-	public void 사물함_섹션_정보_가져오기() {
-		System.out.println(
-				"cabinetFacadeService = " + cabinetFacadeService.getCabinetsPerSection("새롬관", 2));
-	}
+//	@Test
+//	public void 사물함_섹션_정보_가져오기() {
+//		System.out.println(
+//				"cabinetFacadeService = " + cabinetFacadeService.getCabinetsPerSection("새롬관", 2));
+//	}
 }

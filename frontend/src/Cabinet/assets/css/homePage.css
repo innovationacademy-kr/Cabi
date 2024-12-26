@@ -1,0 +1,32 @@
+@media screen and (max-width: 1100px) {
+  #infoWrap > .titleContainer {
+    width: 90%;
+    max-width: 800px;
+  }
+
+  #infoWrap .section {
+    flex-direction: column;
+    align-items: center;
+  }
+  #infoWrap .article {
+    width: 100%;
+    align-items: center;
+    margin-right: 0px;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  #infoWrap .title {
+    font-size: 1.5rem;
+  }
+  #infoWrap .subtitle {
+    font-size: 1.25rem;
+  }
+  #infoWrap .article > p {
+    font-size: 0.875rem;
+    letter-spacing: -0.02rem;
+  }
+  #infoWrap .button {
+    width: 100px;
+  }
+}

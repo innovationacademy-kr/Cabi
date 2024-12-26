@@ -28,14 +28,14 @@ class LentRepositoryTest {
 		// 빌리고 있는 유저가 없는 cabinet id
 		Long cabinetId = 2L;
 
-		Optional<LentHistory> ent = lentRepository.findFirstByCabinetIdAndEndedAtIsNull(cabinetId);
+		Optional<LentHistory> ent = lentRepository.findByCabinetIdAndEndedAtIsNull(cabinetId);
 		assertTrue(ent.isEmpty());
 
 		LentHistory lentHistory =
 				LentHistory.of(now, now.plusDays(3), 1L, cabinetId);
 
 		LentHistory saved = lentRepository.save(lentHistory);
-		ent = lentRepository.findFirstByCabinetIdAndEndedAtIsNull(cabinetId);
+		ent = lentRepository.findByCabinetIdAndEndedAtIsNull(cabinetId);
 		assertTrue(ent.isPresent());
 		assertEquals(saved, ent.get());
 	}
@@ -46,14 +46,14 @@ class LentRepositoryTest {
 		// 빌리고 있는 사물함이 없는 user id
 		Long userId = 1L;
 
-		Optional<LentHistory> ent = lentRepository.findFirstByUserIdAndEndedAtIsNull(userId);
+		Optional<LentHistory> ent = lentRepository.findByUserIdAndEndedAtIsNull(userId);
 		assertTrue(ent.isEmpty());
 
 		LentHistory lentHistory =
 				LentHistory.of(now, now.plusDays(3), userId, 1L);
 
 		LentHistory saved = lentRepository.save(lentHistory);
-		ent = lentRepository.findFirstByUserIdAndEndedAtIsNull(userId);
+		ent = lentRepository.findByUserIdAndEndedAtIsNull(userId);
 		assertTrue(ent.isPresent());
 		assertEquals(saved, ent.get());
 	}
@@ -62,12 +62,15 @@ class LentRepositoryTest {
 	void findByUserId() {
 		// 빌린 기록이 없는 user id
 		long userId = 18L;
-		List<LentHistory> lentHistories = lentRepository.findByUserId(userId, PageRequest.of(0, 1));
+		List<LentHistory> lentHistories = lentRepository.findPaginationByUserIdOrderByStartedAtDesc(
+				userId,
+				PageRequest.of(0, 1)).toList();
 		assertTrue(lentHistories.isEmpty());
 
 		// 빌린 기록이 12개 있는 user id
 		userId = 5L;
-		lentHistories = lentRepository.findByUserId(userId, PageRequest.of(0, 20));
+		lentHistories = lentRepository.findPaginationByUserIdOrderByStartedAtDesc(userId,
+				PageRequest.of(0, 20)).toList();
 		assertEquals(12, lentHistories.size());
 	}
 
@@ -75,13 +78,15 @@ class LentRepositoryTest {
 	void findByCabinetId() {
 		// 빌린 기록이 없는 cabinet id
 		long cabinetId = 1L;
-		List<LentHistory> lentHistories = lentRepository.findByCabinetId(cabinetId,
-				PageRequest.of(0, 1));
+		List<LentHistory> lentHistories = lentRepository.findPaginationByCabinetIdJoinCabinetAndUser(
+				cabinetId,
+				PageRequest.of(0, 1)).toList();
 		assertTrue(lentHistories.isEmpty());
 
 		// 빌린 기록이 6개 있는 cabinet id
 		cabinetId = 3L;
-		lentHistories = lentRepository.findByCabinetId(cabinetId, PageRequest.of(0, 20));
+		lentHistories = lentRepository.findPaginationByCabinetIdJoinCabinetAndUser(cabinetId,
+				PageRequest.of(0, 20)).toList();
 		assertEquals(6, lentHistories.size());
 	}
 
@@ -89,7 +94,7 @@ class LentRepositoryTest {
 	void countUserActiveLent() {
 		// 빌리고 잇는 기록이 1개인 user id
 		Long userId = 5L;
-		int count = lentRepository.countUserActiveLent(userId);
+		int count = lentRepository.countByUserIdAndEndedAtIsNull(userId);
 		assertEquals(1, count);
 	}
 
@@ -97,7 +102,7 @@ class LentRepositoryTest {
 	void countCabinetActiveLent() {
 		// 빌리고 있는 기록이 3개 있는 cabinet id
 		Long cabinetId = 4L;
-		int count = lentRepository.countCabinetActiveLent(cabinetId);
+		int count = lentRepository.countByCabinetIdAndEndedAtIsNull(cabinetId);
 		assertEquals(3, count);
 	}
 
@@ -105,7 +110,7 @@ class LentRepositoryTest {
 	void countUserAllLent() {
 		// 빌린 기록이 12개 있는 user id
 		Long userId = 5L;
-		int count = lentRepository.countUserAllLent(userId);
+		int count = lentRepository.countByUserId(userId);
 		assertEquals(12, count);
 	}
 
@@ -113,7 +118,7 @@ class LentRepositoryTest {
 	void countCabinetAllLent() {
 		// 빌린 기록이 6개 있는 cabinet id
 		Long cabinetId = 3L;
-		int count = lentRepository.countCabinetAllLent(cabinetId);
+		int count = lentRepository.countByCabinetId(cabinetId);
 		assertEquals(6, count);
 	}
 
@@ -121,10 +126,11 @@ class LentRepositoryTest {
 	void findAllActiveLentByCabinetId() {
 		// 빌리고 있는 기록이 3개 있는 cabinet id
 		long cabinetId = 4L;
-		List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+		List<LentHistory> lentHistories = lentRepository.findAllByCabinetIdAndEndedAtIsNull(
+				cabinetId);
 		assertEquals(3, lentHistories.size());
 		cabinetId = 2L;
-		lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+		lentHistories = lentRepository.findAllByCabinetIdAndEndedAtIsNull(cabinetId);
 		assertTrue(lentHistories.isEmpty());
 	}
 }

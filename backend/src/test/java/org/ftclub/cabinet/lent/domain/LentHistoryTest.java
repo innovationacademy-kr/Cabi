@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
+
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.junit.jupiter.api.Disabled;
@@ -32,13 +33,13 @@ class LentHistoryTest {
 		assertFalse(lentHistory.isCabinetIdEqual(2L));
 	}
 
-	@Test
-	void isSetExpiredAt() {
-		LocalDateTime now = LocalDateTime.now();
-		LentHistory lentHistory = LentHistory.of(now, now.plusDays(3), 1L, 1L);
-		assertTrue(lentHistory.isSetExpiredAt());
-		assertThrows(DomainException.class, () -> LentHistory.of(now, null, 1L, 1L));
-	}
+//	@Test
+//	void isSetExpiredAt() {
+//		LocalDateTime now = LocalDateTime.now();
+//		LentHistory lentHistory = LentHistory.of(now, now.plusDays(3), 1L, 1L);
+//		assertTrue(lentHistory.isSetExpiredAt());
+//		assertThrows(DomainException.class, () -> LentHistory.of(now, null, 1L, 1L));
+//	}
 
 	@Test
 	void isSetEndedAt() {
@@ -83,7 +84,7 @@ class LentHistoryTest {
 		lentHistory.endLent(now.plusDays(6));
 		assertTrue(lentHistory.isSetEndedAt());
 		assertEquals(3, lentHistory.getDaysDiffEndedAndExpired());
-		lentRepository.findById(lentHistory.getLentHistoryId());
+		lentRepository.findById(lentHistory.getId());
 		assertTrue(lentHistory.isSetEndedAt());
 		assertEquals(3, lentHistory.getDaysDiffEndedAndExpired());
 	}

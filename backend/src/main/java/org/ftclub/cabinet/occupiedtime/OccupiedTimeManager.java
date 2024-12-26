@@ -9,10 +9,6 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.config.HaneProperties;
 import org.ftclub.cabinet.dto.UserMonthDataDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.UtilException;
-import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,18 +24,21 @@ public class OccupiedTimeManager {
 
 	private static final int MAX_RETRY = 5;
 	private static final long DELAY_TIME = 2000;
-	private final HaneProperties haneProperties;
-	private final UserOptionalFetcher userOptionalFetcher;
 
+	private final HaneProperties haneProperties;
+
+	/**
+	 * 24HANE API 를 통해서 가져온 사용자의 사용시간 데이터를 필터링하여, 24HANE API 에서 제공하는 사용자의 사용시간 기준을 충족하는 사용자의 데이터만을
+	 * 가져온다.
+	 *
+	 * @param userMonthDataDtoList 24HANE API 를 통해서 가져온 사용자의 사용시간 데이터
+	 * @return 24HANE API 에서 제공하는 사용자의 사용시간 기준을 충족하는 사용자의 데이터
+	 */
 	public List<UserMonthDataDto> filterToMetUserMonthlyTime(
 			UserMonthDataDto[] userMonthDataDtoList) {
-		List<User> allCabiUsers = userOptionalFetcher.findAllActiveUsers();
-		List<UserMonthDataDto> userMonthData = Arrays.stream(userMonthDataDtoList)
-				.filter(dto -> allCabiUsers.stream()
-						.anyMatch(user -> user.getName().equals(dto.getLogin())))
-				.filter(dto -> dto.getMonthAccumationTime() > haneProperties.getLimit_time())
+		return Arrays.stream(userMonthDataDtoList)
+				.filter(dto -> dto.getMonthAccumationTime() > haneProperties.getLimitTimeSeconds())
 				.collect(Collectors.toList());
-		return userMonthData;
 	}
 
 	/**
@@ -51,8 +50,11 @@ public class OccupiedTimeManager {
 	public UserMonthDataDto[] getUserLastMonthOccupiedTime() {
 		LocalDateTime time = LocalDateTime.now();
 
-		String currentYear = String.valueOf(time.getYear());
 		String currentMonth = String.valueOf(time.minusMonths(1).getMonthValue());
+		String currentYear = String.valueOf(time.getYear());
+		if (currentMonth.equals("12")) {
+			currentYear = String.valueOf(time.minusYears(1).getYear());
+		}
 
 		String apiUrl = haneProperties.getUrl() + "?year=" + currentYear
 				+ "&month=" + currentMonth;
@@ -83,7 +85,7 @@ public class OccupiedTimeManager {
 				log.info("요청에 실패했습니다. 최대 {}번 재시도합니다. 현재 시도 횟수: {}", MAX_RETRY, attempt);
 				if (attempt == MAX_RETRY) {
 					log.error("요청에 실패했습니다. 최대 재시도 횟수를 초과했습니다. {}", e.getMessage());
-					throw new UtilException(ExceptionStatus.HANEAPI_ERROR);
+					throw ExceptionStatus.HANEAPI_ERROR.asUtilException();
 				}
 			}
 		}
