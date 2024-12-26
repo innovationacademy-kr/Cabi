@@ -152,12 +152,6 @@ const AnimatedDropdownOptionsStyled = styled.ul<{
   }
 `;
 
-// TODO: 확인 후 삭제
-// const DropdownOptions = styled.ul`
-//   list-style-type: none;
-//   padding: 0;
-// `;
-
 const DropdownOptionStyled = styled.li`
   font-size: 0.875rem;
   padding: 10px;
