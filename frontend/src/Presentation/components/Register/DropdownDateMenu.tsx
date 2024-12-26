@@ -72,11 +72,11 @@ const DropdownDateMenu = ({
         isVisible={dropdownState.isVisible}
         clickCount={clickCount}
       >
-        {data.map((time) => {
+        {data.map((time, index) => {
           const displayTime = time.split("/").slice(1).join("/");
           return (
             <DropdownOption
-              key={time}
+              key={index}
               onClick={() => handleOptionSelect(time, displayTime)}
               invalid={invalidDates?.includes(time)}
             >
