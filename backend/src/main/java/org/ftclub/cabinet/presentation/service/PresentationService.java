@@ -1,12 +1,16 @@
 package org.ftclub.cabinet.presentation.service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.dto.AbleDateResponseDto;
 import org.ftclub.cabinet.dto.InvalidDateResponseDto;
 import org.ftclub.cabinet.dto.PresentationFormData;
 import org.ftclub.cabinet.dto.PresentationFormRequestDto;
@@ -19,6 +23,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationStatus;
+import org.ftclub.cabinet.presentation.domain.PresentationTime;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -35,10 +40,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class PresentationService {
 
-	private static final Integer START_DAY = 1;
+	private static final Integer PRESENTATION_PERIOD = 3;
 	private static final Integer DEFAULT_PAGE = 0;
-	// 쿼리로 받?
 	private static final Integer MAX_MONTH = 3;
+	private static final Integer FETCH_MULTIPLIER = 2;
 	private static final String DATE_TIME = "dateTime";
 	private final PresentationRepository presentationRepository;
 	private final PresentationPolicyService presentationPolicyService;
@@ -56,15 +61,15 @@ public class PresentationService {
 	public void createPresentationForm(Long userId, PresentationFormRequestDto dto) {
 		presentationPolicyService.verifyReservationDate(dto.getDateTime());
 
-		Presentation presentation =
-				Presentation.of(dto.getCategory(), dto.getDateTime(),
-						dto.getPresentationTime(), dto.getSubject(), dto.getSummary(),
-						dto.getDetail());
+		Presentation dummyForm =
+				presentationQueryService.getOneDummyByDate(dto.getDateTime());
+
+		dummyForm.updateDummyToUserForm(dto.getCategory(),
+				dto.getPresentationTime(), dto.getDateTime(),
+				dto.getSubject(), dto.getSummary(), dto.getDetail());
+
 		User user = userQueryService.getUser(userId);
-
-		presentation.setUser(user);
-
-		presentationRepository.save(presentation);
+		dummyForm.setUser(user);
 	}
 
 	/**
@@ -92,20 +97,19 @@ public class PresentationService {
 	 * @param count
 	 * @return
 	 */
-	public List<Presentation> getLatestPastPresentations(int count) {
+	public List<Presentation> getLatestPastPresentations(int count, PresentationStatus status) {
 		LocalDate now = LocalDate.now();
 		LocalDateTime limit = now.atStartOfDay();
 		LocalDateTime start = limit.minusYears(10);
-		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
+		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count * FETCH_MULTIPLIER,
 				Sort.by(DATE_TIME).descending());
 
-		List<Presentation> presentations =
-				presentationQueryService.getPresentationsBetweenWithPageRequest(start, limit,
-						pageRequest);
+		List<Presentation> userForms = presentationQueryService.findUserFormsWithinPeriod(
+				start, limit, pageRequest);
 
-		return presentations.stream()
-				.filter(presentation ->
-						presentation.getPresentationStatus().equals(PresentationStatus.DONE))
+		return userForms.stream()
+				.filter(p -> p.getPresentationStatus().equals(status))
+				.limit(count)
 				.collect(Collectors.toList());
 	}
 
@@ -115,19 +119,19 @@ public class PresentationService {
 	 * @param count
 	 * @return
 	 */
-	public List<Presentation> getLatestUpcomingPresentations(int count) {
+	public List<Presentation> getLatestUpcomingPresentationsByCount(int count,
+			PresentationStatus status) {
 		LocalDate now = LocalDate.now();
 		LocalDateTime start = now.atStartOfDay();
 		LocalDateTime end = start.plusMonths(MAX_MONTH);
-		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count,
+		PageRequest pageRequest = PageRequest.of(DEFAULT_PAGE, count * FETCH_MULTIPLIER,
 				Sort.by(DATE_TIME).ascending());
 
-		List<Presentation> presentations = presentationQueryService.
-				getPresentationsBetweenWithPageRequest(start, end, pageRequest);
-
-		return presentations.stream()
-				.filter(presentation ->
-						presentation.getPresentationStatus().equals(PresentationStatus.EXPECTED))
+		List<Presentation> userForms = presentationQueryService.findUserFormsWithinPeriod(
+				start, end, pageRequest);
+		return userForms.stream()
+				.filter(p -> p.getPresentationStatus().equals(status))
+				.limit(count)
 				.collect(Collectors.toList());
 	}
 
@@ -140,9 +144,12 @@ public class PresentationService {
 	 */
 	public PresentationMainData getPastAndUpcomingPresentations(
 			int pastFormCount, int upcomingFormCount) {
-		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount);
-		List<Presentation> upcomingPresentations = getLatestUpcomingPresentations(
-				upcomingFormCount);
+		List<Presentation> pastPresentations = getLatestPastPresentations(pastFormCount,
+				PresentationStatus.DONE);
+
+		List<Presentation> upcomingPresentations =
+				getLatestUpcomingPresentationsByCount(upcomingFormCount,
+						PresentationStatus.EXPECTED);
 
 		List<PresentationFormData> past = pastPresentations.stream()
 				.map(presentationMapper::toPresentationFormDataDto)
@@ -201,9 +208,22 @@ public class PresentationService {
 		Presentation presentationToUpdate =
 				presentationRepository.findById(formId)
 						.orElseThrow(ExceptionStatus.INVALID_FORM_ID::asServiceException);
-		//날짜 변경시에만 유효성 검증
+
+		// 날짜 변경시에만 유효성 검증
 		if (!presentationToUpdate.getDateTime().isEqual(dto.getDateTime())) {
 			presentationPolicyService.verifyReservationDate(dto.getDateTime());
+		}
+
+		// 발표 취소 시 해당 날짜에 더미 폼 생성
+		if (dto.getStatus() == PresentationStatus.CANCEL) {
+			Presentation presentation =
+					Presentation.of(
+							dto.getDateTime(),
+							PresentationTime.HALF,
+							"dummy",
+							"dummy",
+							"dummy");
+			presentationRepository.save(presentation);
 		}
 
 		presentationToUpdate.adminUpdate(dto.getStatus(), dto.getDateTime(), dto.getLocation());
@@ -225,5 +245,71 @@ public class PresentationService {
 				.collect(Collectors.toList());
 
 		return new PresentationMyPagePaginationDto(result, presentations.getTotalElements());
+	}
+
+	/*
+		현재 달 기준 3달 앞까지 (ex.현재 1월 : 1, 2, 3월 dummy form 생성)
+		2, 4주인 수요일의 form 만들기
+		category Dummy로 만들기
+	 */
+	@Transactional
+	public void generatePresentationFormsEveryThreeMonth(LocalDate nowDate) {
+		List<LocalDateTime> wednesdays = getDummyPresentationFormsDate(nowDate);
+		List<Presentation> presentations = wednesdays.stream()
+				.map(wednesday -> Presentation.of(
+						wednesday,
+						PresentationTime.HALF,
+						"dummy",
+						"dummy",
+						"dummy"
+				))
+				.collect(Collectors.toList());
+
+		presentationRepository.saveAll(presentations);
+	}
+
+	/**
+	 * 스케줄링이 도는 날짜 기준으로 2개월 후의 더미 데이터를 1개 작성한다.
+	 *
+	 * @param nowDate
+	 * @return
+	 */
+	public List<LocalDateTime> getDummyPresentationFormsDate(LocalDate nowDate) {
+		List<LocalDateTime> wednesdays = new ArrayList<>();
+
+		// 2개월 뒤의 첫째 날을 구한다
+		LocalDate firstDayOfMonth =
+				nowDate.plusMonths(2).withDayOfMonth(1);
+
+		// 해당 월의 첫 번째 수요일을 찾는다
+		LocalDate firstWednesday = firstDayOfMonth.with(
+				TemporalAdjusters.nextOrSame(DayOfWeek.WEDNESDAY));
+
+		// 2번째 수요일은 첫 번째 수요일에서 1주 후
+		LocalDate secondWednesday = firstWednesday.plusWeeks(1);
+
+		// 4번째 수요일은 첫 번째 수요일에서 3주 후
+		LocalDate fourthWednesday = firstWednesday.plusWeeks(3);
+
+		wednesdays.add(secondWednesday.atStartOfDay().withHour(14));
+		wednesdays.add(fourthWednesday.atStartOfDay().withHour(14));
+		return wednesdays;
+	}
+
+	public AbleDateResponseDto getAbleDate() {
+		LocalDateTime now = LocalDateTime.now()
+				.withHour(0)
+				.withMinute(0)
+				.withSecond(0);
+		List<Presentation> dummyDates =
+				presentationQueryService.getDummyDateBetweenMonth(now,
+						now.plusMonths(PRESENTATION_PERIOD));
+
+		List<LocalDateTime> result =
+				dummyDates.stream()
+						.map(Presentation::getDateTime)
+						.collect(Collectors.toList());
+
+		return new AbleDateResponseDto(result);
 	}
 }

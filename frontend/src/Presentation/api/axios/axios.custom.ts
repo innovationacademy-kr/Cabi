@@ -75,6 +75,16 @@ export const axiosMyPresentationLog = async (page: number): Promise<any> => {
   }
 };
 
+const axiosGetPresentationAbleDatesURL = "/v5/presentation/able-date";
+export const axiosGetPresentationAbleDates = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosGetPresentationAbleDatesURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 /**
  * 수요지식회 (구 까비지식회) Admin API
  */

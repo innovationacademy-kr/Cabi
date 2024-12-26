@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.utils.scheduler;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.FtClubCabinetException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
+import org.ftclub.cabinet.presentation.service.PresentationService;
 import org.ftclub.cabinet.user.service.LentExtensionManager;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
@@ -39,6 +41,7 @@ public class SystemScheduler {
 	private final BlackholeManager blackholeManager;
 	private final ReleaseManager releaseManager;
 	private final DiscordWebHookMessenger discordWebHookMessenger;
+	private final PresentationService presentationService;
 
 	private void errorHandle(Exception e, DiscordScheduleAlarmMessage message) {
 		if (!(e instanceof FtClubCabinetException)) {
@@ -183,5 +186,12 @@ public class SystemScheduler {
 	public void sectionAlarm() {
 		log.info("called sectionAlarm");
 		sectionAlarmManager.sendSectionAlarm();
+	}
+
+	@Scheduled(cron = "${cabinet.schedule.cron.generate-presentation-form}") // dev yml에도 추가하기
+	public void generatePresentationForm() {
+		log.info("generate presentation forms every 3 months");
+		LocalDate nowDate = LocalDate.now();
+		presentationService.generatePresentationFormsEveryThreeMonth(nowDate);
 	}
 }

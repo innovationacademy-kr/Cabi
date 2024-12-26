@@ -80,7 +80,7 @@ const DetailTableContainer = ({
     let itemStatus = itemType.EVENT_AVAILABLE;
 
     // 발표가 없다면
-    if (!item.id) {
+    if (!item.userName) {
       const date = new Date();
       let dateISO = toISOStringwithTimeZone(date);
       const dateObj = new Date(dateISO);
@@ -104,7 +104,10 @@ const DetailTableContainer = ({
         tableHeadEntries={tableHeadEntries}
       />
       {adminModal.statusModal && (
-        <EditStatusModal closeModal={() => closeAdminModal("statusModal")} />
+        <EditStatusModal
+          list={list}
+          closeModal={() => closeAdminModal("statusModal")}
+        />
       )}
     </>
   );

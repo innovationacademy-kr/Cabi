@@ -9,59 +9,14 @@ import {
   axiosGetPresentationSchedule,
   getAdminPresentationSchedule,
 } from "@/Presentation/api/axios/axios.custom";
-import {
-  calculateAvailableDaysInWeeks,
-  makeIDateObj,
-  toISOStringwithTimeZone,
-} from "@/Presentation/utils/dateUtils";
-import { WEDNESDAY } from "@/Presentation/constants/dayOfTheWeek";
-import {
-  AVAILABLE_WEEKS,
-  FUTURE_MONTHS_TO_DISPLAY,
-} from "@/Presentation/constants/policy";
+import { makeIDateObj } from "@/Presentation/utils/dateUtils";
+import { FUTURE_MONTHS_TO_DISPLAY } from "@/Presentation/constants/policy";
 
 export interface IDate {
   year: string;
   month: string;
   day: string;
 }
-
-const createEmptyPresentation = (day: Date) => ({
-  id: null,
-  subject: null,
-  summary: null,
-  detail: null,
-  dateTime: toISOStringwithTimeZone(day),
-  category: null,
-  userName: null,
-  presentationTime: null,
-  presentationStatus: null,
-  presentationLocation: null,
-});
-
-const findExistingPresentation = (
-  presentations: IPresentationScheduleDetailInfo[],
-  day: Date
-) => {
-  return presentations.find((p) => {
-    const presentationDate = new Date(p.dateTime);
-    return (
-      presentationDate.getFullYear() === day.getFullYear() &&
-      presentationDate.getMonth() === day.getMonth() &&
-      presentationDate.getDate() === day.getDate()
-    );
-  });
-};
-
-const mergePresentationsWithDays = (
-  presentations: IPresentationScheduleDetailInfo[],
-  days: Date[]
-) => {
-  return days.map((day) => {
-    const existingPresentation = findExistingPresentation(presentations, day);
-    return existingPresentation || createEmptyPresentation(day);
-  });
-};
 
 const DetailContentContainer = () => {
   const [currentDate, setCurrentDate] = useState<IDate | null>(null);
@@ -105,21 +60,8 @@ const DetailContentContainer = () => {
         requestDate.year,
         requestDate.month
       );
-      const availableDays = calculateAvailableDaysInWeeks(
-        new Date(
-          parseInt(requestDate.year),
-          parseInt(requestDate.month) - 1,
-          1
-        ),
-        AVAILABLE_WEEKS,
-        WEDNESDAY,
-        1
-      );
-      const mergedPresentationInfo = mergePresentationsWithDays(
-        response.data.forms as IPresentationScheduleDetailInfo[],
-        availableDays
-      );
-      setPresentationDetailInfo(mergedPresentationInfo);
+      const presentationInfo = response.data.forms;
+      setPresentationDetailInfo(presentationInfo);
     } catch (error) {
       console.error("Error fetching presentation schedule:", error);
     }
@@ -141,13 +83,32 @@ const DetailContentContainer = () => {
     } else {
       if (currentDateMonth === 12) {
         requestDate.year = (currentDateYear + 1).toString();
-        requestDate.month = (1).toString();
+        requestDate.month = padToNDigits(1, 2);
       } else {
         requestDate.month = padToNDigits(currentDateMonth + 1, 2);
       }
     }
 
     setCurrentDate(requestDate);
+  };
+
+  const compareDates = (date1: IDate, date2: IDate): number => {
+    const d1 = new Date(parseInt(date1.year), parseInt(date1.month) - 1);
+    const d2 = new Date(parseInt(date2.year), parseInt(date2.month) - 1);
+    return d1.getTime() - d2.getTime();
+  };
+
+  const getMaxDate = (baseDate: IDate, monthsToAdd: number): IDate => {
+    const date = new Date(
+      parseInt(baseDate.year),
+      parseInt(baseDate.month) - 1
+    );
+    date.setMonth(date.getMonth() + monthsToAdd);
+    return {
+      year: date.getFullYear().toString(),
+      month: (date.getMonth() + 1).toString(),
+      day: baseDate.day,
+    };
   };
 
   return (
@@ -157,13 +118,15 @@ const DetailContentContainer = () => {
       presentationDetailInfo={presentationDetailInfo}
       canMoveLeft={
         currentDate
-          ? parseInt(currentDate.month) > parseInt(firstPresentationDate.month)
+          ? compareDates(currentDate, firstPresentationDate) > 0
           : false
       }
       canMoveRight={
         currentDate && todayDate
-          ? parseInt(currentDate.month) <
-            parseInt(todayDate.month) + FUTURE_MONTHS_TO_DISPLAY - 1
+          ? compareDates(
+              currentDate,
+              getMaxDate(todayDate, FUTURE_MONTHS_TO_DISPLAY - 1)
+            ) < 0
           : false
       }
     />

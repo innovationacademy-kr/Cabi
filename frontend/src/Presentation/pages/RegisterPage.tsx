@@ -16,13 +16,10 @@ import {
   PresentationTimeMap,
 } from "@/Presentation/assets/data/maps";
 import { PresentationCategoryType } from "@/Presentation/types/enum/presentation.type.enum";
+import { axiosGetPresentationAbleDates } from "@/Presentation/api/axios/axios.custom";
 import useInput, { IValidationResult } from "@/Presentation/hooks/useInput";
 import useInvalidDates from "@/Presentation/hooks/useInvalidDates";
-import { calculateAvailableDaysInWeeks } from "@/Presentation/utils/dateUtils";
-import { WEDNESDAY } from "@/Presentation/constants/dayOfTheWeek";
 import {
-  AVAILABLE_WEEKS,
-  FUTURE_MONTHS_TO_DISPLAY,
   MAX_CONTENT_LENGTH,
   MAX_SUMMARY_LENGTH,
   MAX_TITLE_LENGTH,
@@ -97,7 +94,7 @@ const RegisterPage = () => {
   );
 
   const invalidDates: string[] = useInvalidDates()?.map((date) =>
-    format(date, "M/d")
+    format(date, "y/M/d")
   );
 
   const handleFocus = (sectionName: string) => {
@@ -143,17 +140,22 @@ const RegisterPage = () => {
   };
 
   useEffect(() => {
-    const availableDates: Date[] = calculateAvailableDaysInWeeks(
-      new Date(),
-      AVAILABLE_WEEKS,
-      WEDNESDAY,
-      FUTURE_MONTHS_TO_DISPLAY,
-      true
-    );
-    const formattedAvailableDates = availableDates.map((date) =>
-      format(date, "M/d")
-    );
-    setAvailableDates(formattedAvailableDates);
+    const fetchPresentationAbleDates = async () => {
+      try {
+        const response = await axiosGetPresentationAbleDates();
+        const availableDates = response.data.results;
+        availableDates.sort();
+        const formattedAvailableDates = availableDates.map(
+          (dateTime: string) => {
+            return format(new Date(dateTime), "y/M/d");
+          }
+        );
+        setAvailableDates(formattedAvailableDates);
+      } catch (error) {
+        console.error("Failed to get able dates", error);
+      }
+    };
+    fetchPresentationAbleDates();
   }, []);
 
   return (

@@ -786,6 +786,48 @@ CREATE TABLE `section_alarm`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
 
+DROP TABLE IF EXISTS `presentation`;
+CREATE TABLE `presentation`
+(
+    `id`                   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `category`              VARCHAR(255) NULL,
+    `date_time`             DATETIME(6) NULL,
+    `detail`                VARCHAR(500) NULL,
+    `presentation_location` VARCHAR(255) NULL,
+    `presentation_status`   VARCHAR(255) NULL,
+    `presentation_time`     VARCHAR(255) NULL,
+    `subject`               VARCHAR(25) NULL,
+    `summary`               VARCHAR(40) NULL,
+    `user_id`               BIGINT NULL,
+    CONSTRAINT `presentation_user_id`
+        FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+
+LOCK TABLES `presentation` WRITE;
+/*!40000 ALTER TABLE `presentation`
+    DISABLE KEYS */;
+INSERT INTO `presentation`
+VALUES (1, 'JOB', '2024-10-09 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (2, NULL, '2024-10-23 14:00:00', 'dummy', 'BASEMENT', 'CANCEL', 'HALF', 'dummy', 'dummy', NULL),
+       (3, NULL, '2024-11-05 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (4, 'JOB', '2024-11-19 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (5, NULL, '2024-12-11 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (6, 'JOB', '2024-12-25 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (7, NULL, '2025-01-08 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (8, NULL, '2025-01-22 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (9, NULL, '2025-02-12 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (10, NULL, '2025-02-26 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (11, NULL, '2025-03-12 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (12, NULL, '2025-03-26 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
+       (13, NULL, '2025-04-09 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
+       (14, NULL, '2025-04-23 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
+       (15, NULL, '2025-05-07 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
+       (16, NULL, '2025-05-21 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
+/*!40000 ALTER TABLE `presentation`
+    ENABLE KEYS */;
+UNLOCK TABLES;
 
 /*!40103 SET TIME_ZONE = @OLD_TIME_ZONE */;
 
