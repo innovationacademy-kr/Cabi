@@ -31,8 +31,8 @@ const DropdownDateMenu = ({
   });
 
   const handleOptionSelect = useCallback(
-    (option: string) => {
-      setSelectedOption(option);
+    (option: string, displayOption: string) => {
+      setSelectedOption(displayOption);
       setDropdownState((prev) => ({
         ...prev,
         isVisible: false,
@@ -68,20 +68,23 @@ const DropdownDateMenu = ({
           rotated={dropdownState.isFocused}
         />
       </RegisterTimeInputStyled>
-      <AnimatedDropdownOptions
+      <AnimatedDropdownOptionsStyled
         isVisible={dropdownState.isVisible}
         clickCount={clickCount}
       >
-        {data.map((time) => (
-          <DropdownOption
-            key={time}
-            onClick={() => handleOptionSelect(time)}
-            invalid={invalidDates?.includes(time)}
-          >
-            {time}
-          </DropdownOption>
-        ))}
-      </AnimatedDropdownOptions>
+        {data.map((time, index) => {
+          const displayTime = time.split("/").slice(1).join("/");
+          return (
+            <DropdownOption
+              key={index}
+              onClick={() => handleOptionSelect(time, displayTime)}
+              invalid={invalidDates?.includes(time)}
+            >
+              {displayTime}
+            </DropdownOption>
+          );
+        })}
+      </AnimatedDropdownOptionsStyled>
     </DropdownContainer>
   );
 };
@@ -116,7 +119,7 @@ const DropdownContainer = styled.div`
   position: relative;
 `;
 
-const AnimatedDropdownOptions = styled.ul<{
+const AnimatedDropdownOptionsStyled = styled.ul<{
   isVisible: boolean;
   clickCount: number;
 }>`
