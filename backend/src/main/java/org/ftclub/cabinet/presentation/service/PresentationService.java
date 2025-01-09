@@ -73,7 +73,7 @@ public class PresentationService {
 	}
 
 	/**
-	 * 예약 불가능한 날짜들을 반환합니다
+	 * 예약 불가능한 날짜들을 반환합니다.
 	 *
 	 * @return
 	 */
