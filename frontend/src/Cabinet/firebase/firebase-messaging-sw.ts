@@ -21,26 +21,16 @@ export const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 let messaging: null | Messaging = null;
-let isApiSupported = false;
-
-// NOTE : 사용자 브라우저가 푸시 알림 기능을 지원하는지 확인
-isSupported().then((result) => {
-  isApiSupported = result;
-  if (
-    typeof window !== "undefined" &&
-    typeof window.navigator !== "undefined" &&
-    isApiSupported
-  ) {
-    messaging = getMessaging(app);
-  }
-});
-
 const unsupportedMsg = `사용 중인 환경에서는 푸시 알림 기능이
 지원되지 않습니다.
 데스크탑 이용을 권장드립니다.`;
 
-const checkBrowserSupport = () => {
-  if (!isApiSupported) {
+// NOTE : 사용자 브라우저가 푸시 알림 기능을 지원하는지 확인
+const checkBrowserSupport = async () => {
+  const isApiSupported = await isSupported();
+
+  if (isApiSupported) messaging = getMessaging(app);
+  else {
     let error = new Error(unsupportedMsg);
     error.name = "브라우저 알림 지원 제한";
     throw error;
@@ -49,7 +39,7 @@ const checkBrowserSupport = () => {
 
 // FCM APP을 등록 후 브라우저 알림 권한을 요청하고, 토큰을 반환
 export const requestFcmAndGetDeviceToken = async (): Promise<string | null> => {
-  checkBrowserSupport();
+  await checkBrowserSupport();
 
   console.log("권한 요청 중...");
   const permission = await Notification.requestPermission();
@@ -77,7 +67,7 @@ export const requestFcmAndGetDeviceToken = async (): Promise<string | null> => {
 
 // FCM 토큰 제거 및 브라우저 알람 권한 해제
 export const deleteFcmToken = async (): Promise<void> => {
-  checkBrowserSupport();
+  await checkBrowserSupport();
 
   await deleteToken(messaging!);
   console.log("Token deleted.");
