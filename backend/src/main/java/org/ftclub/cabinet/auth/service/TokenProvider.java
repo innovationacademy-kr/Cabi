@@ -36,7 +36,7 @@ public class TokenProvider {
 		claims.put("email", user.getEmail());
 		claims.put("name", user.getName());
 		claims.put("blackholedAt", user.getBlackholedAtString());
-//		claims.put("role", user.getRole());
+		claims.put("role", user.getRole());
 
 		return Jwts.builder()
 				.setClaims(claims)
