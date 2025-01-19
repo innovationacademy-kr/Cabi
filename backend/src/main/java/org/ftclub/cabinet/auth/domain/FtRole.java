@@ -8,6 +8,7 @@ public enum FtRole {
 	CADET,
 	MEMBER,
 	INACTIVE,
+	AGU,
 	PISCINER;
 
 	/**

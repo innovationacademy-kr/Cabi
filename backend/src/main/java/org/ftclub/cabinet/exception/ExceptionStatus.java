@@ -86,7 +86,15 @@ public enum ExceptionStatus {
 	NOT_FOUND_SECTION(HttpStatus.BAD_REQUEST, "사물함 구역 정보를 찾을 수 없습니다."),
 	ITEM_NOT_OWNED(HttpStatus.BAD_REQUEST, "해당 아이템을 보유하고 있지 않습니다"),
 	ITEM_USE_DUPLICATED(HttpStatus.FORBIDDEN, "아이템이 중복 사용되었습니다."),
-	INVALID_AMOUNT(HttpStatus.BAD_REQUEST, "코인 지급양은 비어있을 수 없습니다.");
+	INVALID_AMOUNT(HttpStatus.BAD_REQUEST, "코인 지급양은 비어있을 수 없습니다."),
+	FORBIDDEN_USER(HttpStatus.FORBIDDEN, "권한이 부족한 유저입니다"),
+
+	// Security 토큰 관련 -> 존재하지 않거나, malFormed, signature, expired
+	NOT_FOUND_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT 토큰이 존재하지 않습니다."),
+	INVALID_TYPE_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "올바르지 않은 토큰입니다."),
+	EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+
+	;
 
 	final private int statusCode;
 	final private String message;

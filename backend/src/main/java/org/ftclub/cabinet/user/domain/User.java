@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.club.domain.ClubRegistration;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.DomainException;
@@ -51,9 +54,9 @@ public class User {
 	private LocalDateTime blackholedAt = null;
 	@Column(name = "DELETED_AT", length = 32)
 	private LocalDateTime deletedAt = null;
-	//	@Enumerated(value = EnumType.STRING)
-//	@Column(name = "ROLE", length = 32, nullable = false)
-//	private UserRole role;
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "ROLE", length = 32, nullable = false)
+	private FtRole role;
 	@Column(name = "SLACK_ALARM", columnDefinition = "boolean default true")
 	private boolean slackAlarm;
 	@Column(name = "EMAIL_ALARM", columnDefinition = "boolean default true")
