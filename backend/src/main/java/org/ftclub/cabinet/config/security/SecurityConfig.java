@@ -38,10 +38,13 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.mvcMatchers("/actuator/**", "/v4/auth/**").permitAll()
 						.mvcMatchers("/v4/admin/**").hasRole(AdminRole.ADMIN.name())
-						.mvcMatchers("/v4/users/me").hasRole(FtRole.CADET.name())
+						.mvcMatchers("/v4/users/me").hasRole(FtRole.USER.name())
 				)
 				.sessionManagement(sessionManagement
 						-> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.oauth2Login()
+				.loginPage("/v4/auth/login")
+				.and()
 				.exceptionHandling(handler -> handler.authenticationEntryPoint(entrypoint))
 		;
 //				.oauth2Login(oauth ->

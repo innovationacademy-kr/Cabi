@@ -121,4 +121,9 @@ public enum ExceptionStatus {
 	public UtilException asUtilException() {
 		return new UtilException(this);
 	}
+
+	// Spring Security Exception 추가
+	public SpringSecurityException asSpringSecurityException() {
+		return new SpringSecurityException(this);
+	}
 }
