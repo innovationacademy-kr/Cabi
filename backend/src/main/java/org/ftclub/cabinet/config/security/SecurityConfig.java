@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
-	private final CustomOAuth2UserService userService;
+	private final CustomOAuth2UserService customOAuth2UserService;
 	private final AuthenticationEntryPoint entrypoint;
 
 	@Bean
@@ -41,7 +41,7 @@ public class SecurityConfig {
 						.mvcMatchers("/v4/users/me").hasRole(FtRole.USER.name())
 				)
 				.oauth2Login(oauth -> oauth
-						.userInfoEndpoint(user -> user.userService(userService))
+						.userInfoEndpoint(user -> user.userService(customOAuth2UserService))
 				)
 				.exceptionHandling(handler -> handler.authenticationEntryPoint(entrypoint))
 		;
