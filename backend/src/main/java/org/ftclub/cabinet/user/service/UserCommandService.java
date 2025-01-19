@@ -33,7 +33,8 @@ public class UserCommandService {
 		}
 //		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
 //				UserRole.USER);
-		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt());
+		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
+				profile.getRole());
 		return userRepository.save(user);
 	}
 
@@ -43,14 +44,14 @@ public class UserCommandService {
 	 * @param clubName 동아리 이름
 	 * @return 생성된 동아리 유저 객체
 	 */
-	public User createClubUser(String clubName) {
-		if (userRepository.existsByNameAndEmail(clubName, clubName + "@ftclub.org")) {
-			throw ExceptionStatus.EXISTED_CLUB_USER.asServiceException();
-		}
-//		User user = User.of(clubName, clubName + "@ftclub.org", null, UserRole.CLUB);
-		User user = User.of(clubName, clubName + "@ftclub.org", null);
-		return userRepository.save(user);
-	}
+//	public User createClubUser(String clubName) {
+//		if (userRepository.existsByNameAndEmail(clubName, clubName + "@ftclub.org")) {
+//			throw ExceptionStatus.EXISTED_CLUB_USER.asServiceException();
+//		}
+////		User user = User.of(clubName, clubName + "@ftclub.org", null, UserRole.CLUB);
+//		User user = User.of(clubName, clubName + "@ftclub.org", null);
+//		return userRepository.save(user);
+//	}
 
 	/**
 	 * 동아리 유저의 이름을 변경합니다.

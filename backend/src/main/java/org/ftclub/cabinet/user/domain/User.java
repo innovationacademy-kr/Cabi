@@ -68,17 +68,17 @@ public class User {
 	@Column(name = "COIN")
 	private Long coin;
 
-	protected User(String name, String email, LocalDateTime blackholedAt) {
+	protected User(String name, String email, LocalDateTime blackholedAt, FtRole role) {
 		this.name = name;
 		this.email = email;
 		this.blackholedAt = blackholedAt;
 		this.coin = 0L;
-//		this.role = userRole;
+		this.role = role;
 		setDefaultAlarmStatus();
 	}
 
-	public static User of(String name, String email, LocalDateTime blackholedAt) {
-		User user = new User(name, email, blackholedAt);
+	public static User of(String name, String email, LocalDateTime blackholedAt, FtRole role) {
+		User user = new User(name, email, blackholedAt, role);
 		ExceptionUtil.throwIfFalse(user.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return user;
