@@ -9,6 +9,7 @@ public enum FtRole {
 	MEMBER,
 	INACTIVE,
 	AGU,
+	USER,
 	PISCINER;
 
 	/**
@@ -19,6 +20,6 @@ public enum FtRole {
 	 * @return 본 과정 이상의 사용자인지 여부
 	 */
 	public boolean isInCursus() {
-		return this == CADET || this == MEMBER || this == STAFF;
+		return this == CADET || this == MEMBER || this == STAFF || this == USER;
 	}
 }

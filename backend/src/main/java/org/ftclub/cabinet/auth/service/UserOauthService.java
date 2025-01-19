@@ -171,7 +171,9 @@ public class UserOauthService {
 			return FtRole.PISCINER;
 		}
 
-		return (blackHoledAt == null) ? FtRole.MEMBER : FtRole.CADET;
+		return FtRole.USER;
+		// 이후 멤버, 카뎃으로 인가 분류해야할 때 변경
+//		return (blackHoledAt == null) ? FtRole.MEMBER : FtRole.CADET;
 	}
 
 	/**
