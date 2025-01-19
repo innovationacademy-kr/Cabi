@@ -155,6 +155,10 @@ public class UserOauthService {
 		boolean isActive = rootNode.get("active?").asBoolean();
 		JsonNode cursusUsersNode = rootNode.get("cursus_users");
 
+		if (!isActive && blackHoledAt.isAfter(LocalDateTime.now())) {
+			return FtRole.AGU;
+		}
+
 		if (!isActive) {
 			return FtRole.INACTIVE;
 		}
