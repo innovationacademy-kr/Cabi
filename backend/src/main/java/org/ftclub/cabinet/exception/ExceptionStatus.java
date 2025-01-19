@@ -93,6 +93,7 @@ public enum ExceptionStatus {
 	NOT_FOUND_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT 토큰이 존재하지 않습니다."),
 	INVALID_TYPE_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "올바르지 않은 토큰입니다."),
 	EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+	INVALID_AUTHORIZATION(HttpStatus.UNAUTHORIZED, "Oauth로부터 정보를 받아오지 못했습니다."),
 
 	;
 

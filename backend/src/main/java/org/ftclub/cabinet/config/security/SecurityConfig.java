@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -19,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
+	private final CustomOAuth2UserService userService;
 	private final AuthenticationEntryPoint entrypoint;
 
 	@Bean
@@ -36,21 +36,15 @@ public class SecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable)
 				// api별 접근 권한을 부여합니다
 				.authorizeHttpRequests(auth -> auth
-						.mvcMatchers("/actuator/**", "/v4/auth/**").permitAll()
+						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**").permitAll()
 						.mvcMatchers("/v4/admin/**").hasRole(AdminRole.ADMIN.name())
 						.mvcMatchers("/v4/users/me").hasRole(FtRole.USER.name())
 				)
-				.sessionManagement(sessionManagement
-						-> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.oauth2Login()
-				.loginPage("/v4/auth/login")
-				.and()
+				.oauth2Login(oauth -> oauth
+						.userInfoEndpoint(user -> user.userService(userService))
+				)
 				.exceptionHandling(handler -> handler.authenticationEntryPoint(entrypoint))
 		;
-//				.oauth2Login(oauth ->
-//						oauth.userInfoEndpoint(user -> user.userService(userOauthService)
-//								.and().successHandler(oAuthSuccessHandler)
-//						)
 
 		return http.build();
 	}
