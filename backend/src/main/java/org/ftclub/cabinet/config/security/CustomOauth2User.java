@@ -11,11 +11,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 /**
- * google -> uid, email
+ * provider: oauth 로그인 경로
  * <p>
- * ft -> intraId, email, blackholedAt, role
+ * userId: oauth에서 발급한 고유 Id
  * <p>
- * userRole
+ * attribute: oauth별로 사용한 정보들
  */
 @Getter
 @RequiredArgsConstructor
@@ -24,21 +24,7 @@ public class CustomOauth2User implements OAuth2User {
 	private final String provider;
 	private final String userId;
 	private final Map<String, Object> attributes;
-	private String email;
-	private FtRole role;
-	private LocalDateTime blackHoledAt;
 
-
-	public static CustomOauth2User fromFtOauth(String provider, String userId,
-			Map<String, Object> attribute, FtRole role,
-			LocalDateTime blackHoledAt) {
-		CustomOauth2User user = new CustomOauth2User(provider, userId, attribute);
-		user.role = role;
-		user.blackHoledAt = blackHoledAt;
-		user.email = (String) attribute.get("email");
-
-		return user;
-	}
 
 	@Override
 	public Map<String, Object> getAttributes() {
@@ -52,12 +38,26 @@ public class CustomOauth2User implements OAuth2User {
 	 */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(() -> role.getAuthority());
+		FtRole role = (FtRole) attributes.get("role");
+
+		return List.of(role::getAuthority);
 	}
 
 	@Override
 	public String getName() {
 		return provider;
+	}
+
+	public String getEmail() {
+		return (String) attributes.get("email");
+	}
+
+	public LocalDateTime getBlackHoledAt() {
+		return (LocalDateTime) attributes.get("blackholedAt");
+	}
+
+	public FtRole getRole() {
+		return (FtRole) attributes.get("role");
 	}
 
 }
