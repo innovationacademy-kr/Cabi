@@ -165,6 +165,19 @@ public class User {
 		return this.blackholedAt.isEqual(blackholedAt);
 	}
 
+	public boolean isSameUserRole(FtRole role) {
+		return this.role == role;
+	}
+
+	public void changeUserRole(FtRole role) {
+		this.role = role;
+		log.info("Called changeUserRole - from {} to {}", this.role, role);
+	}
+
+	public boolean isSameBlackholedAtAndRole(LocalDateTime blackholedAt, FtRole role) {
+		return isSameBlackholedAt(blackholedAt) && isSameUserRole(role);
+	}
+
 
 	public void addCoin(Long reward) {
 		this.coin += reward;

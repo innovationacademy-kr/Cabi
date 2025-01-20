@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.FtProfile;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.config.security.CustomOauth2User;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -39,15 +40,6 @@ public class UserCommandService {
 		return userRepository.save(user);
 	}
 
-	public User createUserByOauthProfile(CustomOauth2User profile) {
-		if (userRepository.existsByNameAndEmail(profile.getUserId(), profile.getEmail())) {
-			throw ExceptionStatus.USER_ALREADY_EXISTED.asServiceException();
-		}
-		User user = User.of(profile.getUserId(), profile.getEmail(), profile.getBlackHoledAt(),
-				profile.getRole());
-		return userRepository.save(user);
-	}
-
 	/**
 	 * 동아리 유저를 생성합니다.
 	 *
@@ -62,6 +54,14 @@ public class UserCommandService {
 //		User user = User.of(clubName, clubName + "@ftclub.org", null);
 //		return userRepository.save(user);
 //	}
+	public User createUserByOauthProfile(CustomOauth2User profile) {
+		if (userRepository.existsByNameAndEmail(profile.getUserId(), profile.getEmail())) {
+			throw ExceptionStatus.USER_ALREADY_EXISTED.asServiceException();
+		}
+		User user = User.of(profile.getUserId(), profile.getEmail(), profile.getBlackHoledAt(),
+				profile.getRole());
+		return userRepository.save(user);
+	}
 
 	/**
 	 * 동아리 유저의 이름을 변경합니다.
@@ -122,10 +122,30 @@ public class UserCommandService {
 		userRepository.save(user);
 	}
 
+	/**
+	 * 유저의 role을 변경합니다.
+	 *
+	 * @param userId
+	 * @param role
+	 */
+	public void updateUserRoleStatus(Long userId, FtRole role) {
+		User user = userRepository.getById(userId);
+		user.changeUserRole(role);
+		userRepository.save(user);
+	}
+
 	public void updateCoinAmount(Long userId, Long reward) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 		user.addCoin(reward);
+	}
+
+	public void updateUserBlackholeAndRole(Long userId, LocalDateTime blackholedAt, FtRole role) {
+		User user = userRepository.getById(userId);
+		user.changeBlackholedAt(blackholedAt);
+		user.setDeletedAt(null);
+		user.changeUserRole(role);
+		userRepository.save(user);
 	}
 
 	public void addBulkCoin(List<Long> userIds, Long amount) {
