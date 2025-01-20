@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-	private static final String FT_OAUTH_PROVIDER = "ft";
-	private static final String GOOGLE_OAUTH_PROVIDER = "google";
 
 	/**
 	 * oauth 로그인을 마친 유저의 프로필을 해당 사이트로부터 받아오고,
