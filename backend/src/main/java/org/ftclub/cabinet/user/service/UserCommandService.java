@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.FtProfile;
+import org.ftclub.cabinet.config.security.CustomOauth2User;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
@@ -34,6 +35,15 @@ public class UserCommandService {
 //		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
 //				UserRole.USER);
 		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
+				profile.getRole());
+		return userRepository.save(user);
+	}
+
+	public User createUserByOauthProfile(CustomOauth2User profile) {
+		if (userRepository.existsByNameAndEmail(profile.getUserId(), profile.getEmail())) {
+			throw ExceptionStatus.USER_ALREADY_EXISTED.asServiceException();
+		}
+		User user = User.of(profile.getUserId(), profile.getEmail(), profile.getBlackHoledAt(),
 				profile.getRole());
 		return userRepository.save(user);
 	}
