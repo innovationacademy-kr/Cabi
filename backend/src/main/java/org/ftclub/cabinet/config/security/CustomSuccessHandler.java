@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.service.TokenProvider;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
@@ -36,23 +37,31 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-		CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();
-		String name = customOauth2User.getUserId();
-		String email = customOauth2User.getEmail();
+		CustomOauth2User profile = (CustomOauth2User) authentication.getPrincipal();
 		// 구글 -> 처음이면 user에 저장,
 		// 기존 유저라면 role, blackhole 업데이트
-		if (customOauth2User.getProvider().equals(ftProvider)) {
-			User user = userQueryService.findUserByName(customOauth2User.getUserId())
-					.orElseGet(() -> userCommandService.createUserByOauthProfile(customOauth2User));
+		if (profile.getProvider().equals(ftProvider)) {
+			LocalDateTime blackHoledAt = profile.getBlackHoledAt();
+			FtRole role = profile.getRole();
+
+			User user = userQueryService.findUser(profile.getUserId())
+					.orElseGet(() -> userCommandService.createUserByOauthProfile(profile));
+
+			// role, blackholedAt 검수
+			if (!user.isSameBlackholedAtAndRole(blackHoledAt, role)) {
+				userCommandService.updateUserBlackholeAndRole(user.getId(), blackHoledAt, role);
+			}
+
 			String accessToken = tokenProvider.createUserToken(user, LocalDateTime.now());
 			response.addHeader("Authorization", "Bearer " + accessToken);
 		}
 		// credential 에서 찾고, 있으면 이미 연동 에러 반환
 		// 아니라면 계정 연동 진행
-		if (customOauth2User.getProvider().equals(googleProvider)) {
-			
+		if (profile.getProvider().equals(googleProvider)) {
+
 		}
 		// provider가 첨보는 애면 에러 반환
+
 	}
 
 }
