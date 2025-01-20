@@ -3,6 +3,7 @@ package org.ftclub.cabinet.config.security;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -65,14 +66,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 	// 블랙홀, 롤, userId, email
 	private CustomOauth2User generateFtOauthProfile(JsonNode rootNode,
-			Map<String, Object> attribute, String provider, String userId) {
+			Map<String, Object> oauthAttribute, String provider, String userId) {
 		LocalDateTime blackHoledAt = determineBlackHoledAt(rootNode);
 		FtRole role = determineFtRole(rootNode, blackHoledAt);
+		Map<String, Object> attribute = new HashMap<>();
+		attribute.put("email", oauthAttribute.get("email"));
+		attribute.put("blackHoledAt", blackHoledAt);
+		attribute.put("role", role);
 
-		CustomOauth2User user = CustomOauth2User.fromFtOauth(provider, userId, attribute, role,
-				blackHoledAt);
-		log.info("email = {}", user.getEmail());
-		return user;
+		return new CustomOauth2User(provider, userId, attribute);
 	}
 
 	private FtRole determineFtRole(JsonNode rootNode, LocalDateTime blackHoledAt) {
