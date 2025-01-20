@@ -12,6 +12,7 @@ public enum FtRole {
 	USER,
 	PISCINER;
 
+
 	/**
 	 * 본 과정 이상의 사용자인지 확인합니다.
 	 * <p>
@@ -21,5 +22,9 @@ public enum FtRole {
 	 */
 	public boolean isInCursus() {
 		return this == CADET || this == MEMBER || this == STAFF || this == USER;
+	}
+
+	public String getAuthority() {
+		return "ROLE_" + name();
 	}
 }
