@@ -22,7 +22,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 public class CustomOauth2User implements OAuth2User {
 
 	private final String provider;
-	private final String userId;
+	private final String name;
 	private final Map<String, Object> attributes;
 
 
@@ -45,19 +45,19 @@ public class CustomOauth2User implements OAuth2User {
 
 	@Override
 	public String getName() {
-		return provider;
+		return name;
 	}
 
 	public String getEmail() {
-		return (String) attributes.get("email");
+		return (String) attributes.getOrDefault("email", "unknown");
 	}
 
 	public LocalDateTime getBlackHoledAt() {
-		return (LocalDateTime) attributes.get("blackholedAt");
+		return (LocalDateTime) attributes.getOrDefault("blackholedAt", "unknown");
 	}
 
 	public FtRole getRole() {
-		return (FtRole) attributes.get("role");
+		return (FtRole) attributes.getOrDefault("role", "unknown");
 	}
 
 }
