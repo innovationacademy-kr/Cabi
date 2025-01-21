@@ -158,5 +158,13 @@ public class UserQueryService {
 		return userRepository.findAllUsersInNames(userNames);
 	}
 
-
+	/**
+	 * oauthMail 기준으로 찾아 반환합니다.
+	 *
+	 * @param oauthMail
+	 * @return
+	 */
+	public Optional<User> findByOauthEmail(String oauthMail) {
+		return userRepository.findByOauthMail(oauthMail);
+	}
 }

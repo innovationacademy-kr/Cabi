@@ -55,10 +55,10 @@ public class UserCommandService {
 //		return userRepository.save(user);
 //	}
 	public User createUserByOauthProfile(CustomOauth2User profile) {
-		if (userRepository.existsByNameAndEmail(profile.getUserId(), profile.getEmail())) {
+		if (userRepository.existsByNameAndEmail(profile.getName(), profile.getEmail())) {
 			throw ExceptionStatus.USER_ALREADY_EXISTED.asServiceException();
 		}
-		User user = User.of(profile.getUserId(), profile.getEmail(), profile.getBlackHoledAt(),
+		User user = User.of(profile.getName(), profile.getEmail(), profile.getBlackHoledAt(),
 				profile.getRole());
 		return userRepository.save(user);
 	}
@@ -150,5 +150,12 @@ public class UserCommandService {
 
 	public void addBulkCoin(List<Long> userIds, Long amount) {
 		userRepository.updateBulkUserCoin(userIds, amount);
+	}
+
+	public void linkOauthAccount(String name, String email) {
+		User user = userRepository.findByName(name)
+				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+		user.changeOauthMail(email);
+		userRepository.save(user);
 	}
 }

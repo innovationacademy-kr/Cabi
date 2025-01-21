@@ -146,4 +146,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "SET u.coin = u.coin + :amount "
 			+ "WHERE u.id IN :userIds")
 	void updateBulkUserCoin(@Param("userIds") List<Long> userIds, @Param("amount") Long amount);
+
+	Optional<User> findByOauthMail(String oauthMail);
 }

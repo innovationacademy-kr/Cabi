@@ -68,6 +68,10 @@ public class User {
 	@Column(name = "COIN")
 	private Long coin;
 
+	@Email
+	@Column(name = "OAUTH_MAIL")
+	private String oauthMail;
+
 	protected User(String name, String email, LocalDateTime blackholedAt, FtRole role) {
 		this.name = name;
 		this.email = email;
@@ -183,4 +187,7 @@ public class User {
 		this.coin += reward;
 	}
 
+	public void changeOauthMail(String email) {
+		this.oauthMail = email;
+	}
 }
