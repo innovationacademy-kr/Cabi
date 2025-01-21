@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -23,6 +24,10 @@ import org.springframework.stereotype.Service;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
+	@Value("${spring.security.oauth2.client.registration.ft.client-name}")
+	private String ftProvider;
+	@Value("${spring.security.oauth2.client.registration.google.client-name}")
+	private String googleProvider;
 
 	/**
 	 * oauth 로그인을 마친 유저의 프로필을 해당 사이트로부터 받아오고,
@@ -53,10 +58,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			// 고유 id ex) 42 -> intraName, google -> uid
 			String userId = rootNode.path(userNameAttribute).asText();
 
-			if (provider.equals("ft")) {
+			if (provider.equals(ftProvider)) {
 				return generateFtOauthProfile(
 						rootNode, oAuth2User.getAttributes(), provider, userId);
 			}
+
 			return new CustomOauth2User(provider, userId, oAuth2User.getAttributes());
 		} catch (OAuth2AuthenticationException e) {
 			log.error("OAuth2 Authentication Exception : {}", e.getMessage(), e);
