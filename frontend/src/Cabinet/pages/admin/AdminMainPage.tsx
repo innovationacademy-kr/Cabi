@@ -29,7 +29,8 @@ const AdminMainPage = () => {
     useMultiSelect();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
-  const currentFloorNumber = useRecoilValue<number>(currentFloorNumberState);
+  const currentFloor = useRecoilValue<number>(currentFloorNumberState);
+
   useEffect(() => {
     closeAll();
     resetTargetCabinetInfo();
@@ -49,10 +50,9 @@ const AdminMainPage = () => {
     currentSectionNameState
   );
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
-  // const currentFloor = useRecoilValue<number>(currentFloorNumberState);
   const { refreshCabinetList, isLoading } = useCabinetListRefresh(
     currentBuilding,
-    currentFloorNumber
+    currentFloor
   );
 
   const currentSectionIndex = sectionList.findIndex(
@@ -61,7 +61,7 @@ const AdminMainPage = () => {
 
   useEffect(() => {
     resetMultiSelectMode();
-  }, [currentSectionIndex, currentFloorNumber]);
+  }, [currentSectionIndex, currentFloor]);
 
   const moveToLeftSection = () => {
     if (currentSectionIndex <= 0) {
@@ -93,8 +93,6 @@ const AdminMainPage = () => {
     else moveToRightSection();
   };
 
-  // console.log("admin currentFloor : ", currentFloor);
-
   return isLoading ? (
     <LoadingAnimation />
   ) : (
@@ -117,10 +115,7 @@ const AdminMainPage = () => {
         />
       </MultiSelectButtonWrapperStyled>
       <CabinetListWrapperStyled>
-        <CabinetListContainer
-          isAdmin={true}
-          currentFloor={currentFloorNumber}
-        />
+        <CabinetListContainer isAdmin={true} currentFloor={currentFloor} />
 
         <RefreshButtonStyled
           className="cabiButton"

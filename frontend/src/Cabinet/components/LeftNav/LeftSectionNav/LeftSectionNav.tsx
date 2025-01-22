@@ -2,9 +2,12 @@ import { useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { currentSectionNameState, currentFloorNumberState } from "@/Cabinet/recoil/atoms";
-import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
+import {
+  currentFloorNumberState,
+  currentSectionNameState,
+} from "@/Cabinet/recoil/atoms";
 import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
+import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 import CabinetColorTable from "@/Cabinet/components/LeftNav/CabinetColorTable/CabinetColorTable";
 import { clubSectionsData } from "@/Cabinet/assets/data/mapPositionData";
 import { ReactComponent as FilledHeartIcon } from "@/Cabinet/assets/images/filledHeart.svg";
@@ -18,7 +21,7 @@ const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
   const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
     currentSectionNameState
   );
-  const currentFloorNumber = useRecoilValue<number>(currentFloorNumberState);
+  const currentFloor = useRecoilValue<number>(currentFloorNumberState);
   const { pathname } = useLocation();
   const isAdmin = pathname.includes("admin");
 
@@ -47,7 +50,7 @@ const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
             <IconWrapperStyled>
               {!isAdmin &&
                 !isClubSection &&
-                !DISABLED_FLOOR.includes(currentFloorNumber.toString()) &&
+                !DISABLED_FLOOR.includes(currentFloor.toString()) &&
                 (section.alarmRegistered ? (
                   <FilledHeartIcon />
                 ) : (
