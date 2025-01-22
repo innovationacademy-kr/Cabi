@@ -49,10 +49,10 @@ const AdminMainPage = () => {
     currentSectionNameState
   );
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
-  const currentFloor = useRecoilValue<number>(currentFloorNumberState);
+  // const currentFloor = useRecoilValue<number>(currentFloorNumberState);
   const { refreshCabinetList, isLoading } = useCabinetListRefresh(
     currentBuilding,
-    currentFloor
+    currentFloorNumber
   );
 
   const currentSectionIndex = sectionList.findIndex(
@@ -93,6 +93,8 @@ const AdminMainPage = () => {
     else moveToRightSection();
   };
 
+  // console.log("admin currentFloor : ", currentFloor);
+
   return isLoading ? (
     <LoadingAnimation />
   ) : (
@@ -103,10 +105,7 @@ const AdminMainPage = () => {
         touchStartPosY.current = e.changedTouches[0].screenY;
       }}
       onTouchEnd={(e: React.TouchEvent) => {
-        swipeSection(
-          e.changedTouches[0].screenX,
-          e.changedTouches[0].screenY
-        );
+        swipeSection(e.changedTouches[0].screenX, e.changedTouches[0].screenY);
       }}
     >
       <SectionPaginationContainer />
@@ -118,7 +117,10 @@ const AdminMainPage = () => {
         />
       </MultiSelectButtonWrapperStyled>
       <CabinetListWrapperStyled>
-        <CabinetListContainer isAdmin={true} currentFloor={currentFloorNumber} />
+        <CabinetListContainer
+          isAdmin={true}
+          currentFloor={currentFloorNumber}
+        />
 
         <RefreshButtonStyled
           className="cabiButton"
