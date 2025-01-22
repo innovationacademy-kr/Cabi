@@ -124,7 +124,7 @@ const MainPage = () => {
 
   return isLoading ? (
     <LoadingAnimation />
-  ) : (
+  ) : currentFloor ? (
     <WrapperStyled
       ref={mainWrapperRef}
       onTouchStart={(e: React.TouchEvent) => {
@@ -175,7 +175,7 @@ const MainPage = () => {
         />
       )}
     </WrapperStyled>
-  );
+  ) : null;
 };
 
 const WrapperStyled = styled.div`

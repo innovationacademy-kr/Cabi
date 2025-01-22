@@ -57,10 +57,11 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     useRecoilState(currentFloorSectionNamesState);
   // TODO : setter만 남기기
   useEffect(() => {
-    if (currentFloor === undefined) {
+    if (currentFloor === 0) {
       setCurrentMapFloor(floors[0]);
       return;
     }
+
     axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
       .then((response) => {
         setCurrentFloorCabinetData(response.data);

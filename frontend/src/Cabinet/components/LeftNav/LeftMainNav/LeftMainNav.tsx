@@ -1,11 +1,11 @@
 import styled from "styled-components";
+import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 import { ReactComponent as LogoutImg } from "@/Cabinet/assets/images/close-square.svg";
 import { ReactComponent as ClubImg } from "@/Cabinet/assets/images/clubIconGray.svg";
 import { ReactComponent as ProfileImg } from "@/Cabinet/assets/images/profile-circle.svg";
 import { ReactComponent as SlackAlarmImg } from "@/Cabinet/assets/images/slack-alarm.svg";
 import { ReactComponent as SlackImg } from "@/Cabinet/assets/images/slack.svg";
 import { ReactComponent as StoreImg } from "@/Cabinet/assets/images/storeIconGray.svg";
-import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 
 interface ILeftMainNav {
   pathname: string;
