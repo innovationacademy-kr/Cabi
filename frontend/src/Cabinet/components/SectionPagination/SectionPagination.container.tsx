@@ -9,7 +9,7 @@ import SectionPagination from "@/Cabinet/components/SectionPagination/SectionPag
 import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
 const SectionPaginationContainer = (): JSX.Element => {
-  const [floor] = useRecoilState<number>(currentFloorNumberState);
+  const currentFloor = useRecoilValue<number>(currentFloorNumberState);
   const sectionList: Array<ICurrentSectionInfo> = useRecoilValue<
     Array<ICurrentSectionInfo>
   >(currentFloorSectionState);
@@ -19,7 +19,8 @@ const SectionPaginationContainer = (): JSX.Element => {
   const currentSectionIndex = sectionList.findIndex(
     (section) => section.sectionName === currentSectionName
   );
-  const currentPositionName = floor?.toString() + "층 - " + currentSectionName;
+  const currentPositionName =
+    currentFloor?.toString() + "층 - " + currentSectionName;
 
   const changeSectionOnClickIndexButton = (index: number) => {
     if (sectionList === undefined) return;
@@ -46,7 +47,7 @@ const SectionPaginationContainer = (): JSX.Element => {
   };
 
   const isLoaded =
-    floor !== undefined &&
+    currentFloor !== undefined &&
     sectionList !== undefined &&
     currentSectionName !== undefined;
 
