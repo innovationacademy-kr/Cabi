@@ -81,7 +81,9 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
 
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
   const currentFloor = useRecoilValue<number>(currentFloorNumberState);
-  const setCurrentFloorData = useSetRecoilState(currentFloorCabinetState);
+  const setCurrentFloorCabinetData = useSetRecoilState(
+    currentFloorCabinetState
+  );
   const myInfo = useRecoilValue(userState);
   const CabinetIcon = cabinetIconComponentMap[props.lentType];
 
@@ -110,7 +112,7 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
             currentBuilding,
             currentFloor
           );
-          setCurrentFloorData(floorData);
+          setCurrentFloorCabinetData(floorData);
         }
       } catch (error) {
         console.log(error);

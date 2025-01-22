@@ -42,7 +42,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
   const resetBuilding = useResetRecoilState(currentBuildingNameState);
-  const setCurrentFloorData = useSetRecoilState<
+  const setCurrentFloorCabinetData = useSetRecoilState<
     CabinetInfoByBuildingFloorDto[]
   >(currentFloorCabinetState);
   const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
@@ -55,7 +55,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   );
   const [currentFloorSectionNames, setCurrentFloorSectionNames] =
     useRecoilState(currentFloorSectionNamesState);
-
+  // TODO : setter만 남기기
   useEffect(() => {
     if (currentFloor === undefined) {
       setCurrentMapFloor(floors[0]);
@@ -63,7 +63,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     }
     axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
       .then((response) => {
-        setCurrentFloorData(response.data);
+        setCurrentFloorCabinetData(response.data);
         const sections = response.data.map(
           (data: CabinetInfoByBuildingFloorDto) => data.section
         );
@@ -102,7 +102,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       if (floor === currentFloor) {
         axiosCabinetByBuildingFloor(currentBuilding, currentFloor).then(
           (response) => {
-            setCurrentFloorData(response.data);
+            setCurrentFloorCabinetData(response.data);
             setCurrentSection(response.data[0].section);
           }
         );

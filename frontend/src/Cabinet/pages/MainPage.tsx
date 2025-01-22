@@ -221,7 +221,7 @@ const IconWrapperStyled = styled.div<{ disabled: boolean }>`
   }
 `;
 
-const AlertStyled = styled.div<{ currentFloor: number | undefined }>`
+const AlertStyled = styled.div<{ currentFloor: number }>`
   visibility: ${({ currentFloor }) =>
     currentFloor && DISABLED_FLOOR.includes(currentFloor.toString())
       ? "hidden"

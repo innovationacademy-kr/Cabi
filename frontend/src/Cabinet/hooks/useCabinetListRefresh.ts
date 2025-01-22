@@ -35,7 +35,9 @@ const useCabinetListRefresh = (
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myCabinetInfo, setMyLentInfo] = useRecoilState(myCabinetInfoState);
   const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
-  const setCurrentFloorData = useSetRecoilState(currentFloorCabinetState);
+  const setCurrentFloorCabinetData = useSetRecoilState(
+    currentFloorCabinetState
+  );
 
   const fetchAndUpdateCabinetData = async () => {
     try {
@@ -43,7 +45,7 @@ const useCabinetListRefresh = (
         currentBuilding,
         currentFloor
       );
-      setCurrentFloorData(floorData.data);
+      setCurrentFloorCabinetData(floorData.data);
 
       const targetCabinet = floorData.data
         .flatMap((cluster: CabinetPreview) => cluster.cabinets)

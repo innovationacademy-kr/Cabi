@@ -18,7 +18,7 @@ const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
   const floorSection = useRecoilValue<Array<ICurrentSectionInfo>>(
     currentFloorSectionState
   );
-  const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
+  const [currentSection, setCurrentSection] = useRecoilState<string>(
     currentSectionNameState
   );
   const currentFloor = useRecoilValue<number>(currentFloorNumberState);
@@ -36,14 +36,14 @@ const LeftSectionNav = ({ closeLeftNav }: { closeLeftNav: () => void }) => {
         return (
           <FloorSectionStyled
             className={
-              currentFloorSection === section.sectionName
+              currentSection === section.sectionName
                 ? "leftNavButtonActive cabiButton"
                 : "cabiButton"
             }
             key={index}
             onClick={() => {
               closeLeftNav();
-              setCurrentFloorSection(section.sectionName);
+              setCurrentSection(section.sectionName);
             }}
           >
             {section.sectionName}
