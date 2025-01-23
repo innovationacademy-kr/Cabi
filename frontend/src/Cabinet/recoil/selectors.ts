@@ -89,9 +89,9 @@ export const currentFloorColNumState = selector<ISectionColNum[]>({
   key: "CurrentFloorSectionColNum",
   get: ({ get }) => {
     const currentLocationColNum = get(currentBuildingColNumState);
-    const currentFloorNumber = get(currentFloorNumberState);
+    const currentFloor = get(currentFloorNumberState);
     const currentFloorIdx = currentLocationColNum.findIndex(
-      (building) => building.floor === currentFloorNumber
+      (building) => building.floor === currentFloor
     );
 
     if (currentFloorIdx === -1) return [];
@@ -120,13 +120,13 @@ export const currentSectionColNumState = selector<number | undefined>({
 //   get: ({ get }) => {
 //     const buildingColNum = get(buildingColNumState);
 //     const currentLocationName = get(currentLocationNameState);
-//     const currentFloorNumber = get(currentFloorNumberState);
+//     const currentFloor = get(currentFloorNumberState);
 //     const currentSectionName = get(currentSectionNameState);
 
 //     return buildingColNum
 //       .find((building) => building.location === currentLocationName)
 //       ?.floorColNum.find(
-//         (building) => building.floor === currentFloorNumber
+//         (building) => building.floor === currentFloor
 //       )
 //       ?.sectionColNum.find((floor) => floor.section === currentSectionName)
 //       ?.colNum;
