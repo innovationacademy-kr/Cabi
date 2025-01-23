@@ -47,7 +47,7 @@ const SectionPaginationContainer = (): JSX.Element => {
   };
 
   const isLoaded =
-    currentFloor !== undefined &&
+    !currentFloor &&
     sectionList !== undefined &&
     currentSectionName !== undefined;
 

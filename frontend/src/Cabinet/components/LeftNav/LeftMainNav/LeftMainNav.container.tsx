@@ -53,11 +53,12 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const setSelectedTypeOnSearch = useSetRecoilState<CabinetDetailAreaType>(
     selectedTypeOnSearchState
   );
-  const [currentFloorSectionNames, setCurrentFloorSectionNames] =
-    useRecoilState(currentFloorSectionNamesState);
-  // TODO : setter만 남기기
+  const setCurrentFloorSectionNames = useSetRecoilState(
+    currentFloorSectionNamesState
+  );
+
   useEffect(() => {
-    if (currentFloor === 0) {
+    if (!currentFloor) {
       setCurrentMapFloor(floors[0]);
       return;
     }
