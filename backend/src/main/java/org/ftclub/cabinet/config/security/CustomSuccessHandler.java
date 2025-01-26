@@ -28,12 +28,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 /**
  * ft, google 로그인에 따라 유저 저장
  * <p>
  * token을 만들어 발급
  */
+@Component
 @Slf4j
 @RequiredArgsConstructor
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
@@ -50,7 +52,6 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 	private String googleProvider;
 
 
-	// 블랙홀 될 때 AGU, status 변경
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
@@ -58,31 +59,39 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 		String provider = fromLoadUser.getProvider();
 		JsonNode rootNode =
 				objectMapper.convertValue(fromLoadUser.getAttributes(), JsonNode.class);
-		// 42Oauth 로그인 -> 기존 유저라면 status update, 신규 유저라면 새로 만들기
+
+		User user;
 		if (provider.equals(ftProvider)) {
-			handleFtLogin(rootNode, provider, response);
+			user = handleFtLogin(rootNode);
 		} else if (provider.equals(googleProvider)) {
-			handleGoogleLogin(rootNode, provider, response);
-			// 이후에 securityContextHolder에 들어갈 정보 다시 추리기
+			user = handleGoogleLogin(rootNode);
 		} else {
-			log.error("지원하지 않는 oauth 입니다.");
 			throw ExceptionStatus.INVALID_AUTHORIZATION.asSpringSecurityException();
 		}
+
+		updateSecurityContextHolder(user, provider);
+		String accessToken = tokenProvider.createUserToken(user, provider, LocalDateTime.now());
+		response.addHeader("Authorization", "Bearer " + accessToken);
 	}
 
-	private void handleGoogleLogin(JsonNode rootNode, String provider,
-			HttpServletResponse response) {
+	/**
+	 * google oauth로 로그인한 유저를 핸들링합니다.
+	 *
+	 * @param rootNode
+	 * @return
+	 */
+	private User handleGoogleLogin(JsonNode rootNode) {
 		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
 		if (currentAuth == null
 				|| !((currentAuth.getPrincipal()) instanceof CustomOauth2User)) {
 			log.error("Google OAuth 요청 중, 42 OAuth 인증 상태가 유효하지 않습니다.");
-			throw ExceptionStatus.INVALID_AUTHORIZATION.asSpringSecurityException();
+			throw ExceptionStatus.INVALID_OAUTH_TYPE.asSpringSecurityException();
 		}
 
 		CustomOauth2User ftUser = (CustomOauth2User) currentAuth.getPrincipal();
 		if (!ftUser.getProvider().equals(ftProvider)) {
 			log.error("Google OAuth 요청 중, 42 OAuth 인증 상태가 유효하지 않습니다.");
-			throw ExceptionStatus.INVALID_AUTHORIZATION.asSpringSecurityException();
+			throw ExceptionStatus.INVALID_OAUTH_TYPE.asSpringSecurityException();
 		}
 
 		String oauthMail = rootNode.get("email").asText();
@@ -91,25 +100,18 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 		if (userByOauthMail.isPresent()) {
 			log.error("Google의 메일 {}은 이미 다른 사용자{}와 연동되어 있습니다",
 					oauthMail, userByOauthMail.get().getName());
-			throw ExceptionStatus.INVALID_AUTHORIZATION.asSpringSecurityException();
+			throw ExceptionStatus.DUPLICATED_OAUTH_MAIL.asSpringSecurityException();
 		}
 		// ftUser, google email 갖고 연동하기
-		userCommandService.linkOauthAccount(ftUser.getName(), oauthMail);
-
-		User user = userQueryService.getUserByName(ftUser.getName());
-		updateSecurityContextHolder(user, provider, user.getRole());
-
-		String accessToken = tokenProvider.createUserToken(user, LocalDateTime.now());
-		response.addHeader("Authorization", "Bearer " + accessToken);
+		return userCommandService.linkOauthAccount(ftUser.getName(), oauthMail);
 	}
 
 	/**
-	 * 42 oauth로 로그인한 유저에 대해 contextHolder 에 저장할 객체를 생성합니다.
+	 * 42 oauth로 로그인한 유저를 핸들링합니다.
 	 *
 	 * @param rootNode
-	 * @param response
 	 */
-	private void handleFtLogin(JsonNode rootNode, String provider, HttpServletResponse response)
+	private User handleFtLogin(JsonNode rootNode)
 			throws JsonProcessingException {
 		FtProfile profile = userOauthService.convertJsonStringToProfile(rootNode);
 		FtRole role = profile.getRole();
@@ -122,10 +124,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 		if (!user.isSameBlackholedAtAndRole(profile.getBlackHoledAt(), role)) {
 			userCommandService.updateUserBlackholeAndRole(user.getId(), blackHoledAt, role);
 		}
-
-		updateSecurityContextHolder(user, provider, role);
-		String accessToken = tokenProvider.createUserToken(user, LocalDateTime.now());
-		response.addHeader("Authorization", "Bearer " + accessToken);
+		return user;
 	}
 
 	/**
@@ -133,9 +132,8 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 	 *
 	 * @param user
 	 * @param provider
-	 * @param role
 	 */
-	private void updateSecurityContextHolder(User user, String provider, FtRole role) {
+	private void updateSecurityContextHolder(User user, String provider) {
 		Map<String, Object> attribute = Map.of(
 				"email", user.getEmail(),
 				"role", user.getRole(),
@@ -144,7 +142,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
 		CustomOauth2User updateUser = new CustomOauth2User(provider, user.getName(), attribute);
 		List<GrantedAuthority> authorityList =
-				List.of(new SimpleGrantedAuthority(role.getAuthority()));
+				List.of(new SimpleGrantedAuthority(user.getRole().getAuthority()));
 		UsernamePasswordAuthenticationToken newAuth =
 				new UsernamePasswordAuthenticationToken(updateUser, null, authorityList);
 		SecurityContextHolder.getContext().setAuthentication(newAuth);

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 /**
@@ -40,7 +41,7 @@ public class CustomOauth2User implements OAuth2User {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		FtRole role = (FtRole) attributes.get("role");
 
-		return List.of(role::getAuthority);
+		return List.of(new SimpleGrantedAuthority(role.getAuthority()));
 	}
 
 	@Override

@@ -94,7 +94,15 @@ public enum ExceptionStatus {
 	INVALID_TYPE_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "올바르지 않은 토큰입니다."),
 	EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
 	INVALID_AUTHORIZATION(HttpStatus.UNAUTHORIZED, "Oauth로부터 정보를 받아오지 못했습니다."),
+	DUPLICATED_OAUTH_MAIL(HttpStatus.BAD_REQUEST, "이미 등록된 oauthMail 입니다."),
+	INVALID_OAUTH_TYPE(HttpStatus.FORBIDDEN, "42 Oauth 인증 상태가 아닙니다."),
+	OAUTH_EMAIL_ALREADY_LINKED(HttpStatus.CONFLICT, "이미 다른 oauth 계정이 연동되어 있습니다."),
 
+	// JWT 관련 에러
+	JWT_MALFORMED(HttpStatus.BAD_REQUEST, "잘못된 토큰 형식입니다"),
+	JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+	JWT_UNSUPPORTED(HttpStatus.BAD_REQUEST, "지원되지 않는 토큰 형식입니다"),
+	JWT_SIGNATURE(HttpStatus.UNAUTHORIZED, "토큰의 서명이 올바르지 않거나, 변조되었습니다."),
 	;
 
 	final private int statusCode;
