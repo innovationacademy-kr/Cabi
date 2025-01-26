@@ -9,9 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-//@Component 이후에 addFilterAfter 로 적용
+@Component
 @Slf4j
 public class LoggingFilter extends OncePerRequestFilter {
 
