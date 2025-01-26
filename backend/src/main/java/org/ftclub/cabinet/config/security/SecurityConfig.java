@@ -20,6 +20,7 @@ public class SecurityConfig {
 
 	private final CustomOAuth2UserService customOAuth2UserService;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final LoggingFilter loggingFilter;
 	private final CustomSuccessHandler customSuccessHandler;
 	private final AuthenticationEntryPoint entrypoint;
 
@@ -46,8 +47,9 @@ public class SecurityConfig {
 						.userInfoEndpoint(user -> user.userService(customOAuth2UserService))
 						.successHandler(customSuccessHandler)
 				)
-				.addFilterBefore(jwtAuthenticationFilter,
+				.addFilterAfter(jwtAuthenticationFilter,
 						UsernamePasswordAuthenticationFilter.class)
+				.addFilterAfter(loggingFilter, UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling(handler -> handler.authenticationEntryPoint(entrypoint))
 		;
 
