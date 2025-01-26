@@ -152,10 +152,13 @@ public class UserCommandService {
 		userRepository.updateBulkUserCoin(userIds, amount);
 	}
 
-	public void linkOauthAccount(String name, String email) {
+	public User linkOauthAccount(String name, String email) {
 		User user = userRepository.findByName(name)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+		if (user.getOauthMail() != null) {
+			throw ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED.asSpringSecurityException();
+		}
 		user.changeOauthMail(email);
-		userRepository.save(user);
+		return userRepository.save(user);
 	}
 }

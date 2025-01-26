@@ -11,14 +11,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 	private final CustomOAuth2UserService customOAuth2UserService;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final CustomSuccessHandler customSuccessHandler;
 	private final AuthenticationEntryPoint entrypoint;
 
 	@Bean
@@ -42,7 +44,10 @@ public class SecurityConfig {
 				)
 				.oauth2Login(oauth -> oauth
 						.userInfoEndpoint(user -> user.userService(customOAuth2UserService))
+						.successHandler(customSuccessHandler)
 				)
+				.addFilterBefore(jwtAuthenticationFilter,
+						UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling(handler -> handler.authenticationEntryPoint(entrypoint))
 		;
 

@@ -45,6 +45,21 @@ public class TokenProvider {
 				.compact();
 	}
 
+	public String createUserToken(User user, String provider, LocalDateTime now) {
+		Claims claims = Jwts.claims();
+		claims.put("email", user.getEmail());
+		claims.put("name", user.getName());
+		claims.put("blackholedAt", user.getBlackholedAtString());
+		claims.put("role", user.getRole());
+		claims.put("provider", provider);
+
+		return Jwts.builder()
+				.setClaims(claims)
+				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
+				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiryDays())))
+				.compact();
+	}
+
 	/**
 	 * JWT 토큰을 생성합니다.
 	 *
