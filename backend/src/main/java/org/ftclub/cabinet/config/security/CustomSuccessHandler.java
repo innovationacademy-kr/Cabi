@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.service.TokenProvider;
 import org.ftclub.cabinet.auth.service.UserOauthService;
@@ -113,16 +113,19 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 	 */
 	private User handleFtLogin(JsonNode rootNode)
 			throws JsonProcessingException {
-		FtProfile profile = userOauthService.convertJsonStringToProfile(rootNode);
-		FtRole role = profile.getRole();
+		FtOauthProfile profile = userOauthService.convertJsonNodeToProfile(rootNode);
+		List<FtRole> roles = profile.getRoles();
+		String combinedRoles = FtRole.combineRolesToSTring(roles);
+
 		LocalDateTime blackHoledAt = profile.getBlackHoledAt();
 
 		User user = userQueryService.findUser(profile.getIntraName())
-				.orElseGet(() -> userCommandService.createUserByFtProfile(profile));
+				.orElseGet(() -> userCommandService.createUserByFtOauthProfile(profile));
 
 		// role, blackholedAt 검수
-		if (!user.isSameBlackholedAtAndRole(profile.getBlackHoledAt(), role)) {
-			userCommandService.updateUserBlackholeAndRole(user.getId(), blackHoledAt, role);
+		if (!user.isSameBlackHoledAtAndRole(profile.getBlackHoledAt(), combinedRoles)) {
+			userCommandService.updateUserBlackholeAndRole(user.getId(), blackHoledAt,
+					combinedRoles);
 		}
 		return user;
 	}
@@ -136,13 +139,17 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 	private void updateSecurityContextHolder(User user, String provider) {
 		Map<String, Object> attribute = Map.of(
 				"email", user.getEmail(),
-				"role", user.getRole(),
+				"roles", user.getRoles(),
 				"blackholedAt", user.getBlackholedAt()
 		);
 
 		CustomOauth2User updateUser = new CustomOauth2User(provider, user.getName(), attribute);
-		List<GrantedAuthority> authorityList =
-				List.of(new SimpleGrantedAuthority(user.getRole().getAuthority()));
+		List<String> roles = List.of(user.getRoles().split(FtRole.DELIMITER));
+
+		List<GrantedAuthority> authorityList = roles.stream()
+				.map(role -> new SimpleGrantedAuthority(FtRole.ROLE + role))
+				.collect(Collectors.toList());
+
 		UsernamePasswordAuthenticationToken newAuth =
 				new UsernamePasswordAuthenticationToken(updateUser, null, authorityList);
 		SecurityContextHolder.getContext().setAuthentication(newAuth);

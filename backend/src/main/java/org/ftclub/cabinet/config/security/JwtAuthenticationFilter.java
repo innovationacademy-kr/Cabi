@@ -3,12 +3,14 @@ package org.ftclub.cabinet.config.security;
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.service.TokenValidator;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.http.HttpHeaders;
@@ -58,16 +60,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		return header.substring(BEARER.length());
 	}
 
+	// userId, role
 	private void updateSecurityContextHolder(Claims claims) {
 
-		CustomOauth2User updateUser =
-				new CustomOauth2User(claims.get("provider", String.class),
-						claims.get("name", String.class), claims);
+		UserInfoDto userInfoDto =
+				new UserInfoDto(
+						claims.get("userId", Long.class),
+						claims.get("roles", String.class)
+				);
+		List<String> roles = List.of(claims.get("roles", String.class).split(FtRole.DELIMITER));
 
-		List<GrantedAuthority> authorityList =
-				List.of(new SimpleGrantedAuthority("ROLE_" + claims.get("role", String.class)));
+		List<GrantedAuthority> authorityList = roles.stream()
+				.map(role -> new SimpleGrantedAuthority(FtRole.ROLE + role))
+				.collect(Collectors.toList());
 		UsernamePasswordAuthenticationToken newAuth =
-				new UsernamePasswordAuthenticationToken(updateUser, null, authorityList);
+				new UsernamePasswordAuthenticationToken(userInfoDto, null, authorityList);
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 	}
 

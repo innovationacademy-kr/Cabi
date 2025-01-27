@@ -7,8 +7,6 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +20,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
-import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.club.domain.ClubRegistration;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.DomainException;
@@ -54,9 +51,9 @@ public class User {
 	private LocalDateTime blackholedAt = null;
 	@Column(name = "DELETED_AT", length = 32)
 	private LocalDateTime deletedAt = null;
-	@Enumerated(value = EnumType.STRING)
-	@Column(name = "ROLE", length = 32, nullable = false)
-	private FtRole role;
+	//	@Enumerated(value = EnumType.STRING)
+	@Column(name = "ROLE", nullable = false)
+	private String roles;
 	@Column(name = "SLACK_ALARM", columnDefinition = "boolean default true")
 	private boolean slackAlarm;
 	@Column(name = "EMAIL_ALARM", columnDefinition = "boolean default true")
@@ -72,17 +69,17 @@ public class User {
 	@Column(name = "OAUTH_MAIL")
 	private String oauthMail;
 
-	protected User(String name, String email, LocalDateTime blackholedAt, FtRole role) {
+	protected User(String name, String email, LocalDateTime blackholedAt, String roles) {
 		this.name = name;
 		this.email = email;
 		this.blackholedAt = blackholedAt;
 		this.coin = 0L;
-		this.role = role;
+		this.roles = roles;
 		setDefaultAlarmStatus();
 	}
 
-	public static User of(String name, String email, LocalDateTime blackholedAt, FtRole role) {
-		User user = new User(name, email, blackholedAt, role);
+	public static User of(String name, String email, LocalDateTime blackholedAt, String roles) {
+		User user = new User(name, email, blackholedAt, roles);
 		ExceptionUtil.throwIfFalse(user.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return user;
@@ -169,17 +166,17 @@ public class User {
 		return this.blackholedAt.isEqual(blackholedAt);
 	}
 
-	public boolean isSameUserRole(FtRole role) {
-		return this.role == role;
+	public boolean isSameUserRole(String otherRoles) {
+		return roles.equals(otherRoles);
 	}
 
-	public void changeUserRole(FtRole role) {
-		this.role = role;
-		log.info("Called changeUserRole - from {} to {}", this.role, role);
+	public void changeUserRole(String roles) {
+		this.roles = roles;
+		log.info("Called changeUserRole - from {} to {}", this.roles, roles);
 	}
 
-	public boolean isSameBlackholedAtAndRole(LocalDateTime blackholedAt, FtRole role) {
-		return isSameBlackholedAt(blackholedAt) && isSameUserRole(role);
+	public boolean isSameBlackHoledAtAndRole(LocalDateTime blackHoledAt, String otherRoles) {
+		return isSameBlackholedAt(blackHoledAt) && isSameUserRole(otherRoles);
 	}
 
 
