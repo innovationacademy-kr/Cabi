@@ -5,11 +5,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -52,6 +55,15 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 	private String googleProvider;
 
 
+	/**
+	 * 로그인 이후 userPK, role 을 갖고 있는 토큰을 반환합니다.
+	 *
+	 * @param request
+	 * @param response
+	 * @param authentication
+	 * @throws IOException
+	 * @throws ServletException
+	 */
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
@@ -70,8 +82,33 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 		}
 
 		updateSecurityContextHolder(user, provider);
-		String accessToken = tokenProvider.createUserToken(user, provider, LocalDateTime.now());
-		response.addHeader("Authorization", "Bearer " + accessToken);
+		TokenDto tokenDto = tokenProvider.createTokenDto(user.getId(), user.getRoles());
+		// AccessToken은 JSON, RefreshToken -> Cookie?
+		setTokensToResponse(tokenDto, response);
+	}
+
+	/**
+	 * accessToken은 JSON, refreshToken 은 쿠키 형식으로 세팅.
+	 *
+	 * @param tokenDto
+	 * @param response
+	 * @throws IOException
+	 */
+	private void setTokensToResponse(TokenDto tokenDto, HttpServletResponse response)
+			throws IOException {
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		response.setCharacterEncoding("UTF-8");
+		Map<String, String> responseBody = new HashMap<>();
+		responseBody.put(TokenProvider.USER_TOKEN_NAME, tokenDto.getAccessToken());
+		new ObjectMapper().writeValue(response.getWriter(), responseBody);
+
+		Cookie refreshTokenCookie = new Cookie("refreshToken", tokenDto.getRefreshToken());
+		refreshTokenCookie.setHttpOnly(true);
+		refreshTokenCookie.setSecure(true);
+		refreshTokenCookie.setMaxAge((int) (TokenProvider.refreshTokenValidMillisecond / 1000));
+		refreshTokenCookie.setPath("/");
+
+		response.addCookie(refreshTokenCookie);
 	}
 
 	/**
