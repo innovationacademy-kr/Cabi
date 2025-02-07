@@ -5,12 +5,10 @@ import static org.ftclub.cabinet.admin.admin.domain.AdminRole.MASTER;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.util.Base64;
 import lombok.RequiredArgsConstructor;
@@ -145,24 +143,6 @@ public class TokenValidator {
 
 	private boolean isUser(String email) {
 		return userQueryService.findUserByEmail(email).isPresent();
-	}
-
-	// Jwt 관련
-	public Claims parseToken(String token) {
-		try {
-			return Jwts.parserBuilder()
-					.setSigningKey(jwtProperties.getSigningKey()).build()
-					.parseClaimsJws(token)
-					.getBody();
-		} catch (MalformedJwtException | SignatureException e) {
-			throw ExceptionStatus.JWT_INVALID.asSpringSecurityException();
-		} catch (ExpiredJwtException e) {
-			throw ExceptionStatus.JWT_EXPIRED.asSpringSecurityException();
-		} catch (UnsupportedJwtException e) {
-			throw ExceptionStatus.JWT_EXCEPTION.asSpringSecurityException();
-		} catch (IllegalArgumentException e) {
-			throw ExceptionStatus.INVALID_JWT_TOKEN.asSpringSecurityException();
-		}
 	}
 
 }
