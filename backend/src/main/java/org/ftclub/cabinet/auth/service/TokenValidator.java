@@ -154,14 +154,12 @@ public class TokenValidator {
 					.setSigningKey(jwtProperties.getSigningKey()).build()
 					.parseClaimsJws(token)
 					.getBody();
-		} catch (MalformedJwtException e) {
-			throw ExceptionStatus.JWT_MALFORMED.asSpringSecurityException();
+		} catch (MalformedJwtException | SignatureException e) {
+			throw ExceptionStatus.JWT_INVALID.asSpringSecurityException();
 		} catch (ExpiredJwtException e) {
 			throw ExceptionStatus.JWT_EXPIRED.asSpringSecurityException();
 		} catch (UnsupportedJwtException e) {
-			throw ExceptionStatus.JWT_UNSUPPORTED.asSpringSecurityException();
-		} catch (SignatureException e) {
-			throw ExceptionStatus.JWT_SIGNATURE.asSpringSecurityException();
+			throw ExceptionStatus.JWT_EXCEPTION.asSpringSecurityException();
 		} catch (IllegalArgumentException e) {
 			throw ExceptionStatus.INVALID_JWT_TOKEN.asSpringSecurityException();
 		}

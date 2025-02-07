@@ -90,7 +90,6 @@ public enum ExceptionStatus {
 	FORBIDDEN_USER(HttpStatus.FORBIDDEN, "권한이 부족한 유저입니다"),
 
 	// Security 토큰 관련 -> 존재하지 않거나, malFormed, signature, expired
-	NOT_FOUND_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT 토큰이 존재하지 않습니다."),
 	INVALID_TYPE_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "올바르지 않은 토큰입니다."),
 	EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
 	INVALID_AUTHORIZATION(HttpStatus.UNAUTHORIZED, "Oauth로부터 정보를 받아오지 못했습니다."),
@@ -98,11 +97,11 @@ public enum ExceptionStatus {
 	INVALID_OAUTH_TYPE(HttpStatus.FORBIDDEN, "42 Oauth 인증 상태가 아닙니다."),
 	OAUTH_EMAIL_ALREADY_LINKED(HttpStatus.CONFLICT, "이미 다른 oauth 계정이 연동되어 있습니다."),
 
-	// JWT 관련 에러
-	JWT_MALFORMED(HttpStatus.BAD_REQUEST, "잘못된 토큰 형식입니다"),
+	// JWT 관련 에러,
+	JWT_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT 토큰이 존재하지 않습니다."),
 	JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
-	JWT_UNSUPPORTED(HttpStatus.BAD_REQUEST, "지원되지 않는 토큰 형식입니다"),
-	JWT_SIGNATURE(HttpStatus.UNAUTHORIZED, "토큰의 서명이 올바르지 않거나, 변조되었습니다."),
+	JWT_EXCEPTION(HttpStatus.BAD_REQUEST, "JWT 에러가 발생하였습니다."),
+	JWT_INVALID(HttpStatus.UNAUTHORIZED, "토큰의 서명이 올바르지 않거나, 변조되었습니다."),
 	;
 
 	final private int statusCode;
@@ -134,5 +133,9 @@ public enum ExceptionStatus {
 	// Spring Security Exception 추가
 	public SpringSecurityException asSpringSecurityException() {
 		return new SpringSecurityException(this);
+	}
+
+	public JwtAuthenticationException asJwtAuthenticationException() {
+		return new JwtAuthenticationException(this);
 	}
 }

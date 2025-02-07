@@ -59,6 +59,6 @@ public enum FtRole {
 	}
 
 	public String getAuthority() {
-		return "ROLE_" + name();
+		return ROLE + name();
 	}
 }
