@@ -23,6 +23,7 @@ public class SecurityConfig {
 	private final LoggingFilter loggingFilter;
 	private final CustomSuccessHandler customSuccessHandler;
 	private final AuthenticationEntryPoint entrypoint;
+	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
@@ -35,8 +36,6 @@ public class SecurityConfig {
 		// security 에서 기본적으로 제공하는 로그인 폼 사용 안함 우리는 oauth 로그인 사용
 		http.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
-				// 일단 csrf 설정은 나중에.. 생각하자.
-				.csrf(AbstractHttpConfigurer::disable)
 				// api별 접근 권한을 부여합니다
 				.authorizeHttpRequests(auth -> auth
 						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**").permitAll()
@@ -51,7 +50,8 @@ public class SecurityConfig {
 						UsernamePasswordAuthenticationFilter.class)
 				.addFilterAfter(loggingFilter, UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling(handler -> handler.authenticationEntryPoint(entrypoint))
-		;
+				.exceptionHandling(
+						handler -> handler.accessDeniedHandler(customAccessDeniedHandler));
 
 		return http.build();
 	}

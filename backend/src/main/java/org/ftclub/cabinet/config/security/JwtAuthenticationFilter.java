@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import java.io.IOException;
 import java.security.Key;
@@ -63,8 +64,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 		} catch (ExpiredJwtException e) {
 			throw new JwtAuthenticationException(ExceptionStatus.JWT_EXPIRED);
-		} catch (SignatureException | MalformedJwtException e) {
+		} catch (SignatureException | MalformedJwtException | IllegalArgumentException e) {
 			throw new JwtAuthenticationException(ExceptionStatus.JWT_INVALID);
+		} catch (UnsupportedJwtException e) {
+			throw new JwtAuthenticationException(ExceptionStatus.JWT_UNSUPPORTED);
 		} catch (Exception e) {
 			log.error("JWT Authentication failed: {}", e.getMessage(), e);
 			throw new JwtAuthenticationException(ExceptionStatus.JWT_EXCEPTION);

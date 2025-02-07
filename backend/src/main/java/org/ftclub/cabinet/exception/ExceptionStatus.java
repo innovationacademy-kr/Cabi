@@ -96,12 +96,14 @@ public enum ExceptionStatus {
 	DUPLICATED_OAUTH_MAIL(HttpStatus.BAD_REQUEST, "이미 등록된 oauthMail 입니다."),
 	INVALID_OAUTH_TYPE(HttpStatus.FORBIDDEN, "42 Oauth 인증 상태가 아닙니다."),
 	OAUTH_EMAIL_ALREADY_LINKED(HttpStatus.CONFLICT, "이미 다른 oauth 계정이 연동되어 있습니다."),
+	AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
 
 	// JWT 관련 에러,
 	JWT_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT 토큰이 존재하지 않습니다."),
 	JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
 	JWT_EXCEPTION(HttpStatus.BAD_REQUEST, "JWT 에러가 발생하였습니다."),
 	JWT_INVALID(HttpStatus.UNAUTHORIZED, "토큰의 서명이 올바르지 않거나, 변조되었습니다."),
+	JWT_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "지원하지 않는 토큰 형식입니다."),
 	;
 
 	final private int statusCode;
@@ -133,9 +135,5 @@ public enum ExceptionStatus {
 	// Spring Security Exception 추가
 	public SpringSecurityException asSpringSecurityException() {
 		return new SpringSecurityException(this);
-	}
-
-	public JwtAuthenticationException asJwtAuthenticationException() {
-		return new JwtAuthenticationException(this);
 	}
 }

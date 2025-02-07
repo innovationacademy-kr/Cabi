@@ -18,11 +18,4 @@ public class JwtAuthenticationException extends AuthenticationException {
 		return status.getMessage();
 	}
 
-	public int getStatus() {
-		return status.getStatusCode();
-	}
-
-	public String getError() {
-		return status.getError();
-	}
 }
