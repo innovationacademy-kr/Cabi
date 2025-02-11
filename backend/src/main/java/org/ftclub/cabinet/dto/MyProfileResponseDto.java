@@ -21,7 +21,6 @@ public class MyProfileResponseDto {
 	private final String date = LocalDateTime.now().format(
 			DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss 'KST'", Locale.US)
 	);
-	private final LentExtensionResponseDto lentExtensionResponseDto;
 	private final AlarmTypeResponseDto alarmTypes;
 	private final Boolean isDeviceTokenExpired;
 	private final Long coins;

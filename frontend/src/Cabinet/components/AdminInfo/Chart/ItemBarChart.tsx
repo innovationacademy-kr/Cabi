@@ -83,10 +83,10 @@ const ItemBarChart = ({ data }: { data: IItemUseCountDto[] }) => {
             "var(--sys-main-color)",
             "var(--sys-main-color)",
             "var(--sys-main-color)",
-            "var(--ref-purple-300)",
+            "var(--ref-purple-400)",
             "var(--ref-purple-200)",
             "var(--sys-main-color)",
-            "var(--ref-purple-300)",
+            "var(--ref-purple-400)",
             "var(--ref-purple-200)",
           ]}
           defs={[]}

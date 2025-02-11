@@ -43,7 +43,6 @@ public interface UserMapper {
 	@Mapping(target = "cabinetId", source = "cabinet.id")
 	MyProfileResponseDto toMyProfileResponseDto(UserSessionDto user,
 			Cabinet cabinet, BanHistory banHistory,
-			LentExtensionResponseDto lentExtensionResponseDto,
 			AlarmTypeResponseDto alarmTypes, boolean isDeviceTokenExpired, Long coins);
 
 	BlockedUserPaginationDto toBlockedUserPaginationDto(List<UserBlockedInfoDto> result,

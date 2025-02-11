@@ -8,13 +8,10 @@
   --ref-gray-200: #eeeeee;
   --ref-gray-300: #d9d9d9;
   --ref-gray-400: #bcbcbc;
-  --ref-gray-450: #8c8c8c;
   --ref-gray-500: #7b7b7b;
-  --ref-gray-530: #505354;
-  --ref-gray-550: #3d3f40;
-  --ref-gray-600: #3c3c3c;
-  --ref-gray-700: #313233;
-  --ref-gray-800: #262626;
+  --ref-gray-600: #525252;
+  --ref-gray-700: #3c3c3c;
+  --ref-gray-800: #2e2e2e;
   --ref-gray-900: #1f1f1f;
   --ref-black: #181818;
 
@@ -37,38 +34,33 @@
 
   /* blue */
   --ref-blue-100: #f5f7ff;
-  --ref-blue-150: #dce7fd;
-  --ref-blue-160: #91b5fa;
-  --ref-blue-200: #7ebffb;
-  --ref-blue-210: #74b9ff;
-  --ref-blue-230: #0984e3;
-  --ref-blue-250: #5278fd;
-  --ref-blue-300: #406ee4;
-  --ref-blue-400: #3f69fd;
-  --ref-blue-430: #2c5afd;
-  --ref-blue-450: #0d4c92;
-  --ref-blue-470: #26447e;
-  --ref-blue-500: #252526;
+  --ref-blue-200: #dce7fd;
+  --ref-blue-300: #91b5fa;
+  --ref-blue-400: #7ebffb;
+  --ref-blue-500: #5278fd;
+  --ref-blue-600: #3f69fd;
+  --ref-blue-700: #2c5afd;
+  --ref-blue-800: #26447e;
+  --ref-blue-900: #252526;
 
   /* purple */
   --ref-purple-100: #f9f6ff;
   --ref-purple-200: #dfd0fe;
-  --ref-purple-300: #b18cff;
-  --ref-purple-350: #a29bfe;
-  --ref-purple-400: #a17bf3;
+  --ref-purple-300: #a29bfe;
+  --ref-purple-400: #b18cff;
   --ref-purple-500: #9747ff;
   --ref-purple-600: #8337e5;
-  --ref-purple-650: #6931b2;
-  --ref-purple-690: #3c1c66;
-  --ref-purple-700: #252425;
+  --ref-purple-700: #6931b2;
+  --ref-purple-800: #3c1c66;
+  --ref-purple-900: #252425;
 
   --ref-transparent-purple-100: #b18cff5f;
   --ref-transparent-purple-200: #b08cffe1;
 
   /* pink */
   --ref-pink-100: #f473b1;
-  --ref-pink-150: #ff4589;
-  --ref-pink-200: #d72766;
+  --ref-pink-200: #ff4589;
+  --ref-pink-300: #d72766;
 
   /* shadow color */
   --ref-black-shadow-100: rgba(0, 0, 0, 0.1);
@@ -78,18 +70,18 @@
 
   /* cabinet */
   --full-color: var(--ref-gray-200);
-  --banned-color: var(--ref-gray-600);
-  --broken-color: var(--ref-gray-600);
+  --banned-color: var(--ref-gray-700);
+  --broken-color: var(--ref-gray-700);
   --session-color: var(--ref-gray-200);
 
   /* custom color */
-  --custom-blue-100: var(--ref-blue-210);
-  --custom-blue-200: var(--ref-blue-230);
-  --custom-blue-300: var(--ref-blue-450);
+  --custom-blue-100: var(--ref-blue-300);
+  --custom-blue-200: var(--ref-blue-500);
+  --custom-blue-300: var(--ref-blue-600);
   --custom-pink-100: var(--ref-pink-100);
-  --custom-pink-200: var(--ref-pink-150);
-  --custom-pink-300: var(--ref-pink-200);
-  --custom-purple-100: var(--ref-purple-350);
+  --custom-pink-200: var(--ref-pink-200);
+  --custom-pink-300: var(--ref-pink-300);
+  --custom-purple-100: var(--ref-purple-300);
   --custom-purple-200: var(--ref-purple-500);
   --custom-orange: var(--ref-orange-100);
   --custom-yellow: var(--ref-yellow);
@@ -97,23 +89,19 @@
   --custom-green-200: var(--ref-green-400);
 
   /* component variable */
-  --color-picker-hash-color: var(--ref-gray-450);
-  --sys-sub-color: var(--ref-purple-300);
-  --sys-default-sub-color: var(--ref-purple-300);
-  --sys-presentation-sub-color: var(--ref-blue-160);
+  --sys-sub-color: var(--ref-purple-400);
+  --sys-default-sub-color: var(--ref-purple-400);
+  --sys-presentation-sub-color: var(--ref-blue-300);
   --tooltip-shadow-color: var(--ref-black-shadow-400);
   --color-picker-border-shadow-color: var(--ref-black-shadow-200);
-  --presentation-detail-available-color: var(--ref-blue-150);
-  --presentation-blue-pagination-btn-color: var(--ref-blue-250);
+  --presentation-detail-available-color: var(--ref-blue-200);
+  --presentation-blue-pagination-btn-color: var(--ref-blue-500);
   --mine-text-color: var(--ref-black);
-
-  --size-base: 14px;
-
-  --size-base: 14px;
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;
   --building-font: "Do Hyeon", sans-serif;
+  --size-base: 14px;
 
   /* default setting */
   font-family: "Noto Sans KR", Inter, Avenir, Helvetica, Arial, sans-serif;
