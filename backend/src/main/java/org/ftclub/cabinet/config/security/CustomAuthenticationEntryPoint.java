@@ -9,8 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.JwtAuthenticationException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -28,8 +28,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 		ExceptionStatus exceptionStatus = ExceptionStatus.AUTHENTICATION_FAILED;
 		log.error("Request Uri : {}", request.getRequestURI());
 
-		if (authException instanceof JwtAuthenticationException) {
-			exceptionStatus = ((JwtAuthenticationException) authException).getStatus();
+		if (authException instanceof CustomAuthenticationException) {
+			exceptionStatus = ((CustomAuthenticationException) authException).getStatus();
 		}
 
 		response.setStatus(exceptionStatus.getStatusCode());

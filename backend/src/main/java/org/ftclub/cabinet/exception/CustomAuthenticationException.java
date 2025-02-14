@@ -4,11 +4,11 @@ import lombok.Getter;
 import org.springframework.security.core.AuthenticationException;
 
 @Getter
-public class JwtAuthenticationException extends AuthenticationException {
+public class CustomAuthenticationException extends AuthenticationException {
 
 	private final ExceptionStatus status;
 
-	public JwtAuthenticationException(ExceptionStatus status) {
+	public CustomAuthenticationException(ExceptionStatus status) {
 		super(status.getMessage());
 		this.status = status;
 	}

@@ -41,6 +41,7 @@ public class SecurityConfig {
 						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**").permitAll()
 						.mvcMatchers("/v4/admin/**").hasRole(AdminRole.ADMIN.name())
 						.mvcMatchers("/v4/users/me").hasRole(FtRole.USER.name())
+						.anyRequest().authenticated()
 				)
 				.oauth2Login(oauth -> oauth
 						.userInfoEndpoint(user -> user.userService(customOAuth2UserService))
@@ -49,9 +50,10 @@ public class SecurityConfig {
 				.addFilterAfter(jwtAuthenticationFilter,
 						UsernamePasswordAuthenticationFilter.class)
 				.addFilterAfter(loggingFilter, UsernamePasswordAuthenticationFilter.class)
-				.exceptionHandling(handler -> handler.authenticationEntryPoint(entrypoint))
-				.exceptionHandling(
-						handler -> handler.accessDeniedHandler(customAccessDeniedHandler));
+				.exceptionHandling(handler -> handler
+						.authenticationEntryPoint(entrypoint)
+						.accessDeniedHandler(customAccessDeniedHandler))
+		;
 
 		return http.build();
 	}
