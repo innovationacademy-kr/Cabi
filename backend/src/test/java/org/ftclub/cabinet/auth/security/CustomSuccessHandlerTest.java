@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.auth.service;
+package org.ftclub.cabinet.auth.security;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.ftclub.cabinet.config.security.CustomOauth2User;
 import org.ftclub.cabinet.config.security.CustomSuccessHandler;
+import org.ftclub.cabinet.config.security.JwtTokenProvider;
 import org.ftclub.cabinet.config.security.OauthService;
 import org.ftclub.cabinet.config.security.TokenDto;
 import org.ftclub.cabinet.exception.CustomAuthenticationException;
@@ -51,7 +52,7 @@ public class CustomSuccessHandlerTest {
 	@Mock
 	private OauthService oauthService;
 	@Mock
-	private TokenProvider tokenProvider;
+	private JwtTokenProvider tokenProvider;
 	@Mock
 	private ObjectMapper objectMapper;
 	@Mock

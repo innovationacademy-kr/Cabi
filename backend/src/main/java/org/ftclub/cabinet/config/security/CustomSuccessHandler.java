@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
 
-	private final TokenProvider tokenProvider;
+	private final JwtTokenProvider tokenProvider;
 	private final OauthService oauthService;
 	private final ObjectMapper objectMapper;
 	@Value("${spring.security.oauth2.client.registration.ft.client-name}")
@@ -99,7 +99,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 		Cookie refreshTokenCookie = new Cookie("refreshToken", tokenDto.getRefreshToken());
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setSecure(true);
-		refreshTokenCookie.setMaxAge((int) (TokenProvider.refreshTokenValidMillisecond / 1000));
+		refreshTokenCookie.setMaxAge((int) (JwtTokenProvider.refreshTokenValidMillisecond / 1000));
 		refreshTokenCookie.setPath("/");
 
 		response.addCookie(refreshTokenCookie);
