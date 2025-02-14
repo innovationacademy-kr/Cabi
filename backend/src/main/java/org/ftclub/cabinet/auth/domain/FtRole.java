@@ -48,7 +48,7 @@ public enum FtRole {
 	 * @param roles
 	 * @return
 	 */
-	public static String combineRolesToSTring(List<FtRole> roles) {
+	public static String combineRolesToString(List<FtRole> roles) {
 		return roles.stream()
 				.map(FtRole::name)
 				.collect(Collectors.joining(DELIMITER));
