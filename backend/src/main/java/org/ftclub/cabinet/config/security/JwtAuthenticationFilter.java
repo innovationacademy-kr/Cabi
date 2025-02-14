@@ -21,8 +21,8 @@ import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
+import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.JwtAuthenticationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,14 +63,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			filterChain.doFilter(request, response);
 		} catch (ExpiredJwtException e) {
-			throw new JwtAuthenticationException(ExceptionStatus.JWT_EXPIRED);
+			throw new CustomAuthenticationException(ExceptionStatus.JWT_EXPIRED);
 		} catch (SignatureException | MalformedJwtException | IllegalArgumentException e) {
-			throw new JwtAuthenticationException(ExceptionStatus.JWT_INVALID);
+			throw new CustomAuthenticationException(ExceptionStatus.JWT_INVALID);
 		} catch (UnsupportedJwtException e) {
-			throw new JwtAuthenticationException(ExceptionStatus.JWT_UNSUPPORTED);
+			throw new CustomAuthenticationException(ExceptionStatus.JWT_UNSUPPORTED);
 		} catch (Exception e) {
 			log.error("JWT Authentication failed: {}", e.getMessage(), e);
-			throw new JwtAuthenticationException(ExceptionStatus.JWT_EXCEPTION);
+			throw new CustomAuthenticationException(ExceptionStatus.JWT_EXCEPTION);
 		} finally {
 			if (SecurityContextHolder.getContext().getAuthentication() == null) {
 				SecurityContextHolder.clearContext();
@@ -99,7 +99,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private String extractToken(HttpServletRequest request) {
 		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if (header == null || !header.startsWith(BEARER)) {
-			throw new JwtAuthenticationException(ExceptionStatus.JWT_TOKEN_NOT_FOUND);
+			throw new CustomAuthenticationException(ExceptionStatus.JWT_TOKEN_NOT_FOUND);
 		}
 		return header.substring(BEARER.length());
 	}
