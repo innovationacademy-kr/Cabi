@@ -4,13 +4,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,20 +22,28 @@ public class JwtTokenProvider {
 
 	public static final Long refreshTokenValidMillisecond = 30 * 24 * 60 * 60 * 1000L; // 30일
 	private static final String BEARER = "Bearer ";
-	private final JwtProperties jwtProperties;
 	private final Long accessTokenValidMillisecond = 60 * 60 * 1000L; // 1시간
-	@Value("${cabinet.jwt.jwt-secret-key}")
+
+	private Key signingKey;
 	private String secretKey;
 
+	@Value("${cabinet.jwt.jwt-secret-key}")
+	public void setSecretKey(String secretKey) {
+		this.secretKey = secretKey;
+		this.signingKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+	}
 
 	public Claims parseToken(String accessToken) {
-		byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(secretKey);
-		Key key = new SecretKeySpec(secretKeyBytes, SignatureAlgorithm.HS256.getJcaName());
+		Key key = generateKeyBySecret(secretKey);
 
 		return Jwts.parserBuilder()
 				.setSigningKey(key).build()
 				.parseClaimsJws(accessToken)
 				.getBody();
+	}
+
+	private Key generateKeyBySecret(String secret) {
+		return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	}
 
 	/**
@@ -58,24 +65,23 @@ public class JwtTokenProvider {
 	public TokenDto createTokenDto(Long userId, String roles) {
 		Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
 		claims.put("roles", roles);
-		Date now = new Date();
-
-		String accessToken = Jwts.builder()
-				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-				.setClaims(claims)
-				.setIssuedAt(now)
-				.setExpiration(new Date(now.getTime() + accessTokenValidMillisecond))
-				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
-				.compact();
-
-		String refreshToken = Jwts.builder()
-				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-				.setClaims(claims)
-				.setIssuedAt(now)
-				.setExpiration(new Date(now.getTime() + refreshTokenValidMillisecond))
-				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
-				.compact();
+		String accessToken = createToken(userId, roles, accessTokenValidMillisecond);
+		String refreshToken = createToken(userId, roles, refreshTokenValidMillisecond);
 
 		return new TokenDto(accessToken, refreshToken);
+	}
+
+	private String createToken(Long userId, String roles, Long validity) {
+		Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
+		claims.put("roles", roles);
+		Date now = new Date();
+
+		return Jwts.builder()
+				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+				.setClaims(claims)
+				.setIssuedAt(now)
+				.setExpiration(new Date(now.getTime() + validity))
+				.signWith(signingKey, SignatureAlgorithm.HS256)
+				.compact();
 	}
 }
