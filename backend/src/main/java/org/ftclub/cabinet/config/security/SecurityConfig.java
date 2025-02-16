@@ -9,9 +9,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,7 +22,7 @@ public class SecurityConfig {
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final LoggingFilter loggingFilter;
 	private final CustomSuccessHandler customSuccessHandler;
-	private final AuthenticationEntryPoint entrypoint;
+	private final CustomAuthenticationEntryPoint entrypoint;
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	@Bean
@@ -38,9 +38,10 @@ public class SecurityConfig {
 				.httpBasic(AbstractHttpConfigurer::disable)
 				// api별 접근 권한을 부여합니다
 				.authorizeHttpRequests(auth -> auth
-						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**").permitAll()
-						.mvcMatchers("/v4/admin/**").hasRole(AdminRole.ADMIN.name())
-						.mvcMatchers("/v4/users/me").hasRole(FtRole.USER.name())
+						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**",
+								"/oauth/authorize/**").permitAll()
+						.mvcMatchers("/v5/admin/**").hasRole(AdminRole.ADMIN.name())
+						.mvcMatchers("/v5/presentation/**").hasRole(FtRole.USER.name())
 						.anyRequest().authenticated()
 				)
 				.oauth2Login(oauth -> oauth
@@ -49,7 +50,7 @@ public class SecurityConfig {
 				)
 				.addFilterAfter(jwtAuthenticationFilter,
 						UsernamePasswordAuthenticationFilter.class)
-				.addFilterAfter(loggingFilter, UsernamePasswordAuthenticationFilter.class)
+				.addFilterAfter(loggingFilter, SecurityContextHolderFilter.class)
 				.exceptionHandling(handler -> handler
 						.authenticationEntryPoint(entrypoint)
 						.accessDeniedHandler(customAccessDeniedHandler))
