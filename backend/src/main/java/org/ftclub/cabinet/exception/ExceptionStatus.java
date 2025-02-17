@@ -101,7 +101,7 @@ public enum ExceptionStatus {
 	// JWT 관련 에러,
 	JWT_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT 토큰이 존재하지 않습니다."),
 	JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
-	JWT_EXCEPTION(HttpStatus.BAD_REQUEST, "JWT 에러가 발생하였습니다."),
+	JWT_EXCEPTION(HttpStatus.UNAUTHORIZED, "JWT 에러가 발생하였습니다."),
 	JWT_INVALID(HttpStatus.UNAUTHORIZED, "토큰의 서명이 올바르지 않거나, 변조되었습니다."),
 	JWT_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "지원하지 않는 토큰 형식입니다."),
 	;
