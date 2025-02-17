@@ -19,6 +19,7 @@ import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,11 +47,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			FilterChain filterChain) throws ServletException, IOException {
-
+		log.info("JwtAuthenticationFilter executing for request URL: {}", request.getRequestURL());
 		try {
 			String token = jwtTokenProvider.extractToken(request);
-			Claims claims = jwtTokenProvider.parseToken(token);
-			updateSecurityContextHolder(claims);
+			log.info("Extracted Token = {}", token);
+			if (token != null) {
+				Claims claims = jwtTokenProvider.parseToken(token);
+				Authentication auth = getAuthentication(claims);
+
+				SecurityContextHolder.getContext().setAuthentication(auth);
+			}
 
 			filterChain.doFilter(request, response);
 		} catch (ExpiredJwtException e) {
@@ -70,7 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	}
 
 	// userId, role
-	private void updateSecurityContextHolder(Claims claims) {
+	private Authentication getAuthentication(Claims claims) {
 		String roles = claims.get("roles", String.class);
 
 		UserInfoDto userInfoDto =
@@ -82,9 +88,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		List<GrantedAuthority> authorityList = Stream.of(roles.split(FtRole.DELIMITER))
 				.map(role -> new SimpleGrantedAuthority(FtRole.ROLE + role))
 				.collect(Collectors.toList());
-		UsernamePasswordAuthenticationToken newAuth =
-				new UsernamePasswordAuthenticationToken(userInfoDto, null, authorityList);
-		SecurityContextHolder.getContext().setAuthentication(newAuth);
+		return new UsernamePasswordAuthenticationToken(userInfoDto, null, authorityList);
 	}
 
 }
