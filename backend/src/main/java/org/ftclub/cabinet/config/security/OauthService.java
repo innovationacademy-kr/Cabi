@@ -54,7 +54,7 @@ public class OauthService {
 			throws JsonProcessingException {
 		FtOauthProfile profile = convertJsonNodeToProfile(rootNode);
 		List<FtRole> roles = profile.getRoles();
-		String combinedRoles = FtRole.combineRolesToSTring(roles);
+		String combinedRoles = FtRole.combineRolesToString(roles);
 
 		LocalDateTime blackHoledAt = profile.getBlackHoledAt();
 
