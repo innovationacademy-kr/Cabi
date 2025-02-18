@@ -2,8 +2,7 @@ package org.ftclub.cabinet.item.controller;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.config.security.UserInfoDto;
 import org.ftclub.cabinet.dto.CoinCollectionRewardResponseDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
@@ -18,6 +17,7 @@ import org.ftclub.cabinet.item.service.ItemFacadeService;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +40,6 @@ public class ItemController {
 	 * @return
 	 */
 	@GetMapping("")
-	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public ItemStoreResponseDto getAllItems() {
 		return itemFacadeService.getAllItems();
 	}
@@ -52,8 +51,7 @@ public class ItemController {
 	 * @param sku
 	 */
 	@PostMapping("/{sku}/purchase")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public void purchaseItem(@UserSession UserSessionDto user,
+	public void purchaseItem(@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Sku sku) {
 		itemFacadeService.purchaseItem(user.getUserId(), sku);
 	}
@@ -66,12 +64,12 @@ public class ItemController {
 	 * @return
 	 */
 	@GetMapping("/history")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public ItemHistoryPaginationDto getItemHistory(@UserSession UserSessionDto user,
+	public ItemHistoryPaginationDto getItemHistory(@AuthenticationPrincipal UserInfoDto user,
 			Pageable pageable) {
 		return itemFacadeService.getItemHistory(user.getUserId(), pageable);
 	}
 
+	// TODO: UserSession을 AuthenticationPrincipal로 변경
 	/**
 	 * 유저가 보유하고 있는 아이템 목록 조회
 	 *
@@ -79,7 +77,6 @@ public class ItemController {
 	 * @return
 	 */
 	@GetMapping("/me")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public MyItemResponseDto getMyItems(@UserSession UserSessionDto user) {
 		return itemFacadeService.getMyItems(user);
 	}
@@ -93,8 +90,7 @@ public class ItemController {
 	 * @return
 	 */
 	@GetMapping("/coin/history")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public CoinHistoryPaginationDto getCoinHistory(@UserSession UserSessionDto user,
+	public CoinHistoryPaginationDto getCoinHistory(@AuthenticationPrincipal UserInfoDto user,
 			@RequestParam CoinHistoryType type, Pageable pageable) {
 		return itemFacadeService.getCoinHistory(user.getUserId(), type, pageable);
 	}
@@ -106,9 +102,8 @@ public class ItemController {
 	 * @return
 	 */
 	@GetMapping("/coin")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public CoinMonthlyCollectionDto getCoinMonthlyCollectionCount(
-			@UserSession UserSessionDto user) {
+			@AuthenticationPrincipal UserInfoDto user) {
 		return itemFacadeService.getCoinCollectionCountInMonth(user.getUserId());
 	}
 
@@ -118,8 +113,7 @@ public class ItemController {
 	 * @param user 유저 세션
 	 */
 	@PostMapping("/coin")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public CoinCollectionRewardResponseDto collectCoin(@UserSession UserSessionDto user) {
+	public CoinCollectionRewardResponseDto collectCoin(@AuthenticationPrincipal UserInfoDto user) {
 		return itemFacadeService.collectCoinAndIssueReward(user.getUserId());
 	}
 
@@ -131,8 +125,7 @@ public class ItemController {
 	 * @param data sku 에 따라 다르게 필요한 정보
 	 */
 	@PostMapping("{sku}/use")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public void useItem(@UserSession UserSessionDto user,
+	public void useItem(@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable("sku") Sku sku,
 			@Valid @RequestBody ItemUseRequestDto data) {
 		itemFacadeService.useItem(user.getUserId(), sku, data);
