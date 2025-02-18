@@ -48,7 +48,6 @@ public class PingController {
 //	}
 
 	@GetMapping("/issue-ext")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public String ok() {
 		lentExtensionManager.issueLentExtension();
 		return "ok";
