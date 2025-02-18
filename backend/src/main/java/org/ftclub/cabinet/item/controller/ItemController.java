@@ -69,7 +69,6 @@ public class ItemController {
 		return itemFacadeService.getItemHistory(user.getUserId(), pageable);
 	}
 
-	// TODO: UserSession을 AuthenticationPrincipal로 변경
 	/**
 	 * 유저가 보유하고 있는 아이템 목록 조회
 	 *
@@ -77,8 +76,8 @@ public class ItemController {
 	 * @return
 	 */
 	@GetMapping("/me")
-	public MyItemResponseDto getMyItems(@UserSession UserSessionDto user) {
-		return itemFacadeService.getMyItems(user);
+	public MyItemResponseDto getMyItems(@AuthenticationPrincipal UserInfoDto user) {
+		return itemFacadeService.getMyItems(user.getUserId());
 	}
 
 	/**

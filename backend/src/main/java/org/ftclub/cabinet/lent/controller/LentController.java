@@ -125,8 +125,8 @@ public class LentController {
 	 */
 	@GetMapping("/me")
 	public ResponseEntity<MyCabinetResponseDto> getMyLentInfo(
-			@UserSession UserSessionDto user) {
-		MyCabinetResponseDto myCabinetResponseDto = lentFacadeService.getMyLentInfo(user);
+			@AuthenticationPrincipal UserInfoDto user) {
+		MyCabinetResponseDto myCabinetResponseDto = lentFacadeService.getMyLentInfo(user.getUserId());
 		if (myCabinetResponseDto == null) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
@@ -143,9 +143,9 @@ public class LentController {
 	 */
 	@GetMapping("/me/histories")
 	public LentHistoryPaginationDto getMyLentLog(
-			@UserSession UserSessionDto user,
+			@AuthenticationPrincipal UserInfoDto user,
 			@Valid Pageable pageable) {
-		return lentFacadeService.getMyLentLog(user, pageable);
+		return lentFacadeService.getMyLentLog(user.getUserId(), pageable);
 	}
 
 	/**
