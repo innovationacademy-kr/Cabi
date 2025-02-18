@@ -100,13 +100,13 @@ public class ItemFacadeService {
 	/**
 	 * 유저의 보유 아이템 반환
 	 *
-	 * @param user 유저 정보
+	 * @param userId 유저 정보
 	 * @return 유저의 보유 아이템
 	 */
 	@Transactional(readOnly = true)
-	public MyItemResponseDto getMyItems(UserSessionDto user) {
+	public MyItemResponseDto getMyItems(Long userId) {
 		List<ItemHistory> userItemHistories = itemHistoryQueryService.findAllItemHistoryByUser(
-				user.getUserId());
+				userId);
 
 		Map<ItemType, List<ItemDto>> itemMap = userItemHistories.stream()
 				.map(ItemHistory::getItem)

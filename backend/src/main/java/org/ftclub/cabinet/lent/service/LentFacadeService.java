@@ -74,14 +74,14 @@ public class LentFacadeService {
 	/**
 	 * 내 대여 기록 조회
 	 *
-	 * @param user     사용자 세션
+	 * @param userId     사용자 Id
 	 * @param pageable 페이지 정보
 	 * @return 대여 기록
 	 */
 	@Transactional(readOnly = true)
-	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user, Pageable pageable) {
+	public LentHistoryPaginationDto getMyLentLog(Long userId, Pageable pageable) {
 		Page<LentHistory> lentHistories =
-				lentQueryService.findUserLentHistories(user.getUserId(), pageable);
+				lentQueryService.findUserLentHistories(userId, pageable);
 		List<LentHistoryDto> result = lentHistories.stream()
 				.map(lentHistory -> lentMapper.toLentHistoryDto(lentHistory, lentHistory.getUser(),
 						lentHistory.getCabinet())).collect(Collectors.toList());
@@ -91,18 +91,18 @@ public class LentFacadeService {
 	/**
 	 * 내 대여 정보 조회
 	 *
-	 * @param user 사용자 세션
+	 * @param userId 사용자 Id
 	 * @return 대여 정보
 	 */
 	@Transactional(readOnly = true)
-	public MyCabinetResponseDto getMyLentInfo(UserSessionDto user) {
+	public MyCabinetResponseDto getMyLentInfo(Long userId) {
 		LentHistory userLentHistory = lentQueryService.findUserActiveLentHistoryWithCabinet(
-				user.getUserId());
+				userId);
 		Long cabinetId;
 		Cabinet userActiveCabinet;
 		List<LentDto> lentDtoList;
 		if (userLentHistory == null) {
-			cabinetId = lentRedisService.findCabinetJoinedUser(user.getUserId());
+			cabinetId = lentRedisService.findCabinetJoinedUser(userId);
 			if (cabinetId == null) {
 				return null;
 			}
