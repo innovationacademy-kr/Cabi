@@ -9,8 +9,9 @@ const LoginTemplate = (props: {
   pageTitle: string;
   pageSubTitle: string;
   imgSrc: string;
+  googleUrl: string;
 }) => {
-  const { url, pageTitle, pageSubTitle, imgSrc } = props;
+  const { url, pageTitle, pageSubTitle, imgSrc, googleUrl } = props;
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -51,6 +52,13 @@ const LoginTemplate = (props: {
             disabled={isClicked}
           >
             {isClicked ? <LoadingAnimation></LoadingAnimation> : "L O G I N"}
+          </button>
+          <button
+            onClick={() => {
+              window.location.replace(googleUrl);
+            }}
+          >
+            구글 로그인
           </button>
         </LoginCardStyled>
       </RightSectionStyled>
