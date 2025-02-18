@@ -10,6 +10,7 @@ import org.ftclub.cabinet.alarm.fcm.config.FirebaseConfig;
 import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
+import org.ftclub.cabinet.config.security.UserInfoDto;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
@@ -78,7 +79,7 @@ public class UserFacadeService {
 	 * @return 유저의 사용 가능한 연장권 정보를 반환합니다.
 	 */
 	@Transactional(readOnly = true)
-	public LentExtensionPaginationDto getActiveLentExtensions(UserSessionDto user) {
+	public LentExtensionPaginationDto getActiveLentExtensions(UserInfoDto user) {
 		List<LentExtension> lentExtensions =
 				lentExtensionQueryService.findActiveLentExtensions(user.getUserId());
 		List<LentExtensionResponseDto> result = lentExtensions.stream()
@@ -94,7 +95,7 @@ public class UserFacadeService {
 	 * @param user 유저의 세션 정보
 	 */
 	@Transactional
-	public void useLentExtension(UserSessionDto user) {
+	public void useLentExtension(UserInfoDto user) {
 		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(user.getUserId());
 		List<LentHistory> activeLentHistories = lentQueryService.findCabinetActiveLentHistories(
 				cabinet.getId());
@@ -111,26 +112,26 @@ public class UserFacadeService {
 	/**
 	 * 유저의 알람 설정을 변경합니다.
 	 *
-	 * @param userSessionDto        유저의 세션 정보
+	 * @param userInfoDto           유저의 세션 정보
 	 * @param updateAlarmRequestDto 변경할 알람 설정 정보
 	 */
 	@Transactional
-	public void updateAlarmState(UserSessionDto userSessionDto,
+	public void updateAlarmState(UserInfoDto userInfoDto,
 			UpdateAlarmRequestDto updateAlarmRequestDto) {
-		User user = userQueryService.getUser(userSessionDto.getUserId());
+		User user = userQueryService.getUser(userInfoDto.getUserId());
 		userCommandService.updateAlarmStatus(user, updateAlarmRequestDto);
 	}
 
 	/**
 	 * 유저의 디바이스 토큰 정보를 업데이트합니다.
 	 *
-	 * @param userSessionDto              유저의 세션 정보
+	 * @param userInfoDto                 유저의 세션 정보
 	 * @param updateDeviceTokenRequestDto 디바이스 토큰 정보
 	 */
 	@Transactional
-	public void updateDeviceToken(UserSessionDto userSessionDto,
+	public void updateDeviceToken(UserInfoDto userInfoDto,
 			UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
-		User user = userQueryService.getUser(userSessionDto.getUserId());
+		User user = userQueryService.getUser(userInfoDto.getUserId());
 		fcmTokenRedisService.saveToken(
 				user.getName(),
 				updateDeviceTokenRequestDto.getDeviceToken(),
