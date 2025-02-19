@@ -36,7 +36,7 @@ public class AuthPolicyService {
 	}
 
 	public String getProfileUrl() {
-		return domainProperties.getFeHost() + "/me";
+		return domainProperties.getFeHost() + "/profile";
 	}
 
 	public String getAdminHomeUrl() {
