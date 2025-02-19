@@ -6,7 +6,7 @@ import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
-import org.ftclub.cabinet.config.security.CustomOauth2User;
+import org.ftclub.cabinet.config.security.FtOauthProfile;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
@@ -36,7 +36,16 @@ public class UserCommandService {
 //		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
 //				UserRole.USER);
 		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
-				profile.getRole());
+				profile.getRole().name());
+		return userRepository.save(user);
+	}
+
+	public User createUserByFtOauthProfile(FtOauthProfile profile) {
+		if (userRepository.existsByNameAndEmail(profile.getIntraName(), profile.getEmail())) {
+			throw ExceptionStatus.USER_ALREADY_EXISTED.asServiceException();
+		}
+		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
+				FtRole.combineRolesToString(profile.getRoles()));
 		return userRepository.save(user);
 	}
 
@@ -54,14 +63,6 @@ public class UserCommandService {
 //		User user = User.of(clubName, clubName + "@ftclub.org", null);
 //		return userRepository.save(user);
 //	}
-	public User createUserByOauthProfile(CustomOauth2User profile) {
-		if (userRepository.existsByNameAndEmail(profile.getName(), profile.getEmail())) {
-			throw ExceptionStatus.USER_ALREADY_EXISTED.asServiceException();
-		}
-		User user = User.of(profile.getName(), profile.getEmail(), profile.getBlackHoledAt(),
-				profile.getRole());
-		return userRepository.save(user);
-	}
 
 	/**
 	 * 동아리 유저의 이름을 변경합니다.
@@ -126,11 +127,11 @@ public class UserCommandService {
 	 * 유저의 role을 변경합니다.
 	 *
 	 * @param userId
-	 * @param role
+	 * @param roles
 	 */
-	public void updateUserRoleStatus(Long userId, FtRole role) {
+	public void updateUserRoleStatus(Long userId, String roles) {
 		User user = userRepository.getById(userId);
-		user.changeUserRole(role);
+		user.changeUserRole(roles);
 		userRepository.save(user);
 	}
 
@@ -140,11 +141,12 @@ public class UserCommandService {
 		user.addCoin(reward);
 	}
 
-	public void updateUserBlackholeAndRole(Long userId, LocalDateTime blackholedAt, FtRole role) {
+	public void updateUserBlackholeAndRole(Long userId, LocalDateTime blackholedAt,
+			String newRoles) {
 		User user = userRepository.getById(userId);
 		user.changeBlackholedAt(blackholedAt);
 		user.setDeletedAt(null);
-		user.changeUserRole(role);
+		user.changeUserRole(newRoles);
 		userRepository.save(user);
 	}
 
