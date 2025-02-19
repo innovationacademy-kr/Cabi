@@ -184,19 +184,18 @@ public class AuthFacadeService {
 	}
 
 	/**
-	 * ft oauth 로그인을 제외한 sns 로그인
+	 * 유저의 role, blackhole 상태 확인 후 oauthMail 연동
 	 *
+	 * @param userId
 	 * @param oauth
-	 * @param provider
+	 * @param oauthMail
 	 */
-	public void handleOauth2Login(HttpServletResponse res, String oauth, String provider)
-			throws IOException {
-
-		// 기존 로그인 상태가 ft가 아니라면
+	public void linkOauthMail(Long userId, String oauth, String oauthMail) {
 		if (!oauth.equals("ft")) {
 			throw ExceptionStatus.NOT_FT_LOGIN_STATUS.asServiceException();
 		}
-
-		res.sendRedirect("/oauth2/authorization/" + provider);
+		// 만약 기존에 연결된 계정 있는지 verify 추가
+		User user = userQueryService.getUser(userId);
+		user.changeOauthMail(oauthMail);
 	}
 }

@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.config.security;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -39,7 +38,6 @@ public class CustomOauth2User implements OAuth2User {
 	 */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-//		FtRole role = (FtRole) attributes.get("role");
 
 		return authorities != null ? authorities : Collections.emptyList();
 	}
@@ -51,10 +49,6 @@ public class CustomOauth2User implements OAuth2User {
 
 	public String getEmail() {
 		return (String) attributes.getOrDefault("email", "unknown");
-	}
-
-	public LocalDateTime getBlackHoledAt() {
-		return (LocalDateTime) attributes.getOrDefault("blackholedAt", "unknown");
 	}
 
 	public FtRole getRole() {

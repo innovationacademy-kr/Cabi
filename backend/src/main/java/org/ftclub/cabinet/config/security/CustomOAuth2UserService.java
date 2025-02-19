@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+
+	private final ObjectMapper objectMapper;
 
 	/**
 	 * oauth 로그인을 마친 유저의 프로필을 해당 사이트로부터 받아온 후
@@ -33,6 +36,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			String provider = userRequest.getClientRegistration().getRegistrationId();
 			// 고유 id ex) 42 -> intraName, google -> uid
 			String userId = oAuth2User.getName();
+//			JsonNode rootNode =
+//					objectMapper.convertValue(oAuth2User.getAttributes(), JsonNode.class);
 
 			return new CustomOauth2User(provider, userId, oAuth2User.getAttributes(), null);
 		} catch (OAuth2AuthenticationException e) {

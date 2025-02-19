@@ -10,8 +10,6 @@ import java.security.Key;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.exception.CustomAuthenticationException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -59,7 +57,7 @@ public class JwtTokenProvider {
 	public String extractToken(HttpServletRequest request) {
 		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if (header == null || !header.startsWith(BEARER)) {
-			throw new CustomAuthenticationException(ExceptionStatus.JWT_TOKEN_NOT_FOUND);
+			return null;
 		}
 		return header.substring(BEARER.length());
 	}

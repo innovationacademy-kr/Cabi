@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -18,7 +17,6 @@ public class SecurityConfig {
 
 	private final CustomOAuth2UserService customOAuth2UserService;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
-	private final OAuth2CheckFilter oAuth2CheckFilter;
 	private final LoggingFilter loggingFilter;
 	private final CustomSuccessHandler customSuccessHandler;
 	private final CustomAuthenticationEntryPoint entrypoint;
@@ -49,7 +47,6 @@ public class SecurityConfig {
 						.userInfoEndpoint(user -> user.userService(customOAuth2UserService))
 						.successHandler(customSuccessHandler)
 				)
-				.addFilterBefore(oAuth2CheckFilter, OAuth2AuthorizationRequestRedirectFilter.class)
 				.addFilterAfter(jwtAuthenticationFilter,
 						UsernamePasswordAuthenticationFilter.class)
 //				.addFilterAfter(loggingFilter, SecurityContextHolderFilter.class)

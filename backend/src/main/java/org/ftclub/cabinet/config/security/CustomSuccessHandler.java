@@ -1,14 +1,15 @@
 package org.ftclub.cabinet.config.security;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,6 +45,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	private final OauthService oauthService;
 	private final ObjectMapper objectMapper;
 	private final AuthPolicyService authPolicyService;
+	private final UserQueryService userQueryService;
 	@Value("${spring.security.oauth2.client.registration.ft.client-name}")
 	private String ftProvider;
 	@Value("${spring.security.oauth2.client.registration.google.client-name}")
@@ -55,40 +58,48 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	 * @param response
 	 * @param authentication
 	 * @throws IOException
-	 * @throws ServletException
 	 */
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-			Authentication authentication) throws IOException, ServletException {
+			Authentication authentication) throws IOException {
 
 		CustomOauth2User fromLoadUser = (CustomOauth2User) authentication.getPrincipal();
 		String provider = fromLoadUser.getProvider();
-
 		JsonNode rootNode =
 				objectMapper.convertValue(fromLoadUser.getAttributes(), JsonNode.class);
-		User user = handleUserLogin(provider, rootNode, fromLoadUser);
 
-		Authentication newAuth = getAuthenticationByLoadUser(user, provider);
-		SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-		TokenDto tokenDto = tokenProvider.createTokenDto(user.getId(), user.getRoles(), provider);
-		setTokensToResponse(tokenDto, response);
-
-		String redirectUrl =
-				provider.equals(ftProvider) ? authPolicyService.getMainHomeUrl()
-						: authPolicyService.getProfileUrl();
-		response.sendRedirect(redirectUrl);
-	}
-
-	private User handleUserLogin(String provider, JsonNode rootNode,
-			CustomOauth2User fromLoadUser) throws JsonProcessingException {
+		User user;
+		String redirectUrl = authPolicyService.getMainHomeUrl();
 		if (provider.equals(ftProvider)) {
-			return oauthService.handleFtLogin(rootNode);
+			user = oauthService.handleFtLogin(rootNode);
+			Authentication newAuth = getAuthenticationByLoadUser(user, provider);
+			SecurityContextHolder.getContext().setAuthentication(newAuth);
+			TokenDto tokenDto =
+					tokenProvider.createTokenDto(user.getId(), user.getRoles(), provider);
+			setTokensToResponse(tokenDto, response);
+		} else if (provider.equals(googleProvider)) {
+			String googleEmail = fromLoadUser.getEmail();
+			// 이미 연동한 계정이라면 토큰 발급, main페이지로 ㄱㄱ
+			// 없는 계정이라면 redirect만 ㄱㄱ
+			Optional<User> userByOauthMail = userQueryService.findByOauthEmail(googleEmail);
+			if (userByOauthMail.isEmpty()) {
+				redirectUrl = authPolicyService.getProfileUrl() + "?oauthMail=" + URLEncoder.encode(
+						googleEmail, StandardCharsets.UTF_8);
+			}
+			if (userByOauthMail.isPresent()) {
+				User googleUser = userByOauthMail.get();
+				Authentication googleAuth = getAuthenticationByLoadUser(googleUser, provider);
+				SecurityContextHolder.getContext().setAuthentication(googleAuth);
+
+				TokenDto token = tokenProvider.createTokenDto(googleUser.getId(),
+						googleUser.getRoles(), provider);
+				setTokensToResponse(token, response);
+			}
+		} else {
+			throw new CustomAuthenticationException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
 		}
-		if (provider.equals(googleProvider)) {
-			return oauthService.handleGoogleLogin(rootNode, fromLoadUser);
-		}
-		throw new CustomAuthenticationException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
+
+		response.sendRedirect(redirectUrl);
 	}
 
 	/**
