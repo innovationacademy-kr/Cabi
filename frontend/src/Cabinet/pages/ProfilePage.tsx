@@ -17,6 +17,19 @@ import {
   axiosMyInfo,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
+import instance from "../api/axios/axios.instance";
+
+const axiosLinkGoogleAccount = async (oauthMail: string) => {
+  try {
+    const { data } = await instance.post(
+      `${import.meta.env.VITE_BE_HOST}/v4/auth/mail`,
+      { oauthMail }
+    );
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -45,6 +58,15 @@ const ProfilePage = () => {
     }, 350);
   }, []);
 
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const oauthMail = url.searchParams.get("oauthMail");
+    if (oauthMail) {
+      console.log(oauthMail);
+      axiosLinkGoogleAccount(oauthMail);
+    }
+  }, []);
+
   return (
     <>
       {isLoading ? (
@@ -59,9 +81,8 @@ const ProfilePage = () => {
           <AlarmCardContainer alarm={myInfo.alarmTypes} />
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
-          {/* 버튼 추가 */}
           {myInfo.oauthMail ? (
-            <div>myInfo.oauthMail</div>
+            <div>{myInfo.oauthMail}</div>
           ) : (
             <button
               onClick={() => {
