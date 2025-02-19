@@ -80,8 +80,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		UserInfoDto userInfoDto =
 				new UserInfoDto(
 						claims.get(JwtTokenProvider.USER_ID, Long.class),
-						roles,
-						claims.get(JwtTokenProvider.OAUTH, String.class)
+						claims.get(JwtTokenProvider.OAUTH, String.class),
+						roles
 				);
 
 		List<GrantedAuthority> authorityList = Stream.of(roles.split(FtRole.DELIMITER))
