@@ -23,7 +23,7 @@ const SectionPaginationContainer = (): JSX.Element => {
     currentFloor?.toString() + "층 - " + currentSectionName;
 
   const changeSectionOnClickIndexButton = (index: number) => {
-    if (sectionList === undefined) return;
+    if (!sectionList.length) return;
 
     const targetSectionName = sectionList.at(index)?.sectionName;
     if (targetSectionName === undefined) return;
@@ -47,9 +47,7 @@ const SectionPaginationContainer = (): JSX.Element => {
   };
 
   const isLoaded =
-    !currentFloor &&
-    sectionList !== undefined &&
-    currentSectionName !== undefined;
+    currentFloor && sectionList.length && currentSectionName !== undefined;
 
   return (
     <React.Fragment>
