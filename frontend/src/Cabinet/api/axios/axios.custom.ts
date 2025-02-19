@@ -985,19 +985,3 @@ export const axiosGetUserItems = async (
     throw error;
   }
 };
-
-const axiosRegisterSnsURL = "/v4/auth";
-export const axiosRegisterSns = async (provider: string): Promise<any> => {
-  try {
-    const response = await instance.get(`${axiosRegisterSnsURL}/${provider}`);
-    return response;
-  } catch (error) {
-    logAxiosError(
-      error,
-      ErrorType.INTERNAL_SERVER_ERROR,
-      "SNS 연동 중 오류 발생",
-      false
-    );
-    throw error;
-  }
-};
