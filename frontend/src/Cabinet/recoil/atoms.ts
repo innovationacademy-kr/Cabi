@@ -34,6 +34,7 @@ export const userState = atom<UserDto>({
     alarmTypes: null,
     isDeviceTokenExpired: null,
     coins: null,
+    oauthMail: null,
   },
 });
 
