@@ -15,6 +15,7 @@ import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileC
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import {
   axiosMyInfo,
+  axiosRegisterSns,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
 
@@ -60,13 +61,16 @@ const ProfilePage = () => {
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
           {myInfo.oauthMail ? (
-            <div>myInfo.oauthMail</div>
+            <div>{myInfo.oauthMail}</div>
           ) : (
             <button
-              onClick={() => {
-                window.location.replace(
-                  `${import.meta.env.VITE_BE_HOST}/oauth2/authorization/google`
-                );
+              onClick={async () => {
+                try {
+                  const res = await axiosRegisterSns("google");
+                  console.log(res);
+                } catch (error) {
+                  throw error;
+                }
               }}
             >
               구글 계정 연동

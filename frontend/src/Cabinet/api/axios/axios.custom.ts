@@ -765,9 +765,9 @@ export const axiosLentClubCabinet = async (
   try {
     const response = await instance.post(
       axiosLentClubCabinetURL +
-      clubId.toString() +
-      "/cabinets/" +
-      cabinetId.toString()
+        clubId.toString() +
+        "/cabinets/" +
+        cabinetId.toString()
     );
     return response;
   } catch (error) {
@@ -981,6 +981,25 @@ export const axiosGetUserItems = async (
       ErrorType.STORE,
       "유저 아이템 내역 불러오는중 오류 발생",
       true
+    );
+    throw error;
+  }
+};
+
+const axiosRegisterSnsURL = "/v4/auth";
+export const axiosRegisterSns = async (provider: string): Promise<any> => {
+  try {
+    const response = await instance.post(
+      `${axiosRegisterSnsURL}/${provider}`,
+      {}
+    );
+    return response;
+  } catch (error) {
+    logAxiosError(
+      error,
+      ErrorType.INTERNAL_SERVER_ERROR,
+      "SNS 연동 중 오류 발생",
+      false
     );
     throw error;
   }
