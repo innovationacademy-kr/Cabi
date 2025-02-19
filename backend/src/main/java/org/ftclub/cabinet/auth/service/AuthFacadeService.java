@@ -16,6 +16,7 @@ import org.ftclub.cabinet.auth.domain.GoogleProfile;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.repository.UserRepository;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class AuthFacadeService {
 	private final AuthPolicyService authPolicyService;
 	private final TokenProvider tokenProvider;
 	private final CookieManager cookieManager;
+	private final UserRepository userRepository;
 
 	/**
 	 * 유저 로그인 페이지로 리다이렉트합니다.
@@ -194,8 +196,9 @@ public class AuthFacadeService {
 		if (!oauth.equals("ft")) {
 			throw ExceptionStatus.NOT_FT_LOGIN_STATUS.asServiceException();
 		}
-		// 만약 기존에 연결된 계정 있는지 verify 추가
+		// 만약 기존에 연결된 계정 있는지 verify 추가, oauthMail null인지 검증하기
 		User user = userQueryService.getUser(userId);
 		user.changeOauthMail(oauthMail);
+		userRepository.save(user);
 	}
 }
