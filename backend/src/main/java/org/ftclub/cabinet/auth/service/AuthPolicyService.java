@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthPolicyService {
+
 	private final MasterProperties masterProperties;
 	private final DomainProperties domainProperties;
 
@@ -32,6 +33,10 @@ public class AuthPolicyService {
 
 	public String getMainHomeUrl() {
 		return domainProperties.getFeHost() + "/home";
+	}
+
+	public String getProfileUrl() {
+		return domainProperties.getFeHost() + "/me";
 	}
 
 	public String getAdminHomeUrl() {

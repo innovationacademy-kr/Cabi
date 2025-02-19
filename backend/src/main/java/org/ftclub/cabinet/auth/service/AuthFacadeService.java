@@ -182,4 +182,21 @@ public class AuthFacadeService {
 		Cookie adminCookie = cookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, "");
 		cookieManager.setCookieToClient(res, adminCookie, "/", res.getHeader("host"));
 	}
+
+	/**
+	 * ft oauth 로그인을 제외한 sns 로그인
+	 *
+	 * @param oauth
+	 * @param provider
+	 */
+	public void handleOauth2Login(HttpServletResponse res, String oauth, String provider)
+			throws IOException {
+
+		// 기존 로그인 상태가 ft가 아니라면
+		if (!oauth.equals("ft")) {
+			throw ExceptionStatus.NOT_FT_LOGIN_STATUS.asServiceException();
+		}
+
+		res.sendRedirect("/oauth2/authorization/" + provider);
+	}
 }
