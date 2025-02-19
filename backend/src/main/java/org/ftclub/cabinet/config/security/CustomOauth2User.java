@@ -2,13 +2,12 @@ package org.ftclub.cabinet.config.security;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 /**
@@ -25,6 +24,7 @@ public class CustomOauth2User implements OAuth2User {
 	private final String provider;
 	private final String name;
 	private final Map<String, Object> attributes;
+	private final Collection<? extends GrantedAuthority> authorities;
 
 
 	@Override
@@ -39,9 +39,9 @@ public class CustomOauth2User implements OAuth2User {
 	 */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		FtRole role = (FtRole) attributes.get("role");
+//		FtRole role = (FtRole) attributes.get("role");
 
-		return List.of(new SimpleGrantedAuthority(role.getAuthority()));
+		return authorities != null ? authorities : Collections.emptyList();
 	}
 
 	@Override

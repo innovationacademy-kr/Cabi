@@ -34,7 +34,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			// 고유 id ex) 42 -> intraName, google -> uid
 			String userId = oAuth2User.getName();
 
-			return new CustomOauth2User(provider, userId, oAuth2User.getAttributes());
+			return new CustomOauth2User(provider, userId, oAuth2User.getAttributes(), null);
 		} catch (OAuth2AuthenticationException e) {
 			log.error("OAuth2 Authentication Exception : {}", e.getMessage(), e);
 			throw ExceptionStatus.INVALID_AUTHORIZATION.asSpringSecurityException();
