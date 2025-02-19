@@ -1,11 +1,11 @@
 package org.ftclub.cabinet.config.security;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Getter
 public class UserOauthMailDto {
 
-	private final String oauthMail;
+	private String oauthMail;
 }
