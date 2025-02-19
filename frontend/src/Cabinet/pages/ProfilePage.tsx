@@ -59,6 +59,19 @@ const ProfilePage = () => {
           <AlarmCardContainer alarm={myInfo.alarmTypes} />
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
+          {myInfo.oauthMail ? (
+            <div>myInfo.oauthMail</div>
+          ) : (
+            <button
+              onClick={() => {
+                window.location.replace(
+                  `${import.meta.env.VITE_BE_HOST}/oauth2/authorization/google`
+                );
+              }}
+            >
+              구글 계정 연동
+            </button>
+          )}
         </CardGridWrapper>
       )}
     </>
