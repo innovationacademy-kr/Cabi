@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.config.security;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -65,23 +66,29 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 		JsonNode rootNode =
 				objectMapper.convertValue(fromLoadUser.getAttributes(), JsonNode.class);
-
-		User user;
-		if (provider.equals(ftProvider)) {
-			user = oauthService.handleFtLogin(rootNode);
-		} else if (provider.equals(googleProvider)) {
-			user = oauthService.handleGoogleLogin(rootNode, fromLoadUser);
-		} else {
-			throw new CustomAuthenticationException(ExceptionStatus.INVALID_OAUTH_TYPE);
-		}
+		User user = handleUserLogin(provider, rootNode, fromLoadUser);
 
 		Authentication newAuth = getAuthenticationByLoadUser(user, provider);
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-		TokenDto tokenDto = tokenProvider.createTokenDto(user.getId(), user.getRoles());
-		// AccessToken은 JSON, RefreshToken -> Cookie?
+		TokenDto tokenDto = tokenProvider.createTokenDto(user.getId(), user.getRoles(), provider);
 		setTokensToResponse(tokenDto, response);
-		response.sendRedirect(authPolicyService.getMainHomeUrl());
+
+		String redirectUrl =
+				provider.equals(ftProvider) ? authPolicyService.getMainHomeUrl()
+						: authPolicyService.getProfileUrl();
+		response.sendRedirect(redirectUrl);
+	}
+
+	private User handleUserLogin(String provider, JsonNode rootNode,
+			CustomOauth2User fromLoadUser) throws JsonProcessingException {
+		if (provider.equals(ftProvider)) {
+			return oauthService.handleFtLogin(rootNode);
+		}
+		if (provider.equals(googleProvider)) {
+			return oauthService.handleGoogleLogin(rootNode, fromLoadUser);
+		}
+		throw new CustomAuthenticationException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
 	}
 
 	/**

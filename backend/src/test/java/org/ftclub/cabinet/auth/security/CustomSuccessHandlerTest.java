@@ -105,18 +105,18 @@ public class CustomSuccessHandlerTest {
 		//given -> 이전 로그인 상태가 ft가 아닌 google
 		when(customOauth2User.getProvider()).thenReturn(google_provider);
 		when(oauthService.handleGoogleLogin(any(), any(CustomOauth2User.class)))
-				.thenThrow(ExceptionStatus.INVALID_OAUTH_TYPE.asSpringSecurityException());
+				.thenThrow(ExceptionStatus.NOT_FT_LOGIN_STATUS.asSpringSecurityException());
 
 		assertThatThrownBy(() ->
 				customSuccessHandler.onAuthenticationSuccess(request, response, authentication))
 				.isInstanceOf(SpringSecurityException.class)
-				.hasMessage(ExceptionStatus.INVALID_OAUTH_TYPE.getMessage());
+				.hasMessage(ExceptionStatus.NOT_FT_LOGIN_STATUS.getMessage());
 
 		// 예외 발생 시, 아래의 서비스는 작동하지 않아야 한다.
 		verify(response, times(0)).setContentType(MediaType.APPLICATION_JSON_VALUE);
 		verify(response, times(0)).setCharacterEncoding("UTF-8");
 		verify(response, times(0)).addCookie(any(Cookie.class));
-		verify(tokenProvider, times(0)).createTokenDto(anyLong(), anyString());
+		verify(tokenProvider, times(0)).createTokenDto(anyLong(), anyString(), anyString());
 	}
 
 	@Test

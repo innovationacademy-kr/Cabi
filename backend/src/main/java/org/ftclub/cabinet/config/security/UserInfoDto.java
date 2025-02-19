@@ -10,5 +10,6 @@ import lombok.ToString;
 public class UserInfoDto {
 
 	private final Long userId;
+	private final String oauth;
 	private final String roles;
 }

@@ -75,12 +75,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	// userId, role
 	private Authentication getAuthentication(Claims claims) {
-		String roles = claims.get("roles", String.class);
+		String roles = claims.get(JwtTokenProvider.ROLES, String.class);
 
 		UserInfoDto userInfoDto =
 				new UserInfoDto(
-						claims.get("userId", Long.class),
-						roles
+						claims.get(JwtTokenProvider.USER_ID, Long.class),
+						roles,
+						claims.get(JwtTokenProvider.OAUTH, String.class)
 				);
 
 		List<GrantedAuthority> authorityList = Stream.of(roles.split(FtRole.DELIMITER))

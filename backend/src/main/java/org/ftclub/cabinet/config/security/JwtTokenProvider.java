@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 public class JwtTokenProvider {
 
 	public static final Long accessTokenValidMillisecond = 60 * 60 * 1000L; // 1시간
+	public static final String OAUTH = "oauth";
+	public static final String USER_ID = "userId";
+	public static final String ROLES = "roles";
 	private static final String BEARER = "Bearer ";
 	public final Long refreshTokenValidMillisecond = 30 * 24 * 60 * 60 * 1000L; // 30일
 	private Key signingKey;
@@ -61,18 +64,19 @@ public class JwtTokenProvider {
 		return header.substring(BEARER.length());
 	}
 
-	public TokenDto createTokenDto(Long userId, String roles) {
+	public TokenDto createTokenDto(Long userId, String roles, String provider) {
+		Claims claims = Jwts.claims();
+		claims.put(USER_ID, userId);
+		claims.put(ROLES, roles);
+		claims.put(OAUTH, provider);
 
-		String accessToken = createToken(userId, roles, accessTokenValidMillisecond);
-		String refreshToken = createToken(userId, roles, refreshTokenValidMillisecond);
+		String accessToken = createToken(claims, accessTokenValidMillisecond);
+		String refreshToken = createToken(claims, refreshTokenValidMillisecond);
 
 		return new TokenDto(accessToken, refreshToken);
 	}
 
-	private String createToken(Long userId, String roles, Long validity) {
-		Claims claims = Jwts.claims();
-		claims.put("userId", userId);
-		claims.put("roles", roles);
+	private String createToken(Claims claims, Long validity) {
 		Date now = new Date();
 
 		return Jwts.builder()

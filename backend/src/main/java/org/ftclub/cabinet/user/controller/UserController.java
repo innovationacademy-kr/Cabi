@@ -1,8 +1,6 @@
 package org.ftclub.cabinet.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.config.security.UserInfoDto;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
@@ -56,7 +54,7 @@ public class UserController {
 	/**
 	 * 현재 로그인한 유저의 연장권을 사용합니다.
 	 *
-	 * @param userSessionDto 현재 로그인한 유저의 세션 정보
+	 * @param userInfoDto 현재 로그인한 유저의 세션 정보
 	 */
 	@PostMapping("/me/lent-extensions")
 	public void useLentExtension(
@@ -65,7 +63,6 @@ public class UserController {
 	}
 
 	@PutMapping("/me/alarms")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void updateMyProfile(
 			@AuthenticationPrincipal UserInfoDto userInfoDto,
 			@RequestBody UpdateAlarmRequestDto updateAlarmRequestDto) {
@@ -73,7 +70,6 @@ public class UserController {
 	}
 
 	@PutMapping("/me/device-token")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void updateDeviceToken(
 			@AuthenticationPrincipal UserInfoDto userInfoDto,
 			@RequestBody UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {

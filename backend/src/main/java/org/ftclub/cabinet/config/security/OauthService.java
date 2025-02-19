@@ -33,11 +33,6 @@ public class OauthService {
 
 	public User handleGoogleLogin(JsonNode rootNode, CustomOauth2User ftUser) {
 
-		if (!ftUser.getProvider().equals(ftProvider)) {
-			log.error("Google OAuth 요청 중, 42 OAuth 인증 상태가 유효하지 않습니다.");
-			throw ExceptionStatus.INVALID_OAUTH_TYPE.asSpringSecurityException();
-		}
-
 		String oauthMail = rootNode.get("email").asText();
 		Optional<User> userByOauthMail = userQueryService.findByOauthEmail(oauthMail);
 
