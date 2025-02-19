@@ -989,10 +989,7 @@ export const axiosGetUserItems = async (
 const axiosRegisterSnsURL = "/v4/auth";
 export const axiosRegisterSns = async (provider: string): Promise<any> => {
   try {
-    const response = await instance.post(
-      `${axiosRegisterSnsURL}/${provider}`,
-      {}
-    );
+    const response = await instance.get(`${axiosRegisterSnsURL}/${provider}`);
     return response;
   } catch (error) {
     logAxiosError(
