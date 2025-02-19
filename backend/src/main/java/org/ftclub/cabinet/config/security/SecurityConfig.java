@@ -1,14 +1,13 @@
 package org.ftclub.cabinet.config.security;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.admin.admin.domain.AdminRole;
-import org.ftclub.cabinet.auth.domain.FtRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -19,6 +18,7 @@ public class SecurityConfig {
 
 	private final CustomOAuth2UserService customOAuth2UserService;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final OAuth2CheckFilter oAuth2CheckFilter;
 	private final LoggingFilter loggingFilter;
 	private final CustomSuccessHandler customSuccessHandler;
 	private final CustomAuthenticationEntryPoint entrypoint;
@@ -39,22 +39,17 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**",
 								"/oauth/authorize/**").permitAll()
-						.mvcMatchers("/v5/admin/**").hasRole(AdminRole.ADMIN.name())
-						.mvcMatchers("/v5/presentation/**").hasRole(FtRole.USER.name())
-
-						.mvcMatchers("/v4/users").hasRole("USER")
+						.mvcMatchers("/v5/admin/**").hasRole("ADMIN")
 						.mvcMatchers("/v4/cabinets/**").hasAnyRole("USER", "ADMIN")
 						.antMatchers("/v4/lent/cabinets/share/cancel/*").hasAnyRole("USER", "ADMIN")
-						.mvcMatchers("/v4/lent/**").hasRole("USER")
-						.mvcMatchers("/v4/clubs/**").hasRole("USER")
-						.mvcMatchers("/v4/itmes").hasAnyRole("USER", "ADMIN")
-						.mvcMatchers("/v4/itmes/**").hasRole("USER")
-						.anyRequest().authenticated()
+						.mvcMatchers("/v4/items").hasAnyRole("USER", "ADMIN")
+						.anyRequest().hasRole("USER")
 				)
 				.oauth2Login(oauth -> oauth
 						.userInfoEndpoint(user -> user.userService(customOAuth2UserService))
 						.successHandler(customSuccessHandler)
 				)
+				.addFilterBefore(oAuth2CheckFilter, OAuth2AuthorizationRequestRedirectFilter.class)
 				.addFilterAfter(jwtAuthenticationFilter,
 						UsernamePasswordAuthenticationFilter.class)
 //				.addFilterAfter(loggingFilter, SecurityContextHolderFilter.class)
