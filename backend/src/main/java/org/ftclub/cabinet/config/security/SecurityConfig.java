@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.context.SecurityContextHolderFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -42,6 +41,13 @@ public class SecurityConfig {
 								"/oauth/authorize/**").permitAll()
 						.mvcMatchers("/v5/admin/**").hasRole(AdminRole.ADMIN.name())
 						.mvcMatchers("/v5/presentation/**").hasRole(FtRole.USER.name())
+
+						.mvcMatchers("/v4/cabinets/**").hasAnyRole("USER", "ADMIN")
+						.antMatchers("/v4/lent/cabinets/share/cancel/*").hasAnyRole("USER", "ADMIN")
+						.mvcMatchers("/v4/lent/**").hasRole("USER")
+						.mvcMatchers("/v4/clubs/**").hasRole("USER")
+						.mvcMatchers("/v4/itmes").hasAnyRole("USER", "ADMIN")
+						.mvcMatchers("/v4/itmes/**").hasRole("USER")
 						.anyRequest().authenticated()
 				)
 				.oauth2Login(oauth -> oauth
@@ -50,7 +56,7 @@ public class SecurityConfig {
 				)
 				.addFilterAfter(jwtAuthenticationFilter,
 						UsernamePasswordAuthenticationFilter.class)
-				.addFilterAfter(loggingFilter, SecurityContextHolderFilter.class)
+//				.addFilterAfter(loggingFilter, SecurityContextHolderFilter.class)
 				.exceptionHandling(handler -> handler
 						.authenticationEntryPoint(entrypoint)
 						.accessDeniedHandler(customAccessDeniedHandler))

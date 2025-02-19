@@ -95,14 +95,14 @@ public class LentFacadeService {
 	 * @return 대여 정보
 	 */
 	@Transactional(readOnly = true)
-	public MyCabinetResponseDto getMyLentInfo(UserSessionDto user) {
+	public MyCabinetResponseDto getMyLentInfo(Long userId) {
 		LentHistory userLentHistory = lentQueryService.findUserActiveLentHistoryWithCabinet(
-				user.getUserId());
+				userId);
 		Long cabinetId;
 		Cabinet userActiveCabinet;
 		List<LentDto> lentDtoList;
 		if (userLentHistory == null) {
-			cabinetId = lentRedisService.findCabinetJoinedUser(user.getUserId());
+			cabinetId = lentRedisService.findCabinetJoinedUser(userId);
 			if (cabinetId == null) {
 				return null;
 			}
