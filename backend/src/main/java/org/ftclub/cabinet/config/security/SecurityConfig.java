@@ -42,6 +42,7 @@ public class SecurityConfig {
 						.mvcMatchers("/v5/admin/**").hasRole(AdminRole.ADMIN.name())
 						.mvcMatchers("/v5/presentation/**").hasRole(FtRole.USER.name())
 
+						.mvcMatchers("/v4/users").hasRole("USER")
 						.mvcMatchers("/v4/cabinets/**").hasAnyRole("USER", "ADMIN")
 						.antMatchers("/v4/lent/cabinets/share/cancel/*").hasAnyRole("USER", "ADMIN")
 						.mvcMatchers("/v4/lent/**").hasRole("USER")
