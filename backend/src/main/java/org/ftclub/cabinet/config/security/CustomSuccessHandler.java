@@ -14,18 +14,17 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
-import org.ftclub.cabinet.auth.service.TokenProvider;
+import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,12 +35,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class CustomSuccessHandler implements AuthenticationSuccessHandler {
+public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 
 	private final JwtTokenProvider tokenProvider;
 	private final OauthService oauthService;
 	private final ObjectMapper objectMapper;
+	private final AuthPolicyService authPolicyService;
 	@Value("${spring.security.oauth2.client.registration.ft.client-name}")
 	private String ftProvider;
 	@Value("${spring.security.oauth2.client.registration.google.client-name}")
@@ -75,10 +75,13 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 			throw new CustomAuthenticationException(ExceptionStatus.INVALID_OAUTH_TYPE);
 		}
 
-		updateSecurityContextHolder(user, provider);
+		Authentication newAuth = getAuthenticationByLoadUser(user, provider);
+		SecurityContextHolder.getContext().setAuthentication(newAuth);
+
 		TokenDto tokenDto = tokenProvider.createTokenDto(user.getId(), user.getRoles());
 		// AccessToken은 JSON, RefreshToken -> Cookie?
 		setTokensToResponse(tokenDto, response);
+		response.sendRedirect(authPolicyService.getMainHomeUrl());
 	}
 
 	/**
@@ -90,34 +93,14 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 	 */
 	private void setTokensToResponse(TokenDto tokenDto, HttpServletResponse response)
 			throws IOException {
-		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		response.setCharacterEncoding("UTF-8");
-		Map<String, String> responseBody = new HashMap<>();
-		responseBody.put(TokenProvider.USER_TOKEN_NAME, tokenDto.getAccessToken());
-		new ObjectMapper().writeValue(response.getWriter(), responseBody);
+		Cookie accessTokenCookie = new Cookie("access_token", tokenDto.getAccessToken());
+//		accessTokenCookie.setHttpOnly(true);
+		accessTokenCookie.setSecure(true);
+		accessTokenCookie.setMaxAge((int) (JwtTokenProvider.accessTokenValidMillisecond / 1000));
+		accessTokenCookie.setPath("/");
 
-		Cookie refreshTokenCookie = new Cookie("refreshToken", tokenDto.getRefreshToken());
-		refreshTokenCookie.setHttpOnly(true);
-		refreshTokenCookie.setSecure(true);
-		refreshTokenCookie.setMaxAge((int) (JwtTokenProvider.refreshTokenValidMillisecond / 1000));
-		refreshTokenCookie.setPath("/");
-
-		response.addCookie(refreshTokenCookie);
+		response.addCookie(accessTokenCookie);
 	}
-
-	/**
-	 * google oauth로 로그인한 유저를 핸들링합니다.
-	 *
-	 * @param rootNode
-	 * @return
-	 */
-
-	/**
-	 * 42 oauth로 로그인한 유저를 핸들링합니다.
-	 *
-	 * @param rootNode
-	 */
-
 
 	/**
 	 * user를 가지고 securityContextHolder 에 공통적으로 저장될 정보로 변환하고, 저장합니다.
@@ -127,21 +110,20 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 	 * @param user
 	 * @param provider
 	 */
-	private void updateSecurityContextHolder(User user, String provider) {
+	private Authentication getAuthenticationByLoadUser(User user, String provider) {
 		Map<String, Object> attribute = new HashMap<>();
 		attribute.put("email", user.getEmail());
 		attribute.put("roles", user.getRoles());
 		attribute.put("blackholedAt", user.getBlackholedAt());
 
-		CustomOauth2User updateUser = new CustomOauth2User(provider, user.getName(), attribute);
 		List<String> roles = List.of(user.getRoles().split(FtRole.DELIMITER));
 
 		List<GrantedAuthority> authorityList = roles.stream()
 				.map(role -> new SimpleGrantedAuthority(FtRole.ROLE + role))
 				.collect(Collectors.toList());
 
-		UsernamePasswordAuthenticationToken newAuth =
-				new UsernamePasswordAuthenticationToken(updateUser, null, authorityList);
-		SecurityContextHolder.getContext().setAuthentication(newAuth);
+		CustomOauth2User updateUser =
+				new CustomOauth2User(provider, user.getName(), attribute, authorityList);
+		return new UsernamePasswordAuthenticationToken(updateUser, null, authorityList);
 	}
 }
