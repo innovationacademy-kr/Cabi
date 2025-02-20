@@ -34,6 +34,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class UserOauthService {
 
 	private static final int CURSUS_INDEX = 1;
+	private static final int PISCINE_INDEX = 0;
+	private static final int CADET_INDEX = 1;
 
 	@Qualifier(OauthConfig.FT_OAUTH_20_SERVICE)
 	private final OAuth20Service ftOAuth20Service;
@@ -184,7 +186,7 @@ public class UserOauthService {
 	 */
 	private LocalDateTime determineBlackHoledAt(JsonNode rootNode) {
 		JsonNode cursusNode = rootNode.get("cursus_users");
-		int index = cursusNode.size() > 1 ? 1 : 0;
+		int index = cursusNode.size() > CADET_INDEX ? CADET_INDEX : PISCINE_INDEX;
 
 		JsonNode blackHoledAtNode = cursusNode.get(index).get("blackholed_at");
 		if (blackHoledAtNode.isNull() || blackHoledAtNode.asText().isEmpty()) {
