@@ -8,6 +8,10 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.concurrent.ExecutionException;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.FtProfile;
@@ -15,17 +19,11 @@ import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.scribejava.OauthConfig;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.concurrent.ExecutionException;
 
 /**
  * 유저 로그인을 위한 서비스입니다.
@@ -34,7 +32,10 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 @Log4j2
 public class UserOauthService {
+
 	private static final int CURSUS_INDEX = 1;
+	private static final int PISCINE_INDEX = 0;
+	private static final int CADET_INDEX = 1;
 
 	@Qualifier(OauthConfig.FT_OAUTH_20_SERVICE)
 	private final OAuth20Service ftOAuth20Service;
@@ -60,7 +61,8 @@ public class UserOauthService {
 	 * @throws ExecutionException
 	 * @throws InterruptedException
 	 */
-	public OAuth2AccessToken issueAccessTokenByCredentialsGrant() throws IOException, ExecutionException, InterruptedException {
+	public OAuth2AccessToken issueAccessTokenByCredentialsGrant()
+			throws IOException, ExecutionException, InterruptedException {
 		return ftOAuth20Service.getAccessTokenClientCredentialsGrant();
 	}
 
@@ -71,7 +73,8 @@ public class UserOauthService {
 	 * @return 유저 프로필 정보 {@link FtProfile}
 	 * @throws JsonProcessingException JSON 파싱 예외
 	 */
-	public FtProfile getProfileByIntraName(String accessToken, String intraName) throws JsonProcessingException {
+	public FtProfile getProfileByIntraName(String accessToken, String intraName)
+			throws JsonProcessingException {
 		log.info("Called getProfileByIntraName {}", intraName);
 		JsonNode result = WebClient.create().get()
 				.uri(ftApiProperties.getUsersInfoUri() + '/' + intraName)
@@ -92,7 +95,8 @@ public class UserOauthService {
 	 * @throws ExecutionException   비동기 처리시 스레드에서 발생한 오류 처리 예외
 	 * @throws InterruptedException 비동기 처리시 스레드 종료를 위한 예외
 	 */
-	public FtProfile getProfileByCode(String code) throws IOException, ExecutionException, InterruptedException {
+	public FtProfile getProfileByCode(String code)
+			throws IOException, ExecutionException, InterruptedException {
 		OAuth2AccessToken accessToken = ftOAuth20Service.getAccessToken(code);
 		OAuthRequest oAuthRequest = new OAuthRequest(Verb.GET, ftApiProperties.getUserInfoUri());
 		ftOAuth20Service.signRequest(accessToken, oAuthRequest);
@@ -100,12 +104,14 @@ public class UserOauthService {
 			Response response = ftOAuth20Service.execute(oAuthRequest);
 			return convertJsonStringToProfile(objectMapper.readTree(response.getBody()));
 		} catch (Exception e) {
-			if (e instanceof IOException)
+			if (e instanceof IOException) {
 				log.error("42 API 서버에서 프로필 정보를 가져오는데 실패했습니다."
 						+ "code: {}, message: {}", code, e.getMessage());
-			if (e instanceof ExecutionException || e instanceof InterruptedException)
+			}
+			if (e instanceof ExecutionException || e instanceof InterruptedException) {
 				log.error("42 API 서버에서 프로필 정보를 비동기적으로 가져오는데 실패했습니다."
 						+ "code: {}, message: {}", code, e.getMessage());
+			}
 			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asServiceException();
 		}
 	}
@@ -116,13 +122,15 @@ public class UserOauthService {
 	 * @param jsonNode JSON 데이터
 	 * @return 유저 프로필 정보 {@link FtProfile}
 	 * @throws JsonProcessingException JSON 파싱 예외
-	 * @see <a href="https://api.intra.42.fr/apidoc/2.0/users/me.html">42 API에서 제공하는 Profile Json에 대한 정보</a>
+	 * @see <a href="https://api.intra.42.fr/apidoc/2.0/users/me.html">42 API에서 제공하는 Profile Json에
+	 * 대한 정보</a>
 	 */
 	private FtProfile convertJsonStringToProfile(JsonNode jsonNode) throws JsonProcessingException {
 		String intraName = jsonNode.get("login").asText();
 		String email = jsonNode.get("email").asText();
-		if (intraName == null || email == null)
+		if (intraName == null || email == null) {
 			throw ExceptionStatus.INCORRECT_ARGUMENT.asServiceException();
+		}
 
 		LocalDateTime blackHoledAt = determineBlackHoledAt(jsonNode);
 		FtRole role = determineFtRole(jsonNode, blackHoledAt);
@@ -149,14 +157,17 @@ public class UserOauthService {
 		boolean isActive = rootNode.get("active?").asBoolean();
 		JsonNode cursusUsersNode = rootNode.get("cursus_users");
 
-		if (!isActive)
+		if (!isActive) {
 			return FtRole.INACTIVE;
+		}
 
-		if (isUserStaff)
+		if (isUserStaff) {
 			return FtRole.STAFF;
+		}
 
-		if (cursusUsersNode.size() < CURSUS_INDEX + 1)
+		if (cursusUsersNode.size() < CURSUS_INDEX + 1) {
 			return FtRole.PISCINER;
+		}
 
 		return (blackHoledAt == null) ? FtRole.MEMBER : FtRole.CADET;
 	}
@@ -165,14 +176,22 @@ public class UserOauthService {
 	 * AccessToken을 이용해 받은 JSON 형식의 유저 profile 정보를 통해 유저의 blackholedAt을 반환합니다.
 	 * <br>
 	 * 유저가 blackhole에 빠지는 시각을 반환합니다.
+	 * <p>
+	 * cursus_user : 유저가 42에서 활동한 과정들 ex) 0 -> 피신, 1 -> 입과 후
+	 * <p>
+	 * 42 서울과정을 중심으로 생각해, 과정을 더 진행한 유저여도 1번 idx의 blackholed_at 값을 가져옵니다.
 	 *
 	 * @param rootNode 유저 프로필 정보 JSON 데이터
 	 * @return 유저의 blackholedAt
 	 */
 	private LocalDateTime determineBlackHoledAt(JsonNode rootNode) {
-		JsonNode blackHoledAtNode = rootNode.get("cursus_users").get(CURSUS_INDEX).get("blackholed_at");
-		if (blackHoledAtNode.isNull() || blackHoledAtNode.isEmpty())
+		JsonNode cursusNode = rootNode.get("cursus_users");
+		int index = cursusNode.size() > CADET_INDEX ? CADET_INDEX : PISCINE_INDEX;
+
+		JsonNode blackHoledAtNode = cursusNode.get(index).get("blackholed_at");
+		if (blackHoledAtNode.isNull() || blackHoledAtNode.asText().isEmpty()) {
 			return null;
+		}
 		return DateUtil.convertStringToDate(blackHoledAtNode.asText());
 	}
 }
