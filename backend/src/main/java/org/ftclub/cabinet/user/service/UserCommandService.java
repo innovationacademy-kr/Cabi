@@ -163,4 +163,9 @@ public class UserCommandService {
 		user.changeOauthMail(email);
 		return userRepository.save(user);
 	}
+
+	public void updateOauthMail(User user, String googleEmail) {
+		user.changeOauthMail(googleEmail);
+		userRepository.save(user);
+	}
 }

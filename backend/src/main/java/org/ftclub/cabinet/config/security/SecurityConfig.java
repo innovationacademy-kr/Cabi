@@ -36,8 +36,7 @@ public class SecurityConfig {
 				.httpBasic(AbstractHttpConfigurer::disable)
 				// api별 접근 권한을 부여합니다
 				.authorizeHttpRequests(auth -> auth
-						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**",
-								"/oauth/authorize/**").permitAll()
+						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**").permitAll()
 						.mvcMatchers("/v5/admin/**").hasRole("ADMIN")
 						.mvcMatchers("/v4/cabinets/**").hasAnyRole("USER", "ADMIN")
 						.antMatchers("/v4/lent/cabinets/share/cancel/*").hasAnyRole("USER", "ADMIN")

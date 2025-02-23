@@ -1,10 +1,10 @@
 package org.ftclub.cabinet.config.security;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-@RequiredArgsConstructor
+@Builder
 @ToString
 @Getter
 public class UserInfoDto {
@@ -12,4 +12,5 @@ public class UserInfoDto {
 	private final Long userId;
 	private final String oauth;
 	private final String roles;
+
 }
