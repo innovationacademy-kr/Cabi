@@ -186,19 +186,16 @@ public class AuthFacadeService {
 	}
 
 	/**
-	 * 유저의 role, blackhole 상태 확인 후 oauthMail 연동
+	 * 1. DB에 유저가 있는지 확인
+	 * <p>
+	 * 2. 연동 계정으로 2FA 코드 혹은 링크 발송
+	 * <p>
+	 * 3. 코드가 맞는지 검증
 	 *
-	 * @param userId
-	 * @param oauth
-	 * @param oauthMail
+	 * @param name
 	 */
-	public void linkOauthMail(Long userId, String oauth, String oauthMail) {
-		if (!oauth.equals("ft")) {
-			throw ExceptionStatus.NOT_FT_LOGIN_STATUS.asServiceException();
-		}
-		// 만약 기존에 연결된 계정 있는지 verify 추가, oauthMail null인지 검증하기
-		User user = userQueryService.getUser(userId);
-		user.changeOauthMail(oauthMail);
-		userRepository.save(user);
+	public void requestTemporaryLogin(String name) {
+		User user = userQueryService.getUserByName(name);
+
 	}
 }

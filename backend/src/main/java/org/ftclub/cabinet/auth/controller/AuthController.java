@@ -7,12 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
-import org.ftclub.cabinet.config.security.UserInfoDto;
-import org.ftclub.cabinet.config.security.UserOauthMailDto;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,13 +47,12 @@ public class AuthController {
 		authFacadeService.handleUserLogin(req, res, code);
 	}
 
-	@PostMapping("/mail")
-	public void linkOauthMailToUser(
-			@AuthenticationPrincipal UserInfoDto userInfoDto,
-			@RequestBody UserOauthMailDto userOauthMailDto
-	) {
-		authFacadeService.linkOauthMail(userInfoDto.getUserId(), userInfoDto.getOauth(),
-				userOauthMailDto.getOauthMail());
+	/**
+	 * AGU 유저의 임시 로그인
+	 */
+	@PostMapping("/login/AGU")
+	public void loginAguUser(@RequestParam String name) {
+		authFacadeService.requestTemporaryLogin(name);
 	}
 
 	/**
