@@ -40,7 +40,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
 		responseBody.put("status", exceptionStatus.getStatusCode());
 		responseBody.put("error", exceptionStatus.getError());
-		responseBody.put("message", authException.getMessage());
+		responseBody.put("message", exceptionStatus.getMessage());
 		responseBody.put("timestamp", Instant.now().toString());
 
 		new ObjectMapper().writeValue(response.getWriter(), responseBody);

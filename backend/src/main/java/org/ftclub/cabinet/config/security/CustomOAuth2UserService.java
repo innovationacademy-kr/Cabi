@@ -36,8 +36,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			String provider = userRequest.getClientRegistration().getRegistrationId();
 			// 고유 id ex) 42 -> intraName, google -> uid
 			String userId = oAuth2User.getName();
-//			JsonNode rootNode =
-//					objectMapper.convertValue(oAuth2User.getAttributes(), JsonNode.class);
 
 			return new CustomOauth2User(provider, userId, oAuth2User.getAttributes(), null);
 		} catch (OAuth2AuthenticationException e) {

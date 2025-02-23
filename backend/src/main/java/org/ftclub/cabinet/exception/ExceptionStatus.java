@@ -98,6 +98,7 @@ public enum ExceptionStatus {
 	NOT_SUPPORT_OAUTH_TYPE(HttpStatus.FORBIDDEN, "지원하지 않는 OAuth 타입입니다."),
 	OAUTH_EMAIL_ALREADY_LINKED(HttpStatus.CONFLICT, "이미 다른 oauth 계정이 연동되어 있습니다."),
 	AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
+	ACCESS_DENIED(HttpStatus.FORBIDDEN, "권한이 부족합니다"),
 
 	// JWT 관련 에러,
 	JWT_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT 토큰이 존재하지 않습니다."),
@@ -105,6 +106,8 @@ public enum ExceptionStatus {
 	JWT_EXCEPTION(HttpStatus.UNAUTHORIZED, "JWT 에러가 발생하였습니다."),
 	JWT_INVALID(HttpStatus.UNAUTHORIZED, "토큰의 서명이 올바르지 않거나, 변조되었습니다."),
 	JWT_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "지원하지 않는 토큰 형식입니다."),
+	JWT_NOT_EXPIRED(HttpStatus.BAD_REQUEST, "만료되지 않은 토큰의 재발급 요청입니다"),
+	JWT_ALREADY_USED(HttpStatus.BAD_REQUEST, "이미 사용된 토큰입니다."),
 	;
 
 	final private int statusCode;
