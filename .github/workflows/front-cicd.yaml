@@ -4,7 +4,9 @@ on:
     paths:
       - "frontend/**"
   workflow_dispatch:
-
+permissions:
+  id-token: write
+  contents: read
 jobs:
   frontend-CI:
     runs-on: ubuntu-latest
@@ -52,10 +54,9 @@ jobs:
 
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Dev S3에 배포 및 CloudFront 캐시 무효화
