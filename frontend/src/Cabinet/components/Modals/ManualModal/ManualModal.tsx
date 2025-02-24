@@ -398,7 +398,7 @@ const ItemIconStyled = styled.div<{
     stroke-width: 50px;
     & > path {
       transform: scale(2);
-      stroke: var(--ref-purple-690);
+      stroke: var(--ref-purple-800);
     }
   }
 

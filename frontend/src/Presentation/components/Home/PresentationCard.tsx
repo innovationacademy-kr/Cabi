@@ -125,7 +125,7 @@ const SubTitleStyled = styled.div`
   word-break: break-all;
   line-height: 1.5;
   margin-bottom: 12px;
-  color: var(--gray-line-btn-color);
+  color: var(--presentation-card-sub-title-color);
 `;
 
 const DetailFooterStyled = styled.div`

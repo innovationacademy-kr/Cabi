@@ -11,15 +11,15 @@ import useMenu from "@/Cabinet/hooks/useMenu";
 const MapInfoContainer = () => {
   const { closeMap } = useMenu();
   const floorInfo = useRecoilValue(currentBuildingFloorState);
+  const currentFloor = useRecoilValue<number>(currentFloorNumberState);
   const [currentMapFloor, setCurrentMapFloor] =
     useRecoilState<number>(currentMapFloorState);
-  const [currentFloor] = useRecoilState<number>(currentFloorNumberState);
   const touchXpos = useRef(0);
   const touchYpos = useRef(0);
 
   useEffect(() => {
     if (currentMapFloor === undefined) {
-      if (currentFloor === undefined) setCurrentMapFloor(floorInfo[0]);
+      if (!currentFloor) setCurrentMapFloor(floorInfo[0]);
       else setCurrentMapFloor(currentFloor);
       return;
     }

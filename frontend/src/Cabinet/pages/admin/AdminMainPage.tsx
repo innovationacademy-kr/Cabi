@@ -29,7 +29,8 @@ const AdminMainPage = () => {
     useMultiSelect();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
-  const currentFloorNumber = useRecoilValue<number>(currentFloorNumberState);
+  const currentFloor = useRecoilValue<number>(currentFloorNumberState);
+
   useEffect(() => {
     closeAll();
     resetTargetCabinetInfo();
@@ -49,7 +50,6 @@ const AdminMainPage = () => {
     currentSectionNameState
   );
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
-  const currentFloor = useRecoilValue<number>(currentFloorNumberState);
   const { refreshCabinetList, isLoading } = useCabinetListRefresh(
     currentBuilding,
     currentFloor
@@ -61,7 +61,7 @@ const AdminMainPage = () => {
 
   useEffect(() => {
     resetMultiSelectMode();
-  }, [currentSectionIndex, currentFloorNumber]);
+  }, [currentSectionIndex, currentFloor]);
 
   const moveToLeftSection = () => {
     if (currentSectionIndex <= 0) {
@@ -103,10 +103,7 @@ const AdminMainPage = () => {
         touchStartPosY.current = e.changedTouches[0].screenY;
       }}
       onTouchEnd={(e: React.TouchEvent) => {
-        swipeSection(
-          e.changedTouches[0].screenX,
-          e.changedTouches[0].screenY
-        );
+        swipeSection(e.changedTouches[0].screenX, e.changedTouches[0].screenY);
       }}
     >
       <SectionPaginationContainer />
@@ -118,7 +115,7 @@ const AdminMainPage = () => {
         />
       </MultiSelectButtonWrapperStyled>
       <CabinetListWrapperStyled>
-        <CabinetListContainer isAdmin={true} currentFloor={currentFloorNumber} />
+        <CabinetListContainer isAdmin={true} currentFloor={currentFloor} />
 
         <RefreshButtonStyled
           className="cabiButton"

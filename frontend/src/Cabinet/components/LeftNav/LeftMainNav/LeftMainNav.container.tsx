@@ -53,14 +53,16 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const setSelectedTypeOnSearch = useSetRecoilState<CabinetDetailAreaType>(
     selectedTypeOnSearchState
   );
-  const [currentFloorSectionNames, setCurrentFloorSectionNames] =
-    useRecoilState(currentFloorSectionNamesState);
+  const setCurrentFloorSectionNames = useSetRecoilState(
+    currentFloorSectionNamesState
+  );
 
   useEffect(() => {
-    if (currentFloor === undefined) {
+    if (!currentFloor) {
       setCurrentMapFloor(floors[0]);
       return;
     }
+
     axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
       .then((response) => {
         setCurrentFloorData(response.data);
