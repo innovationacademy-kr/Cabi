@@ -1,4 +1,3 @@
-import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   currentFloorNumberState,
@@ -8,7 +7,7 @@ import { currentFloorSectionState } from "@/Cabinet/recoil/selectors";
 import SectionPagination from "@/Cabinet/components/SectionPagination/SectionPagination";
 import { ICurrentSectionInfo } from "@/Cabinet/types/dto/cabinet.dto";
 
-const SectionPaginationContainer = (): JSX.Element => {
+const SectionPaginationContainer = (): JSX.Element | null => {
   const currentFloor = useRecoilValue<number>(currentFloorNumberState);
   const sectionList: Array<ICurrentSectionInfo> = useRecoilValue<
     Array<ICurrentSectionInfo>
@@ -21,6 +20,8 @@ const SectionPaginationContainer = (): JSX.Element => {
   );
   const currentPositionName =
     currentFloor?.toString() + "층 - " + currentSectionName;
+  const isLoaded =
+    currentFloor && sectionList.length && currentSectionName !== undefined;
 
   const changeSectionOnClickIndexButton = (index: number) => {
     if (!sectionList.length) return;
@@ -46,23 +47,18 @@ const SectionPaginationContainer = (): JSX.Element => {
     }
   };
 
-  const isLoaded =
-    currentFloor && sectionList.length && currentSectionName !== undefined;
-
-  return (
-    <React.Fragment>
-      {isLoaded && (
-        <SectionPagination
-          currentSectionName={currentSectionName}
-          currentPositionName={currentPositionName}
-          sectionList={sectionList}
-          changeSectionOnClickIndexButton={changeSectionOnClickIndexButton}
-          moveToLeftSection={moveToLeftSection}
-          moveToRightSection={moveToRightSection}
-        />
-      )}
-    </React.Fragment>
-  );
+  if (isLoaded)
+    return (
+      <SectionPagination
+        currentSectionName={currentSectionName}
+        currentPositionName={currentPositionName}
+        sectionList={sectionList}
+        changeSectionOnClickIndexButton={changeSectionOnClickIndexButton}
+        moveToLeftSection={moveToLeftSection}
+        moveToRightSection={moveToRightSection}
+      />
+    );
+  else return null;
 };
 
 export default SectionPaginationContainer;
