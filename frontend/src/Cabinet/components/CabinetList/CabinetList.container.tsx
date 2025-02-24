@@ -24,7 +24,8 @@ interface ICabinetListContainer {
 }
 
 const CabinetListContainer = ({
-  isAdmin, currentFloor
+  isAdmin,
+  currentFloor,
 }: ICabinetListContainer): JSX.Element => {
   const colNum = useRecoilValue(currentSectionColNumState);
   const currentSectionCabinets = useRecoilValue<CabinetPreviewInfo[]>(
@@ -52,10 +53,11 @@ const CabinetListContainer = ({
           />
         </div>
       )}
-      {currentFloorSectionNames.includes(currentSectionName) && !(DISABLED_FLOOR.includes(currentFloor.toString())) && (
-        <RealViewNotification colNum={colNum as number} />
-      )}
-      {(!isAdmin && DISABLED_FLOOR.includes(currentFloor.toString())) ? (
+      {currentFloorSectionNames.includes(currentSectionName) &&
+        !DISABLED_FLOOR.includes(currentFloor.toString()) && (
+          <RealViewNotification colNum={colNum as number} />
+        )}
+      {!isAdmin && DISABLED_FLOOR.includes(currentFloor.toString()) ? (
         <EmptySection message={`${currentFloor}층은 현재 이용 불가입니다!`} />
       ) : (
         <>
@@ -66,8 +68,8 @@ const CabinetListContainer = ({
           />
           {(currentSectionName === SectionType.elevator ||
             currentSectionName === SectionType.stairs) && (
-              <EmptySection message={"여기엔 사물함이 없어요!"} />
-            )}
+            <EmptySection message={"여기엔 사물함이 없어요!"} />
+          )}
         </>
       )}
     </React.Fragment>

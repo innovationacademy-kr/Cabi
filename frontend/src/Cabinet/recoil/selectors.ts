@@ -89,9 +89,9 @@ export const currentFloorColNumState = selector<ISectionColNum[]>({
   key: "CurrentFloorSectionColNum",
   get: ({ get }) => {
     const currentLocationColNum = get(currentBuildingColNumState);
-    const currentFloorNumber = get(currentFloorNumberState);
+    const currentFloor = get(currentFloorNumberState);
     const currentFloorIdx = currentLocationColNum.findIndex(
-      (building) => building.floor === currentFloorNumber
+      (building) => building.floor === currentFloor
     );
 
     if (currentFloorIdx === -1) return [];
@@ -112,43 +112,3 @@ export const currentSectionColNumState = selector<number | undefined>({
     return currentFloorColNum[currentSectionIdx].colNum;
   },
 });
-
-// 한 번에 처리
-
-// export const currentSectionColNumState = selector<number | undefined>({
-//   key: "CurrentSectionColNum",
-//   get: ({ get }) => {
-//     const buildingColNum = get(buildingColNumState);
-//     const currentLocationName = get(currentLocationNameState);
-//     const currentFloorNumber = get(currentFloorNumberState);
-//     const currentSectionName = get(currentSectionNameState);
-
-//     return buildingColNum
-//       .find((building) => building.location === currentLocationName)
-//       ?.floorColNum.find(
-//         (building) => building.floor === currentFloorNumber
-//       )
-//       ?.sectionColNum.find((floor) => floor.section === currentSectionName)
-//       ?.colNum;
-//   },
-// });
-
-/* ---------------------- */
-
-// export const targetCabinetInfoSelectorState = selector<CabinetInfo | undefined>(
-//   {
-//     key: "TargetCabinetSelectorInfo",
-//     get: async ({ get }) => {
-//       const currentCabinetId = get(currentCabinetIdState);
-
-//       if (currentCabinetId === undefined) return;
-//       try {
-//         const cabinetInfoResponse: AxiosResponse<CabinetInfo> =
-//           await axiosCabinetById(currentCabinetId);
-//         return cabinetInfoResponse.data;
-//       } catch (error) {
-//         console.log(error);
-//       }
-//     },
-//   }
-// );
