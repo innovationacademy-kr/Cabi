@@ -19,7 +19,7 @@ const MapInfoContainer = () => {
 
   useEffect(() => {
     if (currentMapFloor === undefined) {
-      if (currentFloor === undefined) setCurrentMapFloor(floorInfo[0]);
+      if (!currentFloor) setCurrentMapFloor(floorInfo[0]);
       else setCurrentMapFloor(currentFloor);
       return;
     }
