@@ -13,6 +13,7 @@ import org.ftclub.cabinet.exception.CustomAccessDeniedException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
@@ -35,8 +36,11 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
+		log.error("Request Method = {}", request.getMethod());
 		ExceptionStatus exceptionStatus = ExceptionStatus.ACCESS_DENIED;
 		log.error("Request Uri : {}", request.getRequestURI());
+		log.error("Access Denied! Authentication: {}",
+				SecurityContextHolder.getContext().getAuthentication());
 		if (accessDeniedException instanceof CustomAccessDeniedException) {
 			exceptionStatus = ((CustomAccessDeniedException) accessDeniedException).getStatus();
 		}

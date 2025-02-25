@@ -16,7 +16,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class OAuth2CheckFilter extends OncePerRequestFilter {
 
-	private final JwtTokenProvider tokenProvider;
 	private final JwtTokenProvider jwtTokenProvider;
 
 	@Override
@@ -28,7 +27,7 @@ public class OAuth2CheckFilter extends OncePerRequestFilter {
 		if (request.getRequestURI().equals("/oauth2/authorization/google")) {
 			String token = jwtTokenProvider.extractToken(request);
 			Claims claims = jwtTokenProvider.parseToken(token);
-			if (!claims.get(JwtTokenProvider.OAUTH).equals("ft")) {
+			if (!claims.get(JwtTokenConstants.OAUTH).equals("ft")) {
 				throw new CustomAuthenticationException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
 			}
 		}

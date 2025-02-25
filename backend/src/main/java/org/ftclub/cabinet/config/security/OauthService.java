@@ -9,13 +9,15 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
+import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.DateUtil;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 
 @Slf4j
@@ -26,10 +28,7 @@ public class OauthService {
 	private static final int CURSUS_INDEX = 1;
 	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
-	@Value("${spring.security.oauth2.client.registration.ft.client-name}")
-	private String ftProvider;
-	@Value("${spring.security.oauth2.client.registration.google.client-name}")
-	private String googleProvider;
+	private final FtApiProperties ftApiProperties;
 
 	public User handleGoogleLogin(JsonNode rootNode, CustomOauth2User ftUser) {
 
@@ -45,11 +44,9 @@ public class OauthService {
 		return userCommandService.linkOauthAccount(ftUser.getName(), oauthMail);
 	}
 
-	public User handleFtLogin(JsonNode rootNode)
-			throws JsonProcessingException {
+	public User handleFtLogin(JsonNode rootNode) {
 		FtOauthProfile profile = convertJsonNodeToProfile(rootNode);
-		List<FtRole> roles = profile.getRoles();
-		String combinedRoles = FtRole.combineRolesToString(roles);
+		String combinedRoles = FtRole.combineRolesToString(profile.getRoles());
 
 		LocalDateTime blackHoledAt = profile.getBlackHoledAt();
 
@@ -64,8 +61,7 @@ public class OauthService {
 		return user;
 	}
 
-	public FtOauthProfile convertJsonNodeToProfile(JsonNode jsonNode)
-			throws JsonProcessingException {
+	public FtOauthProfile convertJsonNodeToProfile(JsonNode jsonNode) {
 		String intraName = jsonNode.get("login").asText();
 		String email = jsonNode.get("email").asText();
 		log.info("user Information = {}", jsonNode);
@@ -120,11 +116,33 @@ public class OauthService {
 	}
 
 	private LocalDateTime determineBlackHoledAt(JsonNode rootNode) {
-		JsonNode blackHoledAtNode = rootNode.get("cursus_users").get(CURSUS_INDEX)
-				.get("blackholed_at");
+		JsonNode cursusNode = rootNode.get("cursus_users");
+		int index = cursusNode.size() > 1 ? 1 : 0;
+
+		JsonNode blackHoledAtNode = cursusNode.get(index).get("blackholed_at");
 		if (blackHoledAtNode.isNull() || blackHoledAtNode.asText().isEmpty()) {
 			return null;
 		}
 		return DateUtil.convertStringToDate(blackHoledAtNode.asText());
 	}
+
+	public FtOauthProfile getProfileByIntraName(String accessToken, String intraName)
+			throws JsonProcessingException {
+		log.info("Called getProfileByIntraName {}", intraName);
+		JsonNode result = WebClient.create().get()
+				.uri(ftApiProperties.getUsersInfoUri() + '/' + intraName)
+				.accept(MediaType.APPLICATION_JSON)
+				.headers(h -> h.setBearerAuth(accessToken))
+				.retrieve()
+				.bodyToMono(JsonNode.class)
+				.block();
+		return convertJsonNodeToProfile(result);
+	}
+
+	public boolean isAguUser(String name, String ftAccessToken) throws JsonProcessingException {
+		FtOauthProfile profile = getProfileByIntraName(ftAccessToken, name);
+		List<FtRole> roles = profile.getRoles();
+		return roles.contains(FtRole.AGU);
+	}
+
 }

@@ -31,12 +31,13 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		// security 에서 기본적으로 제공하는 로그인 폼 사용 안함 우리는 oauth 로그인 사용
-		http.formLogin(AbstractHttpConfigurer::disable)
-				.csrf(csrf -> csrf.ignoringAntMatchers("/v4/auth/mail"))
+		http.csrf(AbstractHttpConfigurer::disable)
+				.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
 				// api별 접근 권한을 부여합니다
 				.authorizeHttpRequests(auth -> auth
-						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**").permitAll()
+						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**",
+								"/v4/auth/login/AGU").permitAll()
 						.mvcMatchers("/v5/admin/**").hasRole("ADMIN")
 						.mvcMatchers("/v4/cabinets/**").hasAnyRole("USER", "ADMIN")
 						.antMatchers("/v4/lent/cabinets/share/cancel/*").hasAnyRole("USER", "ADMIN")
@@ -47,7 +48,7 @@ public class SecurityConfig {
 						.userInfoEndpoint(user -> user.userService(customOAuth2UserService))
 						.successHandler(customSuccessHandler)
 				)
-				.addFilterAfter(jwtAuthenticationFilter,
+				.addFilterBefore(jwtAuthenticationFilter,
 						UsernamePasswordAuthenticationFilter.class)
 //				.addFilterAfter(loggingFilter, SecurityContextHolderFilter.class)
 				.exceptionHandling(handler -> handler

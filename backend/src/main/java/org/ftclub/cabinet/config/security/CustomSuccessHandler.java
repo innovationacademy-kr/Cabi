@@ -50,6 +50,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	private final AuthPolicyService authPolicyService;
 	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
+	private final JwtTokenProperties jwtTokenProperties;
+
 	@Value("${spring.security.oauth2.client.registration.ft.client-name}")
 	private String ftProvider;
 	@Value("${spring.security.oauth2.client.registration.google.client-name}")
@@ -123,11 +125,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	}
 
 	private UserInfoDto getPrevLoginStatusByCookie(HttpServletRequest request) {
-		String accessToken = cookieManager.getCookieValue(request, JwtTokenProvider.ACCESS_TOKEN);
+		String accessToken = cookieManager.getCookieValue(request, JwtTokenConstants.ACCESS_TOKEN);
 		Claims claims = tokenProvider.parseToken(accessToken);
 
-		Long userId = claims.get(JwtTokenProvider.USER_ID, Long.class);
-		String prevOauth = claims.get(JwtTokenProvider.OAUTH, String.class);
+		Long userId = claims.get(JwtTokenConstants.USER_ID, Long.class);
+		String prevOauth = claims.get(JwtTokenConstants.OAUTH, String.class);
 
 		return UserInfoDto.builder()
 				.userId(userId)
@@ -142,16 +144,16 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	 * @param response
 	 */
 	private void setTokensToResponse(TokenDto tokenDto, HttpServletResponse response) {
-		Cookie accessTokenCookie = new Cookie(JwtTokenProvider.ACCESS_TOKEN,
+		Cookie accessTokenCookie = new Cookie(JwtTokenConstants.ACCESS_TOKEN,
 				tokenDto.getAccessToken());
 		accessTokenCookie.setSecure(true);
-		accessTokenCookie.setMaxAge((int) (JwtTokenProvider.accessTokenValidMillisecond / 1000));
+		accessTokenCookie.setMaxAge(jwtTokenProperties.getAccessExpirySeconds());
 		accessTokenCookie.setPath("/");
 
-		Cookie refreshTokenCookie = new Cookie(JwtTokenProvider.REFRESH_TOKEN,
+		Cookie refreshTokenCookie = new Cookie(JwtTokenConstants.REFRESH_TOKEN,
 				tokenDto.getRefreshToken());
 		refreshTokenCookie.setHttpOnly(true);
-		refreshTokenCookie.setMaxAge((int) (JwtTokenProvider.refreshTokenValidMillisecond / 1000));
+		refreshTokenCookie.setMaxAge(jwtTokenProperties.getRefreshExpirySeconds());
 		refreshTokenCookie.setPath("/");
 
 		response.addCookie(accessTokenCookie);
