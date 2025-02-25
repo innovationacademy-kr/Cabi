@@ -95,6 +95,13 @@ public class AlarmProperties {
 	@Value("${cabinet.alarm.slack.announcement.template}")
 	private String announcementSlackTemplate;
 
+	/*======================== verificationCode =============================*/
+	@Value("${cabinet.alarm.mail.verificationCode.subject}")
+	private String verificationCodeSubject;
+	@Value("${cabinet.alarm.mail.verificationCode.template}")
+	private String verificationMailTemplateUrl;
+
+
 	/*==================== section alarm ========================*/
 	@Value("${cabinet.alarm.mail.sectionAlarm.subject}")
 	private String sectionAlarmSubject;
@@ -120,4 +127,6 @@ public class AlarmProperties {
 
 	@Value("${cabinet.alarm.overdue-term.overdue}")
 	private Long overdueTermOverdue;
+
+
 }
