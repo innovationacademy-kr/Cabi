@@ -1,7 +1,11 @@
 package org.ftclub.cabinet.auth.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -10,16 +14,23 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
+import org.ftclub.cabinet.alarm.domain.EmailVerificationAlarm;
+import org.ftclub.cabinet.alarm.service.VerificationCodeRedisService;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.GoogleProfile;
+import org.ftclub.cabinet.config.security.AccessTokenDto;
+import org.ftclub.cabinet.config.security.JwtTokenProvider;
+import org.ftclub.cabinet.config.security.OauthService;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.repository.UserRepository;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 인증 관련 비즈니스 로직을 처리하는 서비스입니다.
@@ -38,7 +49,13 @@ public class AuthFacadeService {
 	private final AuthPolicyService authPolicyService;
 	private final TokenProvider tokenProvider;
 	private final CookieManager cookieManager;
-	private final UserRepository userRepository;
+	private final ApplicationEventPublisher eventPublisher;
+	private final OauthService oauthService;
+	private final VerificationCodeRedisService verificationCodeRedisService;
+	private final JwtTokenProvider jwtTokenProvider;
+	private final ApplicationTokenManager applicationTokenManager;
+	@Value("${cabinet.server.be-host}")
+	private String beHost;
 
 	/**
 	 * 유저 로그인 페이지로 리다이렉트합니다.
@@ -186,7 +203,7 @@ public class AuthFacadeService {
 	}
 
 	/**
-	 * 1. DB에 유저가 있는지 확인
+	 * 1. DB에 유저가 있는지 확인, AGU 상태인지 확인
 	 * <p>
 	 * 2. 연동 계정으로 2FA 코드 혹은 링크 발송
 	 * <p>
@@ -194,8 +211,32 @@ public class AuthFacadeService {
 	 *
 	 * @param name
 	 */
-	public void requestTemporaryLogin(String name) {
+	@Transactional
+	public void requestTemporaryLogin(String name) throws JsonProcessingException {
 		User user = userQueryService.getUserByName(name);
+		// agu 상태인지 검증하는 로직.. 로그인이 아니라 profile 만 받아오도록 ftOauthProfile?
+		if (!user.getRoles().contains("AGU")
+				&& !oauthService.isAguUser(name, applicationTokenManager.getFtAccessToken())) {
+			throw ExceptionStatus.ACCESS_DENIED.asServiceException();
+		}
+		String tmpToken = UUID.randomUUID().toString();
 
+		verificationCodeRedisService.saveVerificationCode(user.getName(), tmpToken);
+		String verificationLink = beHost + "/verification?code=" + tmpToken +
+				"&name=" + URLEncoder.encode(name, StandardCharsets.UTF_8);
+
+		eventPublisher.publishEvent(new EmailVerificationAlarm(verificationLink));
+	}
+
+	public AccessTokenDto verifyTemporaryCode(String name, String code) {
+		User user = userQueryService.getUserByName(name);
+		verificationCodeRedisService.verifyTemporaryCode(name, code);
+
+		verificationCodeRedisService.deleteVerificationCode(name, code);
+		String temporaryToken =
+				jwtTokenProvider.createAGUToken(user.getId());
+		return AccessTokenDto.builder()
+				.accessToken(temporaryToken)
+				.build();
 	}
 }

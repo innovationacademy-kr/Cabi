@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.auth.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpServletRequest;
@@ -7,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
+import org.ftclub.cabinet.config.security.AccessTokenDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,8 +53,17 @@ public class AuthController {
 	 * AGU 유저의 임시 로그인
 	 */
 	@PostMapping("/login/AGU")
-	public void loginAguUser(@RequestParam String name) {
+	public void requestAGULogin(@RequestParam(name = "name") String name)
+			throws JsonProcessingException {
 		authFacadeService.requestTemporaryLogin(name);
+	}
+
+
+	@GetMapping("/login/AGU")
+	public AccessTokenDto loginAguLogin(
+			@RequestParam(name = "code") String code,
+			@RequestParam(name = "name") String name) {
+		return authFacadeService.verifyTemporaryCode(name, code);
 	}
 
 	/**
