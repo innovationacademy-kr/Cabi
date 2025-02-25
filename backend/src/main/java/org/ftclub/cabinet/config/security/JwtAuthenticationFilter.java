@@ -52,32 +52,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			if (token != null) {
 				Claims claims = jwtTokenProvider.parseToken(token);
 				Authentication auth = getAuthentication(claims);
-
 				SecurityContextHolder.getContext().setAuthentication(auth);
 			}
 
 		} catch (ExpiredJwtException e) {
 			log.error("Expired JWT Token : {}", e.getMessage());
 			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_EXPIRED);
+			SecurityContextHolder.clearContext();
 		} catch (SignatureException | MalformedJwtException | IllegalArgumentException e) {
 			log.error("Illegal JWT Token : {}", e.getMessage());
 			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_INVALID);
+			SecurityContextHolder.clearContext();
 
 		} catch (UnsupportedJwtException e) {
 			log.error("Unsupported JWT Token : {}", e.getMessage());
 			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_UNSUPPORTED);
+			SecurityContextHolder.clearContext();
 
 		} catch (Exception e) {
 			log.error("JWT Authentication failed: {}", e.getMessage(), e);
 			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_EXCEPTION);
+			SecurityContextHolder.clearContext();
 
-		} finally {
-			if (SecurityContextHolder.getContext().getAuthentication() == null) {
-				SecurityContextHolder.clearContext();
-			}
 		}
 		filterChain.doFilter(request, response);
-		
+
 	}
 
 	// userId, role

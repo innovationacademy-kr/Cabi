@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.jwt.repository;
 
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.config.security.JwtTokenProperties;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,15 +15,13 @@ public class JwtRedis {
 	private static final String JWT_ACCESS_KEY_SUFFIX = ":usedAccessToken";
 	private static final String JWT_REFRESH_KEY_SUFFIX = ":usedRefreshToken";
 	private final RedisTemplate<String, String> jwtTemplate;
-	private Long accessTokenExpiration;
-	private Long refreshTokenExpiration;
+	private final JwtTokenProperties jwtTokenProperties;
 
 	public void saveExpiredAccessToken(String userId, String token) {
 		jwtTemplate.opsForValue()
 				.set(userId + JWT_ACCESS_KEY_SUFFIX,
 						token,
-						accessTokenExpiration,
-						TimeUnit.MILLISECONDS
+						jwtTokenProperties.getAccessExpiry()
 				);
 	}
 
@@ -36,14 +34,13 @@ public class JwtRedis {
 		jwtTemplate.opsForValue()
 				.set(userId + JWT_REFRESH_KEY_SUFFIX,
 						refreshToken,
-						refreshTokenExpiration,
-						TimeUnit.MILLISECONDS
+						jwtTokenProperties.getRefreshExpiry()
 				);
 	}
 
 	public String getRefreshToken(String userId) {
 		String key = userId + JWT_REFRESH_KEY_SUFFIX;
-		
+
 		return jwtTemplate.opsForValue().get(key);
 	}
 }
