@@ -83,7 +83,7 @@ public class CookieManager {
 		Cookie accessTokenCookie =
 				cookieOf(JwtTokenConstants.ACCESS_TOKEN, tokens.getAccessToken());
 		accessTokenCookie.setSecure(true);
-		accessTokenCookie.setMaxAge(jwtTokenProperties.getAccessExpirySeconds());
+		accessTokenCookie.setMaxAge(jwtTokenProperties.getRefreshExpirySeconds());
 		setToClient(response, accessTokenCookie, "/", serverName);
 
 		// 리프레시 토큰 쿠키 설정
