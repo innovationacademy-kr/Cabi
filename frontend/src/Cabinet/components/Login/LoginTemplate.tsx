@@ -1,18 +1,10 @@
-import { useState } from "react";
 import styled from "styled-components";
-import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { ReactComponent as LoginImg } from "@/Cabinet/assets/images/loginImg.svg";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
+import LoginButtonGroup from "./LoginButtonGroup";
 
-const LoginTemplate = (props: {
-  url: string;
-  pageTitle: string;
-  pageSubTitle: string;
-  imgSrc: string;
-  googleUrl: string;
-}) => {
-  const { url, pageTitle, pageSubTitle, imgSrc, googleUrl } = props;
-  const [isClicked, setIsClicked] = useState(false);
+const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
+  const { pageTitle, pageSubTitle } = props;
 
   return (
     <LoginPageStyled id="loginPage">
@@ -44,22 +36,7 @@ const LoginTemplate = (props: {
             <CardTitleStyled>{pageTitle}</CardTitleStyled>
             <CardSubTitleStyled>{pageSubTitle}</CardSubTitleStyled>
           </CardTitleBoxStyled>
-          <button
-            onClick={() => {
-              window.location.replace(url);
-              setIsClicked(true);
-            }}
-            disabled={isClicked}
-          >
-            {isClicked ? <LoadingAnimation></LoadingAnimation> : "L O G I N"}
-          </button>
-          <button
-            onClick={() => {
-              window.location.replace(googleUrl);
-            }}
-          >
-            구글 로그인
-          </button>
+          <LoginButtonGroup />
         </LoginCardStyled>
       </RightSectionStyled>
     </LoginPageStyled>
