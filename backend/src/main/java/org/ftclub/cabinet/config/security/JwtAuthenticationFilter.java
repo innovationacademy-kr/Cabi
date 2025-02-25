@@ -47,6 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			FilterChain filterChain) throws ServletException, IOException {
+		log.info("JWT Filter: 요청 URL = {}", request.getRequestURI());
 		try {
 			String token = jwtTokenProvider.extractToken(request);
 			if (token != null) {
@@ -75,12 +76,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	// userId, role
 	private Authentication getAuthentication(Claims claims) {
-		String roles = claims.get(JwtTokenProvider.ROLES, String.class);
+		String roles = claims.get(JwtTokenConstants.ROLES, String.class);
 
 		UserInfoDto userInfoDto =
 				new UserInfoDto(
-						claims.get(JwtTokenProvider.USER_ID, Long.class),
-						claims.get(JwtTokenProvider.OAUTH, String.class),
+						claims.get(JwtTokenConstants.USER_ID, Long.class),
+						claims.get(JwtTokenConstants.OAUTH, String.class),
 						roles
 				);
 
