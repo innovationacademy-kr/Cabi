@@ -31,4 +31,8 @@ public class UserOauthConnectionQueryService {
 	public boolean isExistByUserId(Long userId) {
 		return userOauthConnectionRepository.existsByUserId(userId);
 	}
+
+	public Optional<UserOauthConnection> getByUserId(Long userId) {
+		return userOauthConnectionRepository.findByUserId(userId);
+	}
 }

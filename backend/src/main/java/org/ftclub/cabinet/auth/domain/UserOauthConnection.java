@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class UserOauthConnection {
 	@Column(name = "ID")
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID")
 	private User user;
 	@Column(name = "PROVIDER_TYPE")

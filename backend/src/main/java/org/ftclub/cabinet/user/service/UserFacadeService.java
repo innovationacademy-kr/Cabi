@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 import org.ftclub.cabinet.alarm.fcm.config.FirebaseConfig;
 import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
+import org.ftclub.cabinet.auth.domain.UserOauthConnection;
+import org.ftclub.cabinet.auth.service.UserOauthConnectionQueryService;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
@@ -47,6 +49,7 @@ public class UserFacadeService {
 	private final FirebaseConfig firebaseConfig;
 	private final BanHistoryCommandService banHistoryCommandService;
 	private final ItemRedisService itemRedisService;
+	private final UserOauthConnectionQueryService userOauthConnectionQueryService;
 
 
 	/**
@@ -57,16 +60,24 @@ public class UserFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public MyProfileResponseDto getProfile(Long userId) {
-		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(userId);
-		BanHistory banHistory =
-				banHistoryQueryService.findRecentActiveBanHistory(userId, LocalDateTime.now())
-						.orElse(null);
 		User currentUser = userQueryService.getUser(userId);
+		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(userId);
+		BanHistory banHistory = banHistoryQueryService.
+				findRecentActiveBanHistory(userId, LocalDateTime.now())
+				.orElse(null);
+
+		String oauthMail = userOauthConnectionQueryService
+				.getByUserId(currentUser.getId())
+				.map(UserOauthConnection::getMail)
+				.orElse(null);
+
 		AlarmTypeResponseDto userAlarmTypes = currentUser.getAlarmTypes();
 		boolean isDeviceTokenExpired = userAlarmTypes.isPush()
 				&& fcmTokenRedisService.findByUserName(currentUser.getName()).isEmpty();
+
 		Long coins = currentUser.getCoin();
-		return userMapper.toMyProfileResponseDto(currentUser, cabinet, banHistory, userAlarmTypes,
+		return userMapper.toMyProfileResponseDto(currentUser, oauthMail, cabinet, banHistory,
+				userAlarmTypes,
 				isDeviceTokenExpired, coins);
 	}
 
