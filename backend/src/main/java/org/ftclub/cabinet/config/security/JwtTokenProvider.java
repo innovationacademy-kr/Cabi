@@ -7,7 +7,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
 import java.util.Date;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -128,12 +127,7 @@ public class JwtTokenProvider {
 			TokenDto tokenDto = createTokens(user.getId(), user.getRoles(), provider);
 
 			// cookie 업데이트 로직 추가
-			Cookie accessCookie = cookieManager.cookieOf(JwtTokenConstants.ACCESS_TOKEN,
-					tokenDto.getAccessToken());
-			Cookie refreshCookie = cookieManager.cookieOf(JwtTokenConstants.REFRESH_TOKEN,
-					tokenDto.getRefreshToken());
-			cookieManager.setCookieToClient(response, accessCookie, "/", request.getServerName());
-			cookieManager.setCookieToClient(response, refreshCookie, "/", request.getServerName());
+			cookieManager.setTokenCookies(response, tokenDto, request.getServerName());
 
 			// access, refresh blackList 추가
 			jwtRedisService.addUsedTokens(user.getId(), accessToken, refreshToken);

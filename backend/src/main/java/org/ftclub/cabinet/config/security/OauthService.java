@@ -48,8 +48,9 @@ public class OauthService {
 		String providerId = oauth2User.getName();
 		String providerType = oauth2User.getProvider();
 
-		Optional<UserOauthConnection> userConnection = userOauthConnectionQueryService.findByProviderIdAndProviderType(
-				providerId, providerType);
+		Optional<UserOauthConnection> userConnection =
+				userOauthConnectionQueryService.findByProviderIdAndProviderType(providerId,
+						providerType);
 		// 기존 연동 유저
 		if (userConnection.isPresent()) {
 			User user = userConnection.get().getUser();
