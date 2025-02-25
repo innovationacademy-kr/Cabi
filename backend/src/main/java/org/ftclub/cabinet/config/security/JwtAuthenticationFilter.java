@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
-import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -57,21 +56,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				SecurityContextHolder.getContext().setAuthentication(auth);
 			}
 
-			filterChain.doFilter(request, response);
 		} catch (ExpiredJwtException e) {
-			throw new CustomAuthenticationException(ExceptionStatus.JWT_EXPIRED);
+			log.error("Expired JWT Token : {}", e.getMessage());
+			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_EXPIRED);
 		} catch (SignatureException | MalformedJwtException | IllegalArgumentException e) {
-			throw new CustomAuthenticationException(ExceptionStatus.JWT_INVALID);
+			log.error("Illegal JWT Token : {}", e.getMessage());
+			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_INVALID);
+
 		} catch (UnsupportedJwtException e) {
-			throw new CustomAuthenticationException(ExceptionStatus.JWT_UNSUPPORTED);
+			log.error("Unsupported JWT Token : {}", e.getMessage());
+			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_UNSUPPORTED);
+
 		} catch (Exception e) {
 			log.error("JWT Authentication failed: {}", e.getMessage(), e);
-			throw new CustomAuthenticationException(ExceptionStatus.JWT_EXCEPTION);
+			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_EXCEPTION);
+
 		} finally {
 			if (SecurityContextHolder.getContext().getAuthentication() == null) {
 				SecurityContextHolder.clearContext();
 			}
 		}
+		filterChain.doFilter(request, response);
+		
 	}
 
 	// userId, role

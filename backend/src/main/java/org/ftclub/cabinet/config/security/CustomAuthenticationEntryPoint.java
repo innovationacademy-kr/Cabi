@@ -28,6 +28,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 		ExceptionStatus exceptionStatus = ExceptionStatus.AUTHENTICATION_FAILED;
 		log.error("Request Uri : {}", request.getRequestURI());
 
+		Object exceptionStatusAttr = request.getAttribute("exceptionStatus");
+		if (exceptionStatusAttr instanceof ExceptionStatus) {
+			exceptionStatus = (ExceptionStatus) exceptionStatusAttr;
+		}
 		if (authException instanceof CustomAuthenticationException) {
 			exceptionStatus = ((CustomAuthenticationException) authException).getStatus();
 		}
