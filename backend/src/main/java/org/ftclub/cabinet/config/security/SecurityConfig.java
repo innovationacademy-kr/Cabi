@@ -29,7 +29,8 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http, JwtExceptionFilter jwtExceptionFilter)
+			throws Exception {
 		// security 에서 기본적으로 제공하는 로그인 폼 사용 안함 우리는 oauth 로그인 사용
 		http.csrf(AbstractHttpConfigurer::disable)
 				.formLogin(AbstractHttpConfigurer::disable)
@@ -50,6 +51,7 @@ public class SecurityConfig {
 				)
 				.addFilterBefore(jwtAuthenticationFilter,
 						UsernamePasswordAuthenticationFilter.class)
+				.addFilterAfter(jwtExceptionFilter, JwtAuthenticationFilter.class)
 //				.addFilterAfter(loggingFilter, SecurityContextHolderFilter.class)
 				.exceptionHandling(handler -> handler
 						.authenticationEntryPoint(entrypoint)

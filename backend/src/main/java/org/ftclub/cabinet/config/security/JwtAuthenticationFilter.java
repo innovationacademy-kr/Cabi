@@ -1,10 +1,6 @@
 package org.ftclub.cabinet.config.security;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -47,36 +42,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			FilterChain filterChain) throws ServletException, IOException {
 		log.info("JWT Filter: 요청 URL = {}", request.getRequestURI());
-		try {
-			String token = jwtTokenProvider.extractToken(request);
-			if (token != null) {
-				Claims claims = jwtTokenProvider.parseToken(token);
-				Authentication auth = getAuthentication(claims);
-				SecurityContextHolder.getContext().setAuthentication(auth);
-			}
-
-		} catch (ExpiredJwtException e) {
-			log.error("Expired JWT Token : {}", e.getMessage());
-			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_EXPIRED);
-			SecurityContextHolder.clearContext();
-		} catch (SignatureException | MalformedJwtException | IllegalArgumentException e) {
-			log.error("Illegal JWT Token : {}", e.getMessage());
-			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_INVALID);
-			SecurityContextHolder.clearContext();
-
-		} catch (UnsupportedJwtException e) {
-			log.error("Unsupported JWT Token : {}", e.getMessage());
-			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_UNSUPPORTED);
-			SecurityContextHolder.clearContext();
-
-		} catch (Exception e) {
-			log.error("JWT Authentication failed: {}", e.getMessage(), e);
-			request.setAttribute("exceptionStatus", ExceptionStatus.JWT_EXCEPTION);
-			SecurityContextHolder.clearContext();
-
+		String token = jwtTokenProvider.extractToken(request);
+		if (token != null) {
+			Claims claims = jwtTokenProvider.parseToken(token);
+			Authentication auth = getAuthentication(claims);
+			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
 		filterChain.doFilter(request, response);
-
 	}
 
 	// userId, role
