@@ -6,10 +6,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
+import org.ftclub.cabinet.auth.domain.OauthResult;
+import org.ftclub.cabinet.auth.domain.UserOauthConnection;
+import org.ftclub.cabinet.auth.service.AuthenticationService;
+import org.ftclub.cabinet.auth.service.UserOauthConnectionCommandService;
+import org.ftclub.cabinet.auth.service.UserOauthConnectionQueryService;
 import org.ftclub.cabinet.config.FtApiProperties;
+import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
@@ -29,20 +36,49 @@ public class OauthService {
 	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
 	private final FtApiProperties ftApiProperties;
+	private final AuthenticationService authenticationService;
+	private final UserOauthConnectionQueryService userOauthConnectionQueryService;
+	private final UserOauthConnectionCommandService userOauthConnectionCommandService;
 
-	public User handleGoogleLogin(JsonNode rootNode, CustomOauth2User ftUser) {
+	public OauthResult handleExternalOAuthLogin(
+			CustomOauth2User oauth2User,
+			HttpServletRequest request,
+			String mainProviderName) {
+		String oauthMail = oauth2User.getEmail();
+		String providerId = oauth2User.getName();
+		String providerType = oauth2User.getProvider();
 
-		String oauthMail = rootNode.get("email").asText();
-		Optional<User> userByOauthMail = userQueryService.findByOauthEmail(oauthMail);
-
-		if (userByOauthMail.isPresent()) {
-			log.error("Google의 메일 {}은 이미 다른 사용자{}와 연동되어 있습니다",
-					oauthMail, userByOauthMail.get().getName());
-			throw ExceptionStatus.DUPLICATED_OAUTH_MAIL.asSpringSecurityException();
+		Optional<UserOauthConnection> userConnection = userOauthConnectionQueryService.findByProviderIdAndProviderType(
+				providerId, providerType);
+		// 기존 연동 유저
+		if (userConnection.isPresent()) {
+			User user = userConnection.get().getUser();
+			return new OauthResult(user, false);
 		}
-		// ftUser, google email 갖고 연동하기
-		return userCommandService.linkOauthAccount(ftUser.getName(), oauthMail);
+
+		UserInfoDto prevLoginInfo = authenticationService.getAuthInfoFromCookie(request);
+		// ft 로그인 상태가 아니라면 에러
+		if (!prevLoginInfo.getOauth().equals(mainProviderName)) {
+			throw new CustomAuthenticationException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
+		}
+		// 해당 oauth 계정을 다른 유저가 사용하고있다면 에러
+		if (userOauthConnectionQueryService.isExistByOauthIdAndType(providerId, providerType)) {
+			throw new CustomAuthenticationException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
+		}
+
+		// 유저가 이미 다른 oauth 계정을 연동중이라면 에러
+		User user = userQueryService.getUser(prevLoginInfo.getUserId());
+		if (userOauthConnectionQueryService.isExistByUserId(user.getId())) {
+			throw new CustomAuthenticationException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
+		}
+
+		UserOauthConnection connection =
+				UserOauthConnection.of(user, providerType, providerId, oauthMail);
+		userOauthConnectionCommandService.save(connection);
+
+		return new OauthResult(user, true);
 	}
+
 
 	public User handleFtLogin(JsonNode rootNode) {
 		FtOauthProfile profile = convertJsonNodeToProfile(rootNode);
