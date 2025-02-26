@@ -14,6 +14,7 @@ import PointColorCardContainer from "@/Cabinet/components/Card/PointColorCard/Po
 import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileCard.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import {
+  axiosGetAccountLinkData,
   axiosMyInfo,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
@@ -85,9 +86,15 @@ const ProfilePage = () => {
             <div>{myInfo.oauthMail}</div>
           ) : (
             <button
-              onClick={() => {
+              onClick={async () => {
+                const accountLinkData = await axiosGetAccountLinkData();
+
                 window.location.replace(
-                  `${import.meta.env.VITE_BE_HOST}/oauth2/authorization/google`
+                  `${
+                    import.meta.env.VITE_BE_HOST
+                  }/oauth2/authorization/google?link_code=${
+                    accountLinkData.data.oauthLink
+                  }`
                 );
               }}
             >
