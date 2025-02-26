@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.alarm.service;
 
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.repository.VerificationCodeRedis;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -20,8 +19,11 @@ public class VerificationCodeRedisService {
 		}
 	}
 
-	@Transactional
-	public void saveVerificationCode(String name, String code) {
+	public void createOauthCodeLink(Long userId, String code) {
+		codeRedis.saveOauthLinkCode(String.valueOf(userId), code);
+	}
+
+	public void createVerificationCode(String name, String code) {
 		codeRedis.saveVerificationCode(name, code);
 	}
 
@@ -29,4 +31,15 @@ public class VerificationCodeRedisService {
 		codeRedis.deleteVerificationCode(name, code);
 	}
 
+	public Long getUserIdByLinkCode(String linkCode) {
+		String userId = codeRedis.getUserIdByOauthLink(linkCode);
+		if (userId == null) {
+			throw ExceptionStatus.NOT_FOUND_OAUTH_LINK.asServiceException();
+		}
+		return Long.parseLong(userId);
+	}
+
+	public void removeOauthLink(String code) {
+		codeRedis.deleteOauthLink(code);
+	}
 }

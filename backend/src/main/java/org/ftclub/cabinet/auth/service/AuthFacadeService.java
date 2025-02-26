@@ -23,6 +23,7 @@ import org.ftclub.cabinet.config.security.AccessTokenDto;
 import org.ftclub.cabinet.config.security.JwtTokenProvider;
 import org.ftclub.cabinet.config.security.OauthService;
 import org.ftclub.cabinet.dto.MasterLoginDto;
+import org.ftclub.cabinet.dto.OauthLinkDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
@@ -221,7 +222,7 @@ public class AuthFacadeService {
 		}
 		String tmpToken = UUID.randomUUID().toString();
 
-		verificationCodeRedisService.saveVerificationCode(user.getName(), tmpToken);
+		verificationCodeRedisService.createVerificationCode(user.getName(), tmpToken);
 		String verificationLink = beHost + "/verification?code=" + tmpToken +
 				"&name=" + URLEncoder.encode(name, StandardCharsets.UTF_8);
 
@@ -238,5 +239,15 @@ public class AuthFacadeService {
 		return AccessTokenDto.builder()
 				.accessToken(temporaryToken)
 				.build();
+	}
+
+	public OauthLinkDto generateOauthLink(Long userId, String oauth) {
+		if (!oauth.equals("ft")) {
+			throw ExceptionStatus.NOT_FT_LOGIN_STATUS.asServiceException();
+		}
+		String linkCode = UUID.randomUUID().toString();
+
+		verificationCodeRedisService.createOauthCodeLink(userId, linkCode);
+		return new OauthLinkDto(linkCode);
 	}
 }

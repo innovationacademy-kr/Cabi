@@ -49,10 +49,10 @@ public class SecurityConfig {
 						.userInfoEndpoint(user -> user.userService(customOAuth2UserService))
 						.successHandler(customSuccessHandler)
 				)
+//				.addFilterBefore(loggingFilter, SecurityContextHolderFilter.class)
 				.addFilterBefore(jwtAuthenticationFilter,
 						UsernamePasswordAuthenticationFilter.class)
-				.addFilterAfter(jwtExceptionFilter, JwtAuthenticationFilter.class)
-//				.addFilterAfter(loggingFilter, SecurityContextHolderFilter.class)
+				.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
 				.exceptionHandling(handler -> handler
 						.authenticationEntryPoint(entrypoint)
 						.accessDeniedHandler(customAccessDeniedHandler))

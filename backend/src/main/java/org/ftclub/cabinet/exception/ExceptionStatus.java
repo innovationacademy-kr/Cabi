@@ -108,7 +108,8 @@ public enum ExceptionStatus {
 	JWT_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "지원하지 않는 토큰 형식입니다."),
 	JWT_NOT_EXPIRED(HttpStatus.BAD_REQUEST, "만료되지 않은 토큰의 재발급 요청입니다"),
 	JWT_ALREADY_USED(HttpStatus.BAD_REQUEST, "이미 사용된 토큰입니다."),
-	NOT_FOUND_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "기한이 만료되었거나, 올바르지 않은 코드입니다.");
+	NOT_FOUND_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "기한이 만료되었거나, 올바르지 않은 코드입니다."),
+	NOT_FOUND_OAUTH_LINK(HttpStatus.BAD_REQUEST, "oauth 로그인 시, 링크가 부정확합니다..");
 
 	final private int statusCode;
 	final private String message;

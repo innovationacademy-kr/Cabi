@@ -63,7 +63,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 		} else if (isExternalProvider(provider)) {
 			OauthResult result =
-					oauthService.handleExternalOAuthLogin(fromLoadUser, request, ftProvider);
+					oauthService.handleExternalOAuthLogin(fromLoadUser, request);
 			authenticationService.processAuthentication(request, response, result.getUser(),
 					provider);
 			if (result.isRedirectionToProfile()) {

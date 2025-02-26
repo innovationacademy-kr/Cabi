@@ -1,7 +1,9 @@
 package org.ftclub.cabinet.config.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
@@ -29,6 +31,14 @@ public class JwtTokenProvider {
 	private final JwtRedisService jwtRedisService;
 	private final JwtTokenProperties jwtTokenProperties;
 
+	/**
+	 * 1. parse Token Exception 발생 시 FE에게 어떻게 전달할 것인가?
+	 * <p>
+	 * 2. 위치에 따라 발생하는 exception 관리를 어떻게 할까?
+	 *
+	 * @param accessToken
+	 * @return
+	 */
 	public Claims parseToken(String accessToken) {
 		Key key = jwtTokenProperties.getSigningKey();
 
@@ -106,26 +116,35 @@ public class JwtTokenProvider {
 		if (accessToken == null) {
 			throw ExceptionStatus.JWT_TOKEN_NOT_FOUND.asServiceException();
 		}
-		// 만료 토큰이 아니면 에러
-		Claims claims = parseToken(refreshToken);
-		String provider = claims.get(JwtTokenConstants.OAUTH, String.class);
-		Long userId = claims.get(JwtTokenConstants.USER_ID, Long.class);
-		User user = userQueryService.getUser(userId);
+		
+		try {
+			parseToken(accessToken);
 
-		// 이미 사용된 토큰인지 검수
-		if (jwtRedisService.isUsedAccessToken(user.getId(), accessToken)
-				|| jwtRedisService.isUsedRefreshToken(userId, refreshToken)) {
-			throw ExceptionStatus.JWT_ALREADY_USED.asServiceException();
+			throw ExceptionStatus.JWT_NOT_EXPIRED.asServiceException();
+		} catch (ExpiredJwtException e) {
+			Claims claims = parseToken(refreshToken);
+			String provider = claims.get(JwtTokenConstants.OAUTH, String.class);
+			Long userId = claims.get(JwtTokenConstants.USER_ID, Long.class);
+			User user = userQueryService.getUser(userId);
+
+			// 이미 사용된 토큰인지 검수
+			if (jwtRedisService.isUsedAccessToken(user.getId(), accessToken)
+					|| jwtRedisService.isUsedRefreshToken(userId, refreshToken)) {
+				throw ExceptionStatus.JWT_ALREADY_USED.asServiceException();
+			}
+			// 토큰 생성
+			TokenDto tokenDto = createTokens(user.getId(), user.getRoles(), provider);
+
+			// cookie 업데이트 로직 추가
+			cookieManager.setTokenCookies(response, tokenDto, request.getServerName());
+
+			// access, refresh blackList 추가
+			jwtRedisService.addUsedTokens(user.getId(), accessToken, refreshToken);
+
+			return tokenDto;
+		} catch (JwtException e) {
+			throw ExceptionStatus.JWT_EXCEPTION.asServiceException();
 		}
-		// 토큰 생성
-		TokenDto tokenDto = createTokens(user.getId(), user.getRoles(), provider);
 
-		// cookie 업데이트 로직 추가
-		cookieManager.setTokenCookies(response, tokenDto, request.getServerName());
-
-		// access, refresh blackList 추가
-		jwtRedisService.addUsedTokens(user.getId(), accessToken, refreshToken);
-
-		return tokenDto;
 	}
 }

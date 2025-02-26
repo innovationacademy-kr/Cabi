@@ -9,10 +9,10 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.alarm.service.VerificationCodeRedisService;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.domain.UserOauthConnection;
-import org.ftclub.cabinet.auth.service.AuthenticationService;
 import org.ftclub.cabinet.auth.service.UserOauthConnectionCommandService;
 import org.ftclub.cabinet.auth.service.UserOauthConnectionQueryService;
 import org.ftclub.cabinet.config.FtApiProperties;
@@ -36,14 +36,13 @@ public class OauthService {
 	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
 	private final FtApiProperties ftApiProperties;
-	private final AuthenticationService authenticationService;
 	private final UserOauthConnectionQueryService userOauthConnectionQueryService;
 	private final UserOauthConnectionCommandService userOauthConnectionCommandService;
+	private final VerificationCodeRedisService verificationCodeRedisService;
 
 	public OauthResult handleExternalOAuthLogin(
 			CustomOauth2User oauth2User,
-			HttpServletRequest request,
-			String mainProviderName) {
+			HttpServletRequest request) {
 		String oauthMail = oauth2User.getEmail();
 		String providerId = oauth2User.getName();
 		String providerType = oauth2User.getProvider();
@@ -57,18 +56,19 @@ public class OauthService {
 			return new OauthResult(user, false);
 		}
 
-		UserInfoDto prevLoginInfo = authenticationService.getAuthInfoFromCookie(request);
-		// ft 로그인 상태가 아니라면 에러
-		if (!prevLoginInfo.getOauth().equals(mainProviderName)) {
-			throw new CustomAuthenticationException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
+		String linkCode = request.getParameter("link_code");
+		if (linkCode == null) {
+			throw new CustomAuthenticationException(ExceptionStatus.NOT_FOUND_OAUTH_LINK);
 		}
+		Long userId = verificationCodeRedisService.getUserIdByLinkCode(linkCode);
+
 		// 해당 oauth 계정을 다른 유저가 사용하고있다면 에러
 		if (userOauthConnectionQueryService.isExistByOauthIdAndType(providerId, providerType)) {
 			throw new CustomAuthenticationException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
 		}
 
 		// 유저가 이미 다른 oauth 계정을 연동중이라면 에러
-		User user = userQueryService.getUser(prevLoginInfo.getUserId());
+		User user = userQueryService.getUser(userId);
 		if (userOauthConnectionQueryService.isExistByUserId(user.getId())) {
 			throw new CustomAuthenticationException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
 		}
@@ -76,7 +76,7 @@ public class OauthService {
 		UserOauthConnection connection =
 				UserOauthConnection.of(user, providerType, providerId, oauthMail);
 		userOauthConnectionCommandService.save(connection);
-
+		verificationCodeRedisService.removeOauthLink(linkCode);
 		return new OauthResult(user, true);
 	}
 
@@ -101,7 +101,6 @@ public class OauthService {
 	public FtOauthProfile convertJsonNodeToProfile(JsonNode jsonNode) {
 		String intraName = jsonNode.get("login").asText();
 		String email = jsonNode.get("email").asText();
-		log.info("user Information = {}", jsonNode);
 		if (intraName == null || email == null) {
 			throw ExceptionStatus.INCORRECT_ARGUMENT.asServiceException();
 		}

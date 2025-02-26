@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.config.security.AccessTokenDto;
+import org.ftclub.cabinet.config.security.UserInfoDto;
+import org.ftclub.cabinet.dto.OauthLinkDto;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +59,11 @@ public class AuthController {
 	public void requestAGULogin(@RequestParam(name = "name") String name)
 			throws JsonProcessingException {
 		authFacadeService.requestTemporaryLogin(name);
+	}
+
+	@GetMapping("/link")
+	public OauthLinkDto generateOauthLink(@AuthenticationPrincipal UserInfoDto userInfo) {
+		return authFacadeService.generateOauthLink(userInfo.getUserId(), userInfo.getOauth());
 	}
 
 
