@@ -985,13 +985,3 @@ export const axiosGetUserItems = async (
     throw error;
   }
 };
-
-const axiosGetAccountLinkDataURL = "/v4/auth/link";
-export const axiosGetAccountLinkData = async (): Promise<any> => {
-  try {
-    const response = await instance.get(axiosGetAccountLinkDataURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
