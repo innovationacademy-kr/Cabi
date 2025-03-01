@@ -39,13 +39,20 @@ public class JwtTokenProvider {
 	 * @param accessToken
 	 * @return
 	 */
-	public Claims parseToken(String accessToken) {
+	public Claims parseValidToken(String token) {
 		Key key = jwtTokenProperties.getSigningKey();
-
-		return Jwts.parserBuilder()
-				.setSigningKey(key).build()
-				.parseClaimsJws(accessToken)
-				.getBody();
+		try {
+			return Jwts.parserBuilder()
+					.setSigningKey(key).build()
+					.parseClaimsJws(token)
+					.getBody();
+		} catch (ExpiredJwtException e) {
+			log.error("만료된 JWT 토큰입니다: {}", e.getMessage());
+			throw e; // 그대로 던져서 호출자가 처리하도록 함
+		} catch (JwtException e) {
+			log.error("유효하지 않은 JWT 토큰입니다: {}", e.getMessage());
+			throw e; // 그대로 던져서 호출자가 처리하도록 함
+		}
 	}
 
 	/**
@@ -116,13 +123,14 @@ public class JwtTokenProvider {
 		if (accessToken == null) {
 			throw ExceptionStatus.JWT_TOKEN_NOT_FOUND.asServiceException();
 		}
-		
+
 		try {
-			parseToken(accessToken);
+			parseValidToken(accessToken);
 
 			throw ExceptionStatus.JWT_NOT_EXPIRED.asServiceException();
 		} catch (ExpiredJwtException e) {
-			Claims claims = parseToken(refreshToken);
+			// refreshToken parse 도중 예외 발생 시 serviceException 반환
+			Claims claims = parseValidToken(refreshToken);
 			String provider = claims.get(JwtTokenConstants.OAUTH, String.class);
 			Long userId = claims.get(JwtTokenConstants.USER_ID, Long.class);
 			User user = userQueryService.getUser(userId);

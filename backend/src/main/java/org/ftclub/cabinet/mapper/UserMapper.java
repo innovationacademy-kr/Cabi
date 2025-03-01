@@ -39,6 +39,7 @@ public interface UserMapper {
 
 	@Mapping(target = "userId", source = "user.id")
 	@Mapping(target = "cabinetId", source = "cabinet.id")
+	@Mapping(target = "oauthMail", source = "oauthMail")
 	MyProfileResponseDto toMyProfileResponseDto(User user, String oauthMail,
 			Cabinet cabinet, BanHistory banHistory,
 			AlarmTypeResponseDto alarmTypes, boolean isDeviceTokenExpired, Long coins);

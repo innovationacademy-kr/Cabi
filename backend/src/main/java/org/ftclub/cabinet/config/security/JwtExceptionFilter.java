@@ -2,9 +2,7 @@ package org.ftclub.cabinet.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
+import io.jsonwebtoken.JwtException;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
@@ -37,12 +35,9 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 		} catch (ExpiredJwtException e) {
 			log.error("Expired JWT Token : {}", e.getMessage());
 			exceptionStatus = ExceptionStatus.JWT_EXPIRED;
-		} catch (SignatureException | MalformedJwtException | IllegalArgumentException e) {
+		} catch (JwtException e) {
 			log.error("Illegal JWT Token : {}", e.getMessage());
 			exceptionStatus = ExceptionStatus.JWT_INVALID;
-		} catch (UnsupportedJwtException e) {
-			log.error("Unsupported JWT Token : {}", e.getMessage());
-			exceptionStatus = ExceptionStatus.JWT_UNSUPPORTED;
 		} catch (Exception e) {
 			log.error("JWT Authentication failed: {}", e.getMessage(), e);
 			exceptionStatus = ExceptionStatus.JWT_EXCEPTION;

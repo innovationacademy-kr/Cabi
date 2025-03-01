@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		log.info("JWT Filter: 요청 URL = {}", request.getRequestURI());
 		String token = jwtTokenProvider.extractToken(request);
 		if (token != null) {
-			Claims claims = jwtTokenProvider.parseToken(token);
+			Claims claims = jwtTokenProvider.parseValidToken(token);
 			Authentication auth = getAuthentication(claims);
 			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
