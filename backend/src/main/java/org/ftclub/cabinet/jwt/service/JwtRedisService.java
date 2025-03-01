@@ -29,4 +29,8 @@ public class JwtRedisService {
 		jwtRedis.saveExpiredAccessToken(String.valueOf(userId), accessToken);
 		jwtRedis.saveRefreshToken(String.valueOf(userId), refreshToken);
 	}
+
+	public void addRefreshToken(Long userId, String refreshToken) {
+		jwtRedis.saveRefreshToken(String.valueOf(userId), refreshToken);
+	}
 }

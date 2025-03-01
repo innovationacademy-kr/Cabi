@@ -105,4 +105,24 @@ public class CookieManager {
 		}
 		res.addCookie(cookie);
 	}
+
+	public void deleteAllCookies(HttpServletRequest req, HttpServletResponse res) {
+		Cookie[] cookies = req.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				Cookie newCookie = new Cookie(cookie.getName(), null);
+				newCookie.setMaxAge(0);
+				newCookie.setPath("/");
+
+				if (cookie.getDomain() != null) {
+					newCookie.setDomain(cookie.getDomain());
+				}
+
+				newCookie.setSecure(cookie.getSecure());
+				newCookie.setHttpOnly(cookie.isHttpOnly());
+
+				res.addCookie(newCookie);
+			}
+		}
+	}
 }

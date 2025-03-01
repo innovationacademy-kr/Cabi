@@ -50,6 +50,11 @@ public class SecurityConfig {
 						.userInfoEndpoint(user -> user.userService(customOAuth2UserService))
 						.successHandler(customSuccessHandler)
 				)
+				.logout(logout -> logout
+						.logoutUrl("/v4/auth/logout")
+						.invalidateHttpSession(true)
+						.clearAuthentication(true)
+				)
 				.addFilterBefore(loggingFilter, SecurityContextHolderFilter.class)
 				.addFilterBefore(jwtAuthenticationFilter,
 						UsernamePasswordAuthenticationFilter.class)
