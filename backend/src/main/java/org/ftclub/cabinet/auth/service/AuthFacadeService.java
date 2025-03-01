@@ -25,6 +25,7 @@ import org.ftclub.cabinet.config.security.OauthService;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.dto.OauthLinkDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -55,6 +56,9 @@ public class AuthFacadeService {
 	private final VerificationCodeRedisService verificationCodeRedisService;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final ApplicationTokenManager applicationTokenManager;
+	private final JwtRedisService jwtRedisService;
+	private final UserOauthConnectionQueryService userOauthConnectionQueryService;
+	private final UserOauthConnectionCommandService userOauthConnectionCommandService;
 	@Value("${cabinet.server.be-host}")
 	private String beHost;
 
@@ -182,13 +186,26 @@ public class AuthFacadeService {
 	/**
 	 * 유저 로그아웃을 처리합니다.
 	 * <p>
-	 * 쿠키에 저장된 유저 토큰을 제거합니다.
+	 * access, refresh 토큰을 사용 처리합니다.
+	 * <p>
+	 * 모든 쿠키를 제거합니다.
 	 *
 	 * @param res 요청 시의 서블렛 {@link HttpServletResponse}
 	 */
-	public void userLogout(HttpServletResponse res) {
-		Cookie userCookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, "");
-		cookieManager.setCookieToClient(res, userCookie, "/", res.getHeader("host"));
+	public void userLogout(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			Long userId,
+			String refreshToken) {
+//		Cookie userCookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, "");
+//		cookieManager.setCookieToClient(res, userCookie, "/", res.getHeader("host"));
+
+		// accessToken, refreshToken 사용 처리
+		String accessToken = jwtTokenProvider.extractToken(request);
+		if (accessToken != null && refreshToken != null) {
+			jwtRedisService.addUsedTokens(userId, accessToken, refreshToken);
+		}
+		cookieManager.deleteAllCookies(request, response);
 	}
 
 	/**
@@ -249,5 +266,9 @@ public class AuthFacadeService {
 
 		verificationCodeRedisService.createOauthCodeLink(userId, linkCode);
 		return new OauthLinkDto(linkCode);
+	}
+
+	public void deleteOauthMail(Long userId) {
+		userOauthConnectionCommandService.deleteByUserId(userId);
 	}
 }
