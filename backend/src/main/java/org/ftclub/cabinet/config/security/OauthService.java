@@ -9,10 +9,14 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.alarm.service.VerificationCodeRedisService;
+import org.ftclub.cabinet.admin.admin.domain.Admin;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.domain.UserOauthConnection;
+import org.ftclub.cabinet.auth.service.AuthPolicyService;
+import org.ftclub.cabinet.auth.service.AuthenticationService;
 import org.ftclub.cabinet.auth.service.UserOauthConnectionCommandService;
 import org.ftclub.cabinet.auth.service.UserOauthConnectionQueryService;
 import org.ftclub.cabinet.config.FtApiProperties;
@@ -38,7 +42,9 @@ public class OauthService {
 	private final FtApiProperties ftApiProperties;
 	private final UserOauthConnectionQueryService userOauthConnectionQueryService;
 	private final UserOauthConnectionCommandService userOauthConnectionCommandService;
-	private final VerificationCodeRedisService verificationCodeRedisService;
+	private final AuthenticationService authenticationService;
+	private final AdminQueryService adminQueryService;
+	private final AuthPolicyService authPolicyService;
 
 	public OauthResult handleExternalOAuthLogin(
 			CustomOauth2User oauth2User,
@@ -47,28 +53,41 @@ public class OauthService {
 		String providerId = oauth2User.getName();
 		String providerType = oauth2User.getProvider();
 
+		if (adminQueryService.isAdminEmail(oauthMail)) {
+			Admin admin = adminQueryService.getByEmail(oauthMail);
+
+			return OauthResult.builder()
+					.userId(admin.getId())
+					.roles(AdminRole.ADMIN.name())
+					.redirectionUrl(authPolicyService.getAdminHomeUrl())
+					.build();
+		}
+
 		Optional<UserOauthConnection> userConnection =
 				userOauthConnectionQueryService.findByProviderIdAndProviderType(providerId,
 						providerType);
 		// 기존 연동 유저
 		if (userConnection.isPresent()) {
 			User user = userConnection.get().getUser();
-			return new OauthResult(user, false);
+
+			return OauthResult.builder()
+					.userId(user.getId())
+					.roles(user.getRoles())
+					.redirectionUrl(authPolicyService.getMainHomeUrl())
+					.build();
 		}
 
-		String linkCode = request.getParameter("link_code");
-		if (linkCode == null) {
-			throw new CustomAuthenticationException(ExceptionStatus.NOT_FOUND_OAUTH_LINK);
+		UserInfoDto userInfoDto = authenticationService.getAuthInfoFromCookie(request);
+		if (!userInfoDto.getOauth().equals("ft")) {
+			throw new CustomAuthenticationException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
 		}
-		Long userId = verificationCodeRedisService.getUserIdByLinkCode(linkCode);
-
 		// 해당 oauth 계정을 다른 유저가 사용하고있다면 에러
 		if (userOauthConnectionQueryService.isExistByOauthIdAndType(providerId, providerType)) {
 			throw new CustomAuthenticationException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
 		}
 
 		// 유저가 이미 다른 oauth 계정을 연동중이라면 에러
-		User user = userQueryService.getUser(userId);
+		User user = userQueryService.getUser(userInfoDto.getUserId());
 		if (userOauthConnectionQueryService.isExistByUserId(user.getId())) {
 			throw new CustomAuthenticationException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
 		}
@@ -76,12 +95,17 @@ public class OauthService {
 		UserOauthConnection connection =
 				UserOauthConnection.of(user, providerType, providerId, oauthMail);
 		userOauthConnectionCommandService.save(connection);
-		verificationCodeRedisService.removeOauthLink(linkCode);
-		return new OauthResult(user, true);
+		return OauthResult.builder()
+				.userId(user.getId())
+				.email(user.getEmail())
+				.name(user.getName())
+				.roles(user.getRoles())
+				.redirectionUrl(authPolicyService.getProfileUrl())
+				.build();
 	}
 
 
-	public User handleFtLogin(JsonNode rootNode) {
+	public OauthResult handleFtLogin(JsonNode rootNode) {
 		FtOauthProfile profile = convertJsonNodeToProfile(rootNode);
 		String combinedRoles = FtRole.combineRolesToString(profile.getRoles());
 
@@ -95,7 +119,14 @@ public class OauthService {
 			userCommandService.updateUserBlackholeAndRole(user.getId(), blackHoledAt,
 					combinedRoles);
 		}
-		return user;
+		return OauthResult.builder()
+				.userId(user.getId())
+				.blackHoledAt(user.getBlackholedAt())
+				.email(user.getEmail())
+				.name(user.getName())
+				.roles(user.getRoles())
+				.redirectionUrl(authPolicyService.getMainHomeUrl())
+				.build();
 	}
 
 	public FtOauthProfile convertJsonNodeToProfile(JsonNode jsonNode) {

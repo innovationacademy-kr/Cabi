@@ -2,6 +2,8 @@ package org.ftclub.cabinet.config.security;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,8 +13,8 @@ import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.service.AuthenticationService;
 import org.ftclub.cabinet.exception.CustomAccessDeniedException;
+import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.user.domain.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -57,29 +59,48 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 				objectMapper.convertValue(fromLoadUser.getAttributes(), JsonNode.class);
 		String redirectUrl = authPolicyService.getMainHomeUrl();
 
-		if (provider.equals(ftProvider)) {
-			User user = oauthService.handleFtLogin(rootNode);
-			authenticationService.processAuthentication(request, response, user, provider);
+		try {
+			if (provider.equals(ftProvider)) {
+				OauthResult user = oauthService.handleFtLogin(rootNode);
+				authenticationService.processAuthentication(request, response, user, provider);
 
-		} else if (isExternalProvider(provider)) {
-			OauthResult result =
-					oauthService.handleExternalOAuthLogin(fromLoadUser, request);
-			authenticationService.processAuthentication(request, response, result.getUser(),
-					provider);
-			if (result.isRedirectionToProfile()) {
-				redirectUrl = authPolicyService.getProfileUrl();
+			} else if (isExternalProvider(provider)) {
+				OauthResult result =
+						oauthService.handleExternalOAuthLogin(fromLoadUser, request);
+				authenticationService.processAuthentication(request, response, result, provider);
+				redirectUrl = result.getRedirectionUrl();
+			} else {
+				throw new CustomAccessDeniedException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
 			}
-
-		} else {
-			throw new CustomAccessDeniedException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
+			response.sendRedirect(redirectUrl);
+		} catch (CustomAuthenticationException e) {
+			redirectWithError(response, e.getStatus());
+		} catch (CustomAccessDeniedException e) {
+			redirectWithError(response, e.getStatus());
+		} catch (ExpiredJwtException e) {
+			redirectWithError(response, ExceptionStatus.EXPIRED_JWT_TOKEN);
+		} catch (JwtException e) {
+			redirectWithError(response, ExceptionStatus.JWT_INVALID);
 		}
-
-		response.sendRedirect(redirectUrl);
+//		} catch (Exception e) {
+//			redirectWithError(response, ExceptionStatus.INTERNAL_SERVER_ERROR);
+//		}
 	}
 
 	private boolean isExternalProvider(String provider) {
-		return provider.equals(ftProvider) ||
-				provider.equals(googleProvider);
+		return provider.equals(googleProvider);
+	}
+
+	private void redirectWithError(HttpServletResponse response, ExceptionStatus exceptionStatus)
+			throws IOException {
+		String errorCode = exceptionStatus.getError();
+		String message = exceptionStatus.name();
+
+		response.sendRedirect(authPolicyService.getOauthErrorPage() +
+				"?code=" + errorCode +
+				"&status=" + exceptionStatus.getStatusCode() +
+				"&message=" + message
+		);
 	}
 
 }

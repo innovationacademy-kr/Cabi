@@ -1,13 +1,18 @@
 package org.ftclub.cabinet.auth.domain;
 
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
-import org.ftclub.cabinet.user.domain.User;
 
 @Getter
-@AllArgsConstructor
+@Builder
 public class OauthResult {
 
-	private User user;
-	private boolean redirectionToProfile;
+	private Long userId;
+	private String name;
+	private LocalDateTime blackHoledAt;
+	private String roles;
+	private String email;
+	private String redirectionUrl;
+
 }
