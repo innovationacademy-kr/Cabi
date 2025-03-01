@@ -16,4 +16,8 @@ public class UserOauthConnectionCommandService {
 	public void save(UserOauthConnection connection) {
 		repository.save(connection);
 	}
+
+	public void deleteByUserId(Long userId) {
+		repository.deleteByUserId(userId);
+	}
 }

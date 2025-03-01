@@ -9,9 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.config.security.AccessTokenDto;
+import org.ftclub.cabinet.config.security.JwtTokenConstants;
 import org.ftclub.cabinet.config.security.UserInfoDto;
 import org.ftclub.cabinet.dto.OauthLinkDto;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,6 +69,11 @@ public class AuthController {
 		return authFacadeService.generateOauthLink(userInfo.getUserId(), userInfo.getOauth());
 	}
 
+	@DeleteMapping("/link")
+	public void unLinkOauthMail(@AuthenticationPrincipal UserInfoDto userInfoDto) {
+		authFacadeService.deleteOauthMail(userInfoDto.getUserId());
+	}
+
 
 	@GetMapping("/login/AGU")
 	public AccessTokenDto loginAguLogin(
@@ -80,7 +88,11 @@ public class AuthController {
 	 * @param res 요청 시의 서블릿 {@link HttpServletResponse}
 	 */
 	@GetMapping("/logout")
-	public void logout(HttpServletResponse res) {
-		authFacadeService.userLogout(res);
+	public void logout(
+			@AuthenticationPrincipal UserInfoDto userInfoDto,
+			@CookieValue(name = JwtTokenConstants.REFRESH_TOKEN, required = false) String refreshToken,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+		authFacadeService.userLogout(request, response, userInfoDto.getUserId(), refreshToken);
 	}
 }
