@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.admin.admin.domain.Admin;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -30,6 +33,7 @@ public class JwtTokenProvider {
 	private final CookieManager cookieManager;
 	private final JwtRedisService jwtRedisService;
 	private final JwtTokenProperties jwtTokenProperties;
+	private final AdminQueryService adminQueryService;
 
 	/**
 	 * 1. parse Token Exception 발생 시 FE에게 어떻게 전달할 것인가?
@@ -131,8 +135,28 @@ public class JwtTokenProvider {
 		} catch (ExpiredJwtException e) {
 			// refreshToken parse 도중 예외 발생 시 serviceException 반환
 			Claims claims = parseValidToken(refreshToken);
-			String provider = claims.get(JwtTokenConstants.OAUTH, String.class);
 			Long userId = claims.get(JwtTokenConstants.USER_ID, Long.class);
+			String roles = claims.get(JwtTokenConstants.ROLES, String.class);
+			String provider = claims.get(JwtTokenConstants.OAUTH, String.class);
+
+			if (roles.contains(AdminRole.ADMIN.name())) {
+				Admin admin = adminQueryService.getById(userId);
+
+				if (jwtRedisService.isUsedAccessToken(admin.getId(), accessToken)
+						|| jwtRedisService.isUsedRefreshToken(admin.getId(), refreshToken)) {
+					throw ExceptionStatus.JWT_ALREADY_USED.asServiceException();
+				}
+
+				TokenDto tokenDto = createTokens(admin.getId(), admin.getRole().name(), provider);
+
+				// cookie 업데이트 로직 추가
+				cookieManager.setTokenCookies(response, tokenDto, request.getServerName());
+
+				// access, refresh blackList 추가
+				jwtRedisService.addUsedTokens(admin.getId(), accessToken, refreshToken);
+
+				return tokenDto;
+			}
 			User user = userQueryService.getUser(userId);
 
 			// 이미 사용된 토큰인지 검수

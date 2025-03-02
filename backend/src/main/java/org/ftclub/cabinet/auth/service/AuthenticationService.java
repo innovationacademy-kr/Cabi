@@ -26,7 +26,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -69,24 +68,20 @@ public class AuthenticationService {
 		}
 	}
 
-	public void processAuthentication(HttpServletRequest request, HttpServletResponse response,
+	public void generateTokenAndSetCookies(String serverName, HttpServletResponse res,
 			OauthResult user, String provider) {
 		TokenDto tokens = tokenProvider.createTokens(
 				user.getUserId(),
 				user.getRoles(),
 				provider
 		);
-		cookieManager.setTokenCookies(response, tokens, request.getServerName());
-
-		Authentication auth = createAuthenticationForUser(user, provider);
-		SecurityContextHolder.getContext().setAuthentication(auth);
+		cookieManager.setTokenCookies(res, tokens, serverName);
 	}
 
 	public Authentication createAuthenticationForUser(OauthResult user, String provider) {
 		Map<String, Object> attribute = new HashMap<>();
 		attribute.put("email", user.getEmail());
 		attribute.put("roles", user.getRoles());
-		attribute.put("blackholedAt", user.getBlackHoledAt());
 
 		List<String> roles = List.of(user.getRoles().split(FtRole.DELIMITER));
 

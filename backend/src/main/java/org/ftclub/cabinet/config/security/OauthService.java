@@ -53,7 +53,10 @@ public class OauthService {
 		String providerId = oauth2User.getName();
 		String providerType = oauth2User.getProvider();
 
-		if (adminQueryService.isAdminEmail(oauthMail)) {
+		String referer = request.getHeader("Referer");
+		log.info("referer = {}", referer);
+
+		if (adminQueryService.isAdminEmail(oauthMail) && getLoginContext(request).equals("ADMIN")) {
 			Admin admin = adminQueryService.getByEmail(oauthMail);
 
 			return OauthResult.builder()
@@ -104,6 +107,16 @@ public class OauthService {
 				.build();
 	}
 
+	private String getLoginContext(HttpServletRequest request) {
+		String referer = request.getHeader("Referer");
+		log.info("referer = {}", referer);
+		if (referer != null) {
+			if (referer.contains("/admin/login")) {
+				return "ADMIN";
+			}
+		}
+		return "USER";
+	}
 
 	public OauthResult handleFtLogin(JsonNode rootNode) {
 		FtOauthProfile profile = convertJsonNodeToProfile(rootNode);

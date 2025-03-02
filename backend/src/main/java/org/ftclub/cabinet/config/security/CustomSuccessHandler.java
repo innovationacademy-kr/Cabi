@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.service.AuthenticationService;
@@ -17,6 +18,7 @@ import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +37,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	private final ObjectMapper objectMapper;
 	private final AuthPolicyService authPolicyService;
 	private final AuthenticationService authenticationService;
+	private final JwtTokenProvider jwtTokenProvider;
+	private final CookieManager cookieManager;
 
 	@Value("${spring.security.oauth2.client.registration.ft.client-name}")
 	private String ftProvider;
@@ -62,12 +66,21 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		try {
 			if (provider.equals(ftProvider)) {
 				OauthResult user = oauthService.handleFtLogin(rootNode);
-				authenticationService.processAuthentication(request, response, user, provider);
 
+				// auth 만들고, 토큰 만들어서 쿠키에 넣기
+				authenticationService.generateTokenAndSetCookies(request.getServerName(), response,
+						user, provider);
+				Authentication auth =
+						authenticationService.createAuthenticationForUser(user, provider);
+				SecurityContextHolder.getContext().setAuthentication(auth);
 			} else if (isExternalProvider(provider)) {
 				OauthResult result =
 						oauthService.handleExternalOAuthLogin(fromLoadUser, request);
-				authenticationService.processAuthentication(request, response, result, provider);
+				authenticationService.generateTokenAndSetCookies(request.getServerName(), response,
+						result, provider);
+				Authentication auth =
+						authenticationService.createAuthenticationForUser(result, provider);
+				SecurityContextHolder.getContext().setAuthentication(auth);
 				redirectUrl = result.getRedirectionUrl();
 			} else {
 				throw new CustomAccessDeniedException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
