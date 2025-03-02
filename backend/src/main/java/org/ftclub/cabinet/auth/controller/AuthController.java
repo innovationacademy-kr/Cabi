@@ -8,10 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
-import org.ftclub.cabinet.config.security.AccessTokenDto;
 import org.ftclub.cabinet.config.security.JwtTokenConstants;
 import org.ftclub.cabinet.config.security.UserInfoDto;
-import org.ftclub.cabinet.dto.OauthLinkDto;
+import org.ftclub.cabinet.config.security.UserOauthMailDto;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,30 +55,30 @@ public class AuthController {
 	}
 
 	/**
-	 * AGU 유저의 임시 로그인
+	 * 계정 연동 해제
+	 *
+	 * @param userInfoDto
 	 */
-	@PostMapping("/login/AGU")
-	public void requestAGULogin(@RequestParam(name = "name") String name)
-			throws JsonProcessingException {
-		authFacadeService.requestTemporaryLogin(name);
-	}
-
-	@GetMapping("/link")
-	public OauthLinkDto generateOauthLink(@AuthenticationPrincipal UserInfoDto userInfo) {
-		return authFacadeService.generateOauthLink(userInfo.getUserId(), userInfo.getOauth());
-	}
-
 	@DeleteMapping("/link")
 	public void unLinkOauthMail(@AuthenticationPrincipal UserInfoDto userInfoDto) {
 		authFacadeService.deleteOauthMail(userInfoDto.getUserId());
 	}
 
+	/**
+	 * AGU 유저의 임시 로그인 메일 발송
+	 */
+	@PostMapping("/AGU")
+	public UserOauthMailDto requestAGULogin(@RequestParam(name = "name") String name)
+			throws JsonProcessingException {
+		return authFacadeService.requestTemporaryLogin(name);
+	}
 
-	@GetMapping("/login/AGU")
-	public AccessTokenDto loginAguLogin(
+	@GetMapping("/AGU")
+	public void loginAguLogin(HttpServletRequest req,
+			HttpServletResponse res,
 			@RequestParam(name = "code") String code,
-			@RequestParam(name = "name") String name) {
-		return authFacadeService.verifyTemporaryCode(name, code);
+			@RequestParam(name = "name") String name) throws IOException {
+		authFacadeService.verifyTemporaryCode(req, res, name, code);
 	}
 
 	/**

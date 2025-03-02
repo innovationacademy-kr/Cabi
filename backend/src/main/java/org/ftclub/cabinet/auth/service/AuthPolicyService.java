@@ -46,4 +46,8 @@ public class AuthPolicyService {
 	public String getAdminHomeUrl() {
 		return domainProperties.getFeHost() + "/admin/home";
 	}
+
+	public String getAGUUrl() {
+		return domainProperties.getFeHost() + "/AGU";
+	}
 }

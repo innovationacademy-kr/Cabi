@@ -5,25 +5,26 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
+import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.EmailVerificationAlarm;
-import org.ftclub.cabinet.alarm.service.VerificationCodeRedisService;
+import org.ftclub.cabinet.alarm.service.AguCodeRedisService;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.GoogleProfile;
-import org.ftclub.cabinet.config.security.AccessTokenDto;
+import org.ftclub.cabinet.config.security.JwtTokenConstants;
 import org.ftclub.cabinet.config.security.JwtTokenProvider;
 import org.ftclub.cabinet.config.security.OauthService;
+import org.ftclub.cabinet.config.security.UserOauthMailDto;
 import org.ftclub.cabinet.dto.MasterLoginDto;
-import org.ftclub.cabinet.dto.OauthLinkDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.user.domain.User;
@@ -32,11 +33,11 @@ import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 인증 관련 비즈니스 로직을 처리하는 서비스입니다.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthFacadeService {
@@ -53,7 +54,7 @@ public class AuthFacadeService {
 	private final CookieManager cookieManager;
 	private final ApplicationEventPublisher eventPublisher;
 	private final OauthService oauthService;
-	private final VerificationCodeRedisService verificationCodeRedisService;
+	private final AguCodeRedisService aguCodeRedisService;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final ApplicationTokenManager applicationTokenManager;
 	private final JwtRedisService jwtRedisService;
@@ -184,13 +185,12 @@ public class AuthFacadeService {
 	}
 
 	/**
-	 * 유저 로그아웃을 처리합니다.
-	 * <p>
-	 * access, refresh 토큰을 사용 처리합니다.
-	 * <p>
-	 * 모든 쿠키를 제거합니다.
+	 * 유저의 토큰들을 블랙리스트에 추가하고, 쿠키를 제거합니다.
 	 *
-	 * @param res 요청 시의 서블렛 {@link HttpServletResponse}
+	 * @param request
+	 * @param response
+	 * @param userId
+	 * @param refreshToken
 	 */
 	public void userLogout(
 			HttpServletRequest request,
@@ -221,51 +221,63 @@ public class AuthFacadeService {
 	}
 
 	/**
-	 * 1. DB에 유저가 있는지 확인, AGU 상태인지 확인
+	 * 이름으로 유저를 검색합니다
 	 * <p>
-	 * 2. 연동 계정으로 2FA 코드 혹은 링크 발송
-	 * <p>
-	 * 3. 코드가 맞는지 검증
+	 * AGU 유저라면 code를 만들어 redis에 저장하고, 메일을 발송합니다.
 	 *
 	 * @param name
+	 * @return
+	 * @throws JsonProcessingException
 	 */
-	@Transactional
-	public void requestTemporaryLogin(String name) throws JsonProcessingException {
+	public UserOauthMailDto requestTemporaryLogin(String name) throws JsonProcessingException {
 		User user = userQueryService.getUserByName(name);
 		// agu 상태인지 검증하는 로직.. 로그인이 아니라 profile 만 받아오도록 ftOauthProfile?
 		if (!user.getRoles().contains("AGU")
 				&& !oauthService.isAguUser(name, applicationTokenManager.getFtAccessToken())) {
 			throw ExceptionStatus.ACCESS_DENIED.asServiceException();
 		}
-		String tmpToken = UUID.randomUUID().toString();
+		// 코드가 있는데 발급 요청이면 에러
+		if (aguCodeRedisService.isAlreadyExist(name)) {
+			throw ExceptionStatus.CODE_ALREADY_SENT.asServiceException();
+		}
 
-		verificationCodeRedisService.createVerificationCode(user.getName(), tmpToken);
-		String verificationLink = beHost + "/verification?code=" + tmpToken +
+		String aguCode = aguCodeRedisService.createAguCode(user.getName());
+
+		// 나중에 메서드로 빼기
+		String verificationLink = "http://localhost:2424/" + "v4/auth/AGU?code=" + aguCode +
 				"&name=" + URLEncoder.encode(name, StandardCharsets.UTF_8);
-
-		eventPublisher.publishEvent(new EmailVerificationAlarm(verificationLink));
+		AlarmEvent alarmEvent =
+				AlarmEvent.of(user.getId(), new EmailVerificationAlarm(verificationLink));
+		eventPublisher.publishEvent(alarmEvent);
+		return new UserOauthMailDto(user.getEmail());
 	}
 
-	public AccessTokenDto verifyTemporaryCode(String name, String code) {
+	/**
+	 * 성공 시 임시토큰을 쿠키에 설정하고, AGU 페이지로 리다이렉트합니다.
+	 *
+	 * @param name
+	 * @param code
+	 * @return
+	 */
+	public void verifyTemporaryCode(HttpServletRequest req, HttpServletResponse res, String name,
+			String code)
+			throws IOException {
+		log.info("code = {}, name = {}", code, name);
 		User user = userQueryService.getUserByName(name);
-		verificationCodeRedisService.verifyTemporaryCode(name, code);
 
-		verificationCodeRedisService.deleteVerificationCode(name, code);
+		aguCodeRedisService.verifyTemporaryCode(name, code);
+
+		aguCodeRedisService.removeAguCode(name);
 		String temporaryToken =
 				jwtTokenProvider.createAGUToken(user.getId());
-		return AccessTokenDto.builder()
-				.accessToken(temporaryToken)
-				.build();
-	}
 
-	public OauthLinkDto generateOauthLink(Long userId, String oauth) {
-		if (!oauth.equals("ft")) {
-			throw ExceptionStatus.NOT_FT_LOGIN_STATUS.asServiceException();
-		}
-		String linkCode = UUID.randomUUID().toString();
+		Cookie cookie = new Cookie(JwtTokenConstants.ACCESS_TOKEN, temporaryToken);
+		cookie.setSecure(true);
+		cookie.setHttpOnly(true);
+		cookie.setMaxAge(60 * 60 * 100);
+		cookieManager.setToClient(res, cookie, "/", req.getServerName());
 
-		verificationCodeRedisService.createOauthCodeLink(userId, linkCode);
-		return new OauthLinkDto(linkCode);
+		res.sendRedirect(authPolicyService.getAGUUrl());
 	}
 
 	public void deleteOauthMail(Long userId) {
