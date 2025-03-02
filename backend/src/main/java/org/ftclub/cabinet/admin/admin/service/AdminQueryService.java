@@ -42,4 +42,10 @@ public class AdminQueryService {
 		return adminRepository.findByEmail(oauthMail)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 	}
+
+	public Admin getById(Long userId) {
+
+		return adminRepository.findById(userId)
+				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+	}
 }

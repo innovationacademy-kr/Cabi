@@ -42,5 +42,6 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	 *
 	 * @return
 	 */
+	@Query("SELECT a.email FROM Admin a")
 	Set<String> findAllAdminEmails();
 }
