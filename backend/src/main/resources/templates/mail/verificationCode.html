@@ -6,7 +6,7 @@
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
       name="viewport">
   <meta content="ie=edge" http-equiv="X-UA-Compatible">
-  <title>Document</title>
+  <title>Cabi 이메일 인증</title>
 </head>
 <body>
 
@@ -15,15 +15,17 @@
 </div>
 <br>
 <div>
-  <b th:text="${name}"></b>님, 아래 링크를 눌러 인증을 완료해주세요.<b th:href="${verificationLink}"></b> <br><br>
+  <b th:text="${name}"></b>님, 아래 링크를 눌러 인증을 완료해주세요.<br><br>
+  <a style="color:#157eef; text-decoration:underline;" th:href="${verificationLink}">이메일 인증하기</a>
+  <br><br>
 
-  임시 로그인은 10분간 유지됩니다.<br>
+  해당 인증링크는 10분간 유효합니다.<br>
   이용에 참고 바랍니다.<br><br>
 </div>
 <br>
 <div>
   사물함 대여 서비스 바로가기 ➡ <a href="https://cabi.42seoul.io">https://cabi.42seoul.io</a> <br>
-  사물함 서비스 관련 문의사항 ➡ <a href="https://42born2code.slack.com/archives/C02V6GE8LD7">https://42born2code.slack.com/archives/C02V6GE8LD7</a>
+  사물함 서비스 관련 문의사항 ➡ <a href="https://42born2code.slack.com/archives/C02V6GE8LD7">Slack Cabi채널</a>
   <br>
 </div>
 

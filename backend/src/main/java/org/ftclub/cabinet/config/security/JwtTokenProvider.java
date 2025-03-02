@@ -36,11 +36,9 @@ public class JwtTokenProvider {
 	private final AdminQueryService adminQueryService;
 
 	/**
-	 * 1. parse Token Exception 발생 시 FE에게 어떻게 전달할 것인가?
-	 * <p>
-	 * 2. 위치에 따라 발생하는 exception 관리를 어떻게 할까?
+	 * 토큰을 복호화하고, 예외 발생 시 호출자가 처리하도록 합니다.
 	 *
-	 * @param accessToken
+	 * @param token
 	 * @return
 	 */
 	public Claims parseValidToken(String token) {
@@ -73,6 +71,14 @@ public class JwtTokenProvider {
 		return header.substring(JwtTokenConstants.BEARER.length());
 	}
 
+	/**
+	 * access, refresh Token을 생성합니다.
+	 *
+	 * @param userId
+	 * @param roles
+	 * @param provider
+	 * @return
+	 */
 	public TokenDto createTokens(Long userId, String roles, String provider) {
 		Claims claims = Jwts.claims();
 		claims.put(JwtTokenConstants.USER_ID, userId);
@@ -85,12 +91,19 @@ public class JwtTokenProvider {
 		return new TokenDto(accessToken, refreshToken);
 	}
 
+	/**
+	 * AGU 유저 토큰을 생성합니다.
+	 *
+	 * @param userId
+	 * @return
+	 */
 	public String createAGUToken(Long userId) {
+		Date now = new Date();
 		return Jwts.builder()
 				.claim(JwtTokenConstants.USER_ID, userId)
 				.claim(JwtTokenConstants.ROLES, FtRole.AGU.name())
 				.claim(JwtTokenConstants.OAUTH, "Temporary")
-				.setExpiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) // 10분
+				.setExpiration(new Date(now.getTime() + jwtTokenProperties.getAccessExpiryMillis()))
 				.signWith(jwtTokenProperties.getSigningKey())
 				.compact();
 	}
@@ -111,7 +124,7 @@ public class JwtTokenProvider {
 	/**
 	 * accessToken이 만료되었는지 확인
 	 * <p>
-	 * 사용된 토큰은 redis로 blackList에 추가
+	 * 사용된 토큰(만료 access, 발급 1회 역할 다한 refresh)은 redis로 blackList에 추가
 	 * <p>
 	 * 쿠키 업데이트
 	 *

@@ -42,6 +42,7 @@ public class SecurityConfig {
 								"/v4/auth/login/AGU", "/v5/jwt/reissue").permitAll()
 						.mvcMatchers("/v5/admin/**").hasRole("ADMIN")
 						.mvcMatchers("/v4/cabinets/**").hasAnyRole("USER", "ADMIN")
+						.mvcMatchers("/v4/users/me").hasAnyRole("USER", "AGU")
 						.antMatchers("/v4/lent/cabinets/share/cancel/*").hasAnyRole("USER", "ADMIN")
 						.mvcMatchers("/v4/items").hasAnyRole("USER", "ADMIN")
 						.anyRequest().hasRole("USER")
