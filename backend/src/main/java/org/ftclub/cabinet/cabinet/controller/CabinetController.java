@@ -7,10 +7,10 @@ import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.log.Logging;
-import org.ftclub.cabinet.user.domain.UserSession;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,7 +47,7 @@ public class CabinetController {
 	 */
 	@GetMapping("/buildings/{building}/floors/{floor}")
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
-			@UserSession UserSessionDto user,
+			@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable("building") String building,
 			@PathVariable("floor") Integer floor) {
 		return cabinetFacadeService.getCabinetsPerSection(building, floor,

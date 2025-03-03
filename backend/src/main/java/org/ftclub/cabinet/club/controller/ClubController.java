@@ -3,16 +3,14 @@ package org.ftclub.cabinet.club.controller;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.club.service.ClubFacadeService;
-import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.dto.AddClubUserRequestDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.dto.ClubInfoResponseDto;
 import org.ftclub.cabinet.dto.ClubMemoUpdateDto;
 import org.ftclub.cabinet.dto.ClubNoticeUpdateDto;
 import org.ftclub.cabinet.dto.MandateClubMasterRequestDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.log.Logging;
-import org.ftclub.cabinet.user.domain.UserSession;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +36,7 @@ public class ClubController {
 	 * @return 내가 속한 동아리 목록
 	 */
 	@GetMapping("")
-	public ClubInfoPaginationDto getMyClubs(@UserSession UserSessionDto user) {
+	public ClubInfoPaginationDto getMyClubs(@AuthenticationPrincipal UserInfoDto user) {
 		return clubFacadeService.getMyClubs(user.getUserId());
 	}
 
@@ -65,7 +63,7 @@ public class ClubController {
 	 * @param addClubUserRequestDto 사용자 추가 요청 정보
 	 */
 	@PostMapping("/{clubId}/users")
-	public void addClubUser(@UserSession UserSessionDto user,
+	public void addClubUser(@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long clubId,
 			@Valid @RequestBody AddClubUserRequestDto addClubUserRequestDto) {
 		clubFacadeService.addClubUser(user.getUserId(), clubId, addClubUserRequestDto.getName());
@@ -79,7 +77,7 @@ public class ClubController {
 	 * @param userId 사용자 ID
 	 */
 	@DeleteMapping("/{clubId}/users/{userId}")
-	public void deleteClubUser(@UserSession UserSessionDto user,
+	public void deleteClubUser(@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long clubId,
 			@PathVariable Long userId) {
 		clubFacadeService.deleteClubUser(user.getUserId(), clubId, userId);
@@ -93,7 +91,7 @@ public class ClubController {
 	 * @param mandateClubMasterRequestDto 동아리장 위임 요청 정보
 	 */
 	@PostMapping("/{clubId}/mandate")
-	public void mandateClubUser(@UserSession UserSessionDto user,
+	public void mandateClubUser(@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long clubId,
 			@Valid @RequestBody MandateClubMasterRequestDto mandateClubMasterRequestDto) {
 		clubFacadeService.mandateClubUser(user.getUserId(), clubId,
@@ -101,14 +99,15 @@ public class ClubController {
 	}
 
 	@PostMapping("/{clubId}/notice")
-	public void updateClubNotice(@UserSession UserSessionDto user, @PathVariable Long clubId,
+	public void updateClubNotice(@AuthenticationPrincipal UserInfoDto user,
+			@PathVariable Long clubId,
 			@Valid @RequestBody ClubNoticeUpdateDto clubNoticeUpdateDto) {
 		clubFacadeService.updateClubNotice(user.getUserId(), clubId,
 				clubNoticeUpdateDto.getNotice());
 	}
 
 	@PostMapping("/{clubId}/memo")
-	public void updateClubMemo(@UserSession UserSessionDto user, @PathVariable Long clubId,
+	public void updateClubMemo(@AuthenticationPrincipal UserInfoDto user, @PathVariable Long clubId,
 			@Valid @RequestBody ClubMemoUpdateDto clubMemoUpdateDto) {
 		clubFacadeService.updateClubMemo(user.getUserId(), clubId, clubMemoUpdateDto.getMemo());
 	}
