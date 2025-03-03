@@ -19,12 +19,13 @@ import org.ftclub.cabinet.alarm.service.AguCodeRedisService;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.GoogleProfile;
-import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
-import org.ftclub.cabinet.jwt.service.JwtTokenProvider;
-import org.ftclub.cabinet.dto.UserOauthMailDto;
 import org.ftclub.cabinet.dto.MasterLoginDto;
+import org.ftclub.cabinet.dto.TokenDto;
+import org.ftclub.cabinet.dto.UserOauthMailDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
+import org.ftclub.cabinet.jwt.service.JwtTokenProvider;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -113,6 +114,21 @@ public class AuthFacadeService {
 		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
 		Cookie cookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
 		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+		if (cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME) != null) {
+			String redirect = cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME);
+			cookieManager.deleteCookie(res, REDIRECT_COOKIE_NAME);
+			res.sendRedirect(redirect);
+			return;
+		}
+		res.sendRedirect(authPolicyService.getMainHomeUrl());
+	}
+
+	public void publicLogin(HttpServletRequest req, HttpServletResponse res, String name)
+			throws IOException {
+		User user = userQueryService.findUser(name).orElseThrow(
+				ExceptionStatus.NOT_FOUND_USER::asServiceException);
+		TokenDto tokens = jwtTokenProvider.createTokens(user.getId(), "USER", "Temporary");
+		cookieManager.setTokenCookies(res, tokens, req.getServerName());
 		if (cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME) != null) {
 			String redirect = cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME);
 			cookieManager.deleteCookie(res, REDIRECT_COOKIE_NAME);
