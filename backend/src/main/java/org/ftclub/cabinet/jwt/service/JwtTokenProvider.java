@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.jwt.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -17,8 +17,10 @@ import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.FtRole;
+import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.jwt.service.JwtRedisService;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
+import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.http.HttpHeaders;

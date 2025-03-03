@@ -2,7 +2,7 @@ package org.ftclub.cabinet.item.controller;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.config.security.UserInfoDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.dto.CoinCollectionRewardResponseDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;

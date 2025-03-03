@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.config.security.filter;
 
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
+import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
+import org.ftclub.cabinet.jwt.service.JwtTokenProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

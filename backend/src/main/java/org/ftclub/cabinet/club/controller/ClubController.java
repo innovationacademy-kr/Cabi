@@ -3,7 +3,7 @@ package org.ftclub.cabinet.club.controller;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.club.service.ClubFacadeService;
-import org.ftclub.cabinet.config.security.UserInfoDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.dto.AddClubUserRequestDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.dto.ClubInfoResponseDto;

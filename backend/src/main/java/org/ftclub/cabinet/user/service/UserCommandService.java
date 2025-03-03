@@ -6,7 +6,7 @@ import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
-import org.ftclub.cabinet.config.security.FtOauthProfile;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;

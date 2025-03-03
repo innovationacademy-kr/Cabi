@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.jwt.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.config.security.JwtTokenProperties;
+import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.redis.core.RedisTemplate;

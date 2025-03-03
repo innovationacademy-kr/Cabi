@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,14 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.domain.UserOauthConnection;
-import org.ftclub.cabinet.auth.service.AuthPolicyService;
-import org.ftclub.cabinet.auth.service.AuthenticationService;
-import org.ftclub.cabinet.auth.service.UserOauthConnectionCommandService;
-import org.ftclub.cabinet.auth.service.UserOauthConnectionQueryService;
 import org.ftclub.cabinet.config.FtApiProperties;
+import org.ftclub.cabinet.auth.domain.CustomOauth2User;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
@@ -80,7 +79,7 @@ public class OauthService {
 			User user = userConnection.get().getUser();
 
 			return new OauthResult(user.getId(), user.getRoles(),
-					authPolicyService.getAdminHomeUrl());
+					authPolicyService.getMainHomeUrl());
 		}
 
 		// 신규 연동 유저
@@ -110,8 +109,8 @@ public class OauthService {
 	/**
 	 * ft 로그인 핸들링
 	 *
-	 * @param rootNode
-	 * @return
+	 * @param rootNode ftProfile -> JsonNode
+	 * @return 필요한 정보만 파싱한 객체 {@link OauthResult}
 	 */
 	@Transactional
 	public OauthResult handleFtLogin(JsonNode rootNode) {

@@ -6,9 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.JwtProperties;
-import org.ftclub.cabinet.config.security.JwtTokenConstants;
-import org.ftclub.cabinet.config.security.JwtTokenProperties;
-import org.ftclub.cabinet.config.security.TokenDto;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
+import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
+import org.ftclub.cabinet.dto.TokenDto;
 import org.springframework.stereotype.Component;
 
 /**

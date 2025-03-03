@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.jwt.domain;
 
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;

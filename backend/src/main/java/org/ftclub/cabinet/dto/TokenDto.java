@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.config.security.UserInfoDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;

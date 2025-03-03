@@ -3,7 +3,7 @@ package org.ftclub.cabinet.lent.controller;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.config.security.UserInfoDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;

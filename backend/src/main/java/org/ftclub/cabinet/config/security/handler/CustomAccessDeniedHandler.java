@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.config.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
