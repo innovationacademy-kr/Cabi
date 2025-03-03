@@ -2,7 +2,6 @@ package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutionException;
@@ -33,6 +32,7 @@ import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * 인증 관련 비즈니스 로직을 처리하는 서비스입니다.
@@ -43,6 +43,7 @@ import org.springframework.stereotype.Service;
 public class AuthFacadeService {
 
 	private static final String REDIRECT_COOKIE_NAME = "redirect";
+	private static final String VERIFICATION_API = "/v4/auth/AGU";
 	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
 	private final AdminQueryService adminQueryService;
@@ -185,7 +186,7 @@ public class AuthFacadeService {
 	}
 
 	/**
-	 * 유저의 토큰들을 블랙리스트에 추가하고, 쿠키를 제거합니다.
+	 * 토큰들을 블랙리스트에 추가하고, 쿠키를 제거합니다.
 	 *
 	 * @param request
 	 * @param response
@@ -231,12 +232,12 @@ public class AuthFacadeService {
 	 */
 	public UserOauthMailDto requestTemporaryLogin(String name) throws JsonProcessingException {
 		User user = userQueryService.getUserByName(name);
-		// agu 상태인지 검증하는 로직.. 로그인이 아니라 profile 만 받아오도록 ftOauthProfile?
+		// agu 상태인지 검증
 		if (!user.getRoles().contains("AGU")
 				&& !oauthService.isAguUser(name, applicationTokenManager.getFtAccessToken())) {
 			throw ExceptionStatus.ACCESS_DENIED.asServiceException();
 		}
-		// 코드가 있는데 발급 요청이면 에러
+		// 코드가 있는데 발급 요청이면 에러(3분 내로 재요청)
 		if (aguCodeRedisService.isAlreadyExist(name)) {
 			throw ExceptionStatus.CODE_ALREADY_SENT.asServiceException();
 		}
@@ -244,27 +245,38 @@ public class AuthFacadeService {
 		String aguCode = aguCodeRedisService.createAguCode(user.getName());
 
 		// 나중에 메서드로 빼기
-		String verificationLink = "http://localhost:2424/" + "v4/auth/AGU?code=" + aguCode +
-				"&name=" + URLEncoder.encode(name, StandardCharsets.UTF_8);
+		String verificationLink = generateVerificationLink(aguCode, name);
 		AlarmEvent alarmEvent =
 				AlarmEvent.of(user.getId(), new EmailVerificationAlarm(verificationLink));
 		eventPublisher.publishEvent(alarmEvent);
 		return new UserOauthMailDto(user.getEmail());
 	}
 
+	private String generateVerificationLink(String aguCode, String name) {
+		return UriComponentsBuilder.fromHttpUrl(beHost)
+				.path(VERIFICATION_API)
+				.queryParam("code", aguCode)
+				.queryParam("name", name)
+				.encode(StandardCharsets.UTF_8)
+				.build()
+				.toString();
+	}
+
 	/**
+	 * redis 내의 코드와 비교하여 검증합니다.
+	 * <p>
 	 * 성공 시 임시토큰을 쿠키에 설정하고, AGU 페이지로 리다이렉트합니다.
 	 *
 	 * @param name
 	 * @param code
 	 * @return
 	 */
-	public void verifyTemporaryCode(HttpServletRequest req, HttpServletResponse res, String name,
-			String code)
-			throws IOException {
-		log.info("code = {}, name = {}", code, name);
-		User user = userQueryService.getUserByName(name);
+	public void verifyTemporaryCode(HttpServletRequest req,
+			HttpServletResponse res,
+			String name,
+			String code) throws IOException {
 
+		User user = userQueryService.getUserByName(name);
 		aguCodeRedisService.verifyTemporaryCode(name, code);
 
 		aguCodeRedisService.removeAguCode(name);
@@ -280,6 +292,11 @@ public class AuthFacadeService {
 		res.sendRedirect(authPolicyService.getAGUUrl());
 	}
 
+	/**
+	 * 계정 연동을 해지합니다.
+	 *
+	 * @param userId
+	 */
 	public void deleteOauthMail(Long userId) {
 		userOauthConnectionCommandService.deleteByUserId(userId);
 	}
