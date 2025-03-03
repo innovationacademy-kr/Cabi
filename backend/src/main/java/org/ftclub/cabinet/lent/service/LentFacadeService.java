@@ -21,7 +21,6 @@ import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
-import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.dto.UserVerifyRequestDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -79,9 +78,9 @@ public class LentFacadeService {
 	 * @return 대여 기록
 	 */
 	@Transactional(readOnly = true)
-	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user, Pageable pageable) {
+	public LentHistoryPaginationDto getMyLentLog(Long userId, Pageable pageable) {
 		Page<LentHistory> lentHistories =
-				lentQueryService.findUserLentHistories(user.getUserId(), pageable);
+				lentQueryService.findUserLentHistories(userId, pageable);
 		List<LentHistoryDto> result = lentHistories.stream()
 				.map(lentHistory -> lentMapper.toLentHistoryDto(lentHistory, lentHistory.getUser(),
 						lentHistory.getCabinet())).collect(Collectors.toList());

@@ -3,16 +3,14 @@ package org.ftclub.cabinet.lent.controller;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.ShareCodeDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.log.Logging;
-import org.ftclub.cabinet.user.domain.UserSession;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +40,7 @@ public class LentController {
 	 */
 	@PostMapping("/cabinets/{cabinetId}")
 	public void startLentCabinet(
-			@UserSession UserSessionDto user,
+			@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long cabinetId) {
 		lentFacadeService.startLentCabinet(user.getUserId(), cabinetId);
 	}
@@ -56,7 +54,7 @@ public class LentController {
 	 */
 	@PostMapping("/cabinets/share/{cabinetId}")
 	public void startLentShareCabinet(
-			@UserSession UserSessionDto user,
+			@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long cabinetId,
 			@Valid @RequestBody ShareCodeDto shareCodeDto) {
 		lentFacadeService.startLentShareCabinet(user.getUserId(), cabinetId,
@@ -71,7 +69,7 @@ public class LentController {
 	 */
 	@PatchMapping("/cabinets/share/cancel/{cabinetId}")
 	public void cancelLentShareCabinet(
-			@UserSession UserSessionDto user,
+			@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long cabinetId) {
 		lentFacadeService.cancelShareCabinetLent(user.getUserId(), cabinetId);
 	}
@@ -83,7 +81,7 @@ public class LentController {
 	 */
 	@PatchMapping("/return")
 	public void endLent(
-			@UserSession UserSessionDto userSessionDto) {
+			@AuthenticationPrincipal UserInfoDto userSessionDto) {
 		lentFacadeService.endUserLent(userSessionDto.getUserId(), null);
 	}
 
@@ -97,7 +95,7 @@ public class LentController {
 	 */
 	@PatchMapping("/return-memo")
 	public void endLentWithMemo(
-			@UserSession UserSessionDto userSessionDto,
+			@AuthenticationPrincipal UserInfoDto userSessionDto,
 			@Valid @RequestBody LentEndMemoDto lentEndMemoDto) {
 		lentFacadeService.endUserLent(userSessionDto.getUserId(), lentEndMemoDto.getCabinetMemo());
 	}
@@ -112,7 +110,7 @@ public class LentController {
 	 */
 	@PatchMapping("/me/cabinet")
 	public void updateCabinetInfo(
-			@UserSession UserSessionDto user,
+			@AuthenticationPrincipal UserInfoDto user,
 			@Valid @RequestBody CabinetInfoRequestDto cabinetInfoRequestDto) {
 		lentFacadeService.updateLentCabinetInfo(user.getUserId(),
 				cabinetInfoRequestDto.getTitle(), cabinetInfoRequestDto.getMemo());
@@ -145,9 +143,9 @@ public class LentController {
 	 */
 	@GetMapping("/me/histories")
 	public LentHistoryPaginationDto getMyLentLog(
-			@UserSession UserSessionDto user,
+			@AuthenticationPrincipal UserInfoDto user,
 			@Valid Pageable pageable) {
-		return lentFacadeService.getMyLentLog(user, pageable);
+		return lentFacadeService.getMyLentLog(user.getUserId(), pageable);
 	}
 
 	/**
@@ -158,7 +156,7 @@ public class LentController {
 	 */
 	@PostMapping("/swap/{cabinetId}")
 	public void swap(
-			@UserSession UserSessionDto user,
+			@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long cabinetId) {
 		lentFacadeService.swapPrivateCabinet(user.getUserId(), cabinetId);
 	}
