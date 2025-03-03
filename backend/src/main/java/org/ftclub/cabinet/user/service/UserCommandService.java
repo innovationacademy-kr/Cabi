@@ -141,9 +141,8 @@ public class UserCommandService {
 		user.addCoin(reward);
 	}
 
-	public void updateUserBlackholeAndRole(Long userId, LocalDateTime blackholedAt,
+	public void updateUserBlackholeAndRole(User user, LocalDateTime blackholedAt,
 			String newRoles) {
-		User user = userRepository.getById(userId);
 		user.changeBlackholedAt(blackholedAt);
 		user.setDeletedAt(null);
 		user.changeUserRole(newRoles);

@@ -1,10 +1,10 @@
 package org.ftclub.cabinet.config.security;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-@Builder
+@AllArgsConstructor
 @ToString
 @Getter
 public class UserInfoDto {

@@ -24,10 +24,6 @@ public class UserOauthConnectionQueryService {
 		return userOauthConnectionRepository.findByProviderIdAndProviderType(name, type);
 	}
 
-	public boolean isExistByOauthIdAndType(String oauthId, String type) {
-		return userOauthConnectionRepository.existsByProviderIdAndProviderType(oauthId, type);
-	}
-
 	public boolean isExistByUserId(Long userId) {
 		return userOauthConnectionRepository.existsByUserId(userId);
 	}

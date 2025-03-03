@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
-import org.ftclub.cabinet.admin.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.OauthResult;
@@ -28,6 +28,7 @@ import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 
@@ -45,7 +46,16 @@ public class OauthService {
 	private final AuthenticationService authenticationService;
 	private final AdminQueryService adminQueryService;
 	private final AuthPolicyService authPolicyService;
+	private final AdminCommandService adminCommandService;
 
+	/**
+	 * ft oauth 로그인 외에 로그인 시도
+	 *
+	 * @param oauth2User
+	 * @param request
+	 * @return
+	 */
+	@Transactional
 	public OauthResult handleExternalOAuthLogin(
 			CustomOauth2User oauth2User,
 			HttpServletRequest request) {
@@ -53,17 +63,13 @@ public class OauthService {
 		String providerId = oauth2User.getName();
 		String providerType = oauth2User.getProvider();
 
-		String referer = request.getHeader("Referer");
-		log.info("referer = {}", referer);
+		// adminPage 에서 요청 시
+		if (isAdminPageRequest(request, oauthMail)) {
+			Admin admin = adminQueryService.findByEmail(oauthMail)
+					.orElseGet(() -> adminCommandService.createAdminByEmail(oauthMail));
 
-		if (adminQueryService.isAdminEmail(oauthMail) && getLoginContext(request).equals("ADMIN")) {
-			Admin admin = adminQueryService.getByEmail(oauthMail);
-
-			return OauthResult.builder()
-					.userId(admin.getId())
-					.roles(AdminRole.ADMIN.name())
-					.redirectionUrl(authPolicyService.getAdminHomeUrl())
-					.build();
+			return new OauthResult(admin.getId(), admin.getRole().name(),
+					authPolicyService.getAdminHomeUrl());
 		}
 
 		Optional<UserOauthConnection> userConnection =
@@ -73,51 +79,41 @@ public class OauthService {
 		if (userConnection.isPresent()) {
 			User user = userConnection.get().getUser();
 
-			return OauthResult.builder()
-					.userId(user.getId())
-					.roles(user.getRoles())
-					.redirectionUrl(authPolicyService.getMainHomeUrl())
-					.build();
+			return new OauthResult(user.getId(), user.getRoles(),
+					authPolicyService.getAdminHomeUrl());
 		}
 
+		// 신규 연동 유저
 		UserInfoDto userInfoDto = authenticationService.getAuthInfoFromCookie(request);
+
+		// 이전 oauth 로그인 상태가 ft인지 검증
 		if (!userInfoDto.getOauth().equals("ft")) {
 			throw new CustomAuthenticationException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
 		}
-		// 해당 oauth 계정을 다른 유저가 사용하고있다면 에러
-		if (userOauthConnectionQueryService.isExistByOauthIdAndType(providerId, providerType)) {
-			throw new CustomAuthenticationException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
-		}
 
 		// 유저가 이미 다른 oauth 계정을 연동중이라면 에러
-		User user = userQueryService.getUser(userInfoDto.getUserId());
-		if (userOauthConnectionQueryService.isExistByUserId(user.getId())) {
+		if (userOauthConnectionQueryService.isExistByUserId(userInfoDto.getUserId())) {
 			throw new CustomAuthenticationException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
 		}
 
+		User user = userQueryService.getUser(userInfoDto.getUserId());
 		UserOauthConnection connection =
 				UserOauthConnection.of(user, providerType, providerId, oauthMail);
 		userOauthConnectionCommandService.save(connection);
-		return OauthResult.builder()
-				.userId(user.getId())
-				.email(user.getEmail())
-				.name(user.getName())
-				.roles(user.getRoles())
-				.redirectionUrl(authPolicyService.getProfileUrl())
-				.build();
+		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getProfileUrl());
 	}
 
-	private String getLoginContext(HttpServletRequest request) {
-		String referer = request.getHeader("Referer");
-		log.info("referer = {}", referer);
-		if (referer != null) {
-			if (referer.contains("/admin/login")) {
-				return "ADMIN";
-			}
-		}
-		return "USER";
+	private boolean isAdminPageRequest(HttpServletRequest req, String oauthMail) {
+		return adminQueryService.isAdminEmail(oauthMail) && isAdminReferer(req);
 	}
 
+	/**
+	 * ft 로그인 핸들링
+	 *
+	 * @param rootNode
+	 * @return
+	 */
+	@Transactional
 	public OauthResult handleFtLogin(JsonNode rootNode) {
 		FtOauthProfile profile = convertJsonNodeToProfile(rootNode);
 		String combinedRoles = FtRole.combineRolesToString(profile.getRoles());
@@ -129,19 +125,32 @@ public class OauthService {
 
 		// role, blackholedAt 검수
 		if (!user.isSameBlackHoledAtAndRole(profile.getBlackHoledAt(), combinedRoles)) {
-			userCommandService.updateUserBlackholeAndRole(user.getId(), blackHoledAt,
+			userCommandService.updateUserBlackholeAndRole(user, blackHoledAt,
 					combinedRoles);
 		}
-		return OauthResult.builder()
-				.userId(user.getId())
-				.blackHoledAt(user.getBlackholedAt())
-				.email(user.getEmail())
-				.name(user.getName())
-				.roles(user.getRoles())
-				.redirectionUrl(authPolicyService.getMainHomeUrl())
-				.build();
+		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getMainHomeUrl());
 	}
 
+	/**
+	 * admin 페이지에서 로그인 시도인지 검증
+	 *
+	 * @param request
+	 * @return
+	 */
+	private boolean isAdminReferer(HttpServletRequest request) {
+		String referer = request.getHeader("Referer");
+		if (referer != null) {
+			return referer.contains("/admin/login");
+		}
+		return false;
+	}
+
+	/**
+	 * 42 로그인 시 받은 profile -> jsonNode 파싱
+	 *
+	 * @param jsonNode
+	 * @return
+	 */
 	public FtOauthProfile convertJsonNodeToProfile(JsonNode jsonNode) {
 		String intraName = jsonNode.get("login").asText();
 		String email = jsonNode.get("email").asText();
@@ -165,7 +174,7 @@ public class OauthService {
 		JsonNode cursusUsersNode = rootNode.get("cursus_users");
 		List<FtRole> roles = new ArrayList<>();
 
-		// inactive에 대해서는 단일 권한을 반환.
+		// inactive에 대해서는 단일 권한을 반환. inactive / blackhole
 		if (!isActive) {
 			return handleInactiveUser(blackHoledAt, roles);
 		}
@@ -206,6 +215,14 @@ public class OauthService {
 		return DateUtil.convertStringToDate(blackHoledAtNode.asText());
 	}
 
+	/**
+	 * 42에서 발급한 accessToken을 활용해 유저의 정보를 받아옵니다
+	 *
+	 * @param accessToken
+	 * @param intraName
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	public FtOauthProfile getProfileByIntraName(String accessToken, String intraName)
 			throws JsonProcessingException {
 		log.info("Called getProfileByIntraName {}", intraName);
