@@ -17,6 +17,19 @@ import {
   axiosMyInfo,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
+import instance from "../api/axios/axios.instance";
+
+const axiosLinkGoogleAccount = async (oauthMail: string) => {
+  try {
+    const { data } = await instance.post(
+      `${import.meta.env.VITE_BE_HOST}/v4/auth/mail`,
+      { oauthMail }
+    );
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -45,6 +58,15 @@ const ProfilePage = () => {
     }, 350);
   }, []);
 
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const oauthMail = url.searchParams.get("oauthMail");
+    if (oauthMail) {
+      console.log(oauthMail);
+      axiosLinkGoogleAccount(oauthMail);
+    }
+  }, []);
+
   return (
     <>
       {isLoading ? (
@@ -59,6 +81,19 @@ const ProfilePage = () => {
           <AlarmCardContainer alarm={myInfo.alarmTypes} />
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
+          {myInfo.oauthMail ? (
+            <div>{myInfo.oauthMail}</div>
+          ) : (
+            <button
+              onClick={() => {
+                window.location.replace(
+                  `${import.meta.env.VITE_BE_HOST}/oauth2/authorization/google`
+                );
+              }}
+            >
+              구글 계정 연동
+            </button>
+          )}
         </CardGridWrapper>
       )}
     </>

@@ -10,14 +10,14 @@ public class UserTest {
 
 	@Test
 	void isSameBlackholedAt_test_both_null() {
-		User test = User.of("test", "aewf@naver.com", null);
+		User test = User.of("test", "aewf@naver.com", null, "USER");
 		boolean sameBlackholedAt = test.isSameBlackholedAt(null);
 		Assertions.assertTrue(sameBlackholedAt);
 	}
 
 	@Test
 	void isSameBlackholedAt_test_one_null() {
-		User test = User.of("test", "aewf@naver.com", null);
+		User test = User.of("test", "aewf@naver.com", null, "USER");
 		boolean sameBlackholedAt = test.isSameBlackholedAt(LocalDateTime.now());
 		Assertions.assertFalse(sameBlackholedAt);
 	}
@@ -25,7 +25,7 @@ public class UserTest {
 	@Test
 	void isSameBlackholedAt_test_same() {
 		LocalDateTime now = LocalDateTime.now();
-		User test = User.of("test", "aewf@naver.com", now);
+		User test = User.of("test", "aewf@naver.com", now, "USER");
 		boolean sameBlackholedAt = test.isSameBlackholedAt(now);
 		Assertions.assertTrue(sameBlackholedAt);
 	}

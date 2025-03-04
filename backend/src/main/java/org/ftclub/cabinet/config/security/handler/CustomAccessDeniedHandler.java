@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.config.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -9,8 +9,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.exception.CustomAccessDeniedException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
@@ -32,16 +35,24 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
-		
+
+		log.error("Request Method = {}", request.getMethod());
+		ExceptionStatus exceptionStatus = ExceptionStatus.ACCESS_DENIED;
 		log.error("Request Uri : {}", request.getRequestURI());
-		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		log.error("Access Denied! Authentication: {}",
+				SecurityContextHolder.getContext().getAuthentication());
+		if (accessDeniedException instanceof CustomAccessDeniedException) {
+			exceptionStatus = ((CustomAccessDeniedException) accessDeniedException).getStatus();
+		}
+
+		response.setStatus(exceptionStatus.getStatusCode());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		response.setCharacterEncoding("UTF-8");
 
 		Map<String, Object> responseBody = new HashMap<>();
-		responseBody.put("status", HttpServletResponse.SC_FORBIDDEN);
-		responseBody.put("error", "Forbidden");
-		responseBody.put("message", accessDeniedException.getMessage());
+		responseBody.put("status", exceptionStatus.getStatusCode());
+		responseBody.put("error", exceptionStatus.getError());
+		responseBody.put("message", exceptionStatus.getMessage());
 		responseBody.put("timestamp", Instant.now().toString());
 
 		new ObjectMapper().writeValue(response.getWriter(), responseBody);

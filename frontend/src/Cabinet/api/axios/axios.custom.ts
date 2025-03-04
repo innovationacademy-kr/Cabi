@@ -765,9 +765,9 @@ export const axiosLentClubCabinet = async (
   try {
     const response = await instance.post(
       axiosLentClubCabinetURL +
-      clubId.toString() +
-      "/cabinets/" +
-      cabinetId.toString()
+        clubId.toString() +
+        "/cabinets/" +
+        cabinetId.toString()
     );
     return response;
   } catch (error) {

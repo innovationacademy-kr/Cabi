@@ -115,7 +115,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END " +
 			"FROM User u " +
 			"WHERE u.name = :name AND u.email = :email AND u.deletedAt IS NULL")
-	boolean existsByNameAndEmail(String name, String email);
+	boolean existsByNameAndEmail(@Param("name") String name,
+			@Param("email") String email);
 
 	/**
 	 * 유저의 이름과 일치하며, 삭제되지 않은 유저를 모두 가져옵니다.

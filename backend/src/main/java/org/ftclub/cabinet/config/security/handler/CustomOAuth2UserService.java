@@ -1,7 +1,8 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.config.security.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.auth.domain.CustomOauth2User;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+
 
 	/**
 	 * oauth 로그인을 마친 유저의 프로필을 해당 사이트로부터 받아온 후
@@ -34,7 +36,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			// 고유 id ex) 42 -> intraName, google -> uid
 			String userId = oAuth2User.getName();
 
-			return new CustomOauth2User(provider, userId, oAuth2User.getAttributes());
+			return new CustomOauth2User(provider, userId, oAuth2User.getAttributes(), null);
 		} catch (OAuth2AuthenticationException e) {
 			log.error("OAuth2 Authentication Exception : {}", e.getMessage(), e);
 			throw ExceptionStatus.INVALID_AUTHORIZATION.asSpringSecurityException();

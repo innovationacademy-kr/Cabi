@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.config.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -28,6 +28,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 		ExceptionStatus exceptionStatus = ExceptionStatus.AUTHENTICATION_FAILED;
 		log.error("Request Uri : {}", request.getRequestURI());
 
+		Object exceptionStatusAttr = request.getAttribute("exceptionStatus");
+		if (exceptionStatusAttr instanceof ExceptionStatus) {
+			exceptionStatus = (ExceptionStatus) exceptionStatusAttr;
+		}
 		if (authException instanceof CustomAuthenticationException) {
 			exceptionStatus = ((CustomAuthenticationException) authException).getStatus();
 		}
@@ -40,7 +44,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
 		responseBody.put("status", exceptionStatus.getStatusCode());
 		responseBody.put("error", exceptionStatus.getError());
-		responseBody.put("message", authException.getMessage());
+		responseBody.put("message", exceptionStatus.getMessage());
 		responseBody.put("timestamp", Instant.now().toString());
 
 		new ObjectMapper().writeValue(response.getWriter(), responseBody);

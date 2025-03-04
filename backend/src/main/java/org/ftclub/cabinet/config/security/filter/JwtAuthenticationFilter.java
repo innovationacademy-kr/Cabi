@@ -1,10 +1,6 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.config.security.filter;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,8 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
-import org.ftclub.cabinet.exception.CustomAuthenticationException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
+import org.ftclub.cabinet.jwt.service.JwtTokenProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,12 +23,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtTokenProvider jwtTokenProvider;
+
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		return request.getRequestURI().equals("/v5/jwt/reissue");
+	}
 
 	/**
 	 * JWT에 대한 검증을 진행한 후, contextHolder에 유저에 대한 정보를 저장합니다.
@@ -47,41 +49,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			FilterChain filterChain) throws ServletException, IOException {
-		log.info("JwtAuthenticationFilter executing for request URL: {}", request.getRequestURL());
-		try {
-			String token = jwtTokenProvider.extractToken(request);
-			log.info("Extracted Token = {}", token);
-			if (token != null) {
-				Claims claims = jwtTokenProvider.parseToken(token);
-				Authentication auth = getAuthentication(claims);
-
-				SecurityContextHolder.getContext().setAuthentication(auth);
-			}
-
-			filterChain.doFilter(request, response);
-		} catch (ExpiredJwtException e) {
-			throw new CustomAuthenticationException(ExceptionStatus.JWT_EXPIRED);
-		} catch (SignatureException | MalformedJwtException | IllegalArgumentException e) {
-			throw new CustomAuthenticationException(ExceptionStatus.JWT_INVALID);
-		} catch (UnsupportedJwtException e) {
-			throw new CustomAuthenticationException(ExceptionStatus.JWT_UNSUPPORTED);
-		} catch (Exception e) {
-			log.error("JWT Authentication failed: {}", e.getMessage(), e);
-			throw new CustomAuthenticationException(ExceptionStatus.JWT_EXCEPTION);
-		} finally {
-			if (SecurityContextHolder.getContext().getAuthentication() == null) {
-				SecurityContextHolder.clearContext();
-			}
+		log.info("JWT Filter: 요청 URL = {}", request.getRequestURI());
+		String token = jwtTokenProvider.extractToken(request);
+		if (token != null) {
+			Claims claims = jwtTokenProvider.parseValidToken(token);
+			Authentication auth = getAuthentication(claims);
+			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
+		filterChain.doFilter(request, response);
 	}
 
 	// userId, role
 	private Authentication getAuthentication(Claims claims) {
-		String roles = claims.get("roles", String.class);
+		String roles = claims.get(JwtTokenConstants.ROLES, String.class);
 
 		UserInfoDto userInfoDto =
 				new UserInfoDto(
-						claims.get("userId", Long.class),
+						claims.get(JwtTokenConstants.USER_ID, Long.class),
+						claims.get(JwtTokenConstants.OAUTH, String.class),
 						roles
 				);
 

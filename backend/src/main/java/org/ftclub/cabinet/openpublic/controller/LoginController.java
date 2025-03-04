@@ -25,6 +25,7 @@ public class LoginController {
 		final String username = "anonymous";
 		if (!alarmProperties.getIsProduction()) {
 			authFacadeService.handlePublicLogin(request, response, username);
+//			authFacadeService.publicLogin(request, response, username);
 		}
 	}
 }

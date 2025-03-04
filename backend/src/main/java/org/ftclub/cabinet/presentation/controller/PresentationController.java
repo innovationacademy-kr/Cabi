@@ -4,19 +4,17 @@ package org.ftclub.cabinet.presentation.controller;
 import java.time.YearMonth;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.AbleDateResponseDto;
 import org.ftclub.cabinet.dto.InvalidDateResponseDto;
 import org.ftclub.cabinet.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.dto.PresentationFormResponseDto;
 import org.ftclub.cabinet.dto.PresentationMainData;
 import org.ftclub.cabinet.dto.PresentationMyPagePaginationDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.presentation.service.PresentationService;
-import org.ftclub.cabinet.user.domain.UserSession;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,9 +31,8 @@ public class PresentationController {
 	private final PresentationService presentationService;
 
 	@PostMapping("/form")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void createPresentationForm(
-			@UserSession UserSessionDto user,
+			@AuthenticationPrincipal UserInfoDto user,
 			@Valid @RequestBody PresentationFormRequestDto dto) {
 		presentationService.createPresentationForm(user.getUserId(), dto);
 	}
@@ -51,7 +48,6 @@ public class PresentationController {
 	}
 
 	@GetMapping("")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public PresentationMainData getMainData(
 			@RequestParam(value = "pastFormCount") Integer pastFormCount,
 			@RequestParam(value = "upcomingFormCount") Integer upcomingFormCount) {
@@ -75,9 +71,8 @@ public class PresentationController {
 	 * @return
 	 */
 	@GetMapping("/me/histories")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public PresentationMyPagePaginationDto getUserPresentation(
-			@UserSession UserSessionDto user,
+			@AuthenticationPrincipal UserInfoDto user,
 			Pageable pageable
 	) {
 		return presentationService.getUserPresentations(user.getUserId(), pageable);

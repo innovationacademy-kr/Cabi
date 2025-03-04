@@ -2,6 +2,7 @@ package org.ftclub.cabinet.auth.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -16,39 +17,44 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
+import org.ftclub.cabinet.auth.domain.CookieManager;
+import org.ftclub.cabinet.config.security.JwtTokenConstants;
+import org.ftclub.cabinet.config.security.JwtTokenProperties;
 import org.ftclub.cabinet.config.security.JwtTokenProvider;
 import org.ftclub.cabinet.config.security.TokenDto;
-import org.ftclub.cabinet.exception.CustomAuthenticationException;
-import org.junit.jupiter.api.BeforeEach;
+import org.ftclub.cabinet.jwt.service.JwtRedisService;
+import org.ftclub.cabinet.user.service.UserQueryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class JwtTokenProviderTest {
 
+	private final String secretKey = "testSecretKeytestSecretKeytestSecretKeytestSecretKey";
+	private final SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+	@Mock
+	private JwtTokenProperties tokenProperties;
+	@Mock
+	private UserQueryService userQueryService;
+	@Mock
+	private CookieManager cookieManager;
+	@Mock
+	private JwtRedisService jwtRedisService;
 	@InjectMocks
 	private JwtTokenProvider jwtTokenProvider;
-	private String secretKey;
-
-	@BeforeEach
-	void setUp() {
-		secretKey = "testSecretKeytestSecretKeytestSecretKeytestSecretKey";
-		ReflectionTestUtils.setField(jwtTokenProvider, "secretKey", secretKey);
-		ReflectionTestUtils.setField(jwtTokenProvider, "signingKey",
-				Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)));
-		ReflectionTestUtils.setField(jwtTokenProvider, "accessTokenValidMillisecond", 1L);
-	}
+	@Mock
+	private HttpServletRequest request;
 
 	@Test
 	@DisplayName("유효한 토큰에 대한 claims 변환")
 	void parseValidToken() {
+		when(tokenProperties.getSigningKey()).thenReturn(key);
 		String jwt = createValidToken();
-
 		Claims claims = jwtTokenProvider.parseToken(jwt);
 
 		assertThat(claims.getSubject()).isEqualTo("1");
@@ -61,10 +67,14 @@ public class JwtTokenProviderTest {
 		Long userId = 1L;
 		String roles = "USER";
 
-		TokenDto tokenDto = jwtTokenProvider.createTokenDto(userId, roles);
+		when(tokenProperties.getAccessExpiryMillis()).thenReturn(360000L);
+		when(tokenProperties.getRefreshExpiryMillis()).thenReturn(36000000L);
+		when(tokenProperties.getSigningKey()).thenReturn(key);
+
+		TokenDto tokenDto = jwtTokenProvider.createTokens(userId, roles, "ft");
 		Claims claims = jwtTokenProvider.parseToken(tokenDto.getAccessToken());
 
-		assertEquals(String.valueOf(userId), claims.getSubject());
+		assertEquals(String.valueOf(userId), String.valueOf(claims.get(JwtTokenConstants.USER_ID)));
 		assertEquals(roles, claims.get("roles"));
 	}
 
@@ -73,9 +83,13 @@ public class JwtTokenProviderTest {
 	void expiredToken() throws InterruptedException {
 
 		// given, refreshToken 유효기한을 1ms로 설정한다.
+		when(tokenProperties.getSigningKey()).thenReturn(key);
+		when(tokenProperties.getAccessExpiryMillis()).thenReturn(1L);
+		when(tokenProperties.getRefreshExpiryMillis()).thenReturn(36000000L);
+
 		Long userID = 123L;
 		String roles = "USER";
-		TokenDto tokenDto = jwtTokenProvider.createTokenDto(userID, roles);
+		TokenDto tokenDto = jwtTokenProvider.createTokens(userID, roles, "ft");
 
 		Thread.sleep(10);
 
@@ -90,6 +104,7 @@ public class JwtTokenProviderTest {
 	void invalidToken() {
 		String invalidToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.fakePayload.signature"; // 임의로 조작된 토큰
 
+		when(tokenProperties.getSigningKey()).thenReturn(key);
 		assertThrows(JwtException.class, () -> {
 			jwtTokenProvider.parseToken(invalidToken);
 		});
@@ -106,36 +121,23 @@ public class JwtTokenProviderTest {
 	}
 
 	@Test
-	@DisplayName("Bearer로 시작 안함")
-	void extractTokenWithoutBearer() {
-		HttpServletRequest request = mock(HttpServletRequest.class);
-		when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("invalidToken");
-
-		assertThrows(CustomAuthenticationException.class, () -> {
-			jwtTokenProvider.extractToken(request);
-		});
-	}
-
-	@Test
 	@DisplayName("Authorization 헤더 없음")
 	void extractTokenWithoutAuthorizationHeader() {
 		HttpServletRequest request = mock(HttpServletRequest.class);
 		when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(null);
 
-		assertThrows(CustomAuthenticationException.class, () -> {
-			jwtTokenProvider.extractToken(request);
-		});
+		assertNull(jwtTokenProvider.extractToken(request));
+
 	}
 
 	private String createValidToken() {
-		SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
 		return Jwts.builder()
 				.setSubject("1")
 				.claim("roles", "USER")
 				.setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + 60000))
-				.signWith(key, SignatureAlgorithm.HS256)
+				.setExpiration(new Date(new Date().getTime() + 36000000))
+				.signWith(tokenProperties.getSigningKey(), SignatureAlgorithm.HS256)
 				.compact();
 
 	}
