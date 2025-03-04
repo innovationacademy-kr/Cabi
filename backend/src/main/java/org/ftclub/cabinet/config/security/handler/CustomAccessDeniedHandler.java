@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.exception.CustomAccessDeniedException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +21,12 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+
+	private final CookieManager cookieManager;
+
+	public CustomAccessDeniedHandler(CookieManager cookieManager) {
+		this.cookieManager = cookieManager;
+	}
 
 	/**
 	 * Security 내부에서 403 에러 발생 시, Spring은 기본 오류 페이지를 응답합니다.
@@ -36,6 +43,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
+		cookieManager.deleteAllCookies(request, response);
 		log.error("Request Method = {}", request.getMethod());
 		ExceptionStatus exceptionStatus = ExceptionStatus.ACCESS_DENIED;
 		log.error("Request Uri : {}", request.getRequestURI());
@@ -44,7 +52,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 		if (accessDeniedException instanceof CustomAccessDeniedException) {
 			exceptionStatus = ((CustomAccessDeniedException) accessDeniedException).getStatus();
 		}
-
 		response.setStatus(exceptionStatus.getStatusCode());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		response.setCharacterEncoding("UTF-8");

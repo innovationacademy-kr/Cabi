@@ -18,10 +18,10 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import org.ftclub.cabinet.auth.domain.CookieManager;
-import org.ftclub.cabinet.config.security.JwtTokenConstants;
-import org.ftclub.cabinet.config.security.JwtTokenProperties;
-import org.ftclub.cabinet.config.security.JwtTokenProvider;
-import org.ftclub.cabinet.config.security.TokenDto;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
+import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
+import org.ftclub.cabinet.jwt.service.JwtTokenProvider;
+import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +55,7 @@ public class JwtTokenProviderTest {
 	void parseValidToken() {
 		when(tokenProperties.getSigningKey()).thenReturn(key);
 		String jwt = createValidToken();
-		Claims claims = jwtTokenProvider.parseToken(jwt);
+		Claims claims = jwtTokenProvider.parseValidToken(jwt);
 
 		assertThat(claims.getSubject()).isEqualTo("1");
 		assertThat(claims.get("roles", String.class)).isEqualTo("USER");
@@ -72,7 +72,7 @@ public class JwtTokenProviderTest {
 		when(tokenProperties.getSigningKey()).thenReturn(key);
 
 		TokenDto tokenDto = jwtTokenProvider.createTokens(userId, roles, "ft");
-		Claims claims = jwtTokenProvider.parseToken(tokenDto.getAccessToken());
+		Claims claims = jwtTokenProvider.parseValidToken(tokenDto.getAccessToken());
 
 		assertEquals(String.valueOf(userId), String.valueOf(claims.get(JwtTokenConstants.USER_ID)));
 		assertEquals(roles, claims.get("roles"));
@@ -95,7 +95,7 @@ public class JwtTokenProviderTest {
 
 		// when & then
 		assertThrows(ExpiredJwtException.class, () -> {
-			jwtTokenProvider.parseToken(tokenDto.getAccessToken());
+			jwtTokenProvider.parseValidToken(tokenDto.getAccessToken());
 		});
 	}
 
@@ -106,7 +106,7 @@ public class JwtTokenProviderTest {
 
 		when(tokenProperties.getSigningKey()).thenReturn(key);
 		assertThrows(JwtException.class, () -> {
-			jwtTokenProvider.parseToken(invalidToken);
+			jwtTokenProvider.parseValidToken(invalidToken);
 		});
 	}
 

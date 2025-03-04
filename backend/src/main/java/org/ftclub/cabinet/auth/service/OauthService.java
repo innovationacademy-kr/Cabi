@@ -2,6 +2,8 @@ package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,31 +14,44 @@ import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
+import org.ftclub.cabinet.alarm.domain.AlarmEvent;
+import org.ftclub.cabinet.alarm.domain.EmailVerificationAlarm;
+import org.ftclub.cabinet.alarm.service.AguCodeRedisService;
+import org.ftclub.cabinet.auth.domain.CustomOauth2User;
 import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.domain.UserOauthConnection;
 import org.ftclub.cabinet.config.FtApiProperties;
-import org.ftclub.cabinet.auth.domain.CustomOauth2User;
 import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.dto.UserOauthMailDto;
 import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 
+/**
+ * OAuth 제공자와의 연동, 프로필 정보 변환, 사용자 연결 상태 관리
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OauthService {
 
 	private static final int CURSUS_INDEX = 1;
+	private static final String REDIRECT_COOKIE_NAME = "redirect";
+
+	private static final String VERIFICATION_API = "/v4/auth/AGU";
 	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
 	private final FtApiProperties ftApiProperties;
@@ -46,6 +61,11 @@ public class OauthService {
 	private final AdminQueryService adminQueryService;
 	private final AuthPolicyService authPolicyService;
 	private final AdminCommandService adminCommandService;
+	private final ApplicationTokenManager applicationTokenManager;
+	private final AguCodeRedisService aguCodeRedisService;
+	private final ApplicationEventPublisher eventPublisher;
+	@Value("${cabinet.server.be-host}")
+	private String beHost;
 
 	/**
 	 * ft oauth 로그인 외에 로그인 시도
@@ -57,17 +77,18 @@ public class OauthService {
 	@Transactional
 	public OauthResult handleExternalOAuthLogin(
 			CustomOauth2User oauth2User,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws JsonProcessingException {
 		String oauthMail = oauth2User.getEmail();
 		String providerId = oauth2User.getName();
 		String providerType = oauth2User.getProvider();
 
 		// adminPage 에서 요청 시
-		if (isAdminPageRequest(request, oauthMail)) {
+		if (authenticationService.isAdminRequest(request)) {
 			Admin admin = adminQueryService.findByEmail(oauthMail)
 					.orElseGet(() -> adminCommandService.createAdminByEmail(oauthMail));
 
-			return new OauthResult(admin.getId(), admin.getRole().name(),
+			return new OauthResult(admin.getId(),
+					admin.getRole().name(),
 					authPolicyService.getAdminHomeUrl());
 		}
 
@@ -77,8 +98,17 @@ public class OauthService {
 		// 기존 연동 유저
 		if (userConnection.isPresent()) {
 			User user = userConnection.get().getUser();
+			FtOauthProfile profile =
+					getProfileByIntraName(applicationTokenManager.getFtAccessToken(),
+							user.getName());
+			String combinedRoles = FtRole.combineRolesToString(profile.getRoles());
+			LocalDateTime blackHoledAt = profile.getBlackHoledAt();
 
-			return new OauthResult(user.getId(), user.getRoles(),
+			if (!user.isSameBlackHoledAtAndRole(profile.getBlackHoledAt(), combinedRoles)) {
+				userCommandService.updateUserBlackholeAndRole(user, blackHoledAt, combinedRoles);
+			}
+			return new OauthResult(user.getId(),
+					user.getRoles(),
 					authPolicyService.getMainHomeUrl());
 		}
 
@@ -102,10 +132,6 @@ public class OauthService {
 		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getProfileUrl());
 	}
 
-	private boolean isAdminPageRequest(HttpServletRequest req, String oauthMail) {
-		return adminQueryService.isAdminEmail(oauthMail) && isAdminReferer(req);
-	}
-
 	/**
 	 * ft 로그인 핸들링
 	 *
@@ -116,7 +142,6 @@ public class OauthService {
 	public OauthResult handleFtLogin(JsonNode rootNode) {
 		FtOauthProfile profile = convertJsonNodeToProfile(rootNode);
 		String combinedRoles = FtRole.combineRolesToString(profile.getRoles());
-
 		LocalDateTime blackHoledAt = profile.getBlackHoledAt();
 
 		User user = userQueryService.findUser(profile.getIntraName())
@@ -128,20 +153,6 @@ public class OauthService {
 					combinedRoles);
 		}
 		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getMainHomeUrl());
-	}
-
-	/**
-	 * admin 페이지에서 로그인 시도인지 검증
-	 *
-	 * @param request
-	 * @return
-	 */
-	private boolean isAdminReferer(HttpServletRequest request) {
-		String referer = request.getHeader("Referer");
-		if (referer != null) {
-			return referer.contains("/admin/login");
-		}
-		return false;
 	}
 
 	/**
@@ -240,5 +251,60 @@ public class OauthService {
 		List<FtRole> roles = profile.getRoles();
 		return roles.contains(FtRole.AGU);
 	}
+
+	/**
+	 * 이름으로 유저를 검색합니다
+	 * <p>
+	 * AGU 유저라면 code를 만들어 redis에 저장하고, 메일을 발송합니다.
+	 *
+	 * @param name
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	public UserOauthMailDto requestTemporaryLogin(String name) throws JsonProcessingException {
+		User user = userQueryService.getUserByName(name);
+		// agu 상태인지 검증
+		if (!user.getRoles().contains("AGU")
+				&& !isAguUser(name, applicationTokenManager.getFtAccessToken())) {
+			throw ExceptionStatus.ACCESS_DENIED.asServiceException();
+		}
+		// 코드가 있는데 발급 요청이면 에러(3분 내로 재요청)
+		if (aguCodeRedisService.isAlreadyExist(name)) {
+			throw ExceptionStatus.CODE_ALREADY_SENT.asServiceException();
+		}
+
+		String aguCode = aguCodeRedisService.createAguCode(user.getName());
+
+		// 나중에 메서드로 빼기
+		String verificationLink = generateVerificationLink(aguCode, name);
+		AlarmEvent alarmEvent =
+				AlarmEvent.of(user.getId(), new EmailVerificationAlarm(verificationLink));
+		eventPublisher.publishEvent(alarmEvent);
+		return new UserOauthMailDto(user.getEmail());
+	}
+
+	private String generateVerificationLink(String aguCode, String name) {
+		return UriComponentsBuilder.fromHttpUrl(beHost)
+				.path(VERIFICATION_API)
+				.queryParam("code", aguCode)
+				.queryParam("name", name)
+				.encode(StandardCharsets.UTF_8)
+				.build()
+				.toUriString();
+	}
+
+	/**
+	 * public 로그인 요청 시 임시 토큰을 만듭니다.
+	 *
+	 * @param name
+	 * @throws IOException
+	 */
+	public OauthResult handlePublicLogin(String name) {
+		User user = userQueryService.findUser(name).orElseThrow(
+				ExceptionStatus.NOT_FOUND_USER::asServiceException);
+
+		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getMainHomeUrl());
+	}
+
 
 }

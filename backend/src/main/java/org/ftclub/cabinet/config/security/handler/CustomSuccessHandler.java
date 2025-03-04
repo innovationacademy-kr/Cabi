@@ -1,10 +1,12 @@
 package org.ftclub.cabinet.config.security.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -62,8 +64,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		try {
 			OauthResult oauthResult = processOAuthLogin(request, provider, fromLoadUser);
 			authenticationService.processAuthentication(request, response, oauthResult, provider);
+			String redirectUrl = oauthResult.getRedirectionUrl();
 
-			response.sendRedirect(oauthResult.getRedirectionUrl());
+			log.info("redirectUrl = {}", redirectUrl);
+			if (oauthResult.getRoles().contains("AGU")) {
+				redirectUrl = authPolicyService.getAGUUrl();
+			}
+			response.sendRedirect(redirectUrl);
 		} catch (Exception e) {
 			ExceptionStatus status = handleAuthenticationException(e);
 
@@ -80,7 +87,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	 * @return
 	 */
 	private OauthResult processOAuthLogin(HttpServletRequest req, String provider,
-			CustomOauth2User oauth2User) {
+			CustomOauth2User oauth2User) throws JsonProcessingException {
 		if (provider.equals(ftProvider)) {
 			JsonNode rootNode =
 					objectMapper.convertValue(oauth2User.getAttributes(), JsonNode.class);
@@ -96,7 +103,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	/**
 	 * 에러 핸들링
 	 *
-	 * @param e
+	 * @param e successHandler 처리 도중 발생할 수 있는 에러들 핸들링
 	 * @return
 	 */
 	private ExceptionStatus handleAuthenticationException(Exception e) {
@@ -142,10 +149,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		String errorCode = status.getError();
 		String message = status.name();
 
+		log.error("error Redirect Start");
 		String uri = UriComponentsBuilder.fromHttpUrl(authPolicyService.getOauthErrorPage())
 				.queryParam("code", errorCode)
 				.queryParam("status", status.getStatusCode())
-				.queryParam("message", message).toString();
+				.queryParam("message", message)
+				.encode(StandardCharsets.UTF_8)
+				.toUriString();
 
 		response.sendRedirect(uri);
 	}

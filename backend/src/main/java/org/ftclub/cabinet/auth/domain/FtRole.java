@@ -55,7 +55,7 @@ public enum FtRole {
 	}
 
 	public boolean isInCursus() {
-		return this == CADET || this == MEMBER || this == STAFF || this == USER;
+		return this == CADET || this == MEMBER || this == STAFF || this == USER || this == AGU;
 	}
 
 	public String getAuthority() {

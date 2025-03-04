@@ -10,10 +10,12 @@ import org.ftclub.cabinet.config.security.handler.CustomOAuth2UserService;
 import org.ftclub.cabinet.config.security.handler.CustomSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
@@ -43,11 +45,16 @@ public class SecurityConfig {
 		http.csrf(AbstractHttpConfigurer::disable)
 				.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
+				.sessionManagement(session -> session
+						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				)
 				// api별 접근 권한을 부여합니다
 				.authorizeHttpRequests(auth -> auth
 						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**",
-								"/v4/auth/login/AGU", "/v5/jwt/reissue").permitAll()
+								"/v4/auth/login/AGU", "/v5/jwt/reissue", "/v4/admin/auth/login")
+						.permitAll()
 						.mvcMatchers("/slack/**").hasRole("ADMIN")
+						.mvcMatchers("/v4/admin/**").hasRole("ADMIN")
 						.mvcMatchers("/v5/admin/**").hasRole("ADMIN")
 						.mvcMatchers("/v4/cabinets/**").hasAnyRole("USER", "ADMIN")
 						.mvcMatchers("/v4/users/me").hasAnyRole("USER", "AGU")
@@ -61,6 +68,9 @@ public class SecurityConfig {
 				)
 				.logout(logout -> logout
 						.logoutUrl("/v4/auth/logout")
+						.logoutSuccessHandler((request, response, authentication) -> {
+							response.setStatus(HttpStatus.OK.value());
+						})
 						.invalidateHttpSession(true)
 						.clearAuthentication(true)
 				)

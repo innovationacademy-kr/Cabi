@@ -1,14 +1,15 @@
 package org.ftclub.cabinet.auth.domain;
 
+import java.util.Arrays;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
-import org.ftclub.cabinet.dto.TokenDto;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,14 +32,12 @@ public class CookieManager {
 	 */
 	public String getCookieValue(HttpServletRequest req, String name) {
 		Cookie[] cookies = req.getCookies();
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals(name)) {
-					return cookie.getValue();
-				}
-			}
-		}
-		return null;
+
+		return Arrays.stream(cookies)
+				.filter(c -> c.getName().equals(name))
+				.map(Cookie::getValue)
+				.findFirst()
+				.orElse(null);
 	}
 
 	/**
