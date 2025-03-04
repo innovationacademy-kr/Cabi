@@ -6,6 +6,7 @@ import {
   currentSectionNameState,
 } from "@/Cabinet/recoil/atoms";
 import ProfileCard from "@/Cabinet/components/Card/ProfileCard/ProfileCard";
+import { axiosLogout } from "@/Cabinet/api/axios/axios.custom";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const ProfileCardContainer = ({ name }: { name: string | null }) => {
@@ -14,22 +15,27 @@ const ProfileCardContainer = ({ name }: { name: string | null }) => {
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
   const resetBuilding = useResetRecoilState(currentBuildingNameState);
 
-  const onClickLogoutButton = (): void => {
-    if (import.meta.env.VITE_IS_LOCAL === "true") {
-      removeCookie("access_token", {
-        path: "/",
-        domain: "localhost",
-      });
-    } else {
-      removeCookie("access_token", {
-        path: "/",
-        domain: "cabi.42seoul.io",
-      });
+  const onClickLogoutButton = async (): Promise<void> => {
+    try {
+      await axiosLogout();
+      if (import.meta.env.VITE_IS_LOCAL === "true") {
+        removeCookie("access_token", {
+          path: "/",
+          domain: "localhost",
+        });
+      } else {
+        removeCookie("access_token", {
+          path: "/",
+          domain: "cabi.42seoul.io",
+        });
+      }
+      resetBuilding();
+      resetCurrentFloor();
+      resetCurrentSection();
+      navigator("/login");
+    } catch (error) {
+      console.error(error);
     }
-    resetBuilding();
-    resetCurrentFloor();
-    resetCurrentSection();
-    navigator("/login");
   };
 
   return (
