@@ -113,6 +113,14 @@ const AdminHomePage = () => {
       setOverdueUserList
     );
   }, []);
+
+  useEffect(() => {
+    console.log("===Admin Home Mount===");
+    console.log("current path: " + window.location.pathname);
+    console.log("auth cookies: " + document.cookie);
+    console.log("local storage: " + JSON.stringify(localStorage));
+  }, []);
+
   return (
     <AdminHomeStyled>
       <ContainerStyled>
