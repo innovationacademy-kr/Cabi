@@ -16,13 +16,7 @@ const reissueInstance = axios.create({
 
 const reissueToken = async () => {
   try {
-    const token = (() => {
-      const pathname = window.location.pathname;
-      if (pathname.startsWith("/admin")) {
-        return getCookie("admin_access_token");
-      }
-      return getCookie("access_token");
-    })();
+    const token = getCookie("access_token");
 
     const response = await reissueInstance.post(
       "/v5/jwt/reissue",
@@ -45,13 +39,7 @@ const reissueToken = async () => {
 };
 
 instance.interceptors.request.use(async (config) => {
-  const token = (() => {
-    const pathname = window.location.pathname;
-    if (pathname.startsWith("/admin")) {
-      return getCookie("admin_access_token");
-    }
-    return getCookie("access_token");
-  })();
+  const token = getCookie("access_token");
   config.headers.set("Authorization", `Bearer ${token}`);
   return config;
 });
@@ -66,11 +54,7 @@ instance.interceptors.response.use(
 
       if (isReissued) {
         const originalRequest = error.config;
-
-        const newToken = window.location.pathname.startsWith("/admin")
-          ? getCookie("admin_access_token")
-          : getCookie("access_token");
-
+        const newToken = getCookie("access_token");
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return instance(originalRequest);
       } else {
@@ -79,17 +63,10 @@ instance.interceptors.response.use(
             ? "localhost"
             : "cabi.42seoul.io";
 
-        if (window.location.pathname.startsWith("/admin")) {
-          removeCookie("admin_access_token", {
-            path: "/",
-            domain: domain,
-          });
-        } else {
-          removeCookie("access_token", {
-            path: "/",
-            domain: domain,
-          });
-        }
+        removeCookie("access_token", {
+          path: "/",
+          domain: domain,
+        });
 
         window.location.href = "login";
         alert(error.response.data.message);

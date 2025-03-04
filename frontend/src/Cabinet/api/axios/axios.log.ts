@@ -3,7 +3,7 @@ import { HttpStatusCode } from "axios";
 import ErrorType from "@/Cabinet/types/enum/error.type.enum";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
-const token = getCookie("admin_access_token") ?? getCookie("access_token");
+const token = getCookie("access_token");
 const payload = token?.split(".")[1];
 const userId = payload ? JSON.parse(window.atob(payload)).name : "Unknown";
 
