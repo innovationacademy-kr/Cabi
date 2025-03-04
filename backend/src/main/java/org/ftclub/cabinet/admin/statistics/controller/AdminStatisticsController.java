@@ -1,12 +1,9 @@
 package org.ftclub.cabinet.admin.statistics.controller;
 
-import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.statistics.service.AdminStatisticsFacadeService;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
@@ -33,7 +30,6 @@ public class AdminStatisticsController {
 	 * @return 전 층의 사물함 정보를 반환합니다.
 	 */
 	@GetMapping("/buildings/floors/cabinets")
-	@AuthGuard(level = ADMIN_ONLY)
 	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
 		return adminStatisticsFacadeService.getAllCabinetsInfo();
 	}
@@ -46,7 +42,6 @@ public class AdminStatisticsController {
 	 * @return 현재일자 기준, 입력한 기간 동안 발생한 대여 및 반납의 횟수를 반환합니다.
 	 */
 	@GetMapping("/lent-histories")
-	@AuthGuard(level = ADMIN_ONLY)
 	public LentsStatisticsResponseDto getLentCountStatistics(
 			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
 			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
@@ -60,7 +55,6 @@ public class AdminStatisticsController {
 	 * @return 차단당한 유저 정보를 반환합니다.
 	 */
 	@GetMapping("/users/banned")
-	@AuthGuard(level = ADMIN_ONLY)
 	public BlockedUserPaginationDto getUsersBannedInfo(Pageable pageable) {
 		return adminStatisticsFacadeService.getAllBanUsers(pageable);
 	}
@@ -72,7 +66,6 @@ public class AdminStatisticsController {
 	 * @return 연체중인 유저 리스트를 반환합니다.
 	 */
 	@GetMapping("/users/overdue")
-	@AuthGuard(level = ADMIN_ONLY)
 	public OverdueUserCabinetPaginationDto getOverdueUsers(Pageable pageable) {
 		return adminStatisticsFacadeService.getOverdueUsers(pageable);
 	}

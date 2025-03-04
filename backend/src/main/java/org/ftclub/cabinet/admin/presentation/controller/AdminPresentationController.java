@@ -1,11 +1,8 @@
 package org.ftclub.cabinet.admin.presentation.controller;
 
-import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
-
 import java.time.YearMonth;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.PresentationFormResponseDto;
 import org.ftclub.cabinet.dto.PresentationUpdateDto;
 import org.ftclub.cabinet.presentation.service.PresentationService;
@@ -27,7 +24,6 @@ public class AdminPresentationController {
 	private final PresentationService presentationService;
 
 	@PatchMapping("/{formId}/update")
-	@AuthGuard(level = ADMIN_ONLY)
 	public void updatePresentationByFormId(
 			@PathVariable("formId") Long formId,
 			@Valid @RequestBody PresentationUpdateDto dto) {
@@ -35,7 +31,6 @@ public class AdminPresentationController {
 	}
 
 	@GetMapping("/schedule")
-	@AuthGuard(level = ADMIN_ONLY)
 	public PresentationFormResponseDto adminSchedulePage(@RequestParam(value = "yearMonth")
 	@DateTimeFormat(pattern = "yyyy-MM")
 	YearMonth yearMonth) {

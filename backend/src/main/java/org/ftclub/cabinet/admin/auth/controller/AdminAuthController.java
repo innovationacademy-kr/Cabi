@@ -1,17 +1,22 @@
 package org.ftclub.cabinet.admin.auth.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.service.AuthFacadeService;
-import org.ftclub.cabinet.dto.MasterLoginDto;
-import org.ftclub.cabinet.log.Logging;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutionException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.auth.service.AuthFacadeService;
+import org.ftclub.cabinet.auth.service.AuthenticationService;
+import org.ftclub.cabinet.dto.MasterLoginDto;
+import org.ftclub.cabinet.log.Logging;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 관리자 인증을 수행하는 컨트롤러 클래스입니다.
@@ -23,6 +28,7 @@ import java.util.concurrent.ExecutionException;
 public class AdminAuthController {
 
 	private final AuthFacadeService authFacadeService;
+	private final AuthenticationService authenticationService;
 
 	/**
 	 * 관리자 로그인 페이지로 리다이렉트 합니다.
@@ -31,8 +37,9 @@ public class AdminAuthController {
 	 * @throws IOException 입출력 예외
 	 */
 	@GetMapping("/login")
-	public void login(HttpServletResponse res) throws IOException {
-		authFacadeService.requestAdminLogin(res);
+	public void login(HttpServletRequest req,
+			HttpServletResponse res) throws IOException {
+		authenticationService.requestAdminLogin(req, res);
 	}
 
 	/**
@@ -44,8 +51,8 @@ public class AdminAuthController {
 	 */
 	@PostMapping("/login")
 	public void masterLogin(HttpServletRequest req,
-	                        HttpServletResponse res,
-	                        @Valid @RequestBody MasterLoginDto masterLoginDto) {
+			HttpServletResponse res,
+			@Valid @RequestBody MasterLoginDto masterLoginDto) {
 		authFacadeService.masterLogin(masterLoginDto, req, res, LocalDateTime.now());
 	}
 
@@ -60,7 +67,7 @@ public class AdminAuthController {
 
 	@GetMapping("/login/callback")
 	public void loginCallback(@RequestParam String code, HttpServletRequest req,
-	                          HttpServletResponse res) throws IOException, ExecutionException, InterruptedException {
+			HttpServletResponse res) throws IOException, ExecutionException, InterruptedException {
 		authFacadeService.handleAdminLogin(req, res, code);
 	}
 

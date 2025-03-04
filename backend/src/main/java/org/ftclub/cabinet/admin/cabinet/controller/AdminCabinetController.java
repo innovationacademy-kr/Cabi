@@ -6,8 +6,6 @@ import org.ftclub.cabinet.admin.dto.AdminCabinetGridUpdateRequestDto;
 import org.ftclub.cabinet.admin.dto.AdminCabinetStatusNoteUpdateRequestDto;
 import org.ftclub.cabinet.admin.dto.AdminCabinetTitleUpdateRequestDto;
 import org.ftclub.cabinet.admin.dto.AdminCabinetVisibleNumUpdateRequestDto;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
@@ -43,7 +41,6 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/status-note")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetStatusNote(
 			@PathVariable("cabinetId") Long cabinetId,
 			@Valid @RequestBody AdminCabinetStatusNoteUpdateRequestDto dto) {
@@ -58,7 +55,6 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/title")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetTitle(
 			@PathVariable("cabinetId") Long cabinetId,
 			@Valid @RequestBody AdminCabinetTitleUpdateRequestDto dto) {
@@ -72,7 +68,6 @@ public class AdminCabinetController {
 	 * @throws ControllerException cabinetIds가 null인 경우.
 	 */
 	@PatchMapping("")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetBundleStatus(
 			@Valid @RequestBody CabinetStatusRequestDto cabinetStatusRequestDto) {
 		cabinetFacadeService.updateCabinetBundleStatus(cabinetStatusRequestDto.getCabinetIds(),
@@ -87,7 +82,6 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/grid")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetGrid(
 			@PathVariable("cabinetId") Long cabinetId,
 			@Valid @RequestBody AdminCabinetGridUpdateRequestDto dto) {
@@ -102,7 +96,6 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/visible-num")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetVisibleNum(
 			@PathVariable("cabinetId") Long cabinetId,
 			@Valid @RequestBody AdminCabinetVisibleNumUpdateRequestDto dto) {
@@ -117,7 +110,6 @@ public class AdminCabinetController {
 	 * @return 사물함 정보 페이지네이션
 	 */
 	@GetMapping("/status/{status}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByStatus(
 			@PathVariable("status") CabinetStatus status,
 			@Valid Pageable pageable) {
@@ -132,7 +124,6 @@ public class AdminCabinetController {
 	 * @return 대여 기록 페이지네이션
 	 */
 	@GetMapping("/{cabinetId}/lent-histories")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public LentHistoryPaginationDto getCabinetLentHistories(
 			@Valid @PathVariable("cabinetId") Long cabinetId, @Valid Pageable pageable) {
 		return cabinetFacadeService.getLentHistoryPagination(cabinetId, pageable);

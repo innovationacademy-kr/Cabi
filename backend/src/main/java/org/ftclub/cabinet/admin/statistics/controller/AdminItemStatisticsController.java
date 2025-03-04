@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.item.service.AdminItemFacadeService;
 import org.ftclub.cabinet.admin.statistics.service.AdminStatisticsFacadeService;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.CoinCollectStatisticsDto;
 import org.ftclub.cabinet.dto.CoinStaticsDto;
 import org.ftclub.cabinet.dto.ItemStatisticsDto;
@@ -35,7 +33,6 @@ public class AdminItemStatisticsController {
 	 * @return
 	 */
 	@GetMapping("/coins/collect")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public CoinCollectStatisticsDto getCoinCollectCountByMonth(
 			@RequestParam("year") Integer year,
 			@RequestParam("month") Integer month) {
@@ -48,7 +45,6 @@ public class AdminItemStatisticsController {
 	 * @return
 	 */
 	@GetMapping("/coins")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public TotalCoinAmountDto getTotalCoinAmount() {
 		return adminStatisticsFacadeService.getTotalCoinAmount();
 	}
@@ -59,7 +55,6 @@ public class AdminItemStatisticsController {
 	 * @return
 	 */
 	@GetMapping("/items")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public ItemStatisticsDto getItemPurchaseStatistics() {
 		return adminItemFacadeService.getItemPurchaseStatistics();
 	}
@@ -72,7 +67,6 @@ public class AdminItemStatisticsController {
 	 * @return
 	 */
 	@GetMapping("/coins/use")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public CoinStaticsDto getCoinStaticsDto(
 			@RequestParam("startDate") @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime startDate,
 			@RequestParam("endDate") @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime endDate) {

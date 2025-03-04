@@ -2,7 +2,6 @@ package org.ftclub.cabinet.item.controller;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.dto.CoinCollectionRewardResponseDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
@@ -10,7 +9,7 @@ import org.ftclub.cabinet.dto.ItemHistoryPaginationDto;
 import org.ftclub.cabinet.dto.ItemStoreResponseDto;
 import org.ftclub.cabinet.dto.ItemUseRequestDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.domain.Sku;
 import org.ftclub.cabinet.item.service.ItemFacadeService;
@@ -63,7 +62,7 @@ public class ItemController {
 	 * @return
 	 */
 	@GetMapping("/history")
-	public ItemHistoryPaginationDto getItemHistory(@AuthenticationPrincipal UserSessionDto user,
+	public ItemHistoryPaginationDto getItemHistory(@AuthenticationPrincipal UserInfoDto user,
 			Pageable pageable) {
 		return itemFacadeService.getItemHistory(user.getUserId(), pageable);
 	}

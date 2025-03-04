@@ -1,13 +1,9 @@
 package org.ftclub.cabinet.admin.club.controller;
 
 
-import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
-
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.club.service.AdminClubFacadeService;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.ClubCreateDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.dto.ClubUpdateRequestDto;
@@ -43,7 +39,6 @@ public class AdminClubController {
 	 * @return 모든 동아리 정보
 	 */
 	@GetMapping("")
-	@AuthGuard(level = ADMIN_ONLY)
 	public ClubInfoPaginationDto getAllClubsInfoDto(@Valid Pageable pageable) {
 		return adminClubFacadeService.findAllActiveClubsInfo(pageable);
 	}
@@ -54,7 +49,6 @@ public class AdminClubController {
 	 * @param clubCreateDto 생성할 동아리 정보
 	 */
 	@PostMapping("")
-	@AuthGuard(level = ADMIN_ONLY)
 	public void createNewClub(@Valid @RequestBody ClubCreateDto clubCreateDto) {
 		adminClubFacadeService.createNewClub(clubCreateDto.getClubName(),
 				clubCreateDto.getClubMaster());
@@ -66,7 +60,6 @@ public class AdminClubController {
 	 * @param cabinetId 삭제할 동아리 아이디
 	 */
 	@DeleteMapping("/{cabinetId}")
-	@AuthGuard(level = ADMIN_ONLY)
 	public void deleteClub(@PathVariable Long cabinetId) {
 		adminClubFacadeService.deleteClub(cabinetId);
 	}
@@ -78,7 +71,6 @@ public class AdminClubController {
 	 * @param clubUpdateRequestDto 수정할 동아리 정보
 	 */
 	@PatchMapping("/{clubId}")
-	@AuthGuard(level = ADMIN_ONLY)
 	public void updateClubUser(@PathVariable("clubId") Long clubId,
 			@Valid @RequestBody ClubUpdateRequestDto clubUpdateRequestDto) {
 		adminClubFacadeService.updateClub(clubId, clubUpdateRequestDto.getClubName(),
@@ -92,7 +84,6 @@ public class AdminClubController {
 	 * @param cabinetId 대여시킬 사물함 ID
 	 */
 	@PostMapping("/{clubId}/cabinets/{cabinetId}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void startClubLent(@PathVariable Long clubId, @PathVariable Long cabinetId) {
 		lentFacadeService.startLentClubCabinet(clubId, cabinetId);
 	}
@@ -104,7 +95,6 @@ public class AdminClubController {
 	 * @param cabinetId 반납할 사물함 ID
 	 */
 	@DeleteMapping("/{clubId}/cabinets/{cabinetId}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void endClubLent(@PathVariable Long clubId, @PathVariable Long cabinetId,
 			@Valid @RequestBody LentEndMemoDto lentEndMemoDto) {
 		lentFacadeService.endLentClub(clubId, cabinetId, lentEndMemoDto.getCabinetMemo());
