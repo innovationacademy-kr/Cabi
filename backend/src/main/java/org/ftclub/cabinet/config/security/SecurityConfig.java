@@ -50,7 +50,7 @@ public class SecurityConfig {
 				)
 				// api별 접근 권한을 부여합니다
 				.authorizeHttpRequests(auth -> auth
-						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**",
+						.mvcMatchers("/ping", "/actuator/**", "/v4/auth/**", "/login/**",
 								"/v5/jwt/reissue", "/v4/admin/auth/login")
 						.permitAll()
 						.mvcMatchers("/slack/**").hasRole("ADMIN")
