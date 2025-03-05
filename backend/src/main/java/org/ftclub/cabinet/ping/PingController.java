@@ -2,8 +2,6 @@ package org.ftclub.cabinet.ping;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.item.service.ItemCommandService;
 import org.ftclub.cabinet.item.service.ItemRedisService;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
@@ -48,7 +46,6 @@ public class PingController {
 //	}
 
 	@GetMapping("/issue-ext")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public String ok() {
 		lentExtensionManager.issueLentExtension();
 		return "ok";
