@@ -49,7 +49,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class OauthService {
 
 	private static final int CURSUS_INDEX = 1;
-	private static final String REDIRECT_COOKIE_NAME = "redirect";
 
 	private static final String VERIFICATION_API = "/v4/auth/AGU";
 	private final UserQueryService userQueryService;
@@ -275,7 +274,6 @@ public class OauthService {
 
 		String aguCode = aguCodeRedisService.createAguCode(user.getName());
 
-		// 나중에 메서드로 빼기
 		String verificationLink = generateVerificationLink(aguCode, name);
 		AlarmEvent alarmEvent =
 				AlarmEvent.of(user.getId(), new EmailVerificationAlarm(verificationLink));

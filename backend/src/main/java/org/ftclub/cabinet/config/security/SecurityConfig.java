@@ -51,13 +51,13 @@ public class SecurityConfig {
 				// api별 접근 권한을 부여합니다
 				.authorizeHttpRequests(auth -> auth
 						.mvcMatchers("/actuator/**", "/v4/auth/**", "/login/**",
-								"/v4/auth/login/AGU", "/v5/jwt/reissue", "/v4/admin/auth/login")
+								"/v5/jwt/reissue", "/v4/admin/auth/login")
 						.permitAll()
 						.mvcMatchers("/slack/**").hasRole("ADMIN")
 						.mvcMatchers("/v4/admin/**").hasRole("ADMIN")
 						.mvcMatchers("/v5/admin/**").hasRole("ADMIN")
 						.mvcMatchers("/v4/cabinets/**").hasAnyRole("USER", "ADMIN")
-						.mvcMatchers("/v4/users/me").hasAnyRole("USER", "AGU")
+						.mvcMatchers("/v4/lent/me").hasAnyRole("USER", "AGU")
 						.antMatchers("/v4/lent/cabinets/share/cancel/*").hasAnyRole("USER", "ADMIN")
 						.mvcMatchers("/v4/items").hasAnyRole("USER", "ADMIN")
 						.anyRequest().hasRole("USER")
@@ -68,9 +68,8 @@ public class SecurityConfig {
 				)
 				.logout(logout -> logout
 						.logoutUrl("/v4/auth/logout")
-						.logoutSuccessHandler((request, response, authentication) -> {
-							response.setStatus(HttpStatus.OK.value());
-						})
+						.logoutSuccessHandler((request, response, authentication) ->
+								response.setStatus(HttpStatus.OK.value()))
 						.invalidateHttpSession(true)
 						.clearAuthentication(true)
 				)
