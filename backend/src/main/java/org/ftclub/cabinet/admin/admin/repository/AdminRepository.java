@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.admin.admin.repository;
 
 import java.util.Optional;
-import java.util.Set;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,11 +36,4 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	@Query("SELECT au.role FROM Admin au WHERE au.email = :email")
 	Optional<AdminRole> findAdminRoleByEmail(@Param("email") String email);
 
-	/**
-	 * 어드민용 메일을 모두 불러옵니다(캐싱용).
-	 *
-	 * @return
-	 */
-	@Query("SELECT a.email FROM Admin a")
-	Set<String> findAllAdminEmails();
 }
