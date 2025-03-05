@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
-import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
@@ -151,16 +151,6 @@ public class UserCommandService {
 
 	public void addBulkCoin(List<Long> userIds, Long amount) {
 		userRepository.updateBulkUserCoin(userIds, amount);
-	}
-
-	public User linkOauthAccount(String name, String email) {
-		User user = userRepository.findByName(name)
-				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
-		if (user.getOauthMail() != null) {
-			throw ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED.asSpringSecurityException();
-		}
-		user.changeOauthMail(email);
-		return userRepository.save(user);
 	}
 
 }

@@ -51,8 +51,7 @@ public class User {
 	private LocalDateTime blackholedAt = null;
 	@Column(name = "DELETED_AT", length = 32)
 	private LocalDateTime deletedAt = null;
-	//	@Enumerated(value = EnumType.STRING)
-	@Column(name = "ROLE", nullable = false)
+	@Column(name = "ROLES", nullable = false)
 	private String roles;
 	@Column(name = "SLACK_ALARM", columnDefinition = "boolean default true")
 	private boolean slackAlarm;
@@ -64,10 +63,6 @@ public class User {
 	@NotNull
 	@Column(name = "COIN")
 	private Long coin;
-
-	@Email
-	@Column(name = "OAUTH_MAIL")
-	private String oauthMail;
 
 	protected User(String name, String email, LocalDateTime blackholedAt, String roles) {
 		this.name = name;
@@ -184,7 +179,4 @@ public class User {
 		this.coin += reward;
 	}
 
-	public void changeOauthMail(String email) {
-		this.oauthMail = email;
-	}
 }
