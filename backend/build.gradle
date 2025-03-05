@@ -119,6 +119,21 @@ dependencyManagement {
     }
 }
 
+def querydslDir = "$buildDir/generated/querydsl"
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets {
+    main.java.srcDir querydslDir
+}
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
 
 tasks.register('copyMainConfig', Copy) {
     from '../config/backend/src/main/resources'
@@ -169,19 +184,5 @@ bootJar {
         into 'build/classes/static'
     }
 
-    def querydslDir = "$buildDir/generated/querydsl"
-    querydsl {
-        jpa = true
-        querydslSourcesDir = querydslDir
-    }
-    sourceSets {
-        main.java.srcDir querydslDir
-    }
-    configurations {
-        querydsl.extendsFrom compileClasspath
-    }
-    compileQuerydsl {
-        options.annotationProcessorPath = configurations.querydsl
-    }
 
 }
