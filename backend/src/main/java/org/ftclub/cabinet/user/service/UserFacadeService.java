@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 import org.ftclub.cabinet.alarm.fcm.config.FirebaseConfig;
 import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
-import org.ftclub.cabinet.auth.domain.UserOauthConnection;
 import org.ftclub.cabinet.auth.service.UserOauthConnectionQueryService;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
@@ -17,6 +16,7 @@ import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.dto.UpdateDeviceTokenRequestDto;
+import org.ftclub.cabinet.dto.UserOauthConnectionDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.item.service.ItemRedisService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -66,9 +66,9 @@ public class UserFacadeService {
 				findRecentActiveBanHistory(userId, LocalDateTime.now())
 				.orElse(null);
 
-		String oauthMail = userOauthConnectionQueryService
-				.getByUserId(currentUser.getId())
-				.map(UserOauthConnection::getMail)
+		UserOauthConnectionDto userOauthConnectionDto = userOauthConnectionQueryService
+				.findByUserId(currentUser.getId())
+				.map(userMapper::toUserOauthConnectionDto)
 				.orElse(null);
 
 		AlarmTypeResponseDto userAlarmTypes = currentUser.getAlarmTypes();
@@ -76,7 +76,8 @@ public class UserFacadeService {
 				&& fcmTokenRedisService.findByUserName(currentUser.getName()).isEmpty();
 
 		Long coins = currentUser.getCoin();
-		return userMapper.toMyProfileResponseDto(currentUser, oauthMail, cabinet, banHistory,
+		return userMapper.toMyProfileResponseDto(currentUser, userOauthConnectionDto, cabinet,
+				banHistory,
 				userAlarmTypes,
 				isDeviceTokenExpired, coins);
 	}

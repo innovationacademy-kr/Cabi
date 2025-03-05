@@ -5,6 +5,7 @@ import static org.mapstruct.NullValueMappingStrategy.RETURN_NULL;
 
 import java.util.List;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
+import org.ftclub.cabinet.auth.domain.UserOauthConnection;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.ClubUserListDto;
@@ -12,6 +13,7 @@ import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
+import org.ftclub.cabinet.dto.UserOauthConnectionDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -37,10 +39,13 @@ public interface UserMapper {
 	@Mapping(target = "userId", source = "user.id")
 	UserProfileDto toUserProfileDto(User user);
 
+	UserOauthConnectionDto toUserOauthConnectionDto(UserOauthConnection userOauthConnection);
+
 	@Mapping(target = "userId", source = "user.id")
 	@Mapping(target = "cabinetId", source = "cabinet.id")
-	@Mapping(target = "oauthMail", source = "oauthMail")
-	MyProfileResponseDto toMyProfileResponseDto(User user, String oauthMail,
+	@Mapping(target = "email", source = "user.email")
+	MyProfileResponseDto toMyProfileResponseDto(User user,
+			UserOauthConnectionDto userOauthConnection,
 			Cabinet cabinet, BanHistory banHistory,
 			AlarmTypeResponseDto alarmTypes, boolean isDeviceTokenExpired, Long coins);
 
