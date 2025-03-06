@@ -97,14 +97,20 @@ public class OauthService {
 		// 기존 연동 유저
 		if (userConnection.isPresent()) {
 			User user = userConnection.get().getUser();
-			FtOauthProfile profile =
-					getProfileByIntraName(applicationTokenManager.getFtAccessToken(),
-							user.getName());
-			String combinedRoles = FtRole.combineRolesToString(profile.getRoles());
-			LocalDateTime blackHoledAt = profile.getBlackHoledAt();
+			try {
+				FtOauthProfile profile =
+						getProfileByIntraName(applicationTokenManager.getFtAccessToken(),
+								user.getName());
+				String combinedRoles = FtRole.combineRolesToString(profile.getRoles());
+				LocalDateTime blackHoledAt = profile.getBlackHoledAt();
 
-			if (!user.isSameBlackHoledAtAndRole(profile.getBlackHoledAt(), combinedRoles)) {
-				userCommandService.updateUserBlackholeAndRole(user, blackHoledAt, combinedRoles);
+				if (!user.isSameBlackHoledAtAndRole(profile.getBlackHoledAt(), combinedRoles)) {
+					userCommandService.updateUserBlackholeAndRole(user, blackHoledAt,
+							combinedRoles);
+				}
+			} catch (Exception e) {
+				log.error("42 api 호출 도중, 에러가 발생했습니다. user = {}, message = {}",
+						user.getName(), e.getMessage());
 			}
 			return new OauthResult(user.getId(),
 					user.getRoles(),
