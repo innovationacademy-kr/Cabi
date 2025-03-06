@@ -3,12 +3,10 @@ buildscript {
         queryDslVersion = "5.0.0"
     }
 }
-
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
@@ -19,13 +17,6 @@ sourceCompatibility = '11'
 
 ext {
     set('springCloudVersion', "2021.0.8")
-    snippetsDir = file('build/generated-snippets')
-    snippetsDir.mkdirs()
-    outputDocs = file('src/main/resources/static/docs')
-}
-
-test {
-    outputs.dir snippetsDir
 }
 
 configurations {
@@ -35,7 +26,6 @@ configurations {
     configureEach {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
-    asciidoctorExt
 }
 
 repositories {
@@ -108,9 +98,6 @@ dependencies {
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     testImplementation 'org.modelmapper:modelmapper:3.1.1'
     testRuntimeOnly 'com.h2database:h2'
-
-    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 dependencyManagement {
@@ -150,39 +137,11 @@ tasks.named('compileJava') {
 
 
 test {
-    outputs.dir snippetsDir
     useJUnitPlatform()
     failFast = true
     systemProperty 'spring.profiles.active', 'test'
 }
 
-asciidoctor {
-    dependsOn test
-    baseDirFollowsSourceDir()
-    inputs.dir snippetsDir
-    configurations 'asciidoctorExt'
-}
-
-tasks.register('copyDocument', Copy) {
-    dependsOn asciidoctor
-    from file("${asciidoctor.outputDir}")
-    into file("${outputDocs}")
-}
-
-build {
-    dependsOn copyDocument
-}
-
 jar {
     enabled = false
-}
-
-bootJar {
-    dependsOn asciidoctor
-    copy {
-        from("${asciidoctor.outputDir}")
-        into 'build/classes/static'
-    }
-
-
 }
