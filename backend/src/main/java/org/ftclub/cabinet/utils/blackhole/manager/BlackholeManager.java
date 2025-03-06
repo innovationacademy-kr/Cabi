@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtProfile;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
-import org.ftclub.cabinet.auth.service.UserOauthService;
+import org.ftclub.cabinet.auth.service.OauthService;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -23,7 +25,7 @@ import org.springframework.web.client.HttpClientErrorException;
 @Log4j2
 public class BlackholeManager {
 
-	private final UserOauthService userOauthService;
+	private final OauthService userOauthService;
 	private final ApplicationTokenManager tokenManager;
 	private final LentFacadeService lentFacadeService;
 	private final UserCommandService userCommandService;
@@ -36,6 +38,7 @@ public class BlackholeManager {
 	private void terminateInvalidUser(UserBlackHoleEvent userBlackHoleEvent, LocalDateTime now) {
 		log.info("{}는 유효하지 않은 사용자입니다.", userBlackHoleEvent);
 		lentFacadeService.endUserLent(userBlackHoleEvent.getUserId(), null);
+		userCommandService.updateRole(userBlackHoleEvent.getUserId(), FtRole.BLACK_HOLE.name());
 		userCommandService.deleteById(userBlackHoleEvent.getUserId(), now);
 	}
 
@@ -45,7 +48,7 @@ public class BlackholeManager {
 	 * @param userName 42 intra name
 	 * @return 유저 프로필 {@link FtProfile}
 	 */
-	public FtProfile getUserRecentIntraProfile(String userName) {
+	public FtOauthProfile getUserRecentIntraProfile(String userName) {
 		try {
 			return userOauthService.getProfileByIntraName(tokenManager.getFtAccessToken(),
 					userName);
@@ -66,8 +69,8 @@ public class BlackholeManager {
 	public void handleBlackHole(UserBlackHoleEvent dto) {
 		LocalDateTime now = LocalDateTime.now();
 		try {
-			FtProfile userRecentIntraProfile = getUserRecentIntraProfile(dto.getName());
-			if (!userRecentIntraProfile.getRole().isInCursus()) {
+			FtOauthProfile userRecentIntraProfile = getUserRecentIntraProfile(dto.getName());
+			if (FtRole.isInActive(userRecentIntraProfile.getRoles())) {
 				terminateInvalidUser(dto, now);
 			}
 			userCommandService.updateUserBlackholeStatus(dto.getUserId(),
@@ -96,7 +99,7 @@ public class BlackholeManager {
 
 
 	public void blackholeUpdate(User user) {
-		FtProfile userRecentIntraProfile = getUserRecentIntraProfile(user.getName());
+		FtOauthProfile userRecentIntraProfile = getUserRecentIntraProfile(user.getName());
 		userCommandService.updateUserBlackholeStatus(user.getId(),
 				userRecentIntraProfile.getBlackHoledAt());
 	}
@@ -106,7 +109,7 @@ public class BlackholeManager {
 	}
 
 	public boolean isBlackholedUser(User user) {
-		FtProfile userRecentIntraProfile = getUserRecentIntraProfile(user.getName());
+		FtOauthProfile userRecentIntraProfile = getUserRecentIntraProfile(user.getName());
 		return isBlackholeRemains(userRecentIntraProfile.getBlackHoledAt());
 	}
 

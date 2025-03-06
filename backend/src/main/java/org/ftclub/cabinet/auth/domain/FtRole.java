@@ -11,15 +11,16 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum FtRole {
-	STAFF("ROLE_STAFF"),
-	CADET("ROLE_CADET"),
-	MEMBER("ROLE_MEMBER"),
-	INACTIVE("ROLE_INACTIVE"),
-	AGU("ROLE_AGU"),
-	USER("ROLE_USER"),
-	PISCINER("ROLE_PISCINER"),
-	TEMP_USER("ROLE_TEMP"),
-	;
+	USER,
+	CADET,
+	MEMBER,
+	STAFF,
+	AGU,
+
+	PISCINER,
+
+	INACTIVE,
+	BLACK_HOLE;
 
 
 	public static final String DELIMITER = ",";
@@ -31,16 +32,6 @@ public enum FtRole {
 	 *
 	 * @return 본 과정 이상의 사용자인지 여부
 	 */
-	private final String roles;
-
-	public static String addRole(FtRole role, String addRole) {
-		String preRoles = role.getRoles();
-		return preRoles + DELIMITER + addRole;
-	}
-
-	public static String addRole(String roles, FtRole role) {
-		return roles + DELIMITER + role.getRoles();
-	}
 
 	/**
 	 * enum name 들을 합쳐 String으로 반환
@@ -52,6 +43,10 @@ public enum FtRole {
 		return roles.stream()
 				.map(FtRole::name)
 				.collect(Collectors.joining(DELIMITER));
+	}
+
+	public static boolean isInActive(List<FtRole> roles) {
+		return roles.contains(BLACK_HOLE) || roles.contains(INACTIVE);
 	}
 
 	public boolean isInCursus() {

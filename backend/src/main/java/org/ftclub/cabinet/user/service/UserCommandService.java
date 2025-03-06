@@ -136,8 +136,7 @@ public class UserCommandService {
 	}
 
 	public void updateCoinAmount(Long userId, Long reward) {
-		User user = userRepository.findById(userId)
-				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+		User user = userRepository.getById(userId);
 		user.addCoin(reward);
 	}
 
@@ -153,4 +152,9 @@ public class UserCommandService {
 		userRepository.updateBulkUserCoin(userIds, amount);
 	}
 
+	public void updateRole(Long userId, String roles) {
+		User user = userRepository.getById(userId);
+		user.changeUserRole(roles);
+		userRepository.save(user);
+	}
 }
