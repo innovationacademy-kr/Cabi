@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
-import org.ftclub.cabinet.config.security.CustomOAuth2UserService;
 import org.ftclub.cabinet.config.security.SecurityConfig;
+import org.ftclub.cabinet.config.security.handler.CustomOAuth2UserService;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
