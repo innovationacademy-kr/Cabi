@@ -150,7 +150,7 @@ public class AuthenticationService {
 			jwtRedisService.addUsedTokens(userId, accessToken, refreshToken);
 		}
 		// 내부 모든 쿠키 삭제
-		cookieManager.deleteAllCookies(request, response);
+		cookieManager.deleteAllCookies(request.getCookies(), response);
 	}
 
 	public void requestAdminLogin(HttpServletRequest req, HttpServletResponse res)

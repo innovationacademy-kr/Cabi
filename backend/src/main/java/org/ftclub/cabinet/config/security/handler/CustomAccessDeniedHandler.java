@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-		cookieManager.deleteAllCookies(request, response);
+		Cookie[] cookies = request.getCookies();
+		cookieManager.deleteAllCookies(cookies, response);
 		log.error("Request Method = {}", request.getMethod());
 		ExceptionStatus exceptionStatus = ExceptionStatus.ACCESS_DENIED;
 		log.error("Request Uri : {}", request.getRequestURI());

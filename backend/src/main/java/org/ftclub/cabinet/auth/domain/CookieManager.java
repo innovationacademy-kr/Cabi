@@ -105,8 +105,7 @@ public class CookieManager {
 		res.addCookie(cookie);
 	}
 
-	public void deleteAllCookies(HttpServletRequest req, HttpServletResponse res) {
-		Cookie[] cookies = req.getCookies();
+	public void deleteAllCookies(Cookie[] cookies, HttpServletResponse res) {
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				Cookie newCookie = new Cookie(cookie.getName(), null);
