@@ -29,7 +29,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 		try {
 			filterChain.doFilter(request, response);
 		} finally {
-			log.info("Response - IP: {}, URI: {}, Status: {}",
+			log.debug("Response - IP: {}, URI: {}, Status: {}",
 					ipAddress, requestURI, response.getStatus());
 		}
 	}

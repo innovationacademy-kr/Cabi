@@ -49,11 +49,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			FilterChain filterChain) throws ServletException, IOException {
-		log.info("JWT Filter: 요청 URL = {}", request.getRequestURI());
 		String token = jwtTokenProvider.extractToken(request);
 		if (token != null) {
 			Claims claims = jwtTokenProvider.parseValidToken(token);
 			Authentication auth = getAuthentication(claims);
+			log.info("JWT Filter: 요청 URL = {}, userId = {}",
+					request.getRequestURI(),
+					claims.get("userId", Long.class));
 			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
 		filterChain.doFilter(request, response);
