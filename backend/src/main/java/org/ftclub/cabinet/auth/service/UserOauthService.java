@@ -128,13 +128,13 @@ public class UserOauthService {
 	private FtProfile convertJsonStringToProfile(JsonNode jsonNode) throws JsonProcessingException {
 		String intraName = jsonNode.get("login").asText();
 		String email = jsonNode.get("email").asText();
+
 		if (intraName == null || email == null) {
 			throw ExceptionStatus.INCORRECT_ARGUMENT.asServiceException();
 		}
 
 		LocalDateTime blackHoledAt = determineBlackHoledAt(jsonNode);
 		FtRole role = determineFtRole(jsonNode, blackHoledAt);
-
 		return FtProfile.builder()
 				.intraName(intraName)
 				.email(email)
@@ -157,6 +157,10 @@ public class UserOauthService {
 		boolean isActive = rootNode.get("active?").asBoolean();
 		JsonNode cursusUsersNode = rootNode.get("cursus_users");
 
+		if (!isActive && blackHoledAt.isAfter(LocalDateTime.now())) {
+			return FtRole.AGU;
+		}
+
 		if (!isActive) {
 			return FtRole.INACTIVE;
 		}
@@ -169,7 +173,9 @@ public class UserOauthService {
 			return FtRole.PISCINER;
 		}
 
-		return (blackHoledAt == null) ? FtRole.MEMBER : FtRole.CADET;
+		return FtRole.USER;
+		// 이후 멤버, 카뎃으로 인가 분류해야할 때 변경
+//		return (blackHoledAt == null) ? FtRole.MEMBER : FtRole.CADET;
 	}
 
 	/**
@@ -185,6 +191,7 @@ public class UserOauthService {
 	 * @return 유저의 blackholedAt
 	 */
 	private LocalDateTime determineBlackHoledAt(JsonNode rootNode) {
+
 		JsonNode cursusNode = rootNode.get("cursus_users");
 		int index = cursusNode.size() > CADET_INDEX ? CADET_INDEX : PISCINE_INDEX;
 

@@ -1,12 +1,11 @@
 package org.ftclub.cabinet.admin.admin.repository;
 
+import java.util.Optional;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.Optional;
 
 public interface AdminRepository extends JpaRepository<Admin, Long> {
 
@@ -36,4 +35,5 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	 */
 	@Query("SELECT au.role FROM Admin au WHERE au.email = :email")
 	Optional<AdminRole> findAdminRoleByEmail(@Param("email") String email);
+
 }

@@ -10,6 +10,7 @@ import org.ftclub.cabinet.alarm.domain.Alarm;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.AnnouncementAlarm;
 import org.ftclub.cabinet.alarm.domain.AvailableSectionAlarm;
+import org.ftclub.cabinet.alarm.domain.EmailVerificationAlarm;
 import org.ftclub.cabinet.alarm.domain.ExtensionExpirationImminentAlarm;
 import org.ftclub.cabinet.alarm.domain.ExtensionIssuanceAlarm;
 import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
@@ -67,9 +68,19 @@ public class EmailAlarmSender {
 			return generateAnnouncementAlarm((AnnouncementAlarm) alarm, context);
 		} else if (alarm instanceof AvailableSectionAlarm) {
 			return generateSectionAlarm((AvailableSectionAlarm) alarm, context);
+		} else if (alarm instanceof EmailVerificationAlarm) {
+			return generateTemporaryVerificationAlarm((EmailVerificationAlarm) alarm, context);
 		} else {
 			throw ExceptionStatus.NOT_FOUND_ALARM.asServiceException();
 		}
+	}
+
+	private MailDto generateTemporaryVerificationAlarm(
+			EmailVerificationAlarm alarm,
+			Context context) {
+		context.setVariable("verificationLink", alarm.getVerificationLink());
+		return new MailDto(alarmProperties.getVerificationCodeSubject(),
+				alarmProperties.getVerificationMailTemplateUrl(), context);
 	}
 
 	@NotNull

@@ -1,3 +1,4 @@
+import { gapi } from "gapi-script";
 import { useNavigate } from "react-router-dom";
 import { useResetRecoilState } from "recoil";
 import {
@@ -6,30 +7,43 @@ import {
   currentSectionNameState,
 } from "@/Cabinet/recoil/atoms";
 import ProfileCard from "@/Cabinet/components/Card/ProfileCard/ProfileCard";
+import { axiosLogout } from "@/Cabinet/api/axios/axios.custom";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const ProfileCardContainer = ({ name }: { name: string | null }) => {
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
   const resetBuilding = useResetRecoilState(currentBuildingNameState);
 
-  const onClickLogoutButton = (): void => {
-    if (import.meta.env.VITE_IS_LOCAL === "true") {
+  const onClickLogoutButton = async (): Promise<void> => {
+    try {
+      const response = await axiosLogout();
+      const { provider } = response.data;
+
+      if (provider === "google") {
+        const googleAuth = gapi.auth2?.getAuthInstance();
+        if (googleAuth) await googleAuth.signOut();
+        navigate("/login");
+      } else if (provider === "ft") {
+        const returnUrl = encodeURIComponent(`/login`);
+        window.location.href = `https://profile.intra.42.fr/logout?return_to=${returnUrl}`;
+      } else {
+        navigate("/login");
+      }
+      resetBuilding();
+      resetCurrentFloor();
+      resetCurrentSection();
       removeCookie("access_token", {
         path: "/",
-        domain: "localhost",
+        domain:
+          import.meta.env.VITE_IS_LOCAL === "true"
+            ? "localhost"
+            : "cabi.42seoul.io",
       });
-    } else {
-      removeCookie("access_token", {
-        path: "/",
-        domain: "cabi.42seoul.io",
-      });
+    } catch (error) {
+      console.error(error);
     }
-    resetBuilding();
-    resetCurrentFloor();
-    resetCurrentSection();
-    navigator("/login");
   };
 
   return (

@@ -1,16 +1,14 @@
 package org.ftclub.cabinet.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.dto.UpdateDeviceTokenRequestDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.log.Logging;
-import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.service.UserFacadeService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,49 +34,45 @@ public class UserController {
 	 * @return {@link MyProfileResponseDto} 현재 로그인한 유저의 프로필
 	 */
 	@GetMapping("/me")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public MyProfileResponseDto getMyProfile(@UserSession UserSessionDto userSessionDto) {
-		return userFacadeService.getProfile(userSessionDto);
+	public MyProfileResponseDto getMyProfile(
+			@AuthenticationPrincipal UserInfoDto userSessionDto) {
+		return userFacadeService.getProfile(userSessionDto.getUserId());
 	}
 
 	/**
 	 * 현재 로그인한 유저의 사용가능한 연장권 정보를 리턴합니다.
 	 *
-	 * @param userSessionDto 현재 로그인한 유저의 세션 정보
+	 * @param userInfoDto 현재 로그인한 유저의 세션 정보
 	 * @return {@link LentExtensionPaginationDto} 현재 로그인한 유저의 활성화중인 연장권 정보
 	 */
 	@GetMapping("/me/lent-extensions/active")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public LentExtensionPaginationDto getMyActiveLentExtension(
-			@UserSession UserSessionDto userSessionDto) {
-		return userFacadeService.getActiveLentExtensions(userSessionDto);
+			@AuthenticationPrincipal UserInfoDto userInfoDto) {
+		return userFacadeService.getActiveLentExtensions(userInfoDto.getUserId());
 	}
 
 	/**
 	 * 현재 로그인한 유저의 연장권을 사용합니다.
 	 *
-	 * @param userSessionDto 현재 로그인한 유저의 세션 정보
+	 * @param userInfoDto 현재 로그인한 유저의 세션 정보
 	 */
 	@PostMapping("/me/lent-extensions")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void useLentExtension(
-			@UserSession UserSessionDto userSessionDto) {
-		userFacadeService.useLentExtension(userSessionDto);
+			@AuthenticationPrincipal UserInfoDto userInfoDto) {
+		userFacadeService.useLentExtension(userInfoDto.getUserId());
 	}
 
 	@PutMapping("/me/alarms")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void updateMyProfile(
-			@UserSession UserSessionDto userSessionDto,
+			@AuthenticationPrincipal UserInfoDto userInfoDto,
 			@RequestBody UpdateAlarmRequestDto updateAlarmRequestDto) {
-		userFacadeService.updateAlarmState(userSessionDto, updateAlarmRequestDto);
+		userFacadeService.updateAlarmState(userInfoDto.getUserId(), updateAlarmRequestDto);
 	}
 
 	@PutMapping("/me/device-token")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void updateDeviceToken(
-			@UserSession UserSessionDto userSessionDto,
+			@AuthenticationPrincipal UserInfoDto userInfoDto,
 			@RequestBody UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
-		userFacadeService.updateDeviceToken(userSessionDto, updateDeviceTokenRequestDto);
+		userFacadeService.updateDeviceToken(userInfoDto.getUserId(), updateDeviceTokenRequestDto);
 	}
 }

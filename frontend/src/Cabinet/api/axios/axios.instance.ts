@@ -7,11 +7,39 @@ axios.defaults.withCredentials = true;
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BE_HOST,
+});
+
+const reissueInstance = axios.create({
+  baseURL: import.meta.env.VITE_BE_HOST,
   withCredentials: true,
 });
 
+const reissueToken = async () => {
+  try {
+    const token = getCookie("access_token");
+
+    const response = await reissueInstance.post(
+      "/v5/jwt/reissue",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error("Token reissue failed:", error);
+    return false;
+  }
+};
+
 instance.interceptors.request.use(async (config) => {
-  const token = getCookie("admin_access_token") ?? getCookie("access_token");
+  const token = getCookie("access_token");
   config.headers.set("Authorization", `Bearer ${token}`);
   return config;
 });
@@ -20,24 +48,29 @@ instance.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
-    // access_token unauthorized
+  async (error) => {
     if (error.response?.status === HttpStatusCode.Unauthorized) {
-      if (import.meta.env.VITE_IS_LOCAL === "true") {
-        removeCookie("admin_access_token", {
-          path: "/",
-          domain: "localhost",
-        });
-        removeCookie("access_token");
+      const isReissued = await reissueToken();
+
+      if (isReissued) {
+        const originalRequest = error.config;
+        const newToken = getCookie("access_token");
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return instance(originalRequest);
       } else {
-        removeCookie("admin_access_token", {
+        const domain =
+          import.meta.env.VITE_IS_LOCAL === "true"
+            ? "localhost"
+            : "cabi.42seoul.io";
+
+        removeCookie("access_token", {
           path: "/",
-          domain: "cabi.42seoul.io",
+          domain: domain,
         });
-        removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
+
+        window.location.href = "login";
+        alert(error.response.data.message);
       }
-      window.location.href = "login";
-      alert(error.response.data.message);
     } else if (error.response?.status === HttpStatusCode.InternalServerError) {
       logAxiosError(error, ErrorType.INTERNAL_SERVER_ERROR, "서버 에러");
     }

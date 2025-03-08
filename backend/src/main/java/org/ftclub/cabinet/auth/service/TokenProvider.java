@@ -36,7 +36,31 @@ public class TokenProvider {
 		claims.put("email", user.getEmail());
 		claims.put("name", user.getName());
 		claims.put("blackholedAt", user.getBlackholedAtString());
-//		claims.put("role", user.getRole());
+		claims.put("role", user.getRoles());
+
+		return Jwts.builder()
+				.setClaims(claims)
+				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
+				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiryDays())))
+				.compact();
+	}
+
+	/**
+	 * security의 Oauth2 로그인 성공 시, 발급되는 JWT
+	 *
+	 * @param user     유저
+	 * @param provider oauth 로그인 위치
+	 * @param now      발급 시각(현재)
+	 * @return
+	 */
+	public String createUserToken(User user, String provider, LocalDateTime now) {
+		Claims claims = Jwts.claims();
+		claims.put("provider", provider);
+		claims.put("userId", user.getId());
+		claims.put("email", user.getEmail());
+		claims.put("name", user.getName());
+		claims.put("blackholedAt", user.getBlackholedAtString());
+		claims.put("roles", user.getRoles());
 
 		return Jwts.builder()
 				.setClaims(claims)
@@ -62,4 +86,6 @@ public class TokenProvider {
 				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiryDays())))
 				.compact();
 	}
+
+
 }

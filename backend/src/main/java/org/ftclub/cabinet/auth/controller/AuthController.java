@@ -1,17 +1,26 @@
 package org.ftclub.cabinet.auth.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
+import org.ftclub.cabinet.auth.service.AuthenticationService;
+import org.ftclub.cabinet.auth.service.OauthService;
+import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.dto.UserOauthMailDto;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/v4/auth")
@@ -20,6 +29,8 @@ import java.util.concurrent.ExecutionException;
 public class AuthController {
 
 	private final AuthFacadeService authFacadeService;
+	private final AuthenticationService authenticationService;
+	private final OauthService oauthService;
 
 	/**
 	 * 사용자 로그인 페이지로 리다이렉트합니다.
@@ -47,13 +58,46 @@ public class AuthController {
 		authFacadeService.handleUserLogin(req, res, code);
 	}
 
+	/*-------------- 리뉴얼 후 컨트롤러 --------------*/
+
+	/**
+	 * 계정 연동 해제
+	 *
+	 * @param userInfoDto
+	 */
+	@DeleteMapping("/link")
+	public void unLinkOauthMail(@AuthenticationPrincipal UserInfoDto userInfoDto) {
+		authenticationService.deleteOauthMail(userInfoDto.getUserId());
+	}
+
+	/**
+	 * AGU 유저의 임시 로그인 메일 발송
+	 */
+	@PostMapping("/AGU")
+	public UserOauthMailDto requestAGULogin(@RequestParam(name = "name") String name)
+			throws JsonProcessingException {
+		return oauthService.requestTemporaryLogin(name);
+	}
+
+	@GetMapping("/AGU")
+	public void loginAguLogin(HttpServletRequest req,
+			HttpServletResponse res,
+			@RequestParam(name = "code") String code,
+			@RequestParam(name = "name") String name) throws IOException {
+		authenticationService.verifyTemporaryCode(req, res, name, code);
+	}
+
 	/**
 	 * 로그아웃시, HTTP Response 의 set-cookie Header 를 지워줍니다. cookie에 담긴 JWT 토큰을 제거합니다.
 	 *
 	 * @param res 요청 시의 서블릿 {@link HttpServletResponse}
 	 */
 	@GetMapping("/logout")
-	public void logout(HttpServletResponse res) {
-		authFacadeService.userLogout(res);
+	public void logout(
+			@AuthenticationPrincipal UserInfoDto userInfoDto,
+			@CookieValue(name = JwtTokenConstants.REFRESH_TOKEN, required = false) String refreshToken,
+			HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		authenticationService.userLogout(request, response, userInfoDto.getUserId(), refreshToken);
 	}
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.alarm.config.AlarmProperties;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
+import org.ftclub.cabinet.alarm.domain.EmailVerificationAlarm;
 import org.ftclub.cabinet.alarm.domain.TransactionalAlarmEvent;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -45,6 +46,11 @@ public class AlarmEventListener {
 
 	private void eventProceed(AlarmEvent alarmEvent) {
 		User receiver = userQueryService.getUser(alarmEvent.getReceiverId());
+
+		if (alarmEvent.getAlarm() instanceof EmailVerificationAlarm) {
+			emailAlarmSender.send(receiver, alarmEvent);
+			return;
+		}
 
 		if (receiver.isSlackAlarm()) {
 			slackAlarmSender.send(receiver, alarmEvent);

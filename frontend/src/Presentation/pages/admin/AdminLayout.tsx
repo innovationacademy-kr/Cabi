@@ -17,7 +17,7 @@ const Layout = (): JSX.Element => {
   const isMainPage: boolean = location.pathname === "/admin/main";
   const { closeAll } = useMenu();
 
-  const token = getCookie("admin_access_token");
+  const token = getCookie("access_token");
 
   const checkPath = () => {
     if (location.pathname === "/admin") return true;

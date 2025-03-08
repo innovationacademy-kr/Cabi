@@ -23,6 +23,7 @@ export interface UserDto {
   alarmTypes: AlarmInfo | null;
   isDeviceTokenExpired: boolean | null;
   coins: number | null; // 보유 코인
+  oauthMail: string | null; // sns 연동된 계정의 메일 주소
 }
 
 export interface UserInfo {

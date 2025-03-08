@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtProfile;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
@@ -33,7 +35,17 @@ public class UserCommandService {
 		}
 //		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
 //				UserRole.USER);
-		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt());
+		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
+				profile.getRole().name());
+		return userRepository.save(user);
+	}
+
+	public User createUserByFtOauthProfile(FtOauthProfile profile) {
+		if (userRepository.existsByNameAndEmail(profile.getIntraName(), profile.getEmail())) {
+			throw ExceptionStatus.USER_ALREADY_EXISTED.asServiceException();
+		}
+		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
+				FtRole.combineRolesToString(profile.getRoles()));
 		return userRepository.save(user);
 	}
 
@@ -43,14 +55,14 @@ public class UserCommandService {
 	 * @param clubName 동아리 이름
 	 * @return 생성된 동아리 유저 객체
 	 */
-	public User createClubUser(String clubName) {
-		if (userRepository.existsByNameAndEmail(clubName, clubName + "@ftclub.org")) {
-			throw ExceptionStatus.EXISTED_CLUB_USER.asServiceException();
-		}
-//		User user = User.of(clubName, clubName + "@ftclub.org", null, UserRole.CLUB);
-		User user = User.of(clubName, clubName + "@ftclub.org", null);
-		return userRepository.save(user);
-	}
+//	public User createClubUser(String clubName) {
+//		if (userRepository.existsByNameAndEmail(clubName, clubName + "@ftclub.org")) {
+//			throw ExceptionStatus.EXISTED_CLUB_USER.asServiceException();
+//		}
+////		User user = User.of(clubName, clubName + "@ftclub.org", null, UserRole.CLUB);
+//		User user = User.of(clubName, clubName + "@ftclub.org", null);
+//		return userRepository.save(user);
+//	}
 
 	/**
 	 * 동아리 유저의 이름을 변경합니다.
@@ -99,7 +111,7 @@ public class UserCommandService {
 	}
 
 	/**
-	 * 유저의 블랙홀을 변경합니다.
+	 * 유저의 블랙홀과 롤을 변경합니다.
 	 *
 	 * @param userId       유저의 ID
 	 * @param blackholedAt 변경할 blackholedAt
@@ -111,13 +123,69 @@ public class UserCommandService {
 		userRepository.save(user);
 	}
 
+	/**
+	 * 유저 balckholedAt, roles 업데이트에 대한 오버로딩
+	 *
+	 * @param userId
+	 * @param blackholedAt
+	 * @param roles
+	 */
+	public void updateUserBlackholeAndRole(Long userId, LocalDateTime blackholedAt,
+			String roles) {
+		User user = userRepository.getById(userId);
+		updateUserBlackholeAndRole(user, blackholedAt, roles);
+	}
+
+	/**
+	 * 유저의 blackholedAt, roles 를 업데이트 합니다.
+	 *
+	 * @param user
+	 * @param blackholedAt
+	 * @param roles
+	 */
+	public void updateUserBlackholeAndRole(User user, LocalDateTime blackholedAt,
+			String roles) {
+		user.changeBlackholedAt(blackholedAt);
+		user.setDeletedAt(null);
+		user.changeUserRole(roles);
+		userRepository.save(user);
+	}
+
+	/**
+	 * 유저의 role을 변경합니다.
+	 *
+	 * @param userId
+	 * @param roles
+	 */
+	public void updateUserRoleStatus(Long userId, String roles) {
+		User user = userRepository.getById(userId);
+		user.changeUserRole(roles);
+		userRepository.save(user);
+	}
+
 	public void updateCoinAmount(Long userId, Long reward) {
-		User user = userRepository.findById(userId)
-				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+		User user = userRepository.getById(userId);
 		user.addCoin(reward);
 	}
 
 	public void addBulkCoin(List<Long> userIds, Long amount) {
 		userRepository.updateBulkUserCoin(userIds, amount);
+	}
+
+	public void updateRole(Long userId, String roles) {
+		User user = userRepository.getById(userId);
+		user.changeUserRole(roles);
+		userRepository.save(user);
+	}
+
+	/**
+	 * 유저를 삭제하고, role을 업데이트 합니다.
+	 *
+	 * @param userId
+	 * @param roles
+	 * @param now
+	 */
+	public void deleteAndUpdateRole(Long userId, String roles, LocalDateTime now) {
+		userRepository.deleteAndUpdateRole(userId, roles, now);
 	}
 }

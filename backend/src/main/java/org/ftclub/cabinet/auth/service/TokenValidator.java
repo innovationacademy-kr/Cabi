@@ -84,7 +84,8 @@ public class TokenValidator {
 	 */
 	public boolean isTokenValid(String token, Key key) {
 		try {
-			Jwts.parserBuilder().setSigningKey(key).build()
+			Jwts.parserBuilder()
+					.setSigningKey(key).build()
 					.parseClaimsJws(token);
 			return true;
 		} catch (MalformedJwtException e) {
@@ -143,4 +144,5 @@ public class TokenValidator {
 	private boolean isUser(String email) {
 		return userQueryService.findUserByEmail(email).isPresent();
 	}
+
 }

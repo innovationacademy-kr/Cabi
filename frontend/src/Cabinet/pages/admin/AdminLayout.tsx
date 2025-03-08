@@ -22,7 +22,7 @@ const Layout = (): JSX.Element => {
   const location = useLocation();
   const selectedTypeOnSearch = useRecoilValue(selectedTypeOnSearchState);
 
-  const token = getCookie("admin_access_token");
+  const token = getCookie("access_token");
 
   const checkPath = () => {
     if (location.pathname === "/admin") return true;

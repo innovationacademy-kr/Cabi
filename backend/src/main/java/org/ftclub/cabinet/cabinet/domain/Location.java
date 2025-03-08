@@ -2,7 +2,6 @@ package org.ftclub.cabinet.cabinet.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -15,7 +14,6 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
  */
 @Embeddable
 @NoArgsConstructor
-@EqualsAndHashCode
 @Getter
 @ToString
 public class Location {

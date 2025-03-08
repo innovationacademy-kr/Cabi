@@ -2,7 +2,6 @@ package org.ftclub.cabinet.admin.search.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.search.service.AdminSearchFacadeService;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
 /**
  * Admin 페이지에서 검색을 할 때 사용하는 컨트롤러입니다.
@@ -34,7 +31,6 @@ public class AdminSearchController {
 	 * @return 사물함의 정보를 반환합니다.
 	 */
 	@GetMapping("/cabinets-simple")
-	@AuthGuard(level = ADMIN_ONLY)
 	public CabinetSimplePaginationDto getCabinetsSimpleInfo(
 			@RequestParam("visibleNum") Integer visibleNum) {
 		return adminSearchFacadeService.getCabinetsSimpleInfo(visibleNum);
@@ -47,7 +43,6 @@ public class AdminSearchController {
 	 * @return 사물함의 정보를 반환합니다.
 	 */
 	@GetMapping("/cabinets")
-	@AuthGuard(level = ADMIN_ONLY)
 	public CabinetInfoPaginationDto getCabinetsInfo(
 			@RequestParam("visibleNum") Integer visibleNum) {
 		return adminSearchFacadeService.getCabinetInfo(visibleNum);
@@ -61,7 +56,6 @@ public class AdminSearchController {
 	 * @return 유저의 프로필을 반환합니다.
 	 */
 	@GetMapping("/users-simple")
-	@AuthGuard(level = ADMIN_ONLY)
 	public UserProfilePaginationDto getUsersProfile(
 			@RequestParam("name") String name, Pageable pageable) {
 		return adminSearchFacadeService.getUsersProfile(name, pageable);
@@ -75,7 +69,6 @@ public class AdminSearchController {
 	 * @return 유저가 빌린 사물함의 정보를 반환합니다.
 	 */
 	@GetMapping("/users")
-	@AuthGuard(level = ADMIN_ONLY)
 	public UserCabinetPaginationDto getCabinetsLentInfo(
 			@RequestParam("name") String name, Pageable pageable) {
 		return adminSearchFacadeService.getUserLentCabinetInfo(name, pageable);

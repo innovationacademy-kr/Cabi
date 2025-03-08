@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.lent.service.AdminLentFacadeService;
 import org.ftclub.cabinet.admin.user.service.AdminLentExtensionFacadeService;
 import org.ftclub.cabinet.admin.user.service.AdminUserFacadeService;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +30,6 @@ public class AdminUserController {
 	 * @param userId 유저 고유 아이디
 	 */
 	@DeleteMapping("/{userId}/ban-history")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void deleteBanHistoryByUserId(@PathVariable("userId") Long userId) {
 		adminUserFacadeService.deleteRecentBanHistory(userId, LocalDateTime.now());
 	}
@@ -45,7 +42,6 @@ public class AdminUserController {
 	 * @return {@link LentHistoryPaginationDto} 유저의 대여 기록
 	 */
 	@GetMapping("/{userId}/lent-histories")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public LentHistoryPaginationDto getLentHistoriesByUserId(
 			@PathVariable("userId") Long userId, Pageable pageable) {
 		return adminLentFacadeService.getUserLentHistories(userId, pageable);
