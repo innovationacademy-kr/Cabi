@@ -1,8 +1,5 @@
 import { getInitialDisplayStyle } from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
-import {
-  DisplayStyleToggleType,
-  DisplayStyleType,
-} from "@/Cabinet/types/enum/displayStyle.type.enum";
+import { DisplayStyleType } from "@/Cabinet/types/enum/displayStyle.type.enum";
 import {
   getDisplayStyleFromLocalStorage,
   isDeviceDarkMode,
