@@ -37,14 +37,14 @@ public class UserOauthConnection {
 	@Column(name = "CREATED_AT")
 	private LocalDateTime createdAt;
 	@Email
-	@Column(name = "MAIL")
-	private String mail;
+	@Column(name = "EMAIL")
+	private String email;
 
-	protected UserOauthConnection(User user, String providerType, String providerId, String mail) {
+	protected UserOauthConnection(User user, String providerType, String providerId, String email) {
 		this.user = user;
 		this.providerType = providerType;
 		this.providerId = providerId;
-		this.mail = mail;
+		this.email = email;
 		this.createdAt = LocalDateTime.now();
 	}
 
@@ -64,7 +64,7 @@ public class UserOauthConnection {
 
 	private boolean isValid() {
 		return this.user != null
-				&& this.mail != null && this.createdAt != null
+				&& this.email != null && this.createdAt != null
 				&& this.providerId != null && this.providerType != null;
 	}
 

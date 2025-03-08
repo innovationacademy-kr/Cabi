@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -101,12 +101,11 @@ public class OauthService {
 				FtOauthProfile profile =
 						getProfileByIntraName(applicationTokenManager.getFtAccessToken(),
 								user.getName());
-				String combinedRoles = FtRole.combineRolesToString(profile.getRoles());
+				String roles = FtRole.combineRolesToString(profile.getRoles());
 				LocalDateTime blackHoledAt = profile.getBlackHoledAt();
 
-				if (!user.isSameBlackHoledAtAndRole(blackHoledAt, combinedRoles)) {
-					userCommandService.updateUserBlackholeAndRole(user, blackHoledAt,
-							combinedRoles);
+				if (!user.isSameBlackHoledAtAndRole(blackHoledAt, roles)) {
+					userCommandService.updateUserBlackholeAndRole(user, blackHoledAt, roles);
 				}
 			} catch (Exception e) {
 				log.error("42 api 호출 도중, 에러가 발생했습니다. user = {}, message = {}",
@@ -146,15 +145,14 @@ public class OauthService {
 	@Transactional
 	public OauthResult handleFtLogin(JsonNode rootNode) {
 		FtOauthProfile profile = convertJsonNodeToProfile(rootNode);
-		String combinedRoles = FtRole.combineRolesToString(profile.getRoles());
 		LocalDateTime blackHoledAt = profile.getBlackHoledAt();
+		String roles = FtRole.combineRolesToString(profile.getRoles());
 
 		User user = userQueryService.findUser(profile.getIntraName())
 				.orElseGet(() -> userCommandService.createUserByFtOauthProfile(profile));
-
 		// role, blackholedAt 검수
-		if (!user.isSameBlackHoledAtAndRole(profile.getBlackHoledAt(), combinedRoles)) {
-			userCommandService.updateUserBlackholeAndRole(user, blackHoledAt, combinedRoles);
+		if (!user.isSameBlackHoledAtAndRole(blackHoledAt, roles)) {
+			userCommandService.updateUserBlackholeAndRole(user, blackHoledAt, roles);
 		}
 		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getMainHomeUrl());
 	}
@@ -173,7 +171,7 @@ public class OauthService {
 		}
 
 		LocalDateTime blackHoledAt = determineBlackHoledAt(jsonNode);
-		List<FtRole> roles = determineFtRoles(jsonNode, blackHoledAt);
+		Set<FtRole> roles = determineFtRoles(jsonNode, blackHoledAt);
 		return FtOauthProfile.builder()
 				.intraName(intraName)
 				.email(email)
@@ -182,11 +180,11 @@ public class OauthService {
 				.build();
 	}
 
-	public List<FtRole> determineFtRoles(JsonNode rootNode, LocalDateTime blackHoledAt) {
+	public Set<FtRole> determineFtRoles(JsonNode rootNode, LocalDateTime blackHoledAt) {
 		boolean isUserStaff = rootNode.get("staff?").asBoolean();
 		boolean isActive = rootNode.get("active?").asBoolean();
 		JsonNode cursusUsersNode = rootNode.get("cursus_users");
-		List<FtRole> roles = new ArrayList<>();
+		Set<FtRole> roles = new HashSet<>();
 
 		// inactive에 대해서는 단일 권한을 반환. inactive / blackhole
 		if (!isActive) {
@@ -209,7 +207,7 @@ public class OauthService {
 		return roles;
 	}
 
-	private List<FtRole> handleInactiveUser(LocalDateTime blackHoledAt, List<FtRole> roles) {
+	private Set<FtRole> handleInactiveUser(LocalDateTime blackHoledAt, Set<FtRole> roles) {
 		if (blackHoledAt.isAfter(LocalDateTime.now())) {
 			roles.add(FtRole.AGU);
 		} else {
@@ -252,7 +250,7 @@ public class OauthService {
 
 	public boolean isAguUser(String name, String ftAccessToken) throws JsonProcessingException {
 		FtOauthProfile profile = getProfileByIntraName(ftAccessToken, name);
-		List<FtRole> roles = profile.getRoles();
+		Set<FtRole> roles = profile.getRoles();
 		return roles.contains(FtRole.AGU);
 	}
 
@@ -268,7 +266,7 @@ public class OauthService {
 	public UserOauthMailDto requestTemporaryLogin(String name) throws JsonProcessingException {
 		User user = userQueryService.getUserByName(name);
 		// agu 상태인지 검증
-		if (!user.getRoles().contains("AGU")
+		if (!user.getRoles().contains(FtRole.AGU.name())
 				&& !isAguUser(name, applicationTokenManager.getFtAccessToken())) {
 			throw ExceptionStatus.ACCESS_DENIED.asServiceException();
 		}

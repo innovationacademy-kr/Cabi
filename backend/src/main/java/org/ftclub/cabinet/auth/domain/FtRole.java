@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.auth.domain;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -39,13 +39,13 @@ public enum FtRole {
 	 * @param roles
 	 * @return
 	 */
-	public static String combineRolesToString(List<FtRole> roles) {
+	public static String combineRolesToString(Set<FtRole> roles) {
 		return roles.stream()
 				.map(FtRole::name)
 				.collect(Collectors.joining(DELIMITER));
 	}
 
-	public static boolean isActiveUser(List<FtRole> roles) {
+	public static boolean isActiveUser(Set<FtRole> roles) {
 		return roles.contains(USER) || roles.contains(AGU) || roles.contains(STAFF);
 	}
 

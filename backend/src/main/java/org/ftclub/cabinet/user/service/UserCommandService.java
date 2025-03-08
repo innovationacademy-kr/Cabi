@@ -130,7 +130,8 @@ public class UserCommandService {
 	 * @param blackholedAt
 	 * @param roles
 	 */
-	public void updateUserBlackholeAndRole(Long userId, LocalDateTime blackholedAt, String roles) {
+	public void updateUserBlackholeAndRole(Long userId, LocalDateTime blackholedAt,
+			String roles) {
 		User user = userRepository.getById(userId);
 		updateUserBlackholeAndRole(user, blackholedAt, roles);
 	}
@@ -142,7 +143,8 @@ public class UserCommandService {
 	 * @param blackholedAt
 	 * @param roles
 	 */
-	public void updateUserBlackholeAndRole(User user, LocalDateTime blackholedAt, String roles) {
+	public void updateUserBlackholeAndRole(User user, LocalDateTime blackholedAt,
+			String roles) {
 		user.changeBlackholedAt(blackholedAt);
 		user.setDeletedAt(null);
 		user.changeUserRole(roles);

@@ -51,14 +51,15 @@ public class User {
 	private LocalDateTime blackholedAt = null;
 	@Column(name = "DELETED_AT", length = 32)
 	private LocalDateTime deletedAt = null;
-	@Column(name = "ROLES", nullable = false)
-	private String roles;
 	@Column(name = "SLACK_ALARM", columnDefinition = "boolean default true")
 	private boolean slackAlarm;
 	@Column(name = "EMAIL_ALARM", columnDefinition = "boolean default true")
 	private boolean emailAlarm;
 	@Column(name = "PUSH_ALARM", columnDefinition = "boolean default false")
 	private boolean pushAlarm;
+
+	@Column(name = "ROLES")
+	private String roles;
 
 	@NotNull
 	@Column(name = "COIN")
@@ -73,7 +74,8 @@ public class User {
 		setDefaultAlarmStatus();
 	}
 
-	public static User of(String name, String email, LocalDateTime blackholedAt, String roles) {
+	public static User of(String name, String email, LocalDateTime blackholedAt,
+			String roles) {
 		User user = new User(name, email, blackholedAt, roles);
 		ExceptionUtil.throwIfFalse(user.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));

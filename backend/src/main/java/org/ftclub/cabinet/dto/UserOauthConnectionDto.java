@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class UserOauthConnectionDto {
 
-	private final String mail;
+	private final String email;
 	private final String providerType;
 }
