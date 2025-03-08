@@ -66,7 +66,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 			authenticationService.processAuthentication(request, response, oauthResult, provider);
 			String redirectUrl = oauthResult.getRedirectionUrl();
 
-			log.info("redirectUrl = {}", redirectUrl);
 			if (oauthResult.getRoles().contains("AGU")) {
 				redirectUrl = authPolicyService.getAGUUrl();
 			}
@@ -119,6 +118,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		}
 		if (e instanceof JwtException) {
 			return ExceptionStatus.JWT_EXCEPTION;
+		}
+		if (e instanceof NullPointerException) {
+			return ExceptionStatus.JSON_PROCESSING_EXCEPTION;
 		}
 		if (e instanceof ServiceException) {
 			return ((ServiceException) e).getStatus();

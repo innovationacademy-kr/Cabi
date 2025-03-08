@@ -38,8 +38,8 @@ public class BlackholeManager {
 	private void terminateInvalidUser(UserBlackHoleEvent userBlackHoleEvent, LocalDateTime now) {
 		log.info("{}는 유효하지 않은 사용자입니다.", userBlackHoleEvent);
 		lentFacadeService.endUserLent(userBlackHoleEvent.getUserId(), null);
-		userCommandService.updateRole(userBlackHoleEvent.getUserId(), FtRole.BLACK_HOLE.name());
-		userCommandService.deleteById(userBlackHoleEvent.getUserId(), now);
+		userCommandService.deleteAndUpdateRole(
+				userBlackHoleEvent.getUserId(), FtRole.BLACK_HOLE.name(), now);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class BlackholeManager {
 		LocalDateTime now = LocalDateTime.now();
 		try {
 			FtOauthProfile userRecentIntraProfile = getUserRecentIntraProfile(dto.getName());
-			if (FtRole.isInActive(userRecentIntraProfile.getRoles())) {
+			if (!FtRole.isActiveUser(userRecentIntraProfile.getRoles())) {
 				terminateInvalidUser(dto, now);
 			}
 			userCommandService.updateUserBlackholeStatus(dto.getUserId(),

@@ -45,8 +45,8 @@ public enum FtRole {
 				.collect(Collectors.joining(DELIMITER));
 	}
 
-	public static boolean isInActive(List<FtRole> roles) {
-		return roles.contains(BLACK_HOLE) || roles.contains(INACTIVE);
+	public static boolean isActiveUser(List<FtRole> roles) {
+		return roles.contains(USER) || roles.contains(AGU) || roles.contains(STAFF);
 	}
 
 	public boolean isInCursus() {

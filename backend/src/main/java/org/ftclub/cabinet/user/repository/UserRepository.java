@@ -102,7 +102,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @return {@link User} 리스트
 	 * @Param("endDate") LocalDateTime endDate);
 	 */
-	@Query("SELECT u FROM User u WHERE u.blackholedAt > :blackholedAt AND u.deletedAt IS NULL")
+	@Query("SELECT u "
+			+ "FROM User u "
+			+ "WHERE u.blackholedAt > :blackholedAt "
+			+ "AND u.deletedAt IS NULL")
 	List<User> findByBlackholedAtAfter(@Param("blackholedAt") LocalDateTime blackholedAt);
 
 	/**
@@ -148,4 +151,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "WHERE u.id IN :userIds")
 	void updateBulkUserCoin(@Param("userIds") List<Long> userIds, @Param("amount") Long amount);
 
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("UPDATE User u "
+			+ "SET u.roles = :roles, "
+			+ "u.deletedAt = :deletedAt "
+			+ "WHERE u.id = :userId")
+	void deleteAndUpdateRole(@Param("userId") Long userId, @Param("roles") String roles,
+			@Param("deletedAt") LocalDateTime deletedAt);
 }

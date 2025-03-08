@@ -157,4 +157,15 @@ public class UserCommandService {
 		user.changeUserRole(roles);
 		userRepository.save(user);
 	}
+
+	/**
+	 * 유저를 삭제하고, role을 업데이트 합니다.
+	 *
+	 * @param userId
+	 * @param roles
+	 * @param now
+	 */
+	public void deleteAndUpdateRole(Long userId, String roles, LocalDateTime now) {
+		userRepository.deleteAndUpdateRole(userId, roles, now);
+	}
 }

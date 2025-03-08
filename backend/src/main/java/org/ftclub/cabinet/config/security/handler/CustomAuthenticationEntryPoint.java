@@ -25,7 +25,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 
-		ExceptionStatus exceptionStatus = ExceptionStatus.AUTHENTICATION_FAILED;
+		ExceptionStatus exceptionStatus = ExceptionStatus.UNAUTHORIZED;
+		log.error("OAuth2 인증 실패: {}", authException.getMessage());
 		log.error("Request Uri : {}", request.getRequestURI());
 
 		Object exceptionStatusAttr = request.getAttribute("exceptionStatus");
