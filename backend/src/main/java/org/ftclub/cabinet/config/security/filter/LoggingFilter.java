@@ -26,7 +26,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 		String requestURI = request.getRequestURI();
 		String ipAddress = getClientIpAddr(request);
 
-		log.debug("IP: {}, action: {}, status: {}", ipAddress, requestURI, response.getStatus());
+		log.info("IP: {}, action: {}, status: {}", ipAddress, requestURI, response.getStatus());
 
 		filterChain.doFilter(request, response);
 	}
