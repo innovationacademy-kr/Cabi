@@ -111,7 +111,7 @@ public class UserCommandService {
 	}
 
 	/**
-	 * 유저의 블랙홀을 변경합니다.
+	 * 유저의 블랙홀과 롤을 변경합니다.
 	 *
 	 * @param userId       유저의 ID
 	 * @param blackholedAt 변경할 blackholedAt
@@ -120,6 +120,32 @@ public class UserCommandService {
 		User user = userRepository.getById(userId);
 		user.changeBlackholedAt(blackholedAt);
 		user.setDeletedAt(null);
+		userRepository.save(user);
+	}
+
+	/**
+	 * 유저 balckholedAt, roles 업데이트에 대한 오버로딩
+	 *
+	 * @param userId
+	 * @param blackholedAt
+	 * @param roles
+	 */
+	public void updateUserBlackholeAndRole(Long userId, LocalDateTime blackholedAt, String roles) {
+		User user = userRepository.getById(userId);
+		updateUserBlackholeAndRole(user, blackholedAt, roles);
+	}
+
+	/**
+	 * 유저의 blackholedAt, roles 를 업데이트 합니다.
+	 *
+	 * @param user
+	 * @param blackholedAt
+	 * @param roles
+	 */
+	public void updateUserBlackholeAndRole(User user, LocalDateTime blackholedAt, String roles) {
+		user.changeBlackholedAt(blackholedAt);
+		user.setDeletedAt(null);
+		user.changeUserRole(roles);
 		userRepository.save(user);
 	}
 
@@ -138,14 +164,6 @@ public class UserCommandService {
 	public void updateCoinAmount(Long userId, Long reward) {
 		User user = userRepository.getById(userId);
 		user.addCoin(reward);
-	}
-
-	public void updateUserBlackholeAndRole(User user, LocalDateTime blackholedAt,
-			String newRoles) {
-		user.changeBlackholedAt(blackholedAt);
-		user.setDeletedAt(null);
-		user.changeUserRole(newRoles);
-		userRepository.save(user);
 	}
 
 	public void addBulkCoin(List<Long> userIds, Long amount) {

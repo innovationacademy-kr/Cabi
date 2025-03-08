@@ -166,8 +166,8 @@ public class User {
 	}
 
 	public void changeUserRole(String roles) {
-		this.roles = roles;
 		log.info("Called changeUserRole - from {} to {}", this.roles, roles);
+		this.roles = roles;
 	}
 
 	public boolean isSameBlackHoledAtAndRole(LocalDateTime blackHoledAt, String otherRoles) {

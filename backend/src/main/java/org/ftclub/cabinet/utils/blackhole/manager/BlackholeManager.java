@@ -73,8 +73,9 @@ public class BlackholeManager {
 			if (!FtRole.isActiveUser(userRecentIntraProfile.getRoles())) {
 				terminateInvalidUser(dto, now);
 			}
-			userCommandService.updateUserBlackholeStatus(dto.getUserId(),
-					userRecentIntraProfile.getBlackHoledAt());
+			userCommandService.updateUserBlackholeAndRole(dto.getUserId(),
+					userRecentIntraProfile.getBlackHoledAt(),
+					FtRole.combineRolesToString(userRecentIntraProfile.getRoles()));
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
 			if (status.equals(HttpStatus.UNAUTHORIZED) || status.equals(HttpStatus.FORBIDDEN)) {

@@ -104,7 +104,7 @@ public class OauthService {
 				String combinedRoles = FtRole.combineRolesToString(profile.getRoles());
 				LocalDateTime blackHoledAt = profile.getBlackHoledAt();
 
-				if (!user.isSameBlackHoledAtAndRole(profile.getBlackHoledAt(), combinedRoles)) {
+				if (!user.isSameBlackHoledAtAndRole(blackHoledAt, combinedRoles)) {
 					userCommandService.updateUserBlackholeAndRole(user, blackHoledAt,
 							combinedRoles);
 				}
@@ -154,8 +154,7 @@ public class OauthService {
 
 		// role, blackholedAt 검수
 		if (!user.isSameBlackHoledAtAndRole(profile.getBlackHoledAt(), combinedRoles)) {
-			userCommandService.updateUserBlackholeAndRole(user, blackHoledAt,
-					combinedRoles);
+			userCommandService.updateUserBlackholeAndRole(user, blackHoledAt, combinedRoles);
 		}
 		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getMainHomeUrl());
 	}
