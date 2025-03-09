@@ -3,8 +3,6 @@ import ErrorType from "@/Cabinet/types/enum/error.type.enum";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 
-axios.defaults.withCredentials = true;
-
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BE_HOST,
 });
