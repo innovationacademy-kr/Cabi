@@ -17,13 +17,18 @@ jobs:
           mkdir -p ~/.ssh
           echo '${{ secrets.SSH_CONFIG }}' | base64 -d > ~/.ssh/id_rsa
           chmod 400 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
       - name: 체크아웃
         uses: actions/checkout@v3
         with:
-          submodules: true # submodule -> submodules
+          submodules: false
+
       - name: 서브모듈 업데이트
         run: |
-          git submodule update --init config
+          git config --global url."git@github.com:".insteadOf "https://github.com/"
+          git submodule update --init --recursive config
+      #          git submodule update --init config
 
       - name: Node.js 16.x Version
         uses: actions/setup-node@v3 # v1 -> v3
