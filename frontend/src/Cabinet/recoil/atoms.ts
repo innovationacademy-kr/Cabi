@@ -21,6 +21,7 @@ import { UserDto, UserInfo } from "@/Cabinet/types/dto/user.dto";
 import CabinetDetailAreaType from "@/Cabinet/types/enum/cabinetDetailArea.type.enum";
 import { DisplayStyleToggleType } from "@/Cabinet/types/enum/displayStyle.type.enum";
 
+
 const { persistAtom } = recoilPersist();
 
 export const userState = atom<UserDto>({
@@ -34,7 +35,7 @@ export const userState = atom<UserDto>({
     alarmTypes: null,
     isDeviceTokenExpired: null,
     coins: null,
-    oauthMail: null,
+    userOauthConnection: null,
   },
 });
 

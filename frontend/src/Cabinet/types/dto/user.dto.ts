@@ -1,6 +1,7 @@
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import { LentExtensionDto } from "@/Cabinet/types/dto/lent.dto";
+import { UserOauthConnection } from "@/Presentation/types/common/login";
 
 /**
  * @description 유저 정보
@@ -23,7 +24,7 @@ export interface UserDto {
   alarmTypes: AlarmInfo | null;
   isDeviceTokenExpired: boolean | null;
   coins: number | null; // 보유 코인
-  oauthMail: string | null; // sns 연동된 계정의 메일 주소
+  userOauthConnection: UserOauthConnection | null;
 }
 
 export interface UserInfo {

@@ -9,3 +9,8 @@ export interface SocialLoginConfig {
     icon: React.ReactNode;
   };
 }
+
+export interface UserOauthConnection {
+  email: string;
+  providerType: LoginProvider;
+}
