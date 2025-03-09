@@ -57,22 +57,25 @@ instance.interceptors.response.use(
         const newToken = getCookie("access_token");
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return instance(originalRequest);
-      } else {
-        const domain =
-          import.meta.env.VITE_IS_LOCAL === "true"
-            ? "localhost"
-            : "cabi.42seoul.io";
-
-        removeCookie("access_token", {
-          path: "/",
-          domain: domain,
-        });
-
-        window.location.href = "login";
-        alert(error.response.data.message);
       }
+      const domain =
+        import.meta.env.VITE_IS_LOCAL === "true"
+          ? "localhost"
+          : "cabi.42seoul.io";
+
+      removeCookie("access_token", {
+        path: "/",
+        domain,
+      });
+
+      window.location.href = "login";
+      alert(error.response.data.message);
     } else if (error.response?.status === HttpStatusCode.InternalServerError) {
       logAxiosError(error, ErrorType.INTERNAL_SERVER_ERROR, "서버 에러");
+    } else if (error.response?.status === HttpStatusCode.Forbidden) {
+      window.location.href = "login";
+      alert(error.response.data.message);
+      logAxiosError(error, ErrorType.FORBIDDEN, "접근 권한 없음");
     }
     return Promise.reject(error);
   }
