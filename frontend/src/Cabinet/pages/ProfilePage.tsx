@@ -81,8 +81,11 @@ const ProfilePage = () => {
           <AlarmCardContainer alarm={myInfo.alarmTypes} />
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
-          {myInfo.oauthMail ? (
-            <div>{myInfo.oauthMail}</div>
+          {myInfo.userOauthConnection ? (
+            <>
+              <div>{myInfo.userOauthConnection.email}</div>
+              <div>{myInfo.userOauthConnection.providerType}</div>
+            </>
           ) : (
             <button
               onClick={() => {
