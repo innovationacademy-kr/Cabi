@@ -45,16 +45,13 @@ public class SecurityConfig {
 				)
 				// api별 접근 권한을 부여합니다
 				.authorizeHttpRequests(auth -> auth
-						.mvcMatchers("/", "/ping", "/actuator/**", "/v4/auth/**", "/login/**",
-								"/v5/jwt/reissue", "/v4/admin/auth/login")
+						.mvcMatchers(SecurityPathPatterns.PUBLIC_ENDPOINTS)
 						.permitAll()
-						.mvcMatchers("/slack/**").hasRole("ADMIN")
-						.mvcMatchers("/v4/admin/**").hasRole("ADMIN")
-						.mvcMatchers("/v5/admin/**").hasRole("ADMIN")
-						.mvcMatchers("/v4/cabinets/**").hasAnyRole("USER", "ADMIN")
-						.mvcMatchers("/v4/lent/me").hasAnyRole("USER", "AGU")
-						.antMatchers("/v4/lent/cabinets/share/cancel/*").hasAnyRole("USER", "ADMIN")
-						.mvcMatchers("/v4/items").hasAnyRole("USER", "ADMIN")
+						.mvcMatchers(SecurityPathPatterns.ADMIN_ENDPOINTS).hasRole("ADMIN")
+						.mvcMatchers(SecurityPathPatterns.USER_ADMIN_ENDPOINTS)
+						.hasAnyRole("USER", "ADMIN")
+						.mvcMatchers(SecurityPathPatterns.USER_AGU_ENDPOINTS)
+						.hasAnyRole("USER", "AGU")
 						.anyRequest().hasRole("USER")
 				)
 				.oauth2Login(oauth -> oauth
