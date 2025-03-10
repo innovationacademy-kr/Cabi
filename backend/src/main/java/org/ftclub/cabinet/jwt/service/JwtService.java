@@ -7,12 +7,14 @@ import io.jsonwebtoken.Jwts;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.user.domain.User;
@@ -20,6 +22,7 @@ import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtService {
@@ -31,6 +34,12 @@ public class JwtService {
 	private final UserQueryService userQueryService;
 
 
+	/**
+	 * 토큰 파싱 후 정보를 담은 객체 반환
+	 *
+	 * @param token
+	 * @return
+	 */
 	public UserInfoDto validateTokenAndGetUserInfo(String token) {
 		try {
 			Claims claims = tokenProvider.parseToken(token);
@@ -39,9 +48,18 @@ public class JwtService {
 			throw ExceptionStatus.EXPIRED_JWT_TOKEN.asServiceException();
 		} catch (JwtException e) {
 			throw ExceptionStatus.JWT_EXCEPTION.asServiceException();
+		} catch (DomainException e) {
+			log.error("Claims has null value : {}", e.getMessage());
+			throw e;
 		}
 	}
 
+	/**
+	 * AGU 토큰 발급
+	 *
+	 * @param userId
+	 * @return
+	 */
 	public String createAguToken(Long userId) {
 		Claims claims = Jwts.claims();
 
@@ -52,6 +70,14 @@ public class JwtService {
 		return tokenProvider.createAguToken(claims);
 	}
 
+	/**
+	 * access, refresh 토큰을 생성해 객체로 반환
+	 *
+	 * @param userId
+	 * @param roles
+	 * @param provider
+	 * @return
+	 */
 	public TokenDto createTokens(Long userId, String roles, String provider) {
 		Claims claims = Jwts.claims();
 
@@ -100,6 +126,17 @@ public class JwtService {
 		}
 	}
 
+	/**
+	 * admin 토큰을 재발급합니다
+	 * <p>
+	 * 사용된 토큰인지 검증 후 새로운 토큰 발급, 이전 토큰 blackList에 추가
+	 *
+	 * @param req
+	 * @param res
+	 * @param currentTokens reissue 이전 입력받은 토큰
+	 * @param userInfoDto   refreshToken parse를 통해 생성한 유저 정보
+	 * @return {@link TokenDto} 새로 생성한 토큰 객체
+	 */
 	private TokenDto reissueAdminToken(HttpServletRequest req, HttpServletResponse res,
 			TokenDto currentTokens, UserInfoDto userInfoDto) {
 		Admin admin = adminQueryService.getById(userInfoDto.getUserId());
@@ -118,6 +155,17 @@ public class JwtService {
 		return tokens;
 	}
 
+	/**
+	 * user 토큰을 재발급합니다
+	 * <p>
+	 * 사용된 토큰인지 검증 후 새로운 토큰 발급, 이전 토큰 blackList에 추가
+	 *
+	 * @param req
+	 * @param res
+	 * @param currentTokens reissue 이전 입력받은 토큰
+	 * @param userInfoDto   refreshToken parse를 통해 생성한 유저 정보
+	 * @return {@link TokenDto} 새로 생성한 토큰 객체
+	 */
 	private TokenDto reissueUserToken(HttpServletRequest req, HttpServletResponse res,
 			TokenDto currentTokens, UserInfoDto userInfoDto) {
 		User user = userQueryService.getUser(userInfoDto.getUserId());

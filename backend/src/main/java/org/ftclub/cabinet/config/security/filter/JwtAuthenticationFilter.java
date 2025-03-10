@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.jwt.service.JwtService;
-import org.ftclub.cabinet.jwt.service.JwtTokenProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,7 +26,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private final JwtTokenProvider jwtTokenProvider;
 	private final JwtService jwtService;
 
 	@Override
@@ -49,11 +47,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			FilterChain filterChain) throws ServletException, IOException {
-		String token = jwtTokenProvider.extractToken(request);
+		String token = jwtService.extractToken(request);
 		if (token != null) {
 			UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(token);
 			Authentication auth = getAuthentication(userInfoDto);
-			
+
 			log.info("JWT Filter: 요청 URL = {}, userId = {}",
 					request.getRequestURI(),
 					userInfoDto.getUserId()
@@ -63,7 +61,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 	}
 
-	// userId, role
 	private Authentication getAuthentication(UserInfoDto dto) {
 		String roles = dto.getRoles();
 
