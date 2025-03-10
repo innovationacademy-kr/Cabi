@@ -12,12 +12,14 @@ import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCar
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
 import PointColorCardContainer from "@/Cabinet/components/Card/PointColorCard/PointColorCard.container";
 import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileCard.container";
+import SnsConnectionCardContainer from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCard.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import {
   axiosMyInfo,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
 import instance from "../api/axios/axios.instance";
+
 
 const axiosLinkGoogleAccount = async (oauthMail: string) => {
   try {
@@ -63,6 +65,7 @@ const ProfilePage = () => {
     const oauthMail = url.searchParams.get("oauthMail");
     if (oauthMail) {
       console.log(oauthMail);
+      // link google account
       axiosLinkGoogleAccount(oauthMail);
     }
   }, []);
@@ -78,25 +81,12 @@ const ProfilePage = () => {
             name={myInfo.name}
             unbannedAt={myInfo.unbannedAt}
           />
-          <AlarmCardContainer alarm={myInfo.alarmTypes} />
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
-          {myInfo.userOauthConnection ? (
-            <>
-              <div>{myInfo.userOauthConnection.email}</div>
-              <div>{myInfo.userOauthConnection.providerType}</div>
-            </>
-          ) : (
-            <button
-              onClick={() => {
-                window.location.replace(
-                  `${import.meta.env.VITE_BE_HOST}/oauth2/authorization/google`
-                );
-              }}
-            >
-              구글 계정 연동
-            </button>
-          )}
+          <AlarmCardContainer alarm={myInfo.alarmTypes} />
+          <SnsConnectionCardContainer
+            userOauthConnection={myInfo.userOauthConnection}
+          />
         </CardGridWrapper>
       )}
     </>
@@ -111,20 +101,22 @@ const CardGridWrapper = styled.div`
   width: 100%;
   grid-gap: 20px;
   grid-template-columns: 350px 350px;
-  grid-template-rows: 163px 183px 230px;
+  grid-template-rows: 163px 183px 230px 230px;
   grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "displayStyle lentInfo" // h: 183px
-    "pointColor alarm"; // h: 230px h: 230px
+    "pointColor alarm" // h: 230px h: 230px
+    "snsConnection snsConnection"; // h: 230px
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
-    grid-template-rows: 163px 366px 183px 230px 230px;
+    grid-template-rows: 163px 366px 183px 230px 230px 230px;
     grid-template-areas:
       "profile"
       "lentInfo"
       "displayStyle"
       "pointColor"
-      "alarm";
+      "alarm"
+      "snsConnection";
   }
 `;
 
