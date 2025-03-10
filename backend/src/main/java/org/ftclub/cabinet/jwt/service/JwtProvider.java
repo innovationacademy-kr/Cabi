@@ -10,7 +10,6 @@ import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.TokenDto;
-import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
 import org.springframework.stereotype.Service;
 
@@ -48,36 +47,30 @@ public class JwtProvider {
 	}
 
 
-	public TokenDto createAccessAndRefreshToken(Long userId, String roles, String provider) {
-		String accessToken = createToken(userId, roles, provider,
-				tokenProperties.getAccessExpiryMillis());
-		String refreshToken = createToken(userId, roles, provider,
-				tokenProperties.getRefreshExpiryMillis());
+	public TokenDto createAccessAndRefreshToken(Claims claims) {
+		String accessToken = createToken(claims, tokenProperties.getAccessExpiryMillis());
+		String refreshToken = createToken(claims, tokenProperties.getRefreshExpiryMillis());
 
 		return new TokenDto(accessToken, refreshToken);
 	}
 
-	public String createAguToken(Long userId) {
+	public String createAguToken(Claims claims) {
 		Date now = new Date();
-		
+
 		return Jwts.builder()
 				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-				.claim(JwtTokenConstants.USER_ID, userId)
-				.claim(JwtTokenConstants.ROLES, "AGU")
-				.claim(JwtTokenConstants.OAUTH, "Temporary")
+				.setClaims(claims)
 				.setExpiration(new Date(now.getTime() + tokenProperties.getAccessExpiryMillis()))
 				.signWith(tokenProperties.getSigningKey())
 				.compact();
 	}
 
-	private String createToken(Long userId, String roles, String provider, Long validity) {
+	private String createToken(Claims claims, Long validity) {
 		Date now = new Date();
 
 		return Jwts.builder()
 				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-				.claim(JwtTokenConstants.USER_ID, userId)
-				.claim(JwtTokenConstants.ROLES, roles)
-				.claim(JwtTokenConstants.OAUTH, provider)
+				.setClaims(claims)
 				.setExpiration(new Date(now.getTime() + validity))
 				.signWith(tokenProperties.getSigningKey())
 				.compact();

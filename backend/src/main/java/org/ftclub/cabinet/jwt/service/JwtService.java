@@ -3,6 +3,7 @@ package org.ftclub.cabinet.jwt.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,37 @@ public class JwtService {
 	private final CookieManager cookieManager;
 	private final UserQueryService userQueryService;
 
+
+	public UserInfoDto validateTokenAndGetUserInfo(String token) {
+		try {
+			Claims claims = tokenProvider.parseToken(token);
+			return UserInfoDto.fromClaims(claims);
+		} catch (ExpiredJwtException e) {
+			throw ExceptionStatus.EXPIRED_JWT_TOKEN.asServiceException();
+		} catch (JwtException e) {
+			throw ExceptionStatus.JWT_EXCEPTION.asServiceException();
+		}
+	}
+
+	public String createAguToken(Long userId) {
+		Claims claims = Jwts.claims();
+
+		claims.put(JwtTokenConstants.USER_ID, userId);
+		claims.put(JwtTokenConstants.ROLES, "AGU");
+		claims.put(JwtTokenConstants.OAUTH, "Temporary");
+
+		return tokenProvider.createAguToken(claims);
+	}
+
+	public TokenDto createTokens(Long userId, String roles, String provider) {
+		Claims claims = Jwts.claims();
+
+		claims.put(JwtTokenConstants.USER_ID, userId);
+		claims.put(JwtTokenConstants.ROLES, roles);
+		claims.put(JwtTokenConstants.OAUTH, provider);
+
+		return tokenProvider.createAccessAndRefreshToken(claims);
+	}
 
 	/**
 	 * 토큰을 재발급합니다.
@@ -77,8 +109,8 @@ public class JwtService {
 				currentTokens.getRefreshToken())) {
 			throw ExceptionStatus.JWT_ALREADY_USED.asServiceException();
 		}
-		TokenDto tokens = tokenProvider.createAccessAndRefreshToken(
-				admin.getId(), admin.getRole().name(), userInfoDto.getOauth());
+		TokenDto tokens = createTokens(admin.getId(), admin.getRole().name(),
+				userInfoDto.getOauth());
 
 		cookieManager.setTokenCookies(res, tokens, req.getServerName());
 		jwtRedisService.addUsedAdminTokens(
@@ -95,8 +127,7 @@ public class JwtService {
 				currentTokens.getRefreshToken())) {
 			throw ExceptionStatus.JWT_ALREADY_USED.asServiceException();
 		}
-		TokenDto tokens = tokenProvider.createAccessAndRefreshToken(
-				user.getId(), user.getRoles(), userInfoDto.getOauth());
+		TokenDto tokens = createTokens(user.getId(), user.getRoles(), userInfoDto.getOauth());
 
 		cookieManager.setTokenCookies(res, tokens, req.getServerName());
 		jwtRedisService.addUserUsedTokens(
