@@ -17,7 +17,7 @@ import org.ftclub.cabinet.auth.domain.GoogleProfile;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.jwt.service.JwtTokenProvider;
+import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -41,7 +41,7 @@ public class AuthFacadeService {
 	private final AuthPolicyService authPolicyService;
 	private final TokenProvider tokenProvider;
 	private final CookieManager cookieManager;
-	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtService jwtService;
 
 
 	/**
@@ -60,17 +60,6 @@ public class AuthFacadeService {
 					"/", req.getServerName());
 		}
 		userOauthService.requestLogin(res);
-	}
-
-	/**
-	 * 관리자 로그인 페이지로 리다이렉트합니다.
-	 *
-	 * @param res 응답 시의 서블렛 {@link HttpServletResponse}
-	 * @throws IOException 입출력 예외
-	 */
-	public void requestAdminLogin(HttpServletResponse res) throws IOException {
-
-		adminOauthService.requestLogin(res);
 	}
 
 	/**
@@ -108,7 +97,7 @@ public class AuthFacadeService {
 			throws IOException {
 		User user = userQueryService.findUser(name).orElseThrow(
 				ExceptionStatus.NOT_FOUND_USER::asServiceException);
-		TokenDto tokens = jwtTokenProvider.createTokens(user.getId(), "USER", "Temporary");
+		TokenDto tokens = jwtService.createTokens(user.getId(), "USER", "Temporary");
 		cookieManager.setTokenCookies(res, tokens, req.getServerName());
 		if (cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME) != null) {
 			String redirect = cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME);

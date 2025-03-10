@@ -22,7 +22,7 @@ public class UserInfoDto {
 		String roles = claims.get(JwtTokenConstants.ROLES, String.class);
 
 		if (userId == null || provider == null || roles == null) {
-			throw ExceptionStatus.JWT_EXCEPTION.asDomainException();
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
 		return new UserInfoDto(userId, provider, roles);
 	}

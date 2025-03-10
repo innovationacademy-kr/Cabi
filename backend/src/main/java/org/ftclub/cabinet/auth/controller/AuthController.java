@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.auth.service.AuthenticationService;
-import org.ftclub.cabinet.auth.service.OauthService;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.dto.UserOauthMailDto;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
@@ -30,7 +29,6 @@ public class AuthController {
 
 	private final AuthFacadeService authFacadeService;
 	private final AuthenticationService authenticationService;
-	private final OauthService oauthService;
 
 	/**
 	 * 사용자 로그인 페이지로 리다이렉트합니다.
@@ -76,7 +74,7 @@ public class AuthController {
 	@PostMapping("/AGU")
 	public UserOauthMailDto requestAGULogin(@RequestParam(name = "name") String name)
 			throws JsonProcessingException {
-		return oauthService.requestTemporaryLogin(name);
+		return authenticationService.requestTemporaryLogin(name);
 	}
 
 	@GetMapping("/AGU")
