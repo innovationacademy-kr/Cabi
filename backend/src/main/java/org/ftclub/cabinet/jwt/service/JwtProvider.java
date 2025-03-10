@@ -57,6 +57,19 @@ public class JwtProvider {
 		return new TokenDto(accessToken, refreshToken);
 	}
 
+	public String createAguToken(Long userId) {
+		Date now = new Date();
+		
+		return Jwts.builder()
+				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+				.claim(JwtTokenConstants.USER_ID, userId)
+				.claim(JwtTokenConstants.ROLES, "AGU")
+				.claim(JwtTokenConstants.OAUTH, "Temporary")
+				.setExpiration(new Date(now.getTime() + tokenProperties.getAccessExpiryMillis()))
+				.signWith(tokenProperties.getSigningKey())
+				.compact();
+	}
+
 	private String createToken(Long userId, String roles, String provider, Long validity) {
 		Date now = new Date();
 
