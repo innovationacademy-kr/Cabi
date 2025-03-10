@@ -35,7 +35,6 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http)
 			throws Exception {
-		// security 에서 기본적으로 제공하는 로그인 폼 사용 안함 우리는 oauth 로그인 사용
 		http.csrf(AbstractHttpConfigurer::disable)
 				.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
@@ -43,7 +42,6 @@ public class SecurityConfig {
 				.sessionManagement(session -> session
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				)
-				// api별 접근 권한을 부여합니다
 				.authorizeHttpRequests(auth -> auth
 						.mvcMatchers(SecurityPathPatterns.PUBLIC_ENDPOINTS)
 						.permitAll()
