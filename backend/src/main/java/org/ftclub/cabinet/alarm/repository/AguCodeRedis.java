@@ -25,7 +25,8 @@ public class AguCodeRedis {
 		aguCodeTemplate
 				.set(name + AGU_CODE_SUFFIX,
 						code,
-						Duration.ofMinutes(5)
+						Duration.ofSeconds(30)
+						// Duration.ofMinutes(5)
 				);
 		String savedValue = aguCodeTemplate.get(name + AGU_CODE_SUFFIX);
 		System.out.println("저장 키: " + name);

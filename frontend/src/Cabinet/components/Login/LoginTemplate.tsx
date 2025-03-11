@@ -44,7 +44,16 @@ const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
             <CardSubTitleStyled>{pageSubTitle}</CardSubTitleStyled>
           </CardTitleBoxStyled>
           <LoginButtonGroup />
-          <span onClick={() => navigator("/agu")}>A.G.U</span>
+          <span
+            onClick={() => navigator("/agu")}
+            style={{
+              textDecoration: "underline",
+              cursor: "pointer",
+              // TODO: 회색
+            }}
+          >
+            A.G.U
+          </span>
         </LoginCardStyled>
       </RightSectionStyled>
     </LoginPageStyled>

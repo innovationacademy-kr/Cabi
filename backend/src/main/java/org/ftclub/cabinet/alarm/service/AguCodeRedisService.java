@@ -20,7 +20,7 @@ public class AguCodeRedisService {
 		log.info("codeInRedis = {}", codeInRedis);
 
 		if (codeInRedis == null || !codeInRedis.equals(code)) {
-			throw ExceptionStatus.NOT_FOUND_VERIFICATION_CODE.asServiceException();
+			throw ExceptionStatus.NOT_FOUND_VERIFICATION_LINK.asServiceException();
 		}
 	}
 
