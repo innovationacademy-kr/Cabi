@@ -48,6 +48,6 @@ public class AuthPolicyService {
 	}
 
 	public String getAGUUrl() {
-		return domainProperties.getFeHost() + "/AGU";
+		return domainProperties.getFeHost() + "/agu";
 	}
 }
