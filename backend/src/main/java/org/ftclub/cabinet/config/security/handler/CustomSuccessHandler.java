@@ -156,7 +156,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		String message = status.name();
 
 		log.error("error Redirect Start");
-		String uri = UriComponentsBuilder.fromHttpUrl(authPolicyService.getOauthErrorPage())
+		String uri = UriComponentsBuilder.fromHttpUrl(authPolicyService.getLoginUrl())
 				.queryParam("code", errorCode)
 				.queryParam("status", status.getStatusCode())
 				.queryParam("message", message)

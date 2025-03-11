@@ -47,6 +47,7 @@ public class JwtService {
 		} catch (ExpiredJwtException e) {
 			throw ExceptionStatus.EXPIRED_JWT_TOKEN.asServiceException();
 		} catch (JwtException e) {
+			log.error("JwtException : {}", e.getMessage(), e);
 			throw ExceptionStatus.JWT_EXCEPTION.asServiceException();
 		} catch (DomainException e) {
 			log.error("Claims has null value : {}", e.getMessage());
