@@ -94,13 +94,15 @@ public class CookieManager {
 		setToClient(response, refreshTokenCookie, "/", serverName);
 	}
 
-	public void setToClient(HttpServletResponse res, Cookie cookie, String path,
+	public void setToClient(HttpServletResponse res,
+			Cookie cookie, String path,
 			String serverName) {
 		cookie.setPath(path);
 		if (serverName.equals(domainProperties.getLocal())) {
 			cookie.setDomain(domainProperties.getLocal());
 		} else {
 			cookie.setDomain(domainProperties.getCookieDomain());
+			cookie.setSecure(true);
 		}
 		res.addCookie(cookie);
 	}

@@ -142,8 +142,7 @@ public class AuthenticationService {
 		String temporaryToken =
 				jwtService.createAguToken(user.getId());
 
-		Cookie cookie = new Cookie(JwtTokenConstants.ACCESS_TOKEN, temporaryToken);
-		cookie.setSecure(true);
+		Cookie cookie = cookieManager.cookieOf(JwtTokenConstants.ACCESS_TOKEN, temporaryToken);
 		cookie.setMaxAge(60 * 60);
 		cookieManager.setToClient(res, cookie, "/", req.getServerName());
 
