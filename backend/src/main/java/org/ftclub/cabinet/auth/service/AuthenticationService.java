@@ -144,8 +144,7 @@ public class AuthenticationService {
 
 		Cookie cookie = new Cookie(JwtTokenConstants.ACCESS_TOKEN, temporaryToken);
 		cookie.setSecure(true);
-		cookie.setHttpOnly(true);
-		cookie.setMaxAge(60 * 60 * 100);
+		cookie.setMaxAge(60 * 60);
 		cookieManager.setToClient(res, cookie, "/", req.getServerName());
 
 		res.sendRedirect(authPolicyService.getAGUUrl());
