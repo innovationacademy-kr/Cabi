@@ -45,7 +45,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-	private static final String VERIFICATION_API = "/v4/auth/AGU";
+	private static final String VERIFICATION_API = "/v5/auth/agu";
 	private final UserOauthConnectionCommandService userOauthConnectionCommandService;
 	private final AguCodeRedisService aguCodeRedisService;
 	private final CookieManager cookieManager;
