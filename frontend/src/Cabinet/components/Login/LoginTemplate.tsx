@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as LoginImg } from "@/Cabinet/assets/images/loginImg.svg";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
@@ -5,6 +6,12 @@ import LoginButtonGroup from "./LoginButtonGroup";
 
 const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
   const { pageTitle, pageSubTitle } = props;
+  const navigator = useNavigate();
+
+  // const onClickRedirectButton = (location: string) => {
+  //    closeLeftNav();
+  //   navigator(location);
+  // };
 
   return (
     <LoginPageStyled id="loginPage">
@@ -37,6 +44,7 @@ const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
             <CardSubTitleStyled>{pageSubTitle}</CardSubTitleStyled>
           </CardTitleBoxStyled>
           <LoginButtonGroup />
+          <span onClick={() => navigator("/agu")}>A.G.U</span>
         </LoginCardStyled>
       </RightSectionStyled>
     </LoginPageStyled>

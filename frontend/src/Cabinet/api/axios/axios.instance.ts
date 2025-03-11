@@ -15,10 +15,10 @@ const reissueInstance = axios.create({
 const reissueToken = async () => {
   try {
     const token = getCookie("access_token");
-
+    console.log("token : ", token);
     const response = await reissueInstance.post(
       "/v5/jwt/reissue",
-      {},
+      // {},
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -38,7 +38,8 @@ const reissueToken = async () => {
 
 instance.interceptors.request.use(async (config) => {
   const token = getCookie("access_token");
-  config.headers.set("Authorization", `Bearer ${token}`);
+  const isAGUPage = window.location.pathname === "/agu";
+  if (!isAGUPage) config.headers.set("Authorization", `Bearer ${token}`);
   return config;
 });
 
