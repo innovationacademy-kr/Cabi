@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { getEnabledProviders, getSocialDisplayInfo } from "@/Cabinet/utils/loginUtils";
+import {
+  getEnabledProviders,
+  getSocialDisplayInfo,
+} from "@/Cabinet/utils/loginUtils";
 import { LoginProvider } from "@/Presentation/types/common/login";
 import Card from "../Card";
-
 
 interface OAuthConnection {
   providerType: string;
@@ -25,20 +27,23 @@ const SnsConnectionCard: React.FC<SnsConnectionCardProps> = ({
       )
     : [];
 
+  console.log("connectedProviders : ", connectedProviders);
   const allProviders = getEnabledProviders();
+  console.log("allProviders : ", allProviders);
 
   const excludeProviders: LoginProvider[] = ["42"];
+  console.log("excludeProviders : ", excludeProviders);
 
   const availableProviders = allProviders.filter(
     (provider) =>
       !excludeProviders.includes(provider) &&
       !connectedProviders.includes(provider)
   );
-
+  console.log("availableProviders : ", availableProviders);
   const cardButtons = availableProviders.map((provider) => {
     const displayInfo = getSocialDisplayInfo(provider);
     return {
-      label: displayInfo.text.replace(" 로그인", " 연동"),
+      label: displayInfo.text.replace(" 로그인", " 연ㅁ동"),
       onClick: () => onConnectService(provider),
       backgroundColor: displayInfo.backgroundColor,
       fontColor: displayInfo.fontColor,
@@ -55,6 +60,7 @@ const SnsConnectionCard: React.FC<SnsConnectionCardProps> = ({
       buttons={cardButtons}
     >
       <CardContent>
+        aaa
         {userOauthConnections?.length > 0 ? (
           <ConnectionsList>
             {userOauthConnections

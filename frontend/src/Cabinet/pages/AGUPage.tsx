@@ -1,13 +1,42 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { axiosAGU } from "../api/axios/axios.custom";
+import { axiosAGU, axiosMyLentInfo } from "../api/axios/axios.custom";
+import { getCookie } from "../api/react_cookie/cookies";
 import LoadingAnimation from "../components/Common/LoadingAnimation";
+import { myCabinetInfoState } from "../recoil/atoms";
+import { MyCabinetInfoResponseDto } from "../types/dto/cabinet.dto";
+
+const token = getCookie("access_token");
 
 const AGUPage = () => {
   const idRef = useRef<HTMLInputElement>(null);
   const [mail, setMail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  console.log("AGUPage!!!");
+  const [myLentInfoState, setMyLentInfoState] =
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  // const setMyLentInfoState =
+  //   useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+
+  async function getMyLentInfo() {
+    try {
+      const { data: myLentInfo } = await axiosMyLentInfo();
+
+      setMyLentInfoState(myLentInfo);
+      console.log("getMyLentInfo : ", myLentInfo);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    console.log("token : ", token);
+    if (token) getMyLentInfo();
+  }, []);
+  useEffect(() => {
+    console.log("myLentInfoState : ", myLentInfoState);
+  }, [myLentInfoState]);
+
   const handleButtonClick = async () => {
     setIsLoading(true);
     // TODO: animation
@@ -36,6 +65,9 @@ const AGUPage = () => {
   );
 };
 
+{
+  /* <button onClick={handleButtonClick}>버튼2</button> */
+}
 const WrapperStyled = styled.main`
   display: flex;
   flex-direction: column;

@@ -41,7 +41,6 @@ const root: HTMLElement = document.documentElement;
 const token = getCookie("access_token");
 
 const Layout = (): JSX.Element => {
-  console.log("Layout 렌더링됨");
   const [hasPenaltyItem, setHasPenaltyItem] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -138,9 +137,10 @@ const Layout = (): JSX.Element => {
   useEffect(() => {
     deleteOldPointColors();
     console.log("token : ", token);
-    // if (token && isAGUPage) navigate("/agu");
-    if (!token && !isLoginPage) navigate("/login");
+    if (isAGUPage) navigate("/agu");
+    else if (!token && !isLoginPage) navigate("/login");
     else if (token) {
+      console.log("getMyInfo");
       getMyInfo();
       Promise.all([getBuildingsData(), getMyLentInfo()]).then(() =>
         setIsLoading(false)

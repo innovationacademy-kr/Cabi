@@ -39,7 +39,10 @@ const reissueToken = async () => {
 instance.interceptors.request.use(async (config) => {
   const token = getCookie("access_token");
   const isAGUPage = window.location.pathname === "/agu";
-  if (!isAGUPage) config.headers.set("Authorization", `Bearer ${token}`);
+  console.log("isAGUPage ??? ", isAGUPage);
+  console.log("token ??? ", token);
+  if (token || !isAGUPage)
+    config.headers.set("Authorization", `Bearer ${token}`);
   return config;
 });
 
