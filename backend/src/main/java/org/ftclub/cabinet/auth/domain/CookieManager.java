@@ -81,20 +81,18 @@ public class CookieManager {
 	public void setTokenCookies(HttpServletResponse response, TokenDto tokens, String serverName) {
 		Cookie accessTokenCookie =
 				cookieOf(JwtTokenConstants.ACCESS_TOKEN, tokens.getAccessToken());
-		accessTokenCookie.setSecure(true);
 		accessTokenCookie.setMaxAge(jwtTokenProperties.getRefreshExpirySeconds());
-		setToClient(response, accessTokenCookie, "/", serverName);
+		setSecureAndClient(response, accessTokenCookie, "/", serverName);
 
 		// 리프레시 토큰 쿠키 설정
 		Cookie refreshTokenCookie =
 				cookieOf(JwtTokenConstants.REFRESH_TOKEN, tokens.getRefreshToken());
 		refreshTokenCookie.setHttpOnly(true);
-		refreshTokenCookie.setSecure(true);
 		refreshTokenCookie.setMaxAge(jwtTokenProperties.getRefreshExpirySeconds());
-		setToClient(response, refreshTokenCookie, "/", serverName);
+		setSecureAndClient(response, refreshTokenCookie, "/", serverName);
 	}
 
-	public void setToClient(HttpServletResponse res,
+	public void setSecureAndClient(HttpServletResponse res,
 			Cookie cookie, String path,
 			String serverName) {
 		cookie.setPath(path);
