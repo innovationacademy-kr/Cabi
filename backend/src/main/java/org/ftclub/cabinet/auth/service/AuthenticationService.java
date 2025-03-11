@@ -114,7 +114,7 @@ public class AuthenticationService {
 
 		String accessToken = jwtService.extractToken(request);
 		if (accessToken != null && refreshToken != null) {
-			jwtRedisService.addUserUsedTokens(userId, accessToken, refreshToken);
+			jwtRedisService.addUsedUserTokensToBlackList(userId, accessToken, refreshToken);
 		}
 		// 내부 모든 쿠키 삭제
 		cookieManager.deleteAllCookies(request.getCookies(), response);

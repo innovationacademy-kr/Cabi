@@ -66,7 +66,7 @@ public class AdminAuthService {
 	 */
 	public AccessTokenDto masterLogin(MasterLoginDto masterLoginDto, HttpServletRequest req,
 			HttpServletResponse res, LocalDateTime now) {
-		
+
 		if (!authPolicyService.isMatchWithMasterAuthInfo(masterLoginDto.getId(),
 				masterLoginDto.getPassword())) {
 			throw ExceptionStatus.UNAUTHORIZED_ADMIN.asServiceException();
@@ -102,7 +102,7 @@ public class AdminAuthService {
 		// TODO: admin 토큰 폐기도 처리해야함 accessToken, refreshToken 사용 처리
 		String accessToken = jwtService.extractToken(request);
 		if (accessToken != null && refreshToken != null) {
-			jwtRedisService.addUsedAdminTokens(userId, accessToken, refreshToken);
+			jwtRedisService.addUsedAdminTokensToBlackList(userId, accessToken, refreshToken);
 		}
 		// 내부 모든 쿠키 삭제
 		cookieManager.deleteAllCookies(request.getCookies(), response);

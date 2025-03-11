@@ -25,7 +25,7 @@ public class JwtRedisService {
 		return refreshToken.equals(refreshTokenInRedis);
 	}
 
-	public void addUserUsedTokens(Long userId, String accessToken, String refreshToken) {
+	public void addUsedUserTokensToBlackList(Long userId, String accessToken, String refreshToken) {
 		jwtRedis.saveUserAccessToken(String.valueOf(userId), accessToken);
 		jwtRedis.saveUserRefreshToken(String.valueOf(userId), refreshToken);
 	}
@@ -42,7 +42,7 @@ public class JwtRedisService {
 		return expiredRefreshToken.equals(refreshToken);
 	}
 
-	public void addUsedAdminTokens(Long id, String accessToken, String refreshToken) {
+	public void addUsedAdminTokensToBlackList(Long id, String accessToken, String refreshToken) {
 		jwtRedis.saveAdminAccessToken(String.valueOf(id), accessToken);
 		jwtRedis.saveAdminRefreshToken(String.valueOf(id), refreshToken);
 	}

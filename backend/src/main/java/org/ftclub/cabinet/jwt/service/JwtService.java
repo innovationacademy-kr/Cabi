@@ -151,7 +151,7 @@ public class JwtService {
 				userInfoDto.getOauth());
 
 		cookieManager.setTokenCookies(res, tokens, req.getServerName());
-		jwtRedisService.addUsedAdminTokens(
+		jwtRedisService.addUsedAdminTokensToBlackList(
 				admin.getId(), currentTokens.getAccessToken(), currentTokens.getRefreshToken());
 		return tokens;
 	}
@@ -179,7 +179,7 @@ public class JwtService {
 		TokenDto tokens = createTokens(user.getId(), user.getRoles(), userInfoDto.getOauth());
 
 		cookieManager.setTokenCookies(res, tokens, req.getServerName());
-		jwtRedisService.addUserUsedTokens(
+		jwtRedisService.addUsedUserTokensToBlackList(
 				user.getId(), currentTokens.getAccessToken(), currentTokens.getRefreshToken());
 		return tokens;
 	}
@@ -198,7 +198,6 @@ public class JwtService {
 
 		return header.substring(JwtTokenConstants.BEARER.length());
 	}
-
 }
 
 
