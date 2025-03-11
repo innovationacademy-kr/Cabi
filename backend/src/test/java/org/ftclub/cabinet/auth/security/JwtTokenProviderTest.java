@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -18,11 +17,11 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import org.ftclub.cabinet.auth.domain.CookieManager;
-import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
-import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
-import org.ftclub.cabinet.jwt.service.JwtTokenProvider;
 import org.ftclub.cabinet.dto.TokenDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
+import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +45,7 @@ public class JwtTokenProviderTest {
 	@Mock
 	private JwtRedisService jwtRedisService;
 	@InjectMocks
-	private JwtTokenProvider jwtTokenProvider;
+	private JwtService jwtTokenProvider;
 	@Mock
 	private HttpServletRequest request;
 
@@ -55,10 +54,10 @@ public class JwtTokenProviderTest {
 	void parseValidToken() {
 		when(tokenProperties.getSigningKey()).thenReturn(key);
 		String jwt = createValidToken();
-		Claims claims = jwtTokenProvider.parseValidToken(jwt);
+		UserInfoDto userInfo = jwtTokenProvider.validateTokenAndGetUserInfo(jwt);
 
-		assertThat(claims.getSubject()).isEqualTo("1");
-		assertThat(claims.get("roles", String.class)).isEqualTo("USER");
+		assertThat(userInfo.getUserId()).isEqualTo("1");
+		assertThat(userInfo.getRoles()).isEqualTo("USER");
 	}
 
 	@Test
@@ -72,10 +71,11 @@ public class JwtTokenProviderTest {
 		when(tokenProperties.getSigningKey()).thenReturn(key);
 
 		TokenDto tokenDto = jwtTokenProvider.createTokens(userId, roles, "ft");
-		Claims claims = jwtTokenProvider.parseValidToken(tokenDto.getAccessToken());
+		UserInfoDto userInfo = jwtTokenProvider.validateTokenAndGetUserInfo(
+				tokenDto.getAccessToken());
 
-		assertEquals(String.valueOf(userId), String.valueOf(claims.get(JwtTokenConstants.USER_ID)));
-		assertEquals(roles, claims.get("roles"));
+		assertEquals(String.valueOf(userId), userInfo.getUserId());
+		assertEquals(roles, userInfo.getRoles());
 	}
 
 	@Test
@@ -95,7 +95,7 @@ public class JwtTokenProviderTest {
 
 		// when & then
 		assertThrows(ExpiredJwtException.class, () -> {
-			jwtTokenProvider.parseValidToken(tokenDto.getAccessToken());
+			jwtTokenProvider.validateTokenAndGetUserInfo(tokenDto.getAccessToken());
 		});
 	}
 
@@ -106,7 +106,7 @@ public class JwtTokenProviderTest {
 
 		when(tokenProperties.getSigningKey()).thenReturn(key);
 		assertThrows(JwtException.class, () -> {
-			jwtTokenProvider.parseValidToken(invalidToken);
+			jwtTokenProvider.validateTokenAndGetUserInfo(invalidToken);
 		});
 	}
 
