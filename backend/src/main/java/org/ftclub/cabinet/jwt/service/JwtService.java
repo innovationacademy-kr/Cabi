@@ -88,6 +88,7 @@ public class JwtService {
 		return tokenProvider.createAccessAndRefreshToken(claims);
 	}
 
+
 	/**
 	 * 토큰을 재발급합니다.
 	 * <p>
@@ -197,6 +198,7 @@ public class JwtService {
 
 		return header.substring(JwtTokenConstants.BEARER.length());
 	}
+
 }
 
 

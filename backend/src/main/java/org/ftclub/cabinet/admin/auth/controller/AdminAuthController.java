@@ -7,10 +7,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.admin.auth.service.AdminAuthService;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
-import org.ftclub.cabinet.auth.service.AuthenticationService;
+import org.ftclub.cabinet.dto.AccessTokenDto;
 import org.ftclub.cabinet.dto.MasterLoginDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.log.Logging;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminAuthController {
 
 	private final AuthFacadeService authFacadeService;
-	private final AuthenticationService authenticationService;
+	private final AdminAuthService adminAuthService;
 
 	/**
 	 * 관리자 로그인 페이지로 리다이렉트 합니다.
@@ -39,7 +44,7 @@ public class AdminAuthController {
 	@GetMapping("/login")
 	public void login(HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
-		authenticationService.requestAdminLogin(req, res);
+		adminAuthService.requestAdminLogin(req, res);
 	}
 
 	/**
@@ -50,10 +55,11 @@ public class AdminAuthController {
 	 * @param masterLoginDto 최고 관리자 로그인 정보
 	 */
 	@PostMapping("/login")
-	public void masterLogin(HttpServletRequest req,
+	public AccessTokenDto masterLogin(HttpServletRequest req,
 			HttpServletResponse res,
 			@Valid @RequestBody MasterLoginDto masterLoginDto) {
-		authFacadeService.masterLogin(masterLoginDto, req, res, LocalDateTime.now());
+
+		return adminAuthService.masterLogin(masterLoginDto, req, res, LocalDateTime.now());
 	}
 
 	/**
@@ -77,7 +83,10 @@ public class AdminAuthController {
 	 * @param res 요청 시의 서블릿 {@link HttpServletResponse}
 	 */
 	@GetMapping("/logout")
-	public void logout(HttpServletResponse res) {
-		authFacadeService.adminLogout(res);
+	public void logout(HttpServletRequest req, HttpServletResponse res,
+			@AuthenticationPrincipal UserInfoDto user,
+			@CookieValue(name = JwtTokenConstants.REFRESH_TOKEN) String refreshToken)
+			throws IOException {
+		adminAuthService.adminLogout(req, res, user.getUserId(), refreshToken);
 	}
 }

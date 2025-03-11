@@ -57,7 +57,6 @@ public class AuthenticationService {
 	private final ApplicationTokenManager applicationTokenManager;
 	private final ApplicationEventPublisher eventPublisher;
 	private final UserOauthConnectionQueryService userOauthConnectionQueryService;
-
 	@Value("${cabinet.server.be-host}")
 	private String beHost;
 
@@ -88,7 +87,6 @@ public class AuthenticationService {
 	 * @return
 	 */
 	public Authentication createAuthenticationForUser(OauthResult user, String provider) {
-
 		UserInfoDto userInfoDto =
 				new UserInfoDto(user.getUserId(), provider, user.getRoles());
 
@@ -120,33 +118,6 @@ public class AuthenticationService {
 		}
 		// 내부 모든 쿠키 삭제
 		cookieManager.deleteAllCookies(request.getCookies(), response);
-	}
-
-	public void adminLogout(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Long userId,
-			String refreshToken) throws IOException {
-
-		// TODO: admin 토큰 폐기도 처리해야함 accessToken, refreshToken 사용 처리
-		String accessToken = jwtService.extractToken(request);
-		if (accessToken != null && refreshToken != null) {
-			jwtRedisService.addUsedAdminTokens(userId, accessToken, refreshToken);
-		}
-		// 내부 모든 쿠키 삭제
-		cookieManager.deleteAllCookies(request.getCookies(), response);
-	}
-
-	public void requestAdminLogin(HttpServletRequest req, HttpServletResponse res)
-			throws IOException {
-		// 쿠키에 로그인 현상 저장
-		Cookie cookie = cookieManager.cookieOf("login_source", "admin");
-		cookie.setMaxAge(15);
-		cookie.setSecure(true);
-		cookie.setHttpOnly(true);
-		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
-
-		res.sendRedirect(beHost + "/oauth2/authorization/google");
 	}
 
 
