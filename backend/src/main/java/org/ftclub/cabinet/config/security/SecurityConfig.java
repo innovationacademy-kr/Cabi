@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -34,33 +33,23 @@ public class SecurityConfig {
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	@Bean
-	public WebSecurityCustomizer webSecurityCustomizer() {
-		return web -> web.ignoring()
-				.mvcMatchers("/error", "/favicon.ico");
-	}
-
-	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http)
 			throws Exception {
-		// security 에서 기본적으로 제공하는 로그인 폼 사용 안함 우리는 oauth 로그인 사용
 		http.csrf(AbstractHttpConfigurer::disable)
 				.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
+				.cors().and()
 				.sessionManagement(session -> session
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				)
-				// api별 접근 권한을 부여합니다
 				.authorizeHttpRequests(auth -> auth
-						.mvcMatchers("/ping", "/actuator/**", "/v4/auth/**", "/login/**",
-								"/v5/jwt/reissue", "/v4/admin/auth/login")
+						.mvcMatchers(SecurityPathPatterns.PUBLIC_ENDPOINTS)
 						.permitAll()
-						.mvcMatchers("/slack/**").hasRole("ADMIN")
-						.mvcMatchers("/v4/admin/**").hasRole("ADMIN")
-						.mvcMatchers("/v5/admin/**").hasRole("ADMIN")
-						.mvcMatchers("/v4/cabinets/**").hasAnyRole("USER", "ADMIN")
-						.mvcMatchers("/v4/lent/me").hasAnyRole("USER", "AGU")
-						.antMatchers("/v4/lent/cabinets/share/cancel/*").hasAnyRole("USER", "ADMIN")
-						.mvcMatchers("/v4/items").hasAnyRole("USER", "ADMIN")
+						.mvcMatchers(SecurityPathPatterns.ADMIN_ENDPOINTS).hasRole("ADMIN")
+						.mvcMatchers(SecurityPathPatterns.USER_ADMIN_ENDPOINTS)
+						.hasAnyRole("USER", "ADMIN")
+						.mvcMatchers(SecurityPathPatterns.USER_AGU_ENDPOINTS)
+						.hasAnyRole("USER", "AGU")
 						.anyRequest().hasRole("USER")
 				)
 				.oauth2Login(oauth -> oauth

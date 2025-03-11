@@ -73,7 +73,7 @@ export const currentBuildingNameState = atom<string>({
 
 export const currentFloorNumberState = atom<number>({
   key: "CurrentFloor",
-  default: undefined,
+  default: 0,
   effects_UNSTABLE: [persistAtom],
 });
 

@@ -18,6 +18,7 @@ import org.ftclub.cabinet.auth.service.AuthenticationService;
 import org.ftclub.cabinet.auth.service.OauthService;
 import org.ftclub.cabinet.exception.CustomAccessDeniedException;
 import org.ftclub.cabinet.exception.CustomAuthenticationException;
+import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +67,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 			authenticationService.processAuthentication(request, response, oauthResult, provider);
 			String redirectUrl = oauthResult.getRedirectionUrl();
 
-			if (oauthResult.getRoles().contains("AGU")) {
+			if (oauthResult.hasRole("AGU")) {
 				redirectUrl = authPolicyService.getAGUUrl();
 			}
 			response.sendRedirect(redirectUrl);
@@ -124,6 +125,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		}
 		if (e instanceof ServiceException) {
 			return ((ServiceException) e).getStatus();
+		}
+		if (e instanceof DomainException) {
+			return ((DomainException) e).getStatus();
 		}
 		log.error("Authentication Failed", e);
 		return ExceptionStatus.INTERNAL_SERVER_ERROR;

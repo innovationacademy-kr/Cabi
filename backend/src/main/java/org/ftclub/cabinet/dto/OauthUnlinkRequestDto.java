@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+@AllArgsConstructor
 @Getter
 @ToString
-@AllArgsConstructor
-public class AccessTokenDto {
+public class OauthUnlinkRequestDto {
 
-	private final String accessToken;
+	private String oauthMail;
+	private String provider;
 }

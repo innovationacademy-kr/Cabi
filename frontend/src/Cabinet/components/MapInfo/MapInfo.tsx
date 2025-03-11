@@ -1,9 +1,10 @@
 import styled from "styled-components";
+import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 import MapFloorSelect from "@/Cabinet/components/MapInfo/MapFloorSelect/MapFloorSelect";
 import MapGrid from "@/Cabinet/components/MapInfo/MapGrid/MapGrid";
-import { DISABLED_FLOOR } from "@/Cabinet/pages/AvailablePage";
 
 const DEFAULT_FLOOR = 2;
+
 const MapInfo = ({
   touchStart,
   touchEnd,
@@ -19,10 +20,10 @@ const MapInfo = ({
   floorInfo: number[];
   closeMap: React.MouseEventHandler;
 }) => {
-  const currentFloor = floor ?? DEFAULT_FLOOR;
-  const validFloor = DISABLED_FLOOR.includes(currentFloor.toString())
+  const currentMapFloor = floor ?? DEFAULT_FLOOR;
+  const validFloor = DISABLED_FLOOR.includes(currentMapFloor.toString())
     ? DEFAULT_FLOOR
-    : currentFloor;
+    : currentMapFloor;
 
   return (
     <MapInfoContainerStyled
@@ -40,7 +41,11 @@ const MapInfo = ({
           style={{ width: "24px", cursor: "pointer" }}
         />
       </HeaderStyled>
-      <MapFloorSelect floor={validFloor} setFloor={setFloor} floorInfo={floorInfo} />
+      <MapFloorSelect
+        floor={validFloor}
+        setFloor={setFloor}
+        floorInfo={floorInfo}
+      />
       <MapGrid floor={validFloor} />
     </MapInfoContainerStyled>
   );

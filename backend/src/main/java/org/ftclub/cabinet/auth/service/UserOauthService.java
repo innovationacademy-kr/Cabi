@@ -34,6 +34,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class UserOauthService {
 
 	private static final int CURSUS_INDEX = 1;
+	private static final int PISCINE_INDEX = 0;
+	private static final int CADET_INDEX = 1;
 
 	@Qualifier(OauthConfig.FT_OAUTH_20_SERVICE)
 	private final OAuth20Service ftOAuth20Service;
@@ -126,7 +128,7 @@ public class UserOauthService {
 	private FtProfile convertJsonStringToProfile(JsonNode jsonNode) throws JsonProcessingException {
 		String intraName = jsonNode.get("login").asText();
 		String email = jsonNode.get("email").asText();
-		log.info("user Information = {}", jsonNode);
+
 		if (intraName == null || email == null) {
 			throw ExceptionStatus.INCORRECT_ARGUMENT.asServiceException();
 		}
@@ -180,13 +182,20 @@ public class UserOauthService {
 	 * AccessToken을 이용해 받은 JSON 형식의 유저 profile 정보를 통해 유저의 blackholedAt을 반환합니다.
 	 * <br>
 	 * 유저가 blackhole에 빠지는 시각을 반환합니다.
+	 * <p>
+	 * cursus_user : 유저가 42에서 활동한 과정들 ex) 0 -> 피신, 1 -> 입과 후
+	 * <p>
+	 * 42 서울과정을 중심으로 생각해, 과정을 더 진행한 유저여도 1번 idx의 blackholed_at 값을 가져옵니다.
 	 *
 	 * @param rootNode 유저 프로필 정보 JSON 데이터
 	 * @return 유저의 blackholedAt
 	 */
 	private LocalDateTime determineBlackHoledAt(JsonNode rootNode) {
-		JsonNode blackHoledAtNode = rootNode.get("cursus_users").get(CURSUS_INDEX)
-				.get("blackholed_at");
+
+		JsonNode cursusNode = rootNode.get("cursus_users");
+		int index = cursusNode.size() > CADET_INDEX ? CADET_INDEX : PISCINE_INDEX;
+
+		JsonNode blackHoledAtNode = cursusNode.get(index).get("blackholed_at");
 		if (blackHoledAtNode.isNull() || blackHoledAtNode.asText().isEmpty()) {
 			return null;
 		}
