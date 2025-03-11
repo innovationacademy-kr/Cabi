@@ -17,6 +17,7 @@ import org.ftclub.cabinet.alarm.service.AguCodeRedisService;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.OauthResult;
+import org.ftclub.cabinet.auth.domain.UserOauthConnection;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.dto.UserOauthMailDto;
@@ -55,6 +56,7 @@ public class AuthenticationService {
 	private final JwtService jwtService;
 	private final ApplicationTokenManager applicationTokenManager;
 	private final ApplicationEventPublisher eventPublisher;
+	private final UserOauthConnectionQueryService userOauthConnectionQueryService;
 
 	@Value("${cabinet.server.be-host}")
 	private String beHost;
@@ -223,7 +225,15 @@ public class AuthenticationService {
 	 *
 	 * @param userId
 	 */
-	public void deleteOauthMail(Long userId) {
+	public void deleteOauthMail(Long userId, String oauthMail, String provider) {
+
+		UserOauthConnection connection = userOauthConnectionQueryService.findByUserId(userId)
+				.orElseThrow(ExceptionStatus.NOT_FOUND_OAUTH_LINK::asServiceException);
+
+		if (!connection.getProviderType().equals(provider)
+				|| connection.getEmail().equals(oauthMail)) {
+			throw ExceptionStatus.NOT_FOUND_OAUTH_LINK.asServiceException();
+		}
 		userOauthConnectionCommandService.deleteByUserId(userId);
 	}
 }
