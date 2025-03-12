@@ -37,12 +37,17 @@ const reissueToken = async () => {
 };
 
 instance.interceptors.request.use(async (config) => {
-  const token = getCookie("access_token");
+  const accessToken = getCookie("access_token");
+  const aguToken = getCookie("agu_token");
   const isAGUPage = window.location.pathname === "/agu";
   console.log("isAGUPage ??? ", isAGUPage);
-  console.log("token ??? ", token);
-  if (token || !isAGUPage)
-    config.headers.set("Authorization", `Bearer ${token}`);
+  console.log("accessToken ??? ", accessToken);
+  console.log("aguToken ??? ", aguToken);
+  if (accessToken || !isAGUPage)
+    config.headers.set("Authorization", `Bearer ${accessToken}`);
+  else if (aguToken && isAGUPage)
+    config.headers.set("Authorization", `Bearer ${aguToken}`);
+  // TODO : 정리 - 반납하시겠습니까 에서 lent/me 요청 보낼때
   return config;
 });
 

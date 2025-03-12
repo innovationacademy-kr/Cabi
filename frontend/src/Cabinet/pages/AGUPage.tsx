@@ -21,8 +21,10 @@ const AGUPage = () => {
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const subTitle = "현재 대여중인 사물함 정보입니다. 지금 반납 하시겠습니까?";
   const navigator = useNavigate();
-  const token = getCookie("access_token");
-
+  const aguToken = getCookie("agu_token");
+  const accessToken = getCookie("access_token");
+  console.log("aguToken : ", aguToken);
+  console.log("accessToken : ", accessToken);
   const tryReturnRequest = async (e: React.MouseEvent) => {
     setIsLoading(true);
     try {
@@ -102,7 +104,7 @@ const AGUPage = () => {
    `;
 
   useEffect(() => {
-    if (token) getMyLentInfo();
+    if (aguToken) getMyLentInfo();
   }, []);
 
   useEffect(() => {
@@ -129,7 +131,7 @@ const AGUPage = () => {
     <WrapperStyled>
       <UtilsSectionStyled></UtilsSectionStyled>
       <HeaderStyled>AGUPage</HeaderStyled>
-      {token ? (
+      {aguToken ? (
         <>
           <SubHeaderStyled>{subTitle}</SubHeaderStyled>
           <button onClick={tryReturnRequest}>네, 반납할게요</button>
