@@ -480,22 +480,25 @@ export const axiosAGU = async (intraId: string): Promise<any> => {
   }
 };
 
-// const axiosLinkURL = "/v5/auth/link";
-// export const axiosLink = async (mail: string): Promise<any> => {
-//   // if (intraId === null) return;
-//   try {
-//     const response = await instance.delete(axiosLinkURL, null, {
-//       params: {
-//         oauthMail : , // 연동 해지하려는 mail
-//         provider : , // 연동되어있는 providerType
-//       },
-//     });
-//     return response;
-//   } catch (error) {
-//     // logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");
-//     throw error;
-//   }
-// };
+const axiosLinkURL = "/v5/auth/link";
+export const axiosLink = async (
+  mail: string,
+  provider: string
+): Promise<any> => {
+  // if (intraId === null) return;
+  try {
+    const response = await instance.delete(axiosLinkURL, {
+      params: {
+        oauthMail: mail, // 연동 해지하려는 mail
+        provider: provider, // 연동되어있는 providerType
+      },
+    });
+    return response;
+  } catch (error) {
+    // logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");
+    throw error;
+  }
+};
 
 const axiosReturnByUserIdURL = "/v4/admin/return-users/";
 export const axiosReturnByUserId = async (userIds: number[]): Promise<any> => {

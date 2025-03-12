@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { axiosLink } from "@/Cabinet/api/axios/axios.custom";
 import {
   getEnabledProviders,
   getSocialDisplayInfo,
@@ -27,6 +28,8 @@ const SnsConnectionCard: React.FC<SnsConnectionCardProps> = ({
       )
     : [];
 
+  console.log("userOauthConnections : ", userOauthConnections);
+  // [{email: 'jeekimin3@gmail.com', providerType: 'google'}]
   console.log("connectedProviders : ", connectedProviders);
   const allProviders = getEnabledProviders();
   console.log("allProviders : ", allProviders);
@@ -52,6 +55,20 @@ const SnsConnectionCard: React.FC<SnsConnectionCardProps> = ({
     };
   });
 
+  async function handleButton() {
+    try {
+      const mailState = userOauthConnections[0].email;
+      const providerTypeState = userOauthConnections[0].providerType;
+      const response = await axiosLink(mailState, providerTypeState);
+      console.log(response);
+      // TODO : 배열 중 하나 골라야됨
+
+      // setMyLentInfoState(myLentInfo);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <Card
       title="연동 계정"
@@ -60,7 +77,7 @@ const SnsConnectionCard: React.FC<SnsConnectionCardProps> = ({
       buttons={cardButtons}
     >
       <CardContent>
-        aaa
+        <button onClick={handleButton}>연동 해지</button>
         {userOauthConnections?.length > 0 ? (
           <ConnectionsList>
             {userOauthConnections
