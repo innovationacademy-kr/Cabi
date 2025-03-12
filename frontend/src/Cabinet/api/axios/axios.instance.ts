@@ -40,9 +40,9 @@ instance.interceptors.request.use(async (config) => {
   const accessToken = getCookie("access_token");
   const aguToken = getCookie("agu_token");
   const isAGUPage = window.location.pathname === "/agu";
-  console.log("isAGUPage ??? ", isAGUPage);
-  console.log("accessToken ??? ", accessToken);
-  console.log("aguToken ??? ", aguToken);
+  // console.log("isAGUPage ??? ", isAGUPage);
+  // console.log("accessToken ??? ", accessToken);
+  // console.log("aguToken ??? ", aguToken);
   if (accessToken || !isAGUPage)
     config.headers.set("Authorization", `Bearer ${accessToken}`);
   else if (aguToken && isAGUPage)
@@ -57,14 +57,19 @@ instance.interceptors.response.use(
   },
   async (error) => {
     if (error.response?.status === HttpStatusCode.Unauthorized) {
-      const isReissued = await reissueToken();
+      const token = getCookie("access_token");
 
-      if (isReissued) {
-        const originalRequest = error.config;
-        const newToken = getCookie("access_token");
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return instance(originalRequest);
+      if (token) {
+        const isReissued = await reissueToken();
+
+        if (isReissued) {
+          const originalRequest = error.config;
+          const newToken = getCookie("access_token");
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return instance(originalRequest);
+        }
       }
+
       const domain =
         import.meta.env.VITE_IS_LOCAL === "true"
           ? "localhost"
