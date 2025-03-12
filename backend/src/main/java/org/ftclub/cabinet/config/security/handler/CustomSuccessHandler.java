@@ -144,7 +144,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	}
 
 	/**
-	 * SuccessHandling 도중 예외 발생 시 예외 페이지로 redirect 합니다.
+	 * SuccessHandling 도중 예외 발생 시 로그인 페이지로 redirect 합니다.
 	 *
 	 * @param response
 	 * @param status

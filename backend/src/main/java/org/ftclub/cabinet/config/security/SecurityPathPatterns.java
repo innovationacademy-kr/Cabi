@@ -27,7 +27,8 @@ public class SecurityPathPatterns {
 	};
 
 	public static final String[] USER_AGU_ENDPOINTS = {
-			"/v4/lent/me"
+			"/v4/lent/me",
+			"/v4/lent/return"
 	};
 
 	private SecurityPathPatterns() {
