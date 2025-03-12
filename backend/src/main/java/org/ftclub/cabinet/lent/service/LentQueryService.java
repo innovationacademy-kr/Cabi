@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -223,5 +224,15 @@ public class LentQueryService {
 	public LentHistory getUserActiveLentHistoryWithCabinet(Long userId) {
 		return lentRepository.findByUserIdAndEndedAtIsNullJoinCabinet(userId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_LENT_HISTORY::asServiceException);
+	}
+
+	/**
+	 * 유저가 현재 대여중인 사물함의 기록을 가져옵니다.
+	 *
+	 * @param userId
+	 * @return
+	 */
+	public Optional<LentHistory> getUserActiveLentHistory(Long userId) {
+		return lentRepository.findByUserIdAndEndedAtIsNull(userId);
 	}
 }
