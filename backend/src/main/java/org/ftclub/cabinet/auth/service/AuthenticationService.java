@@ -204,11 +204,11 @@ public class AuthenticationService {
 	public void deleteOauthMail(Long userId, String oauthMail, String provider) {
 
 		UserOauthConnection connection = userOauthConnectionQueryService.findByUserId(userId)
-				.orElseThrow(ExceptionStatus.NOT_FOUND_OAUTH_LINK::asServiceException);
+				.orElseThrow(ExceptionStatus.NOT_FOUND_OAUTH_CONNECTION::asServiceException);
 
 		if (!connection.getProviderType().equals(provider)
 				|| connection.getEmail().equals(oauthMail)) {
-			throw ExceptionStatus.NOT_FOUND_OAUTH_LINK.asServiceException();
+			throw ExceptionStatus.INVALID_OAUTH_CONNECTION.asServiceException();
 		}
 		userOauthConnectionCommandService.deleteByUserId(userId);
 	}

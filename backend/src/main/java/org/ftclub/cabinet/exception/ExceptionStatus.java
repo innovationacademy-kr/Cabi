@@ -111,7 +111,8 @@ public enum ExceptionStatus {
 	JWT_ALREADY_USED(HttpStatus.BAD_REQUEST, "이미 사용된 토큰입니다."),
 	NOT_FOUND_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "기한이 만료되었거나, 올바르지 않은 코드입니다."),
 	NOT_FOUND_VERIFICATION_LINK(HttpStatus.BAD_REQUEST, "인증 링크가 일치하지 않습니다"),
-	NOT_FOUND_OAUTH_LINK(HttpStatus.BAD_REQUEST, "Oauth 연동 기록이 존재하지 않습니다"),
+	NOT_FOUND_OAUTH_CONNECTION(HttpStatus.NOT_FOUND, "Oauth 연동 기록이 존재하지 않습니다"),
+	INVALID_OAUTH_CONNECTION(HttpStatus.BAD_REQUEST, "Oauth 연동 기록이 일치하지 않습니다"),
 	CODE_ALREADY_SENT(HttpStatus.TOO_MANY_REQUESTS, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다.");
 
 	final private int statusCode;
