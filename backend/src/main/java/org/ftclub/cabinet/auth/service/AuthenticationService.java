@@ -207,7 +207,7 @@ public class AuthenticationService {
 				.orElseThrow(ExceptionStatus.NOT_FOUND_OAUTH_CONNECTION::asServiceException);
 
 		if (!connection.getProviderType().equals(provider)
-				|| connection.getEmail().equals(oauthMail)) {
+				|| !connection.getEmail().equals(oauthMail)) {
 			throw ExceptionStatus.INVALID_OAUTH_CONNECTION.asServiceException();
 		}
 		userOauthConnectionCommandService.deleteByUserId(userId);
