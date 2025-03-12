@@ -88,6 +88,7 @@ public enum ExceptionStatus {
 	ITEM_USE_DUPLICATED(HttpStatus.FORBIDDEN, "아이템이 중복 사용되었습니다."),
 	INVALID_AMOUNT(HttpStatus.BAD_REQUEST, "코인 지급양은 비어있을 수 없습니다."),
 	FORBIDDEN_USER(HttpStatus.FORBIDDEN, "권한이 부족한 유저입니다"),
+	NO_ACTIVE_LENT_FOUND(HttpStatus.BAD_REQUEST, "대여 기록이 존재하지 않습니다"),
 
 	// Security 토큰 관련 -> 존재하지 않거나, malFormed, signature, expired
 	INVALID_TYPE_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "올바르지 않은 토큰입니다."),
@@ -111,7 +112,7 @@ public enum ExceptionStatus {
 	NOT_FOUND_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "기한이 만료되었거나, 올바르지 않은 코드입니다."),
 	NOT_FOUND_VERIFICATION_LINK(HttpStatus.BAD_REQUEST, "인증 링크가 일치하지 않습니다"),
 	NOT_FOUND_OAUTH_LINK(HttpStatus.BAD_REQUEST, "Oauth 연동 기록이 존재하지 않습니다"),
-	CODE_ALREADY_SENT(HttpStatus.BAD_REQUEST, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다.");
+	CODE_ALREADY_SENT(HttpStatus.TOO_MANY_REQUESTS, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다.");
 
 	final private int statusCode;
 	final private String message;

@@ -25,6 +25,8 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
+import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,6 +59,8 @@ public class AuthenticationService {
 	private final ApplicationTokenManager applicationTokenManager;
 	private final ApplicationEventPublisher eventPublisher;
 	private final UserOauthConnectionQueryService userOauthConnectionQueryService;
+	private final LentFacadeService lentFacadeService;
+	private final LentQueryService lentQueryService;
 	@Value("${cabinet.server.be-host}")
 	private String beHost;
 
@@ -165,6 +169,9 @@ public class AuthenticationService {
 				&& !oauthService.isAguUser(name, applicationTokenManager.getFtAccessToken())) {
 			throw ExceptionStatus.ACCESS_DENIED.asServiceException();
 		}
+		lentQueryService.getUserActiveLentHistory(user.getId())
+				.orElseThrow(ExceptionStatus.NO_ACTIVE_LENT_FOUND::asServiceException);
+
 		// 코드가 있는데 발급 요청이면 에러(3분 내로 재요청)
 		if (aguCodeRedisService.isAlreadyExist(name)) {
 			throw ExceptionStatus.CODE_ALREADY_SENT.asServiceException();
