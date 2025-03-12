@@ -3,6 +3,8 @@ package org.ftclub.cabinet.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
+import org.ftclub.cabinet.auth.service.UserOauthService;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
@@ -28,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	private final UserFacadeService userFacadeService;
+	private final UserOauthService userOauthService;
+	private final ApplicationTokenManager applicationTokenManager;
 
 	/**
 	 * 현재 로그인한 유저의 프로필을 반환합니다. 전체 사물함 뷰에서 본인의 사물함을 표시하기 위해 사용됩니다.
@@ -81,4 +85,5 @@ public class UserController {
 			@RequestBody UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
 		userFacadeService.updateDeviceToken(userSessionDto, updateDeviceTokenRequestDto);
 	}
+
 }
