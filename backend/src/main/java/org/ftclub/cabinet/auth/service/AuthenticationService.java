@@ -13,20 +13,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.EmailVerificationAlarm;
+import org.ftclub.cabinet.alarm.repository.AguCodeRedis;
 import org.ftclub.cabinet.alarm.service.AguCodeRedisService;
-import org.ftclub.cabinet.auth.domain.CookieManager;
+import org.ftclub.cabinet.auth.domain.CookieInfo;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.OauthResult;
-import org.ftclub.cabinet.auth.domain.UserOauthConnection;
+import org.ftclub.cabinet.dto.AguMailResponse;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
-import org.ftclub.cabinet.dto.UserOauthMailDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
-import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
+import org.ftclub.cabinet.oauth.service.OauthProfileService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,19 +49,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class AuthenticationService {
 
 	private static final String VERIFICATION_API = "/v5/auth/agu";
-	private final UserOauthConnectionCommandService userOauthConnectionCommandService;
 	private final AguCodeRedisService aguCodeRedisService;
-	private final CookieManager cookieManager;
 	private final UserQueryService userQueryService;
 	private final AuthPolicyService authPolicyService;
 	private final JwtRedisService jwtRedisService;
-	private final OauthService oauthService;
 	private final JwtService jwtService;
 	private final ApplicationTokenManager applicationTokenManager;
 	private final ApplicationEventPublisher eventPublisher;
-	private final UserOauthConnectionQueryService userOauthConnectionQueryService;
-	private final LentFacadeService lentFacadeService;
 	private final LentQueryService lentQueryService;
+	private final OauthProfileService oauthProfileService;
+	private final CookieService cookieService;
+
 	@Value("${cabinet.server.be-host}")
 	private String beHost;
 
@@ -76,7 +75,7 @@ public class AuthenticationService {
 			OauthResult result, String provider) {
 
 		TokenDto tokens = jwtService.createTokens(result.getUserId(), result.getRoles(), provider);
-		cookieManager.setTokenCookies(res, tokens, req.getServerName());
+		cookieService.setTokenCookies(res, tokens, req.getServerName());
 
 		Authentication auth = createAuthenticationForUser(result, provider);
 		SecurityContextHolder.getContext().setAuthentication(auth);
@@ -121,7 +120,7 @@ public class AuthenticationService {
 			jwtRedisService.addUsedUserTokensToBlackList(userId, accessToken, refreshToken);
 		}
 		// 내부 모든 쿠키 삭제
-		cookieManager.deleteAllCookies(request.getCookies(), response);
+		cookieService.deleteAllCookies(request.getCookies(), request.getServerName(), response);
 	}
 
 
@@ -146,10 +145,10 @@ public class AuthenticationService {
 		String temporaryToken =
 				jwtService.createAguToken(user.getId());
 
-		Cookie cookie = cookieManager.cookieOf(JwtTokenConstants.AGU_TOKEN, temporaryToken);
-		cookie.setMaxAge(60 * 60);
-		cookieManager.setSecureAndClient(res, cookie, "/", req.getServerName());
+		Cookie cookie = new Cookie(JwtTokenConstants.AGU_TOKEN, temporaryToken);
+		CookieInfo cookieInfo = new CookieInfo(req.getServerName(), 60 * 60, true);
 
+		cookieService.setToClient(cookie, cookieInfo, res);
 		res.sendRedirect(authPolicyService.getAGUUrl());
 	}
 
@@ -162,11 +161,12 @@ public class AuthenticationService {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	public UserOauthMailDto requestTemporaryLogin(String name) throws JsonProcessingException {
+	public AguMailResponse requestTemporaryLogin(String name) throws JsonProcessingException {
 		User user = userQueryService.getUserByName(name);
-		// agu 상태인지 검증 이 유저가 지금 당장 최신의 profile에 AGU라고 박혀잇니??
-		if (!user.getRoles().contains(FtRole.AGU.name())
-				&& !oauthService.isAguUser(name, applicationTokenManager.getFtAccessToken())) {
+		FtOauthProfile profile = oauthProfileService.getProfileByIntraName(
+				applicationTokenManager.getFtAccessToken(), name);
+
+		if (!user.isContainRole(FtRole.AGU.name()) && !profile.isSameRole(FtRole.AGU)) {
 			throw ExceptionStatus.ACCESS_DENIED.asServiceException();
 		}
 		lentQueryService.getUserActiveLentHistory(user.getId())
@@ -183,7 +183,7 @@ public class AuthenticationService {
 		AlarmEvent alarmEvent =
 				AlarmEvent.of(user.getId(), new EmailVerificationAlarm(verificationLink));
 		eventPublisher.publishEvent(alarmEvent);
-		return new UserOauthMailDto(user.getEmail());
+		return new AguMailResponse(user.getEmail(), AguCodeRedis.EXPIRY_MIN);
 	}
 
 	private String generateVerificationLink(String aguCode, String name) {
@@ -194,22 +194,5 @@ public class AuthenticationService {
 				.encode(StandardCharsets.UTF_8)
 				.build()
 				.toUriString();
-	}
-
-	/**
-	 * 계정 연동을 해지합니다.
-	 *
-	 * @param userId
-	 */
-	public void deleteOauthMail(Long userId, String oauthMail, String provider) {
-
-		UserOauthConnection connection = userOauthConnectionQueryService.findByUserId(userId)
-				.orElseThrow(ExceptionStatus.NOT_FOUND_OAUTH_CONNECTION::asServiceException);
-
-		if (!connection.getProviderType().equals(provider)
-				|| !connection.getEmail().equals(oauthMail)) {
-			throw ExceptionStatus.INVALID_OAUTH_CONNECTION.asServiceException();
-		}
-		userOauthConnectionCommandService.deleteByUserId(userId);
 	}
 }
