@@ -14,8 +14,8 @@ import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtService;
+import org.ftclub.cabinet.oauth.domain.OauthLink;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserOauthConnection;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ public class OauthLinkFacadeService {
 				.orElseGet(() -> handleNewLinkUser(req, providerType, providerId, oauthMail));
 	}
 
-	public OauthResult handleExistingLinkedUser(UserOauthConnection connection) {
+	public OauthResult handleExistingLinkedUser(OauthLink connection) {
 		User user = connection.getUser();
 		try {
 			FtOauthProfile profile = oauthProfileService.getProfileByIntraName(
@@ -82,8 +82,8 @@ public class OauthLinkFacadeService {
 		}
 
 		User user = userQueryService.getUser(userInfoDto.getUserId());
-		UserOauthConnection connection =
-				UserOauthConnection.of(user, providerType, providerId, oauthMail);
+		OauthLink connection =
+				OauthLink.of(user, providerType, providerId, oauthMail);
 		oauthLinkCommandService.save(connection);
 		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getProfileUrl());
 	}
@@ -96,7 +96,7 @@ public class OauthLinkFacadeService {
 	@Transactional
 	public void deleteOauthMail(Long userId, String oauthMail, String provider) {
 
-		UserOauthConnection connection = oauthLinkQueryService.getByUserId(userId);
+		OauthLink connection = oauthLinkQueryService.getByUserId(userId);
 
 		if (!connection.getProviderType().equals(provider)
 				|| !connection.getEmail().equals(oauthMail)) {
