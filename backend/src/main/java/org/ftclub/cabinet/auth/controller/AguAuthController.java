@@ -42,6 +42,18 @@ public class AguAuthController {
 	}
 
 	/**
+	 * Agu 유저의 사물함 반납 취소
+	 *
+	 * @param req
+	 */
+	@PostMapping("/agu/cancel")
+	public void aguCancel(HttpServletRequest req,
+			HttpServletResponse res,
+			@RequestParam("name") String name) {
+		authenticationService.deleteAguUserInfo(req, res, name);
+	}
+
+	/**
 	 * 로그아웃시, HTTP Response 의 set-cookie Header 를 지워줍니다. cookie에 담긴 JWT 토큰을 제거합니다.
 	 *
 	 * @param res 요청 시의 서블릿 {@link HttpServletResponse}

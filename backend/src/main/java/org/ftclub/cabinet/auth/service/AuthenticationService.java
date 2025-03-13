@@ -123,6 +123,17 @@ public class AuthenticationService {
 		cookieService.deleteAllCookies(request.getCookies(), request.getServerName(), response);
 	}
 
+	/**
+	 * 쿠키, agu코드 삭제
+	 *
+	 * @param req
+	 * @param userId
+	 */
+	public void deleteAguUserInfo(HttpServletRequest req, HttpServletResponse res, String name) {
+		aguCodeRedisService.removeAguCode(name);
+		cookieService.deleteAllCookies(req.getCookies(), req.getServerName(), res);
+	}
+
 
 	/**
 	 * redis 내의 코드와 비교하여 검증합니다.
