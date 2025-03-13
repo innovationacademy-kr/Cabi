@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.exception;
 
-import java.nio.file.AccessDeniedException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +9,7 @@ import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -59,13 +59,14 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<?> accessDeniedExceptionHandler(AccessDeniedException e) {
-		log.info("[AccessDeniedException] : {}", e.getMessage());
+		ExceptionStatus status = ExceptionStatus.FORBIDDEN_USER;
+		log.info("[AccessDeniedException] : {} : {}", status.getError(), status.getMessage());
 		if (log.isDebugEnabled()) {
 			log.debug("Exception stack trace: ", e);
 		}
 		return ResponseEntity
-				.status(HttpStatus.FORBIDDEN)
-				.body(e.getCause());
+				.status(status.getStatusCode())
+				.body(status);
 	}
 
 	@ExceptionHandler(CustomServiceException.class)

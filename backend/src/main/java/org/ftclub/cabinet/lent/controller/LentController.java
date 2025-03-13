@@ -14,6 +14,7 @@ import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -122,6 +123,7 @@ public class LentController {
 	 * @param user 사용자 세션
 	 * @return 내 사물함 대여 정보 HTTP 응답
 	 */
+	@PreAuthorize("hasRole('AGU') or (hasRole('USER') and !@securityPathPolicy.isAguContext())")
 	@GetMapping("/me")
 	public ResponseEntity<MyCabinetResponseDto> getMyLentInfo(
 			@AuthenticationPrincipal UserInfoDto user) {
