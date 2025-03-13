@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 public class AguCodeRedis {
 
+	public static final int EXPIRY_MIN = 3;
 	private static final String AGU_CODE_SUFFIX = ":aguCode";
 	private final ValueOperations<String, String> aguCodeTemplate;
 
@@ -26,7 +27,7 @@ public class AguCodeRedis {
 				.set(name + AGU_CODE_SUFFIX,
 						code,
 						Duration.ofSeconds(30)
-						// Duration.ofMinutes(5)
+						// Duration.ofMinutes(EXPIRY_MIN)
 				);
 		String savedValue = aguCodeTemplate.get(name + AGU_CODE_SUFFIX);
 		System.out.println("저장 키: " + name);
