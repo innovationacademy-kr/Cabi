@@ -13,4 +13,8 @@ public class FtOauthProfile {
 	private final String email;
 	private final LocalDateTime blackHoledAt;
 	private final Set<FtRole> roles;
+
+	public boolean isSameRole(FtRole role) {
+		return this.roles.contains(role);
+	}
 }

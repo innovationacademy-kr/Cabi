@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.config.security.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -15,12 +14,12 @@ import org.ftclub.cabinet.auth.domain.CustomOauth2User;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.service.AuthenticationService;
-import org.ftclub.cabinet.auth.service.OauthService;
 import org.ftclub.cabinet.exception.CustomAccessDeniedException;
 import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.oauth.service.OauthFacadeService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -38,7 +37,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 
-	private final OauthService oauthService;
+	private final OauthFacadeService oauthFacadeService;
 	private final ObjectMapper objectMapper;
 	private final AuthPolicyService authPolicyService;
 	private final AuthenticationService authenticationService;
@@ -86,16 +85,17 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	 * @param oauth2User
 	 * @return
 	 */
-	private OauthResult processOAuthLogin(HttpServletRequest req, String provider,
-			CustomOauth2User oauth2User) throws JsonProcessingException {
+	private OauthResult processOAuthLogin(HttpServletRequest req,
+			String provider, CustomOauth2User oauth2User) {
+
 		if (provider.equals(ftProvider)) {
 			JsonNode rootNode =
 					objectMapper.convertValue(oauth2User.getAttributes(), JsonNode.class);
 
-			return oauthService.handleFtLogin(rootNode);
+			return oauthFacadeService.handleFtLogin(rootNode);
 		}
 		if (isExternalProvider(provider)) {
-			return oauthService.handleExternalOAuthLogin(oauth2User, req);
+			return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
 		}
 		throw new CustomAccessDeniedException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
 	}
@@ -121,6 +121,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 			return ExceptionStatus.JWT_EXCEPTION;
 		}
 		if (e instanceof NullPointerException) {
+			e.printStackTrace();  // 전체 스택 트레이스를 콘솔에 출력 (혹은 로거로 기록 가능)
 			return ExceptionStatus.JSON_PROCESSING_EXCEPTION;
 		}
 		if (e instanceof ServiceException) {
