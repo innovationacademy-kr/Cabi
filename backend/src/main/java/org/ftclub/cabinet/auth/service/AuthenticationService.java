@@ -116,11 +116,23 @@ public class AuthenticationService {
 			String refreshToken) throws IOException {
 
 		String accessToken = jwtService.extractToken(request);
-		if (accessToken != null && refreshToken != null) {
-			jwtRedisService.addUsedUserTokensToBlackList(userId, accessToken, refreshToken);
+		if (accessToken == null || refreshToken == null) {
+			throw ExceptionStatus.JWT_TOKEN_NOT_FOUND.asServiceException();
 		}
-		// 내부 모든 쿠키 삭제
+		// 내부 모든 쿠키 및 토큰 삭제
+		jwtRedisService.addUsedUserTokensToBlackList(userId, accessToken, refreshToken);
 		cookieService.deleteAllCookies(request.getCookies(), request.getServerName(), response);
+	}
+
+	/**
+	 * 쿠키, agu코드 삭제
+	 *
+	 * @param req
+	 * @param userId
+	 */
+	public void deleteAguUserInfo(HttpServletRequest req, HttpServletResponse res, String name) {
+		aguCodeRedisService.removeAguCode(name);
+		cookieService.deleteAllCookies(req.getCookies(), req.getServerName(), res);
 	}
 
 

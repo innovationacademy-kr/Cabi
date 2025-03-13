@@ -121,7 +121,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 			return ExceptionStatus.JWT_EXCEPTION;
 		}
 		if (e instanceof NullPointerException) {
-			e.printStackTrace();  // 전체 스택 트레이스를 콘솔에 출력 (혹은 로거로 기록 가능)
 			return ExceptionStatus.JSON_PROCESSING_EXCEPTION;
 		}
 		if (e instanceof ServiceException) {

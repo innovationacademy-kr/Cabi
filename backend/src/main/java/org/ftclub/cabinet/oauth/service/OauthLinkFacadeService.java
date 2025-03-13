@@ -70,7 +70,7 @@ public class OauthLinkFacadeService {
 
 		String refreshToken = cookieService.getCookieValue(req, JwtTokenConstants.REFRESH_TOKEN);
 		if (refreshToken == null) {
-			throw new CustomAuthenticationException(ExceptionStatus.JWT_TOKEN_NOT_FOUND);
+			throw new CustomAuthenticationException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
 		}
 
 		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(refreshToken);
