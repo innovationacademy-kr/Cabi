@@ -1,5 +1,6 @@
-package org.ftclub.cabinet.auth.service;
+package org.ftclub.cabinet.oauth.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -8,9 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
+import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
 @Service
@@ -19,6 +23,29 @@ public class OauthProfileService {
 
 	private static final int PISCINE_INDEX = 0;
 	private static final int CADET_INDEX = 1;
+	private final FtApiProperties ftApiProperties;
+
+	/**
+	 * 42에서 발급한 accessToken을 활용해 유저의 정보를 받아옵니다
+	 *
+	 * @param accessToken
+	 * @param intraName
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	public FtOauthProfile getProfileByIntraName(String accessToken, String intraName)
+			throws JsonProcessingException {
+		log.info("Called getProfileByIntraName {}", intraName);
+		JsonNode result = WebClient.create().get()
+				.uri(ftApiProperties.getUsersInfoUri() + '/' + intraName)
+				.accept(MediaType.APPLICATION_JSON)
+				.headers(h -> h.setBearerAuth(accessToken))
+				.retrieve()
+				.bodyToMono(JsonNode.class)
+				.block();
+
+		return convertJsonNodeToFtOauthProfile(result);
+	}
 
 	/**
 	 * 42 로그인 시 받은 jsonNode -> FtOauthProfile 객체 변환
