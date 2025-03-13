@@ -58,7 +58,7 @@ public class AguAuthController {
 	 *
 	 * @param res 요청 시의 서블릿 {@link HttpServletResponse}
 	 */
-	@GetMapping("/logout")
+	@PostMapping("/logout")
 	public void logout(
 			@AuthenticationPrincipal UserInfoDto userInfoDto,
 			@CookieValue(name = JwtTokenConstants.REFRESH_TOKEN) String refreshToken,
