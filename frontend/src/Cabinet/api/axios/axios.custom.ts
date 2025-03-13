@@ -8,10 +8,10 @@ import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 
-const axiosLogoutUrl = "/v4/auth/logout";
+const axiosLogoutUrl = "/v5/auth/logout";
 export const axiosLogout = async (): Promise<any> => {
   try {
-    const response = await instance.get(axiosLogoutUrl);
+    const response = await instance.post(axiosLogoutUrl);
     return response;
   } catch (error) {
     throw error;
@@ -488,7 +488,7 @@ export const axiosLink = async (
   // if (intraId === null) return;
   try {
     const response = await instance.delete(axiosLinkURL, {
-      params: {
+      data: {
         oauthMail: mail, // 연동 해지하려는 mail
         provider: provider, // 연동되어있는 providerType
       },
