@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.auth.domain;
+package org.ftclub.cabinet.user.domain;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -15,7 +15,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.user.domain.User;
 
 @Entity
 @Getter
@@ -36,6 +35,8 @@ public class UserOauthConnection {
 	private String providerId; // UUID
 	@Column(name = "CREATED_AT")
 	private LocalDateTime createdAt;
+	@Column(name = "DELETED_AT")
+	private LocalDateTime deletedAt;
 	@Email
 	@Column(name = "EMAIL")
 	private String email;
@@ -46,6 +47,7 @@ public class UserOauthConnection {
 		this.providerId = providerId;
 		this.email = email;
 		this.createdAt = LocalDateTime.now();
+		this.deletedAt = null;
 	}
 
 	public static UserOauthConnection of(
@@ -66,6 +68,10 @@ public class UserOauthConnection {
 		return this.user != null
 				&& this.email != null && this.createdAt != null
 				&& this.providerId != null && this.providerType != null;
+	}
+
+	public void generateDeletedAt() {
+		this.deletedAt = LocalDateTime.now();
 	}
 
 	@Override
