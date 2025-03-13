@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
-import org.ftclub.cabinet.auth.domain.CookieManager;
+import org.ftclub.cabinet.auth.service.CookieService;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.DomainException;
@@ -30,8 +30,8 @@ public class JwtService {
 	private final JwtProvider tokenProvider;
 	private final AdminQueryService adminQueryService;
 	private final JwtRedisService jwtRedisService;
-	private final CookieManager cookieManager;
 	private final UserQueryService userQueryService;
+	private final CookieService cookieService;
 
 
 	/**
@@ -151,7 +151,7 @@ public class JwtService {
 		TokenDto tokens = createTokens(admin.getId(), admin.getRole().name(),
 				userInfoDto.getOauth());
 
-		cookieManager.setTokenCookies(res, tokens, req.getServerName());
+		cookieService.setTokenCookies(res, tokens, req.getServerName());
 		jwtRedisService.addUsedAdminTokensToBlackList(
 				admin.getId(), currentTokens.getAccessToken(), currentTokens.getRefreshToken());
 		return tokens;
@@ -179,7 +179,7 @@ public class JwtService {
 		}
 		TokenDto tokens = createTokens(user.getId(), user.getRoles(), userInfoDto.getOauth());
 
-		cookieManager.setTokenCookies(res, tokens, req.getServerName());
+		cookieService.setTokenCookies(res, tokens, req.getServerName());
 		jwtRedisService.addUsedUserTokensToBlackList(
 				user.getId(), currentTokens.getAccessToken(), currentTokens.getRefreshToken());
 		return tokens;

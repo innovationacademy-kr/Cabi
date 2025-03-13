@@ -1,9 +1,7 @@
 package org.ftclub.cabinet.jwt.service;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import java.security.Key;
 import java.util.Date;
@@ -32,18 +30,10 @@ public class JwtProvider {
 	public Claims parseToken(String token) {
 		Key key = tokenProperties.getSigningKey();
 
-		try {
-			return Jwts.parserBuilder()
-					.setSigningKey(key).build()
-					.parseClaimsJws(token)
-					.getBody();
-		} catch (ExpiredJwtException e) {
-			log.info("만료된 JWT 입니다 : {}", e.getMessage());
-			throw e;
-		} catch (JwtException e) {
-			log.info("유효하지 않은 JWT 입니다 : {}", e.getMessage());
-			throw e;
-		}
+		return Jwts.parserBuilder()
+				.setSigningKey(key).build()
+				.parseClaimsJws(token)
+				.getBody();
 	}
 
 
