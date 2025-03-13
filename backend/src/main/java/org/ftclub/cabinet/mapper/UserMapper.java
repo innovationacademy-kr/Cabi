@@ -5,7 +5,6 @@ import static org.mapstruct.NullValueMappingStrategy.RETURN_NULL;
 
 import java.util.List;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
-import org.ftclub.cabinet.auth.domain.UserOauthConnection;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.ClubUserListDto;
@@ -16,6 +15,7 @@ import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.dto.UserOauthConnectionDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
+import org.ftclub.cabinet.oauth.domain.OauthLink;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.User;
@@ -39,7 +39,7 @@ public interface UserMapper {
 	@Mapping(target = "userId", source = "user.id")
 	UserProfileDto toUserProfileDto(User user);
 
-	UserOauthConnectionDto toUserOauthConnectionDto(UserOauthConnection userOauthConnection);
+	UserOauthConnectionDto toUserOauthConnectionDto(OauthLink userOauthConnection);
 
 	@Mapping(target = "userId", source = "user.id")
 	@Mapping(target = "cabinetId", source = "cabinet.id")

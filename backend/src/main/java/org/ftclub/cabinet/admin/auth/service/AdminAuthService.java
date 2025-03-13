@@ -7,9 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
+import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
+import org.ftclub.cabinet.auth.domain.CookieInfo;
 import org.ftclub.cabinet.auth.domain.CookieManager;
+import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
+import org.ftclub.cabinet.auth.service.CookieService;
 import org.ftclub.cabinet.dto.AccessTokenDto;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.dto.TokenDto;
@@ -20,6 +24,7 @@ import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +36,8 @@ public class AdminAuthService {
 	private final JwtService jwtService;
 	private final JwtTokenProperties jwtTokenProperties;
 	private final JwtRedisService jwtRedisService;
+	private final AdminCommandService adminCommandService;
+	private final CookieService cookieService;
 
 	@Value("${cabinet.server.be-host}")
 	private String beHost;
@@ -45,12 +52,10 @@ public class AdminAuthService {
 	public void requestAdminLogin(HttpServletRequest req, HttpServletResponse res)
 			throws IOException {
 		// 쿠키에 로그인 현상 저장
-		Cookie cookie = cookieManager.cookieOf("login_source", "admin");
-		cookie.setMaxAge(15);
-		cookie.setSecure(true);
-		cookie.setHttpOnly(true);
-		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+		Cookie cookie = new Cookie("login_source", "admin");
+		CookieInfo cookieInfo = new CookieInfo(req.getServerName(), 15, true);
 
+		cookieService.setToClient(cookie, cookieInfo, res);
 		res.sendRedirect(beHost + "/oauth2/authorization/google");
 	}
 
@@ -105,7 +110,17 @@ public class AdminAuthService {
 			jwtRedisService.addUsedAdminTokensToBlackList(userId, accessToken, refreshToken);
 		}
 		// 내부 모든 쿠키 삭제
-		cookieManager.deleteAllCookies(request.getCookies(), response);
+		cookieService.deleteAllCookies(request.getCookies(), request.getServerName(), response);
+	}
+
+	@Transactional
+	public OauthResult handleAdminLogin(String adminMail) {
+		Admin admin = adminQueryService.findByEmail(adminMail)
+				.orElseGet(() -> adminCommandService.createAdminByEmail(adminMail));
+
+		return new OauthResult(admin.getId(),
+				admin.getRole().name(),
+				authPolicyService.getAdminHomeUrl());
 	}
 
 }

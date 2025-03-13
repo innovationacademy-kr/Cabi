@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String token = jwtService.extractToken(request);
 		if (token != null) {
 			UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(token);
-			Authentication auth = getAuthentication(request, userInfoDto);
+			Authentication auth = getAuthentication(userInfoDto);
 
 			log.info("JWT Filter: 요청 URL = {}, userId = {}, role = {}",
 					request.getRequestURI(),

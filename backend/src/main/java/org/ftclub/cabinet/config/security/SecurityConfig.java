@@ -59,7 +59,7 @@ public class SecurityConfig {
 						.successHandler(customSuccessHandler)
 				)
 				.logout(logout -> logout
-						.logoutUrl("/v4/auth/logout")
+						.logoutUrl("/v5/auth/logout")
 						.logoutSuccessHandler((request, response, authentication) ->
 								response.setStatus(HttpStatus.OK.value()))
 						.invalidateHttpSession(true)
