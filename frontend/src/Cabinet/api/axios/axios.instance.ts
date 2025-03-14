@@ -39,10 +39,10 @@ const reissueToken = async () => {
 instance.interceptors.request.use(async (config) => {
   const accessToken = getCookie("access_token");
   const aguToken = getCookie("agu_token");
+  const xsrfToken = getCookie("XSRF-TOKEN");
   const isAGUPage = window.location.pathname === "/agu";
-  // console.log("isAGUPage ??? ", isAGUPage);
-  // console.log("accessToken ??? ", accessToken);
-  // console.log("aguToken ??? ", aguToken);
+
+  config.headers.set("X-XSRF-TOKEN", xsrfToken);
   if (accessToken || !isAGUPage)
     config.headers.set("Authorization", `Bearer ${accessToken}`);
   else if (aguToken && isAGUPage)
