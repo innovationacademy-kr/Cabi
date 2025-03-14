@@ -14,17 +14,15 @@ const reissueInstance = axios.create({
 
 const reissueToken = async () => {
   try {
+    // TODO : 경로에 따라 헤더 다르게 세팅
     const token = getCookie("access_token");
-    console.log("token : ", token);
-    const response = await reissueInstance.post(
-      "/v5/jwt/reissue",
-      // {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const xsrfToken = getCookie("XSRF-TOKEN");
+    const response = await reissueInstance.post("/v5/jwt/reissue", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "X-XSRF-TOKEN": xsrfToken,
+      },
+    });
 
     if (response.status === 200) {
       return true;
