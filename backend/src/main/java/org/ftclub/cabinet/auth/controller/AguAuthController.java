@@ -34,7 +34,7 @@ public class AguAuthController {
 	}
 
 	@GetMapping("/agu")
-	public void loginAguLogin(HttpServletRequest req,
+	public void verifyAguCode(HttpServletRequest req,
 			HttpServletResponse res,
 			@RequestParam(name = "code") String code,
 			@RequestParam(name = "name") String name) throws IOException {
@@ -47,10 +47,8 @@ public class AguAuthController {
 	 * @param req
 	 */
 	@PostMapping("/agu/cancel")
-	public void aguCancel(HttpServletRequest req,
-			HttpServletResponse res,
-			@RequestParam("name") String name) {
-		authenticationService.deleteAguUserInfo(req, res, name);
+	public void aguCancel(HttpServletRequest req, HttpServletResponse res) {
+		authenticationService.deleteAguUserInfo(req, res);
 	}
 
 	/**

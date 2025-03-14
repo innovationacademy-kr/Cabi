@@ -125,13 +125,11 @@ public class AuthenticationService {
 	}
 
 	/**
-	 * 쿠키, agu코드 삭제
+	 * 쿠키 제거
 	 *
 	 * @param req
-	 * @param userId
 	 */
-	public void deleteAguUserInfo(HttpServletRequest req, HttpServletResponse res, String name) {
-		aguCodeRedisService.removeAguCode(name);
+	public void deleteAguUserInfo(HttpServletRequest req, HttpServletResponse res) {
 		cookieService.deleteAllCookies(req.getCookies(), req.getServerName(), res);
 	}
 
