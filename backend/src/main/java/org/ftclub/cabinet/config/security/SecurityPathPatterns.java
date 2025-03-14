@@ -6,7 +6,7 @@ public class SecurityPathPatterns {
 			"/",
 			"/demo",
 			"/ping",
-			"actuator/**",
+			"/actuator/**",
 			"/favicon.ico",
 			"/v4/auth/**",
 			"/v5/auth/**",
