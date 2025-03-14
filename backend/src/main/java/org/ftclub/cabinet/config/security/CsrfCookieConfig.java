@@ -15,6 +15,7 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 @RequiredArgsConstructor
 public class CsrfCookieConfig implements CsrfTokenRepository {
 
+	public static final String CSRF_HEADER = "XSRF-TOKEN";
 	private final CookieCsrfTokenRepository delegate = CookieCsrfTokenRepository.withHttpOnlyFalse();
 	private final CookieService cookieService;
 
@@ -31,7 +32,7 @@ public class CsrfCookieConfig implements CsrfTokenRepository {
 			return;
 		}
 
-		Cookie csrfCookie = new Cookie("XSRF-TOKEN", token.getToken());
+		Cookie csrfCookie = new Cookie(CSRF_HEADER, token.getToken());
 		CookieInfo cookieInfo = new CookieInfo(request.getServerName(), -1, false);
 		cookieService.setToClient(csrfCookie, cookieInfo, response);
 	}
