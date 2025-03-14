@@ -29,11 +29,11 @@ public class OauthLinkQueryService {
 	}
 
 	public OauthLink getByUserId(Long userId) {
-		return oauthLinkRepository.findByUserId(userId)
+		return oauthLinkRepository.findByUserIdAndDeletedAtIsNull(userId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_OAUTH_CONNECTION::asServiceException);
 	}
 
 	public Optional<OauthLink> findByUserId(Long userId) {
-		return oauthLinkRepository.findByUserId(userId);
+		return oauthLinkRepository.findByUserIdAndDeletedAtIsNull(userId);
 	}
 }

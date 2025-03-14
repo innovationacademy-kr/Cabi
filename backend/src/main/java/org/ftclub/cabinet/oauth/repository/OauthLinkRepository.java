@@ -20,7 +20,8 @@ public interface OauthLinkRepository extends JpaRepository<OauthLink, Long> {
 	Optional<OauthLink> findByProviderIdAndProviderTypeAndDeletedAtIsNull(
 			String providerId, String providerType);
 
-	Optional<OauthLink> findByUserId(Long userId);
+
+	Optional<OauthLink> findByUserIdAndDeletedAtIsNull(Long userId);
 
 	boolean existsByProviderIdAndProviderType(String providerId, String providerType);
 
