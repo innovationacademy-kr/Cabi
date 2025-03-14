@@ -3,6 +3,9 @@ import ErrorType from "@/Cabinet/types/enum/error.type.enum";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 
+axios.defaults.xsrfCookieName = "XSRF-TOKEN"; // 쿠키 이름
+axios.defaults.xsrfHeaderName = "X-XSRF-TOKEN"; // 요청 헤더에 포함될 이름
+
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BE_HOST,
 });
