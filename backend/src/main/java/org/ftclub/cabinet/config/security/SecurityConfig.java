@@ -19,7 +19,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -34,12 +33,13 @@ public class SecurityConfig {
 	private final CustomSuccessHandler customSuccessHandler;
 	private final CustomAuthenticationEntryPoint entrypoint;
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
+	private final CsrfCookieConfig csrfCookieConfig;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http)
 			throws Exception {
 		http.csrf(csrf -> csrf
-						.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+						.csrfTokenRepository(csrfCookieConfig))
 				.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.cors().and()
