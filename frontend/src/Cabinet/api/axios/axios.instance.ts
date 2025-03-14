@@ -45,15 +45,16 @@ instance.interceptors.request.use(async (config) => {
   const aguToken = getCookie("agu_token");
   const xsrfToken = getCookie("XSRF-TOKEN");
   const isAGUPage = window.location.pathname === "/agu";
-  console.log("instance xsrfToken : ", xsrfToken);
 
-  config.headers.set("X-XSRF-TOKEN", xsrfToken);
-  if (isAGUPage) config.headers.set("X-Client-Path", "/agu");
-  // if (accessToken || (accessToken && !isAGUPage))
-  if (accessToken || !isAGUPage)
-    config.headers.set("Authorization", `Bearer ${accessToken}`);
-  else if (aguToken && isAGUPage)
-    config.headers.set("Authorization", `Bearer ${aguToken}`);
+  if (xsrfToken) config.headers["X-XSRF-TOKEN"] = xsrfToken;
+  if (isAGUPage) config.headers["X-Client-Path"] = "/agu";
+
+  // TODO : 조건문 수정
+  if (accessToken) config.headers["Authorization"] = `Bearer ${accessToken}`;
+  if (accessToken && !isAGUPage)
+    config.headers["Authorization"] = `Bearer ${accessToken}`;
+  if (aguToken && isAGUPage)
+    config.headers["Authorization"] = `Bearer ${aguToken}`;
   // TODO : 정리 - 반납하시겠습니까 에서 lent/me 요청 보낼때
   return config;
 });
