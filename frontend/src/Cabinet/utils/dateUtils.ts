@@ -34,7 +34,6 @@ export const formatDate = (
 ) => {
   if (date === null) return "";
   return [
-    // date.getFullYear(),
     padToNDigits(date.getFullYear(), yearLen),
     padToNDigits(date.getMonth() + 1, monthLen),
     padToNDigits(date.getDate(), dayLen),

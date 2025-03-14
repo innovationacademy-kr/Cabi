@@ -480,6 +480,19 @@ export const axiosAGU = async (intraId: string): Promise<any> => {
   }
 };
 
+export const axiosAGUCancel = async (intraId: string): Promise<any> => {
+  // if (intraId === null) return;
+  try {
+    const response = await instance.post(axiosAGUURL + "/cancel", null, {
+      params: { name: intraId },
+    });
+    return response;
+  } catch (error) {
+    // logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");
+    throw error;
+  }
+};
+
 const axiosLinkURL = "/v5/auth/link";
 export const axiosLink = async (
   mail: string,
