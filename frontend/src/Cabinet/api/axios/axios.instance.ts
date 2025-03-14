@@ -49,7 +49,7 @@ instance.interceptors.request.use(async (config) => {
   console.log("instance xsrfToken : ", xsrfToken);
 
   config.headers.set("X-XSRF-TOKEN", xsrfToken);
-  if (isAGUPage) config.headers.set("X-ClientT-Path", "/agu");
+  if (isAGUPage) config.headers.set("X-Client-Path", "/agu");
   if (accessToken || !isAGUPage)
     config.headers.set("Authorization", `Bearer ${accessToken}`);
   else if (aguToken && isAGUPage)
