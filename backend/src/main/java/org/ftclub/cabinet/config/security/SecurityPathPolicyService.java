@@ -48,7 +48,12 @@ public class SecurityPathPolicyService {
 			return false;
 		}
 
+		String origin = request.getHeader("Origin");
 		String referer = request.getHeader(HttpHeaders.REFERER);
+		log.info("Origin = {}", origin);
+		log.info("Referer = {}, RequestURI = {}, RequestURL = {}",
+				referer, request.getRequestURI(), request.getRequestURL());
+
 		log.info("Referer = {}", referer);
 		String uri = request.getRequestURI();
 
