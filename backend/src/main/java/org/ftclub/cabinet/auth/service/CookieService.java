@@ -39,7 +39,7 @@ public class CookieService {
 		Cookie accessTokenCookie = cookieManager.createCookie(
 				JwtTokenConstants.ACCESS_TOKEN,
 				tokens.getAccessToken(),
-				jwtTokenProperties.getAccessExpirySeconds(),
+				jwtTokenProperties.getAccessExpirySeconds() + 180,
 				"/",
 				false,
 				isSecure
@@ -49,7 +49,7 @@ public class CookieService {
 		Cookie refreshTokenCookie = cookieManager.createCookie(
 				JwtTokenConstants.REFRESH_TOKEN,
 				tokens.getRefreshToken(),
-				jwtTokenProperties.getRefreshExpirySeconds(),
+				jwtTokenProperties.getRefreshExpirySeconds() + 180,
 				"/",
 				true,
 				isSecure
