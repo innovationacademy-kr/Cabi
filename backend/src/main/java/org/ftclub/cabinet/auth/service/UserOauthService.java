@@ -128,19 +128,31 @@ public class UserOauthService {
 	private FtProfile convertJsonStringToProfile(JsonNode jsonNode) throws JsonProcessingException {
 		String intraName = jsonNode.get("login").asText();
 		String email = jsonNode.get("email").asText();
-
 		if (intraName == null || email == null) {
 			throw ExceptionStatus.INCORRECT_ARGUMENT.asServiceException();
 		}
+		JsonNode mainCursus = find42CursusNode(jsonNode);
+		LocalDateTime blackHoledAt = determineBlackHoledAt(mainCursus);
+		FtRole role = determineFtRole(jsonNode, mainCursus);
 
-		LocalDateTime blackHoledAt = determineBlackHoledAt(jsonNode);
-		FtRole role = determineFtRole(jsonNode, blackHoledAt);
 		return FtProfile.builder()
 				.intraName(intraName)
 				.email(email)
 				.role(role)
 				.blackHoledAt(blackHoledAt)
 				.build();
+	}
+
+	private JsonNode find42CursusNode(JsonNode rootNode) {
+		JsonNode cursusUsers = rootNode.get("cursus_users");
+
+		for (JsonNode cursusUser : cursusUsers) {
+			JsonNode cursus = cursusUser.get("cursus");
+			if ("42cursus".equals(cursus.get("slug").asText())) {
+				return cursusUser;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -152,30 +164,25 @@ public class UserOauthService {
 	 * @param blackHoledAt 유저가 blackholed된 시각
 	 * @return 유저의 role
 	 */
-	private FtRole determineFtRole(JsonNode rootNode, LocalDateTime blackHoledAt) {
+	private FtRole determineFtRole(JsonNode rootNode, JsonNode mainCursus) {
 		boolean isUserStaff = rootNode.get("staff?").asBoolean();
 		boolean isActive = rootNode.get("active?").asBoolean();
-		JsonNode cursusUsersNode = rootNode.get("cursus_users");
-
-		if (!isActive && blackHoledAt.isAfter(LocalDateTime.now())) {
-			return FtRole.AGU;
-		}
-
-		if (!isActive) {
-			return FtRole.INACTIVE;
-		}
-
 		if (isUserStaff) {
 			return FtRole.STAFF;
 		}
-
-		if (cursusUsersNode.size() < CURSUS_INDEX + 1) {
+		if (!isActive) {
+			return FtRole.INACTIVE;
+		}
+		if (mainCursus == null) {
 			return FtRole.PISCINER;
 		}
 
-		return FtRole.USER;
-		// 이후 멤버, 카뎃으로 인가 분류해야할 때 변경
-//		return (blackHoledAt == null) ? FtRole.MEMBER : FtRole.CADET;
+		JsonNode blackHoledAtNode = mainCursus.get("blackholed_at");
+
+		if (blackHoledAtNode.isNull() || blackHoledAtNode.asText().isEmpty()) {
+			return FtRole.MEMBER;
+		}
+		return FtRole.CADET;
 	}
 
 	/**
@@ -190,12 +197,11 @@ public class UserOauthService {
 	 * @param rootNode 유저 프로필 정보 JSON 데이터
 	 * @return 유저의 blackholedAt
 	 */
-	private LocalDateTime determineBlackHoledAt(JsonNode rootNode) {
-
-		JsonNode cursusNode = rootNode.get("cursus_users");
-		int index = cursusNode.size() > CADET_INDEX ? CADET_INDEX : PISCINE_INDEX;
-
-		JsonNode blackHoledAtNode = cursusNode.get(index).get("blackholed_at");
+	private LocalDateTime determineBlackHoledAt(JsonNode mainCursus) {
+		if (mainCursus == null) {
+			return null;
+		}
+		JsonNode blackHoledAtNode = mainCursus.get("blackholed_at");
 		if (blackHoledAtNode.isNull() || blackHoledAtNode.asText().isEmpty()) {
 			return null;
 		}

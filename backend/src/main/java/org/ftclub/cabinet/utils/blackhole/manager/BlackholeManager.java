@@ -13,7 +13,6 @@ import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
-import org.ftclub.cabinet.oauth.service.OauthFacadeService;
 import org.ftclub.cabinet.oauth.service.OauthProfileService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
@@ -26,7 +25,6 @@ import org.springframework.web.client.HttpClientErrorException;
 @Log4j2
 public class BlackholeManager {
 
-	private final OauthFacadeService userOauthFacadeService;
 	private final ApplicationTokenManager tokenManager;
 	private final LentFacadeService lentFacadeService;
 	private final UserCommandService userCommandService;
