@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.config.AlarmProperties;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthenticationService;
-import org.ftclub.cabinet.auth.service.OauthService;
 import org.ftclub.cabinet.log.Logging;
+import org.ftclub.cabinet.oauth.service.OauthFacadeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,13 +21,13 @@ public class LoginController {
 
 	private final AlarmProperties alarmProperties;
 	private final AuthenticationService authenticationService;
-	private final OauthService oauthService;
+	private final OauthFacadeService oauthFacadeService;
 
 	@GetMapping("")
 	public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		final String username = "anonymous";
 		if (!alarmProperties.getIsProduction()) {
-			OauthResult result = oauthService.handlePublicLogin(username);
+			OauthResult result = oauthFacadeService.handlePublicLogin(username);
 
 			authenticationService.processAuthentication(request, response, result, "Temporary");
 		}

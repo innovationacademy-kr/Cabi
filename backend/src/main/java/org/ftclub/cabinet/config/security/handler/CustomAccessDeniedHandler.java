@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.auth.domain.CookieManager;
+import org.ftclub.cabinet.auth.service.CookieService;
 import org.ftclub.cabinet.exception.CustomAccessDeniedException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.http.MediaType;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
-	private final CookieManager cookieManager;
+	private final CookieService cookieService;
 
 	/**
 	 * Security 내부에서 403 에러 발생 시, Spring은 기본 오류 페이지를 응답합니다.
@@ -43,7 +43,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
 		Cookie[] cookies = request.getCookies();
-		cookieManager.deleteAllCookies(cookies, response);
+		cookieService.deleteAllCookies(cookies, request.getServerName(), response);
 		log.error("Request Method = {}", request.getMethod());
 		ExceptionStatus exceptionStatus = ExceptionStatus.ACCESS_DENIED;
 		log.error("Request Uri : {}", request.getRequestURI());

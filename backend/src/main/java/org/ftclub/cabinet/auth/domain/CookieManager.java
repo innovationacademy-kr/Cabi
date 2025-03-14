@@ -68,11 +68,26 @@ public class CookieManager {
 	 * @param res  요청 시의 서블렛 {@link HttpServletResponse}
 	 * @param name 쿠키 이름
 	 */
+	public void deleteCookie(HttpServletResponse res, String serverName, String name) {
+		Cookie cookie = new Cookie(name, null);
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
+		if (isLocalEnvironment(serverName)) {
+			cookie.setDomain(domainProperties.getLocal());
+		} else {
+			cookie.setDomain(domainProperties.getCookieDomain());
+		}
+		res.addCookie(cookie);
+	}
+
 	public void deleteCookie(HttpServletResponse res, String name) {
 		Cookie cookie = new Cookie(name, null);
 		cookie.setMaxAge(0);
+		cookie.setPath("/");
+		
 		res.addCookie(cookie);
 	}
+
 
 	public Cookie cookieOf(String name, String value) {
 		return new Cookie(name, value);
@@ -81,46 +96,63 @@ public class CookieManager {
 	public void setTokenCookies(HttpServletResponse response, TokenDto tokens, String serverName) {
 		Cookie accessTokenCookie =
 				cookieOf(JwtTokenConstants.ACCESS_TOKEN, tokens.getAccessToken());
-		accessTokenCookie.setSecure(true);
 		accessTokenCookie.setMaxAge(jwtTokenProperties.getRefreshExpirySeconds());
-		setToClient(response, accessTokenCookie, "/", serverName);
+		setSecureAndClient(response, accessTokenCookie, "/", serverName);
 
 		// 리프레시 토큰 쿠키 설정
 		Cookie refreshTokenCookie =
 				cookieOf(JwtTokenConstants.REFRESH_TOKEN, tokens.getRefreshToken());
 		refreshTokenCookie.setHttpOnly(true);
-		refreshTokenCookie.setSecure(true);
 		refreshTokenCookie.setMaxAge(jwtTokenProperties.getRefreshExpirySeconds());
-		setToClient(response, refreshTokenCookie, "/", serverName);
+		setSecureAndClient(response, refreshTokenCookie, "/", serverName);
 	}
 
-	public void setToClient(HttpServletResponse res, Cookie cookie, String path,
+	public void setSecureAndClient(HttpServletResponse res,
+			Cookie cookie, String path,
 			String serverName) {
 		cookie.setPath(path);
 		if (serverName.equals(domainProperties.getLocal())) {
 			cookie.setDomain(domainProperties.getLocal());
 		} else {
 			cookie.setDomain(domainProperties.getCookieDomain());
+			cookie.setSecure(true);
 		}
 		res.addCookie(cookie);
 	}
 
-	public void deleteAllCookies(Cookie[] cookies, HttpServletResponse res) {
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				Cookie newCookie = new Cookie(cookie.getName(), null);
-				newCookie.setMaxAge(0);
-				newCookie.setPath("/");
+	/*---------리뉴얼-----------*/
 
-				if (cookie.getDomain() != null) {
-					newCookie.setDomain(cookie.getDomain());
-				}
+	public Cookie createCookie(String name, String value, int maxAge, String path,
+			boolean isHttpOnly, boolean isSecure) {
+		Cookie cookie = new Cookie(name, value);
 
-				newCookie.setSecure(cookie.getSecure());
-				newCookie.setHttpOnly(cookie.isHttpOnly());
+		cookie.setMaxAge(maxAge);
+		cookie.setPath(path);
+		cookie.setHttpOnly(isHttpOnly);
+		cookie.setSecure(isSecure);
+		return cookie;
+	}
 
-				res.addCookie(newCookie);
-			}
+	public void setDomainAndAddCookie(HttpServletResponse response, String serverName,
+			Cookie cookie) {
+
+		if (serverName.equals(domainProperties.getLocal())) {
+			cookie.setDomain(domainProperties.getLocal());
+		} else {
+			cookie.setDomain(domainProperties.getCookieDomain());
+		}
+		response.addCookie(cookie);
+	}
+
+	public boolean isLocalEnvironment(String serverName) {
+		return serverName.equals(domainProperties.getLocal());
+	}
+
+	public void setDomainByEnv(Cookie cookie, String serverName) {
+		if (isLocalEnvironment(serverName)) {
+			cookie.setDomain(domainProperties.getLocal());
+		} else {
+			cookie.setDomain(domainProperties.getCookieDomain());
 		}
 	}
 }

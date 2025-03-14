@@ -12,34 +12,65 @@ import org.springframework.stereotype.Component;
 @Logging(level = LogLevel.DEBUG)
 public class JwtRedis {
 
-	private static final String JWT_ACCESS_KEY_SUFFIX = ":usedAccessToken";
-	private static final String JWT_REFRESH_KEY_SUFFIX = ":usedRefreshToken";
+	private static final String USER_JWT_ACCESS_KEY_SUFFIX = ":usedUserAccessToken";
+	private static final String ADMIN_JWT_ACCESS_KEY_SUFFIX = ":usedAdminAccessToken";
+	private static final String USER_JWT_REFRESH_KEY_SUFFIX = ":usedUserRefreshToken";
+	private static final String ADMIN_JWT_REFRESH_KEY_SUFFIX = ":usedAdminRefreshToken";
+
 	private final RedisTemplate<String, String> jwtTemplate;
 	private final JwtTokenProperties jwtTokenProperties;
 
-	public void saveExpiredAccessToken(String userId, String token) {
+	public void saveUserAccessToken(String userId, String token) {
 		jwtTemplate.opsForValue()
-				.set(userId + JWT_ACCESS_KEY_SUFFIX,
+				.set(userId + USER_JWT_ACCESS_KEY_SUFFIX,
 						token,
 						jwtTokenProperties.getAccessExpiry()
 				);
 	}
 
-	public String getExpiredAccessToken(String userId) {
-		String key = userId + JWT_ACCESS_KEY_SUFFIX;
+	public void saveAdminAccessToken(String userId, String accessToken) {
+		jwtTemplate.opsForValue()
+				.set(userId + ADMIN_JWT_ACCESS_KEY_SUFFIX,
+						accessToken,
+						jwtTokenProperties.getAccessExpiry())
+		;
+	}
+
+	public String getUserAccessToken(String userId) {
+		String key = userId + USER_JWT_ACCESS_KEY_SUFFIX;
 		return jwtTemplate.opsForValue().get(key);
 	}
 
-	public void saveRefreshToken(String userId, String refreshToken) {
+	public void saveUserRefreshToken(String userId, String refreshToken) {
 		jwtTemplate.opsForValue()
-				.set(userId + JWT_REFRESH_KEY_SUFFIX,
+				.set(userId + USER_JWT_REFRESH_KEY_SUFFIX,
 						refreshToken,
 						jwtTokenProperties.getRefreshExpiry()
 				);
 	}
 
-	public String getRefreshToken(String userId) {
-		String key = userId + JWT_REFRESH_KEY_SUFFIX;
+	public void saveAdminRefreshToken(String userId, String accessToken) {
+		jwtTemplate.opsForValue()
+				.set(userId + ADMIN_JWT_REFRESH_KEY_SUFFIX,
+						accessToken,
+						jwtTokenProperties.getRefreshExpiry())
+		;
+	}
+
+	public String getUserRefreshToken(String userId) {
+		String key = userId + USER_JWT_REFRESH_KEY_SUFFIX;
+
+		return jwtTemplate.opsForValue().get(key);
+	}
+
+	public String getAdminAccessToken(String adminId) {
+		String key = adminId + ADMIN_JWT_ACCESS_KEY_SUFFIX;
+
+		return jwtTemplate.opsForValue().get(key);
+	}
+
+	public String getAdminRefreshToken(String adminId) {
+		String key = adminId + ADMIN_JWT_REFRESH_KEY_SUFFIX;
 
 		return jwtTemplate.opsForValue().get(key);
 	}

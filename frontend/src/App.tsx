@@ -7,6 +7,7 @@ import Layout from "@/Cabinet/pages/Layout";
 import LoginPage from "@/Cabinet/pages/LoginPage";
 import PostLogin from "@/Cabinet/pages/PostLogin";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import AGUPage from "./Cabinet/pages/AGUPage";
 
 const LoginFailurePage = lazy(() => import("@/Cabinet/pages/LoginFailurePage"));
 const NotFoundPage = lazy(() => import("@/Cabinet/pages/NotFoundPage"));
@@ -72,6 +73,7 @@ function App(): React.ReactElement {
             <Route path="store/inventory" element={<InventoryPage />} />
             <Route path="store/item-use-log" element={<ItemUsageLogPage />} />
             <Route path="store/coin-log" element={<CoinLogPage />} />
+            <Route path="agu" element={<AGUPage />} />
           </Route>
           <Route path="/presentation/" element={<PresentationLayout />}>
             <Route path="home" element={<PresentationHomePage />} />

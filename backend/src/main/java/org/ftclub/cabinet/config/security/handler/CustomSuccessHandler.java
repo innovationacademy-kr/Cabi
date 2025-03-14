@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.config.security.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -15,11 +14,12 @@ import org.ftclub.cabinet.auth.domain.CustomOauth2User;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.service.AuthenticationService;
-import org.ftclub.cabinet.auth.service.OauthService;
 import org.ftclub.cabinet.exception.CustomAccessDeniedException;
 import org.ftclub.cabinet.exception.CustomAuthenticationException;
+import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.oauth.service.OauthFacadeService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -37,7 +37,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 
-	private final OauthService oauthService;
+	private final OauthFacadeService oauthFacadeService;
 	private final ObjectMapper objectMapper;
 	private final AuthPolicyService authPolicyService;
 	private final AuthenticationService authenticationService;
@@ -66,7 +66,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 			authenticationService.processAuthentication(request, response, oauthResult, provider);
 			String redirectUrl = oauthResult.getRedirectionUrl();
 
-			if (oauthResult.getRoles().contains("AGU")) {
+			if (oauthResult.hasRole("AGU")) {
 				redirectUrl = authPolicyService.getAGUUrl();
 			}
 			response.sendRedirect(redirectUrl);
@@ -85,16 +85,17 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	 * @param oauth2User
 	 * @return
 	 */
-	private OauthResult processOAuthLogin(HttpServletRequest req, String provider,
-			CustomOauth2User oauth2User) throws JsonProcessingException {
+	private OauthResult processOAuthLogin(HttpServletRequest req,
+			String provider, CustomOauth2User oauth2User) {
+
 		if (provider.equals(ftProvider)) {
 			JsonNode rootNode =
 					objectMapper.convertValue(oauth2User.getAttributes(), JsonNode.class);
 
-			return oauthService.handleFtLogin(rootNode);
+			return oauthFacadeService.handleFtLogin(rootNode);
 		}
 		if (isExternalProvider(provider)) {
-			return oauthService.handleExternalOAuthLogin(oauth2User, req);
+			return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
 		}
 		throw new CustomAccessDeniedException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
 	}
@@ -125,6 +126,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		if (e instanceof ServiceException) {
 			return ((ServiceException) e).getStatus();
 		}
+		if (e instanceof DomainException) {
+			return ((DomainException) e).getStatus();
+		}
 		log.error("Authentication Failed", e);
 		return ExceptionStatus.INTERNAL_SERVER_ERROR;
 	}
@@ -140,7 +144,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	}
 
 	/**
-	 * SuccessHandling 도중 예외 발생 시 예외 페이지로 redirect 합니다.
+	 * SuccessHandling 도중 예외 발생 시 로그인 페이지로 redirect 합니다.
 	 *
 	 * @param response
 	 * @param status
@@ -152,7 +156,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		String message = status.name();
 
 		log.error("error Redirect Start");
-		String uri = UriComponentsBuilder.fromHttpUrl(authPolicyService.getOauthErrorPage())
+		String uri = UriComponentsBuilder.fromHttpUrl(authPolicyService.getLoginUrl())
 				.queryParam("code", errorCode)
 				.queryParam("status", status.getStatusCode())
 				.queryParam("message", message)

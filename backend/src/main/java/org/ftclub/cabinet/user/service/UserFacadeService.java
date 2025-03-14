@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 import org.ftclub.cabinet.alarm.fcm.config.FirebaseConfig;
 import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
-import org.ftclub.cabinet.auth.service.UserOauthConnectionQueryService;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
@@ -24,6 +25,7 @@ import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.UserMapper;
+import org.ftclub.cabinet.oauth.service.OauthLinkQueryService;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
@@ -49,13 +51,13 @@ public class UserFacadeService {
 	private final FirebaseConfig firebaseConfig;
 	private final BanHistoryCommandService banHistoryCommandService;
 	private final ItemRedisService itemRedisService;
-	private final UserOauthConnectionQueryService userOauthConnectionQueryService;
+	private final OauthLinkQueryService oauthLinkQueryService;
 
 
 	/**
 	 * 유저의 프로필을 가져옵니다.
 	 *
-	 * @param user 유저의 세션 정보
+	 * @param userId 유저의 세션 정보
 	 * @return 유저의 프로필 정보를 반환합니다.
 	 */
 	@Transactional(readOnly = true)
@@ -66,7 +68,7 @@ public class UserFacadeService {
 				findRecentActiveBanHistory(userId, LocalDateTime.now())
 				.orElse(null);
 
-		UserOauthConnectionDto userOauthConnectionDto = userOauthConnectionQueryService
+		UserOauthConnectionDto userOauthConnectionDto = oauthLinkQueryService
 				.findByUserId(currentUser.getId())
 				.map(userMapper::toUserOauthConnectionDto)
 				.orElse(null);
@@ -160,6 +162,35 @@ public class UserFacadeService {
 		BanHistory recentBanHistory = banHistoryQueryService.getRecentBanHistory(userId);
 		LocalDateTime reducedUnbannedAt = recentBanHistory.getUnbannedAt().minusDays(days);
 		banHistoryCommandService.updateBanDate(recentBanHistory, reducedUnbannedAt);
+	}
+
+	/**
+	 * profile, user 내의 요소를 비교해 일치하지 않을 경우 정보 업데이트
+	 *
+	 * @param profile
+	 * @param user
+	 */
+	@Transactional
+	public void updateUserStatus(FtOauthProfile profile, User user) {
+		LocalDateTime blackHoledAt = profile.getBlackHoledAt();
+		String roles = FtRole.combineRolesToString(profile.getRoles());
+
+		// role, blackholedAt 검수
+		if (!user.isSameBlackHoledAtAndRole(blackHoledAt, roles)) {
+			userCommandService.updateUserBlackholeAndRole(user, blackHoledAt, roles);
+		}
+	}
+
+	/**
+	 * profile 내의 name 기준으로 유저가 존재하지 않으면 생성
+	 *
+	 * @param profile
+	 * @return
+	 */
+	@Transactional
+	public User createUserIfNotExistFromProfile(FtOauthProfile profile) {
+		return userQueryService.findUser(profile.getIntraName())
+				.orElseGet(() -> userCommandService.createUserByFtOauthProfile(profile));
 	}
 
 }

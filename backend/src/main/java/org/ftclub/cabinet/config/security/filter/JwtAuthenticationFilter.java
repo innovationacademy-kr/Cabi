@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.config.security.filter;
 
-import io.jsonwebtoken.Claims;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,8 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.dto.UserInfoDto;
-import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
-import org.ftclub.cabinet.jwt.service.JwtTokenProvider;
+import org.ftclub.cabinet.jwt.service.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,7 +26,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtService jwtService;
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -49,33 +47,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			FilterChain filterChain) throws ServletException, IOException {
-		String token = jwtTokenProvider.extractToken(request);
+		String token = jwtService.extractToken(request);
 		if (token != null) {
-			Claims claims = jwtTokenProvider.parseValidToken(token);
-			Authentication auth = getAuthentication(claims);
-			log.info("JWT Filter: 요청 URL = {}, userId = {}",
+			UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(token);
+			Authentication auth = getAuthentication(userInfoDto);
+
+			log.info("JWT Filter: 요청 URL = {}, userId = {}, role = {}",
 					request.getRequestURI(),
-					claims.get("userId", Long.class));
+					userInfoDto.getUserId(),
+					userInfoDto.getRoles()
+			);
 			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
 		filterChain.doFilter(request, response);
 	}
 
-	// userId, role
-	private Authentication getAuthentication(Claims claims) {
-		String roles = claims.get(JwtTokenConstants.ROLES, String.class);
-
-		UserInfoDto userInfoDto =
-				new UserInfoDto(
-						claims.get(JwtTokenConstants.USER_ID, Long.class),
-						claims.get(JwtTokenConstants.OAUTH, String.class),
-						roles
-				);
+	private Authentication getAuthentication(UserInfoDto dto) {
+		String roles = dto.getRoles();
 
 		List<GrantedAuthority> authorityList = Stream.of(roles.split(FtRole.DELIMITER))
 				.map(role -> new SimpleGrantedAuthority(FtRole.ROLE + role))
 				.collect(Collectors.toList());
-		return new UsernamePasswordAuthenticationToken(userInfoDto, null, authorityList);
+		return new UsernamePasswordAuthenticationToken(dto, null, authorityList);
 	}
 
 }

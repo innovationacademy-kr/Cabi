@@ -8,10 +8,10 @@ import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 
-const axiosLogoutUrl = "/v4/auth/logout";
+const axiosLogoutUrl = "/v5/auth/logout";
 export const axiosLogout = async (): Promise<any> => {
   try {
-    const response = await instance.get(axiosLogoutUrl);
+    const response = await instance.post(axiosLogoutUrl);
     return response;
   } catch (error) {
     throw error;
@@ -462,6 +462,52 @@ export const axiosAdminCabinetInfoByCabinetId = async (
     );
     return response;
   } catch (error) {
+    throw error;
+  }
+};
+
+const axiosAGUURL = "/v5/auth/agu";
+export const axiosAGU = async (intraId: string): Promise<any> => {
+  // if (intraId === null) return;
+  try {
+    const response = await instance.post(axiosAGUURL, null, {
+      params: { name: intraId },
+    });
+    return response;
+  } catch (error) {
+    // logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");
+    throw error;
+  }
+};
+
+// export const axiosAGUCancel = async (intraId: string): Promise<any> => {
+export const axiosAGUCancel = async (): Promise<any> => {
+  // if (intraId === null) return;
+  try {
+    const response = await instance.post(axiosAGUURL + "/cancel");
+    return response;
+  } catch (error) {
+    // logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");
+    throw error;
+  }
+};
+
+const axiosLinkURL = "/v5/auth/link";
+export const axiosLink = async (
+  mail: string,
+  provider: string
+): Promise<any> => {
+  // if (intraId === null) return;
+  try {
+    const response = await instance.delete(axiosLinkURL, {
+      data: {
+        oauthMail: mail, // 연동 해지하려는 mail
+        provider: provider, // 연동되어있는 providerType
+      },
+    });
+    return response;
+  } catch (error) {
+    // logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");
     throw error;
   }
 };

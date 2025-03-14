@@ -167,6 +167,10 @@ public class User {
 		return roles.equals(otherRoles);
 	}
 
+	public boolean isContainRole(String otherRole) {
+		return roles.contains(otherRole);
+	}
+
 	public void changeUserRole(String roles) {
 		log.info("Called changeUserRole - from {} to {}", this.roles, roles);
 		this.roles = roles;

@@ -9,11 +9,12 @@ import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
-import org.ftclub.cabinet.auth.service.OauthService;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
+import org.ftclub.cabinet.oauth.service.OauthFacadeService;
+import org.ftclub.cabinet.oauth.service.OauthProfileService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.springframework.http.HttpStatus;
@@ -25,10 +26,11 @@ import org.springframework.web.client.HttpClientErrorException;
 @Log4j2
 public class BlackholeManager {
 
-	private final OauthService userOauthService;
+	private final OauthFacadeService userOauthFacadeService;
 	private final ApplicationTokenManager tokenManager;
 	private final LentFacadeService lentFacadeService;
 	private final UserCommandService userCommandService;
+	private final OauthProfileService oauthProfileService;
 
 	/**
 	 * 블랙홀에 빠진 유저를 강제 반납 및 삭제 처리한다.
@@ -50,7 +52,7 @@ public class BlackholeManager {
 	 */
 	public FtOauthProfile getUserRecentIntraProfile(String userName) {
 		try {
-			return userOauthService.getProfileByIntraName(tokenManager.getFtAccessToken(),
+			return oauthProfileService.getProfileByIntraName(tokenManager.getFtAccessToken(),
 					userName);
 		} catch (JsonProcessingException e) {
 			log.error("getUserRecentIntraProfile Exception: {}", userName, e);

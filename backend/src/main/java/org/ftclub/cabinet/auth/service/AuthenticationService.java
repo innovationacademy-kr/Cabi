@@ -1,9 +1,9 @@
 package org.ftclub.cabinet.auth.service;
 
-import io.jsonwebtoken.Claims;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.servlet.http.Cookie;
@@ -11,26 +11,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.alarm.domain.AlarmEvent;
+import org.ftclub.cabinet.alarm.domain.EmailVerificationAlarm;
+import org.ftclub.cabinet.alarm.repository.AguCodeRedis;
 import org.ftclub.cabinet.alarm.service.AguCodeRedisService;
-import org.ftclub.cabinet.auth.domain.CookieManager;
+import org.ftclub.cabinet.auth.domain.CookieInfo;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.OauthResult;
+import org.ftclub.cabinet.dto.AguMailResponse;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
-import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
-import org.ftclub.cabinet.jwt.service.JwtTokenProvider;
+import org.ftclub.cabinet.jwt.service.JwtService;
+import org.ftclub.cabinet.lent.service.LentQueryService;
+import org.ftclub.cabinet.oauth.service.OauthProfileService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * 토큰 관리, 인증 정보 관리, 인가 부여
@@ -40,14 +48,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-
-	private final JwtTokenProvider tokenProvider;
-	private final CookieManager cookieManager;
+	private static final String VERIFICATION_API = "/v5/auth/agu";
+	private final AguCodeRedisService aguCodeRedisService;
 	private final UserQueryService userQueryService;
 	private final AuthPolicyService authPolicyService;
-	private final AguCodeRedisService aguCodeRedisService;
 	private final JwtRedisService jwtRedisService;
-	private final UserOauthConnectionCommandService userOauthConnectionCommandService;
+	private final JwtService jwtService;
+	private final ApplicationTokenManager applicationTokenManager;
+	private final ApplicationEventPublisher eventPublisher;
+	private final LentQueryService lentQueryService;
+	private final OauthProfileService oauthProfileService;
+	private final CookieService cookieService;
 
 	@Value("${cabinet.server.be-host}")
 	private String beHost;
@@ -63,52 +74,13 @@ public class AuthenticationService {
 	public void processAuthentication(HttpServletRequest req, HttpServletResponse res,
 			OauthResult result, String provider) {
 
-		generateTokensAndSetCookies(req.getServerName(), res, result, provider);
+		TokenDto tokens = jwtService.createTokens(result.getUserId(), result.getRoles(), provider);
+		cookieService.setTokenCookies(res, tokens, req.getServerName());
+
 		Authentication auth = createAuthenticationForUser(result, provider);
 		SecurityContextHolder.getContext().setAuthentication(auth);
 	}
 
-	/**
-	 * oauth2 Login 직전 로그인 쿠키를 통해 유저 정보 생성
-	 *
-	 * @param request
-	 * @return
-	 */
-	public UserInfoDto getAuthInfoFromCookie(HttpServletRequest request) {
-		String refreshToken = Optional.ofNullable(
-						cookieManager.getCookieValue(request, JwtTokenConstants.REFRESH_TOKEN))
-				.orElseThrow(() ->
-						new CustomAuthenticationException(ExceptionStatus.NOT_FT_LOGIN_STATUS));
-		Claims claims = tokenProvider.parseValidToken(refreshToken);
-
-		Long userId = claims.get(JwtTokenConstants.USER_ID, Long.class);
-		String prevOauth = claims.get(JwtTokenConstants.OAUTH, String.class);
-		String roles = claims.get(JwtTokenConstants.ROLES, String.class);
-
-		if (userId == null || prevOauth == null || roles == null) {
-			throw new CustomAuthenticationException(ExceptionStatus.JWT_INVALID);
-		}
-
-		return new UserInfoDto(userId, prevOauth, roles);
-	}
-
-	/**
-	 * 토큰을 만들어 쿠키에 저장합니다
-	 *
-	 * @param serverName
-	 * @param res
-	 * @param user
-	 * @param provider
-	 */
-	public void generateTokensAndSetCookies(String serverName, HttpServletResponse res,
-			OauthResult user, String provider) {
-		TokenDto tokens = tokenProvider.createTokens(
-				user.getUserId(),
-				user.getRoles(),
-				provider
-		);
-		cookieManager.setTokenCookies(res, tokens, serverName);
-	}
 
 	/**
 	 * SecurityContextHolder에 저장할 유저 정보
@@ -118,7 +90,6 @@ public class AuthenticationService {
 	 * @return
 	 */
 	public Authentication createAuthenticationForUser(OauthResult user, String provider) {
-
 		UserInfoDto userInfoDto =
 				new UserInfoDto(user.getUserId(), provider, user.getRoles());
 
@@ -144,30 +115,22 @@ public class AuthenticationService {
 			Long userId,
 			String refreshToken) throws IOException {
 
-		// accessToken, refreshToken 사용 처리
-		String accessToken = tokenProvider.extractToken(request);
-		if (accessToken != null && refreshToken != null) {
-			jwtRedisService.addUsedTokens(userId, accessToken, refreshToken);
+		String accessToken = jwtService.extractToken(request);
+		if (accessToken == null || refreshToken == null) {
+			throw ExceptionStatus.JWT_TOKEN_NOT_FOUND.asServiceException();
 		}
-		// 내부 모든 쿠키 삭제
-		cookieManager.deleteAllCookies(request.getCookies(), response);
+		// 내부 모든 쿠키 및 토큰 삭제
+		jwtRedisService.addUsedUserTokensToBlackList(userId, accessToken, refreshToken);
+		cookieService.deleteAllCookies(request.getCookies(), request.getServerName(), response);
 	}
 
-	public void requestAdminLogin(HttpServletRequest req, HttpServletResponse res)
-			throws IOException {
-		// 쿠키에 로그인 현상 저장
-		Cookie cookie = cookieManager.cookieOf("login_source", "admin");
-		cookie.setMaxAge(30);
-		cookie.setSecure(true);
-		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
-
-		res.sendRedirect(beHost + "/oauth2/authorization/google");
-	}
-
-	public boolean isAdminRequest(HttpServletRequest request) {
-		String loginSource = cookieManager.getCookieValue(request, "login_source");
-		log.info("loginSource = {}", loginSource);
-		return loginSource != null && loginSource.equals("admin");
+	/**
+	 * 쿠키 제거
+	 *
+	 * @param req
+	 */
+	public void deleteAguUserInfo(HttpServletRequest req, HttpServletResponse res) {
+		cookieService.deleteAllCookies(req.getCookies(), req.getServerName(), res);
 	}
 
 
@@ -188,25 +151,57 @@ public class AuthenticationService {
 		User user = userQueryService.getUserByName(name);
 		aguCodeRedisService.verifyTemporaryCode(name, code);
 
-		aguCodeRedisService.removeAguCode(name);
 		String temporaryToken =
-				tokenProvider.createAGUToken(user.getId());
+				jwtService.createAguToken(user.getId());
 
-		Cookie cookie = new Cookie(JwtTokenConstants.ACCESS_TOKEN, temporaryToken);
-		cookie.setSecure(true);
-		cookie.setHttpOnly(true);
-		cookie.setMaxAge(60 * 60 * 100);
-		cookieManager.setToClient(res, cookie, "/", req.getServerName());
+		Cookie cookie = new Cookie(JwtTokenConstants.AGU_TOKEN, temporaryToken);
+		CookieInfo cookieInfo = new CookieInfo(req.getServerName(), 60 * 60, false);
 
+		cookieService.setToClient(cookie, cookieInfo, res);
 		res.sendRedirect(authPolicyService.getAGUUrl());
 	}
 
 	/**
-	 * 계정 연동을 해지합니다.
+	 * 이름으로 유저를 검색합니다
+	 * <p>
+	 * AGU 유저라면 code를 만들어 redis에 저장하고, 메일을 발송합니다.
 	 *
-	 * @param userId
+	 * @param name
+	 * @return
+	 * @throws JsonProcessingException
 	 */
-	public void deleteOauthMail(Long userId) {
-		userOauthConnectionCommandService.deleteByUserId(userId);
+	public AguMailResponse requestTemporaryLogin(String name) throws JsonProcessingException {
+		User user = userQueryService.getUserByName(name);
+		FtOauthProfile profile = oauthProfileService.getProfileByIntraName(
+				applicationTokenManager.getFtAccessToken(), name);
+
+		if (!user.isContainRole(FtRole.AGU.name()) && !profile.isSameRole(FtRole.AGU)) {
+			throw ExceptionStatus.ACCESS_DENIED.asServiceException();
+		}
+		lentQueryService.getUserActiveLentHistory(user.getId())
+				.orElseThrow(ExceptionStatus.NO_ACTIVE_LENT_FOUND::asServiceException);
+
+		// 코드가 있는데 발급 요청이면 에러(3분 내로 재요청)
+		if (aguCodeRedisService.isAlreadyExist(name)) {
+			throw ExceptionStatus.CODE_ALREADY_SENT.asServiceException();
+		}
+
+		String aguCode = aguCodeRedisService.createAguCode(user.getName());
+
+		String verificationLink = generateVerificationLink(aguCode, name);
+		AlarmEvent alarmEvent =
+				AlarmEvent.of(user.getId(), new EmailVerificationAlarm(verificationLink));
+		eventPublisher.publishEvent(alarmEvent);
+		return new AguMailResponse(user.getEmail(), AguCodeRedis.EXPIRY_MIN);
+	}
+
+	private String generateVerificationLink(String aguCode, String name) {
+		return UriComponentsBuilder.fromHttpUrl(beHost)
+				.path(VERIFICATION_API)
+				.queryParam("code", aguCode)
+				.queryParam("name", name)
+				.encode(StandardCharsets.UTF_8)
+				.build()
+				.toUriString();
 	}
 }

@@ -61,6 +61,7 @@ const Layout = (): JSX.Element => {
   const isRootPath: boolean = location.pathname === "/";
   const isLoginPage: boolean = location.pathname === "/login";
   const isMainPage: boolean = location.pathname === "/main";
+  const isAGUPage: boolean = location.pathname === "/agu";
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -135,8 +136,11 @@ const Layout = (): JSX.Element => {
 
   useEffect(() => {
     deleteOldPointColors();
-    if (!token && !isLoginPage) navigate("/login");
+    console.log("token : ", token);
+    if (isAGUPage) navigate("/agu");
+    else if (!token && !isLoginPage) navigate("/login");
     else if (token) {
+      console.log("getMyInfo");
       getMyInfo();
       Promise.all([getBuildingsData(), getMyLentInfo()]).then(() =>
         setIsLoading(false)
@@ -176,7 +180,7 @@ const Layout = (): JSX.Element => {
     body.style.setProperty("--mine-color", savedMineColor);
   }, [savedMainColor, savedSubColor, savedMineColor]);
 
-  return isLoginPage ? (
+  return isLoginPage || isAGUPage ? (
     <Outlet />
   ) : (
     <React.Fragment>

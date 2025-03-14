@@ -24,6 +24,7 @@ const LoginButtonGroup = () => {
           key={provider}
           onLogin={() => {
             window.location.replace(getSocialAuthUrl(provider));
+            console.log(getSocialAuthUrl(provider), provider);
             setLoginStatus({ isClicked: true, target: provider });
           }}
           display={getSocialDisplayInfo(provider)}

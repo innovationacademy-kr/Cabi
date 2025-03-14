@@ -39,8 +39,8 @@ public class AuthPolicyService {
 		return domainProperties.getFeHost() + "/profile";
 	}
 
-	public String getOauthErrorPage() {
-		return domainProperties.getFeHost() + "/oauth-error";
+	public String getLoginUrl() {
+		return domainProperties.getFeHost() + "/login";
 	}
 
 	public String getAdminHomeUrl() {
@@ -48,6 +48,6 @@ public class AuthPolicyService {
 	}
 
 	public String getAGUUrl() {
-		return domainProperties.getFeHost() + "/AGU";
+		return domainProperties.getFeHost() + "/agu";
 	}
 }

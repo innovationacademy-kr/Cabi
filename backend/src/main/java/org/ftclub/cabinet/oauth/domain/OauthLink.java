@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.auth.domain;
+package org.ftclub.cabinet.oauth.domain;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -20,7 +20,7 @@ import org.ftclub.cabinet.user.domain.User;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserOauthConnection {
+public class OauthLink {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,26 +36,29 @@ public class UserOauthConnection {
 	private String providerId; // UUID
 	@Column(name = "CREATED_AT")
 	private LocalDateTime createdAt;
+	@Column(name = "DELETED_AT")
+	private LocalDateTime deletedAt;
 	@Email
 	@Column(name = "EMAIL")
 	private String email;
 
-	protected UserOauthConnection(User user, String providerType, String providerId, String email) {
+	protected OauthLink(User user, String providerType, String providerId, String email) {
 		this.user = user;
 		this.providerType = providerType;
 		this.providerId = providerId;
 		this.email = email;
 		this.createdAt = LocalDateTime.now();
+		this.deletedAt = null;
 	}
 
-	public static UserOauthConnection of(
+	public static OauthLink of(
 			User user,
 			String providerType,
 			String providerId,
 			String mail) {
 
-		UserOauthConnection connection =
-				new UserOauthConnection(user, providerType, providerId, mail);
+		OauthLink connection =
+				new OauthLink(user, providerType, providerId, mail);
 		if (!connection.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
@@ -68,15 +71,19 @@ public class UserOauthConnection {
 				&& this.providerId != null && this.providerType != null;
 	}
 
+	public void generateDeletedAt() {
+		this.deletedAt = LocalDateTime.now();
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof UserOauthConnection)) {
+		if (!(o instanceof OauthLink)) {
 			return false;
 		}
-		UserOauthConnection that = (UserOauthConnection) o;
+		OauthLink that = (OauthLink) o;
 		return Objects.equals(getId(), that.getId());
 	}
 
