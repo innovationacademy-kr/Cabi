@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.admin.auth.controller;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,7 +58,7 @@ public class AdminAuthController {
 			HttpServletResponse res,
 			@Valid @RequestBody MasterLoginDto masterLoginDto) {
 
-		return adminAuthService.masterLogin(masterLoginDto, req, res, LocalDateTime.now());
+		return adminAuthService.masterLogin(masterLoginDto, req, res);
 	}
 
 	/**

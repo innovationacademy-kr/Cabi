@@ -26,4 +26,8 @@ public class UserInfoDto {
 		}
 		return new UserInfoDto(userId, provider, roles);
 	}
+
+	public boolean hasRole(String otherRole) {
+		return this.roles.contains(otherRole);
+	}
 }

@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.admin.auth.service;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +17,6 @@ import org.ftclub.cabinet.dto.AccessTokenDto;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
@@ -70,7 +68,7 @@ public class AdminAuthService {
 	 * @param now            현재 시각
 	 */
 	public AccessTokenDto masterLogin(MasterLoginDto masterLoginDto, HttpServletRequest req,
-			HttpServletResponse res, LocalDateTime now) {
+			HttpServletResponse res) {
 
 		if (!authPolicyService.isMatchWithMasterAuthInfo(masterLoginDto.getId(),
 				masterLoginDto.getPassword())) {
@@ -80,13 +78,8 @@ public class AdminAuthService {
 				.orElseThrow(ExceptionStatus.UNAUTHORIZED_ADMIN::asServiceException);
 		TokenDto masterToken =
 				jwtService.createTokens(master.getId(), master.getRole().name(), "master");
-		Cookie cookie =
-				cookieManager.cookieOf(JwtTokenConstants.REFRESH_TOKEN,
-						masterToken.getRefreshToken());
-		cookie.setHttpOnly(true);
-		cookie.setSecure(true);
-		cookie.setMaxAge(jwtTokenProperties.getRefreshExpirySeconds());
-		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+
+		cookieService.setTokenCookies(res, masterToken, req.getServerName());
 		return new AccessTokenDto(masterToken.getAccessToken());
 	}
 
