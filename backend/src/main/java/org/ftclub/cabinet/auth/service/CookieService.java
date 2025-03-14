@@ -61,7 +61,7 @@ public class CookieService {
 	public void deleteAllCookies(Cookie[] cookies, String serverName, HttpServletResponse res) {
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				if (CsrfCookieConfig.CSRF_HEADER.equals(cookie.getName())) {
+				if (!CsrfCookieConfig.CSRF_HEADER.equals(cookie.getName())) {
 					cookieManager.deleteCookie(res, serverName, cookie.getName());
 				}
 			}
