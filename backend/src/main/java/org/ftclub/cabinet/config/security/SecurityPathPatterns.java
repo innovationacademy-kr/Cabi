@@ -10,6 +10,7 @@ public class SecurityPathPatterns {
 			"/favicon.ico",
 			"/v4/auth/**",
 			"/v5/auth/**",
+			"/v4/admin/auth/**",
 			"/v5/jwt/reissue",
 			"/v4/admin/auth/login"
 	};

@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.auth.service;
 
+import static org.mockito.Mockito.mock;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -8,10 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.mock;
-
 @ExtendWith(MockitoExtension.class)
-public class OauthServiceUnitTest {
+public class OauthFacadeServiceUnitTest {
 
 //	@InjectMocks
 //	OauthService oauthService;

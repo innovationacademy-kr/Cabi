@@ -11,11 +11,13 @@ import org.ftclub.cabinet.config.security.handler.CustomSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
@@ -34,6 +36,7 @@ public class SecurityConfig {
 	private final CustomAuthenticationEntryPoint entrypoint;
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 	private final CsrfCookieConfig csrfCookieConfig;
+	private final SecurityExpressionHandler<FilterInvocation> expressionHandler;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http)
@@ -46,7 +49,8 @@ public class SecurityConfig {
 				.sessionManagement(session -> session
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				)
-				.authorizeHttpRequests(auth -> auth
+				.authorizeRequests(auth -> auth
+						.expressionHandler(expressionHandler)
 						.mvcMatchers(SecurityPathPatterns.PUBLIC_ENDPOINTS)
 						.permitAll()
 						.mvcMatchers(SecurityPathPatterns.ADMIN_ENDPOINTS).hasRole("ADMIN")
