@@ -4,7 +4,7 @@ import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 // TODO : CSRF 토큰 자동 포함을 위해 withCredentials 설정 주석 내용 수정
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 axios.defaults.xsrfCookieName = "XSRF-TOKEN"; // 쿠키 이름
 axios.defaults.xsrfHeaderName = "X-XSRF-TOKEN"; // 요청 헤더에 포함될 이름
