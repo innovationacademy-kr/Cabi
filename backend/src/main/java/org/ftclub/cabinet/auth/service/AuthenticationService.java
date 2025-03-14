@@ -158,7 +158,7 @@ public class AuthenticationService {
 				jwtService.createAguToken(user.getId());
 
 		Cookie cookie = new Cookie(JwtTokenConstants.AGU_TOKEN, temporaryToken);
-		CookieInfo cookieInfo = new CookieInfo(req.getServerName(), 60 * 60, true);
+		CookieInfo cookieInfo = new CookieInfo(req.getServerName(), 60 * 60, false);
 
 		cookieService.setToClient(cookie, cookieInfo, res);
 		res.sendRedirect(authPolicyService.getAGUUrl());
