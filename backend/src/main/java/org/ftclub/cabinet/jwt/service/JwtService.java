@@ -116,7 +116,8 @@ public class JwtService {
 			UserInfoDto userInfoDto = UserInfoDto.fromClaims(claims);
 			TokenDto currentTokens = new TokenDto(accessToken, refreshToken);
 
-			if (userInfoDto.getRoles().contains(AdminRole.ADMIN.name())) {
+			if (userInfoDto.hasRole(AdminRole.ADMIN.name())
+					|| userInfoDto.hasRole(AdminRole.MASTER.name())) {
 				return reissueAdminToken(req, res, currentTokens, userInfoDto);
 			}
 

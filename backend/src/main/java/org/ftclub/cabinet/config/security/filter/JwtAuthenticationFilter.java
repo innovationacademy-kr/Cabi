@@ -52,8 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(token);
 			Authentication auth = getAuthentication(userInfoDto);
 
-			log.info("JWT Filter: 요청 URL = {}, userId = {}, role = {}",
-					request.getRequestURI(),
+			log.info("JWT Filter: userId = {}, role = {}",
 					userInfoDto.getUserId(),
 					userInfoDto.getRoles()
 			);
