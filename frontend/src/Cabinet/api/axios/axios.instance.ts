@@ -17,6 +17,7 @@ const reissueToken = async () => {
     // TODO : 경로에 따라 헤더 다르게 세팅
     const token = getCookie("access_token");
     const xsrfToken = getCookie("XSRF-TOKEN");
+    console.log("reissue instance xsrfToken : ", xsrfToken);
     const response = await reissueInstance.post("/v5/jwt/reissue", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -39,6 +40,7 @@ instance.interceptors.request.use(async (config) => {
   const aguToken = getCookie("agu_token");
   const xsrfToken = getCookie("XSRF-TOKEN");
   const isAGUPage = window.location.pathname === "/agu";
+  console.log("instance xsrfToken : ", xsrfToken);
 
   config.headers.set("X-XSRF-TOKEN", xsrfToken);
   if (isAGUPage) config.headers.set("X-ClientT-Path", "/agu");
