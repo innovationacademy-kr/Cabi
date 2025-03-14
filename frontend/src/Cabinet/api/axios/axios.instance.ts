@@ -43,6 +43,7 @@ instance.interceptors.request.use(async (config) => {
   const isAGUPage = window.location.pathname === "/agu";
 
   config.headers.set("X-XSRF-TOKEN", xsrfToken);
+  if (isAGUPage) config.headers.set("X-ClientT-Path", "/agu");
   if (accessToken || !isAGUPage)
     config.headers.set("Authorization", `Bearer ${accessToken}`);
   else if (aguToken && isAGUPage)
