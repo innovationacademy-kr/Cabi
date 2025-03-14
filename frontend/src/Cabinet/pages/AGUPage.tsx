@@ -7,7 +7,7 @@ import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import {
   axiosAGU,
-  axiosAGUCancel,
+  axiosAGUReturnCancel,
   axiosMyLentInfo,
   axiosReturn,
 } from "@/Cabinet/api/axios/axios.custom";
@@ -24,7 +24,7 @@ const AGUPage = () => {
   const navigator = useNavigate();
   const aguToken = getCookie("agu_token");
   const [serverTime, setServerTime] = useRecoilState<Date>(serverTimeState);
-  const [timerTimeInMs, setTimerTimeInMs] = useState(0); // 유효 타이머 시간 ms로 표현
+  const [timerTimeInMs, setTimerTimeInMs] = useState(0); // agu code 인증 링크 요청 유효 타이머 시간 ms로 표현
   // TODO : 변수명
   const tryReturnRequest = async (e: React.MouseEvent) => {
     setIsLoading(true);
@@ -66,7 +66,7 @@ const AGUPage = () => {
     setIsLoading(true);
 
     try {
-      const response = await axiosAGUCancel();
+      const response = await axiosAGUReturnCancel();
       // setModalTitle("반납되었습니다");
       console.log("tryReturnCancelRequest response : ", response);
       if (response.status === 200) {
