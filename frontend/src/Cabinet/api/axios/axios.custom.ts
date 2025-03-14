@@ -480,12 +480,11 @@ export const axiosAGU = async (intraId: string): Promise<any> => {
   }
 };
 
-export const axiosAGUCancel = async (intraId: string): Promise<any> => {
+// export const axiosAGUCancel = async (intraId: string): Promise<any> => {
+export const axiosAGUCancel = async (): Promise<any> => {
   // if (intraId === null) return;
   try {
-    const response = await instance.post(axiosAGUURL + "/cancel", null, {
-      params: { name: intraId },
-    });
+    const response = await instance.post(axiosAGUURL + "/cancel");
     return response;
   } catch (error) {
     // logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");

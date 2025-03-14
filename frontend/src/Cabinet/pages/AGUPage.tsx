@@ -7,6 +7,7 @@ import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import {
   axiosAGU,
+  axiosAGUCancel,
   axiosMyLentInfo,
   axiosReturn,
 } from "@/Cabinet/api/axios/axios.custom";
@@ -46,6 +47,42 @@ const AGUPage = () => {
       // setHasErrorOnResponse(true);
     } finally {
       // setIsLoading(false);
+      // setShowResponseModal(true);
+    }
+  };
+
+  const handleCancelButtonClick = () => {
+    const answer = confirm(
+      "다시 처음부터 해야되고 메일 요청 시간 만료안됐으면 기다려야됨. 그래도 진행?"
+    );
+
+    if (answer) {
+      //
+      tryReturnCancelRequest();
+    }
+  };
+
+  const tryReturnCancelRequest = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await axiosAGUCancel();
+      // setModalTitle("반납되었습니다");
+      console.log("tryReturnCancelRequest response : ", response);
+      if (response.status === 200) {
+        navigator("/login");
+      }
+    } catch (error: any) {
+      alert(error.data);
+      console.log(error);
+      // if (error.response.status === 418) {
+      //   props.closeModal(e);
+      //   props.handleOpenPasswordCheckModal();
+      //   return;
+      // }
+      // setHasErrorOnResponse(true);
+    } finally {
+      setIsLoading(false);
       // setShowResponseModal(true);
     }
   };
@@ -115,7 +152,7 @@ const AGUPage = () => {
           <SubHeaderStyled>{subTitle}</SubHeaderStyled>
           <>{returnDetail}</>
           <button onClick={tryReturnRequest}>네, 반납할게요</button>
-          <button onClick={() => navigator("//")}>취소</button>
+          <button onClick={handleCancelButtonClick}>취소</button>
         </>
       ) : (
         <>
