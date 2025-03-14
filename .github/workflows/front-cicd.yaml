@@ -20,10 +20,9 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
       - name: 체크아웃
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
-          submodules: true
-          ssh-key: ${{ secrets.SSH_CONFIG }}
+          submodules: false
 
       - name: 서브모듈 업데이트
         run: |
