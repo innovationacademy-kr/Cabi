@@ -151,7 +151,6 @@ public class AuthenticationService {
 		User user = userQueryService.getUserByName(name);
 		aguCodeRedisService.verifyTemporaryCode(name, code);
 
-		aguCodeRedisService.removeAguCode(name);
 		String temporaryToken =
 				jwtService.createAguToken(user.getId());
 
