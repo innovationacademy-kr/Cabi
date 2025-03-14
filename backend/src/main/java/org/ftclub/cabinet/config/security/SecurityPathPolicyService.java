@@ -14,7 +14,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @RequiredArgsConstructor
 public class SecurityPathPolicyService {
 
-
+	private static final String PATH_HEADER = "X-Client-Path";
 	private final CookieService cookieService;
 
 	public boolean isAguContext() {
@@ -48,16 +48,16 @@ public class SecurityPathPolicyService {
 			return false;
 		}
 
-		String origin = request.getHeader("Origin");
 		String referer = request.getHeader(HttpHeaders.REFERER);
-		log.info("Origin = {}", origin);
-		log.info("Referer = {}, RequestURI = {}, RequestURL = {}",
-				referer, request.getRequestURI(), request.getRequestURL());
+		String customPath = request.getHeader(PATH_HEADER);
 
-		log.info("Referer = {}", referer);
+		log.info("Referer = {}, CustomPath = {}", referer, customPath);
 		String uri = request.getRequestURI();
 
-		return (referer != null && (referer.contains(path) || uri.contains(path)));
+		return ((referer != null && referer.contains(path))
+				|| (customPath != null && customPath.contains(path))
+				|| uri.contains(path)
+		);
 	}
 
 	/**
