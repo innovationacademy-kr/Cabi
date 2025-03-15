@@ -6,6 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+/**
+ * javaMailSender 에 대한 설정
+ * <p>
+ * smtp gmail 사용, 타임아웃 5초, 재발송 1회 제한
+ */
 @Configuration
 public class MailConfig {
 

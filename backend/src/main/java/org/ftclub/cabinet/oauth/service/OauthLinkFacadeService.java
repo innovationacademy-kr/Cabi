@@ -37,6 +37,15 @@ public class OauthLinkFacadeService {
 	private final UserFacadeService userFacadeService;
 	private final CookieService cookieService;
 
+	/**
+	 * providerId(unique), type을 기준으로 계정 연동 상태를 확인한 후,
+	 * <p>
+	 * 새로 연동하거나 유저 정보(role, blackholedAt)를 업데이트 합니다
+	 *
+	 * @param req
+	 * @param oauth2User
+	 * @return
+	 */
 	public OauthResult handleLinkUser(HttpServletRequest req,
 			CustomOauth2User oauth2User) {
 		String oauthMail = oauth2User.getEmail();
@@ -48,6 +57,14 @@ public class OauthLinkFacadeService {
 				.orElseGet(() -> handleNewLinkUser(req, providerType, providerId, oauthMail));
 	}
 
+	/**
+	 * 기존 계정 연동 유저
+	 * <p>
+	 * 42 api를 통해 role, blackholedAt 업데이트. 42 api 호출 시 문제가 있을 경우 리트라이 없이 업데이트 생략
+	 *
+	 * @param connection
+	 * @return
+	 */
 	public OauthResult handleExistingLinkedUser(OauthLink connection) {
 		User user = connection.getUser();
 		try {
@@ -65,6 +82,17 @@ public class OauthLinkFacadeService {
 				authPolicyService.getMainHomeUrl());
 	}
 
+	/**
+	 * 신규 계정 연동 유저 생성
+	 * <p>
+	 * refreshToken으로부터 서비스에 가입한 유저인지 확인 및 loginStatus 확인
+	 *
+	 * @param req
+	 * @param providerType
+	 * @param providerId
+	 * @param oauthMail
+	 * @return
+	 */
 	public OauthResult handleNewLinkUser(HttpServletRequest req, String providerType,
 			String providerId, String oauthMail) {
 
