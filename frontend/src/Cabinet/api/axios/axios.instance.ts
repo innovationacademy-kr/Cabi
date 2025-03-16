@@ -24,11 +24,11 @@ const reissueToken = async () => {
     const token = getCookie("access_token");
     const xsrfToken = getCookie("XSRF-TOKEN");
     const headers: { [key: string]: string } = {};
-
     if (token) headers["Authorization"] = `Bearer ${token}`;
     if (xsrfToken) headers["X-XSRF-TOKEN"] = xsrfToken;
-
-    const response = await reissueInstance.post("/v5/jwt/reissue", { headers });
+    const response = await reissueInstance.post("/v5/jwt/reissue", null, {
+      headers,
+    });
 
     if (response.status === 200) {
       return true;
