@@ -4,13 +4,11 @@ import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import { axiosReissueToken } from "./axios.custom";
 
-axios.defaults.withCredentials = true; // CSRF 토큰 자동 포함하기 위해 추가
-
-axios.defaults.xsrfCookieName = "XSRF-TOKEN"; // 쿠키 이름
-axios.defaults.xsrfHeaderName = "X-XSRF-TOKEN"; // 요청 헤더에 포함될 이름
-
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BE_HOST,
+  withCredentials: true,
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-XSRF-TOKEN",
 });
 
 instance.interceptors.request.use(async (config) => {
@@ -42,10 +40,11 @@ instance.interceptors.response.use(
         try {
           const response = await axiosReissueToken();
 
-          if (response.status === 200) {
+          if (response.status === HttpStatusCode.Ok) {
             const originalRequest = error.config;
             const newToken = getCookie("access_token");
             originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
             return instance(originalRequest);
           }
         } catch (error) {
