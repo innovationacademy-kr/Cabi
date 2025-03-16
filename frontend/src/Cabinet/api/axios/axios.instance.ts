@@ -15,7 +15,7 @@ const setAuthorizationHeader = (
   config: InternalAxiosRequestConfig,
   token?: string
 ) => {
-  if (token) config.headers["Authorization"] = `Bearer ${token}`;
+  if (token) config.headers.set("Authorization", `Bearer ${token}`);
 };
 
 instance.interceptors.request.use(async (config) => {
@@ -24,7 +24,7 @@ instance.interceptors.request.use(async (config) => {
   const isAGUPage = window.location.pathname === "/agu";
 
   if (isAGUPage) {
-    config.headers["X-Client-Path"] = "/agu";
+    config.headers.set("X-Client-Path", "/agu");
     setAuthorizationHeader(config, aguToken);
   } else {
     setAuthorizationHeader(config, accessToken);
