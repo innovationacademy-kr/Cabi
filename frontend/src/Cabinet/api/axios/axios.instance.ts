@@ -12,11 +12,6 @@ const instance = axios.create({
   baseURL: import.meta.env.VITE_BE_HOST,
 });
 
-const reissueInstance = axios.create({
-  baseURL: import.meta.env.VITE_BE_HOST,
-  withCredentials: true,
-});
-
 const reissueToken = async () => {
   try {
     // TODO : 경로에 따라 헤더 다르게 세팅
@@ -25,7 +20,7 @@ const reissueToken = async () => {
 
     if (token) headers["Authorization"] = `Bearer ${token}`;
 
-    const response = await reissueInstance.post("/v5/jwt/reissue", { headers });
+    const response = await instance.post("/v5/jwt/reissue", { headers });
 
     if (response.status === 200) {
       return true;
