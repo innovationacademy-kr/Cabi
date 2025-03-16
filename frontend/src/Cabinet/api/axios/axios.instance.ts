@@ -3,7 +3,7 @@ import ErrorType from "@/Cabinet/types/enum/error.type.enum";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 
-axios.defaults.withCredentials = true; // CSRF 토큰 자동 포함
+axios.defaults.withCredentials = true; // CSRF 토큰 자동 포함하기 위해 추가
 
 axios.defaults.xsrfCookieName = "XSRF-TOKEN"; // 쿠키 이름
 axios.defaults.xsrfHeaderName = "X-XSRF-TOKEN"; // 요청 헤더에 포함될 이름
@@ -21,11 +21,9 @@ const reissueToken = async () => {
   try {
     // TODO : 경로에 따라 헤더 다르게 세팅
     const token = getCookie("access_token");
-    const xsrfToken = getCookie("XSRF-TOKEN");
     const headers: { [key: string]: string } = {};
 
     if (token) headers["Authorization"] = `Bearer ${token}`;
-    if (xsrfToken) headers["X-XSRF-TOKEN"] = xsrfToken;
 
     const response = await reissueInstance.post("/v5/jwt/reissue", { headers });
 
@@ -42,10 +40,8 @@ const reissueToken = async () => {
 instance.interceptors.request.use(async (config) => {
   const accessToken = getCookie("access_token");
   const aguToken = getCookie("agu_token");
-  const xsrfToken = getCookie("XSRF-TOKEN");
   const isAGUPage = window.location.pathname === "/agu";
 
-  if (xsrfToken) config.headers["X-XSRF-TOKEN"] = xsrfToken;
   if (isAGUPage) config.headers["X-Client-Path"] = "/agu";
 
   // TODO : 조건문 수정
