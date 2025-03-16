@@ -52,7 +52,7 @@ const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
               // TODO: 회색
             }}
           >
-            A.G.U
+            A.G.U?
           </span>
         </LoginCardStyled>
       </RightSectionStyled>
