@@ -13,8 +13,35 @@ import {
   axiosReturn,
 } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
-import { formatDate } from "@/Cabinet/utils/dateUtils";
-import { DetailStyled } from "../components/Modals/Modal";
+import AGURequestMail from "../components/AGU/AGURequestMail";
+import AGUReturn from "../components/AGU/AGUReturn";
+import CabinetStatus from "../types/enum/cabinet.status.enum";
+import CabinetType from "../types/enum/cabinet.type.enum";
+
+const tmp: MyCabinetInfoResponseDto = {
+  building: "새롬관",
+  cabinetId: 91,
+  floor: 2,
+  lentType: CabinetType.PRIVATE,
+  lents: [
+    {
+      expiredAt: new Date("2025-04-12T23:59:59.932478"),
+      lentHistoryId: 3,
+      name: "jeekim",
+      startedAt: new Date("2025-03-12T18:03:19.932478"),
+      userId: 2,
+    },
+  ],
+  maxUser: 1,
+  memo: "",
+  previousUserName: "",
+  section: "End of Cluster 1",
+  shareCode: -1,
+  status: CabinetStatus.FULL,
+  statusNote: "",
+  title: "",
+  visibleNum: 11,
+};
 
 const AGUPage = () => {
   // TODO: animation
@@ -30,64 +57,6 @@ const AGUPage = () => {
   const [timerTimeInMs, setTimerTimeInMs] = useState(0); // agu code 인증 링크 요청 유효 타이머 시간 ms로 표현
   // TODO : 변수명
 
-  const tryReturnRequest = async (e: React.MouseEvent) => {
-    setIsLoading(true);
-
-    try {
-      const response = await axiosReturn();
-      console.log("tryReturnRequest response : ", response);
-      if (response.status === 200) {
-        alert("반납되었습니다");
-        // setMyLentInfoState(undefined);
-        // TODO : setMyLentInfoState 초기값으로 설정
-      }
-    } catch (error: any) {
-      alert(error.response.data.message);
-    } finally {
-      setIsLoading(false);
-      setMail("");
-      // TODO : idRef.current.value = "";
-      // TODO : 취소 버튼 눌러도. 로그인 페이지로 가도. 그냥 현재 화면을 벗어나면.
-      navigator("/login");
-    }
-  };
-
-  const handleCancelButtonClick = () => {
-    const answer = confirm(
-      "다시 처음부터 해야되고 메일 요청 시간 만료안됐으면 기다려야됨. 그래도 진행?"
-    );
-
-    if (answer) {
-      //
-      tryReturnCancelRequest();
-      setMail("");
-    }
-  };
-
-  const tryReturnCancelRequest = async () => {
-    setIsLoading(true);
-
-    try {
-      const response = await axiosAGUReturnCancel();
-      console.log("tryReturnCancelRequest response : ", response);
-      if (response.status === 200) {
-        navigator("/login");
-      }
-    } catch (error: any) {
-      alert(error.data);
-      console.log(error);
-      // if (error.response.status === 418) {
-      //   props.closeModal(e);
-      //   props.handleOpenPasswordCheckModal();
-      //   return;
-      // }
-      // setHasErrorOnResponse(true);
-    } finally {
-      setIsLoading(false);
-      // setShowResponseModal(true);
-    }
-  };
-
   async function getMyLentInfo() {
     try {
       const { data: myLentInfo } = await axiosMyLentInfo();
@@ -97,19 +66,6 @@ const AGUPage = () => {
       console.error(error);
     }
   }
-
-  const formattedDate = formatDate(
-    myLentInfoState ? new Date(myLentInfoState.lents[0].expiredAt) : null,
-    "/",
-    4,
-    2,
-    2
-  );
-
-  const returnDetailMsg = myLentInfoState
-    ? `<strong>${myLentInfoState.floor}층 - ${myLentInfoState.section}, ${myLentInfoState.visibleNum}번</strong>
-   대여기간 : <strong>${formattedDate}</strong>까지`
-    : "";
 
   useEffect(() => {
     if (aguToken) getMyLentInfo();
@@ -149,8 +105,14 @@ const AGUPage = () => {
       <HeaderStyled>AGUPage</HeaderStyled>
       {aguToken && myLentInfoState ? (
         <>
+          <AGUReturn
+            setIsLoading={setIsLoading}
+            setMail={setMail}
+            navigator={navigator}
+            myLentInfoState={myLentInfoState}
+          />
           {/* <SubHeaderStyled>{returnSubTitle}</SubHeaderStyled> */}
-          <SubHeaderStyled>
+          {/* <SubHeaderStyled>
             현재 대여중인 사물함 정보입니다.{" "}
             <span>지금 반납 하시겠습니까?</span>
           </SubHeaderStyled>
@@ -166,13 +128,20 @@ const AGUPage = () => {
             onClick={handleCancelButtonClick}
             text="취소"
             theme="grayLine"
-          />
+          /> */}
         </>
       ) : (
         <>
+          <AGUReturn
+            setIsLoading={setIsLoading}
+            setMail={setMail}
+            navigator={navigator}
+            myLentInfoState={tmp}
+          />
+          {/* <AGURequestMail />
           <SubHeaderStyled>{mail}</SubHeaderStyled>
           <input ref={idRef} style={{ border: "1px solid black" }}></input>
-          <button onClick={handleButtonClick}>요청</button>
+          <button onClick={handleButtonClick}>요청</button> */}
         </>
       )}
       {/* <LoadingAnimation /> */}
