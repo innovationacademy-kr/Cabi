@@ -376,7 +376,6 @@ export const axiosItems = async (): Promise<any> => {
     const response = await instance.get(axiosItemsURL);
     return response;
   } catch (error) {
-    console.log(error);
     logAxiosError(
       error,
       ErrorType.STORE,
@@ -392,7 +391,6 @@ export const axiosAdminItems = async (): Promise<any> => {
     const response = await instance.get(axiosAdminItemsURL);
     return response;
   } catch (error) {
-    console.log(error);
     logAxiosError(
       error,
       ErrorType.STORE,
@@ -499,6 +497,16 @@ export const axiosDisconnectSocialAccount = async (
         provider: provider, // 연동되어있는 providerType
       },
     });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosReissueTokenURL = "/v5/jwt/reissue";
+export const axiosReissueToken = async (): Promise<any> => {
+  try {
+    const response = await instance.post(axiosReissueTokenURL);
     return response;
   } catch (error) {
     throw error;

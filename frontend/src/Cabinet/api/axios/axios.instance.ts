@@ -2,6 +2,7 @@ import axios, { HttpStatusCode } from "axios";
 import ErrorType from "@/Cabinet/types/enum/error.type.enum";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
+import { axiosReissueToken } from "./axios.custom";
 
 axios.defaults.withCredentials = true; // CSRF 토큰 자동 포함하기 위해 추가
 
@@ -11,26 +12,6 @@ axios.defaults.xsrfHeaderName = "X-XSRF-TOKEN"; // 요청 헤더에 포함될 �
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BE_HOST,
 });
-
-const reissueToken = async () => {
-  try {
-    // TODO : 경로에 따라 헤더 다르게 세팅
-    const token = getCookie("access_token");
-    const headers: { [key: string]: string } = {};
-
-    if (token) headers["Authorization"] = `Bearer ${token}`;
-
-    const response = await instance.post("/v5/jwt/reissue", { headers });
-
-    if (response.status === 200) {
-      return true;
-    }
-    return false;
-  } catch (error) {
-    console.error("Token reissue failed:", error);
-    return false;
-  }
-};
 
 instance.interceptors.request.use(async (config) => {
   const accessToken = getCookie("access_token");
@@ -58,13 +39,17 @@ instance.interceptors.response.use(
       const token = getCookie("access_token");
 
       if (token) {
-        const isReissued = await reissueToken();
+        try {
+          const response = await axiosReissueToken();
 
-        if (isReissued) {
-          const originalRequest = error.config;
-          const newToken = getCookie("access_token");
-          originalRequest.headers.Authorization = `Bearer ${newToken}`;
-          return instance(originalRequest);
+          if (response.status === 200) {
+            const originalRequest = error.config;
+            const newToken = getCookie("access_token");
+            originalRequest.headers.Authorization = `Bearer ${newToken}`;
+            return instance(originalRequest);
+          }
+        } catch (error) {
+          console.error("Token reissue failed:", error);
         }
       }
 
