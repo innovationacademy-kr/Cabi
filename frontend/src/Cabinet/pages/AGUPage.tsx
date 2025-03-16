@@ -102,7 +102,7 @@ const AGUPage = () => {
   return (
     <WrapperStyled>
       <UtilsSectionStyled></UtilsSectionStyled>
-      <HeaderStyled>AGUPage</HeaderStyled>
+      <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
       {aguToken && myLentInfoState ? (
         <>
           <AGUReturn
