@@ -33,11 +33,13 @@ public class SecurityConfig {
 	private final CustomSuccessHandler customSuccessHandler;
 	private final CustomAuthenticationEntryPoint entrypoint;
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
+	private final CsrfCookieConfig csrfCookieConfig;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http)
 			throws Exception {
-		http.csrf(AbstractHttpConfigurer::disable)
+		http.csrf(csrf -> csrf
+						.csrfTokenRepository(csrfCookieConfig))
 				.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.cors().and()

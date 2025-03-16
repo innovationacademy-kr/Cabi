@@ -44,14 +44,16 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
 		Cookie[] cookies = request.getCookies();
 		cookieService.deleteAllCookies(cookies, request.getServerName(), response);
-		log.error("Request Method = {}", request.getMethod());
+
 		ExceptionStatus exceptionStatus = ExceptionStatus.ACCESS_DENIED;
-		log.error("Request Uri : {}", request.getRequestURI());
+		log.error("Request Uri : {}, Method : {}", request.getRequestURI(), request.getMethod());
 		log.error("Access Denied! Authentication: {}",
 				SecurityContextHolder.getContext().getAuthentication());
+
 		if (accessDeniedException instanceof CustomAccessDeniedException) {
 			exceptionStatus = ((CustomAccessDeniedException) accessDeniedException).getStatus();
 		}
+		response.resetBuffer();
 		response.setStatus(exceptionStatus.getStatusCode());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		response.setCharacterEncoding("UTF-8");
@@ -62,6 +64,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 		responseBody.put("message", exceptionStatus.getMessage());
 		responseBody.put("timestamp", Instant.now().toString());
 
-		new ObjectMapper().writeValue(response.getWriter(), responseBody);
+		new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
 	}
 }

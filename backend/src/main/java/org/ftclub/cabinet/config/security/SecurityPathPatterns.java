@@ -22,7 +22,7 @@ public class SecurityPathPatterns {
 
 	public static final String[] USER_ADMIN_ENDPOINTS = {
 			"/v4/cabinets/**",
-			"/v4/items",
+			"/v5/items",
 			"/v4/lent/cabinets/share/cancel/*"
 	};
 

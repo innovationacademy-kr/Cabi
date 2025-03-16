@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.CookieInfo;
 import org.ftclub.cabinet.auth.domain.CookieManager;
+import org.ftclub.cabinet.config.security.CsrfCookieConfig;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
@@ -60,7 +61,9 @@ public class CookieService {
 	public void deleteAllCookies(Cookie[] cookies, String serverName, HttpServletResponse res) {
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				cookieManager.deleteCookie(res, serverName, cookie.getName());
+				if (!CsrfCookieConfig.CSRF_HEADER.equals(cookie.getName())) {
+					cookieManager.deleteCookie(res, serverName, cookie.getName());
+				}
 			}
 		}
 	}

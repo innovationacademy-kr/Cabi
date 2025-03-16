@@ -19,17 +19,15 @@ const reissueInstance = axios.create({
 
 const reissueToken = async () => {
   try {
+    // TODO : 경로에 따라 헤더 다르게 세팅
     const token = getCookie("access_token");
-    console.log("token : ", token);
-    const response = await reissueInstance.post(
-      "/v5/jwt/reissue",
-      // {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const xsrfToken = getCookie("XSRF-TOKEN");
+    const headers: { [key: string]: string } = {};
+
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+    if (xsrfToken) headers["X-XSRF-TOKEN"] = xsrfToken;
+
+    const response = await reissueInstance.post("/v5/jwt/reissue", { headers });
 
     if (response.status === 200) {
       return true;
@@ -44,14 +42,18 @@ const reissueToken = async () => {
 instance.interceptors.request.use(async (config) => {
   const accessToken = getCookie("access_token");
   const aguToken = getCookie("agu_token");
+  const xsrfToken = getCookie("XSRF-TOKEN");
   const isAGUPage = window.location.pathname === "/agu";
-  // console.log("isAGUPage ??? ", isAGUPage);
-  // console.log("accessToken ??? ", accessToken);
-  // console.log("aguToken ??? ", aguToken);
-  if (accessToken || !isAGUPage)
-    config.headers.set("Authorization", `Bearer ${accessToken}`);
-  else if (aguToken && isAGUPage)
-    config.headers.set("Authorization", `Bearer ${aguToken}`);
+
+  if (xsrfToken) config.headers["X-XSRF-TOKEN"] = xsrfToken;
+  if (isAGUPage) config.headers["X-Client-Path"] = "/agu";
+
+  // TODO : 조건문 수정
+  if (accessToken) config.headers["Authorization"] = `Bearer ${accessToken}`;
+  if (accessToken && !isAGUPage)
+    config.headers["Authorization"] = `Bearer ${accessToken}`;
+  if (aguToken && isAGUPage)
+    config.headers["Authorization"] = `Bearer ${aguToken}`;
   // TODO : 정리 - 반납하시겠습니까 에서 lent/me 요청 보낼때
   return config;
 });
