@@ -1,11 +1,12 @@
-package org.ftclub.cabinet.exception;
+package org.ftclub.cabinet.config.security.exception;
 
 import lombok.Getter;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 
 @Getter
 public class SpringSecurityException extends RuntimeException {
 
-	final ExceptionStatus status;
+	private final ExceptionStatus status;
 
 	public SpringSecurityException(ExceptionStatus status) {
 		this.status = status;
@@ -15,4 +16,5 @@ public class SpringSecurityException extends RuntimeException {
 	public String getMessage() {
 		return status.getMessage();
 	}
+
 }
