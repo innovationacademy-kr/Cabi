@@ -5,14 +5,13 @@ import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.auth.domain.FtOauthProfile;
-import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
+import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
 import org.ftclub.cabinet.oauth.service.OauthProfileService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
@@ -46,7 +45,7 @@ public class BlackholeManager {
 	 * 42 API를 통해 유저의 프로필을 가져온다.
 	 *
 	 * @param userName 42 intra name
-	 * @return 유저 프로필 {@link FtProfile}
+	 * @return 유저 프로필 {@link FtOauthProfile}
 	 */
 	public FtOauthProfile getUserRecentIntraProfile(String userName) {
 		try {
