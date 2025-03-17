@@ -32,9 +32,9 @@ const AGURequestMail = ({
         }
       }
     } catch (error: any) {
-      console.log(error);
-      // error.response.status
+      console.error(error);
       alert(error.response.data.message);
+      if (idRef.current) idRef.current.value = "";
     } finally {
       // setIsLoading(false);
     }
