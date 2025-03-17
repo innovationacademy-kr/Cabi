@@ -47,11 +47,8 @@ public class SecurityPathPolicyService {
 		if (request == null) {
 			return false;
 		}
-
 		String referer = request.getHeader(HttpHeaders.REFERER);
 		String customPath = request.getHeader(PATH_HEADER);
-
-		log.info("Referer = {}, CustomPath = {}", referer, customPath);
 		String uri = request.getRequestURI();
 
 		return ((referer != null && referer.contains(path))
