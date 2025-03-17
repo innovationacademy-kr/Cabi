@@ -43,7 +43,7 @@ public class ApplicationTokenManager {
 			try {
 				OAuth2AuthorizeRequest authorizeRequest =
 						OAuth2AuthorizeRequest.withClientRegistrationId(CLIENT_REGISTRATION_ID)
-								.principal("application")
+								.principal("system")
 								.build();
 				OAuth2AuthorizedClient authorizedClient =
 						authorizedClientManager.authorize(authorizeRequest);

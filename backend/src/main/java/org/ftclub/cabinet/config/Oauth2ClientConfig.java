@@ -27,7 +27,6 @@ public class Oauth2ClientConfig {
 		// Client Credentials Grant 방식 지정
 		OAuth2AuthorizedClientProvider authorizedClientProvider =
 				OAuth2AuthorizedClientProviderBuilder.builder()
-						.authorizationCode()
 						.clientCredentials()
 						.build();
 		// AuthorizedClientManager 설정
