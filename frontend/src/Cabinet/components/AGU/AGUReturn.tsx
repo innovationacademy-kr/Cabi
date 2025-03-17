@@ -1,6 +1,6 @@
 import { HttpStatusCode } from "axios";
-import { useEffect } from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
@@ -16,19 +16,20 @@ import { formatDate } from "@/Cabinet/utils/dateUtils";
 
 // TODO : 파일/컴포넌트 이름 변경
 const AGUReturn = ({
-  setIsLoading,
   setMail,
   mail,
   aguToken,
 }: {
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setMail: React.Dispatch<React.SetStateAction<string>>;
   mail: string;
   aguToken: string;
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [myLentInfoState, setMyLentInfoState] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const navigator = useNavigate();
+  const subHeaderMsg = `현재 대여중인 사물함 정보입니다. <span>지금 반납 하시겠습니까?</span>`;
+  //   TODO : 부모 컴포넌트에서 재사용?
   const formattedDate = formatDate(
     myLentInfoState ? new Date(myLentInfoState.lents[0].expiredAt) : null,
     "/",
@@ -112,8 +113,6 @@ const AGUReturn = ({
       setMail("");
     }
   };
-  const subHeaderMsg = `현재 대여중인 사물함 정보입니다. <span>지금 반납 하시겠습니까?</span>`;
-  //   TODO : 부모 컴포넌트에서 재사용?
 
   if (mail)
     return (
