@@ -1,12 +1,12 @@
-package org.ftclub.cabinet.config.security.handler;
+package org.ftclub.cabinet.security.handler;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.config.security.exception.SecurityExceptionHandlerManager;
-import org.ftclub.cabinet.config.security.exception.SpringSecurityException;
+import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
+import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;

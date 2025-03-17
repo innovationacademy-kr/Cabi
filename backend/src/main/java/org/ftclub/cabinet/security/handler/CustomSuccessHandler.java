@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security.handler;
+package org.ftclub.cabinet.security.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,8 +11,8 @@ import org.ftclub.cabinet.auth.domain.CustomOauth2User;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.service.AuthenticationService;
-import org.ftclub.cabinet.config.security.exception.SecurityExceptionHandlerManager;
-import org.ftclub.cabinet.config.security.exception.SpringSecurityException;
+import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
+import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.oauth.service.OauthFacadeService;
 import org.springframework.beans.factory.annotation.Value;

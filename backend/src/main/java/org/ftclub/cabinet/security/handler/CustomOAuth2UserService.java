@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security.handler;
+package org.ftclub.cabinet.security.handler;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

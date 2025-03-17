@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security.filter;
+package org.ftclub.cabinet.security.filter;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.config.security.exception.SecurityExceptionHandlerManager;
+import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;

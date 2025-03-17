@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.security;
 
 public class SecurityPathPatterns {
 

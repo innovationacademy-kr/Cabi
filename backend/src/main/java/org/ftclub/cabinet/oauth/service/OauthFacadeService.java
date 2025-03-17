@@ -10,7 +10,7 @@ import org.ftclub.cabinet.auth.domain.CustomOauth2User;
 import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
-import org.ftclub.cabinet.config.security.SecurityPathPolicyService;
+import org.ftclub.cabinet.security.SecurityPathPolicyService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.ftclub.cabinet.user.service.UserQueryService;

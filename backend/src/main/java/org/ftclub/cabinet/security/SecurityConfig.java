@@ -1,13 +1,13 @@
-package org.ftclub.cabinet.config.security;
+package org.ftclub.cabinet.security;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.config.security.filter.JwtAuthenticationFilter;
-import org.ftclub.cabinet.config.security.filter.JwtExceptionFilter;
-import org.ftclub.cabinet.config.security.filter.LoggingFilter;
-import org.ftclub.cabinet.config.security.handler.CustomAccessDeniedHandler;
-import org.ftclub.cabinet.config.security.handler.CustomAuthenticationEntryPoint;
-import org.ftclub.cabinet.config.security.handler.CustomOAuth2UserService;
-import org.ftclub.cabinet.config.security.handler.CustomSuccessHandler;
+import org.ftclub.cabinet.security.filter.JwtAuthenticationFilter;
+import org.ftclub.cabinet.security.filter.JwtExceptionFilter;
+import org.ftclub.cabinet.security.filter.LoggingFilter;
+import org.ftclub.cabinet.security.handler.CustomAccessDeniedHandler;
+import org.ftclub.cabinet.security.handler.CustomAuthenticationEntryPoint;
+import org.ftclub.cabinet.security.handler.CustomOAuth2UserService;
+import org.ftclub.cabinet.security.handler.CustomSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;

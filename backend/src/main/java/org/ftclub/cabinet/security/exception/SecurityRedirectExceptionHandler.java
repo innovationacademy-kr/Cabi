@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security.exception;
+package org.ftclub.cabinet.security.exception;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

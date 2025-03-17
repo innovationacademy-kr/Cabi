@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security.exception;
+package org.ftclub.cabinet.security.exception;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;

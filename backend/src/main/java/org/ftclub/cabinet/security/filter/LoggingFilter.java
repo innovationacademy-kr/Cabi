@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config.security.filter;
+package org.ftclub.cabinet.security.filter;
 
 import java.io.IOException;
 import java.util.Arrays;
