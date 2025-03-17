@@ -1,13 +1,11 @@
 package org.ftclub.cabinet.admin.auth.controller;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.auth.service.AdminAuthService;
-import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.dto.AccessTokenDto;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -31,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Logging
 public class AdminAuthController {
 
-	private final AuthFacadeService authFacadeService;
 	private final AdminAuthService adminAuthService;
 
 	/**
@@ -61,20 +57,6 @@ public class AdminAuthController {
 		return adminAuthService.masterLogin(masterLoginDto, req, res);
 	}
 
-	/**
-	 * OAuth 로그인 콜백을 수행합니다.
-	 *
-	 * @param code 구글 API로부터 쿼리로 받은 인증 코드
-	 * @param req  요청 시의 서블렛 {@link HttpServletRequest}
-	 * @param res  요청 시의 서블렛 {@link HttpServletResponse}
-	 * @throws IOException 입출력 예외
-	 */
-
-	@GetMapping("/login/callback")
-	public void loginCallback(@RequestParam String code, HttpServletRequest req,
-			HttpServletResponse res) throws IOException, ExecutionException, InterruptedException {
-		authFacadeService.handleAdminLogin(req, res, code);
-	}
 
 	/**
 	 * 관리자 로그아웃을 수행합니다.
