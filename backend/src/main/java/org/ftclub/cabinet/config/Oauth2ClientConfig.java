@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 @Configuration
 public class Oauth2ClientConfig {
 
+	// 유저 로그인 (Authorization_code) 에만 사용
 	@Bean
 	public OAuth2AuthorizedClientService authorizedClientService(
 			ClientRegistrationRepository clientRegistrationRepository) {
@@ -27,9 +28,26 @@ public class Oauth2ClientConfig {
 		// Client Credentials Grant 방식 지정
 		OAuth2AuthorizedClientProvider authorizedClientProvider =
 				OAuth2AuthorizedClientProviderBuilder.builder()
-						.clientCredentials()
+						.authorizationCode()
 						.build();
 		// AuthorizedClientManager 설정
+		AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
+				new AuthorizedClientServiceOAuth2AuthorizedClientManager(
+						clientRegistrationRepository, authorizedClientService);
+
+		authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
+
+		return authorizedClientManager;
+	}
+
+	@Bean
+	public OAuth2AuthorizedClientManager clientCredentialsAuthorizedClientManager(
+			ClientRegistrationRepository clientRegistrationRepository,
+			OAuth2AuthorizedClientService authorizedClientService) {
+		OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
+				.clientCredentials()
+				.build();
+
 		AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
 				new AuthorizedClientServiceOAuth2AuthorizedClientManager(
 						clientRegistrationRepository, authorizedClientService);

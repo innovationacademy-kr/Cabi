@@ -20,7 +20,7 @@ public class ApplicationTokenManager {
 	private static final int MAX_RETRY = 3;
 	private static final String CLIENT_REGISTRATION_ID = "ft-client-credentials";
 	private static String FT_ACCESS_TOKEN;
-	private final OAuth2AuthorizedClientManager authorizedClientManager;
+	private final OAuth2AuthorizedClientManager clientCredentialsAuthorizedClientManager;
 
 	/**
 	 * 서버가 시작될 때, 42 OAuth 액세스 토큰을 발급합니다.
@@ -46,7 +46,7 @@ public class ApplicationTokenManager {
 								.principal("system")
 								.build();
 				OAuth2AuthorizedClient authorizedClient =
-						authorizedClientManager.authorize(authorizeRequest);
+						clientCredentialsAuthorizedClientManager.authorize(authorizeRequest);
 
 				if (authorizedClient == null || authorizedClient.getAccessToken() == null) {
 					throw ExceptionStatus.OAUTH_BAD_GATEWAY.asServiceException();
