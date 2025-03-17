@@ -7,14 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.auth.domain.CustomOauth2User;
-import org.ftclub.cabinet.auth.domain.OauthResult;
+import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
-import org.ftclub.cabinet.auth.service.AuthenticationService;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.oauth.domain.CustomOauth2User;
+import org.ftclub.cabinet.oauth.domain.OauthResult;
+import org.ftclub.cabinet.oauth.service.OauthFacadeService;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.oauth.service.OauthFacadeService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,7 +35,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	private final OauthFacadeService oauthFacadeService;
 	private final ObjectMapper objectMapper;
 	private final AuthPolicyService authPolicyService;
-	private final AuthenticationService authenticationService;
+	private final AuthFacadeService authFacadeService;
 	private final SecurityExceptionHandlerManager securityExceptionHandlerManager;
 
 	@Value("${spring.security.oauth2.client.registration.ft.client-name}")
@@ -59,7 +59,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 		try {
 			OauthResult oauthResult = processOAuthLogin(request, provider, fromLoadUser);
-			authenticationService.processAuthentication(request, response, oauthResult, provider);
+			authFacadeService.processAuthentication(request, response, oauthResult, provider);
 			String redirectUrl = oauthResult.getRedirectionUrl();
 
 			if (oauthResult.hasRole("AGU")) {
