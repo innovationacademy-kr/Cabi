@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import styled from "styled-components";
 import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
 import Button from "@/Cabinet/components/Common/Button";
 import { axiosAGU } from "@/Cabinet/api/axios/axios.custom";
@@ -14,7 +13,6 @@ const AGURequestMail = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const idRef = useRef<HTMLInputElement>(null);
-
   const subHeaderMsg = mail
     ? `<span>${mail}</span>로 인증 링크가 전송되었습니다.`
     : `인트라 아이디를 입력하시면 <span>인트라 이메일 주소</span>로 <span>인증 링크</span>가 전송됩니다.`;

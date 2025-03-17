@@ -1,49 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
 import AGURequestMail from "@/Cabinet/components/AGU/AGURequestMail";
 import AGUReturn from "@/Cabinet/components/AGU/AGUReturn";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
-import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
-import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+import { axiosMyLentInfo } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
-
-const tmp: MyCabinetInfoResponseDto = {
-  building: "새롬관",
-  cabinetId: 91,
-  floor: 2,
-  lentType: CabinetType.PRIVATE,
-  lents: [
-    {
-      expiredAt: new Date("2025-04-12T23:59:59.932478"),
-      lentHistoryId: 3,
-      name: "jeekim",
-      startedAt: new Date("2025-03-12T18:03:19.932478"),
-      userId: 2,
-    },
-  ],
-  maxUser: 1,
-  memo: "",
-  previousUserName: "",
-  section: "End of Cluster 1",
-  shareCode: -1,
-  status: CabinetStatus.FULL,
-  statusNote: "",
-  title: "",
-  visibleNum: 11,
-};
 
 const AGUPage = () => {
   // TODO: animation
   const [mail, setMail] = useState("");
   const aguToken = getCookie("agu_token");
+  const [myLentInfo, setMyLentInfo] =
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const [userId, setUserId] = useState(0);
+
+  const getMyLentInfo = async () => {
+    try {
+      const { data: myLentInfo } = await axiosMyLentInfo();
+
+      setMyLentInfo(myLentInfo);
+      setUserId(myLentInfo.lents[0].userId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (aguToken) getMyLentInfo();
+  }, []);
 
   return (
     <WrapperStyled>
       <UtilsSectionStyled></UtilsSectionStyled>
       <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
-      {aguToken ? (
-        <AGUReturn setMail={setMail} />
+      {aguToken && userId ? (
+        <AGUReturn setMail={setMail} myLentInfo={myLentInfo} />
       ) : (
         <AGURequestMail mail={mail} setMail={setMail} />
       )}
@@ -51,13 +45,6 @@ const AGUPage = () => {
     </WrapperStyled>
   );
 };
-
-/*
- 2층 - End of Cluster 1, 8번
-대여기간 : 2022/12/21 23:59까지
-{floor}층 - {section}, {lents[].lentHistoryId}번
-대여기간 : {formattedDate}까지
- */
 
 const WrapperStyled = styled.main`
   display: flex;
@@ -90,7 +77,7 @@ export const AGUSubHeaderStyled = styled.div`
 
   span {
     font-weight: 700;
-    text-decoration: underline;
+    /* text-decoration: underline; */
   }
 `;
 

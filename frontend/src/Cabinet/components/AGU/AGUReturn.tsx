@@ -1,44 +1,39 @@
 import { HttpStatusCode } from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
 import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
-import { DetailStyled } from "@/Cabinet/components/Modals/Modal";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import {
   axiosAGUReturnCancel,
   axiosReturn,
 } from "@/Cabinet/api/axios/axios.custom";
-import { axiosMyLentInfo } from "@/Cabinet/api/axios/axios.custom";
-import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
 
 // TODO : 파일/컴포넌트 이름 변경
 const AGUReturn = ({
   setMail,
+  myLentInfo,
 }: {
   setMail: React.Dispatch<React.SetStateAction<string>>;
+  myLentInfo: MyCabinetInfoResponseDto;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [myLentInfoState, setMyLentInfoState] =
-    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const [userId, setUserId] = useState(0);
-  // TODO: userId 1부터 시작한다고 가정했을때 초기값 0으로 설정
+  const resetMyLentInfo = useResetRecoilState(myCabinetInfoState);
   const navigator = useNavigate();
-  const aguToken = getCookie("agu_token");
   const subHeaderMsg = `현재 대여중인 사물함 정보입니다. <span>지금 반납 하시겠습니까?</span>`;
   const formattedDate = formatDate(
-    myLentInfoState ? new Date(myLentInfoState.lents[0].expiredAt) : null,
+    myLentInfo ? new Date(myLentInfo.lents[0].expiredAt) : null,
     "/",
     4,
     2,
     2
   );
-  const returnDetailMsg = myLentInfoState
-    ? `<strong>${myLentInfoState.floor}층 - ${myLentInfoState.section}, ${myLentInfoState.visibleNum}번</strong>
+  const returnDetailMsg = myLentInfo
+    ? `<strong>${myLentInfo.floor}층 - ${myLentInfo.section}, ${myLentInfo.visibleNum}번</strong>
 대여기간 : <strong>${formattedDate}</strong>까지`
     : "";
   /*
@@ -46,31 +41,14 @@ const AGUReturn = ({
   대여기간 : 2022/12/21 23:59까지
   */
 
-  const getMyLentInfo = async () => {
-    try {
-      const { data: myLentInfo } = await axiosMyLentInfo();
-
-      setMyLentInfoState(myLentInfo);
-      setUserId(myLentInfo.lents[0].userId);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    if (aguToken) getMyLentInfo();
-  }, []);
-
-  const tryReturnRequest = async (e: React.MouseEvent) => {
+  const tryReturnRequest = async () => {
     setIsLoading(true);
 
     try {
       const response = await axiosReturn();
-      console.log("tryReturnRequest response : ", response);
       if (response.status === HttpStatusCode.Ok) {
         alert("반납되었습니다");
-        // setMyLentInfoState(undefined);
-        // TODO : setMyLentInfoState 초기값으로 설정
+        resetMyLentInfo();
       }
     } catch (error: any) {
       alert(error.response.data.message);
@@ -119,33 +97,30 @@ const AGUReturn = ({
     }
   };
 
-  if (userId)
-    return (
-      <>
-        <AGUSubHeaderStyled
-          dangerouslySetInnerHTML={{ __html: subHeaderMsg }}
-        ></AGUSubHeaderStyled>
-        <ReturnDetailWrapper>
-          <ReturnDetailMsgStyled
-            dangerouslySetInnerHTML={{ __html: returnDetailMsg! }}
-          />
-        </ReturnDetailWrapper>
-        <ButtonContainer
-          onClick={tryReturnRequest}
-          text="네, 반납할게요"
-          theme="fill"
-          maxWidth="500px"
+  return (
+    <>
+      <AGUSubHeaderStyled
+        dangerouslySetInnerHTML={{ __html: subHeaderMsg }}
+      ></AGUSubHeaderStyled>
+      <ReturnDetailWrapper>
+        <ReturnDetailMsgStyled
+          dangerouslySetInnerHTML={{ __html: returnDetailMsg! }}
         />
-        <ButtonContainer
-          onClick={handleCancelButtonClick}
-          text="취소"
-          theme="grayLine"
-          maxWidth="500px"
-        />
-      </>
-    );
-  return null;
-  // userId 없는거면 내 대여 정보 불러오지 못했다는거.
+      </ReturnDetailWrapper>
+      <ButtonContainer
+        onClick={tryReturnRequest}
+        text="네, 반납할게요"
+        theme="fill"
+        maxWidth="500px"
+      />
+      <ButtonContainer
+        onClick={handleCancelButtonClick}
+        text="취소"
+        theme="grayLine"
+        maxWidth="500px"
+      />
+    </>
+  );
 };
 
 const ReturnDetailWrapper = styled.div`
