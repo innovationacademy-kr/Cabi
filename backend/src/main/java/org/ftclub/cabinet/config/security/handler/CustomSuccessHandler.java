@@ -2,10 +2,7 @@ package org.ftclub.cabinet.config.security.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,17 +11,15 @@ import org.ftclub.cabinet.auth.domain.CustomOauth2User;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.service.AuthenticationService;
-import org.ftclub.cabinet.exception.CustomAccessDeniedException;
-import org.ftclub.cabinet.exception.CustomAuthenticationException;
-import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.config.security.exception.SecurityExceptionHandlerManager;
+import org.ftclub.cabinet.config.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.oauth.service.OauthFacadeService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * ft, google 로그인에 따라 유저 저장
@@ -41,6 +36,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	private final ObjectMapper objectMapper;
 	private final AuthPolicyService authPolicyService;
 	private final AuthenticationService authenticationService;
+	private final SecurityExceptionHandlerManager securityExceptionHandlerManager;
 
 	@Value("${spring.security.oauth2.client.registration.ft.client-name}")
 	private String ftProvider;
@@ -71,9 +67,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 			}
 			response.sendRedirect(redirectUrl);
 		} catch (Exception e) {
-			ExceptionStatus status = handleAuthenticationException(e);
-
-			redirectWithError(response, status);
+			SecurityContextHolder.clearContext();
+			securityExceptionHandlerManager.handle(response, e, true);
 		}
 	}
 
@@ -97,40 +92,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		if (isExternalProvider(provider)) {
 			return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
 		}
-		throw new CustomAccessDeniedException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
-	}
-
-	/**
-	 * 에러 핸들링
-	 *
-	 * @param e successHandler 처리 도중 발생할 수 있는 에러들 핸들링
-	 * @return
-	 */
-	private ExceptionStatus handleAuthenticationException(Exception e) {
-
-		if (e instanceof CustomAuthenticationException) {
-			return ((CustomAuthenticationException) e).getStatus();
-		}
-		if (e instanceof CustomAccessDeniedException) {
-			return ((CustomAccessDeniedException) e).getStatus();
-		}
-		if (e instanceof ExpiredJwtException) {
-			return ExceptionStatus.EXPIRED_JWT_TOKEN;
-		}
-		if (e instanceof JwtException) {
-			return ExceptionStatus.JWT_EXCEPTION;
-		}
-		if (e instanceof NullPointerException) {
-			return ExceptionStatus.JSON_PROCESSING_EXCEPTION;
-		}
-		if (e instanceof ServiceException) {
-			return ((ServiceException) e).getStatus();
-		}
-		if (e instanceof DomainException) {
-			return ((DomainException) e).getStatus();
-		}
-		log.error("Authentication Failed", e);
-		return ExceptionStatus.INTERNAL_SERVER_ERROR;
+		throw new SpringSecurityException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
 	}
 
 	/**
@@ -141,29 +103,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	 */
 	private boolean isExternalProvider(String provider) {
 		return provider.equals(googleProvider);
-	}
-
-	/**
-	 * SuccessHandling 도중 예외 발생 시 로그인 페이지로 redirect 합니다.
-	 *
-	 * @param response
-	 * @param status
-	 * @throws IOException
-	 */
-	private void redirectWithError(HttpServletResponse response, ExceptionStatus status)
-			throws IOException {
-		String errorCode = status.getError();
-		String message = status.name();
-
-		log.error("error Redirect Start");
-		String uri = UriComponentsBuilder.fromHttpUrl(authPolicyService.getLoginUrl())
-				.queryParam("code", errorCode)
-				.queryParam("status", status.getStatusCode())
-				.queryParam("message", message)
-				.encode(StandardCharsets.UTF_8)
-				.toUriString();
-
-		response.sendRedirect(uri);
 	}
 
 }

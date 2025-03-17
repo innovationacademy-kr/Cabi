@@ -12,6 +12,7 @@ import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.service.CookieService;
+import org.ftclub.cabinet.config.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.DomainException;
@@ -45,13 +46,13 @@ public class JwtService {
 			Claims claims = tokenProvider.parseToken(token);
 			return UserInfoDto.fromClaims(claims);
 		} catch (ExpiredJwtException e) {
-			throw ExceptionStatus.EXPIRED_JWT_TOKEN.asServiceException();
+			throw new SpringSecurityException(ExceptionStatus.EXPIRED_JWT_TOKEN);
 		} catch (JwtException e) {
 			log.error("JwtException : {}", e.getMessage(), e);
-			throw ExceptionStatus.JWT_EXCEPTION.asServiceException();
+			throw new SpringSecurityException(ExceptionStatus.JWT_EXCEPTION);
 		} catch (DomainException e) {
 			log.error("Claims has null value : {}", e.getMessage());
-			throw e;
+			throw new SpringSecurityException(ExceptionStatus.INVALID_ARGUMENT);
 		}
 	}
 
