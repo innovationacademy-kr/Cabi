@@ -1,53 +1,40 @@
 package org.ftclub.cabinet.config.security.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.exception.CustomAuthenticationException;
+import org.ftclub.cabinet.config.security.exception.SecurityExceptionHandlerManager;
+import org.ftclub.cabinet.config.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-@Component
+/**
+ * 인증되지 않은 사용자가 보호 리소스 호출 시 예외 발생.
+ * <p>
+ * 인증정보 자체가 없거나, 정보가 유효하지 않으므로 contextHolder 를 비웁니다.
+ */
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+	private final SecurityExceptionHandlerManager securityExceptionHandlerManager;
 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
-			AuthenticationException authException) throws IOException, ServletException {
+			AuthenticationException authException) throws IOException {
 
-		ExceptionStatus exceptionStatus = ExceptionStatus.UNAUTHORIZED;
-		log.error("OAuth2 인증 실패: {}", authException.getMessage());
-		log.error("Request Uri : {}", request.getRequestURI());
+		log.error("Authorization Fail: {}, Request Uri : {}",
+				authException.getMessage(), request.getRequestURI());
+		SpringSecurityException exception =
+				new SpringSecurityException(ExceptionStatus.UNAUTHORIZED);
 
-		Object exceptionStatusAttr = request.getAttribute("exceptionStatus");
-		if (exceptionStatusAttr instanceof ExceptionStatus) {
-			exceptionStatus = (ExceptionStatus) exceptionStatusAttr;
-		}
-		if (authException instanceof CustomAuthenticationException) {
-			exceptionStatus = ((CustomAuthenticationException) authException).getStatus();
-		}
-
-		response.setStatus(exceptionStatus.getStatusCode());
-		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		response.setCharacterEncoding("UTF-8");
-
-		Map<String, Object> responseBody = new HashMap<>();
-
-		responseBody.put("status", exceptionStatus.getStatusCode());
-		responseBody.put("error", exceptionStatus.getError());
-		responseBody.put("message", exceptionStatus.getMessage());
-		responseBody.put("timestamp", Instant.now().toString());
-
-		new ObjectMapper().writeValue(response.getWriter(), responseBody);
+		SecurityContextHolder.clearContext();
+		securityExceptionHandlerManager.handle(response, exception, false);
 	}
 }
