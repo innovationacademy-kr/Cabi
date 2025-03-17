@@ -1,7 +1,8 @@
+import { HttpStatusCode } from "axios";
 import { useRef } from "react";
 import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
 import Button from "@/Cabinet/components/Common/Button";
-import { axiosAGU } from "@/Cabinet/api/axios/axios.custom";
+import { axiosVerifyAGUUser } from "@/Cabinet/api/axios/axios.custom";
 
 // TODO : 파일/컴포넌트 이름 변경
 const AGURequestMail = ({
@@ -22,13 +23,17 @@ const AGURequestMail = ({
     try {
       if (idRef.current) {
         const id = idRef.current.value;
-        const response = await axiosAGU(id);
-        // TODO: 200일때 alert / 화면 글자
-        // TODO : response 타입 설정
-        setMail(response.data.oauthMail);
+        const response = await axiosVerifyAGUUser(id);
+        if (response.status === HttpStatusCode.Ok) {
+          const oauthMail = response.data.oauthMail;
+
+          setMail(oauthMail);
+          alert(`${oauthMail}로 인증 링크가 전송되었습니다.`);
+        }
       }
     } catch (error: any) {
       console.log(error);
+      // error.response.status
       alert(error.response.data.message);
     } finally {
       // setIsLoading(false);

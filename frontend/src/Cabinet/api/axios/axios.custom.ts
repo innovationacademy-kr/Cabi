@@ -465,7 +465,7 @@ export const axiosAdminCabinetInfoByCabinetId = async (
 };
 
 const axiosAGUURL = "/v5/auth/agu";
-export const axiosAGU = async (intraId: string): Promise<any> => {
+export const axiosVerifyAGUUser = async (intraId: string): Promise<any> => {
   try {
     const response = await instance.post(axiosAGUURL, null, {
       params: { name: intraId },
