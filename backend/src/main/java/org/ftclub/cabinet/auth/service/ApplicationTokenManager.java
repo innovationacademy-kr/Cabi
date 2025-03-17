@@ -4,7 +4,6 @@ import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
@@ -19,10 +18,9 @@ import org.springframework.stereotype.Component;
 public class ApplicationTokenManager {
 
 	private static final int MAX_RETRY = 3;
+	private static final String CLIENT_REGISTRATION_ID = "ft-client-credentials";
 	private static String FT_ACCESS_TOKEN;
 	private final OAuth2AuthorizedClientManager authorizedClientManager;
-	@Value("${spring.security.oauth2.client.registration.ft-client-credentials.client-name}")
-	private String clientName;
 
 	/**
 	 * 서버가 시작될 때, 42 OAuth 액세스 토큰을 발급합니다.
@@ -44,7 +42,7 @@ public class ApplicationTokenManager {
 		while (++tryCount <= MAX_RETRY) {
 			try {
 				OAuth2AuthorizeRequest authorizeRequest =
-						OAuth2AuthorizeRequest.withClientRegistrationId(clientName)
+						OAuth2AuthorizeRequest.withClientRegistrationId(CLIENT_REGISTRATION_ID)
 								.principal("application")
 								.build();
 				OAuth2AuthorizedClient authorizedClient =
