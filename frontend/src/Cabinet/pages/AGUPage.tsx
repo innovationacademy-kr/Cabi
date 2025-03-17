@@ -12,7 +12,6 @@ import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 const AGUPage = () => {
   // TODO: animation
   // const [isLoading, setIsLoading] = useState(true);
-  const [mail, setMail] = useState("");
   const [userId, setUserId] = useState(0);
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -55,12 +54,10 @@ const AGUPage = () => {
         <UtilsSectionStyled></UtilsSectionStyled>
         <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
         {aguToken && userId ? (
-          <AGUReturn setMail={setMail} />
+          <AGUReturn />
         ) : (
           <AGURequestMail
-            mail={mail}
-            setMail={setMail}
-            // setIsLoading={setIsLoading}
+          // setIsLoading={setIsLoading}
           />
         )}
       </>

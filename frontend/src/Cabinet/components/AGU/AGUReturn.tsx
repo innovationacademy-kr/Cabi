@@ -14,11 +14,7 @@ import {
 import { formatDate } from "@/Cabinet/utils/dateUtils";
 
 // TODO : 파일/컴포넌트 이름 변경
-const AGUReturn = ({
-  setMail,
-}: {
-  setMail: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+const AGUReturn = () => {
   const [isLoading, setIsLoading] = useState(false);
   const myLentInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -42,7 +38,7 @@ const AGUReturn = ({
   */
 
   const tryReturnRequest = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
 
     try {
       const response = await axiosReturn();
@@ -53,11 +49,10 @@ const AGUReturn = ({
     } catch (error: any) {
       alert(error.response.data.message);
     } finally {
-      setIsLoading(false);
-      setMail("");
-      // TODO : idRef.current.value = "";
-      // TODO : 취소 버튼 눌러도. 로그인 페이지로 가도. 그냥 현재 화면을 벗어나면.
+      // setIsLoading(false);
+
       navigator("/login");
+      // TODO : 취소 버튼 눌러도. 로그인 페이지로 가도. 그냥 현재 화면을 벗어나면.
     }
   };
 
@@ -86,7 +81,7 @@ const AGUReturn = ({
     }
   };
 
-  const handleCancelButtonClick = () => {
+  const handleReturnCancelButtonClick = () => {
     const answer = confirm(
       "다시 처음부터 해야되고 메일 요청 시간 만료안됐으면 기다려야됨. 그래도 진행?"
     );
@@ -94,7 +89,6 @@ const AGUReturn = ({
     if (answer) {
       //
       tryReturnCancelRequest();
-      setMail("");
     }
   };
 
@@ -115,7 +109,7 @@ const AGUReturn = ({
         maxWidth="500px"
       />
       <ButtonContainer
-        onClick={handleCancelButtonClick}
+        onClick={handleReturnCancelButtonClick}
         text="취소"
         theme="grayLine"
         maxWidth="500px"
