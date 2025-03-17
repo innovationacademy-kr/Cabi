@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
+import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import { DetailStyled } from "@/Cabinet/components/Modals/Modal";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
@@ -12,24 +13,23 @@ import {
   axiosReturn,
 } from "@/Cabinet/api/axios/axios.custom";
 import { axiosMyLentInfo } from "@/Cabinet/api/axios/axios.custom";
+import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
 
 // TODO : 파일/컴포넌트 이름 변경
 const AGUReturn = ({
   setMail,
-  mail,
-  aguToken,
 }: {
   setMail: React.Dispatch<React.SetStateAction<string>>;
-  mail: string;
-  aguToken: string;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [myLentInfoState, setMyLentInfoState] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const [userId, setUserId] = useState(0);
+  // TODO: userId 1부터 시작한다고 가정했을때 초기값 0으로 설정
   const navigator = useNavigate();
+  const aguToken = getCookie("agu_token");
   const subHeaderMsg = `현재 대여중인 사물함 정보입니다. <span>지금 반납 하시겠습니까?</span>`;
-  //   TODO : 부모 컴포넌트에서 재사용?
   const formattedDate = formatDate(
     myLentInfoState ? new Date(myLentInfoState.lents[0].expiredAt) : null,
     "/",
@@ -41,20 +41,25 @@ const AGUReturn = ({
     ? `<strong>${myLentInfoState.floor}층 - ${myLentInfoState.section}, ${myLentInfoState.visibleNum}번</strong>
 대여기간 : <strong>${formattedDate}</strong>까지`
     : "";
-
-  useEffect(() => {
-    if (aguToken) getMyLentInfo();
-  }, []);
+  /*
+  2층 - End of Cluster 1, 8번
+  대여기간 : 2022/12/21 23:59까지
+  */
 
   const getMyLentInfo = async () => {
     try {
       const { data: myLentInfo } = await axiosMyLentInfo();
 
       setMyLentInfoState(myLentInfo);
+      setUserId(myLentInfo.lents[0].userId);
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (aguToken) getMyLentInfo();
+  }, []);
 
   const tryReturnRequest = async (e: React.MouseEvent) => {
     setIsLoading(true);
@@ -114,12 +119,12 @@ const AGUReturn = ({
     }
   };
 
-  if (mail)
+  if (userId)
     return (
       <>
-        <SubHeaderStyled
+        <AGUSubHeaderStyled
           dangerouslySetInnerHTML={{ __html: subHeaderMsg }}
-        ></SubHeaderStyled>
+        ></AGUSubHeaderStyled>
         <ReturnDetailWrapper>
           <ReturnDetailMsgStyled
             dangerouslySetInnerHTML={{ __html: returnDetailMsg! }}
@@ -140,24 +145,8 @@ const AGUReturn = ({
       </>
     );
   return null;
-  // mail 없는거면 내 대여 정보 불러오지 못했다는거.
+  // userId 없는거면 내 대여 정보 불러오지 못했다는거.
 };
-
-const SubHeaderStyled = styled.div`
-  text-align: center;
-  font-size: 1.2rem;
-  color: var(--sys-sub-color);
-  margin-top: 25px;
-  line-height: 1.5;
-  word-break: keep-all;
-  margin: 25px 10px 0px 10px;
-  color: var(--sys-main-color);
-
-  span {
-    font-weight: 700;
-    text-decoration: underline;
-  }
-`;
 
 const ReturnDetailWrapper = styled.div`
   height: 100px;

@@ -1,5 +1,4 @@
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import styled from "styled-components";
 import AGURequestMail from "@/Cabinet/components/AGU/AGURequestMail";
 import AGUReturn from "@/Cabinet/components/AGU/AGUReturn";
@@ -43,14 +42,12 @@ const AGUPage = () => {
     <WrapperStyled>
       <UtilsSectionStyled></UtilsSectionStyled>
       <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
-      {/* <SubHeaderStyled>{returnSubTitle}</SubHeaderStyled> */}
       {aguToken ? (
-        <AGUReturn setMail={setMail} mail={mail} aguToken={aguToken} />
+        <AGUReturn setMail={setMail} />
       ) : (
         <AGURequestMail mail={mail} setMail={setMail} />
       )}
       {/* <LoadingAnimation /> */}
-      {/* TODO: 이메일 링크 보냈는데 agu인데 사물함 없을때 */}
     </WrapperStyled>
   );
 };
@@ -81,7 +78,7 @@ const HeaderStyled = styled.h1`
   margin-top: 30px;
 `;
 
-const SubHeaderStyled = styled.div`
+export const AGUSubHeaderStyled = styled.div`
   text-align: center;
   font-size: 1.2rem;
   color: var(--sys-sub-color);

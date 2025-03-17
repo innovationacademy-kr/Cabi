@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
+import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
 import Button from "@/Cabinet/components/Common/Button";
 import { axiosAGU } from "@/Cabinet/api/axios/axios.custom";
 
@@ -39,9 +40,9 @@ const AGURequestMail = ({
 
   return (
     <>
-      <SubHeaderStyled
+      <AGUSubHeaderStyled
         dangerouslySetInnerHTML={{ __html: subHeaderMsg }}
-      ></SubHeaderStyled>
+      ></AGUSubHeaderStyled>
       <input ref={idRef} style={{ border: "1px solid black" }}></input>
       <Button
         onClick={handleButtonClick}
@@ -52,21 +53,5 @@ const AGURequestMail = ({
     </>
   );
 };
-
-const SubHeaderStyled = styled.div`
-  text-align: center;
-  font-size: 1.2rem;
-  color: var(--sys-sub-color);
-  margin-top: 25px;
-  line-height: 1.5;
-  word-break: keep-all;
-  margin: 25px 10px 0px 10px;
-  color: var(--sys-main-color);
-
-  span {
-    font-weight: 700;
-    text-decoration: underline;
-  }
-`;
 
 export default AGURequestMail;
