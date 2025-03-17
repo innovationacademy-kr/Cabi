@@ -12,12 +12,12 @@ import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.service.CookieService;
-import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
+import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.http.HttpHeaders;
@@ -80,7 +80,7 @@ public class JwtService {
 	 * @param provider
 	 * @return
 	 */
-	public TokenDto createTokens(Long userId, String roles, String provider) {
+	public TokenDto createPairTokens(Long userId, String roles, String provider) {
 		Claims claims = Jwts.claims();
 
 		claims.put(JwtTokenConstants.USER_ID, userId);
@@ -150,10 +150,10 @@ public class JwtService {
 				currentTokens.getRefreshToken())) {
 			throw ExceptionStatus.JWT_ALREADY_USED.asServiceException();
 		}
-		TokenDto tokens = createTokens(admin.getId(), admin.getRole().name(),
-				userInfoDto.getOauth());
+		TokenDto tokens =
+				createPairTokens(admin.getId(), admin.getRole().name(), userInfoDto.getOauth());
 
-		cookieService.setTokenCookies(res, tokens, req.getServerName());
+		cookieService.setPairTokenCookiesToClient(res, tokens, req.getServerName());
 		jwtRedisService.addUsedAdminTokensToBlackList(
 				admin.getId(), currentTokens.getAccessToken(), currentTokens.getRefreshToken());
 		return tokens;
@@ -179,9 +179,9 @@ public class JwtService {
 				currentTokens.getRefreshToken())) {
 			throw ExceptionStatus.JWT_ALREADY_USED.asServiceException();
 		}
-		TokenDto tokens = createTokens(user.getId(), user.getRoles(), userInfoDto.getOauth());
+		TokenDto tokens = createPairTokens(user.getId(), user.getRoles(), userInfoDto.getOauth());
 
-		cookieService.setTokenCookies(res, tokens, req.getServerName());
+		cookieService.setPairTokenCookiesToClient(res, tokens, req.getServerName());
 		jwtRedisService.addUsedUserTokensToBlackList(
 				user.getId(), currentTokens.getAccessToken(), currentTokens.getRefreshToken());
 		return tokens;
