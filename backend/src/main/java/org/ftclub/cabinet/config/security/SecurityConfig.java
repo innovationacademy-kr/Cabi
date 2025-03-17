@@ -33,9 +33,9 @@ public class SecurityConfig {
 	private final JwtExceptionFilter jwtExceptionFilter;
 	private final LoggingFilter loggingFilter;
 	private final CustomSuccessHandler customSuccessHandler;
-	private final CustomAuthenticationEntryPoint entrypoint;
-	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 	private final CsrfCookieConfig csrfCookieConfig;
+	private final CustomAuthenticationEntryPoint entryPoint;
+	private final CustomAccessDeniedHandler accessDeniedHandler;
 	private final SecurityExpressionHandler<FilterInvocation> expressionHandler;
 
 	@Bean
@@ -76,8 +76,8 @@ public class SecurityConfig {
 						UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
 				.exceptionHandling(handler -> handler
-						.authenticationEntryPoint(entrypoint)
-						.accessDeniedHandler(customAccessDeniedHandler))
+						.authenticationEntryPoint(entryPoint)
+						.accessDeniedHandler(accessDeniedHandler))
 		;
 
 		return http.build();

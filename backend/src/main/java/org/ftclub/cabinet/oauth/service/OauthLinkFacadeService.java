@@ -9,8 +9,8 @@ import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.service.CookieService;
+import org.ftclub.cabinet.config.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.dto.UserInfoDto;
-import org.ftclub.cabinet.exception.CustomAuthenticationException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtService;
@@ -98,15 +98,15 @@ public class OauthLinkFacadeService {
 
 		String refreshToken = cookieService.getCookieValue(req, JwtTokenConstants.REFRESH_TOKEN);
 		if (refreshToken == null) {
-			throw new CustomAuthenticationException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
+			throw new SpringSecurityException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
 		}
 
 		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(refreshToken);
 		if (!"ft".equals(userInfoDto.getOauth())) {
-			throw new CustomAuthenticationException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
+			throw new SpringSecurityException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
 		}
 		if (oauthLinkQueryService.isExistByUserId(userInfoDto.getUserId())) {
-			throw new CustomAuthenticationException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
+			throw new SpringSecurityException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
 		}
 
 		User user = userQueryService.getUser(userInfoDto.getUserId());

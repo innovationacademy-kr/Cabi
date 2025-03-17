@@ -19,6 +19,7 @@ public class SecurityDefaultExceptionHandler implements SecurityExceptionHandler
 	@Override
 	public void handle(HttpServletResponse res, ExceptionStatus status) throws IOException {
 		res.setStatus(status.getStatusCode());
+		res.setCharacterEncoding("UTF-8");
 		res.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
 		Map<String, Object> errResponse = new HashMap<>();
