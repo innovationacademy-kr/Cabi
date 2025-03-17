@@ -1,35 +1,23 @@
 package org.ftclub.cabinet.config;
 
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-@Component
 @Getter
+@Setter
+@Configuration
+@ConfigurationProperties(prefix = "cabinet.domain-name")
 public class DomainProperties {
 
-	@Value("${cabinet.domain-name.cookie-domain}")
 	private String cookieDomain;
-
-	@Value("${cabinet.domain-name.local}")
 	private String local;
-
-	@Value("${cabinet.domain-name.dev}")
 	private String dev;
-
-	@Value("${cabinet.domain-name.main}")
 	private String main;
-
-	@Value("${cabinet.server.be-host}")
 	private String beHost;
-
-	@Value("${cabinet.server.fe-host}")
 	private String feHost;
-
-	@Value("${cabinet.domain-name.admin-email}")
-	private String adminEmailDomain;
-
-	@Value("${cabinet.domain-name.user-email}")
-	private String userEmailDomain;
+	private String adminEmail;
+	private String userEmail;
 }
 

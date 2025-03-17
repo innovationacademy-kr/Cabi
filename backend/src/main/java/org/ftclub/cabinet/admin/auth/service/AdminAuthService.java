@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.admin.auth.service;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,18 +9,15 @@ import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.domain.CookieInfo;
-import org.ftclub.cabinet.auth.domain.CookieManager;
-import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.service.CookieService;
 import org.ftclub.cabinet.dto.AccessTokenDto;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
-import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
+import org.ftclub.cabinet.oauth.domain.OauthResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AdminAuthService {
 
-	private final CookieManager cookieManager;
 	private final AuthPolicyService authPolicyService;
 	private final AdminQueryService adminQueryService;
 	private final JwtService jwtService;
-	private final JwtTokenProperties jwtTokenProperties;
 	private final JwtRedisService jwtRedisService;
 	private final AdminCommandService adminCommandService;
 	private final CookieService cookieService;
@@ -70,7 +64,7 @@ public class AdminAuthService {
 	 * @param now            현재 시각
 	 */
 	public AccessTokenDto masterLogin(MasterLoginDto masterLoginDto, HttpServletRequest req,
-			HttpServletResponse res, LocalDateTime now) {
+			HttpServletResponse res) {
 
 		if (!authPolicyService.isMatchWithMasterAuthInfo(masterLoginDto.getId(),
 				masterLoginDto.getPassword())) {
@@ -79,14 +73,9 @@ public class AdminAuthService {
 		Admin master = adminQueryService.findByEmail(authPolicyService.getMasterEmail())
 				.orElseThrow(ExceptionStatus.UNAUTHORIZED_ADMIN::asServiceException);
 		TokenDto masterToken =
-				jwtService.createTokens(master.getId(), master.getRole().name(), "master");
-		Cookie cookie =
-				cookieManager.cookieOf(JwtTokenConstants.REFRESH_TOKEN,
-						masterToken.getRefreshToken());
-		cookie.setHttpOnly(true);
-		cookie.setSecure(true);
-		cookie.setMaxAge(jwtTokenProperties.getRefreshExpirySeconds());
-		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+				jwtService.createPairTokens(master.getId(), master.getRole().name(), "master");
+
+		cookieService.setPairTokenCookiesToClient(res, masterToken, req.getServerName());
 		return new AccessTokenDto(masterToken.getAccessToken());
 	}
 

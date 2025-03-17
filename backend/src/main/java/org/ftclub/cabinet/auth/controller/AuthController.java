@@ -1,51 +1,76 @@
 package org.ftclub.cabinet.auth.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
-import org.ftclub.cabinet.auth.service.AuthenticationService;
+import org.ftclub.cabinet.dto.AguMailResponse;
+import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v4/auth")
+@RequestMapping("/v5/auth")
 @RequiredArgsConstructor
-@Log4j2
 public class AuthController {
 
 	private final AuthFacadeService authFacadeService;
-	private final AuthenticationService authenticationService;
 
 	/**
-	 * 사용자 로그인 페이지로 리다이렉트합니다.
-	 *
-	 * @param response 요청 시의 서블렛 {@link HttpServletResponse}
-	 * @throws IOException 입출력 예외
+	 * AGU 유저의 임시 로그인 메일 발송
 	 */
-	@GetMapping("/login")
-	public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		authFacadeService.requestUserLogin(request, response);
+	@PostMapping("/agu")
+	public AguMailResponse requestAGULogin(@RequestParam(name = "name") String name)
+			throws JsonProcessingException {
+		return authFacadeService.requestTemporaryLogin(name);
 	}
 
 	/**
-	 * 사용자 로그인 콜백을 처리합니다.
+	 * agu link 와 비교 후 토큰 발급
 	 *
-	 * @param code 로그인 성공으로 받은 authorization 코드
-	 * @param res  요청 시의 서블릿 {@link HttpServletResponse}
-	 * @throws IOException 입출력 예외
+	 * @param req
+	 * @param res
+	 * @param code
+	 * @param name
+	 * @throws IOException
 	 */
-	@GetMapping("/login/callback")
-	public void loginCallback(
-			@RequestParam String code,
-			HttpServletRequest req,
-			HttpServletResponse res) throws IOException, ExecutionException, InterruptedException {
-		authFacadeService.handleUserLogin(req, res, code);
+	@GetMapping("/agu")
+	public void verifyAguCode(HttpServletRequest req,
+			HttpServletResponse res,
+			@RequestParam(name = "code") String code,
+			@RequestParam(name = "name") String name) throws IOException {
+		authFacadeService.verifyTemporaryCode(req, res, name, code);
 	}
 
+	/**
+	 * Agu 유저의 사물함 반납 취소
+	 *
+	 * @param req
+	 */
+	@PostMapping("/agu/cancel")
+	public void aguCancel(HttpServletRequest req, HttpServletResponse res) {
+		authFacadeService.deleteAguCookie(req, res);
+	}
+
+	/**
+	 * 로그아웃시, HTTP Response 의 set-cookie Header 를 지워줍니다. cookie에 담긴 JWT 토큰을 제거합니다.
+	 *
+	 * @param res 요청 시의 서블릿 {@link HttpServletResponse}
+	 */
+	@PostMapping("/logout")
+	public void logout(
+			@AuthenticationPrincipal UserInfoDto userInfoDto,
+			@CookieValue(name = JwtTokenConstants.REFRESH_TOKEN) String refreshToken,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+		authFacadeService.userLogout(request, response, userInfoDto.getUserId(), refreshToken);
+	}
 }

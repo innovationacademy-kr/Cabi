@@ -4,14 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
-import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,23 +22,22 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class OauthProfileService {
 
-	private static final int PISCINE_INDEX = 0;
-	private static final int CADET_INDEX = 1;
-	private final FtApiProperties ftApiProperties;
+	@Value("${spring.security.oauth2.client.provider.ft.users-info-uri}")
+	private String ftUsersInfoUri;
 
 	/**
 	 * 42에서 발급한 accessToken을 활용해 유저의 정보를 받아옵니다
 	 *
-	 * @param accessToken
-	 * @param intraName
-	 * @return
+	 * @param accessToken 42 API에 전달할 access_token
+	 * @param intraName   유저 intraName
+	 * @return 유저 프로필정보 {@link FtOauthProfile}
 	 * @throws JsonProcessingException
 	 */
 	public FtOauthProfile getProfileByIntraName(String accessToken, String intraName)
 			throws JsonProcessingException {
 		log.info("Called getProfileByIntraName {}", intraName);
 		JsonNode result = WebClient.create().get()
-				.uri(ftApiProperties.getUsersInfoUri() + '/' + intraName)
+				.uri(ftUsersInfoUri + '/' + intraName)
 				.accept(MediaType.APPLICATION_JSON)
 				.headers(h -> h.setBearerAuth(accessToken))
 				.retrieve()
@@ -60,8 +60,9 @@ public class OauthProfileService {
 			throw ExceptionStatus.INCORRECT_ARGUMENT.asServiceException();
 		}
 
-		LocalDateTime blackHoledAt = determineBlackHoledAt(rootNode);
-		Set<FtRole> roles = determineFtRoles(rootNode, blackHoledAt);
+		JsonNode mainCursus = find42CursusNode(rootNode);
+		LocalDateTime blackHoledAt = determineBlackHoledAt(mainCursus);
+		Set<FtRole> roles = determineFtRoles(rootNode, mainCursus, blackHoledAt);
 		return FtOauthProfile.builder()
 				.intraName(intraName)
 				.email(email)
@@ -70,21 +71,36 @@ public class OauthProfileService {
 				.build();
 	}
 
-	public Set<FtRole> determineFtRoles(JsonNode rootNode, LocalDateTime blackHoledAt) {
+	private JsonNode find42CursusNode(JsonNode rootNode) {
+		JsonNode cursusUsers = rootNode.get("cursus_users");
+
+		for (JsonNode cursusUser : cursusUsers) {
+			JsonNode cursus = cursusUser.get("cursus");
+			if ("42cursus".equals(cursus.get("slug").asText())) {
+				return cursusUser;
+			}
+		}
+		return null;
+	}
+
+	public Set<FtRole> determineFtRoles(JsonNode rootNode, JsonNode mainCursus,
+			LocalDateTime blackHoledAt) {
 		boolean isUserStaff = rootNode.get("staff?").asBoolean();
 		boolean isActive = rootNode.get("active?").asBoolean();
-		JsonNode cursusUsersNode = rootNode.get("cursus_users");
 		Set<FtRole> roles = new HashSet<>();
 
 		// inactive에 대해서는 단일 권한을 반환. inactive / blackhole
 		if (!isActive) {
-			return handleInactiveUser(blackHoledAt, roles);
+			addInactiveRolse(blackHoledAt, roles);
+			return roles;
 		}
 		// user -> 여러 권한 핸들링.
-		roles.add(FtRole.USER);
-		if (cursusUsersNode.size() < CADET_INDEX + 1) {
+		if (mainCursus == null) {
 			roles.add(FtRole.PISCINER);
+			return roles;
 		}
+
+		roles.add(FtRole.USER);
 		if (isUserStaff) {
 			roles.add(FtRole.STAFF);
 		}
@@ -93,27 +109,22 @@ public class OauthProfileService {
 		} else {
 			roles.add(FtRole.CADET);
 		}
-
 		return roles;
 	}
 
-	private LocalDateTime determineBlackHoledAt(JsonNode rootNode) {
-		JsonNode cursusNode = rootNode.get("cursus_users");
-		int index = cursusNode.size() > CADET_INDEX ? CADET_INDEX : PISCINE_INDEX;
-
-		JsonNode blackHoledAtNode = cursusNode.get(index).get("blackholed_at");
-		if (blackHoledAtNode.isNull() || blackHoledAtNode.asText().isEmpty()) {
-			return null;
-		}
-		return DateUtil.convertStringToDate(blackHoledAtNode.asText());
-	}
-
-	private Set<FtRole> handleInactiveUser(LocalDateTime blackHoledAt, Set<FtRole> roles) {
-		if (blackHoledAt.isAfter(LocalDateTime.now())) {
+	private void addInactiveRolse(LocalDateTime blackHoledAt, Set<FtRole> roles) {
+		if (blackHoledAt != null && blackHoledAt.isAfter(LocalDateTime.now())) {
 			roles.add(FtRole.AGU);
 		} else {
 			roles.add(FtRole.INACTIVE);
 		}
-		return roles;
+	}
+
+	private LocalDateTime determineBlackHoledAt(JsonNode mainCursus) {
+		return Optional.ofNullable(mainCursus)
+				.map(cursus -> cursus.get("blackholed_at"))
+				.filter(node -> !node.isNull() && !node.asText().isEmpty())
+				.map(node -> DateUtil.convertStringToDate(node.asText()))
+				.orElse(null);
 	}
 }

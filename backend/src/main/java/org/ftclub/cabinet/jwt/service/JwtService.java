@@ -17,6 +17,7 @@ import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
+import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.http.HttpHeaders;
@@ -45,13 +46,13 @@ public class JwtService {
 			Claims claims = tokenProvider.parseToken(token);
 			return UserInfoDto.fromClaims(claims);
 		} catch (ExpiredJwtException e) {
-			throw ExceptionStatus.EXPIRED_JWT_TOKEN.asServiceException();
+			throw new SpringSecurityException(ExceptionStatus.EXPIRED_JWT_TOKEN);
 		} catch (JwtException e) {
 			log.error("JwtException : {}", e.getMessage(), e);
-			throw ExceptionStatus.JWT_EXCEPTION.asServiceException();
+			throw new SpringSecurityException(ExceptionStatus.JWT_EXCEPTION);
 		} catch (DomainException e) {
 			log.error("Claims has null value : {}", e.getMessage());
-			throw e;
+			throw new SpringSecurityException(ExceptionStatus.INVALID_ARGUMENT);
 		}
 	}
 
@@ -79,7 +80,7 @@ public class JwtService {
 	 * @param provider
 	 * @return
 	 */
-	public TokenDto createTokens(Long userId, String roles, String provider) {
+	public TokenDto createPairTokens(Long userId, String roles, String provider) {
 		Claims claims = Jwts.claims();
 
 		claims.put(JwtTokenConstants.USER_ID, userId);
@@ -116,7 +117,8 @@ public class JwtService {
 			UserInfoDto userInfoDto = UserInfoDto.fromClaims(claims);
 			TokenDto currentTokens = new TokenDto(accessToken, refreshToken);
 
-			if (userInfoDto.getRoles().contains(AdminRole.ADMIN.name())) {
+			if (userInfoDto.hasRole(AdminRole.ADMIN.name())
+					|| userInfoDto.hasRole(AdminRole.MASTER.name())) {
 				return reissueAdminToken(req, res, currentTokens, userInfoDto);
 			}
 
@@ -148,10 +150,10 @@ public class JwtService {
 				currentTokens.getRefreshToken())) {
 			throw ExceptionStatus.JWT_ALREADY_USED.asServiceException();
 		}
-		TokenDto tokens = createTokens(admin.getId(), admin.getRole().name(),
-				userInfoDto.getOauth());
+		TokenDto tokens =
+				createPairTokens(admin.getId(), admin.getRole().name(), userInfoDto.getOauth());
 
-		cookieService.setTokenCookies(res, tokens, req.getServerName());
+		cookieService.setPairTokenCookiesToClient(res, tokens, req.getServerName());
 		jwtRedisService.addUsedAdminTokensToBlackList(
 				admin.getId(), currentTokens.getAccessToken(), currentTokens.getRefreshToken());
 		return tokens;
@@ -177,9 +179,9 @@ public class JwtService {
 				currentTokens.getRefreshToken())) {
 			throw ExceptionStatus.JWT_ALREADY_USED.asServiceException();
 		}
-		TokenDto tokens = createTokens(user.getId(), user.getRoles(), userInfoDto.getOauth());
+		TokenDto tokens = createPairTokens(user.getId(), user.getRoles(), userInfoDto.getOauth());
 
-		cookieService.setTokenCookies(res, tokens, req.getServerName());
+		cookieService.setPairTokenCookiesToClient(res, tokens, req.getServerName());
 		jwtRedisService.addUsedUserTokensToBlackList(
 				user.getId(), currentTokens.getAccessToken(), currentTokens.getRefreshToken());
 		return tokens;

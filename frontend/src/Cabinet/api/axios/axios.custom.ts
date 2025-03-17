@@ -492,7 +492,7 @@ export const axiosAGUCancel = async (): Promise<any> => {
   }
 };
 
-const axiosLinkURL = "/v5/oauth/link";
+const axiosLinkURL = "/v5/auth/link";
 export const axiosLink = async (
   mail: string,
   provider: string

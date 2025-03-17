@@ -19,8 +19,7 @@ public enum FtRole {
 
 	PISCINER,
 
-	INACTIVE,
-	BLACK_HOLE;
+	INACTIVE;
 
 
 	public static final String DELIMITER = ",";
