@@ -7,9 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
-import org.ftclub.cabinet.config.security.SecurityConfig;
-import org.ftclub.cabinet.config.security.handler.CustomOAuth2UserService;
-import org.ftclub.cabinet.user.repository.UserRepository;
+import org.ftclub.cabinet.security.SecurityConfig;
+import org.ftclub.cabinet.security.handler.CustomOAuth2UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +35,7 @@ public class AuthLoginTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private TokenProvider tokenProvider;
-
-	@MockBean
 	private CustomOAuth2UserService customOAuth2UserService;
-
-	@MockBean
-	private UserRepository userRepository;
 
 	@Test
 	@DisplayName("FT oauth2 로그인 시 loadUser를 수행한다")
