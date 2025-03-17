@@ -38,7 +38,7 @@ public class BlackholeManager {
 		log.info("{}는 유효하지 않은 사용자입니다.", userBlackHoleEvent);
 		lentFacadeService.endUserLent(userBlackHoleEvent.getUserId(), null);
 		userCommandService.deleteAndUpdateRole(
-				userBlackHoleEvent.getUserId(), FtRole.BLACK_HOLE.name(), now);
+				userBlackHoleEvent.getUserId(), FtRole.INACTIVE.name(), now);
 	}
 
 	/**
