@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
 import AGURequestMail from "@/Cabinet/components/AGU/AGURequestMail";
@@ -11,37 +11,60 @@ import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const AGUPage = () => {
   // TODO: animation
+  // const [isLoading, setIsLoading] = useState(true);
   const [mail, setMail] = useState("");
-  const aguToken = getCookie("agu_token");
-  const [myLentInfo, setMyLentInfo] =
-    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const [userId, setUserId] = useState(0);
+  const setMyLentInfo =
+    useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const aguToken = getCookie("agu_token");
 
   const getMyLentInfo = async () => {
+    // setIsLoading(true);
     try {
-      const { data: myLentInfo } = await axiosMyLentInfo();
-
-      setMyLentInfo(myLentInfo);
-      setUserId(myLentInfo.lents[0].userId);
+      const response = await axiosMyLentInfo();
+      setMyLentInfo(response.data);
+      setUserId(response.data.lents[0].userId);
     } catch (error) {
       console.error(error);
+    } finally {
+      // setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    if (aguToken) getMyLentInfo();
+    if (aguToken) {
+      getMyLentInfo();
+      // setIsLoading(true);
+
+      // let timerId = setTimeout(() => {
+      //   getMyLentInfo();
+      // }, 1000);
+
+      // return () => {
+      //   clearTimeout(timerId);
+      // };
+    }
   }, []);
 
   return (
     <WrapperStyled>
-      <UtilsSectionStyled></UtilsSectionStyled>
-      <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
-      {aguToken && userId ? (
-        <AGUReturn setMail={setMail} myLentInfo={myLentInfo} />
-      ) : (
-        <AGURequestMail mail={mail} setMail={setMail} />
-      )}
-      {/* <LoadingAnimation /> */}
+      {/* {isLoading ? (
+        <LoadingAnimation />
+      ) : ( */}
+      <>
+        <UtilsSectionStyled></UtilsSectionStyled>
+        <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
+        {aguToken && userId ? (
+          <AGUReturn setMail={setMail} />
+        ) : (
+          <AGURequestMail
+            mail={mail}
+            setMail={setMail}
+            // setIsLoading={setIsLoading}
+          />
+        )}
+      </>
+      {/* )} */}
     </WrapperStyled>
   );
 };

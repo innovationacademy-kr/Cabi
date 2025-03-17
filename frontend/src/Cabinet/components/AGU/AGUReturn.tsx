@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useResetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
 import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
@@ -16,12 +16,12 @@ import { formatDate } from "@/Cabinet/utils/dateUtils";
 // TODO : 파일/컴포넌트 이름 변경
 const AGUReturn = ({
   setMail,
-  myLentInfo,
 }: {
   setMail: React.Dispatch<React.SetStateAction<string>>;
-  myLentInfo: MyCabinetInfoResponseDto;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const myLentInfo =
+    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const resetMyLentInfo = useResetRecoilState(myCabinetInfoState);
   const navigator = useNavigate();
   const subHeaderMsg = `현재 대여중인 사물함 정보입니다. <span>지금 반납 하시겠습니까?</span>`;
@@ -68,6 +68,7 @@ const AGUReturn = ({
       const response = await axiosAGUReturnCancel();
       console.log("tryReturnCancelRequest response : ", response);
       if (response.status === 200) {
+        resetMyLentInfo();
         navigator("/login");
       }
     } catch (error: any) {
