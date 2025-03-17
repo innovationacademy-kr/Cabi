@@ -37,47 +37,43 @@ const AGUReturn = () => {
   대여기간 : 2022/12/21 23:59까지
   */
 
+  const resetAndRedirectToLogin = () => {
+    resetMyLentInfo();
+    navigator("/login");
+  };
+
   const tryReturnRequest = async () => {
     // setIsLoading(true);
 
     try {
       const response = await axiosReturn();
+
       if (response.status === HttpStatusCode.Ok) {
         alert("반납되었습니다");
-        resetMyLentInfo();
+        resetAndRedirectToLogin();
       }
     } catch (error: any) {
       alert(error.response.data.message);
+      console.error(error);
     } finally {
       // setIsLoading(false);
-
-      navigator("/login");
-      // TODO : 취소 버튼 눌러도. 로그인 페이지로 가도. 그냥 현재 화면을 벗어나면.
     }
   };
 
   const tryReturnCancelRequest = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
 
     try {
       const response = await axiosAGUReturnCancel();
-      console.log("tryReturnCancelRequest response : ", response);
-      if (response.status === 200) {
-        resetMyLentInfo();
-        navigator("/login");
+
+      if (response.status === HttpStatusCode.Ok) {
+        resetAndRedirectToLogin();
       }
     } catch (error: any) {
       alert(error.data);
-      console.log(error);
-      // if (error.response.status === 418) {
-      //   props.closeModal(e);
-      //   props.handleOpenPasswordCheckModal();
-      //   return;
-      // }
-      // setHasErrorOnResponse(true);
+      console.error(error);
     } finally {
-      setIsLoading(false);
-      // setShowResponseModal(true);
+      // setIsLoading(false);
     }
   };
 
@@ -87,7 +83,6 @@ const AGUReturn = () => {
     );
 
     if (answer) {
-      //
       tryReturnCancelRequest();
     }
   };
