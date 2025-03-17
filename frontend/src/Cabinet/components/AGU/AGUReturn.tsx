@@ -1,6 +1,9 @@
 import { HttpStatusCode } from "axios";
-import { NavigateFunction } from "react-router-dom";
+import { useEffect } from "react";
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import { DetailStyled } from "@/Cabinet/components/Modals/Modal";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
@@ -8,20 +11,24 @@ import {
   axiosAGUReturnCancel,
   axiosReturn,
 } from "@/Cabinet/api/axios/axios.custom";
+import { axiosMyLentInfo } from "@/Cabinet/api/axios/axios.custom";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
 
 // TODO : 파일/컴포넌트 이름 변경
 const AGUReturn = ({
   setIsLoading,
   setMail,
-  navigator,
-  myLentInfoState,
+  mail,
+  aguToken,
 }: {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setMail: React.Dispatch<React.SetStateAction<string>>;
-  navigator: NavigateFunction;
-  myLentInfoState: MyCabinetInfoResponseDto;
+  mail: string;
+  aguToken: string;
 }) => {
+  const [myLentInfoState, setMyLentInfoState] =
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const navigator = useNavigate();
   const formattedDate = formatDate(
     myLentInfoState ? new Date(myLentInfoState.lents[0].expiredAt) : null,
     "/",
@@ -33,6 +40,21 @@ const AGUReturn = ({
     ? `<strong>${myLentInfoState.floor}층 - ${myLentInfoState.section}, ${myLentInfoState.visibleNum}번</strong>
 대여기간 : <strong>${formattedDate}</strong>까지`
     : "";
+
+  useEffect(() => {
+    if (aguToken) getMyLentInfo();
+  }, []);
+
+  const getMyLentInfo = async () => {
+    try {
+      const { data: myLentInfo } = await axiosMyLentInfo();
+
+      setMyLentInfoState(myLentInfo);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const tryReturnRequest = async (e: React.MouseEvent) => {
     setIsLoading(true);
 
@@ -93,30 +115,33 @@ const AGUReturn = ({
   const subHeaderMsg = `현재 대여중인 사물함 정보입니다. <span>지금 반납 하시겠습니까?</span>`;
   //   TODO : 부모 컴포넌트에서 재사용?
 
-  return (
-    <>
-      <SubHeaderStyled
-        dangerouslySetInnerHTML={{ __html: subHeaderMsg }}
-      ></SubHeaderStyled>
-      <ReturnDetailWrapper>
-        <ReturnDetailMsgStyled
-          dangerouslySetInnerHTML={{ __html: returnDetailMsg! }}
+  if (mail)
+    return (
+      <>
+        <SubHeaderStyled
+          dangerouslySetInnerHTML={{ __html: subHeaderMsg }}
+        ></SubHeaderStyled>
+        <ReturnDetailWrapper>
+          <ReturnDetailMsgStyled
+            dangerouslySetInnerHTML={{ __html: returnDetailMsg! }}
+          />
+        </ReturnDetailWrapper>
+        <ButtonContainer
+          onClick={tryReturnRequest}
+          text="네, 반납할게요"
+          theme="fill"
+          maxWidth="500px"
         />
-      </ReturnDetailWrapper>
-      <ButtonContainer
-        onClick={tryReturnRequest}
-        text="네, 반납할게요"
-        theme="fill"
-        maxWidth="500px"
-      />
-      <ButtonContainer
-        onClick={handleCancelButtonClick}
-        text="취소"
-        theme="grayLine"
-        maxWidth="500px"
-      />
-    </>
-  );
+        <ButtonContainer
+          onClick={handleCancelButtonClick}
+          text="취소"
+          theme="grayLine"
+          maxWidth="500px"
+        />
+      </>
+    );
+  return null;
+  // mail 없는거면 내 대여 정보 불러오지 못했다는거.
 };
 
 const SubHeaderStyled = styled.div`
@@ -150,7 +175,7 @@ const ReturnDetailWrapper = styled.div`
 const ReturnDetailMsgStyled = styled.div`
   letter-spacing: -0.02rem;
   line-height: 1.5rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
   white-space: break-spaces;
   text-align: center;
 `;

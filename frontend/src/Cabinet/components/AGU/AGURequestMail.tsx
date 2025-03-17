@@ -50,6 +50,7 @@ const AGURequestMail = ({
       setIsLoading(false);
     }
   };
+
   return (
     <>
       <SubHeaderStyled

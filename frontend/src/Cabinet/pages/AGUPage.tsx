@@ -1,15 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { myCabinetInfoState, serverTimeState } from "@/Cabinet/recoil/atoms";
 import AGURequestMail from "@/Cabinet/components/AGU/AGURequestMail";
 import AGUReturn from "@/Cabinet/components/AGU/AGUReturn";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import { axiosMyLentInfo } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const tmp: MyCabinetInfoResponseDto = {
@@ -42,25 +39,9 @@ const AGUPage = () => {
   const idRef = useRef<HTMLInputElement>(null);
   const [mail, setMail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [myLentInfoState, setMyLentInfoState] =
-    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const returnSubTitle = `현재 대여중인 사물함 정보입니다. <strong>지금 반납 하시겠습니까?</strong>`;
-  const navigator = useNavigate();
   const aguToken = getCookie("agu_token");
 
-  async function getMyLentInfo() {
-    try {
-      const { data: myLentInfo } = await axiosMyLentInfo();
-
-      setMyLentInfoState(myLentInfo);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  useEffect(() => {
-    if (aguToken) getMyLentInfo();
-  }, []);
   // TODO : return으로?
 
   return (
@@ -68,24 +49,22 @@ const AGUPage = () => {
       <UtilsSectionStyled></UtilsSectionStyled>
       <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
       {/* <SubHeaderStyled>{returnSubTitle}</SubHeaderStyled> */}
-      {aguToken && myLentInfoState ? (
-        <>
-          <AGUReturn
-            setIsLoading={setIsLoading}
-            setMail={setMail}
-            navigator={navigator}
-            myLentInfoState={myLentInfoState}
-          />
-        </>
+      {/* {aguToken && myLentInfoState ? ( */}
+      {/* {aguToken && mail ? ( */}
+      {aguToken ? (
+        <AGUReturn
+          setIsLoading={setIsLoading}
+          setMail={setMail}
+          mail={mail}
+          aguToken={aguToken}
+        />
       ) : (
-        <>
-          <AGURequestMail
-            mail={mail}
-            idRef={idRef}
-            setIsLoading={setIsLoading}
-            setMail={setMail}
-          />
-        </>
+        <AGURequestMail
+          mail={mail}
+          idRef={idRef}
+          setIsLoading={setIsLoading}
+          setMail={setMail}
+        />
       )}
       {/* <LoadingAnimation /> */}
       {/* TODO: 이메일 링크 보냈는데 agu인데 사물함 없을때 */}
