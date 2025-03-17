@@ -485,7 +485,7 @@ export const axiosAGUReturnCancel = async (): Promise<any> => {
   }
 };
 
-const axiosSocialAccountLinkURL = "/v5/auth/link";
+const axiosSocialAccountLinkURL = "/v5/oauth/link";
 export const axiosDisconnectSocialAccount = async (
   mail: string,
   provider: string
