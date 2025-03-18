@@ -53,13 +53,15 @@ const AGUPage = () => {
       <>
         <UtilsSectionStyled></UtilsSectionStyled>
         <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
-        {aguToken && userId ? (
+        <AGUCabinetReturnSection />
+        {/* TODO :  */}
+        {/* {aguToken && userId ? (
           <AGUCabinetReturnSection />
         ) : (
           <AGUMailVerificationSection
           // setIsLoading={setIsLoading}
           />
-        )}
+        )} */}
       </>
       {/* )} */}
     </WrapperStyled>
