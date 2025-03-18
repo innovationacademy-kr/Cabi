@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
-import AGURequestMail from "@/Cabinet/components/AGU/AGURequestMail";
-import AGUReturn from "@/Cabinet/components/AGU/AGUReturn";
+import AGUCabinetReturnSection from "@/Cabinet/components/AGU/AGUCabinetReturnSection";
+import AGUMailVerificationSection from "@/Cabinet/components/AGU/AGUMailVerificationSection";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import { axiosMyLentInfo } from "@/Cabinet/api/axios/axios.custom";
@@ -54,9 +54,9 @@ const AGUPage = () => {
         <UtilsSectionStyled></UtilsSectionStyled>
         <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
         {aguToken && userId ? (
-          <AGUReturn />
+          <AGUCabinetReturnSection />
         ) : (
-          <AGURequestMail
+          <AGUMailVerificationSection
           // setIsLoading={setIsLoading}
           />
         )}

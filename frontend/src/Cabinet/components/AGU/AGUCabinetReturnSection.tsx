@@ -14,7 +14,7 @@ import {
 import { formatDate } from "@/Cabinet/utils/dateUtils";
 
 // TODO : 파일/컴포넌트 이름 변경
-const AGUReturn = () => {
+const AGUCabinetReturnSection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const myLentInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -160,4 +160,4 @@ const ReturnDetailMsgStyled = styled.div`
   text-align: center;
 `;
 
-export default AGUReturn;
+export default AGUCabinetReturnSection;
