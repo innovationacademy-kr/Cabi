@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpHeaders;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.EmailVerificationAlarm;
 import org.ftclub.cabinet.alarm.repository.AguCodeRedis;
@@ -121,7 +122,8 @@ public class AuthFacadeService {
 		}
 		// 내부 모든 쿠키 및 토큰 삭제
 		jwtRedisService.addUsedUserTokensToBlackList(userId, accessToken, refreshToken);
-		cookieService.deleteAllCookies(request.getCookies(), request.getServerName(), response);
+		cookieService.deleteAllCookies(request.getCookies(),
+				request.getHeader(HttpHeaders.HOST), response);
 	}
 
 	/**
