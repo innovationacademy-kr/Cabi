@@ -1,12 +1,10 @@
 package org.ftclub.cabinet.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@Getter
-@Setter
+@Data
 @Configuration
 @ConfigurationProperties(prefix = "cabinet.domain-name")
 public class DomainProperties {
