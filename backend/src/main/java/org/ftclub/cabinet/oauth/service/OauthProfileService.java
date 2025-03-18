@@ -22,7 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class OauthProfileService {
 
-	@Value("${spring.security.oauth2.client.provider.ft-user-login.users-info-uri}")
+	@Value("${spring.security.oauth2.client.provider.ft.users-info-uri}")
 	private String ftUsersInfoUri;
 
 	/**
