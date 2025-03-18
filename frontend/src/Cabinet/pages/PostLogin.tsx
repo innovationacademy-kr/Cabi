@@ -19,11 +19,9 @@ const PostLogin = (): JSX.Element => {
   const setUser = useSetRecoilState<UserDto>(userState);
   const navigate = useNavigate();
   const token = getCookie("access_token");
-  console.log("PostLogin@@@");
 
   const getMyInfo = async () => {
     try {
-      console.log("PostLogin getMyInfo");
       const { data: myInfo } = await axiosMyInfo();
       setUser(myInfo);
       if (myInfo.alarmTypes?.push && myInfo.isDeviceTokenExpired) {
