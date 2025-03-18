@@ -1,6 +1,6 @@
 import {
+  ISocialLoginConfig,
   LoginProvider,
-  SocialLoginConfig,
 } from "@/Presentation/types/common/login";
 import { AUTH_CONFIG } from "../constants/login";
 
@@ -14,6 +14,6 @@ export const getSocialAuthUrl = (provider: LoginProvider): string => {
 
 export const getSocialDisplayInfo = (
   provider: LoginProvider
-): SocialLoginConfig["display"] => {
+): ISocialLoginConfig["display"] => {
   return AUTH_CONFIG[provider].display;
 };

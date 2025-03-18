@@ -20,7 +20,6 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import instance from "../api/axios/axios.instance";
 
-
 const axiosLinkGoogleAccount = async (oauthMail: string) => {
   try {
     const { data } = await instance.post(
@@ -85,7 +84,7 @@ const ProfilePage = () => {
           <PointColorCardContainer />
           <AlarmCardContainer alarm={myInfo.alarmTypes} />
           <SnsConnectionCardContainer
-            userOauthConnection={myInfo.userOauthConnection}
+            IUserOauthConnection={myInfo.IUserOauthConnection}
           />
         </CardGridWrapper>
       )}

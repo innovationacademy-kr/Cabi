@@ -1,12 +1,12 @@
 import React from "react";
 import {
+  ISocialLoginConfig,
   LoginProvider,
-  SocialLoginConfig,
 } from "@/Presentation/types/common/login";
 
 const OAUTH_URL = `${import.meta.env.VITE_BE_HOST}/oauth2/authorization`;
 
-export const AUTH_CONFIG: Record<LoginProvider, SocialLoginConfig> = {
+export const AUTH_CONFIG: Record<LoginProvider, ISocialLoginConfig> = {
   42: {
     authUrl: `${OAUTH_URL}/ft`,
     display: {

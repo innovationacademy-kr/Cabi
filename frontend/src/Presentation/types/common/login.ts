@@ -1,6 +1,6 @@
 export type LoginProvider = "42" | "google";
 
-export interface SocialLoginConfig {
+export interface ISocialLoginConfig {
   authUrl: string;
   display: {
     text: string;
@@ -10,7 +10,7 @@ export interface SocialLoginConfig {
   };
 }
 
-export interface UserOauthConnection {
+export interface IUserOauthConnection {
   email: string;
   providerType: LoginProvider;
 }
