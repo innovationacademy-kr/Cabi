@@ -5,14 +5,21 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.CookieInfo;
 import org.ftclub.cabinet.auth.domain.CookieManager;
-import org.ftclub.cabinet.config.security.CsrfCookieConfig;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
+import org.ftclub.cabinet.security.CsrfCookieConfig;
 import org.springframework.stereotype.Service;
 
+/**
+ * cookieManager 의 기본적인 기능을 사용,
+ * <p>
+ * 비즈니스 로직을 더해 처리
+ */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CookieService {
@@ -32,32 +39,43 @@ public class CookieService {
 		res.addCookie(cookie);
 	}
 
-	public void setTokenCookies(HttpServletResponse res, TokenDto tokens, String serverName) {
+	public void setPairTokenCookiesToClient(HttpServletResponse res, TokenDto tokens,
+			String serverName) {
 
+		log.info("Server Name = {}", serverName);
 		boolean isSecure = !cookieManager.isLocalEnvironment(serverName);
 
 		Cookie accessTokenCookie = cookieManager.createCookie(
 				JwtTokenConstants.ACCESS_TOKEN,
 				tokens.getAccessToken(),
-				jwtTokenProperties.getAccessExpirySeconds(),
+				jwtTokenProperties.getAccessExpirySeconds() + 180,
 				"/",
 				false,
 				isSecure
 		);
-		cookieManager.setDomainAndAddCookie(res, serverName, accessTokenCookie);
+		cookieManager.setDomainByEnv(accessTokenCookie, serverName);
+		res.addCookie(accessTokenCookie);
 
 		Cookie refreshTokenCookie = cookieManager.createCookie(
 				JwtTokenConstants.REFRESH_TOKEN,
 				tokens.getRefreshToken(),
-				jwtTokenProperties.getRefreshExpirySeconds(),
+				jwtTokenProperties.getRefreshExpirySeconds() + 180,
 				"/",
 				true,
 				isSecure
 		);
 
-		cookieManager.setDomainAndAddCookie(res, serverName, refreshTokenCookie);
+		cookieManager.setDomainByEnv(refreshTokenCookie, serverName);
+		res.addCookie(refreshTokenCookie);
 	}
 
+	/**
+	 * Csrf 쿠키를 제외한 모든 쿠키를 제거합니다.
+	 *
+	 * @param cookies
+	 * @param serverName
+	 * @param res
+	 */
 	public void deleteAllCookies(Cookie[] cookies, String serverName, HttpServletResponse res) {
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {

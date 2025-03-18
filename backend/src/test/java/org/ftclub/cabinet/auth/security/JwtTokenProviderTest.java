@@ -70,7 +70,7 @@ public class JwtTokenProviderTest {
 		when(tokenProperties.getRefreshExpiryMillis()).thenReturn(36000000L);
 		when(tokenProperties.getSigningKey()).thenReturn(key);
 
-		TokenDto tokenDto = jwtTokenProvider.createTokens(userId, roles, "ft");
+		TokenDto tokenDto = jwtTokenProvider.createPairTokens(userId, roles, "ft");
 		UserInfoDto userInfo = jwtTokenProvider.validateTokenAndGetUserInfo(
 				tokenDto.getAccessToken());
 
@@ -89,7 +89,7 @@ public class JwtTokenProviderTest {
 
 		Long userID = 123L;
 		String roles = "USER";
-		TokenDto tokenDto = jwtTokenProvider.createTokens(userID, roles, "ft");
+		TokenDto tokenDto = jwtTokenProvider.createPairTokens(userID, roles, "ft");
 
 		Thread.sleep(10);
 

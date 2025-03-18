@@ -4,13 +4,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.domain.FtOauthProfile;
-import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
+import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -23,22 +22,6 @@ public class UserCommandService {
 
 	private final UserRepository userRepository;
 
-	/**
-	 * 유저를 생성합니다.
-	 *
-	 * @param profile 42서울에서 가져온 유저 프로필
-	 * @return 생성된 유저 객체
-	 */
-	public User createUserByFtProfile(FtProfile profile) {
-		if (userRepository.existsByNameAndEmail(profile.getIntraName(), profile.getEmail())) {
-			throw ExceptionStatus.USER_ALREADY_EXISTED.asServiceException();
-		}
-//		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
-//				UserRole.USER);
-		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
-				profile.getRole().name());
-		return userRepository.save(user);
-	}
 
 	public User createUserByFtOauthProfile(FtOauthProfile profile) {
 		if (userRepository.existsByNameAndEmail(profile.getIntraName(), profile.getEmail())) {

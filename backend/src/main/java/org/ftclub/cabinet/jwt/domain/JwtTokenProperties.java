@@ -5,8 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Duration;
 import javax.annotation.PostConstruct;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +13,8 @@ import org.springframework.context.annotation.Configuration;
 /**
  * yml 파일 내의 값을 바인딩합니다.
  */
+@Data
 @Slf4j
-@Getter
-@Setter
 @Configuration
 @ConfigurationProperties(prefix = "cabinet.jwt")
 public class JwtTokenProperties {

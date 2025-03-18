@@ -23,18 +23,6 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 	private static final String SPRING_MVC_ERROR_MESSAGE_VALUE = "Spring MVC 에서 예기치 않은 오류가 발생했어요.🥲";
 	private final DiscordWebHookMessenger discordWebHookMessenger;
 
-	// Security Error Controller
-	@ExceptionHandler(SpringSecurityException.class)
-	public ResponseEntity<?> securityExceptionHandler(SpringSecurityException e) {
-		log.info("[SpringSecurityException] {} : {}", e.status.getError(), e.getMessage());
-		if (log.isDebugEnabled()) {
-			log.debug("Exception stack trace: ", e);
-		}
-		return ResponseEntity
-				.status(e.status.getStatusCode())
-				.body(e.status);
-	}
-
 	@ExceptionHandler(ControllerException.class)
 	public ResponseEntity<?> controllerExceptionHandler(ControllerException e) {
 		log.info("[ControllerException] {} : {}", e.status.getError(), e.status.getMessage());
