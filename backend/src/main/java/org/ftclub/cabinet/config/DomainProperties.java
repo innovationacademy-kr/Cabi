@@ -13,8 +13,8 @@ public class DomainProperties {
 	private String local;
 	private String dev;
 	private String main;
-	private String beHost;
-	private String feHost;
+	//	private String beHost;
+//	private String feHost;
 	private String adminEmail;
 	private String userEmail;
 }
