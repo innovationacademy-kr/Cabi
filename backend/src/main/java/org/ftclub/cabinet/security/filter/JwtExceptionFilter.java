@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
+import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,7 +29,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 		try {
 			filterChain.doFilter(request, response);
 
-		} catch (SecurityException e) {
+		} catch (SpringSecurityException e) {
 			log.error("JWT Authentication failed: {}", e.getMessage(), e);
 			SecurityContextHolder.clearContext();
 			securityExceptionHandlerManager.handle(response, e, false);
