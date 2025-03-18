@@ -38,9 +38,21 @@ const redirectToLoginWithAlert = (error: any) => {
   alert(error.response?.data?.message || "로그인이 필요합니다.");
 };
 
-const handleReissueTokenFailure = async (error: any) => {
+const handleReissueToken = async (error: any) => {
   const token = getCookie("access_token");
-  if (!token) return Promise.reject(error);
+  const domain =
+    import.meta.env.VITE_IS_LOCAL === "true" ? "localhost" : "cabi.42seoul.io";
+
+  if (!token) {
+    const isAGUPage = window.location.pathname === "/agu";
+    if (isAGUPage) {
+      removeCookie("agu_token", {
+        path: "/",
+        domain,
+      });
+    }
+    return Promise.reject(error);
+  }
 
   try {
     const response = await axiosReissueToken(); // refresh token으로 access token 재발급
@@ -56,9 +68,6 @@ const handleReissueTokenFailure = async (error: any) => {
     console.error("Token reissue failed:", error);
   }
 
-  const domain =
-    import.meta.env.VITE_IS_LOCAL === "true" ? "localhost" : "cabi.42seoul.io";
-
   removeCookie("access_token", {
     path: "/",
     domain,
@@ -71,7 +80,7 @@ const handleReissueTokenFailure = async (error: any) => {
 
 const handleErrorResponse = async (error: any) => {
   if (error.response?.status === HttpStatusCode.Unauthorized) {
-    return handleReissueTokenFailure(error);
+    return handleReissueToken(error);
   }
 
   if (error.response?.status === HttpStatusCode.InternalServerError) {
