@@ -2,7 +2,6 @@ import "@/Cabinet/assets/css/loginPage.css";
 import LoginTemplate from "@/Cabinet/components/Login/LoginTemplate";
 
 const LoginPage = () => {
-  console.log("LoginPage");
   return (
     <LoginTemplate pageTitle="Cabi" pageSubTitle="여러분의 일상을 가볍게" />
   );

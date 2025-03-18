@@ -1,5 +1,5 @@
 import { HttpStatusCode } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -67,7 +67,8 @@ const AGUReturn = () => {
       const response = await axiosAGUReturnCancel();
 
       if (response.status === HttpStatusCode.Ok) {
-        resetAndRedirectToLogin();
+        resetMyLentInfo();
+        // resetAndRedirectToLogin(); TODO : resetAndRedirectToLogin 필요할까..?
       }
     } catch (error: any) {
       alert(error.data);
@@ -77,15 +78,32 @@ const AGUReturn = () => {
     }
   };
 
-  const handleReturnCancelButtonClick = () => {
-    const answer = confirm(
-      "다시 처음부터 해야되고 메일 요청 시간 만료안됐으면 기다려야됨. 그래도 진행?"
-    );
+  const handlePageExit = () => {
+    // e?: BeforeUnloadEvent
+    // 필요한 API 요청 또는 정리 작업 실행
+    // sendExitRequest();
+    const confirmMsg =
+      "진행 중인 반납 과정이 초기화되고, 일정 시간 동안 새 인증 메일 발송이 제한됩니다. 페이지를 나가시겠습니까?";
+    // if (e?.type === "beforeunload") {
+    //   e.preventDefault();
+    //   // return;
+    // }
 
-    if (answer) {
-      tryReturnCancelRequest();
-    }
+    const isAnswerYes = confirm(confirmMsg);
+
+    if (isAnswerYes) tryReturnCancelRequest();
   };
+
+  useEffect(() => {
+    // TODO : type BeforeUnloadEvent
+    window.addEventListener("popstate", handlePageExit);
+    // window.addEventListener("beforeunload", handlePageExit);
+
+    return () => {
+      // window.removeEventListener("beforeunload", handlePageExit);
+      window.removeEventListener("popstate", handlePageExit);
+    };
+  }, []);
 
   return (
     <>
@@ -104,7 +122,10 @@ const AGUReturn = () => {
         maxWidth="500px"
       />
       <ButtonContainer
-        onClick={handleReturnCancelButtonClick}
+        onClick={(e) => {
+          handlePageExit();
+          // navigator("/login");
+        }}
         text="취소"
         theme="grayLine"
         maxWidth="500px"

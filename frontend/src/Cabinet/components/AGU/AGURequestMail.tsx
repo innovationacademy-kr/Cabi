@@ -6,7 +6,7 @@ import Button from "@/Cabinet/components/Common/Button";
 import { axiosVerifyAGUUser } from "@/Cabinet/api/axios/axios.custom";
 
 // TODO : 파일/컴포넌트 이름 변경
-const AGURequestMail = ({}: {}) => {
+const AGURequestMail = () => {
   const [mail, setMail] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const subHeaderMsg = mail
