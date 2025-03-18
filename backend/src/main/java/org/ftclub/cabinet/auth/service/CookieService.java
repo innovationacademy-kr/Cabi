@@ -5,6 +5,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.CookieInfo;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.dto.TokenDto;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
  * <p>
  * 비즈니스 로직을 더해 처리
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CookieService {
@@ -40,6 +42,7 @@ public class CookieService {
 	public void setPairTokenCookiesToClient(HttpServletResponse res, TokenDto tokens,
 			String serverName) {
 
+		log.info("Server Name = {}", serverName);
 		boolean isSecure = !cookieManager.isLocalEnvironment(serverName);
 
 		Cookie accessTokenCookie = cookieManager.createCookie(
