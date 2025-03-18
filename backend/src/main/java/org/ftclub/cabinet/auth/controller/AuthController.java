@@ -7,10 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.dto.AguMailResponse;
-import org.ftclub.cabinet.dto.UserInfoDto;
-import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,11 +62,7 @@ public class AuthController {
 	 * @param res 요청 시의 서블릿 {@link HttpServletResponse}
 	 */
 	@PostMapping("/logout")
-	public void logout(
-			@AuthenticationPrincipal UserInfoDto userInfoDto,
-			@CookieValue(name = JwtTokenConstants.REFRESH_TOKEN) String refreshToken,
-			HttpServletRequest request,
-			HttpServletResponse response) {
-		authFacadeService.userLogout(request, response, userInfoDto.getUserId(), refreshToken);
+	public void logout(HttpServletRequest request, HttpServletResponse response) {
+		authFacadeService.userLogout(request, response);
 	}
 }
