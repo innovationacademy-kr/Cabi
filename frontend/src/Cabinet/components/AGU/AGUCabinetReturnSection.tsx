@@ -1,5 +1,5 @@
 import { HttpStatusCode } from "axios";
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -13,7 +13,6 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
 
-// TODO : 파일/컴포넌트 이름 변경
 const AGUCabinetReturnSection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const myLentInfo =
@@ -37,11 +36,6 @@ const AGUCabinetReturnSection = () => {
   대여기간 : 2022/12/21 23:59까지
   */
 
-  const resetAndRedirectToLogin = () => {
-    resetMyLentInfo();
-    navigator("/login");
-  };
-
   const tryReturnRequest = async () => {
     // setIsLoading(true);
 
@@ -50,7 +44,8 @@ const AGUCabinetReturnSection = () => {
 
       if (response.status === HttpStatusCode.Ok) {
         alert("반납되었습니다");
-        resetAndRedirectToLogin();
+        resetMyLentInfo();
+        navigator("/login");
       }
     } catch (error: any) {
       alert(error.response.data.message);
@@ -68,7 +63,6 @@ const AGUCabinetReturnSection = () => {
 
       if (response.status === HttpStatusCode.Ok) {
         resetMyLentInfo();
-        // resetAndRedirectToLogin(); TODO : resetAndRedirectToLogin 필요할까..?
       }
     } catch (error: any) {
       alert(error.data);
@@ -78,16 +72,17 @@ const AGUCabinetReturnSection = () => {
     }
   };
 
-  const handlePageExit = async (url?: string) => {
-    // e?: BeforeUnloadEvent
-    // 필요한 API 요청 또는 정리 작업 실행
-    // sendExitRequest();
-    // if (e?.type === "beforeunload") {
-    //   e.preventDefault();
-    //   // return;
-    // }
+  const handlePageExit = async (
+    e: BeforeUnloadEvent | PopStateEvent | MouseEvent,
+    url?: string
+  ) => {
+    if (e.type === "beforeunload") {
+      e.preventDefault();
+      return;
+    }
     const confirmMsg =
       "진행 중인 반납 과정이 초기화되고, 일정 시간 동안 새 인증 메일 발송이 제한됩니다. 페이지를 나가시겠습니까?";
+    // TODO: popstate, 취소버튼 클릭시 로그인 페이지로 이동한다는 내용 추가.
 
     const isAnswerYes = confirm(confirmMsg);
 
@@ -98,17 +93,19 @@ const AGUCabinetReturnSection = () => {
   };
 
   useEffect(() => {
-    const handlePopState = () => {
-      handlePageExit("/login");
+    const handlePopState = (e: PopStateEvent) => {
+      handlePageExit(e, "/login");
+    };
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      handlePageExit(e, "/login");
     };
 
-    // TODO : type BeforeUnloadEvent
-    // window.addEventListener("beforeunload", handlePageExit);
+    window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("popstate", handlePopState);
-
+    
     return () => {
-      // window.removeEventListener("beforeunload", handlePageExit);
       window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
 
@@ -129,8 +126,8 @@ const AGUCabinetReturnSection = () => {
         maxWidth="500px"
       />
       <ButtonContainer
-        onClick={() => {
-          handlePageExit("/login");
+        onClick={(e) => {
+          handlePageExit(e, "/login");
         }}
         text="취소"
         theme="grayLine"
