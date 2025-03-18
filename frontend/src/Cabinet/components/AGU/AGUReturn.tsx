@@ -78,30 +78,37 @@ const AGUReturn = () => {
     }
   };
 
-  const handlePageExit = () => {
+  const handlePageExit = async (url?: string) => {
     // e?: BeforeUnloadEvent
     // 필요한 API 요청 또는 정리 작업 실행
     // sendExitRequest();
-    const confirmMsg =
-      "진행 중인 반납 과정이 초기화되고, 일정 시간 동안 새 인증 메일 발송이 제한됩니다. 페이지를 나가시겠습니까?";
     // if (e?.type === "beforeunload") {
     //   e.preventDefault();
     //   // return;
     // }
+    const confirmMsg =
+      "진행 중인 반납 과정이 초기화되고, 일정 시간 동안 새 인증 메일 발송이 제한됩니다. 페이지를 나가시겠습니까?";
 
     const isAnswerYes = confirm(confirmMsg);
 
-    if (isAnswerYes) tryReturnCancelRequest();
+    if (isAnswerYes) {
+      await tryReturnCancelRequest();
+      if (url) navigator(url);
+    }
   };
 
   useEffect(() => {
+    const handlePopState = () => {
+      handlePageExit("/login");
+    };
+
     // TODO : type BeforeUnloadEvent
-    window.addEventListener("popstate", handlePageExit);
     // window.addEventListener("beforeunload", handlePageExit);
+    window.addEventListener("popstate", handlePopState);
 
     return () => {
       // window.removeEventListener("beforeunload", handlePageExit);
-      window.removeEventListener("popstate", handlePageExit);
+      window.removeEventListener("popstate", handlePopState);
     };
   }, []);
 
@@ -122,9 +129,8 @@ const AGUReturn = () => {
         maxWidth="500px"
       />
       <ButtonContainer
-        onClick={(e) => {
-          handlePageExit();
-          // navigator("/login");
+        onClick={() => {
+          handlePageExit("/login");
         }}
         text="취소"
         theme="grayLine"
