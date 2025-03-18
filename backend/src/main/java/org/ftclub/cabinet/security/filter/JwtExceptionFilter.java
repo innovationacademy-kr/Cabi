@@ -30,7 +30,15 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 
 		} catch (SpringSecurityException e) {
-			log.error("JWT Authentication failed: {}", e.getMessage(), e);
+			log.info("[JWT Authentication failed] {} : {}",
+					e.getStatus().getError(), e.getMessage());
+			SecurityContextHolder.clearContext();
+			securityExceptionHandlerManager.handle(response, e, false);
+		} catch (Exception e) {
+			log.info("Unexpected Error during JWT Authentication : {}", e.getMessage());
+			if (log.isDebugEnabled()) {
+				log.debug("Exception stack trace: ", e);
+			}
 			SecurityContextHolder.clearContext();
 			securityExceptionHandlerManager.handle(response, e, false);
 		}

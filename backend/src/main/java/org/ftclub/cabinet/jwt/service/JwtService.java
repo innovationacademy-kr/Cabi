@@ -48,10 +48,10 @@ public class JwtService {
 		} catch (ExpiredJwtException e) {
 			throw new SpringSecurityException(ExceptionStatus.EXPIRED_JWT_TOKEN);
 		} catch (JwtException e) {
-			log.error("JwtException : {}", e.getMessage(), e);
+			log.info("JwtException : {}", e.getMessage(), e);
 			throw new SpringSecurityException(ExceptionStatus.JWT_EXCEPTION);
 		} catch (DomainException e) {
-			log.error("Claims has null value : {}", e.getMessage());
+			log.info("Claims has null value : {}", e.getMessage());
 			throw new SpringSecurityException(ExceptionStatus.INVALID_ARGUMENT);
 		}
 	}

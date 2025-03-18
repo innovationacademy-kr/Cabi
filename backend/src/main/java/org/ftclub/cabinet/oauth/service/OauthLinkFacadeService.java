@@ -73,7 +73,7 @@ public class OauthLinkFacadeService {
 
 			userFacadeService.updateUserStatus(profile, user);
 		} catch (Exception e) {
-			log.error("42 API 호출 도중 에러발생. blackHole, role update 생략. "
+			log.info("42 API 호출 도중 에러발생. blackHole, role update 생략. "
 							+ "name = {}, message = {}",
 					user.getName(), e.getMessage());
 		}
