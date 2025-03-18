@@ -8,9 +8,9 @@ import org.ftclub.cabinet.security.handler.CustomAccessDeniedHandler;
 import org.ftclub.cabinet.security.handler.CustomAuthenticationEntryPoint;
 import org.ftclub.cabinet.security.handler.CustomOAuth2UserService;
 import org.ftclub.cabinet.security.handler.CustomSuccessHandler;
+import org.ftclub.cabinet.security.handler.LogoutHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,6 +37,7 @@ public class SecurityConfig {
 	private final CustomAuthenticationEntryPoint entryPoint;
 	private final CustomAccessDeniedHandler accessDeniedHandler;
 	private final SecurityExpressionHandler<FilterInvocation> expressionHandler;
+	private final LogoutHandler logoutHandler;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http)
@@ -66,8 +67,7 @@ public class SecurityConfig {
 				)
 				.logout(logout -> logout
 						.logoutUrl("/v5/auth/logout")
-						.logoutSuccessHandler((request, response, authentication) ->
-								response.setStatus(HttpStatus.OK.value()))
+						.logoutSuccessHandler(logoutHandler)
 						.invalidateHttpSession(true)
 						.clearAuthentication(true)
 				)

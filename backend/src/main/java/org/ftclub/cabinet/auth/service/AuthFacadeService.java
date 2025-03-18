@@ -29,6 +29,7 @@ import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
 import org.ftclub.cabinet.oauth.domain.OauthResult;
 import org.ftclub.cabinet.oauth.service.OauthProfileService;
+import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Value;
@@ -110,18 +111,22 @@ public class AuthFacadeService {
 	 *
 	 * @param request
 	 * @param response
-	 * @param userId
-	 * @param refreshToken
 	 */
-	public void userLogout(HttpServletRequest request, HttpServletResponse response,
-			Long userId, String refreshToken) {
+	public void userLogout(HttpServletRequest request, HttpServletResponse response) {
 
 		String accessToken = jwtService.extractToken(request);
+		String refreshToken =
+				cookieService.getCookieValue(request, JwtTokenConstants.REFRESH_TOKEN);
 		if (accessToken == null || refreshToken == null) {
-			throw ExceptionStatus.JWT_TOKEN_NOT_FOUND.asServiceException();
+			throw new SpringSecurityException(ExceptionStatus.JWT_TOKEN_NOT_FOUND);
+		}
+		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(refreshToken);
+		if (!userInfoDto.hasRole(FtRole.USER.name())) {
+			throw new SpringSecurityException(ExceptionStatus.FORBIDDEN_USER);
 		}
 		// 내부 모든 쿠키 및 토큰 삭제
-		jwtRedisService.addUsedUserTokensToBlackList(userId, accessToken, refreshToken);
+		jwtRedisService.addUsedUserTokensToBlackList(userInfoDto.getUserId(), accessToken,
+				refreshToken);
 		cookieService.deleteAllCookies(request.getCookies(),
 				request.getHeader(HttpHeaders.HOST), response);
 	}
