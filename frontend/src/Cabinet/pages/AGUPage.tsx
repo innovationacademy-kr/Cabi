@@ -74,6 +74,11 @@ const WrapperStyled = styled.main`
   align-items: center;
   height: 100%;
   overflow-y: scroll;
+
+  & > button {
+    min-width: 290px;
+    width: 70%;
+  }
 `;
 
 const UtilsSectionStyled = styled.section`
@@ -99,7 +104,6 @@ export const AGUSubHeaderStyled = styled.div`
 
   span {
     font-weight: 700;
-    /* text-decoration: underline; */
   }
 `;
 

@@ -56,7 +56,6 @@ const AGUMailVerificationSection = () => {
 };
 
 const FormInputStyled = styled.input`
-  width: 500px;
   height: 60px;
   border: 1px solid var(--agu-form-input-border-color);
   border-radius: 8px;
@@ -65,6 +64,9 @@ const FormInputStyled = styled.input`
   padding: 0 16px;
   margin: 48px 0 24px 0;
   color: var(--notion-btn-text-color);
+  min-width: 290px;
+  max-width: 500px;
+  width: 70%;
 
   :focus {
     border: 1px solid var(--sys-main-color);

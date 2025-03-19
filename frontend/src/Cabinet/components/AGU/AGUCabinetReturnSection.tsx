@@ -171,12 +171,14 @@ const ReturnDetailWrapper = styled.div`
   height: 100px;
   max-width: 500px;
   width: 100%;
+  min-width: 290px;
   border-radius: 10px;
   border: 1px solid var(--inventory-item-title-border-btm-color);
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 42px 0;
+  width: 70%;
 `;
 
 const ReturnDetailMsgStyled = styled.div`
