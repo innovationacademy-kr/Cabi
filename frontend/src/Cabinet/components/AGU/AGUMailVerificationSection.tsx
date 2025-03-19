@@ -5,7 +5,11 @@ import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
 import Button from "@/Cabinet/components/Common/Button";
 import { axiosVerifyAGUUser } from "@/Cabinet/api/axios/axios.custom";
 
-const AGUMailVerificationSection = () => {
+const AGUMailVerificationSection = ({
+  handleButtonClick,
+}: {
+  handleButtonClick: (key: string, callback: () => void) => void;
+}) => {
   const [mail, setMail] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const subHeaderMsg = mail
@@ -13,9 +17,8 @@ const AGUMailVerificationSection = () => {
     : `인트라 아이디를 입력하시면 <span>인트라 이메일 주소</span>로 <span>인증 링크</span>가 전송됩니다.`;
   const ButtonText = mail ? "재요청" : "인증 요청";
 
-  const handleButtonClick = async () => {
+  const verifyAGUUSer = async () => {
     // setIsLoading(true);
-
     try {
       if (inputRef.current) {
         const id = inputRef.current.value;
@@ -46,7 +49,7 @@ const AGUMailVerificationSection = () => {
         placeholder="인트라 아이디를 입력해주세요"
       />
       <Button
-        onClick={handleButtonClick}
+        onClick={() => handleButtonClick("aguUserVerification", verifyAGUUSer)}
         theme="fill"
         text={ButtonText}
         maxWidth="500px"

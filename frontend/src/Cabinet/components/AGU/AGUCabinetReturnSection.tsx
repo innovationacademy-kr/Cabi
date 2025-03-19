@@ -7,9 +7,10 @@ import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
 import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
-import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
+// import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
+// import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 // TODO
-import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
+// import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 // TODO
 import {
   axiosAGUReturnCancel,
@@ -17,37 +18,41 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
 
-const tmp = {
-  building: "새롬관",
-  cabinetId: 91,
-  floor: 2,
-  lentType: CabinetType.PRIVATE,
-  lents: [
-    {
-      expiredAt: new Date("2025-04-12T23:59:59.932478"),
-      lentHistoryId: 3,
-      name: "jeekim",
-      startedAt: new Date("2025-03-12T18:03:19.932478"),
-      userId: 2,
-    },
-  ],
-  maxUser: 1,
-  memo: "",
-  previousUserName: "",
-  section: "End of Cluster 1",
-  sessionExpiredAt: undefined,
-  shareCode: -1,
-  status: CabinetStatus.FULL,
-  statusNote: "",
-  title: "",
-  visibleNum: 11,
-}; // TODO
+// const tmp = {
+//   building: "새롬관",
+//   cabinetId: 91,
+//   floor: 2,
+//   lentType: CabinetType.PRIVATE,
+//   lents: [
+//     {
+//       expiredAt: new Date("2025-04-12T23:59:59.932478"),
+//       lentHistoryId: 3,
+//       name: "jeekim",
+//       startedAt: new Date("2025-03-12T18:03:19.932478"),
+//       userId: 2,
+//     },
+//   ],
+//   maxUser: 1,
+//   memo: "",
+//   previousUserName: "",
+//   section: "End of Cluster 1",
+//   sessionExpiredAt: undefined,
+//   shareCode: -1,
+//   status: CabinetStatus.FULL,
+//   statusNote: "",
+//   title: "",
+//   visibleNum: 11,
+// }; // TODO
 
-const AGUCabinetReturnSection = () => {
+const AGUCabinetReturnSection = ({
+  handleButtonClick,
+}: {
+  handleButtonClick: (key: string, callback: () => void) => void;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
-  // const myLentInfo =
-  //   useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const myLentInfo = tmp; // TODO
+  const myLentInfo =
+    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  // const myLentInfo = tmp; // TODO
   const resetMyLentInfo = useResetRecoilState(myCabinetInfoState);
   const navigator = useNavigate();
   const subHeaderMsg = `현재 대여중인 사물함 정보입니다. <span>지금 반납 하시겠습니까?</span>`;
@@ -150,14 +155,18 @@ const AGUCabinetReturnSection = () => {
         />
       </ReturnDetailWrapper>
       <ButtonContainer
-        onClick={tryReturnRequest}
+        onClick={() => {
+          handleButtonClick("aguReturn", tryReturnRequest);
+        }}
         text="네, 반납할게요"
         theme="fill"
         maxWidth="500px"
       />
       <ButtonContainer
         onClick={(e) => {
-          handlePageExit(e, "/login");
+          handleButtonClick("aguReturnCancel", () =>
+            handlePageExit(e, "/login")
+          );
         }}
         text="취소"
         theme="grayLine"

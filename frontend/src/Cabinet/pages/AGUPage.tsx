@@ -8,6 +8,7 @@ import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import { axiosMyLentInfo } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
+import useDebounce from "@/Cabinet/hooks/useDebounce";
 
 const AGUPage = () => {
   // TODO: animation
@@ -15,6 +16,7 @@ const AGUPage = () => {
   const [userId, setUserId] = useState(0);
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const { debounce } = useDebounce();
   const aguToken = getCookie("agu_token");
 
   const getMyLentInfo = async () => {
@@ -45,6 +47,10 @@ const AGUPage = () => {
     }
   }, []);
 
+  const handleButtonClick = (key: string, callback: () => void) => {
+    debounce(key, callback, 100);
+  };
+
   return (
     <WrapperStyled>
       {/* {isLoading ? (
@@ -53,15 +59,14 @@ const AGUPage = () => {
       <>
         <UtilsSectionStyled></UtilsSectionStyled>
         <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
-        <AGUCabinetReturnSection />
-        {/* TODO :  */}
-        {/* {aguToken && userId ? (
-          <AGUCabinetReturnSection />
+        {aguToken && userId ? (
+          <AGUCabinetReturnSection handleButtonClick={handleButtonClick} />
         ) : (
           <AGUMailVerificationSection
-          // setIsLoading={setIsLoading}
+            handleButtonClick={handleButtonClick}
+            // setIsLoading={setIsLoading}
           />
-        )} */}
+        )}
       </>
       {/* )} */}
     </WrapperStyled>
