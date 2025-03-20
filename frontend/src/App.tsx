@@ -2,12 +2,12 @@ import PageTracker from "@/api/analytics/PageTracker";
 import * as Sentry from "@sentry/react";
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AGUPage from "@/Cabinet/pages/AGUPage";
 import HomePage from "@/Cabinet/pages/HomePage";
 import Layout from "@/Cabinet/pages/Layout";
 import LoginPage from "@/Cabinet/pages/LoginPage";
 import PostLogin from "@/Cabinet/pages/PostLogin";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import AGUPage from "./Cabinet/pages/AGUPage";
 
 const LoginFailurePage = lazy(() => import("@/Cabinet/pages/LoginFailurePage"));
 const NotFoundPage = lazy(() => import("@/Cabinet/pages/NotFoundPage"));

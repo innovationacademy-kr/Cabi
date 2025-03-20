@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { axiosLink } from "@/Cabinet/api/axios/axios.custom";
+import { axiosDisconnectSocialAccount } from "@/Cabinet/api/axios/axios.custom";
 import {
   getEnabledProviders,
   getSocialDisplayInfo,
@@ -59,7 +59,10 @@ const SnsConnectionCard: React.FC<SnsConnectionCardProps> = ({
     try {
       const mailState = userOauthConnections[0].email;
       const providerTypeState = userOauthConnections[0].providerType;
-      const response = await axiosLink(mailState, providerTypeState);
+      const response = await axiosDisconnectSocialAccount(
+        mailState,
+        providerTypeState
+      );
       console.log(response);
       // TODO : 배열 중 하나 골라야됨
 

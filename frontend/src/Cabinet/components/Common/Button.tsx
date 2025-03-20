@@ -7,6 +7,7 @@ interface ButtonInterface {
   disabled?: boolean;
   iconSrc?: string;
   iconAlt?: string;
+  maxWidth?: string;
 }
 
 const Button = (props: ButtonInterface) => {
@@ -15,14 +16,17 @@ const Button = (props: ButtonInterface) => {
       onClick={props.onClick}
       theme={props.theme}
       disabled={props.disabled}
+      maxWidth={props.maxWidth}
     >
       {props.text}
     </ButtonContainerStyled>
   );
 };
 
-const ButtonContainerStyled = styled.button`
-  max-width: 240px;
+const ButtonContainerStyled = styled.button<{
+  maxWidth?: string;
+}>`
+  max-width: ${(props) => (props.maxWidth ? props.maxWidth : "240px")};
   width: 100%;
   height: 60px;
   padding: 0;
