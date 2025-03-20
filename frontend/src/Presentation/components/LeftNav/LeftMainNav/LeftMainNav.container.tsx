@@ -1,3 +1,4 @@
+import { HttpStatusCode } from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useResetRecoilState } from "recoil";
 import {
@@ -46,23 +47,25 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const onClickLogoutButton = async (): Promise<void> => {
     try {
       const response = await axiosLogout();
-
-      const adminToken = isAdmin ? "admin_" : "";
-      if (import.meta.env.VITE_IS_LOCAL === "true") {
-        removeCookie(adminToken + "access_token", {
-          path: "/",
-          domain: "localhost",
-        });
-      } else {
-        removeCookie(adminToken + "access_token", {
-          path: "/",
-          domain: "cabi.42seoul.io",
-        });
+      if (response.status === HttpStatusCode.Ok) {
+        localStorage.setItem("isLoggedOut", "true");
+        const adminToken = isAdmin ? "admin_" : "";
+        if (import.meta.env.VITE_IS_LOCAL === "true") {
+          removeCookie(adminToken + "access_token", {
+            path: "/",
+            domain: "localhost",
+          });
+        } else {
+          removeCookie(adminToken + "access_token", {
+            path: "/",
+            domain: "cabi.42seoul.io",
+          });
+        }
+        resetBuilding();
+        resetCurrentFloor();
+        resetCurrentSection();
+        navigator("/login");
       }
-      resetBuilding();
-      resetCurrentFloor();
-      resetCurrentSection();
-      navigator("/login");
     } catch (error) {
       console.error(error);
     }

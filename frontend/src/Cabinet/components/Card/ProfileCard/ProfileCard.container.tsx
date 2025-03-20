@@ -1,3 +1,4 @@
+import { HttpStatusCode } from "axios";
 import { gapi } from "gapi-script";
 import { useNavigate } from "react-router-dom";
 import { useResetRecoilState } from "recoil";
@@ -19,26 +20,31 @@ const ProfileCardContainer = ({ name }: { name: string | null }) => {
   const onClickLogoutButton = async (): Promise<void> => {
     try {
       const response = await axiosLogout();
-      const { provider } = response.data;
 
-      if (provider === "google") {
-        const googleAuth = gapi.auth2?.getAuthInstance();
-        if (googleAuth) await googleAuth.signOut();
-      } else if (provider === "ft") {
-        const returnUrl = encodeURIComponent(`/login`);
-        window.location.href = `https://profile.intra.42.fr/logout?return_to=${returnUrl}`;
+      if (response.status === HttpStatusCode.Ok) {
+        localStorage.setItem("isLoggedOut", "true");
+
+        const { provider } = response.data;
+
+        if (provider === "google") {
+          const googleAuth = gapi.auth2?.getAuthInstance();
+          if (googleAuth) await googleAuth.signOut();
+        } else if (provider === "ft") {
+          const returnUrl = encodeURIComponent(`/login`);
+          window.location.href = `https://profile.intra.42.fr/logout?return_to=${returnUrl}`;
+        }
+        removeCookie("access_token", {
+          path: "/",
+          domain:
+            import.meta.env.VITE_IS_LOCAL === "true"
+              ? "localhost"
+              : "cabi.42seoul.io",
+        });
+        resetBuilding();
+        resetCurrentFloor();
+        resetCurrentSection();
+        navigator("/login");
       }
-      removeCookie("access_token", {
-        path: "/",
-        domain:
-          import.meta.env.VITE_IS_LOCAL === "true"
-            ? "localhost"
-            : "cabi.42seoul.io",
-      });
-      resetBuilding();
-      resetCurrentFloor();
-      resetCurrentSection();
-      navigator("/login");
     } catch (error) {
       console.error(error);
     }
