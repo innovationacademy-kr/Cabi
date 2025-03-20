@@ -12,7 +12,7 @@ import useDebounce from "@/Cabinet/hooks/useDebounce";
 
 const AGUPage = () => {
   // TODO: animation
-  // const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState(0);
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -20,7 +20,7 @@ const AGUPage = () => {
   const aguToken = getCookie("agu_token");
 
   const getMyLentInfo = async () => {
-    // setIsLoading(true);
+    setIsLoading(true);
     try {
       const response = await axiosMyLentInfo();
       setMyLentInfo(response.data);
@@ -28,23 +28,14 @@ const AGUPage = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     if (aguToken) {
       getMyLentInfo();
-      // setIsLoading(true);
-
-      // let timerId = setTimeout(() => {
-      //   getMyLentInfo();
-      // }, 1000);
-
-      // return () => {
-      //   clearTimeout(timerId);
-      // };
-    }
+    } else setIsLoading(false);
   }, []);
 
   const handleButtonClick = (key: string, callback: () => void) => {
@@ -53,22 +44,22 @@ const AGUPage = () => {
 
   return (
     <WrapperStyled>
-      {/* {isLoading ? (
+      {isLoading ? (
         <LoadingAnimation />
-      ) : ( */}
-      <>
-        <UtilsSectionStyled></UtilsSectionStyled>
-        <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
-        {aguToken && userId ? (
-          <AGUCabinetReturnSection handleButtonClick={handleButtonClick} />
-        ) : (
-          <AGUMailVerificationSection
-            handleButtonClick={handleButtonClick}
-            // setIsLoading={setIsLoading}
-          />
-        )}
-      </>
-      {/* )} */}
+      ) : (
+        <>
+          <UtilsSectionStyled></UtilsSectionStyled>
+          <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
+          {aguToken && userId ? (
+            <AGUCabinetReturnSection handleButtonClick={handleButtonClick} />
+          ) : (
+            <AGUMailVerificationSection
+              handleButtonClick={handleButtonClick}
+              // setIsLoading={setIsLoading}
+            />
+          )}
+        </>
+      )}
     </WrapperStyled>
   );
 };
