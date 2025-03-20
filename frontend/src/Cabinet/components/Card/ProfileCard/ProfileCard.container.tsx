@@ -11,7 +11,7 @@ import { axiosLogout } from "@/Cabinet/api/axios/axios.custom";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const ProfileCardContainer = ({ name }: { name: string | null }) => {
-  const navigate = useNavigate();
+  const navigator = useNavigate();
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
   const resetBuilding = useResetRecoilState(currentBuildingNameState);
@@ -24,16 +24,10 @@ const ProfileCardContainer = ({ name }: { name: string | null }) => {
       if (provider === "google") {
         const googleAuth = gapi.auth2?.getAuthInstance();
         if (googleAuth) await googleAuth.signOut();
-        navigate("/login");
       } else if (provider === "ft") {
         const returnUrl = encodeURIComponent(`/login`);
         window.location.href = `https://profile.intra.42.fr/logout?return_to=${returnUrl}`;
-      } else {
-        navigate("/login");
       }
-      resetBuilding();
-      resetCurrentFloor();
-      resetCurrentSection();
       removeCookie("access_token", {
         path: "/",
         domain:
@@ -41,6 +35,10 @@ const ProfileCardContainer = ({ name }: { name: string | null }) => {
             ? "localhost"
             : "cabi.42seoul.io",
       });
+      resetBuilding();
+      resetCurrentFloor();
+      resetCurrentSection();
+      navigator("/login");
     } catch (error) {
       console.error(error);
     }

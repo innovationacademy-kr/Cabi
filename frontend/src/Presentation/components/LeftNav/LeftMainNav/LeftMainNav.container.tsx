@@ -5,6 +5,7 @@ import {
   currentFloorNumberState,
   currentSectionNameState,
 } from "@/Cabinet/recoil/atoms";
+import { axiosLogout } from "@/Cabinet/api/axios/axios.custom";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import LeftMainNav from "@/Presentation/components/LeftNav/LeftMainNav/LeftMainNav";
@@ -42,23 +43,29 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
-  const onClickLogoutButton = (): void => {
-    const adminToken = isAdmin ? "admin_" : "";
-    if (import.meta.env.VITE_IS_LOCAL === "true") {
-      removeCookie(adminToken + "access_token", {
-        path: "/",
-        domain: "localhost",
-      });
-    } else {
-      removeCookie(adminToken + "access_token", {
-        path: "/",
-        domain: "cabi.42seoul.io",
-      });
+  const onClickLogoutButton = async (): Promise<void> => {
+    try {
+      const response = await axiosLogout();
+
+      const adminToken = isAdmin ? "admin_" : "";
+      if (import.meta.env.VITE_IS_LOCAL === "true") {
+        removeCookie(adminToken + "access_token", {
+          path: "/",
+          domain: "localhost",
+        });
+      } else {
+        removeCookie(adminToken + "access_token", {
+          path: "/",
+          domain: "cabi.42seoul.io",
+        });
+      }
+      resetBuilding();
+      resetCurrentFloor();
+      resetCurrentSection();
+      navigator("/login");
+    } catch (error) {
+      console.error(error);
     }
-    resetBuilding();
-    resetCurrentFloor();
-    resetCurrentSection();
-    navigator("/login");
   };
 
   return (
