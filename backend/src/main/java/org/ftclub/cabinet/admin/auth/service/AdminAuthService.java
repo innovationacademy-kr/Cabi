@@ -5,7 +5,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpHeaders;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.domain.CookieInfo;
@@ -14,10 +16,13 @@ import org.ftclub.cabinet.auth.service.CookieService;
 import org.ftclub.cabinet.dto.AccessTokenDto;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.dto.TokenDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.oauth.domain.OauthResult;
+import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,19 +92,25 @@ public class AdminAuthService {
 	 *
 	 * @param res 요청 시의 서블렛 {@link HttpServletResponse}
 	 */
-	public void adminLogout(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Long userId,
-			String refreshToken) throws IOException {
+	public void adminLogout(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 
-		// TODO: admin 토큰 폐기도 처리해야함 accessToken, refreshToken 사용 처리
 		String accessToken = jwtService.extractToken(request);
-		if (accessToken != null && refreshToken != null) {
-			jwtRedisService.addUsedAdminTokensToBlackList(userId, accessToken, refreshToken);
+		String refreshToken =
+				cookieService.getCookieValue(request, JwtTokenConstants.REFRESH_TOKEN);
+		if (accessToken == null || refreshToken == null) {
+			throw new SpringSecurityException(ExceptionStatus.JWT_TOKEN_NOT_FOUND);
 		}
-		// 내부 모든 쿠키 삭제
-		cookieService.deleteAllCookies(request.getCookies(), request.getServerName(), response);
+		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(refreshToken);
+		if (!userInfoDto.hasRole(AdminRole.ADMIN.name())
+				&& !userInfoDto.hasRole(AdminRole.MASTER.name())) {
+			throw new SpringSecurityException(ExceptionStatus.FORBIDDEN_USER);
+		}
+		// 내부 모든 쿠키 및 토큰 삭제
+		jwtRedisService.addUsedAdminTokensToBlackList(userInfoDto.getUserId(), accessToken,
+				refreshToken);
+		cookieService.deleteAllCookies(request.getCookies(),
+				request.getHeader(HttpHeaders.HOST), response);
 	}
 
 	@Transactional
