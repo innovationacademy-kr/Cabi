@@ -11,7 +11,6 @@ import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useDebounce from "@/Cabinet/hooks/useDebounce";
 
 const AGUPage = () => {
-  // TODO: animation
   const [isFetchingMyLentInfo, setIsFetchingMyLentInfo] = useState(true);
   const [isProcessingButtonClick, setIsProcessingButtonClick] = useState(false);
   const [userId, setUserId] = useState(0);

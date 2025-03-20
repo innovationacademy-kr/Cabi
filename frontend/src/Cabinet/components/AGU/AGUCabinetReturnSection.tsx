@@ -7,42 +7,11 @@ import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
 import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
-// import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
-// import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
-// TODO
-// import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-// TODO
 import {
   axiosAGUReturnCancel,
   axiosReturn,
 } from "@/Cabinet/api/axios/axios.custom";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-
-// const tmp = {
-//   building: "새롬관",
-//   cabinetId: 91,
-//   floor: 2,
-//   lentType: CabinetType.PRIVATE,
-//   lents: [
-//     {
-//       expiredAt: new Date("2025-04-12T23:59:59.932478"),
-//       lentHistoryId: 3,
-//       name: "jeekim",
-//       startedAt: new Date("2025-03-12T18:03:19.932478"),
-//       userId: 2,
-//     },
-//   ],
-//   maxUser: 1,
-//   memo: "",
-//   previousUserName: "",
-//   section: "End of Cluster 1",
-//   sessionExpiredAt: undefined,
-//   shareCode: -1,
-//   status: CabinetStatus.FULL,
-//   statusNote: "",
-//   title: "",
-//   visibleNum: 11,
-// }; // TODO
 
 const AGUCabinetReturnSection = ({
   handleButtonClick,
@@ -51,10 +20,8 @@ const AGUCabinetReturnSection = ({
   handleButtonClick: (key: string, callback: () => void) => void;
   isProcessingButtonClick: boolean;
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const myLentInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  // const myLentInfo = tmp; // TODO
   const resetMyLentInfo = useResetRecoilState(myCabinetInfoState);
   const navigator = useNavigate();
   const subHeaderMsg = `현재 대여중인 사물함 정보입니다. <span>지금 반납 하시겠습니까?</span>`;
@@ -75,8 +42,6 @@ const AGUCabinetReturnSection = ({
   */
 
   const tryReturnRequest = async () => {
-    // setIsLoading(true);
-
     try {
       const response = await axiosReturn();
 
@@ -88,14 +53,10 @@ const AGUCabinetReturnSection = ({
     } catch (error: any) {
       alert(error.response.data.message);
       console.error(error);
-    } finally {
-      // setIsLoading(false);
     }
   };
 
   const tryReturnCancelRequest = async () => {
-    // setIsLoading(true);
-
     try {
       const response = await axiosAGUReturnCancel();
 
@@ -105,8 +66,6 @@ const AGUCabinetReturnSection = ({
     } catch (error: any) {
       alert(error.data);
       console.error(error);
-    } finally {
-      // setIsLoading(false);
     }
   };
 
