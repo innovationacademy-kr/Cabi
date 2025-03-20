@@ -7,8 +7,10 @@ import { axiosVerifyAGUUser } from "@/Cabinet/api/axios/axios.custom";
 
 const AGUMailVerificationSection = ({
   handleButtonClick,
+  isProcessingButtonClick,
 }: {
   handleButtonClick: (key: string, callback: () => void) => void;
+  isProcessingButtonClick: boolean;
 }) => {
   const [mail, setMail] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -18,7 +20,6 @@ const AGUMailVerificationSection = ({
   const ButtonText = mail ? "재요청" : "인증 요청";
 
   const verifyAGUUSer = async () => {
-    // setIsLoading(true);
     try {
       if (inputRef.current) {
         const id = inputRef.current.value;
@@ -35,7 +36,6 @@ const AGUMailVerificationSection = ({
       alert(error.response.data.message);
       if (inputRef.current) inputRef.current.value = "";
     } finally {
-      // setIsLoading(false);
     }
   };
 
@@ -53,6 +53,7 @@ const AGUMailVerificationSection = ({
         theme="fill"
         text={ButtonText}
         maxWidth="500px"
+        disabled={isProcessingButtonClick}
       ></Button>
     </>
   );

@@ -46,8 +46,10 @@ import { formatDate } from "@/Cabinet/utils/dateUtils";
 
 const AGUCabinetReturnSection = ({
   handleButtonClick,
+  isProcessingButtonClick,
 }: {
   handleButtonClick: (key: string, callback: () => void) => void;
+  isProcessingButtonClick: boolean;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const myLentInfo =
@@ -161,6 +163,7 @@ const AGUCabinetReturnSection = ({
         text="네, 반납할게요"
         theme="fill"
         maxWidth="500px"
+        disabled={isProcessingButtonClick}
       />
       <ButtonContainer
         onClick={(e) => {
@@ -171,6 +174,7 @@ const AGUCabinetReturnSection = ({
         text="취소"
         theme="grayLine"
         maxWidth="500px"
+        disabled={isProcessingButtonClick}
       />
     </>
   );

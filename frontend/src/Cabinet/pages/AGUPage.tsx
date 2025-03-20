@@ -12,7 +12,8 @@ import useDebounce from "@/Cabinet/hooks/useDebounce";
 
 const AGUPage = () => {
   // TODO: animation
-  const [isLoading, setIsLoading] = useState(true);
+  const [isFetchingMyLentInfo, setIsFetchingMyLentInfo] = useState(true);
+  const [isProcessingButtonClick, setIsProcessingButtonClick] = useState(false);
   const [userId, setUserId] = useState(0);
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -20,7 +21,7 @@ const AGUPage = () => {
   const aguToken = getCookie("agu_token");
 
   const getMyLentInfo = async () => {
-    setIsLoading(true);
+    setIsFetchingMyLentInfo(true);
     try {
       const response = await axiosMyLentInfo();
       setMyLentInfo(response.data);
@@ -28,34 +29,45 @@ const AGUPage = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setIsLoading(false);
+      setIsFetchingMyLentInfo(false);
     }
   };
 
   useEffect(() => {
     if (aguToken) {
       getMyLentInfo();
-    } else setIsLoading(false);
+    } else setIsFetchingMyLentInfo(false);
   }, []);
 
   const handleButtonClick = (key: string, callback: () => void) => {
-    debounce(key, callback, 100);
+    setIsProcessingButtonClick(true);
+    debounce(
+      key,
+      async () => {
+        await callback();
+        setIsProcessingButtonClick(false);
+      },
+      100
+    );
   };
 
   return (
     <WrapperStyled>
-      {isLoading ? (
+      {isFetchingMyLentInfo ? (
         <LoadingAnimation />
       ) : (
         <>
           <UtilsSectionStyled></UtilsSectionStyled>
           <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
           {aguToken && userId ? (
-            <AGUCabinetReturnSection handleButtonClick={handleButtonClick} />
+            <AGUCabinetReturnSection
+              handleButtonClick={handleButtonClick}
+              isProcessingButtonClick={isProcessingButtonClick}
+            />
           ) : (
             <AGUMailVerificationSection
               handleButtonClick={handleButtonClick}
-              // setIsLoading={setIsLoading}
+              isProcessingButtonClick={isProcessingButtonClick}
             />
           )}
         </>
