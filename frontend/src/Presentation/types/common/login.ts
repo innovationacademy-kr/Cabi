@@ -1,4 +1,4 @@
-export type LoginProvider = "42" | "google";
+export type LoginProvider = "42" | "google" | "kakao" | "github";
 
 export interface ISocialLoginConfig {
   authUrl: string;

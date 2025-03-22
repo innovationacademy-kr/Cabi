@@ -4,14 +4,14 @@ import { axiosReissueToken } from "@/Cabinet/api/axios/axios.custom";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 
-export const instance = axios.create({
+const instance = axios.create({
   baseURL: import.meta.env.VITE_BE_HOST,
   withCredentials: true,
   xsrfCookieName: "XSRF-TOKEN",
   xsrfHeaderName: "X-XSRF-TOKEN",
 });
 
-export const setAuthorizationHeader = (
+const setAuthorizationHeader = (
   config: InternalAxiosRequestConfig,
   token?: string
 ) => {
@@ -33,7 +33,7 @@ instance.interceptors.request.use(async (config) => {
   return config;
 });
 
-export const redirectToLoginWithAlert = (error: any) => {
+const redirectToLoginWithAlert = (error: any) => {
   window.location.href = "login";
   alert(error.response?.data?.message || "로그인이 필요합니다.");
 };

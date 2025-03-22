@@ -31,4 +31,28 @@ export const AUTH_CONFIG: Record<LoginProvider, ISocialLoginConfig> = {
       }),
     },
   },
+  kakao: {
+    authUrl: `${OAUTH_URL}/kakao`,
+    display: {
+      text: "kakao 로그인",
+      backgroundColor: "blue",
+      fontColor: "#000000",
+      icon: React.createElement("img", {
+        src: "/src/Cabinet/assets/images/google_logo.svg",
+        alt: "kakao",
+      }),
+    },
+  },
+  github: {
+    authUrl: `${OAUTH_URL}/github`,
+    display: {
+      text: "gitHub 로그인",
+      backgroundColor: "green",
+      fontColor: "#000000",
+      icon: React.createElement("img", {
+        src: "/src/Cabinet/assets/images/google_logo.svg",
+        alt: "gitHub",
+      }),
+    },
+  },
 };

@@ -1,21 +1,12 @@
-import { HttpStatusCode } from "axios";
 import React from "react";
 import styled from "styled-components";
-import {
-  axiosDisconnectSocialAccount,
-  axiosReissueToken,
-} from "@/Cabinet/api/axios/axios.custom";
-import instance, {
-  redirectToLoginWithAlert,
-  setAuthorizationHeader,
-} from "@/Cabinet/api/axios/axios.instance";
-import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
+import Card from "@/Cabinet/components/Card/Card";
+import { axiosDisconnectSocialAccount } from "@/Cabinet/api/axios/axios.custom";
 import {
   getEnabledProviders,
   getSocialDisplayInfo,
 } from "@/Cabinet/utils/loginUtils";
 import { LoginProvider } from "@/Presentation/types/common/login";
-import Card from "../Card";
 
 interface IOAuthConnection {
   providerType: string;
@@ -65,7 +56,7 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
     };
   });
 
-  const test1 = async () => {
+  const tryDisconnectSocialAccount = async () => {
     try {
       const mailState = userOauthConnections[0].email;
       const providerTypeState = userOauthConnections[0].providerType;
@@ -82,52 +73,9 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
     }
   };
 
-  const handleReissueToken = async () => {
-    // const token = getCookie("access_token");
-    const domain =
-      import.meta.env.VITE_IS_LOCAL === "true"
-        ? "localhost"
-        : "cabi.42seoul.io";
-
-    // if (!token) {
-    //   const isAGUPage = window.location.pathname === "/agu";
-    //   if (isAGUPage) {
-    //     removeCookie("agu_token", {
-    //       path: "/",
-    //       domain,
-    //     });
-    //   }
-    //   return Promise.reject(error);
-    // }
-
-    try {
-      const response = await axiosReissueToken(); // refresh token으로 access token 재발급
-
-      if (response.status === HttpStatusCode.Ok) {
-        // const originalRequest = error.config;
-        // const newToken = getCookie("access_token");
-        // setAuthorizationHeader(originalRequest, newToken);
-        // return instance(originalRequest);
-        return;
-      }
-    } catch (error) {
-      console.error("Token reissue failed:", error);
-    }
-
-    removeCookie("access_token", {
-      path: "/",
-      domain,
-    });
-
-    // redirectToLoginWithAlert(error);
-
-    // return Promise.reject(error);
+  const handleButton = () => {
+    tryDisconnectSocialAccount();
   };
-
-  async function handleButton() {
-    await test1();
-    // await handleReissueToken();
-  }
 
   return (
     <Card
@@ -154,16 +102,21 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
 
                 return (
                   <ConnectionItem key={index}>
-                    <IconContainer>
-                      <IconWrapper>{displayInfo.icon}</IconWrapper>
-                    </IconContainer>
-                    <ConnectionInfo>
-                      <ProviderName>
-                        {connection.providerType.charAt(0).toUpperCase() +
-                          connection.providerType.slice(1)}
-                      </ProviderName>
-                      <Email>{connection.email}</Email>
-                    </ConnectionInfo>
+                    <ProviderInfoWrapper>
+                      <IconContainer>
+                        {/* <IconWrapper>
+                        </IconWrapper> */}
+                        {displayInfo.icon}
+                      </IconContainer>
+                      <ConnectionInfo>
+                        <ProviderName>
+                          {connection.providerType.charAt(0).toUpperCase() +
+                            connection.providerType.slice(1)}
+                        </ProviderName>
+                        <Email>{connection.email}</Email>
+                      </ConnectionInfo>
+                    </ProviderInfoWrapper>
+                    <ButtonTest>+</ButtonTest>
                   </ConnectionItem>
                 );
               })}
@@ -195,9 +148,10 @@ const ConnectionsList = styled.div`
 const ConnectionItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 12px;
+  padding: 12px 16px 12px 12px;
   background-color: var(--card-content-bg-color);
   border-radius: 8px;
+  justify-content: space-between;
 `;
 
 const IconContainer = styled.div`
@@ -205,7 +159,10 @@ const IconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 20px;
+  height: 20px;
 `;
+// TODO : IconContainer가 필요한가?
 
 const IconWrapper = styled.div`
   width: 24px;
@@ -227,7 +184,7 @@ const ConnectionInfo = styled.div`
 `;
 
 const ProviderName = styled.div`
-  font-weight: bold;
+  /* font-weight: bold; */
   font-size: 14px;
   margin-bottom: 4px;
   color: var(--normal-text-color);
@@ -236,6 +193,7 @@ const ProviderName = styled.div`
 const Email = styled.div`
   font-size: 12px;
   color: var(--gray-text-color);
+  color: var(--ref-gray-500);
 `;
 
 const EmptyState = styled.div`
@@ -248,6 +206,21 @@ const EmptyState = styled.div`
   font-size: 14px;
   background-color: var(--card-content-bg-color);
   border-radius: 8px;
+`;
+
+const ButtonTest = styled.button`
+  width: 16px;
+  height: 16px;
+  color: black;
+  font-size: 16px;
+  padding: 0;
+  line-height: 16px;
+`;
+// TODO : svg 파일로 대체. 연동 / 연동 해지 버튼
+
+const ProviderInfoWrapper = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export default SnsConnectionCard;
