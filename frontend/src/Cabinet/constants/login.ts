@@ -23,6 +23,7 @@ export const AUTH_CONFIG: Record<LoginProvider, ISocialLoginConfig> = {
     authUrl: `${OAUTH_URL}/google`,
     display: {
       text: "Google 로그인",
+      // TODO : " 로그인" 삭제하고 -> 로그인 페이지에서만 " 로그인" 붙이기
       backgroundColor: "#FFFFFF",
       fontColor: "#000000",
       icon: React.createElement("img", {

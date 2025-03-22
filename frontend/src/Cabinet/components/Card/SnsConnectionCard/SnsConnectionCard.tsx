@@ -35,7 +35,6 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
   onConnectService,
 }) => {
   const setMyLentInfo = useSetRecoilState<UserDto>(userState);
-
   const connectedProviders = userOauthConnections
     ? userOauthConnections.map(
         (conn) => conn.providerType.toLowerCase() as LoginProvider
@@ -44,15 +43,12 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
   // TODO : 왜 LoginProvider 타입 캐스팅?
   // console.log("connectedProviders : ", connectedProviders);
   // ['google']
-
-  // console.log("userOauthConnections : ", userOauthConnections);
-  // [{email: 'jeekimin3@gmail.com', providerType: 'google'}]
   const allProviders = getEnabledProviders();
   // console.log("allProviders : ", allProviders);
-
   // allProviders에서 42(excludeProviders) 제외한 프로바이더 배열
-  const allProvidersWO42 = allProviders.filter((elem) => elem !== "42");
-
+  const allProvidersWO42: LoginProvider[] = allProviders.filter(
+    (elem) => elem !== "42"
+  );
   const oauthConnectionAry: IOAuthConnection[] = allProvidersWO42.map(
     (provider) => {
       if (connectedProviders.includes(provider)) {
@@ -82,18 +78,8 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
   // console.log("availableProviders : ", availableProviders);
   // ['kakao', 'github']
 
-  const cardButtons = availableProviders.map((provider) => {
-    const displayInfo = getSocialDisplayInfo(provider);
-    console.log("displayInfo : ", displayInfo);
-    return {
-      label: displayInfo.text.replace(" 로그인", " 연동"),
-      onClick: () => onConnectService(provider),
-      backgroundColor: displayInfo.backgroundColor,
-      fontColor: displayInfo.fontColor,
-      icon: null,
-      isClickable: true,
-    };
-  });
+  // console.log("userOauthConnections : ", userOauthConnections);
+  // [{email: 'jeekimin3@gmail.com', providerType: 'google'}]
 
   const getMyInfo = async () => {
     try {
@@ -125,14 +111,7 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
   };
 
   return (
-    <Card
-      title="소셜 로그인"
-      gridArea="snsConnection"
-      height="290px"
-      // buttons={cardButtons}
-    >
-      {/* <CardContent> */}
-      {/* <ConnectionsList> */}
+    <Card title="소셜 로그인" gridArea="snsConnection" height="290px">
       <>
         {oauthConnectionAry.map((connection) => {
           const providerKey =
@@ -147,8 +126,7 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
                   <IconWrapperStyled>{displayInfo.icon}</IconWrapperStyled>
                   <ConnectionInfo>
                     <ProviderName>
-                      {connection.providerType.charAt(0).toUpperCase() +
-                        connection.providerType.slice(1)}
+                      {displayInfo.text.replace(" 로그인", "")}
                     </ProviderName>
                     <Email isConnected={isConnected}>{connection.email}</Email>
                   </ConnectionInfo>
@@ -170,6 +148,19 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
     </Card>
   );
 };
+
+// const cardButtons = availableProviders.map((provider) => {
+//   const displayInfo = getSocialDisplayInfo(provider);
+//   console.log("displayInfo : ", displayInfo);
+//   return {
+//     label: displayInfo.text.replace(" 로그인", " 연동"),
+//     onClick: () => onConnectService(provider),
+//     backgroundColor: displayInfo.backgroundColor,
+//     fontColor: displayInfo.fontColor,
+//     icon: null,
+//     isClickable: true,
+//   };
+// });
 
 const IconWrapperStyled = styled.div`
   margin-right: 14px;
