@@ -5,6 +5,8 @@ import {
   CardContentStyled,
   CardContentWrapper,
 } from "@/Cabinet/components/Card/CardStyles";
+import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
+import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
 import { axiosDisconnectSocialAccount } from "@/Cabinet/api/axios/axios.custom";
 import {
   getEnabledProviders,
@@ -122,6 +124,7 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
           const providerKey =
             connection.providerType.toLowerCase() as LoginProvider;
           const displayInfo = getSocialDisplayInfo(providerKey);
+          const isConnected = connectedProviders.includes(providerKey);
 
           return (
             <CardContentWrapper>
@@ -133,10 +136,12 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
                       {connection.providerType.charAt(0).toUpperCase() +
                         connection.providerType.slice(1)}
                     </ProviderName>
-                    <Email>{connection.email}</Email>
+                    <Email isConnected={isConnected}>{connection.email}</Email>
                   </ConnectionInfo>
                 </ProviderInfoWrapper>
-                <ButtonTest>+</ButtonTest>
+                <ButtonWrapperStyled>
+                  {isConnected ? <PlusCircleIcon /> : <MinusCircleIcon />}
+                </ButtonWrapperStyled>
               </CardContentStyled>
             </CardContentWrapper>
           );
@@ -164,35 +169,17 @@ const ProviderName = styled.div`
   color: var(--normal-text-color);
 `;
 
-const Email = styled.div`
-  font-size: 14px;
+const Email = styled.div<{ isConnected: boolean }>`
+  font-size: ${(props) => (props.isConnected ? "14px" : "13px")};
   color: var(--gray-text-color);
   color: var(--ref-gray-500);
   margin-top: 5px;
 `;
 
-const EmptyState = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 120px;
-  width: 100%;
-  color: var(--gray-text-color);
-  font-size: 14px;
-  background-color: var(--card-content-bg-color);
-  border-radius: 8px;
-`;
-
-const ButtonTest = styled.button`
-  width: 16px;
-  height: 16px;
-  color: black;
-  font-size: 16px;
-  padding: 0;
-  line-height: 16px;
+const ButtonWrapperStyled = styled.div`
   margin-right: 10px;
+  /* TODO : stroke-width 더 크게? */
 `;
-// TODO : svg 파일로 대체. 연동 / 연동 해지 버튼
 
 const ProviderInfoWrapper = styled.div`
   display: flex;
