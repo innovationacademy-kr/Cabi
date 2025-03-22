@@ -1,6 +1,15 @@
+import { HttpStatusCode } from "axios";
 import React from "react";
 import styled from "styled-components";
-import { axiosDisconnectSocialAccount } from "@/Cabinet/api/axios/axios.custom";
+import {
+  axiosDisconnectSocialAccount,
+  axiosReissueToken,
+} from "@/Cabinet/api/axios/axios.custom";
+import instance, {
+  redirectToLoginWithAlert,
+  setAuthorizationHeader,
+} from "@/Cabinet/api/axios/axios.instance";
+import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import {
   getEnabledProviders,
   getSocialDisplayInfo,
@@ -8,17 +17,17 @@ import {
 import { LoginProvider } from "@/Presentation/types/common/login";
 import Card from "../Card";
 
-interface OAuthConnection {
+interface IOAuthConnection {
   providerType: string;
   email: string;
 }
 
-interface SnsConnectionCardProps {
-  userOauthConnections: OAuthConnection[];
+interface ISnsConnectionCardProps {
+  userOauthConnections: IOAuthConnection[];
   onConnectService: (provider: LoginProvider) => void;
 }
 
-const SnsConnectionCard: React.FC<SnsConnectionCardProps> = ({
+const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
   userOauthConnections,
   onConnectService,
 }) => {
@@ -45,8 +54,9 @@ const SnsConnectionCard: React.FC<SnsConnectionCardProps> = ({
   console.log("availableProviders : ", availableProviders);
   const cardButtons = availableProviders.map((provider) => {
     const displayInfo = getSocialDisplayInfo(provider);
+    console.log("displayInfo : ", displayInfo);
     return {
-      label: displayInfo.text.replace(" 로그인", " 연ㅁ동"),
+      label: displayInfo.text.replace(" 로그인", " 연동"),
       onClick: () => onConnectService(provider),
       backgroundColor: displayInfo.backgroundColor,
       fontColor: displayInfo.fontColor,
@@ -55,7 +65,7 @@ const SnsConnectionCard: React.FC<SnsConnectionCardProps> = ({
     };
   });
 
-  async function handleButton() {
+  const test1 = async () => {
     try {
       const mailState = userOauthConnections[0].email;
       const providerTypeState = userOauthConnections[0].providerType;
@@ -70,6 +80,53 @@ const SnsConnectionCard: React.FC<SnsConnectionCardProps> = ({
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleReissueToken = async () => {
+    // const token = getCookie("access_token");
+    const domain =
+      import.meta.env.VITE_IS_LOCAL === "true"
+        ? "localhost"
+        : "cabi.42seoul.io";
+
+    // if (!token) {
+    //   const isAGUPage = window.location.pathname === "/agu";
+    //   if (isAGUPage) {
+    //     removeCookie("agu_token", {
+    //       path: "/",
+    //       domain,
+    //     });
+    //   }
+    //   return Promise.reject(error);
+    // }
+
+    try {
+      const response = await axiosReissueToken(); // refresh token으로 access token 재발급
+
+      if (response.status === HttpStatusCode.Ok) {
+        // const originalRequest = error.config;
+        // const newToken = getCookie("access_token");
+        // setAuthorizationHeader(originalRequest, newToken);
+        // return instance(originalRequest);
+        return;
+      }
+    } catch (error) {
+      console.error("Token reissue failed:", error);
+    }
+
+    removeCookie("access_token", {
+      path: "/",
+      domain,
+    });
+
+    // redirectToLoginWithAlert(error);
+
+    // return Promise.reject(error);
+  };
+
+  async function handleButton() {
+    await test1();
+    await handleReissueToken();
   }
 
   return (

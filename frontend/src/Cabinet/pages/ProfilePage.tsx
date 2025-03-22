@@ -84,7 +84,7 @@ const ProfilePage = () => {
           <PointColorCardContainer />
           <AlarmCardContainer alarm={myInfo.alarmTypes} />
           <SnsConnectionCardContainer
-            IUserOauthConnection={myInfo.IUserOauthConnection}
+            userOauthConnection={myInfo.userOauthConnection}
           />
         </CardGridWrapper>
       )}
