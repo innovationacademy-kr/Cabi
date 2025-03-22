@@ -96,6 +96,8 @@ const ProfilePage = () => {
 const CardGridWrapper = styled.div`
   display: grid;
   padding: 60px 0;
+  padding: 60px 0 100px 0;
+  /* TODO : 조정 필요 */
   justify-content: center;
   align-items: start;
   width: 100%;

@@ -26,7 +26,7 @@ export const AUTH_CONFIG: Record<LoginProvider, ISocialLoginConfig> = {
       backgroundColor: "#FFFFFF",
       fontColor: "#000000",
       icon: React.createElement("img", {
-        src: "/src/Cabinet/assets/images/google_logo.svg",
+        src: "/src/Cabinet/assets/images/googleLogo.svg",
         alt: "Google",
       }),
     },
@@ -38,7 +38,7 @@ export const AUTH_CONFIG: Record<LoginProvider, ISocialLoginConfig> = {
       backgroundColor: "blue",
       fontColor: "#000000",
       icon: React.createElement("img", {
-        src: "/src/Cabinet/assets/images/google_logo.svg",
+        src: "/src/Cabinet/assets/images/googleLogo.svg",
         alt: "kakao",
       }),
     },
@@ -50,7 +50,7 @@ export const AUTH_CONFIG: Record<LoginProvider, ISocialLoginConfig> = {
       backgroundColor: "green",
       fontColor: "#000000",
       icon: React.createElement("img", {
-        src: "/src/Cabinet/assets/images/google_logo.svg",
+        src: "/src/Cabinet/assets/images/googleLogo.svg",
         alt: "gitHub",
       }),
     },
