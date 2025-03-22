@@ -126,7 +126,7 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
 
   async function handleButton() {
     await test1();
-    await handleReissueToken();
+    // await handleReissueToken();
   }
 
   return (
