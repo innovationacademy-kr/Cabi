@@ -102,14 +102,10 @@ public class OauthLinkFacadeService {
 		}
 
 		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(refreshToken);
-		if (!"ft".equals(userInfoDto.getOauth())) {
-			throw new SpringSecurityException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
-		}
+		User user = userQueryService.getUser(userInfoDto.getUserId());
 		if (oauthLinkQueryService.isExistByUserId(userInfoDto.getUserId())) {
 			throw new SpringSecurityException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
 		}
-
-		User user = userQueryService.getUser(userInfoDto.getUserId());
 		OauthLink connection =
 				OauthLink.of(user, providerType, providerId, oauthMail);
 		oauthLinkCommandService.save(connection);
