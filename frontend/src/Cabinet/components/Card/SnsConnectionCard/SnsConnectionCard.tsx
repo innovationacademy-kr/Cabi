@@ -180,11 +180,28 @@ const Email = styled.div<{ isConnected: boolean }>`
 
 const ButtonWrapperStyled = styled.div`
   margin-right: 10px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > svg {
+    width: 16px;
+    height: 16px;
+  }
 
   :hover {
     cursor: pointer;
   }
-  /* TODO : stroke-width 더 크게? */
+
+  & > svg > circle {
+    stroke-width: 1.2;
+  }
+
+  & > svg > path {
+    stroke-width: 1.2;
+  }
 `;
 
 const ProviderInfoWrapper = styled.div`
