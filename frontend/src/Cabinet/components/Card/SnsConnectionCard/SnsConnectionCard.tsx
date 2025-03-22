@@ -1,5 +1,7 @@
 import React from "react";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { userState } from "@/Cabinet/recoil/atoms";
 import Card from "@/Cabinet/components/Card/Card";
 import {
   CardContentStyled,
@@ -7,7 +9,11 @@ import {
 } from "@/Cabinet/components/Card/CardStyles";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
-import { axiosDisconnectSocialAccount } from "@/Cabinet/api/axios/axios.custom";
+import { UserDto } from "@/Cabinet/types/dto/user.dto";
+import {
+  axiosDisconnectSocialAccount,
+  axiosMyInfo,
+} from "@/Cabinet/api/axios/axios.custom";
 import {
   getEnabledProviders,
   getSocialDisplayInfo,
@@ -28,52 +34,53 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
   userOauthConnections,
   onConnectService,
 }) => {
+  const setMyLentInfo = useSetRecoilState<UserDto>(userState);
+
   const connectedProviders = userOauthConnections
     ? userOauthConnections.map(
         (conn) => conn.providerType.toLowerCase() as LoginProvider
       )
     : [];
   // TODO : 왜 LoginProvider 타입 캐스팅?
-  console.log("connectedProviders : ", connectedProviders);
+  // console.log("connectedProviders : ", connectedProviders);
   // ['google']
 
-  console.log("userOauthConnections : ", userOauthConnections);
+  // console.log("userOauthConnections : ", userOauthConnections);
   // [{email: 'jeekimin3@gmail.com', providerType: 'google'}]
   const allProviders = getEnabledProviders();
-  console.log("allProviders : ", allProviders);
+  // console.log("allProviders : ", allProviders);
+
   // allProviders에서 42(excludeProviders) 제외한 프로바이더 배열
   const allProvidersWO42 = allProviders.filter((elem) => elem !== "42");
-  console.log("allProvidersWO42 : ", allProvidersWO42);
 
   const oauthConnectionAry: IOAuthConnection[] = allProvidersWO42.map(
-    (elem) => {
-      if (connectedProviders.includes(elem)) {
-        const test = userOauthConnections.find((elem2) => {
-          console.log(elem2.providerType.toLocaleLowerCase(), elem);
-          return elem2.providerType.toLocaleLowerCase() == elem;
-        });
-        console.log("test : ", test);
-        return test!;
+    (provider) => {
+      if (connectedProviders.includes(provider)) {
+        const userOauthConnection = userOauthConnections.find(
+          (connection) =>
+            connection.providerType.toLocaleLowerCase() == provider
+        );
+        return userOauthConnection!;
       } else {
         return {
-          providerType: elem,
+          providerType: provider,
           email: "연결되지 않았습니다",
         };
       }
     }
   );
-  console.log("oauthConnectionAry : ", oauthConnectionAry);
+  // console.log("oauthConnectionAry : ", oauthConnectionAry);
   // ['42', 'google', 'kakao', 'github']
   const excludeProviders: LoginProvider[] = ["42"];
-  console.log("excludeProviders : ", excludeProviders);
+  // console.log("excludeProviders : ", excludeProviders);
   // ['42']
   const availableProviders = allProviders.filter(
     (provider) =>
       !excludeProviders.includes(provider) &&
       !connectedProviders.includes(provider)
   ); // 아직 연동 안된 프로바이더
+  // console.log("availableProviders : ", availableProviders);
   // ['kakao', 'github']
-  console.log("availableProviders : ", availableProviders);
 
   const cardButtons = availableProviders.map((provider) => {
     const displayInfo = getSocialDisplayInfo(provider);
@@ -88,18 +95,26 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
     };
   });
 
+  const getMyInfo = async () => {
+    try {
+      const response = await axiosMyInfo();
+      setMyLentInfo(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const tryDisconnectSocialAccount = async () => {
     try {
       const mailState = userOauthConnections[0].email;
       const providerTypeState = userOauthConnections[0].providerType;
+      // TODO : 배열 중 하나 골라야됨
+
       const response = await axiosDisconnectSocialAccount(
         mailState,
         providerTypeState
       );
-      console.log(response);
-      // TODO : 배열 중 하나 골라야됨
-
-      // setMyLentInfoState(myLentInfo);
+      await getMyInfo();
     } catch (error) {
       console.error(error);
     }
@@ -116,18 +131,17 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
       height="290px"
       // buttons={cardButtons}
     >
-      {/* <button onClick={handleButton}>연동 해지</button> */}
       {/* <CardContent> */}
       {/* <ConnectionsList> */}
       <>
-        {oauthConnectionAry.map((connection, index) => {
+        {oauthConnectionAry.map((connection) => {
           const providerKey =
             connection.providerType.toLowerCase() as LoginProvider;
           const displayInfo = getSocialDisplayInfo(providerKey);
           const isConnected = connectedProviders.includes(providerKey);
 
           return (
-            <CardContentWrapper>
+            <CardContentWrapper key={providerKey}>
               <CardContentStyled>
                 <ProviderInfoWrapper>
                   <IconWrapperStyled>{displayInfo.icon}</IconWrapperStyled>
@@ -143,7 +157,9 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
                   {isConnected ? (
                     <MinusCircleIcon onClick={handleButton} />
                   ) : (
-                    <PlusCircleIcon />
+                    <PlusCircleIcon
+                      onClick={() => onConnectService(providerKey)}
+                    />
                   )}
                 </ButtonWrapperStyled>
               </CardContentStyled>
