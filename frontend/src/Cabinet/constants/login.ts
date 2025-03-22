@@ -2,7 +2,7 @@ import React from "react";
 import {
   ISocialLoginConfig,
   LoginProvider,
-} from "@/Presentation/types/common/login";
+} from "@/Presentation/types/common/loginType";
 
 const OAUTH_URL = `${import.meta.env.VITE_BE_HOST}/oauth2/authorization`;
 

@@ -6,7 +6,7 @@ import {
   getEnabledProviders,
   getSocialDisplayInfo,
 } from "@/Cabinet/utils/loginUtils";
-import { LoginProvider } from "@/Presentation/types/common/login";
+import { LoginProvider } from "@/Presentation/types/common/loginType";
 
 interface IOAuthConnection {
   providerType: string;
@@ -27,22 +27,48 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
         (conn) => conn.providerType.toLowerCase() as LoginProvider
       )
     : [];
+  // TODO : 왜 LoginProvider 타입 캐스팅?
+  console.log("connectedProviders : ", connectedProviders);
+  // ['google']
 
   console.log("userOauthConnections : ", userOauthConnections);
   // [{email: 'jeekimin3@gmail.com', providerType: 'google'}]
-  console.log("connectedProviders : ", connectedProviders);
   const allProviders = getEnabledProviders();
   console.log("allProviders : ", allProviders);
+  // allProviders에서 42(excludeProviders) 제외한 프로바이더 배열
+  const allProvidersWO42 = allProviders.filter((elem) => elem !== "42");
+  console.log("allProvidersWO42 : ", allProvidersWO42);
 
+  const oauthConnectionAry: IOAuthConnection[] = allProvidersWO42.map(
+    (elem) => {
+      if (connectedProviders.includes(elem)) {
+        const test = userOauthConnections.find((elem2) => {
+          console.log(elem2.providerType.toLocaleLowerCase(), elem);
+          return elem2.providerType.toLocaleLowerCase() == elem;
+        });
+        console.log("test : ", test);
+        return test!;
+      } else {
+        return {
+          providerType: elem,
+          email: "",
+        };
+      }
+    }
+  );
+  console.log("oauthConnectionAry : ", oauthConnectionAry);
+  // ['42', 'google', 'kakao', 'github']
   const excludeProviders: LoginProvider[] = ["42"];
   console.log("excludeProviders : ", excludeProviders);
-
+  // ['42']
   const availableProviders = allProviders.filter(
     (provider) =>
       !excludeProviders.includes(provider) &&
       !connectedProviders.includes(provider)
-  );
+  ); // 아직 연동 안된 프로바이더
+  // ['kakao', 'github']
   console.log("availableProviders : ", availableProviders);
+
   const cardButtons = availableProviders.map((provider) => {
     const displayInfo = getSocialDisplayInfo(provider);
     console.log("displayInfo : ", displayInfo);
@@ -86,6 +112,42 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
     >
       <CardContent>
         <button onClick={handleButton}>연동 해지</button>
+        {/* {userOauthConnections?.length > 0 ? (
+          <ConnectionsList>
+            {userOauthConnections
+              .filter((connection) => {
+                // 42는 표시하지 않음
+                const providerKey =
+                  connection.providerType.toLowerCase() as LoginProvider;
+                return providerKey !== "42";
+              })
+              .map((connection, index) => {
+                const providerKey =
+                  connection.providerType.toLowerCase() as LoginProvider;
+                const displayInfo = getSocialDisplayInfo(providerKey);
+
+                return (
+                  <ConnectionItem key={index}>
+                    <ProviderInfoWrapper>
+                      <IconContainer>
+                        {displayInfo.icon}
+                      </IconContainer>
+                      <ConnectionInfo>
+                        <ProviderName>
+                          {connection.providerType.charAt(0).toUpperCase() +
+                            connection.providerType.slice(1)}
+                        </ProviderName>
+                        <Email>{connection.email}</Email>
+                      </ConnectionInfo>
+                    </ProviderInfoWrapper>
+                    <ButtonTest>+</ButtonTest>
+                  </ConnectionItem>
+                );
+              })}
+          </ConnectionsList>
+        ) : (
+          <EmptyState>연동된 계정이 없습니다</EmptyState>
+        )} */}
         {userOauthConnections?.length > 0 ? (
           <ConnectionsList>
             {userOauthConnections

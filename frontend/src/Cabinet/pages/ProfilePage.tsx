@@ -85,6 +85,7 @@ const ProfilePage = () => {
           <AlarmCardContainer alarm={myInfo.alarmTypes} />
           <SnsConnectionCardContainer
             userOauthConnection={myInfo.userOauthConnection}
+            // TODO : 백에서 받은 연동된 데이터
           />
         </CardGridWrapper>
       )}

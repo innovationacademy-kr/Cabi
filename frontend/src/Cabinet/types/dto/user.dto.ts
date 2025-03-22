@@ -1,7 +1,7 @@
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import { LentExtensionDto } from "@/Cabinet/types/dto/lent.dto";
-import { IUserOauthConnection } from "@/Presentation/types/common/login";
+import { IUserOauthConnection } from "@/Presentation/types/common/loginType";
 
 /**
  * @description 유저 정보

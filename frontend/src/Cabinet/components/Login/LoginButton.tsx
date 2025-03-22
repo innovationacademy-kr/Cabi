@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { ISocialLoginConfig } from "@/Presentation/types/common/login";
+import { ISocialLoginConfig } from "@/Presentation/types/common/loginType";
 
 interface LoginButtonProps {
   onLogin: () => void;

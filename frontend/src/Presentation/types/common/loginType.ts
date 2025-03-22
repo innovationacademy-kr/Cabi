@@ -14,3 +14,5 @@ export interface IUserOauthConnection {
   email: string;
   providerType: LoginProvider;
 }
+
+// TODO : 위치 변경 필요 - Cabinet으로

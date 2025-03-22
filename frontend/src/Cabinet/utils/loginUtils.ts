@@ -1,7 +1,7 @@
 import {
   ISocialLoginConfig,
   LoginProvider,
-} from "@/Presentation/types/common/login";
+} from "@/Presentation/types/common/loginType";
 import { AUTH_CONFIG } from "../constants/login";
 
 export const getEnabledProviders = (): LoginProvider[] => {
