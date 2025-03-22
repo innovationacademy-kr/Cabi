@@ -96,22 +96,20 @@ const ProfilePage = () => {
 const CardGridWrapper = styled.div`
   display: grid;
   padding: 60px 0;
-  padding: 60px 0 100px 0;
-  /* TODO : 조정 필요 */
   justify-content: center;
   align-items: start;
   width: 100%;
   grid-gap: 20px;
   grid-template-columns: 350px 350px;
-  grid-template-rows: 163px 183px 230px 230px;
+  grid-template-rows: 163px 183px 230px 290px;
   grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "displayStyle lentInfo" // h: 183px
     "pointColor alarm" // h: 230px h: 230px
-    "snsConnection snsConnection"; // h: 230px
+    "snsConnection snsConnection"; // h: 290px
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
-    grid-template-rows: 163px 366px 183px 230px 230px 230px;
+    grid-template-rows: 163px 366px 183px 230px 230px 290px;
     grid-template-areas:
       "profile"
       "lentInfo"

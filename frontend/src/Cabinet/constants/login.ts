@@ -50,7 +50,7 @@ export const AUTH_CONFIG: Record<LoginProvider, ISocialLoginConfig> = {
       backgroundColor: "green",
       fontColor: "#000000",
       icon: React.createElement("img", {
-        src: "/src/Cabinet/assets/images/googleLogo.svg",
+        src: "/src/Cabinet/assets/images/githubLogo.svg",
         alt: "gitHub",
       }),
     },
