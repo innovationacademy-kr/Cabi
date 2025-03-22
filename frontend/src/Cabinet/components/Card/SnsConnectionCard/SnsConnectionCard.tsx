@@ -111,7 +111,7 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
     <Card
       title="소셜 로그인"
       gridArea="snsConnection"
-      height="278px"
+      height="290px"
       // buttons={cardButtons}
     >
       {/* <button onClick={handleButton}>연동 해지</button> */}
@@ -147,28 +147,12 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
 };
 
 const IconContainer = styled.div`
-  margin-right: 12px;
+  margin-right: 14px;
   display: flex;
-  align-items: center;
-  justify-content: center;
   width: 20px;
   height: 20px;
 `;
 // TODO : IconContainer가 필요한가?
-
-const IconWrapper = styled.div`
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-  }
-`;
 
 const ConnectionInfo = styled.div`
   display: flex;
@@ -176,13 +160,12 @@ const ConnectionInfo = styled.div`
 `;
 
 const ProviderName = styled.div`
-  /* font-weight: bold; */
-  font-size: 14px;
+  font-size: 16px;
   color: var(--normal-text-color);
 `;
 
 const Email = styled.div`
-  font-size: 12px;
+  font-size: 14px;
   color: var(--gray-text-color);
   color: var(--ref-gray-500);
   margin-top: 5px;
