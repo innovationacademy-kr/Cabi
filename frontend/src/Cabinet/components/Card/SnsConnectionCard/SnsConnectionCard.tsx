@@ -130,7 +130,7 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
             <CardContentWrapper>
               <CardContentStyled>
                 <ProviderInfoWrapper>
-                  <IconContainer>{displayInfo.icon}</IconContainer>
+                  <IconWrapperStyled>{displayInfo.icon}</IconWrapperStyled>
                   <ConnectionInfo>
                     <ProviderName>
                       {connection.providerType.charAt(0).toUpperCase() +
@@ -140,7 +140,11 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
                   </ConnectionInfo>
                 </ProviderInfoWrapper>
                 <ButtonWrapperStyled>
-                  {isConnected ? <PlusCircleIcon /> : <MinusCircleIcon />}
+                  {isConnected ? (
+                    <MinusCircleIcon onClick={handleButton} />
+                  ) : (
+                    <PlusCircleIcon />
+                  )}
                 </ButtonWrapperStyled>
               </CardContentStyled>
             </CardContentWrapper>
@@ -151,13 +155,11 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
   );
 };
 
-const IconContainer = styled.div`
+const IconWrapperStyled = styled.div`
   margin-right: 14px;
   display: flex;
   width: 20px;
-  height: 20px;
 `;
-// TODO : IconContainer가 필요한가?
 
 const ConnectionInfo = styled.div`
   display: flex;
@@ -178,6 +180,10 @@ const Email = styled.div<{ isConnected: boolean }>`
 
 const ButtonWrapperStyled = styled.div`
   margin-right: 10px;
+
+  :hover {
+    cursor: pointer;
+  }
   /* TODO : stroke-width 더 크게? */
 `;
 
