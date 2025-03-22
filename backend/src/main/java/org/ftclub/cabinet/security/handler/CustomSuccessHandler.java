@@ -3,6 +3,7 @@ package org.ftclub.cabinet.security.handler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,16 +33,15 @@ import org.springframework.stereotype.Component;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 
+	private static final List<String> availableProvider =
+			List.of("ft", "google", "kakao", "naver", "github");
 	private final OauthFacadeService oauthFacadeService;
 	private final ObjectMapper objectMapper;
 	private final AuthPolicyService authPolicyService;
 	private final AuthFacadeService authFacadeService;
 	private final SecurityExceptionHandlerManager securityExceptionHandlerManager;
-
 	@Value("${spring.security.oauth2.client.registration.ft.client-name}")
-	private String ftProvider;
-	@Value("${spring.security.oauth2.client.registration.google.client-name}")
-	private String googleProvider;
+	private String mainProvider;
 
 	/**
 	 * oauth2 로그인 성공 후, role에 맞는 인가 부여 및 토큰을 발행합니다.
@@ -83,26 +83,16 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	private OauthResult processOAuthLogin(HttpServletRequest req,
 			String provider, CustomOauth2User oauth2User) {
 
-		if (provider.equals(ftProvider)) {
+		if (provider.equals(mainProvider)) {
 			JsonNode rootNode =
 					objectMapper.convertValue(oauth2User.getAttributes(), JsonNode.class);
 
 			return oauthFacadeService.handleFtLogin(rootNode);
 		}
-		if (isExternalProvider(provider)) {
+		if (availableProvider.contains(provider)) {
 			return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
 		}
 		throw new SpringSecurityException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
-	}
-
-	/**
-	 * 지정한 oauth provider인지 검증합니다.
-	 *
-	 * @param provider
-	 * @return
-	 */
-	private boolean isExternalProvider(String provider) {
-		return provider.equals(googleProvider);
 	}
 
 }
