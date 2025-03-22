@@ -1,6 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
+import {
+  CardContentStyled,
+  CardContentWrapper,
+} from "@/Cabinet/components/Card/CardStyles";
 import { axiosDisconnectSocialAccount } from "@/Cabinet/api/axios/axios.custom";
 import {
   getEnabledProviders,
@@ -51,7 +55,7 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
       } else {
         return {
           providerType: elem,
-          email: "",
+          email: "연결되지 않았습니다",
         };
       }
     }
@@ -105,116 +109,42 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
 
   return (
     <Card
-      title="연동 계정"
+      title="소셜 로그인"
       gridArea="snsConnection"
-      height="230px"
-      buttons={cardButtons}
+      height="278px"
+      // buttons={cardButtons}
     >
-      <CardContent>
-        <button onClick={handleButton}>연동 해지</button>
-        {/* {userOauthConnections?.length > 0 ? (
-          <ConnectionsList>
-            {userOauthConnections
-              .filter((connection) => {
-                // 42는 표시하지 않음
-                const providerKey =
-                  connection.providerType.toLowerCase() as LoginProvider;
-                return providerKey !== "42";
-              })
-              .map((connection, index) => {
-                const providerKey =
-                  connection.providerType.toLowerCase() as LoginProvider;
-                const displayInfo = getSocialDisplayInfo(providerKey);
+      {/* <button onClick={handleButton}>연동 해지</button> */}
+      {/* <CardContent> */}
+      {/* <ConnectionsList> */}
+      <>
+        {oauthConnectionAry.map((connection, index) => {
+          const providerKey =
+            connection.providerType.toLowerCase() as LoginProvider;
+          const displayInfo = getSocialDisplayInfo(providerKey);
 
-                return (
-                  <ConnectionItem key={index}>
-                    <ProviderInfoWrapper>
-                      <IconContainer>
-                        {displayInfo.icon}
-                      </IconContainer>
-                      <ConnectionInfo>
-                        <ProviderName>
-                          {connection.providerType.charAt(0).toUpperCase() +
-                            connection.providerType.slice(1)}
-                        </ProviderName>
-                        <Email>{connection.email}</Email>
-                      </ConnectionInfo>
-                    </ProviderInfoWrapper>
-                    <ButtonTest>+</ButtonTest>
-                  </ConnectionItem>
-                );
-              })}
-          </ConnectionsList>
-        ) : (
-          <EmptyState>연동된 계정이 없습니다</EmptyState>
-        )} */}
-        {userOauthConnections?.length > 0 ? (
-          <ConnectionsList>
-            {userOauthConnections
-              .filter((connection) => {
-                // 42는 표시하지 않음
-                const providerKey =
-                  connection.providerType.toLowerCase() as LoginProvider;
-                return providerKey !== "42";
-              })
-              .map((connection, index) => {
-                const providerKey =
-                  connection.providerType.toLowerCase() as LoginProvider;
-                const displayInfo = getSocialDisplayInfo(providerKey);
-
-                return (
-                  <ConnectionItem key={index}>
-                    <ProviderInfoWrapper>
-                      <IconContainer>
-                        {/* <IconWrapper>
-                        </IconWrapper> */}
-                        {displayInfo.icon}
-                      </IconContainer>
-                      <ConnectionInfo>
-                        <ProviderName>
-                          {connection.providerType.charAt(0).toUpperCase() +
-                            connection.providerType.slice(1)}
-                        </ProviderName>
-                        <Email>{connection.email}</Email>
-                      </ConnectionInfo>
-                    </ProviderInfoWrapper>
-                    <ButtonTest>+</ButtonTest>
-                  </ConnectionItem>
-                );
-              })}
-          </ConnectionsList>
-        ) : (
-          <EmptyState>연동된 계정이 없습니다</EmptyState>
-        )}
-      </CardContent>
+          return (
+            <CardContentWrapper>
+              <CardContentStyled>
+                <ProviderInfoWrapper>
+                  <IconContainer>{displayInfo.icon}</IconContainer>
+                  <ConnectionInfo>
+                    <ProviderName>
+                      {connection.providerType.charAt(0).toUpperCase() +
+                        connection.providerType.slice(1)}
+                    </ProviderName>
+                    <Email>{connection.email}</Email>
+                  </ConnectionInfo>
+                </ProviderInfoWrapper>
+                <ButtonTest>+</ButtonTest>
+              </CardContentStyled>
+            </CardContentWrapper>
+          );
+        })}
+      </>
     </Card>
   );
 };
-
-const CardContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  padding: 0 20px 20px 20px;
-  box-sizing: border-box;
-`;
-
-const ConnectionsList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-`;
-
-const ConnectionItem = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 12px 16px 12px 12px;
-  background-color: var(--card-content-bg-color);
-  border-radius: 8px;
-  justify-content: space-between;
-`;
 
 const IconContainer = styled.div`
   margin-right: 12px;
@@ -248,7 +178,6 @@ const ConnectionInfo = styled.div`
 const ProviderName = styled.div`
   /* font-weight: bold; */
   font-size: 14px;
-  margin-bottom: 4px;
   color: var(--normal-text-color);
 `;
 
@@ -256,6 +185,7 @@ const Email = styled.div`
   font-size: 12px;
   color: var(--gray-text-color);
   color: var(--ref-gray-500);
+  margin-top: 5px;
 `;
 
 const EmptyState = styled.div`
@@ -277,12 +207,14 @@ const ButtonTest = styled.button`
   font-size: 16px;
   padding: 0;
   line-height: 16px;
+  margin-right: 10px;
 `;
 // TODO : svg 파일로 대체. 연동 / 연동 해지 버튼
 
 const ProviderInfoWrapper = styled.div`
   display: flex;
   align-items: center;
+  margin-left: 10px;
 `;
 
 export default SnsConnectionCard;
