@@ -14,16 +14,16 @@ import { LoginProvider } from "@/Presentation/types/common/loginType";
 interface ISnsConnectionCardProps {
   onConnectService: (provider: LoginProvider) => void;
   oauthConnectionAry: IUserOAuthConnectionDto[];
-  connectedProvider: LoginProvider | null;
+  connectedProvider: LoginProvider | "";
   handleButton: () => void;
 }
 
-const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
+const SnsConnectionCard = ({
   onConnectService,
   oauthConnectionAry,
   connectedProvider,
   handleButton,
-}) => {
+}: ISnsConnectionCardProps) => {
   return (
     <Card title="소셜 로그인" gridArea="snsConnection" height="290px">
       <>

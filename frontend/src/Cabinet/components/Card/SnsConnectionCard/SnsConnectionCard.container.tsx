@@ -1,5 +1,4 @@
 import { HttpStatusCode } from "axios";
-import React from "react";
 import { useSetRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import SnsConnectionCard from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCard";
@@ -19,14 +18,13 @@ interface ISnsConnectionCardContainerProps {
   userOauthConnection: IUserOAuthConnectionDto | null;
 }
 
-const SnsConnectionCardContainer: React.FC<
-  ISnsConnectionCardContainerProps
-> = ({ userOauthConnection }) => {
+const SnsConnectionCardContainer = ({
+  userOauthConnection,
+}: ISnsConnectionCardContainerProps) => {
   const setMyLentInfo = useSetRecoilState<UserDto>(userState);
   const connectedProvider = userOauthConnection
     ? (userOauthConnection.providerType.toLowerCase() as LoginProvider)
-    : null;
-  // TODO : null말고 빈 문자열로 바꾸기
+    : "";
   // TODO : 왜 LoginProvider 타입 캐스팅?
   // console.log("connectedProvider : ", connectedProvider);
   // ['google']
@@ -101,7 +99,7 @@ const SnsConnectionCardContainer: React.FC<
     if (authUrl) {
       window.location.replace(authUrl);
     }
-  }; // 서비스 연동 기능 - 유틸리티 함수 사용
+  }; // 서비스 연동 기능 - 유틸리티 함수 사용. 연동 버튼 눌렀을때 실행
 
   return (
     <SnsConnectionCard
