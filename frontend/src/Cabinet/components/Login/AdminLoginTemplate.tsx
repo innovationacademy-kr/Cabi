@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { HttpStatusCode } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -7,7 +7,10 @@ import UnavailableModal from "@/Cabinet/components/Modals/UnavailableModal/Unava
 import { additionalModalType } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as AdminLoginImg } from "@/Cabinet/assets/images/adminLoginImg.svg";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
-import { axiosAdminAuthLogin } from "@/Cabinet/api/axios/axios.custom";
+import {
+  axiosAdminAuthLogin,
+  axiosAdminGetCSRFToken,
+} from "@/Cabinet/api/axios/axios.custom";
 
 const AdminLoginTemplate = (props: {
   url: string;
@@ -31,15 +34,21 @@ const AdminLoginTemplate = (props: {
     setIsClicked(false);
     setShowUnavailableModal(false);
   };
+
   const handleLoginButton = async () => {
     if (adminId === "" || adminPw === "") {
       alert("아이디와 비밀번호를 입력해주세요.");
       return;
     }
     try {
-      const response = await axiosAdminAuthLogin(adminId, adminPw);
-      if (response.status === 200) {
-        navigate("/admin/home");
+      const csrfTokenResponse = await axiosAdminGetCSRFToken();
+
+      if (csrfTokenResponse.status === HttpStatusCode.Ok) {
+        const loginResponse = await axiosAdminAuthLogin(adminId, adminPw);
+
+        if (loginResponse.status === HttpStatusCode.Ok) {
+          navigate("/admin/home");
+        }
       }
     } catch (error) {
       if (

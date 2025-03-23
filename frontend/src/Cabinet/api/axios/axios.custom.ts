@@ -433,13 +433,22 @@ export const axiosUseItem = async (
 };
 
 // Admin API
-const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
+const axiosAdminAuthURL = "/v4/admin/auth";
+export const axiosAdminGetCSRFToken = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosAdminAuthURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const axiosAdminAuthLogin = async (
   id: string,
   password: string
 ): Promise<any> => {
   try {
-    const response = await instance.post(axiosAdminAuthLoginURL, {
+    const response = await instance.post(axiosAdminAuthURL + "/login", {
       id,
       password,
     });
