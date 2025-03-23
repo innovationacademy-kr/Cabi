@@ -18,7 +18,7 @@ const LoginButtonGroup = () => {
     target: null,
   });
   const [searchParams] = useSearchParams();
-  const messageParamValue = searchParams.get("messageParamValue");
+  const messageParamValue = searchParams.get("message");
   const navigator = useNavigate();
 
   useEffect(() => {
