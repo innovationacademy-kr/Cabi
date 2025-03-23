@@ -13,6 +13,14 @@ import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import { axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 
 // TODO : props interface 정의 & 사용
+interface ISnsConnectionCardModalProps {
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currentProvider: TLoginProvider;
+  newProvider: TLoginProvider;
+  tryDisconnectSocialAccount: () => Promise<any>;
+  setMyInfo: SetterOrUpdater<UserDto>;
+  connectService: (provider: TLoginProvider) => void;
+}
 
 // 모달에 관련된건 되도록이면 이 컴포넌트안에.
 const SnsConnectionCardModal = ({
@@ -22,16 +30,7 @@ const SnsConnectionCardModal = ({
   tryDisconnectSocialAccount,
   setMyInfo,
   connectService,
-}: {
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  currentProvider: TLoginProvider | "";
-  newProvider: TLoginProvider;
-  // TODO : newProvider 타입 정의
-  tryDisconnectSocialAccount: () => Promise<any>;
-  setMyInfo: SetterOrUpdater<UserDto>;
-  connectService: (provider: TLoginProvider) => void;
-}) => {
-  // TODO : setIsModalOpen(false)로. 버튼 누르면
+}: ISnsConnectionCardModalProps) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("");

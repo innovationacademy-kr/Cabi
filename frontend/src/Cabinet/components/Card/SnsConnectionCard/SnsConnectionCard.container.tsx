@@ -126,7 +126,8 @@ const SnsConnectionCardContainer = () => {
       {isModalOpen && (
         <SnsConnectionCardModal
           setIsModalOpen={setIsModalOpen}
-          currentProvider={connectedProvider}
+          currentProvider={connectedProvider as TLoginProvider}
+          // TODO : 정리 필요 - modal이 열리면 connectedProvider는 무조건 있음
           newProvider={newProvider}
           tryDisconnectSocialAccount={tryDisconnectSocialAccount}
           setMyInfo={setMyInfo}
