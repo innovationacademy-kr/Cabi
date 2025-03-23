@@ -5,24 +5,24 @@ import {
   CardContentStyled,
   CardContentWrapper,
 } from "@/Cabinet/components/Card/CardStyles";
+import { TLoginProvider } from "@/Cabinet/assets/data/login";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { getSocialDisplayInfo } from "@/Cabinet/utils/loginUtils";
-import { TLoginProvider } from "@/Cabinet/constants/login";
 
 interface ISnsConnectionCardProps {
   onConnectService: (provider: TLoginProvider) => void;
   oAuthConnectionAry: IUserOAuthConnectionDto[];
   connectedProvider: TLoginProvider | "";
-  handleButton: () => void;
+  handleDisconnectButton: () => void;
 }
 
 const SnsConnectionCard = ({
   onConnectService,
   oAuthConnectionAry,
   connectedProvider,
-  handleButton,
+  handleDisconnectButton,
 }: ISnsConnectionCardProps) => {
   return (
     <Card title="소셜 로그인" gridArea="snsConnection" height="290px">
@@ -47,7 +47,7 @@ const SnsConnectionCard = ({
                 </ProviderInfoWrapper>
                 <ButtonWrapperStyled>
                   {isConnected ? (
-                    <MinusCircleIcon onClick={handleButton} />
+                    <MinusCircleIcon onClick={handleDisconnectButton} />
                   ) : (
                     <PlusCircleIcon
                       onClick={() => onConnectService(providerKey)}

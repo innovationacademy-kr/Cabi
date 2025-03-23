@@ -1,11 +1,11 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { TLoginProvider } from "@/Cabinet/assets/data/login";
 import {
   getEnabledProviders,
   getSocialAuthUrl,
   getSocialDisplayInfo,
 } from "@/Cabinet/utils/loginUtils";
-import { TLoginProvider } from "@/Cabinet/constants/login";
 import LoginButton from "./LoginButton";
 
 const LoginButtonGroup = () => {

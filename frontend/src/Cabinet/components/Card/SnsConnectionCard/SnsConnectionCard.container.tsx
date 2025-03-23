@@ -2,6 +2,7 @@ import { HttpStatusCode } from "axios";
 import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import SnsConnectionCard from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCard";
+import { TLoginProvider } from "@/Cabinet/assets/data/login";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {
@@ -12,7 +13,6 @@ import {
   getEnabledProviders,
   getSocialAuthUrl,
 } from "@/Cabinet/utils/loginUtils";
-import { TLoginProvider } from "@/Cabinet/constants/login";
 
 const SnsConnectionCardContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
@@ -21,9 +21,10 @@ const SnsConnectionCardContainer = () => {
   const connectedProvider = userOauthConnection
     ? (userOauthConnection.providerType.toLowerCase() as TLoginProvider)
     : "";
+  // TODO : 백에서 providerType다 소문자로 보내주면 toLowerCase() 안해도 됨
   // TODO : 왜 TLoginProvider 타입 캐스팅?
   // console.log("connectedProvider : ", connectedProvider);
-  // ['google']
+  // 'google'
   const allProviders = getEnabledProviders();
   // console.log("allProviders : ", allProviders);
   // allProviders에서 42(excludeProviders) 제외한 프로바이더 배열
@@ -86,12 +87,13 @@ const SnsConnectionCardContainer = () => {
     }
   };
 
-  const handleButton = () => {
+  const handleDisconnectButton = () => {
     tryDisconnectSocialAccount();
   };
 
   const handleConnectService = (provider: TLoginProvider) => {
     const authUrl = getSocialAuthUrl(provider);
+
     if (authUrl) {
       window.location.replace(authUrl);
     }
@@ -101,9 +103,8 @@ const SnsConnectionCardContainer = () => {
     <SnsConnectionCard
       onConnectService={handleConnectService}
       oAuthConnectionAry={oAuthConnectionAry}
-      // TODO : oAuthConnectionAry oAuthConnectionAry로 수정
       connectedProvider={connectedProvider}
-      handleButton={handleButton}
+      handleDisconnectButton={handleDisconnectButton}
     />
   );
 };

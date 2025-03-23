@@ -2,7 +2,7 @@ import {
   AUTH_CONFIG,
   ISocialLoginConfig,
   TLoginProvider,
-} from "@/Cabinet/constants/login";
+} from "@/Cabinet/assets/data/login";
 
 export const getEnabledProviders = (): TLoginProvider[] => {
   return Object.keys(AUTH_CONFIG) as TLoginProvider[];
