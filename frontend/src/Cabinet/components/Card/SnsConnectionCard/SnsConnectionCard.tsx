@@ -9,12 +9,12 @@ import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minus
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { getSocialDisplayInfo } from "@/Cabinet/utils/loginUtils";
-import { LoginProvider } from "@/Presentation/types/common/loginType";
+import { TLoginProvider } from "@/Presentation/types/common/loginType";
 
 interface ISnsConnectionCardProps {
-  onConnectService: (provider: LoginProvider) => void;
+  onConnectService: (provider: TLoginProvider) => void;
   oauthConnectionAry: IUserOAuthConnectionDto[];
-  connectedProvider: LoginProvider | "";
+  connectedProvider: TLoginProvider | "";
   handleButton: () => void;
 }
 
@@ -29,7 +29,7 @@ const SnsConnectionCard = ({
       <>
         {oauthConnectionAry.map((connection) => {
           const providerKey =
-            connection.providerType.toLowerCase() as LoginProvider;
+            connection.providerType.toLowerCase() as TLoginProvider;
           const displayInfo = getSocialDisplayInfo(providerKey);
           const isConnected = connectedProvider === providerKey;
 

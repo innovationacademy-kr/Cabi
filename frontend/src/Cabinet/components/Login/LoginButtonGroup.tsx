@@ -5,13 +5,13 @@ import {
   getSocialAuthUrl,
   getSocialDisplayInfo,
 } from "@/Cabinet/utils/loginUtils";
-import { LoginProvider } from "@/Presentation/types/common/loginType";
+import { TLoginProvider } from "@/Presentation/types/common/loginType";
 import LoginButton from "./LoginButton";
 
 const LoginButtonGroup = () => {
   const [loginStatus, setLoginStatus] = useState<{
     isClicked: boolean;
-    target: LoginProvider | null;
+    target: TLoginProvider | null;
   }>({
     isClicked: false,
     target: null,

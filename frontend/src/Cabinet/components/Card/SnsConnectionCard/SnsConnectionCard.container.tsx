@@ -12,22 +12,22 @@ import {
   getEnabledProviders,
   getSocialAuthUrl,
 } from "@/Cabinet/utils/loginUtils";
-import { LoginProvider } from "@/Presentation/types/common/loginType";
+import { TLoginProvider } from "@/Presentation/types/common/loginType";
 
 const SnsConnectionCardContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
   const userOauthConnection = myInfo.userOauthConnection;
 
   const connectedProvider = userOauthConnection
-    ? (userOauthConnection.providerType.toLowerCase() as LoginProvider)
+    ? (userOauthConnection.providerType.toLowerCase() as TLoginProvider)
     : "";
-  // TODO : 왜 LoginProvider 타입 캐스팅?
+  // TODO : 왜 TLoginProvider 타입 캐스팅?
   // console.log("connectedProvider : ", connectedProvider);
   // ['google']
   const allProviders = getEnabledProviders();
   // console.log("allProviders : ", allProviders);
   // allProviders에서 42(excludeProviders) 제외한 프로바이더 배열
-  const allProvidersWO42: LoginProvider[] = allProviders.filter(
+  const allProvidersWO42: TLoginProvider[] = allProviders.filter(
     (elem) => elem !== "42"
   );
 
@@ -45,7 +45,7 @@ const SnsConnectionCardContainer = () => {
   );
   // console.log("oauthConnectionAry : ", oauthConnectionAry);
   // ['42', 'google', 'kakao', 'github']
-  const excludeProviders: LoginProvider[] = ["42"];
+  const excludeProviders: TLoginProvider[] = ["42"];
   // console.log("excludeProviders : ", excludeProviders);
   // ['42']
   const availableProviders = allProviders.filter(
@@ -57,7 +57,7 @@ const SnsConnectionCardContainer = () => {
   // TODO: 안 사용하면 지우기
 
   // console.log("userOauthConnection : ", userOauthConnection);
-  // [{email: 'jeekimin3@gmail.com', providerType: 'google'}]
+  // {email: 'jeekimin3@gmail.com', providerType: 'google'}
 
   const getMyInfo = async () => {
     try {
@@ -90,7 +90,7 @@ const SnsConnectionCardContainer = () => {
     tryDisconnectSocialAccount();
   };
 
-  const handleConnectService = (provider: LoginProvider) => {
+  const handleConnectService = (provider: TLoginProvider) => {
     const authUrl = getSocialAuthUrl(provider);
     if (authUrl) {
       window.location.replace(authUrl);

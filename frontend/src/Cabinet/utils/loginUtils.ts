@@ -1,19 +1,19 @@
 import {
   ISocialLoginConfig,
-  LoginProvider,
+  TLoginProvider,
 } from "@/Presentation/types/common/loginType";
 import { AUTH_CONFIG } from "../constants/login";
 
-export const getEnabledProviders = (): LoginProvider[] => {
-  return Object.keys(AUTH_CONFIG) as LoginProvider[];
+export const getEnabledProviders = (): TLoginProvider[] => {
+  return Object.keys(AUTH_CONFIG) as TLoginProvider[];
 };
 
-export const getSocialAuthUrl = (provider: LoginProvider): string => {
+export const getSocialAuthUrl = (provider: TLoginProvider): string => {
   return AUTH_CONFIG[provider].authUrl;
 };
 
 export const getSocialDisplayInfo = (
-  provider: LoginProvider
+  provider: TLoginProvider
 ): ISocialLoginConfig["display"] => {
   return AUTH_CONFIG[provider].display;
 };
