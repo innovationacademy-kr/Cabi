@@ -1,7 +1,5 @@
-import {
-  ISocialLoginConfig,
-  TLoginProvider,
-} from "@/Presentation/types/common/loginType";
+import { TLoginProvider } from "@/Cabinet/constants/login";
+import { ISocialLoginConfig } from "@/Presentation/types/common/loginType";
 import { AUTH_CONFIG } from "../constants/login";
 
 export const getEnabledProviders = (): TLoginProvider[] => {

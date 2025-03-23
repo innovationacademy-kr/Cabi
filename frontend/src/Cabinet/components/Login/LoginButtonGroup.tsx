@@ -5,7 +5,7 @@ import {
   getSocialAuthUrl,
   getSocialDisplayInfo,
 } from "@/Cabinet/utils/loginUtils";
-import { TLoginProvider } from "@/Presentation/types/common/loginType";
+import { TLoginProvider } from "@/Cabinet/constants/login";
 import LoginButton from "./LoginButton";
 
 const LoginButtonGroup = () => {

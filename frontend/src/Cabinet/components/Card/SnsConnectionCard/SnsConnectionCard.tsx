@@ -9,7 +9,7 @@ import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minus
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { getSocialDisplayInfo } from "@/Cabinet/utils/loginUtils";
-import { TLoginProvider } from "@/Presentation/types/common/loginType";
+import { TLoginProvider } from "@/Cabinet/constants/login";
 
 interface ISnsConnectionCardProps {
   onConnectService: (provider: TLoginProvider) => void;

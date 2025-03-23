@@ -1,5 +1,3 @@
-export type TLoginProvider = "42" | "google" | "kakao" | "github";
-
 export interface ISocialLoginConfig {
   authUrl: string;
   display: {

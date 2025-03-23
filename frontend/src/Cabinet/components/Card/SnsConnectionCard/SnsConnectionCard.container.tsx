@@ -12,7 +12,7 @@ import {
   getEnabledProviders,
   getSocialAuthUrl,
 } from "@/Cabinet/utils/loginUtils";
-import { TLoginProvider } from "@/Presentation/types/common/loginType";
+import { TLoginProvider } from "@/Cabinet/constants/login";
 
 const SnsConnectionCardContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);

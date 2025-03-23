@@ -1,8 +1,7 @@
 import React from "react";
-import {
-  ISocialLoginConfig,
-  TLoginProvider,
-} from "@/Presentation/types/common/loginType";
+import { ISocialLoginConfig } from "@/Presentation/types/common/loginType";
+
+export type TLoginProvider = "42" | "google" | "kakao" | "github";
 
 const OAUTH_URL = `${import.meta.env.VITE_BE_HOST}/oauth2/authorization`;
 
@@ -57,3 +56,4 @@ export const AUTH_CONFIG: Record<TLoginProvider, ISocialLoginConfig> = {
     },
   },
 };
+// TODO : assets/data로 이동?
