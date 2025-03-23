@@ -1,7 +1,16 @@
 import React from "react";
-import { ISocialLoginConfig } from "@/Presentation/types/common/loginType";
 
 export type TLoginProvider = "42" | "google" | "kakao" | "github";
+
+export interface ISocialLoginConfig {
+  authUrl: string;
+  display: {
+    text: string;
+    backgroundColor: string;
+    fontColor: string;
+    icon: React.ReactNode;
+  };
+}
 
 const OAUTH_URL = `${import.meta.env.VITE_BE_HOST}/oauth2/authorization`;
 

@@ -1,6 +1,8 @@
-import { TLoginProvider } from "@/Cabinet/constants/login";
-import { ISocialLoginConfig } from "@/Presentation/types/common/loginType";
-import { AUTH_CONFIG } from "../constants/login";
+import {
+  AUTH_CONFIG,
+  ISocialLoginConfig,
+  TLoginProvider,
+} from "@/Cabinet/constants/login";
 
 export const getEnabledProviders = (): TLoginProvider[] => {
   return Object.keys(AUTH_CONFIG) as TLoginProvider[];
