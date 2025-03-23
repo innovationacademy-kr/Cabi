@@ -12,7 +12,6 @@ import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import { axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 
-// TODO : props interface 정의 & 사용
 interface ISnsConnectionCardModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   currentProvider: TLoginProvider;
@@ -51,10 +50,10 @@ const SnsConnectionCardModal = ({
 
       if (response.status === HttpStatusCode.Ok) {
         try {
-          const response = await axiosMyInfo();
-          setMyInfo(response.data);
+          const { data } = await axiosMyInfo();
+          setMyInfo(data);
 
-          if (response.data.userOauthConnection === null) {
+          if (data.userOauthConnection === null) {
             connectService(newProvider);
           }
         } catch (error) {
