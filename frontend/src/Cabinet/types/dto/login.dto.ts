@@ -3,3 +3,4 @@ export interface IUserOAuthConnectionDto {
   providerType: string;
   email: string;
 }
+// TODO : 또는 null임

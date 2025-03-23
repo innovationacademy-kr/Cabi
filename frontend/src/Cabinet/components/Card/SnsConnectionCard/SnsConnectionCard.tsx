@@ -22,22 +22,25 @@ import {
 import { LoginProvider } from "@/Presentation/types/common/loginType";
 
 interface ISnsConnectionCardProps {
-  userOauthConnections: IUserOAuthConnectionDto[];
+  userOauthConnection: IUserOAuthConnectionDto | null;
   onConnectService: (provider: LoginProvider) => void;
 }
 
 const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
-  userOauthConnections,
+  userOauthConnection,
   onConnectService,
 }) => {
   const setMyLentInfo = useSetRecoilState<UserDto>(userState);
-  const connectedProviders = userOauthConnections
-    ? userOauthConnections.map(
-        (conn) => conn.providerType.toLowerCase() as LoginProvider
-      )
-    : [];
+  // const connectedProviders = userOauthConnection
+  //   ? userOauthConnection.map(
+  //       (conn) => conn.providerType.toLowerCase() as LoginProvider
+  //     )
+  //   : [];
+  const connectedProvider = userOauthConnection
+    ? (userOauthConnection.providerType.toLowerCase() as LoginProvider)
+    : null;
   // TODO : 왜 LoginProvider 타입 캐스팅?
-  // console.log("connectedProviders : ", connectedProviders);
+  // console.log("connectedProvider : ", connectedProvider);
   // ['google']
   const allProviders = getEnabledProviders();
   // console.log("allProviders : ", allProviders);
@@ -47,11 +50,13 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
   );
   const oauthConnectionAry: IUserOAuthConnectionDto[] = allProvidersWO42.map(
     (provider) => {
-      if (connectedProviders.includes(provider)) {
-        const userOauthConnection = userOauthConnections.find(
-          (connection) =>
-            connection.providerType.toLocaleLowerCase() == provider
-        );
+      // if (connectedProvider.includes(provider)) {
+      //   const userOauthConnection = userOauthConnection.find(
+      //     (connection) =>
+      //       connection.providerType.toLocaleLowerCase() == provider
+      //   );
+      //   return userOauthConnection!;
+      if (connectedProvider === provider) {
         return userOauthConnection!;
       } else {
         return {
@@ -68,13 +73,14 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
   // ['42']
   const availableProviders = allProviders.filter(
     (provider) =>
-      !excludeProviders.includes(provider) &&
-      !connectedProviders.includes(provider)
-  ); // 아직 연동 안된 프로바이더
+      // !excludeProviders.includes(provider) &&
+      // !connectedProvider.includes(provider)
+      !excludeProviders.includes(provider) && connectedProvider !== provider
+  ); // 아직 연동 안된 프로바이더. 42가 아니고, 연동된 프로바이더가 아닌 프로바이더들
   // console.log("availableProviders : ", availableProviders);
   // ['kakao', 'github']
 
-  // console.log("userOauthConnections : ", userOauthConnections);
+  // console.log("userOauthConnection : ", userOauthConnection);
   // [{email: 'jeekimin3@gmail.com', providerType: 'google'}]
 
   const getMyInfo = async () => {
@@ -87,18 +93,20 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
   };
 
   const tryDisconnectSocialAccount = async () => {
-    try {
-      const mailState = userOauthConnections[0].email;
-      const providerTypeState = userOauthConnections[0].providerType;
-      // TODO : 배열 중 하나 골라야됨
+    if (userOauthConnection) {
+      try {
+        const mailState = userOauthConnection.email;
+        const providerTypeState = userOauthConnection.providerType;
+        // TODO : 배열 중 하나 골라야됨
 
-      const response = await axiosDisconnectSocialAccount(
-        mailState,
-        providerTypeState
-      );
-      await getMyInfo();
-    } catch (error) {
-      console.error(error);
+        const response = await axiosDisconnectSocialAccount(
+          mailState,
+          providerTypeState
+        );
+        await getMyInfo();
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -113,7 +121,7 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
           const providerKey =
             connection.providerType.toLowerCase() as LoginProvider;
           const displayInfo = getSocialDisplayInfo(providerKey);
-          const isConnected = connectedProviders.includes(providerKey);
+          const isConnected = connectedProvider === providerKey;
 
           return (
             <CardContentWrapper key={providerKey}>
