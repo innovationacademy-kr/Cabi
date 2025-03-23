@@ -9,6 +9,7 @@ import {
 } from "@/Cabinet/components/Card/CardStyles";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
+import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {
   axiosDisconnectSocialAccount,
@@ -20,13 +21,8 @@ import {
 } from "@/Cabinet/utils/loginUtils";
 import { LoginProvider } from "@/Presentation/types/common/loginType";
 
-interface IOAuthConnection {
-  providerType: string;
-  email: string;
-}
-
 interface ISnsConnectionCardProps {
-  userOauthConnections: IOAuthConnection[];
+  userOauthConnections: IUserOAuthConnectionDto[];
   onConnectService: (provider: LoginProvider) => void;
 }
 
@@ -49,7 +45,7 @@ const SnsConnectionCard: React.FC<ISnsConnectionCardProps> = ({
   const allProvidersWO42: LoginProvider[] = allProviders.filter(
     (elem) => elem !== "42"
   );
-  const oauthConnectionAry: IOAuthConnection[] = allProvidersWO42.map(
+  const oauthConnectionAry: IUserOAuthConnectionDto[] = allProvidersWO42.map(
     (provider) => {
       if (connectedProviders.includes(provider)) {
         const userOauthConnection = userOauthConnections.find(

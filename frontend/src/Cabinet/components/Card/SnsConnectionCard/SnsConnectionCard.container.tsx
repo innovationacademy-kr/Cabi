@@ -1,17 +1,12 @@
 // SnsConnectionCard.container.tsx
 import React from "react";
+import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { getSocialAuthUrl } from "@/Cabinet/utils/loginUtils";
 import { LoginProvider } from "@/Presentation/types/common/loginType";
 import SnsConnectionCard from "./SnsConnectionCard";
 
-// 연동 계정 정보 타입 정의
-interface OAuthConnection {
-  providerType: string;
-  email: string;
-}
-
 interface SnsConnectionCardContainerProps {
-  userOauthConnection: OAuthConnection | null;
+  userOauthConnection: IUserOAuthConnectionDto | null;
 }
 
 const SnsConnectionCardContainer: React.FC<SnsConnectionCardContainerProps> = ({
