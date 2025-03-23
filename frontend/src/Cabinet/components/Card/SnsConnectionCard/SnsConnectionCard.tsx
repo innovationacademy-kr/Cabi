@@ -13,21 +13,21 @@ import { TLoginProvider } from "@/Cabinet/constants/login";
 
 interface ISnsConnectionCardProps {
   onConnectService: (provider: TLoginProvider) => void;
-  oauthConnectionAry: IUserOAuthConnectionDto[];
+  oAuthConnectionAry: IUserOAuthConnectionDto[];
   connectedProvider: TLoginProvider | "";
   handleButton: () => void;
 }
 
 const SnsConnectionCard = ({
   onConnectService,
-  oauthConnectionAry,
+  oAuthConnectionAry,
   connectedProvider,
   handleButton,
 }: ISnsConnectionCardProps) => {
   return (
     <Card title="소셜 로그인" gridArea="snsConnection" height="290px">
       <>
-        {oauthConnectionAry.map((connection) => {
+        {oAuthConnectionAry.map((connection) => {
           const providerKey =
             connection.providerType.toLowerCase() as TLoginProvider;
           const displayInfo = getSocialDisplayInfo(providerKey);

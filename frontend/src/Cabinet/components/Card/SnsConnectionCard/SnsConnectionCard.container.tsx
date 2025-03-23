@@ -1,5 +1,5 @@
 import { HttpStatusCode } from "axios";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import SnsConnectionCard from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCard";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
@@ -31,7 +31,7 @@ const SnsConnectionCardContainer = () => {
     (elem) => elem !== "42"
   );
 
-  const oauthConnectionAry: IUserOAuthConnectionDto[] = allProvidersWO42.map(
+  const oAuthConnectionAry: IUserOAuthConnectionDto[] = allProvidersWO42.map(
     (provider) => {
       if (connectedProvider === provider) {
         return userOauthConnection!;
@@ -43,7 +43,7 @@ const SnsConnectionCardContainer = () => {
       }
     }
   );
-  // console.log("oauthConnectionAry : ", oauthConnectionAry);
+  // console.log("oAuthConnectionAry : ", oAuthConnectionAry);
   // ['42', 'google', 'kakao', 'github']
   const excludeProviders: TLoginProvider[] = ["42"];
   // console.log("excludeProviders : ", excludeProviders);
@@ -100,8 +100,8 @@ const SnsConnectionCardContainer = () => {
   return (
     <SnsConnectionCard
       onConnectService={handleConnectService}
-      oauthConnectionAry={oauthConnectionAry}
-      // TODO : oauthConnectionAry oAuthConnectionAry로 수정
+      oAuthConnectionAry={oAuthConnectionAry}
+      // TODO : oAuthConnectionAry oAuthConnectionAry로 수정
       connectedProvider={connectedProvider}
       handleButton={handleButton}
     />
