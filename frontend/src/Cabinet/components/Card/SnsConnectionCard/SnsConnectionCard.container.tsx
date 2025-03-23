@@ -4,11 +4,9 @@ import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import SnsConnectionCard from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCard";
 import SnsConnectionCardModal from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCardModal";
-import { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import { TLoginProvider } from "@/Cabinet/assets/data/login";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
-import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import {
   axiosDisconnectSocialAccount,
   axiosMyInfo,
@@ -22,6 +20,7 @@ const SnsConnectionCardContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
   const userOauthConnection = myInfo.userOauthConnection;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newProvider, setNewProvider] = useState<TLoginProvider>("42"); // TODO: 기본값 42. 주석 남길?
 
   const connectedProvider = userOauthConnection
     ? (userOauthConnection.providerType.toLowerCase() as TLoginProvider)
@@ -83,53 +82,38 @@ const SnsConnectionCardContainer = () => {
           providerTypeState
         );
 
-        if (response.status === HttpStatusCode.Ok) await getMyInfo();
+        return response;
       } catch (error) {
         console.error(error);
       }
     }
   };
 
-  const handleDisconnectButton = () => {
-    tryDisconnectSocialAccount();
+  const handleDisconnectButton = async () => {
+    const response = await tryDisconnectSocialAccount();
+
+    if (response.status === HttpStatusCode.Ok) getMyInfo();
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const connectService = (provider: TLoginProvider) => {
+    const authUrl = getSocialAuthUrl(provider);
+
+    if (authUrl) {
+      window.location.replace(authUrl);
+    }
   };
 
   const handleConnectService = (provider: TLoginProvider) => {
-    // TODO connectedProvider가 있으면 다른 계정 연동 불가능하게 하기
-    // 1. 아무것도 연동 안함 connectedProvider === ""
-    // 2. 한 소셜 계정 연동중 connectedProvider !== ""
     if (connectedProvider === "") {
       // 연동 아무것도 안함
-      const authUrl = getSocialAuthUrl(provider);
-
-      if (authUrl) {
-        window.location.replace(authUrl);
-      }
+      connectService(provider);
     } else {
+      // TODO connectedProvider가 있으면 다른 계정 연동 불가능하게 하기
       // 연동한 상태에서 다른 소셜 계정 연동 시도
-      // TODO : 모달 띄우기
+      setNewProvider(provider);
       setIsModalOpen(true);
-      const modalDetail = `연동돼 있는 ${connectedProvider} 연동 해제하고 ${provider}을 연동할까요?`;
     }
   }; // 서비스 연동 기능 - 유틸리티 함수 사용. 연동 버튼 눌렀을때 실행
-
-  // const connectServiceModalContents: IModalContents = {
-  //   type: "hasProceedBtn",
-  //   iconType: IconType.CHECKICON,
-  //   title: "소셜 계정 연동",
-  //   // TODO : title 수정
-  //   detail: modalDetail,
-  //   proceedBtnText: "네, 새 계정을 연동하겠습니다",
-  //   cancelBtnText: "취소",
-  //   onClickProceed: () => {
-  //     // TODO : 기존 연결 끊고 -> 새로운 소셜 계정 연동
-  //   },
-  //   closeModal: handleCloseModal,
-  // };
 
   return (
     <>
@@ -139,7 +123,16 @@ const SnsConnectionCardContainer = () => {
         connectedProvider={connectedProvider}
         handleDisconnectButton={handleDisconnectButton}
       />
-      {isModalOpen && <SnsConnectionCardModal />}
+      {isModalOpen && (
+        <SnsConnectionCardModal
+          setIsModalOpen={setIsModalOpen}
+          currentProvider={connectedProvider}
+          newProvider={newProvider}
+          tryDisconnectSocialAccount={tryDisconnectSocialAccount}
+          setMyInfo={setMyInfo}
+          connectService={connectService}
+        />
+      )}
     </>
   );
 };
