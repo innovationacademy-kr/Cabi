@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.oauth.domain.CustomOauth2User;
+import org.ftclub.cabinet.oauth.domain.CustomOAuth2User;
 import org.ftclub.cabinet.oauth.domain.OauthResult;
 import org.ftclub.cabinet.oauth.service.OauthFacadeService;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
@@ -54,7 +54,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException {
-		CustomOauth2User fromLoadUser = (CustomOauth2User) authentication.getPrincipal();
+		CustomOAuth2User fromLoadUser = (CustomOAuth2User) authentication.getPrincipal();
 		String provider = fromLoadUser.getProvider();
 
 		try {
@@ -81,7 +81,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	 * @return
 	 */
 	private OauthResult processOAuthLogin(HttpServletRequest req,
-			String provider, CustomOauth2User oauth2User) {
+			String provider, CustomOAuth2User oauth2User) {
 
 		if (provider.equals(mainProvider)) {
 			JsonNode rootNode =
