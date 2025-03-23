@@ -33,9 +33,6 @@ const SnsConnectionCardModal = ({
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
-  const [modalContents, setModalContents] = useState("");
-  // TODO : modalContents, modalTitle 사용해야함
-
   const modalDetail = `연동돼 있는 ${currentProvider} 연동 해제하고 ${newProvider}을 연동할까요?`;
 
   const handleCloseModal = () => {
@@ -54,7 +51,9 @@ const SnsConnectionCardModal = ({
           setMyInfo(data);
 
           if (data.userOauthConnection === null) {
-            connectService(newProvider);
+            await connectService(newProvider);
+            setModalTitle("연동 성공");
+            // TODO : 메시지 변경
           }
         } catch (error) {
           console.error(error);
@@ -62,6 +61,8 @@ const SnsConnectionCardModal = ({
       }
     } catch (error) {
       console.error(error);
+      setModalTitle("연동 실패");
+      // TODO : 메시지 변경
       setHasErrorOnResponse(true);
     } finally {
       setShowResponseModal(true);
@@ -77,7 +78,6 @@ const SnsConnectionCardModal = ({
     proceedBtnText: "네, 새 계정을 연동하겠습니다",
     cancelBtnText: "취소",
     onClickProceed: connectAnotherService,
-    // TODO : 기존 연결 끊고 -> 새로운 소셜 계정 연동
     closeModal: handleCloseModal,
   };
 
@@ -90,13 +90,11 @@ const SnsConnectionCardModal = ({
         (hasErrorOnResponse ? (
           <FailResponseModal
             modalTitle={modalTitle}
-            modalContents={modalContents}
             closeModal={handleCloseModal}
           />
         ) : (
           <SuccessResponseModal
             modalTitle={modalTitle}
-            modalContents={modalContents}
             closeModal={handleCloseModal}
           />
         ))}
