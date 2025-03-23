@@ -23,10 +23,10 @@ const SnsConnectionCardContainer = () => {
     : "";
   // TODO : 백에서 providerType다 소문자로 보내주면 toLowerCase() 안해도 됨
   // TODO : 왜 TLoginProvider 타입 캐스팅?
-  // console.log("connectedProvider : ", connectedProvider);
   // 'google'
+
   const allProviders = getEnabledProviders();
-  // console.log("allProviders : ", allProviders);
+
   // allProviders에서 42(excludeProviders) 제외한 프로바이더 배열
   const allProvidersWO42: TLoginProvider[] = allProviders.filter(
     (elem) => elem !== "42"
@@ -44,16 +44,14 @@ const SnsConnectionCardContainer = () => {
       }
     }
   );
-  // console.log("oAuthConnectionAry : ", oAuthConnectionAry);
-  // ['42', 'google', 'kakao', 'github']
+
   const excludeProviders: TLoginProvider[] = ["42"];
-  // console.log("excludeProviders : ", excludeProviders);
   // ['42']
+
   const availableProviders = allProviders.filter(
     (provider) =>
       !excludeProviders.includes(provider) && connectedProvider !== provider
   ); // 아직 연동 안된 프로바이더. 42가 아니고, 연동된 프로바이더가 아닌 프로바이더들
-  // console.log("availableProviders : ", availableProviders);
   // ['kakao', 'github']
   // TODO: 안 사용하면 지우기
 

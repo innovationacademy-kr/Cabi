@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import LoginButton from "@/Cabinet/components/Login/LoginButton";
 import { TLoginProvider } from "@/Cabinet/assets/data/login";
 import {
   getEnabledProviders,
   getSocialAuthUrl,
   getSocialDisplayInfo,
 } from "@/Cabinet/utils/loginUtils";
-import LoginButton from "./LoginButton";
 
 const LoginButtonGroup = () => {
   const [loginStatus, setLoginStatus] = useState<{
@@ -16,6 +17,19 @@ const LoginButtonGroup = () => {
     isClicked: false,
     target: null,
   });
+  const [searchParams] = useSearchParams();
+  const messageParamValue = searchParams.get("messageParamValue");
+  const navigator = useNavigate();
+
+  useEffect(() => {
+    if (messageParamValue === "NOT_FT_LINK_STATUS") {
+      // code=Forbidden&status=403&message=NOT_FT_LINK_STATUS
+      alert(
+        "아직 연결되지 않은 소셜 계정입니다. 계정을 연동한 후 다시 로그인해 주세요."
+      );
+      navigator("/login");
+    }
+  }, []);
 
   return (
     <LoginButtonGroupStyled>
