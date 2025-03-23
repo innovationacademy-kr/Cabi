@@ -15,8 +15,8 @@ import {
 import { LoginProvider } from "@/Presentation/types/common/loginType";
 
 const SnsConnectionCardContainer = () => {
-  const [myLentInfo, setMyLentInfo] = useRecoilState<UserDto>(userState);
-  const userOauthConnection = myLentInfo.userOauthConnection;
+  const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
+  const userOauthConnection = myInfo.userOauthConnection;
 
   const connectedProvider = userOauthConnection
     ? (userOauthConnection.providerType.toLowerCase() as LoginProvider)
@@ -62,7 +62,7 @@ const SnsConnectionCardContainer = () => {
   const getMyInfo = async () => {
     try {
       const response = await axiosMyInfo();
-      setMyLentInfo(response.data);
+      setMyInfo(response.data);
     } catch (error) {
       console.error(error);
     }
