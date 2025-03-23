@@ -1,5 +1,5 @@
 import { HttpStatusCode } from "axios";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import SnsConnectionCard from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCard";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
@@ -14,14 +14,10 @@ import {
 } from "@/Cabinet/utils/loginUtils";
 import { LoginProvider } from "@/Presentation/types/common/loginType";
 
-interface ISnsConnectionCardContainerProps {
-  userOauthConnection: IUserOAuthConnectionDto | null;
-}
+const SnsConnectionCardContainer = () => {
+  const [myLentInfo, setMyLentInfo] = useRecoilState<UserDto>(userState);
+  const userOauthConnection = myLentInfo.userOauthConnection;
 
-const SnsConnectionCardContainer = ({
-  userOauthConnection,
-}: ISnsConnectionCardContainerProps) => {
-  const setMyLentInfo = useSetRecoilState<UserDto>(userState);
   const connectedProvider = userOauthConnection
     ? (userOauthConnection.providerType.toLowerCase() as LoginProvider)
     : "";
