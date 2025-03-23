@@ -20,8 +20,7 @@ const SnsConnectionCardContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
   const userOauthConnection = myInfo.userOauthConnection;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newProvider, setNewProvider] = useState<TLoginProvider>("42"); // TODO: 기본값 42. 주석 남길?
-
+  const [newProvider, setNewProvider] = useState<TLoginProvider>("42"); // 기본값: "42"
   const connectedProvider = userOauthConnection
     ? (userOauthConnection.providerType.toLowerCase() as TLoginProvider)
     : "";
@@ -59,9 +58,6 @@ const SnsConnectionCardContainer = () => {
   // ['kakao', 'github']
   // TODO: 안 사용하면 지우기
 
-  // console.log("userOauthConnection : ", userOauthConnection);
-  // {email: 'jeekimin3@gmail.com', providerType: 'google'}
-
   const getMyInfo = async () => {
     try {
       const response = await axiosMyInfo();
@@ -98,9 +94,7 @@ const SnsConnectionCardContainer = () => {
   const connectService = (provider: TLoginProvider) => {
     const authUrl = getSocialAuthUrl(provider);
 
-    if (authUrl) {
-      window.location.replace(authUrl);
-    }
+    window.location.replace(authUrl);
   };
 
   const handleConnectService = (provider: TLoginProvider) => {
@@ -108,7 +102,6 @@ const SnsConnectionCardContainer = () => {
       // 연동 아무것도 안함
       connectService(provider);
     } else {
-      // TODO connectedProvider가 있으면 다른 계정 연동 불가능하게 하기
       // 연동한 상태에서 다른 소셜 계정 연동 시도
       setNewProvider(provider);
       setIsModalOpen(true);

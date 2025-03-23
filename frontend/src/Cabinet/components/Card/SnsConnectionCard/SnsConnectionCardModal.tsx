@@ -37,8 +37,7 @@ const SnsConnectionCardModal = ({
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-  };
-  // TODO : 다른 모달들도 필요하면(생기면) 상위 컴포넌트로 이동
+  }; // TODO : 다른 모달들도 필요하면(생기면) 상위 컴포넌트로 이동
 
   // TODO : 기존 연결 끊고 -> 새로운 소셜 계정 연동. 주석 변경 필요
   const connectAnotherService = async () => {
@@ -52,6 +51,7 @@ const SnsConnectionCardModal = ({
 
           if (data.userOauthConnection === null) {
             await connectService(newProvider);
+            // TODO : await 필요한가? 테스트 후 삭제
             setModalTitle("연동 성공");
             // TODO : 메시지 변경
           }
