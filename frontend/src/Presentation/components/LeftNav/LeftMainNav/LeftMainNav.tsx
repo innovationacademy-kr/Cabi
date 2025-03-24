@@ -83,15 +83,10 @@ const LeftMainNav = ({
       </TopSectionStyled>
       <BottomSectionStyled>
         <BottomBtnsStyled>
-          {!isAdmin && (
-            <BottomBtnStyled
-              className="cabiButton"
-              onClick={onClickLogoutButton}
-            >
-              <LogoutImg stroke="var(--gray-line-btn-color)" />
-              Logout
-            </BottomBtnStyled>
-          )}
+          <BottomBtnStyled className="cabiButton" onClick={onClickLogoutButton}>
+            <LogoutImg stroke="var(--gray-line-btn-color)" />
+            Logout
+          </BottomBtnStyled>
         </BottomBtnsStyled>
       </BottomSectionStyled>
     </LeftNavStyled>
