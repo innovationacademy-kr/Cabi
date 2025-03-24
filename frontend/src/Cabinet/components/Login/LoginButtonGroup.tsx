@@ -25,8 +25,8 @@ const LoginButtonGroup = () => {
 
   useEffect(() => {
     if (statusParamValue && Number(statusParamValue) !== HttpStatusCode.Ok) {
-      let alertMsg = "";
-      
+      let alertMsg = "오류가 발생했습니다. 다시 시도해 주세요.";
+
       if (messageParamValue === "NOT_FT_LINK_STATUS") {
         // code=Forbidden&status=403&message=NOT_FT_LINK_STATUS
         alertMsg =
