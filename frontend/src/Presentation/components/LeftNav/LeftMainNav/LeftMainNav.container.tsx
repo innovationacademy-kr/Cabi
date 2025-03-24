@@ -64,7 +64,8 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
         resetBuilding();
         resetCurrentFloor();
         resetCurrentSection();
-        navigator("/login");
+        const path = isAdmin ? "/admin/login" : "/login";
+        navigator(path);
       }
     } catch (error) {
       console.error(error);
