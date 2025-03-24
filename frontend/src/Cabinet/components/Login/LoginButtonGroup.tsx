@@ -63,6 +63,7 @@ const LoginButtonGroup = () => {
           display={getSocialDisplayInfo(provider)}
           isClicked={loginStatus.isClicked}
           isTarget={loginStatus.target === provider}
+          provider={provider}
         />
       ))}
     </LoginButtonGroupStyled>

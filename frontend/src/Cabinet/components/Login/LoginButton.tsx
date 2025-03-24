@@ -1,12 +1,16 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { ISocialLoginConfig } from "@/Cabinet/assets/data/login";
+import {
+  ISocialLoginConfig,
+  TLoginProvider,
+} from "@/Cabinet/assets/data/login";
 
 interface LoginButtonProps {
   onLogin: () => void;
   display: ISocialLoginConfig["display"];
   isClicked: boolean;
   isTarget: boolean;
+  provider: TLoginProvider;
 }
 
 interface ButtonStyledProps {
@@ -19,6 +23,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({
   display,
   isClicked,
   isTarget,
+  provider,
 }) => {
   return (
     <ButtonStyled
@@ -33,7 +38,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({
         </LoginAnimationContainer>
       ) : (
         <>
-          <IconContainer>{display.icon}</IconContainer>
+          <IconContainer provider={provider}>{display.icon}</IconContainer>
           <TextContainer>{display.text}</TextContainer>
         </>
       )}
@@ -71,18 +76,22 @@ const ButtonStyled = styled.button<ButtonStyledProps>`
   }
 `;
 
-const IconContainer = styled.div`
+const IconContainer = styled.div<{ provider: TLoginProvider }>`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 36px;
   min-width: 36px;
+  /* TODO : 필요없으면 삭제 */
   height: 100%;
 
-  img {
+  & > svg {
     width: 20px;
     height: 20px;
-    object-fit: contain;
+  }
+
+  & > svg > path {
+    fill: ${(props) => props.provider === "github" && "#ffffff"};
   }
 `;
 
