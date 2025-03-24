@@ -33,8 +33,8 @@ export const AUTH_CONFIG: Record<TLoginProvider, ISocialLoginConfig> = {
     display: {
       text: "Google 로그인",
       // TODO : " 로그인" 삭제하고 -> 로그인 페이지에서만 " 로그인" 붙이기
-      backgroundColor: "#FFFFFF",
-      fontColor: "#000000",
+      backgroundColor: "var(--ref-gray-100)",
+      fontColor: "var(--ref-gray-900)",
       icon: React.createElement("img", {
         src: "/src/Cabinet/assets/images/googleLogo.svg",
         alt: "Google",
