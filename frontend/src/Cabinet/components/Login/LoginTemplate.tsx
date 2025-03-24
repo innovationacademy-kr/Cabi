@@ -141,16 +141,13 @@ const CardSubTitleStyled = styled.p`
   color: var(--sys-main-color);
 `;
 
-const AGUURLSectionStyled = styled.span`
+const AGUURLSectionStyled = styled.button`
+  background-color: var(--bg-color);
+  color: var(--gray-line-btn-color);
+  height: 30px;
+  margin-top: 10px;
   text-decoration: underline;
   font-size: 0.875rem;
-  color: var(--gray-line-btn-color);
-  font-size: 12px;
-  letter-spacing: -0.02rem;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 export default LoginTemplate;
