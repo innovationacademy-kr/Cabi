@@ -1,3 +1,4 @@
+import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
@@ -19,14 +20,23 @@ const LoginButtonGroup = () => {
   });
   const [searchParams] = useSearchParams();
   const messageParamValue = searchParams.get("message");
+  const statusParamValue = searchParams.get("status");
   const navigator = useNavigate();
 
   useEffect(() => {
-    if (messageParamValue === "NOT_FT_LINK_STATUS") {
-      // code=Forbidden&status=403&message=NOT_FT_LINK_STATUS
-      alert(
-        "아직 연결되지 않은 소셜 계정입니다. 계정을 연동한 후 다시 로그인해 주세요."
-      );
+    if (statusParamValue && Number(statusParamValue) !== HttpStatusCode.Ok) {
+      let alertMsg = "";
+      
+      if (messageParamValue === "NOT_FT_LINK_STATUS") {
+        // code=Forbidden&status=403&message=NOT_FT_LINK_STATUS
+        alertMsg =
+          "아직 연결되지 않은 소셜 계정입니다. 계정을 연동한 후 다시 로그인해 주세요.";
+      } else if (messageParamValue === "OAUTH_EMAIL_ALREADY_LINKED") {
+        // code=Conflict&status=409&message=OAUTH_EMAIL_ALREADY_LINKED
+        alertMsg =
+          "이미 연결된 소셜 계정이 있습니다. 다른 계정을 사용하려면 기존 계정 연동을 해제해주세요.";
+      }
+      alert(alertMsg);
       navigator("/login");
     }
   }, []);
