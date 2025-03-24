@@ -22,9 +22,8 @@ const SnsConnectionCardContainer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newProvider, setNewProvider] = useState<TLoginProvider>("42"); // 기본값: "42"
   const connectedProvider = userOauthConnection
-    ? (userOauthConnection.providerType.toLowerCase() as TLoginProvider)
+    ? (userOauthConnection.providerType as TLoginProvider)
     : "";
-  // TODO : 백에서 providerType다 소문자로 보내주면 toLowerCase() 안해도 됨
   // TODO : 왜 TLoginProvider 타입 캐스팅?
   // 'google'
 
