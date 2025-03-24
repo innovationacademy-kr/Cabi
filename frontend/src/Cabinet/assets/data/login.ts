@@ -1,4 +1,8 @@
 import React from "react";
+import { ReactComponent as FTLogo } from "@/Cabinet/assets/images/42Logo.svg";
+import { ReactComponent as GithubLogo } from "@/Cabinet/assets/images/githubLogo.svg";
+import { ReactComponent as GoogleLogo } from "@/Cabinet/assets/images/googleLogo.svg";
+import { ReactComponent as KakaoLogo } from "@/Cabinet/assets/images/kakaoLogo.svg";
 
 export type TLoginProvider = "42" | "google" | "kakao" | "github";
 
@@ -22,9 +26,8 @@ export const AUTH_CONFIG: Record<TLoginProvider, ISocialLoginConfig> = {
       text: "42 Seoul 로그인",
       backgroundColor: "#9747FF",
       fontColor: "#FFFFFF",
-      icon: React.createElement("img", {
-        src: "/src/Cabinet/assets/images/42_logo.svg",
-        alt: "42",
+      icon: React.createElement(FTLogo, {
+        "aria-label": "42",
       }),
     },
   },
@@ -35,9 +38,8 @@ export const AUTH_CONFIG: Record<TLoginProvider, ISocialLoginConfig> = {
       // TODO : " 로그인" 삭제하고 -> 로그인 페이지에서만 " 로그인" 붙이기
       backgroundColor: "var(--ref-gray-100)",
       fontColor: "var(--ref-gray-900)",
-      icon: React.createElement("img", {
-        src: "/src/Cabinet/assets/images/googleLogo.svg",
-        alt: "Google",
+      icon: React.createElement(GoogleLogo, {
+        "aria-label": "google",
       }),
     },
   },
@@ -47,9 +49,8 @@ export const AUTH_CONFIG: Record<TLoginProvider, ISocialLoginConfig> = {
       text: "kakao 로그인",
       backgroundColor: "#FEE500",
       fontColor: "#000000d9",
-      icon: React.createElement("img", {
-        src: "/src/Cabinet/assets/images/kakaoLogo.svg",
-        alt: "kakao",
+      icon: React.createElement(KakaoLogo, {
+        "aria-label": "kakao",
       }),
     },
   },
@@ -59,9 +60,8 @@ export const AUTH_CONFIG: Record<TLoginProvider, ISocialLoginConfig> = {
       text: "gitHub 로그인",
       backgroundColor: "#24292f",
       fontColor: "#ffffff",
-      icon: React.createElement("img", {
-        src: "/src/Cabinet/assets/images/githubLogo.svg",
-        alt: "gitHub",
+      icon: React.createElement(GithubLogo, {
+        "aria-label": "github",
       }),
     },
   },
