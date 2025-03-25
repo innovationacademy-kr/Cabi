@@ -30,8 +30,10 @@ const FTLoginButton = ({
         <LoadingAnimation></LoadingAnimation>
       ) : (
         <>
-          <IconContainer provider={provider}>{display.icon}</IconContainer>
-          <TextContainer>42 Seoul 로그인</TextContainer>
+          <IconWrapperStyled provider={provider}>
+            {display.icon}
+          </IconWrapperStyled>
+          <TextWrapperStyled>42 Seoul 로그인</TextWrapperStyled>
         </>
       )}
     </ButtonStyled>
@@ -45,13 +47,9 @@ const ButtonStyled = styled.button<{ fontColor: string }>`
   height: 50px;
   padding: 15px;
 
-  transition: all 0.2s ease;
-  /* TODO: 필요? */
-
   &:active {
     transform: translateY(1px);
   }
-  /* TODO: 필요? */
 
   &:disabled {
     opacity: 0.3;
@@ -59,7 +57,7 @@ const ButtonStyled = styled.button<{ fontColor: string }>`
   }
 `;
 
-const IconContainer = styled.div<{ provider: TLoginProvider }>`
+const IconWrapperStyled = styled.div<{ provider: TLoginProvider }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,7 +71,7 @@ const IconContainer = styled.div<{ provider: TLoginProvider }>`
   }
 `;
 
-const TextContainer = styled.div`
+const TextWrapperStyled = styled.div`
   text-align: start;
   width: 100%;
   height: 100%;
@@ -83,5 +81,3 @@ const TextContainer = styled.div`
 `;
 
 export default FTLoginButton;
-
-// TODO : styled component 이름 컨벤션에 맞게 변경
