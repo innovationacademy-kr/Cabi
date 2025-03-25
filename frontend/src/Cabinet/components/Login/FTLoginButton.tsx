@@ -5,12 +5,15 @@ import {
   TLoginProvider,
 } from "@/Cabinet/assets/data/login";
 
-interface IFTLoginButtonProps {
+export interface ILoginButtonProps {
   onLoginButtonClick: (provider: TLoginProvider) => void;
   display: ISocialLoginConfig["display"];
+  // TODO : display 타입 정의하기
+  // TODO : display 이름 변경
   isClicked: boolean;
   isTarget: boolean;
   provider: TLoginProvider;
+  // TODO : provider 이름 변경
 }
 
 const FTLoginButton = ({
@@ -19,7 +22,7 @@ const FTLoginButton = ({
   isClicked,
   isTarget,
   provider,
-}: IFTLoginButtonProps) => {
+}: ILoginButtonProps) => {
   return (
     <ButtonWrapperStyled
       onClick={() => onLoginButtonClick(provider)}

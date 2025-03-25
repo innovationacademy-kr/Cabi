@@ -1,20 +1,7 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import {
-  ISocialLoginConfig,
-  TLoginProvider,
-} from "@/Cabinet/assets/data/login";
-
-interface ILoginButtonProps {
-  onLoginButtonClick: (provider: TLoginProvider) => void;
-  display: ISocialLoginConfig["display"];
-  // TODO : display 타입 정의하기
-  // TODO : display 이름 변경
-  isClicked: boolean;
-  isTarget: boolean;
-  provider: TLoginProvider;
-  // TODO : provider 이름 변경
-}
+import { ILoginButtonProps } from "@/Cabinet/components/Login/FTLoginButton";
+import { TLoginProvider } from "@/Cabinet/assets/data/login";
 
 // TODO : FTLoginButton 참고해서 수정하기
 
