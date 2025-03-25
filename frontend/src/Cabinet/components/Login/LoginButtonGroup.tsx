@@ -22,6 +22,11 @@ const LoginButtonGroup = () => {
   const messageParamValue = searchParams.get("message");
   const statusParamValue = searchParams.get("status");
   const navigator = useNavigate();
+  const allProviders = getEnabledProviders();
+  const allProvidersWO42: TLoginProvider[] = allProviders.filter(
+    (elem) => elem !== "42"
+  );
+  // TODO: allProviders, allProvidersWO42 리팩토링
 
   useEffect(() => {
     if (statusParamValue && Number(statusParamValue) !== HttpStatusCode.Ok) {
@@ -41,31 +46,41 @@ const LoginButtonGroup = () => {
     }
   }, []);
 
+  const onLoginButtonClick = (provider: TLoginProvider) => {
+    const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
+
+    if (isLoggedOut) {
+      window.location.replace(getSocialAuthUrl(provider) + "?prompt=login");
+      localStorage.removeItem("isLoggedOut");
+    } else {
+      window.location.replace(getSocialAuthUrl(provider));
+    }
+
+    setLoginStatus({ isClicked: true, target: provider });
+  };
+
   return (
     <LoginButtonGroupStyled>
-      {getEnabledProviders().map((provider) => (
-        <LoginButton
-          key={provider}
-          onLogin={() => {
-            const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
-
-            if (isLoggedOut) {
-              window.location.replace(
-                getSocialAuthUrl(provider) + "?prompt=login"
-              );
-              localStorage.removeItem("isLoggedOut");
-            } else {
-              window.location.replace(getSocialAuthUrl(provider));
-            }
-
-            setLoginStatus({ isClicked: true, target: provider });
-          }}
-          display={getSocialDisplayInfo(provider)}
-          isClicked={loginStatus.isClicked}
-          isTarget={loginStatus.target === provider}
-          provider={provider}
-        />
-      ))}
+      <LoginButton
+        key="42"
+        onLogin={() => onLoginButtonClick("42" as TLoginProvider)}
+        display={getSocialDisplayInfo("42")}
+        isClicked={loginStatus.isClicked}
+        isTarget={loginStatus.target === "42"}
+        provider="42"
+      />
+      <SocialLoginButtonGroupWrapper>
+        {allProvidersWO42.map((provider) => (
+          <LoginButton
+            key={provider}
+            onLogin={() => onLoginButtonClick(provider)}
+            display={getSocialDisplayInfo(provider)}
+            isClicked={loginStatus.isClicked}
+            isTarget={loginStatus.target === provider}
+            provider={provider}
+          />
+        ))}
+      </SocialLoginButtonGroupWrapper>
     </LoginButtonGroupStyled>
   );
 };
@@ -74,6 +89,10 @@ const LoginButtonGroupStyled = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+`;
+
+const SocialLoginButtonGroupWrapper = styled.div`
+  background-color: green;
 `;
 
 export default LoginButtonGroup;
