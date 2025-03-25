@@ -23,23 +23,25 @@ const LoginButton: React.FC<LoginButtonProps> = ({
   provider,
 }) => {
   return (
-    <ButtonStyled
+    <ButtonWrapperStyled
       onClick={onLogin}
       backgroundColor={display.backgroundColor}
       disabled={isClicked}
     >
       {isClicked && isTarget ? (
-        <LoginAnimationContainer>
+        <LoadingAnimationWrapper>
           <LoadingAnimation />
-        </LoginAnimationContainer>
+        </LoadingAnimationWrapper>
       ) : (
-        <IconContainer provider={provider}>{display.icon}</IconContainer>
+        <IconWrapperStyled provider={provider}>
+          {display.icon}
+        </IconWrapperStyled>
       )}
-    </ButtonStyled>
+    </ButtonWrapperStyled>
   );
 };
 
-const ButtonStyled = styled.button<{ backgroundColor: string }>`
+const ButtonWrapperStyled = styled.button<{ backgroundColor: string }>`
   background-color: ${(props) => props.backgroundColor};
   display: flex;
   align-items: center;
@@ -55,7 +57,7 @@ const ButtonStyled = styled.button<{ backgroundColor: string }>`
   }
 `;
 
-const IconContainer = styled.div<{ provider: TLoginProvider }>`
+const IconWrapperStyled = styled.div<{ provider: TLoginProvider }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,13 +69,9 @@ const IconContainer = styled.div<{ provider: TLoginProvider }>`
   }
 `;
 
-const LoginAnimationContainer = styled.div`
-  width: 30px;
-  height: 24px;
-
+const LoadingAnimationWrapper = styled.div`
   & > div {
     transform: scale(0.5);
-    transform-origin: center center;
   }
 `;
 
