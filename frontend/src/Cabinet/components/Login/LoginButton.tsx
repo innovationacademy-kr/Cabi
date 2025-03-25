@@ -53,10 +53,10 @@ const ButtonStyled = styled.button<ButtonStyledProps>`
   align-items: center;
   justify-content: center;
   height: 36px;
-  border: none;
-  border-radius: 4px;
+  /* border: none; */
+  /* border-radius: 4px; */
   padding: 0 16px;
-  cursor: pointer;
+  /* cursor: pointer; */
   font-size: 14px;
   font-weight: 500;
   gap: 12px;
@@ -71,8 +71,10 @@ const ButtonStyled = styled.button<ButtonStyledProps>`
   }
 
   &:disabled {
-    background-color: #c4c4c4;
-    color: #ffffff;
+    /* background-color: #c4c4c4;
+    color: #ffffff; */
+    opacity: 0.3;
+    cursor: not-allowed;
   }
 `;
 

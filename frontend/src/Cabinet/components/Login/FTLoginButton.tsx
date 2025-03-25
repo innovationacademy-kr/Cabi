@@ -26,7 +26,6 @@ const FTLoginButton = ({
       fontColor={display.fontColor}
       disabled={isClicked}
     >
-      {/* TODO : isTarget 필요? */}
       {isClicked && isTarget ? (
         <LoadingAnimation></LoadingAnimation>
       ) : (
@@ -53,6 +52,11 @@ const ButtonStyled = styled.button<{ fontColor: string }>`
     transform: translateY(1px);
   }
   /* TODO: 필요? */
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
 `;
 
 const IconContainer = styled.div<{ provider: TLoginProvider }>`
@@ -60,7 +64,6 @@ const IconContainer = styled.div<{ provider: TLoginProvider }>`
   align-items: center;
   justify-content: center;
   width: 28px;
-  /* TODO : 필요없으면 삭제 */
   height: 100%;
   margin-right: 15px;
 
