@@ -13,20 +13,20 @@ interface LoginButtonProps {
   provider: TLoginProvider;
 }
 
-interface ButtonStyledProps {
-  backgroundColor: string;
-  fontColor: string;
-}
-
-const FTLoginButton: React.FC<LoginButtonProps> = ({
+const FTLoginButton = ({
   onClick,
   display,
   isClicked,
   isTarget,
   provider,
-}) => {
+}: LoginButtonProps) => {
   return (
-    <ButtonStyled onClick={() => onClick()} disabled={isClicked}>
+    <ButtonStyled
+      onClick={() => onClick()}
+      fontColor={display.fontColor}
+      disabled={isClicked}
+    >
+      {/* TODO : isTarget 필요? */}
       {isClicked && isTarget ? (
         <LoadingAnimation></LoadingAnimation>
       ) : (
@@ -35,36 +35,11 @@ const FTLoginButton: React.FC<LoginButtonProps> = ({
           <TextContainer>42 Seoul 로그인</TextContainer>
         </>
       )}
-      {/* TODO : isTarget 필요? */}
     </ButtonStyled>
   );
 };
-// <ButtonStyled
-//   onClick={onClick}
-//   backgroundColor={display.backgroundColor}
-//   fontColor={display.fontColor}
-//   disabled={isClicked}
-// >
 
-//   {isClicked && isTarget ? (
-//     <LoginAnimationContainer>
-//       <LoadingAnimation />
-//     </LoginAnimationContainer>
-//   ) : (
-//     <>
-//       <IconContainer provider={provider}>{display.icon}</IconContainer>
-//       <TextContainer>42 Seoul 로그인</TextContainer>
-//     </>
-//   )}
-// </ButtonStyled>
-
-const FTLoginButtonStyled = styled.button`
-  background-color: var(--sys-main-color);
-  /* TODO : index.css button style 참고 */
-`;
-
-// const ButtonStyled = styled.button<ButtonStyledProps>`
-const ButtonStyled = styled.button`
+const ButtonStyled = styled.button<{ fontColor: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,59 +49,36 @@ const ButtonStyled = styled.button`
   transition: all 0.2s ease;
   /* TODO: 필요? */
 
-  /* &:hover {
-    filter: brightness(95%);
-  } */
-
   &:active {
     transform: translateY(1px);
   }
-
-  /* &:disabled {
-    background-color: #c4c4c4;
-    color: #ffffff;
-  } */
+  /* TODO: 필요? */
 `;
 
 const IconContainer = styled.div<{ provider: TLoginProvider }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  min-width: 28px;
+  width: 28px;
   /* TODO : 필요없으면 삭제 */
   height: 100%;
-  background-color: blue;
   margin-right: 15px;
 
   & > svg {
     width: 28px;
     height: 20px;
   }
-
-  & > svg > path {
-    fill: ${(props) => props.provider === "github" && "#ffffff"};
-  }
 `;
 
 const TextContainer = styled.div`
   text-align: start;
   width: 100%;
-  background-color: purple;
   height: 100%;
   line-height: 1rem;
   font-size: 1rem;
   font-weight: 500;
 `;
 
-const LoginAnimationContainer = styled.div`
-  width: 30px;
-  height: 24px;
-
-  & > div {
-    transform: scale(0.5);
-    transform-origin: center center;
-  }
-`;
-
 export default FTLoginButton;
+
+// TODO : styled component 이름 컨벤션에 맞게 변경
