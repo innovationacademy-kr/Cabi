@@ -6,7 +6,7 @@ import {
 } from "@/Cabinet/assets/data/login";
 
 interface LoginButtonProps {
-  onClick: (provider?: TLoginProvider) => void;
+  onClick: (provider: TLoginProvider) => void;
   display: ISocialLoginConfig["display"];
   isClicked: boolean;
   isTarget: boolean;
@@ -22,7 +22,7 @@ const FTLoginButton = ({
 }: LoginButtonProps) => {
   return (
     <ButtonStyled
-      onClick={() => onClick()}
+      onClick={() => onClick(provider)}
       fontColor={display.fontColor}
       disabled={isClicked}
     >
@@ -33,7 +33,7 @@ const FTLoginButton = ({
           <IconWrapperStyled provider={provider}>
             {display.icon}
           </IconWrapperStyled>
-          <TextWrapperStyled>42 Seoul 로그인</TextWrapperStyled>
+          <TextWrapperStyled>{display.text}</TextWrapperStyled>
         </>
       )}
     </ButtonStyled>
