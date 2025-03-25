@@ -47,7 +47,9 @@ const LoginButtonGroup = () => {
     }
   }, []);
 
-  const onLoginButtonClick = (provider: TLoginProvider) => {
+  const onLoginButtonClick = (
+    provider: TLoginProvider = "42" as TLoginProvider
+  ) => {
     const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
 
     if (isLoggedOut) {
@@ -64,7 +66,7 @@ const LoginButtonGroup = () => {
     <LoginButtonGroupStyled>
       <FTLoginButton
         key="42"
-        onLogin={() => onLoginButtonClick("42" as TLoginProvider)}
+        onClick={onLoginButtonClick}
         display={getSocialDisplayInfo("42")}
         isClicked={loginStatus.isClicked}
         isTarget={loginStatus.target === "42"}

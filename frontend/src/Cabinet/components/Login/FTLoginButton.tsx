@@ -6,7 +6,7 @@ import {
 } from "@/Cabinet/assets/data/login";
 
 interface LoginButtonProps {
-  onLogin: () => void;
+  onClick: (provider?: TLoginProvider) => void;
   display: ISocialLoginConfig["display"];
   isClicked: boolean;
   isTarget: boolean;
@@ -19,75 +19,73 @@ interface ButtonStyledProps {
 }
 
 const FTLoginButton: React.FC<LoginButtonProps> = ({
-  onLogin,
+  onClick,
   display,
   isClicked,
   isTarget,
   provider,
 }) => {
   return (
-    <ButtonStyled
-      onClick={onLogin}
-      backgroundColor={display.backgroundColor}
-      fontColor={display.fontColor}
-      disabled={isClicked}
-    >
-      {/* <button
-        onClick={() => {
-          window.location.replace(url);
-          setIsClicked(true);
-        }}
-        disabled={isClicked}
-      >
-        {isClicked ? <LoadingAnimation></LoadingAnimation> : "L O G I N"}
-      </button> */}
+    <ButtonStyled onClick={() => onClick()} disabled={isClicked}>
       {isClicked && isTarget ? (
-        <LoginAnimationContainer>
-          <LoadingAnimation />
-        </LoginAnimationContainer>
+        <LoadingAnimation></LoadingAnimation>
       ) : (
         <>
           <IconContainer provider={provider}>{display.icon}</IconContainer>
           <TextContainer>42 Seoul 로그인</TextContainer>
         </>
       )}
+      {/* TODO : isTarget 필요? */}
     </ButtonStyled>
   );
 };
+// <ButtonStyled
+//   onClick={onClick}
+//   backgroundColor={display.backgroundColor}
+//   fontColor={display.fontColor}
+//   disabled={isClicked}
+// >
+
+//   {isClicked && isTarget ? (
+//     <LoginAnimationContainer>
+//       <LoadingAnimation />
+//     </LoginAnimationContainer>
+//   ) : (
+//     <>
+//       <IconContainer provider={provider}>{display.icon}</IconContainer>
+//       <TextContainer>42 Seoul 로그인</TextContainer>
+//     </>
+//   )}
+// </ButtonStyled>
 
 const FTLoginButtonStyled = styled.button`
   background-color: var(--sys-main-color);
   /* TODO : index.css button style 참고 */
 `;
 
-const ButtonStyled = styled.button<ButtonStyledProps>`
-  background-color: ${(props) => props.backgroundColor};
-  color: ${(props) => props.fontColor};
+// const ButtonStyled = styled.button<ButtonStyledProps>`
+const ButtonStyled = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
-  /* border: none; */
-  /* border-radius: 4px; */
-  padding: 0 16px;
-  /* cursor: pointer; */
-  font-size: 14px;
-  font-weight: 500;
-  gap: 12px;
-  transition: all 0.2s ease;
+  height: 50px;
+  padding: 15px;
 
-  &:hover {
+  transition: all 0.2s ease;
+  /* TODO: 필요? */
+
+  /* &:hover {
     filter: brightness(95%);
-  }
+  } */
 
   &:active {
     transform: translateY(1px);
   }
 
-  &:disabled {
+  /* &:disabled {
     background-color: #c4c4c4;
     color: #ffffff;
-  }
+  } */
 `;
 
 const IconContainer = styled.div<{ provider: TLoginProvider }>`
@@ -95,12 +93,14 @@ const IconContainer = styled.div<{ provider: TLoginProvider }>`
   align-items: center;
   justify-content: center;
   width: 36px;
-  min-width: 36px;
+  min-width: 28px;
   /* TODO : 필요없으면 삭제 */
   height: 100%;
+  background-color: blue;
+  margin-right: 15px;
 
   & > svg {
-    width: 20px;
+    width: 28px;
     height: 20px;
   }
 
@@ -110,8 +110,13 @@ const IconContainer = styled.div<{ provider: TLoginProvider }>`
 `;
 
 const TextContainer = styled.div`
-  flex: 1;
-  text-align: center;
+  text-align: start;
+  width: 100%;
+  background-color: purple;
+  height: 100%;
+  line-height: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
 `;
 
 const LoginAnimationContainer = styled.div`
