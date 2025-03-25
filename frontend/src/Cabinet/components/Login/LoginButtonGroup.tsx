@@ -94,9 +94,11 @@ const LoginButtonGroupStyled = styled.div`
 `;
 
 const SocialLoginButtonGroupWrapper = styled.div`
-  background-color: green;
   display: flex;
+  justify-content: space-evenly;
   margin-top: 20px;
+  width: 200px;
+  height: 40px;
 `;
 
 export default LoginButtonGroup;
