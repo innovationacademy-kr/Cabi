@@ -88,11 +88,14 @@ const LoginButtonGroup = () => {
 const LoginButtonGroupStyled = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  margin-top: 60px;
 `;
 
 const SocialLoginButtonGroupWrapper = styled.div`
   background-color: green;
+  display: flex;
+  margin-top: 20px;
 `;
 
 export default LoginButtonGroup;

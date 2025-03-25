@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as LoginImg } from "@/Cabinet/assets/images/loginImg.svg";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
@@ -6,7 +6,6 @@ import LoginButtonGroup from "./LoginButtonGroup";
 
 const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
   const { pageTitle, pageSubTitle } = props;
-  const navigator = useNavigate();
 
   return (
     <LoginPageStyled id="loginPage">
@@ -142,8 +141,8 @@ const CardSubTitleStyled = styled.p`
 const AGUURLSectionStyled = styled(Link)`
   background-color: var(--bg-color);
   color: var(--gray-line-btn-color);
-  height: 30px;
   margin-top: 10px;
+  margin-top: 24px;
   text-decoration: underline;
   font-size: 0.875rem;
   font-weight: lighter;
