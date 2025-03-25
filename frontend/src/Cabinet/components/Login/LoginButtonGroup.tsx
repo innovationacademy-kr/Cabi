@@ -2,6 +2,7 @@ import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
 import LoginButton from "@/Cabinet/components/Login/LoginButton";
 import { TLoginProvider } from "@/Cabinet/assets/data/login";
 import {
@@ -61,7 +62,7 @@ const LoginButtonGroup = () => {
 
   return (
     <LoginButtonGroupStyled>
-      <LoginButton
+      <FTLoginButton
         key="42"
         onLogin={() => onLoginButtonClick("42" as TLoginProvider)}
         display={getSocialDisplayInfo("42")}
