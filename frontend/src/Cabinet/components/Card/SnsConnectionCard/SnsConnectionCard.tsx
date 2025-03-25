@@ -40,7 +40,11 @@ const SnsConnectionCard = ({
                     <ProviderName>
                       {displayInfo.text.replace(" 로그인", "")}
                     </ProviderName>
-                    <Email isConnected={isConnected}>{connection.email}</Email>
+                    {connection.email && (
+                      <Email isConnected={isConnected}>
+                        {connection.email}
+                      </Email>
+                    )}
                   </ConnectionInfo>
                 </ProviderInfoWrapper>
                 <ButtonWrapperStyled isConnected={isConnected}>

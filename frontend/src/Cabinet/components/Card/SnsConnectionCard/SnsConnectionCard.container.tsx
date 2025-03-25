@@ -40,7 +40,7 @@ const SnsConnectionCardContainer = () => {
       } else {
         return {
           providerType: provider,
-          email: "연결되지 않았습니다",
+          email: "",
         };
       }
     }
