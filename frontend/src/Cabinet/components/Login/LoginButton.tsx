@@ -5,26 +5,29 @@ import {
   TLoginProvider,
 } from "@/Cabinet/assets/data/login";
 
-interface LoginButtonProps {
-  onLogin: () => void;
+interface ILoginButtonProps {
+  onLoginButtonClick: (provider: TLoginProvider) => void;
   display: ISocialLoginConfig["display"];
+  // TODO : display 타입 정의하기
+  // TODO : display 이름 변경
   isClicked: boolean;
   isTarget: boolean;
   provider: TLoginProvider;
+  // TODO : provider 이름 변경
 }
 
 // TODO : FTLoginButton 참고해서 수정하기
 
-const LoginButton: React.FC<LoginButtonProps> = ({
-  onLogin,
+const LoginButton = ({
+  onLoginButtonClick,
   display,
   isClicked,
   isTarget,
   provider,
-}) => {
+}: ILoginButtonProps) => {
   return (
     <ButtonWrapperStyled
-      onClick={onLogin}
+      onClick={() => onLoginButtonClick(provider)}
       backgroundColor={display.backgroundColor}
       disabled={isClicked}
     >

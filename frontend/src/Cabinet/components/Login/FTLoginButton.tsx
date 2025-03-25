@@ -5,8 +5,8 @@ import {
   TLoginProvider,
 } from "@/Cabinet/assets/data/login";
 
-interface LoginButtonProps {
-  onClick: (provider: TLoginProvider) => void;
+interface IFTLoginButtonProps {
+  onLoginButtonClick: (provider: TLoginProvider) => void;
   display: ISocialLoginConfig["display"];
   isClicked: boolean;
   isTarget: boolean;
@@ -14,15 +14,15 @@ interface LoginButtonProps {
 }
 
 const FTLoginButton = ({
-  onClick,
+  onLoginButtonClick,
   display,
   isClicked,
   isTarget,
   provider,
-}: LoginButtonProps) => {
+}: IFTLoginButtonProps) => {
   return (
     <ButtonWrapperStyled
-      onClick={() => onClick(provider)}
+      onClick={() => onLoginButtonClick(provider)}
       fontColor={display.fontColor}
       disabled={isClicked}
     >

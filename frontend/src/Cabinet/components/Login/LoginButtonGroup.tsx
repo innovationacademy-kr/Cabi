@@ -64,7 +64,7 @@ const LoginButtonGroup = () => {
     <LoginButtonGroupStyled>
       <FTLoginButton
         key="42"
-        onClick={() => onLoginButtonClick("42")}
+        onLoginButtonClick={() => onLoginButtonClick("42")}
         display={getSocialDisplayInfo("42")}
         isClicked={loginStatus.isClicked}
         isTarget={loginStatus.target === "42"}
@@ -74,7 +74,7 @@ const LoginButtonGroup = () => {
         {allProvidersWO42.map((provider) => (
           <LoginButton
             key={provider}
-            onLogin={() => onLoginButtonClick(provider)}
+            onLoginButtonClick={() => onLoginButtonClick(provider)}
             display={getSocialDisplayInfo(provider)}
             isClicked={loginStatus.isClicked}
             isTarget={loginStatus.target === provider}
