@@ -22,9 +22,8 @@ const SnsConnectionCardContainer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newProvider, setNewProvider] = useState<TLoginProvider>("42"); // 기본값: "42"
   const connectedProvider = userOauthConnection
-    ? (userOauthConnection.providerType as TLoginProvider)
+    ? userOauthConnection.providerType
     : "";
-  // TODO : 왜 TLoginProvider 타입 캐스팅?
   // 'google'
 
   const allProviders = getEnabledProviders();

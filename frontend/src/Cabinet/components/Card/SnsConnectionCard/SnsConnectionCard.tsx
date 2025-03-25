@@ -27,7 +27,7 @@ const SnsConnectionCard = ({
     <Card title="소셜 로그인" gridArea="snsConnection" height="290px">
       <>
         {oAuthConnectionAry.map((connection) => {
-          const providerKey = connection.providerType as TLoginProvider;
+          const providerKey = connection.providerType;
           const displayInfo = getSocialDisplayInfo(providerKey);
           const isConnected = connectedProvider === providerKey;
 

@@ -64,11 +64,11 @@ const LoginButtonGroup = () => {
     <LoginButtonGroupStyled>
       <FTLoginButton
         key="42"
-        onClick={() => onLoginButtonClick("42" as TLoginProvider)}
-        display={getSocialDisplayInfo("42" as TLoginProvider)}
+        onClick={() => onLoginButtonClick("42")}
+        display={getSocialDisplayInfo("42")}
         isClicked={loginStatus.isClicked}
-        isTarget={loginStatus.target === ("42" as TLoginProvider)}
-        provider={"42" as TLoginProvider}
+        isTarget={loginStatus.target === "42"}
+        provider={"42"}
       />
       <SocialLoginButtonGroupWrapper>
         {allProvidersWO42.map((provider) => (
