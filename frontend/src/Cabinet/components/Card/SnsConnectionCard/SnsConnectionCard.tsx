@@ -43,7 +43,7 @@ const SnsConnectionCard = ({
                     <Email isConnected={isConnected}>{connection.email}</Email>
                   </ConnectionInfo>
                 </ProviderInfoWrapper>
-                <ButtonWrapperStyled>
+                <ButtonWrapperStyled isConnected={isConnected}>
                   {isConnected ? (
                     <MinusCircleIcon onClick={handleDisconnectButton} />
                   ) : (
@@ -97,13 +97,14 @@ const Email = styled.div<{ isConnected: boolean }>`
   margin-top: 5px;
 `;
 
-const ButtonWrapperStyled = styled.div`
+const ButtonWrapperStyled = styled.div<{ isConnected: boolean }>`
   margin-right: 10px;
   width: 18px;
   height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
 
   & > svg {
     width: 16px;
@@ -116,10 +117,12 @@ const ButtonWrapperStyled = styled.div`
 
   & > svg > circle {
     stroke-width: 1.2;
+    stroke: ${(props) => !props.isConnected && "var(--line-color)"};
   }
 
   & > svg > path {
     stroke-width: 1.2;
+    stroke: ${(props) => !props.isConnected && "var(--line-color)"};
   }
 `;
 
