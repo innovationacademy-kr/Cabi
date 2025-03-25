@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as LoginImg } from "@/Cabinet/assets/images/loginImg.svg";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
@@ -39,9 +39,7 @@ const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
             <CardSubTitleStyled>{pageSubTitle}</CardSubTitleStyled>
           </CardTitleBoxStyled>
           <LoginButtonGroup />
-          <AGUURLSectionStyled onClick={() => navigator("/agu")}>
-            A.G.U 유저라면?
-          </AGUURLSectionStyled>
+          <AGUURLSectionStyled to="/agu">A.G.U 유저라면?</AGUURLSectionStyled>
         </LoginCardStyled>
       </RightSectionStyled>
     </LoginPageStyled>
@@ -110,10 +108,9 @@ const LoginCardStyled = styled.div`
   width: 350px;
   height: 500px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   flex-direction: column;
-  padding: 85px 0;
+  padding-top: 85px;
   background-color: var(--bg-color);
 `;
 
@@ -129,25 +126,27 @@ const CardLogoStyled = styled.div`
 
 const CardTitleBoxStyled = styled.div`
   text-align: center;
-  margin-top: -40px;
+  margin-top: 25px;
 `;
 
 const CardTitleStyled = styled.h1`
   font-size: 2.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
+  line-height: 2.5rem;
 `;
 
 const CardSubTitleStyled = styled.p`
   color: var(--sys-main-color);
 `;
 
-const AGUURLSectionStyled = styled.button`
+const AGUURLSectionStyled = styled(Link)`
   background-color: var(--bg-color);
   color: var(--gray-line-btn-color);
   height: 30px;
   margin-top: 10px;
   text-decoration: underline;
   font-size: 0.875rem;
+  font-weight: lighter;
 `;
 
 export default LoginTemplate;
