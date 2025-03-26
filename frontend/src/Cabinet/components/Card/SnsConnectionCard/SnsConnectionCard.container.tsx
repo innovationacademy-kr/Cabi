@@ -4,7 +4,7 @@ import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import SnsConnectionCard from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCard";
 import SnsConnectionCardModal from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCardModal";
-import { TLoginProvider } from "@/Cabinet/assets/data/login";
+import { TOAuthProvider } from "@/Cabinet/assets/data/login";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {
@@ -20,7 +20,7 @@ const SnsConnectionCardContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
   const userOauthConnection = myInfo.userOauthConnection;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newProvider, setNewProvider] = useState<TLoginProvider>("42"); // 기본값: "42"
+  const [newProvider, setNewProvider] = useState<TOAuthProvider>("42"); // 기본값: "42"
   const connectedProvider = userOauthConnection
     ? userOauthConnection.providerType
     : "";
@@ -29,7 +29,7 @@ const SnsConnectionCardContainer = () => {
   const allProviders = getEnabledProviders();
 
   // allProviders에서 42(excludeProviders) 제외한 프로바이더 배열
-  const allProvidersWO42: TLoginProvider[] = allProviders.filter(
+  const allProvidersWO42: TOAuthProvider[] = allProviders.filter(
     (elem) => elem !== "42"
   );
 
@@ -46,7 +46,7 @@ const SnsConnectionCardContainer = () => {
     }
   );
 
-  const excludeProviders: TLoginProvider[] = ["42"];
+  const excludeProviders: TOAuthProvider[] = ["42"];
   // ['42']
 
   const availableProviders = allProviders.filter(
@@ -89,11 +89,11 @@ const SnsConnectionCardContainer = () => {
     if (response.status === HttpStatusCode.Ok) getMyInfo();
   };
 
-  const connectService = (provider: TLoginProvider) => {
+  const connectService = (provider: TOAuthProvider) => {
     window.location.replace(getOAuthRedirectUrl(provider));
   };
 
-  const handleConnectService = (provider: TLoginProvider) => {
+  const handleConnectService = (provider: TOAuthProvider) => {
     if (connectedProvider === "") {
       // 연동 아무것도 안함
       connectService(provider);

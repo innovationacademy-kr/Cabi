@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { ILoginButtonProps } from "@/Cabinet/components/Login/FTLoginButton";
-import { TLoginProvider } from "@/Cabinet/assets/data/login";
+import { TOAuthProvider } from "@/Cabinet/assets/data/login";
 
 // TODO : FTLoginButton 참고해서 수정하기
 
@@ -47,7 +47,7 @@ const ButtonWrapperStyled = styled.button<{ backgroundColor: string }>`
   }
 `;
 
-const IconWrapperStyled = styled.div<{ provider: TLoginProvider }>`
+const IconWrapperStyled = styled.div<{ provider: TOAuthProvider }>`
   display: flex;
   align-items: center;
   justify-content: center;

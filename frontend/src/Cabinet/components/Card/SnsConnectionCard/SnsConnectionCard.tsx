@@ -4,16 +4,16 @@ import {
   CardContentStyled,
   CardContentWrapper,
 } from "@/Cabinet/components/Card/CardStyles";
-import { TLoginProvider } from "@/Cabinet/assets/data/login";
+import { TOAuthProvider } from "@/Cabinet/assets/data/login";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { getSocialDisplayInfo } from "@/Cabinet/utils/loginUtils";
 
 interface ISnsConnectionCardProps {
-  onConnectService: (provider: TLoginProvider) => void;
+  onConnectService: (provider: TOAuthProvider) => void;
   oAuthConnectionAry: IUserOAuthConnectionDto[];
-  connectedProvider: TLoginProvider | "";
+  connectedProvider: TOAuthProvider | "";
   handleDisconnectButton: () => void;
 }
 

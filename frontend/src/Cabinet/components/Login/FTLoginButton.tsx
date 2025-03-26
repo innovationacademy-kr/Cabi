@@ -1,18 +1,15 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import {
-  ISocialLoginConfig,
-  TLoginProvider,
-} from "@/Cabinet/assets/data/login";
+import { IOAuthConfig, TOAuthProvider } from "@/Cabinet/assets/data/login";
 
 export interface ILoginButtonProps {
-  onLoginButtonClick: (provider: TLoginProvider) => void;
-  display: ISocialLoginConfig["display"];
+  onLoginButtonClick: (provider: TOAuthProvider) => void;
+  display: IOAuthConfig["display"];
   // TODO : display 타입 정의하기
   // TODO : display 이름 변경
   isClicked: boolean;
   isTarget: boolean;
-  provider: TLoginProvider;
+  provider: TOAuthProvider;
   // TODO : provider 이름 변경
 }
 
@@ -60,7 +57,7 @@ const ButtonWrapperStyled = styled.button<{ fontColor: string }>`
   }
 `;
 
-const IconWrapperStyled = styled.div<{ provider: TLoginProvider }>`
+const IconWrapperStyled = styled.div<{ provider: TOAuthProvider }>`
   display: flex;
   align-items: center;
   justify-content: center;

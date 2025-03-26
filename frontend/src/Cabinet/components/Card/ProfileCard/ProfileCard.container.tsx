@@ -35,6 +35,7 @@ const ProfileCardContainer = ({ name }: { name: string | null }) => {
           const returnUrl = encodeURIComponent(`/login`);
           window.location.href = `https://profile.intra.42.fr/logout?return_to=${returnUrl}`;
         }
+        // TODO : 다른 provider 로그아웃 처리
         removeCookie("access_token", {
           path: "/",
           domain:

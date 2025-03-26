@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
 import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
-import { TLoginProvider } from "@/Cabinet/assets/data/login";
+import { TOAuthProvider } from "@/Cabinet/assets/data/login";
 import {
   getEnabledProviders,
   getOAuthRedirectUrl,
@@ -14,7 +14,7 @@ import {
 const LoginButtonGroup = () => {
   const [loginStatus, setLoginStatus] = useState<{
     isClicked: boolean;
-    target: TLoginProvider | null;
+    target: TOAuthProvider | null;
   }>({
     isClicked: false,
     target: null,
@@ -24,7 +24,7 @@ const LoginButtonGroup = () => {
   const statusParamValue = searchParams.get("status");
   const navigator = useNavigate();
   const allProviders = getEnabledProviders();
-  const allProvidersWO42: TLoginProvider[] = allProviders.filter(
+  const allProvidersWO42: TOAuthProvider[] = allProviders.filter(
     (elem) => elem !== "42"
   );
   // TODO: allProviders, allProvidersWO42 리팩토링
@@ -47,7 +47,7 @@ const LoginButtonGroup = () => {
     }
   }, []);
 
-  const onLoginButtonClick = (provider: TLoginProvider) => {
+  const onLoginButtonClick = (provider: TOAuthProvider) => {
     const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
 
     if (isLoggedOut) {

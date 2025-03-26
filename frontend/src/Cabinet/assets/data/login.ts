@@ -4,9 +4,9 @@ import { ReactComponent as GithubLogo } from "@/Cabinet/assets/images/githubLogo
 import { ReactComponent as GoogleLogo } from "@/Cabinet/assets/images/googleLogo.svg";
 import { ReactComponent as KakaoLogo } from "@/Cabinet/assets/images/kakaoLogo.svg";
 
-export type TLoginProvider = "42" | "google" | "kakao" | "github";
+export type TOAuthProvider = "42" | "google" | "kakao" | "github";
 
-export interface ISocialLoginConfig {
+export interface IOAuthConfig {
   oAuthRedirectUrl: string;
   display: {
     text: string;
@@ -19,7 +19,7 @@ export interface ISocialLoginConfig {
 const OAUTH_BASE_URL = `${import.meta.env.VITE_BE_HOST}/oauth2/authorization/`;
 
 // TODO : 색상 토큰 사용
-export const OAUTH_CONFIG: Record<TLoginProvider, ISocialLoginConfig> = {
+export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
   42: {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}ft`,
     // NOTE : forty-two 42

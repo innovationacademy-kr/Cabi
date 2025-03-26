@@ -7,18 +7,18 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
-import { TLoginProvider } from "@/Cabinet/assets/data/login";
+import { TOAuthProvider } from "@/Cabinet/assets/data/login";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import { axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 
 interface ISnsConnectionCardModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  currentProvider: TLoginProvider;
-  newProvider: TLoginProvider;
+  currentProvider: TOAuthProvider;
+  newProvider: TOAuthProvider;
   tryDisconnectSocialAccount: () => Promise<any>;
   setMyInfo: SetterOrUpdater<UserDto>;
-  connectService: (provider: TLoginProvider) => void;
+  connectService: (provider: TOAuthProvider) => void;
 }
 
 // 모달에 관련된건 되도록이면 이 컴포넌트안에.
