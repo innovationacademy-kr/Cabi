@@ -8,7 +8,6 @@ export interface ILoginButtonProps {
   isClicked: boolean;
   isTarget: boolean;
   provider: TOAuthProvider;
-  // TODO : provider 이름 변경
 }
 
 const FTLoginButton = ({

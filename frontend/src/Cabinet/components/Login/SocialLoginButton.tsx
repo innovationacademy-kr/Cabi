@@ -3,8 +3,6 @@ import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { ILoginButtonProps } from "@/Cabinet/components/Login/FTLoginButton";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 
-// TODO : FTLoginButton 참고해서 수정하기
-
 const SocialLoginButton = ({
   onLoginButtonClick,
   display,
