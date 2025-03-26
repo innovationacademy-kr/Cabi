@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import LoginButtonGroup from "@/Cabinet/components/Login/LoginButtonGroup";
 import { oAuthErrorMsgMap } from "@/Cabinet/assets/data/maps";
-import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
-import { OAuthErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import {
-  getAllOAuthProviders,
-  getOAuthRedirectUrl,
-} from "@/Cabinet/utils/oAuthUtils";
+  TOAuthProvider,
+  ftProvider,
+  socialOAuthProviders,
+} from "@/Cabinet/assets/data/oAuth";
+import { OAuthErrorType } from "@/Cabinet/types/enum/error.type.enum";
+import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
 
 const LoginButtonGroupContainer = () => {
   const [loginStatus, setLoginStatus] = useState<{
@@ -22,11 +23,6 @@ const LoginButtonGroupContainer = () => {
   const [searchParams] = useSearchParams();
   const messageParamValue = searchParams.get("message");
   const statusParamValue = searchParams.get("status");
-  const allProviderAry = getAllOAuthProviders();
-  const socialProviderAry: TOAuthProvider[] = allProviderAry.filter(
-    (elem) => elem !== "42"
-  );
-  const ftProvider = allProviderAry[0];
 
   const getOAuthErrorMessage = (errorType: string | null) => {
     const defaultErrorMsg = "오류가 발생했습니다. 다시 시도해 주세요.";
@@ -69,10 +65,9 @@ const LoginButtonGroupContainer = () => {
   return (
     <LoginButtonGroup
       ftProvider={ftProvider}
-      // TODO : ftProvider, socialProviderAry 다른 파일에 정의해놓고 사용? 파일들에서 재사용되니까
       onLoginButtonClick={onLoginButtonClick}
       loginStatus={loginStatus}
-      socialProviderAry={socialProviderAry}
+      socialProviderAry={socialOAuthProviders}
     />
   );
 };
