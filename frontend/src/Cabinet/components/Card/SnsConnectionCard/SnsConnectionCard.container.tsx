@@ -14,7 +14,7 @@ import {
 import {
   getAllOAuthProviders,
   getOAuthRedirectUrl,
-} from "@/Cabinet/utils/loginUtils";
+} from "@/Cabinet/utils/oAuthUtils";
 
 const SnsConnectionCardContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);

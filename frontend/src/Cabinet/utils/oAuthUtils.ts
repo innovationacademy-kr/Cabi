@@ -17,3 +17,4 @@ export const getOAuthDisplayInfo = (
 ): IOAuthDisplay => {
   return OAUTH_CONFIG[provider].display;
 };
+// TODO : loginUtils 파일명 변경

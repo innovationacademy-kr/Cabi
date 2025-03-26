@@ -9,7 +9,7 @@ import {
   getAllOAuthProviders,
   getOAuthDisplayInfo,
   getOAuthRedirectUrl,
-} from "@/Cabinet/utils/loginUtils";
+} from "@/Cabinet/utils/oAuthUtils";
 
 const LoginButtonGroup = () => {
   const [loginStatus, setLoginStatus] = useState<{
