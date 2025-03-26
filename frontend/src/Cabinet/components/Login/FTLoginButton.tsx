@@ -30,7 +30,9 @@ const FTLoginButton = ({
           <IconWrapperStyled provider={provider}>
             {display.icon}
           </IconWrapperStyled>
-          <TextWrapperStyled>{display.text}</TextWrapperStyled>
+          <TextWrapperStyled>
+            {display.text + " Seoul 로그인"}
+          </TextWrapperStyled>
         </>
       )}
     </ButtonWrapperStyled>

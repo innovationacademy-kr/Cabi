@@ -25,7 +25,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}ft`,
     // NOTE : forty-two 42
     display: {
-      text: "42 Seoul 로그인",
+      text: "42",
       backgroundColor: "#9747FF",
       fontColor: "#FFFFFF",
       icon: React.createElement(FTLogo, {
