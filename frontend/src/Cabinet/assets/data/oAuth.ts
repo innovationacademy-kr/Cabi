@@ -6,14 +6,15 @@ import { ReactComponent as KakaoLogo } from "@/Cabinet/assets/images/kakaoLogo.s
 
 export type TOAuthProvider = "42" | "google" | "kakao" | "github";
 
+export interface IOAuthDisplay {
+  text: string;
+  backgroundColor: string;
+  fontColor: string;
+  icon: React.ReactNode;
+}
 export interface IOAuthConfig {
   oAuthRedirectUrl: string;
-  display: {
-    text: string;
-    backgroundColor: string;
-    fontColor: string;
-    icon: React.ReactNode;
-  };
+  display: IOAuthDisplay;
 }
 
 const OAUTH_BASE_URL = `${import.meta.env.VITE_BE_HOST}/oauth2/authorization/`;
@@ -35,8 +36,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
   google: {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}google`,
     display: {
-      text: "Google 로그인",
-      // TODO : " 로그인" 삭제하고 -> 로그인 페이지에서만 " 로그인" 붙이기
+      text: "Google",
       backgroundColor: "var(--ref-gray-100)",
       fontColor: "var(--ref-gray-900)",
       icon: React.createElement(GoogleLogo, {
@@ -47,7 +47,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
   kakao: {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}kakao`,
     display: {
-      text: "kakao 로그인",
+      text: "kakao",
       backgroundColor: "#FEE500",
       fontColor: "#000000d9",
       icon: React.createElement(KakaoLogo, {
@@ -58,7 +58,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
   github: {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}github`,
     display: {
-      text: "gitHub 로그인",
+      text: "gitHub",
       backgroundColor: "#24292f",
       fontColor: "#ffffff",
       icon: React.createElement(GithubLogo, {

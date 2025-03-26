@@ -1,5 +1,5 @@
 import {
-  IOAuthConfig,
+  IOAuthDisplay,
   OAUTH_CONFIG,
   TOAuthProvider,
 } from "@/Cabinet/assets/data/oAuth";
@@ -15,6 +15,6 @@ export const getOAuthRedirectUrl = (provider: TOAuthProvider): string => {
 
 export const getSocialDisplayInfo = (
   provider: TOAuthProvider
-): IOAuthConfig["display"] => {
+): IOAuthDisplay => {
   return OAUTH_CONFIG[provider].display;
 };

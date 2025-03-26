@@ -1,12 +1,10 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { IOAuthConfig, TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
+import { IOAuthDisplay, TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 
 export interface ILoginButtonProps {
   onLoginButtonClick: (provider: TOAuthProvider) => void;
-  display: IOAuthConfig["display"];
-  // TODO : display 타입 정의하기
-  // TODO : display 이름 변경
+  display: IOAuthDisplay;
   isClicked: boolean;
   isTarget: boolean;
   provider: TOAuthProvider;
