@@ -8,7 +8,7 @@ import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
-import { getSocialDisplayInfo } from "@/Cabinet/utils/loginUtils";
+import { getOAuthDisplayInfo } from "@/Cabinet/utils/loginUtils";
 
 interface ISnsConnectionCardProps {
   onConnectService: (provider: TOAuthProvider) => void;
@@ -28,7 +28,7 @@ const SnsConnectionCard = ({
       <>
         {oAuthConnectionAry.map((connection) => {
           const providerKey = connection.providerType;
-          const displayInfo = getSocialDisplayInfo(providerKey);
+          const displayInfo = getOAuthDisplayInfo(providerKey);
           const isConnected = connectedProvider === providerKey;
 
           return (
@@ -66,7 +66,7 @@ const SnsConnectionCard = ({
 };
 
 // const cardButtons = availableProviders.map((provider) => {
-//   const displayInfo = getSocialDisplayInfo(provider);
+//   const displayInfo = getOAuthDisplayInfo(provider);
 //   console.log("displayInfo : ", displayInfo);
 //   return {
 //     label: displayInfo.text.replace(" 로그인", " 연동"),

@@ -12,7 +12,7 @@ import {
   axiosMyInfo,
 } from "@/Cabinet/api/axios/axios.custom";
 import {
-  getAllProviders,
+  getAllOAuthProviders,
   getOAuthRedirectUrl,
 } from "@/Cabinet/utils/loginUtils";
 
@@ -26,7 +26,7 @@ const SnsConnectionCardContainer = () => {
     : "";
   // 'google'
 
-  const allProviders = getAllProviders();
+  const allProviders = getAllOAuthProviders();
 
   // allProviders에서 42(excludeProviders) 제외한 프로바이더 배열
   const allProvidersWO42: TOAuthProvider[] = allProviders.filter(

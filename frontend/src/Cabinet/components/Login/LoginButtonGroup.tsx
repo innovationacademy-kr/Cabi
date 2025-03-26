@@ -6,9 +6,9 @@ import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
 import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import {
-  getAllProviders,
+  getAllOAuthProviders,
+  getOAuthDisplayInfo,
   getOAuthRedirectUrl,
-  getSocialDisplayInfo,
 } from "@/Cabinet/utils/loginUtils";
 
 const LoginButtonGroup = () => {
@@ -21,7 +21,7 @@ const LoginButtonGroup = () => {
   });
   const [searchParams] = useSearchParams();
   const navigator = useNavigate();
-  const allProviderAry = getAllProviders();
+  const allProviderAry = getAllOAuthProviders();
   const socialProviderAry: TOAuthProvider[] = allProviderAry.filter(
     (elem) => elem !== "42"
   );
@@ -64,7 +64,7 @@ const LoginButtonGroup = () => {
       <FTLoginButton
         key="42"
         onLoginButtonClick={() => onLoginButtonClick("42")}
-        display={getSocialDisplayInfo("42")}
+        display={getOAuthDisplayInfo("42")}
         isClicked={loginStatus.isClicked}
         isTarget={loginStatus.target === "42"}
         provider={"42"}
@@ -74,7 +74,7 @@ const LoginButtonGroup = () => {
           <SocialLoginButton
             key={provider}
             onLoginButtonClick={() => onLoginButtonClick(provider)}
-            display={getSocialDisplayInfo(provider)}
+            display={getOAuthDisplayInfo(provider)}
             isClicked={loginStatus.isClicked}
             isTarget={loginStatus.target === provider}
             provider={provider}
