@@ -101,7 +101,7 @@ const Email = styled.div<{ isConnected: boolean }>`
   margin-top: 5px;
 `;
 
-const ButtonWrapperStyled = styled.div<{ isConnected: boolean }>`
+const ButtonWrapperStyled = styled.button<{ isConnected: boolean }>`
   margin-right: 10px;
   width: 18px;
   height: 18px;
@@ -109,6 +109,8 @@ const ButtonWrapperStyled = styled.div<{ isConnected: boolean }>`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  padding: 0;
+  background-color: var(--bg-color);
 
   & > svg {
     width: 16px;
@@ -116,7 +118,7 @@ const ButtonWrapperStyled = styled.div<{ isConnected: boolean }>`
   }
 
   :hover {
-    cursor: pointer;
+    opacity: 0.8;
   }
 
   & > svg > circle {
