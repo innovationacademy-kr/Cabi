@@ -5,7 +5,7 @@ import { TLoginProvider } from "@/Cabinet/assets/data/login";
 
 // TODO : FTLoginButton 참고해서 수정하기
 
-const LoginButton = ({
+const SocialLoginButton = ({
   onLoginButtonClick,
   display,
   isClicked,
@@ -65,4 +65,4 @@ const LoadingAnimationWrapper = styled.div`
   }
 `;
 
-export default LoginButton;
+export default SocialLoginButton;

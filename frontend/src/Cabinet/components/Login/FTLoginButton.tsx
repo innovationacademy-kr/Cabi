@@ -30,7 +30,7 @@ const FTLoginButton = ({
       disabled={isClicked}
     >
       {isClicked && isTarget ? (
-        <LoadingAnimation></LoadingAnimation>
+        <LoadingAnimation />
       ) : (
         <>
           <IconWrapperStyled provider={provider}>

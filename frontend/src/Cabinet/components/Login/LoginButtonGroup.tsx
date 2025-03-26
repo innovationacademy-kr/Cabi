@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
-import LoginButton from "@/Cabinet/components/Login/LoginButton";
+import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
 import { TLoginProvider } from "@/Cabinet/assets/data/login";
 import {
   getEnabledProviders,
@@ -72,7 +72,7 @@ const LoginButtonGroup = () => {
       />
       <SocialLoginButtonGroupWrapper>
         {allProvidersWO42.map((provider) => (
-          <LoginButton
+          <SocialLoginButton
             key={provider}
             onLoginButtonClick={() => onLoginButtonClick(provider)}
             display={getSocialDisplayInfo(provider)}
