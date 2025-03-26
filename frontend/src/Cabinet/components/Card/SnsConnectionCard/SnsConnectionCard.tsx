@@ -4,7 +4,7 @@ import {
   CardContentStyled,
   CardContentWrapper,
 } from "@/Cabinet/components/Card/CardStyles";
-import { TOAuthProvider } from "@/Cabinet/assets/data/login";
+import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";

@@ -2,7 +2,7 @@ import {
   IOAuthConfig,
   OAUTH_CONFIG,
   TOAuthProvider,
-} from "@/Cabinet/assets/data/login";
+} from "@/Cabinet/assets/data/oAuth";
 
 export const getEnabledProviders = (): TOAuthProvider[] => {
   return Object.keys(OAUTH_CONFIG) as TOAuthProvider[];

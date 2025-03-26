@@ -4,7 +4,7 @@ import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import SnsConnectionCard from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCard";
 import SnsConnectionCardModal from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCardModal";
-import { TOAuthProvider } from "@/Cabinet/assets/data/login";
+import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {

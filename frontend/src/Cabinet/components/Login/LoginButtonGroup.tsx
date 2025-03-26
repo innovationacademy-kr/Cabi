@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
 import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
-import { TOAuthProvider } from "@/Cabinet/assets/data/login";
+import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import {
   getEnabledProviders,
   getOAuthRedirectUrl,

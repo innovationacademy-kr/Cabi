@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { IOAuthConfig, TOAuthProvider } from "@/Cabinet/assets/data/login";
+import { IOAuthConfig, TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 
 export interface ILoginButtonProps {
   onLoginButtonClick: (provider: TOAuthProvider) => void;
