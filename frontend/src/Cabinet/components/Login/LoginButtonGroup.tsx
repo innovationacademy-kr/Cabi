@@ -20,14 +20,13 @@ const LoginButtonGroup = () => {
     target: null,
   });
   const [searchParams] = useSearchParams();
-  const messageParamValue = searchParams.get("message");
-  const statusParamValue = searchParams.get("status");
   const navigator = useNavigate();
-  const allProviders = getEnabledProviders();
-  const allProvidersWO42: TOAuthProvider[] = allProviders.filter(
+  const allProviderAry = getEnabledProviders();
+  const socialProviderAry: TOAuthProvider[] = allProviderAry.filter(
     (elem) => elem !== "42"
   );
-  // TODO: allProviders, allProvidersWO42 리팩토링
+  const messageParamValue = searchParams.get("message");
+  const statusParamValue = searchParams.get("status");
 
   useEffect(() => {
     if (statusParamValue && Number(statusParamValue) !== HttpStatusCode.Ok) {
@@ -71,7 +70,7 @@ const LoginButtonGroup = () => {
         provider={"42"}
       />
       <SocialLoginButtonGroupWrapper>
-        {allProvidersWO42.map((provider) => (
+        {socialProviderAry.map((provider) => (
           <SocialLoginButton
             key={provider}
             onLoginButtonClick={() => onLoginButtonClick(provider)}
