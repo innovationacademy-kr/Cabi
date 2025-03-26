@@ -11,11 +11,13 @@ import {
 import { OAuthErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
 
+export interface ILoginStatus {
+  isClicked: boolean;
+  target: TOAuthProvider | null;
+}
+
 const LoginButtonGroupContainer = () => {
-  const [loginStatus, setLoginStatus] = useState<{
-    isClicked: boolean;
-    target: TOAuthProvider | null;
-  }>({
+  const [loginStatus, setLoginStatus] = useState<ILoginStatus>({
     isClicked: false,
     target: null,
   });

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
+import { ILoginStatus } from "@/Cabinet/components/Login/LoginButtonGroup.container";
 import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
@@ -12,11 +13,7 @@ const LoginButtonGroup = ({
 }: {
   ftProvider: TOAuthProvider;
   onLoginButtonClick: (provider: TOAuthProvider) => void;
-  loginStatus: {
-    isClicked: boolean;
-    target: TOAuthProvider | null;
-  };
-  // TODO : onLoginButtonClick 타입 정의?
+  loginStatus: ILoginStatus;
   socialProviderAry: TOAuthProvider[];
 }) => {
   return (
