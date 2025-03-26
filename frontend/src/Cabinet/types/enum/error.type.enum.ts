@@ -6,4 +6,10 @@ enum ErrorType {
   FORBIDDEN = "FORBIDDEN",
 }
 
+export enum OAuthErrorType {
+  NOT_FT_LINK_STATUS = "NOT_FT_LINK_STATUS",
+  OAUTH_EMAIL_ALREADY_LINKED = "OAUTH_EMAIL_ALREADY_LINKED",
+}
+
 export default ErrorType;
+// TODO : export default ErrorType; 를 지우고, ErrorType enum을 외부로 export 하기

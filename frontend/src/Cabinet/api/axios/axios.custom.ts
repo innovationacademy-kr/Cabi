@@ -1,4 +1,5 @@
 import { captureException } from "@sentry/react";
+import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
@@ -496,14 +497,14 @@ export const axiosAGUReturnCancel = async (): Promise<any> => {
 
 const axiosSocialAccountLinkURL = "/v5/oauth/link";
 export const axiosDisconnectSocialAccount = async (
-  mail: string,
-  provider: string
+  mail: string, // 연동 해지하려는 mail
+  provider: TOAuthProvider // 연동되어있는 provider
 ): Promise<any> => {
   try {
     const response = await instance.delete(axiosSocialAccountLinkURL, {
       data: {
-        oauthMail: mail, // 연동 해지하려는 mail
-        provider: provider, // 연동되어있는 providerType
+        oauthMail: mail,
+        provider: provider,
       },
     });
     return response;
