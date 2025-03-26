@@ -19,7 +19,7 @@ export interface ISocialLoginConfig {
 const OAUTH_BASE_URL = `${import.meta.env.VITE_BE_HOST}/oauth2/authorization/`;
 
 // TODO : 색상 토큰 사용
-export const AUTH_CONFIG: Record<TLoginProvider, ISocialLoginConfig> = {
+export const OAUTH_CONFIG: Record<TLoginProvider, ISocialLoginConfig> = {
   42: {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}ft`,
     // NOTE : forty-two 42
@@ -66,5 +66,4 @@ export const AUTH_CONFIG: Record<TLoginProvider, ISocialLoginConfig> = {
       }),
     },
   },
-  // github logo 색 : #24292f
 };
