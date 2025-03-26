@@ -4,10 +4,9 @@ import {
   TOAuthProvider,
 } from "@/Cabinet/assets/data/oAuth";
 
-export const getEnabledProviders = (): TOAuthProvider[] => {
+export const getAllProviders = (): TOAuthProvider[] => {
   return Object.keys(OAUTH_CONFIG) as TOAuthProvider[];
 };
-// TODO : getEnabledProviders -> getAllProviders
 
 export const getOAuthRedirectUrl = (provider: TOAuthProvider): string => {
   return OAUTH_CONFIG[provider].oAuthRedirectUrl;

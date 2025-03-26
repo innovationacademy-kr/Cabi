@@ -6,7 +6,7 @@ import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
 import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import {
-  getEnabledProviders,
+  getAllProviders,
   getOAuthRedirectUrl,
   getSocialDisplayInfo,
 } from "@/Cabinet/utils/loginUtils";
@@ -21,7 +21,7 @@ const LoginButtonGroup = () => {
   });
   const [searchParams] = useSearchParams();
   const navigator = useNavigate();
-  const allProviderAry = getEnabledProviders();
+  const allProviderAry = getAllProviders();
   const socialProviderAry: TOAuthProvider[] = allProviderAry.filter(
     (elem) => elem !== "42"
   );
