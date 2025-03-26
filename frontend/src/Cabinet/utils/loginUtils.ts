@@ -7,9 +7,10 @@ import {
 export const getEnabledProviders = (): TLoginProvider[] => {
   return Object.keys(AUTH_CONFIG) as TLoginProvider[];
 };
+// TODO : getEnabledProviders -> getAllProviders
 
-export const getSocialAuthUrl = (provider: TLoginProvider): string => {
-  return AUTH_CONFIG[provider].authUrl;
+export const getOAuthRedirectUrl = (provider: TLoginProvider): string => {
+  return AUTH_CONFIG[provider].oAuthRedirectUrl;
 };
 
 export const getSocialDisplayInfo = (

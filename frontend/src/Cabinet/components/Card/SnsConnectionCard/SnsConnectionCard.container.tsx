@@ -13,7 +13,7 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import {
   getEnabledProviders,
-  getSocialAuthUrl,
+  getOAuthRedirectUrl,
 } from "@/Cabinet/utils/loginUtils";
 
 const SnsConnectionCardContainer = () => {
@@ -90,9 +90,7 @@ const SnsConnectionCardContainer = () => {
   };
 
   const connectService = (provider: TLoginProvider) => {
-    const authUrl = getSocialAuthUrl(provider);
-
-    window.location.replace(authUrl);
+    window.location.replace(getOAuthRedirectUrl(provider));
   };
 
   const handleConnectService = (provider: TLoginProvider) => {

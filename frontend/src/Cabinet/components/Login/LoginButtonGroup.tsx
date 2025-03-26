@@ -7,7 +7,7 @@ import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
 import { TLoginProvider } from "@/Cabinet/assets/data/login";
 import {
   getEnabledProviders,
-  getSocialAuthUrl,
+  getOAuthRedirectUrl,
   getSocialDisplayInfo,
 } from "@/Cabinet/utils/loginUtils";
 
@@ -51,10 +51,10 @@ const LoginButtonGroup = () => {
     const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
 
     if (isLoggedOut) {
-      window.location.replace(getSocialAuthUrl(provider) + "?prompt=login");
+      window.location.replace(getOAuthRedirectUrl(provider) + "?prompt=login");
       localStorage.removeItem("isLoggedOut");
     } else {
-      window.location.replace(getSocialAuthUrl(provider));
+      window.location.replace(getOAuthRedirectUrl(provider));
     }
 
     setLoginStatus({ isClicked: true, target: provider });
