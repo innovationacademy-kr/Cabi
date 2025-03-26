@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import LoginButtonGroup from "@/Cabinet/components/Login/LoginButtonGroup";
+import LoginButtonGroupContainer from "@/Cabinet/components/Login/LoginButtonGroup.container";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 
 const LoginCard = () => {
@@ -13,7 +13,7 @@ const LoginCard = () => {
         <CardTitleStyled>Cabi</CardTitleStyled>
         <CardSubTitleStyled>여러분의 일상을 가볍게</CardSubTitleStyled>
       </CardTitleBoxStyled>
-      <LoginButtonGroup />
+      <LoginButtonGroupContainer />
       <AGUURLSectionStyled to="/agu">A.G.U 유저라면?</AGUURLSectionStyled>
     </LoginCardStyled>
   );
