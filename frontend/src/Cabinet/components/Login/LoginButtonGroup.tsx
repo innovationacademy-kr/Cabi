@@ -4,7 +4,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
 import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
+import { oAuthErrorMsgMap } from "@/Cabinet/assets/data/maps";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
+import { OAuthErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import {
   getAllOAuthProviders,
   getOAuthDisplayInfo,
@@ -19,41 +21,50 @@ const LoginButtonGroup = () => {
     isClicked: false,
     target: null,
   });
-  const [searchParams] = useSearchParams();
   const navigator = useNavigate();
+  const [searchParams] = useSearchParams();
+  const messageParamValue = searchParams.get("message");
+  const statusParamValue = searchParams.get("status");
   const allProviderAry = getAllOAuthProviders();
   const socialProviderAry: TOAuthProvider[] = allProviderAry.filter(
     (elem) => elem !== "42"
   );
-  const messageParamValue = searchParams.get("message");
-  const statusParamValue = searchParams.get("status");
+  const ftProvider = allProviderAry[0];
+  // TODO : 위 변수들 선언 순서 바꾸기
+
+  const getOAuthErrorMessage = (errorType: string | null) => {
+    const defaultErrorMsg = "오류가 발생했습니다. 다시 시도해 주세요.";
+    const isValidErrorType = Object.values(OAuthErrorType).includes(
+      errorType as OAuthErrorType
+    );
+    if (errorType && isValidErrorType)
+      return oAuthErrorMsgMap[errorType as OAuthErrorType];
+
+    return defaultErrorMsg;
+  };
+
+  const handleOAuthError = () => {
+    const alertMsg = getOAuthErrorMessage(messageParamValue);
+
+    alert(alertMsg);
+    navigator("/login");
+  };
 
   useEffect(() => {
     if (statusParamValue && Number(statusParamValue) !== HttpStatusCode.Ok) {
-      let alertMsg = "오류가 발생했습니다. 다시 시도해 주세요.";
-
-      if (messageParamValue === "NOT_FT_LINK_STATUS") {
-        // code=Forbidden&status=403&message=NOT_FT_LINK_STATUS
-        alertMsg =
-          "아직 연결되지 않은 소셜 계정입니다. 계정을 연동한 후 다시 로그인해 주세요.";
-      } else if (messageParamValue === "OAUTH_EMAIL_ALREADY_LINKED") {
-        // code=Conflict&status=409&message=OAUTH_EMAIL_ALREADY_LINKED
-        alertMsg =
-          "이미 연결된 소셜 계정이 있습니다. 다른 계정을 사용하려면 기존 계정 연동을 해제해주세요.";
-      }
-      alert(alertMsg);
-      navigator("/login");
+      handleOAuthError();
     }
   }, []);
 
   const onLoginButtonClick = (provider: TOAuthProvider) => {
     const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
+    const redirectUrl = getOAuthRedirectUrl(provider);
 
     if (isLoggedOut) {
-      window.location.replace(getOAuthRedirectUrl(provider) + "?prompt=login");
+      window.location.replace(redirectUrl + "?prompt=login");
       localStorage.removeItem("isLoggedOut");
     } else {
-      window.location.replace(getOAuthRedirectUrl(provider));
+      window.location.replace(redirectUrl);
     }
 
     setLoginStatus({ isClicked: true, target: provider });
@@ -62,12 +73,12 @@ const LoginButtonGroup = () => {
   return (
     <LoginButtonGroupStyled>
       <FTLoginButton
-        key="42"
-        onLoginButtonClick={() => onLoginButtonClick("42")}
-        display={getOAuthDisplayInfo("42")}
+        key={ftProvider}
+        onLoginButtonClick={() => onLoginButtonClick(ftProvider)}
+        display={getOAuthDisplayInfo(ftProvider)}
         isClicked={loginStatus.isClicked}
-        isTarget={loginStatus.target === "42"}
-        provider={"42"}
+        isTarget={loginStatus.target === ftProvider}
+        provider={ftProvider}
       />
       <SocialLoginButtonGroupWrapper>
         {socialProviderAry.map((provider) => (
