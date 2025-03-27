@@ -12,7 +12,7 @@ import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCar
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
 import PointColorCardContainer from "@/Cabinet/components/Card/PointColorCard/PointColorCard.container";
 import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileCard.container";
-import SocialAccountLinkContainer from "@/Cabinet/components/Card/SnsConnectionCard/SocialAccountLink.container";
+import SocialAccountLinkContainer from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLink.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import {
   axiosMyInfo,
