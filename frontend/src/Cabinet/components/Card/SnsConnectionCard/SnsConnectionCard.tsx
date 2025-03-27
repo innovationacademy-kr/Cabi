@@ -65,19 +65,6 @@ const SnsConnectionCard = ({
   );
 };
 
-// const cardButtons = availableProviders.map((provider) => {
-//   const displayInfo = getOAuthDisplayInfo(provider);
-//   console.log("displayInfo : ", displayInfo);
-//   return {
-//     label: displayInfo.text.replace(" 로그인", " 연동"),
-//     onClick: () => onConnectService(provider),
-//     backgroundColor: displayInfo.backgroundColor,
-//     fontColor: displayInfo.fontColor,
-//     icon: null,
-//     isClickable: true,
-//   };
-// });
-
 const IconWrapperStyled = styled.div`
   margin-right: 14px;
   display: flex;

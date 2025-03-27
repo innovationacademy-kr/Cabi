@@ -67,7 +67,6 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
     },
   },
 };
-// TODO : 이것도 대문자 적합?
 
 export const allOAuthProviders = Object.keys(OAUTH_CONFIG) as TOAuthProvider[];
 export const socialOAuthProviders: TOAuthProvider[] = allOAuthProviders.filter(

@@ -4,7 +4,10 @@ import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import SnsConnectionCard from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCard";
 import SnsConnectionCardModal from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCardModal";
-import { TOAuthProvider, allOAuthProviders } from "@/Cabinet/assets/data/oAuth";
+import {
+  TOAuthProvider,
+  socialOAuthProviders,
+} from "@/Cabinet/assets/data/oAuth";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {
@@ -21,15 +24,9 @@ const SnsConnectionCardContainer = () => {
   const connectedProvider = userOauthConnection
     ? userOauthConnection.providerType
     : "";
-  // 'google'
 
-  // allProviders에서 42(excludeProviders) 제외한 프로바이더 배열
-  const allProvidersWO42: TOAuthProvider[] = allOAuthProviders.filter(
-    (elem) => elem !== "42"
-  );
-
-  const oAuthConnectionAry: IUserOAuthConnectionDto[] = allProvidersWO42.map(
-    (provider) => {
+  const oAuthConnectionAry: IUserOAuthConnectionDto[] =
+    socialOAuthProviders.map((provider) => {
       if (connectedProvider === provider) {
         return userOauthConnection!;
       } else {
@@ -38,18 +35,7 @@ const SnsConnectionCardContainer = () => {
           email: "",
         };
       }
-    }
-  );
-
-  const excludeProviders: TOAuthProvider[] = ["42"];
-  // ['42']
-
-  const availableProviders = allOAuthProviders.filter(
-    (provider) =>
-      !excludeProviders.includes(provider) && connectedProvider !== provider
-  ); // 아직 연동 안된 프로바이더. 42가 아니고, 연동된 프로바이더가 아닌 프로바이더들
-  // ['kakao', 'github']
-  // TODO: 안 사용하면 지우기
+    });
 
   const getMyInfo = async () => {
     try {
