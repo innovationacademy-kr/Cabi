@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import SocialAccountLinkCard from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard";
-import SocialAccountLinkCardModal from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCardModal";
+import SocialAccountLinkCardModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountLinkCardModal";
 import {
   TOAuthProvider,
   ftProvider,
