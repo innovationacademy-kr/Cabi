@@ -1,4 +1,4 @@
-enum ErrorType {
+export enum ErrorType {
   LENT = "LENT",
   RETURN = "RETURN",
   STORE = "STORE",
@@ -11,6 +11,3 @@ export enum OAuthErrorType {
   OAUTH_EMAIL_ALREADY_LINKED = "OAUTH_EMAIL_ALREADY_LINKED",
   NOT_SUPPORT_OAUTH_TYPE = "NOT_SUPPORT_OAUTH_TYPE",
 }
-
-export default ErrorType;
-// TODO : export default ErrorType; 를 지우고, ErrorType enum을 외부로 export 하기

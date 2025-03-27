@@ -4,7 +4,7 @@ import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import ErrorType from "@/Cabinet/types/enum/error.type.enum";
+import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
