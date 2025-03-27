@@ -4,6 +4,7 @@ import {
   CardContentStyled,
   CardContentWrapper,
 } from "@/Cabinet/components/Card/CardStyles";
+import SocialAccountUnlinkModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountUnlinkModal";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
@@ -15,6 +16,7 @@ interface ISocialAccountLinkCardProps {
   oAuthConnectionAry: IUserOAuthConnectionDto[];
   connectedProvider: TOAuthProvider | "";
   handleDisconnectButton: () => void;
+  isModalOpen: boolean;
 }
 
 const SocialAccountLinkCard = ({
@@ -22,48 +24,52 @@ const SocialAccountLinkCard = ({
   oAuthConnectionAry,
   connectedProvider,
   handleDisconnectButton,
+  isModalOpen,
 }: ISocialAccountLinkCardProps) => {
   return (
-    <Card title="소셜 로그인" gridArea="socialAccountLink" height="290px">
-      <>
-        {oAuthConnectionAry.map((connection) => {
-          const providerKey = connection.providerType;
-          const displayInfo = getOAuthDisplayInfo(providerKey);
-          const isConnected = connectedProvider === providerKey;
+    <>
+      <Card title="소셜 로그인" gridArea="socialAccountLink" height="290px">
+        <>
+          {oAuthConnectionAry.map((connection) => {
+            const providerKey = connection.providerType;
+            const displayInfo = getOAuthDisplayInfo(providerKey);
+            const isConnected = connectedProvider === providerKey;
 
-          return (
-            <CardContentWrapper key={providerKey}>
-              <CardContentStyled>
-                <ProviderInfoWrapper>
-                  <IconWrapperStyled>{displayInfo.icon}</IconWrapperStyled>
-                  <ConnectionInfo>
-                    <ProviderName>{displayInfo.text}</ProviderName>
-                    {connection.email && (
-                      <Email isConnected={isConnected}>
-                        {connection.email}
-                      </Email>
+            return (
+              <CardContentWrapper key={providerKey}>
+                <CardContentStyled>
+                  <ProviderInfoWrapper>
+                    <IconWrapperStyled>{displayInfo.icon}</IconWrapperStyled>
+                    <ConnectionInfo>
+                      <ProviderName>{displayInfo.text}</ProviderName>
+                      {connection.email && (
+                        <Email isConnected={isConnected}>
+                          {connection.email}
+                        </Email>
+                      )}
+                    </ConnectionInfo>
+                  </ProviderInfoWrapper>
+                  <ButtonWrapperStyled isConnected={isConnected}>
+                    {isConnected ? (
+                      <MinusCircleIcon
+                        onClick={handleDisconnectButton}
+                        aria-label="연결 해제"
+                      />
+                    ) : (
+                      <PlusCircleIcon
+                        onClick={() => onConnectService(providerKey)}
+                        aria-label="연결"
+                      />
                     )}
-                  </ConnectionInfo>
-                </ProviderInfoWrapper>
-                <ButtonWrapperStyled isConnected={isConnected}>
-                  {isConnected ? (
-                    <MinusCircleIcon
-                      onClick={handleDisconnectButton}
-                      aria-label="연결 해제"
-                    />
-                  ) : (
-                    <PlusCircleIcon
-                      onClick={() => onConnectService(providerKey)}
-                      aria-label="연결"
-                    />
-                  )}
-                </ButtonWrapperStyled>
-              </CardContentStyled>
-            </CardContentWrapper>
-          );
-        })}
-      </>
-    </Card>
+                  </ButtonWrapperStyled>
+                </CardContentStyled>
+              </CardContentWrapper>
+            );
+          })}
+        </>
+      </Card>
+      {isModalOpen && <SocialAccountUnlinkModal />}
+    </>
   );
 };
 

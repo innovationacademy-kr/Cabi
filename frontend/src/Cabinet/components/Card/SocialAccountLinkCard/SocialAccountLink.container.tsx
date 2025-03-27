@@ -93,6 +93,7 @@ const SocialAccountLinkContainer = () => {
         oAuthConnectionAry={oAuthConnectionAry}
         connectedProvider={connectedProvider}
         handleDisconnectButton={handleDisconnectButton}
+        isModalOpen={isModalOpen}
       />
       {isModalOpen && connectedProvider !== "" && (
         <SocialAccountLinkCardModal
@@ -104,6 +105,7 @@ const SocialAccountLinkContainer = () => {
           connectService={connectService}
         />
       )}
+      {/* TODO : remove modal */}
     </>
   );
 };
