@@ -10,7 +10,7 @@ import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCi
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
-interface ISnsConnectionCardProps {
+interface ISocialAccountLinkCardProps {
   onConnectService: (provider: TOAuthProvider) => void;
   oAuthConnectionAry: IUserOAuthConnectionDto[];
   connectedProvider: TOAuthProvider | "";
@@ -22,9 +22,9 @@ const SocialAccountLinkCard = ({
   oAuthConnectionAry,
   connectedProvider,
   handleDisconnectButton,
-}: ISnsConnectionCardProps) => {
+}: ISocialAccountLinkCardProps) => {
   return (
-    <Card title="소셜 로그인" gridArea="snsConnection" height="290px">
+    <Card title="소셜 로그인" gridArea="socialAccountLink" height="290px">
       <>
         {oAuthConnectionAry.map((connection) => {
           const providerKey = connection.providerType;

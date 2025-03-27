@@ -12,7 +12,7 @@ import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import { axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 
-interface ISnsConnectionCardModalProps {
+interface ISocialAccountLinkCardModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   currentProvider: TOAuthProvider;
   newProvider: TOAuthProvider;
@@ -29,7 +29,7 @@ const SocialAccountLinkCardModal = ({
   tryDisconnectSocialAccount,
   setMyInfo,
   connectService,
-}: ISnsConnectionCardModalProps) => {
+}: ISocialAccountLinkCardModalProps) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
