@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import SocialAccountLinkCard from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard";
-import SocialAccountLinkCardModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountLinkCardModal";
 import {
   TOAuthProvider,
   ftProvider,
@@ -87,27 +86,20 @@ const SocialAccountLinkContainer = () => {
   }; // 서비스 연동 기능 - 유틸리티 함수 사용. 연동 버튼 눌렀을때 실행
 
   return (
-    <>
-      <SocialAccountLinkCard
-        onConnectService={handleConnectService}
-        oAuthConnectionAry={oAuthConnectionAry}
-        connectedProvider={connectedProvider}
-        handleDisconnectButton={handleDisconnectButton}
-        isModalOpen={isModalOpen}
-      />
-      {isModalOpen && connectedProvider !== "" && (
-        <SocialAccountLinkCardModal
-          setIsModalOpen={setIsModalOpen}
-          currentProvider={connectedProvider}
-          newProvider={newProvider}
-          tryDisconnectSocialAccount={tryDisconnectSocialAccount}
-          setMyInfo={setMyInfo}
-          connectService={connectService}
-        />
-      )}
-      {/* TODO : remove modal */}
-    </>
+    <SocialAccountLinkCard
+      onConnectService={handleConnectService}
+      oAuthConnectionAry={oAuthConnectionAry}
+      connectedProvider={connectedProvider}
+      handleDisconnectButton={handleDisconnectButton}
+      isModalOpen={isModalOpen}
+      setIsModalOpen={setIsModalOpen}
+      newProvider={newProvider}
+      tryDisconnectSocialAccount={tryDisconnectSocialAccount}
+      connectService={connectService}
+      setMyInfo={setMyInfo}
+    />
   );
 };
 
 export default SocialAccountLinkContainer;
+// TODO : SocialAccountLinkCardContainer로 이름 변경

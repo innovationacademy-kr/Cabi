@@ -1,14 +1,17 @@
+import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import {
   CardContentStyled,
   CardContentWrapper,
 } from "@/Cabinet/components/Card/CardStyles";
+import SocialAccountLinkCardModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountLinkCardModal";
 import SocialAccountUnlinkModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountUnlinkModal";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
+import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
 interface ISocialAccountLinkCardProps {
@@ -17,7 +20,13 @@ interface ISocialAccountLinkCardProps {
   connectedProvider: TOAuthProvider | "";
   handleDisconnectButton: () => void;
   isModalOpen: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  newProvider: TOAuthProvider;
+  tryDisconnectSocialAccount: () => Promise<any>;
+  connectService: (provider: TOAuthProvider) => void;
+  setMyInfo: SetterOrUpdater<UserDto>;
 }
+// TODO : props diet?
 
 const SocialAccountLinkCard = ({
   onConnectService,
@@ -25,6 +34,11 @@ const SocialAccountLinkCard = ({
   connectedProvider,
   handleDisconnectButton,
   isModalOpen,
+  setIsModalOpen,
+  newProvider,
+  tryDisconnectSocialAccount,
+  connectService,
+  setMyInfo,
 }: ISocialAccountLinkCardProps) => {
   return (
     <>
@@ -69,6 +83,16 @@ const SocialAccountLinkCard = ({
         </>
       </Card>
       {isModalOpen && <SocialAccountUnlinkModal />}
+      {isModalOpen && connectedProvider !== "" && (
+        <SocialAccountLinkCardModal
+          setIsModalOpen={setIsModalOpen}
+          currentProvider={connectedProvider}
+          newProvider={newProvider}
+          tryDisconnectSocialAccount={tryDisconnectSocialAccount}
+          setMyInfo={setMyInfo}
+          connectService={connectService}
+        />
+      )}
     </>
   );
 };
