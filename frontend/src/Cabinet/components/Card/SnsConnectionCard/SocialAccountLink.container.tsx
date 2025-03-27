@@ -17,7 +17,7 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
 
-const SnsConnectionCardContainer = () => {
+const SocialAccountLinkContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
   const userOauthConnection = myInfo.userOauthConnection;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -108,4 +108,4 @@ const SnsConnectionCardContainer = () => {
   );
 };
 
-export default SnsConnectionCardContainer;
+export default SocialAccountLinkContainer;

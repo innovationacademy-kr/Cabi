@@ -37,9 +37,7 @@ const SnsConnectionCard = ({
                 <ProviderInfoWrapper>
                   <IconWrapperStyled>{displayInfo.icon}</IconWrapperStyled>
                   <ConnectionInfo>
-                    <ProviderName>
-                      {displayInfo.text.replace(" 로그인", "")}
-                    </ProviderName>
+                    <ProviderName>{displayInfo.text}</ProviderName>
                     {connection.email && (
                       <Email isConnected={isConnected}>
                         {connection.email}
@@ -49,10 +47,14 @@ const SnsConnectionCard = ({
                 </ProviderInfoWrapper>
                 <ButtonWrapperStyled isConnected={isConnected}>
                   {isConnected ? (
-                    <MinusCircleIcon onClick={handleDisconnectButton} />
+                    <MinusCircleIcon
+                      onClick={handleDisconnectButton}
+                      aria-label="연결 해제"
+                    />
                   ) : (
                     <PlusCircleIcon
                       onClick={() => onConnectService(providerKey)}
+                      aria-label="연결"
                     />
                   )}
                 </ButtonWrapperStyled>
