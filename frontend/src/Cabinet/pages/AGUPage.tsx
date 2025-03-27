@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
-import AGUCabinetReturnSection from "@/Cabinet/components/AGU/AGUCabinetReturnSection";
+import AGUCabinetReturnSectionContainer from "@/Cabinet/components/AGU/AGUCabinetReturnSection.container";
 import AGUMailVerificationSection from "@/Cabinet/components/AGU/AGUMailVerificationSection";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
@@ -59,7 +59,7 @@ const AGUPage = () => {
           <UtilsSectionStyled></UtilsSectionStyled>
           <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
           {aguToken && userId ? (
-            <AGUCabinetReturnSection
+            <AGUCabinetReturnSectionContainer
               handleButtonClick={handleButtonClick}
               isProcessingButtonClick={isProcessingButtonClick}
             />
