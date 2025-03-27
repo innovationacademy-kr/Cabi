@@ -17,7 +17,7 @@ interface ISnsConnectionCardProps {
   handleDisconnectButton: () => void;
 }
 
-const SnsConnectionCard = ({
+const SocialAccountLinkCard = ({
   onConnectService,
   oAuthConnectionAry,
   connectedProvider,
@@ -127,4 +127,4 @@ const ProviderInfoWrapper = styled.div`
   margin-left: 10px;
 `;
 
-export default SnsConnectionCard;
+export default SocialAccountLinkCard;

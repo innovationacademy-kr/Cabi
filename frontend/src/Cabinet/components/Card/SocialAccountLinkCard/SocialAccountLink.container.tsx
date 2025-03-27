@@ -2,8 +2,8 @@ import { HttpStatusCode } from "axios";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
-import SnsConnectionCard from "@/Cabinet/components/Card/SocialAccountLinkCard/SnsConnectionCard";
 import SnsConnectionCardModal from "@/Cabinet/components/Card/SocialAccountLinkCard/SnsConnectionCardModal";
+import SocialAccountLinkCard from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard";
 import {
   TOAuthProvider,
   ftProvider,
@@ -88,7 +88,7 @@ const SocialAccountLinkContainer = () => {
 
   return (
     <>
-      <SnsConnectionCard
+      <SocialAccountLinkCard
         onConnectService={handleConnectService}
         oAuthConnectionAry={oAuthConnectionAry}
         connectedProvider={connectedProvider}
