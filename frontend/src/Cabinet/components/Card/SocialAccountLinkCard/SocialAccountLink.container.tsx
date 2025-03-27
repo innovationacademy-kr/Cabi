@@ -18,8 +18,7 @@ import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
 const SocialAccountLinkContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
   const userOauthConnection = myInfo.userOauthConnection;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  // TODO : 변수명 변경 필요. 다른 계정 연결 한다는 의미 담긴
+  const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
   const [isUnlinkModalOpen, setIsUnlinkModalOpen] = useState(false);
   const [newProvider, setNewProvider] = useState<TOAuthProvider>(ftProvider);
   const connectedProvider = userOauthConnection
@@ -76,7 +75,7 @@ const SocialAccountLinkContainer = () => {
     } else {
       // 연동한 상태에서 다른 소셜 계정 연동 시도
       setNewProvider(provider);
-      setIsModalOpen(true);
+      setIsSwitchModalOpen(true);
     }
   }; // 서비스 연동 기능 - 유틸리티 함수 사용. 연동 버튼 눌렀을때 실행
 
@@ -85,8 +84,8 @@ const SocialAccountLinkContainer = () => {
       onConnectService={handleConnectService}
       oAuthConnectionAry={oAuthConnectionAry}
       connectedProvider={connectedProvider}
-      isModalOpen={isModalOpen}
-      setIsModalOpen={setIsModalOpen}
+      isSwitchModalOpen={isSwitchModalOpen}
+      setIsSwitchModalOpen={setIsSwitchModalOpen}
       newProvider={newProvider}
       tryDisconnectSocialAccount={tryDisconnectSocialAccount}
       connectService={connectService}

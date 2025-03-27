@@ -18,8 +18,8 @@ interface ISocialAccountLinkCardProps {
   onConnectService: (provider: TOAuthProvider) => void;
   oAuthConnectionAry: IUserOAuthConnectionDto[];
   connectedProvider: TOAuthProvider | "";
-  isModalOpen: boolean;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isSwitchModalOpen: boolean;
+  setIsSwitchModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   newProvider: TOAuthProvider;
   tryDisconnectSocialAccount: () => Promise<any>;
   connectService: (provider: TOAuthProvider) => void;
@@ -34,8 +34,8 @@ const SocialAccountLinkCard = ({
   onConnectService,
   oAuthConnectionAry,
   connectedProvider,
-  isModalOpen,
-  setIsModalOpen,
+  isSwitchModalOpen,
+  setIsSwitchModalOpen,
   newProvider,
   tryDisconnectSocialAccount,
   connectService,
@@ -92,9 +92,9 @@ const SocialAccountLinkCard = ({
           getMyInfo={getMyInfo}
         />
       )}
-      {isModalOpen && connectedProvider !== "" && (
+      {isSwitchModalOpen && connectedProvider !== "" && (
         <SocialAccountSwitchModal
-          setIsModalOpen={setIsModalOpen}
+          setIsModalOpen={setIsSwitchModalOpen}
           currentProvider={connectedProvider}
           newProvider={newProvider}
           tryDisconnectSocialAccount={tryDisconnectSocialAccount}
