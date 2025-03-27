@@ -11,6 +11,11 @@ import {
 import { formatDate } from "@/Cabinet/utils/dateUtils";
 import AGUCabinetReturnSection from "./AGUCabinetReturnSection";
 
+export type TAGUReturnPageExitEvent =
+  | BeforeUnloadEvent
+  | PopStateEvent
+  | MouseEvent;
+
 const AGUCabinetReturnSectionContainer = ({
   handleButtonClick,
   isProcessingButtonClick,
@@ -67,10 +72,7 @@ const AGUCabinetReturnSectionContainer = ({
     }
   };
 
-  const handlePageExit = async (
-    e: BeforeUnloadEvent | PopStateEvent | MouseEvent,
-    url?: string
-  ) => {
+  const handlePageExit = async (e: TAGUReturnPageExitEvent, url?: string) => {
     if (e.type === "beforeunload") {
       e.preventDefault();
       return;

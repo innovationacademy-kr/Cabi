@@ -1,6 +1,6 @@
-import { MouseEvent } from "react";
 import styled from "styled-components";
 import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
+import { TAGUReturnPageExitEvent } from "@/Cabinet/components/AGU/AGUCabinetReturnSection.container";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 
 const AGUCabinetReturnSection = ({
@@ -16,11 +16,7 @@ const AGUCabinetReturnSection = ({
   subHeaderMsg: string;
   returnDetailMsg: string;
   tryReturnRequest: () => Promise<void>;
-  handlePageExit: (
-    e: BeforeUnloadEvent | PopStateEvent | MouseEvent,
-    url?: string
-  ) => Promise<void>;
-  // TODO : BeforeUnloadEvent | PopStateEvent | MouseEvent 타입 정의?
+  handlePageExit: (e: TAGUReturnPageExitEvent, url?: string) => Promise<void>;
 }) => {
   return (
     <>
