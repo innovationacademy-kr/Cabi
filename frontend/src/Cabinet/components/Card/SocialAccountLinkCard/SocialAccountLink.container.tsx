@@ -1,4 +1,3 @@
-import { HttpStatusCode } from "axios";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";

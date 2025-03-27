@@ -5,7 +5,7 @@ import {
   CardContentStyled,
   CardContentWrapper,
 } from "@/Cabinet/components/Card/CardStyles";
-import SocialAccountLinkCardModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountLinkCardModal";
+import SocialAccountSwitchModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountSwitchModal";
 import SocialAccountUnlinkModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountUnlinkModal";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
@@ -93,7 +93,7 @@ const SocialAccountLinkCard = ({
         />
       )}
       {isModalOpen && connectedProvider !== "" && (
-        <SocialAccountLinkCardModal
+        <SocialAccountSwitchModal
           setIsModalOpen={setIsModalOpen}
           currentProvider={connectedProvider}
           newProvider={newProvider}

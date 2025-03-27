@@ -22,7 +22,7 @@ interface ISocialAccountLinkCardModalProps {
 }
 
 // 모달에 관련된건 되도록이면 이 컴포넌트안에.
-const SocialAccountLinkCardModal = ({
+const SocialAccountSwitchModal = ({
   setIsModalOpen,
   currentProvider,
   newProvider,
@@ -102,5 +102,5 @@ const SocialAccountLinkCardModal = ({
   );
 };
 
-export default SocialAccountLinkCardModal;
+export default SocialAccountSwitchModal;
 // TODO : 컴포넌트, 파일 이름 및 위치 변경
