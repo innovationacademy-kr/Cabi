@@ -57,7 +57,6 @@ const AGUPage = () => {
       ) : (
         <>
           <UtilsSectionStyled></UtilsSectionStyled>
-          <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
           {aguToken && userId ? (
             <AGUCabinetReturnSectionContainer
               handleButtonClick={handleButtonClick}
@@ -93,7 +92,7 @@ const UtilsSectionStyled = styled.section`
   margin-top: 50px;
 `;
 
-const HeaderStyled = styled.h1`
+export const AGUHeaderStyled = styled.h1`
   font-size: 2rem;
   font-weight: 700;
   margin-top: 30px;

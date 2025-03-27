@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { useRef, useState } from "react";
 import styled from "styled-components";
-import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
+import { AGUHeaderStyled, AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
 import Button from "@/Cabinet/components/Common/Button";
 import { axiosVerifyAGUUser } from "@/Cabinet/api/axios/axios.custom";
 
@@ -41,6 +41,7 @@ const AGUMailVerificationSection = ({
 
   return (
     <>
+      <AGUHeaderStyled>A.G.U 이메일 인증</AGUHeaderStyled>
       <AGUSubHeaderStyled
         dangerouslySetInnerHTML={{ __html: subHeaderMsg }}
       ></AGUSubHeaderStyled>

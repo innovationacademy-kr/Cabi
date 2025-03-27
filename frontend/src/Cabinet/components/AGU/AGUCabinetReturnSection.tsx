@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
+import { AGUHeaderStyled, AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
 import { TAGUReturnPageExitEvent } from "@/Cabinet/components/AGU/AGUCabinetReturnSection.container";
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 
@@ -20,6 +20,7 @@ const AGUCabinetReturnSection = ({
 }) => {
   return (
     <>
+      <AGUHeaderStyled>A.G.U 사물함 반납</AGUHeaderStyled>
       <AGUSubHeaderStyled
         dangerouslySetInnerHTML={{ __html: subHeaderMsg }}
       ></AGUSubHeaderStyled>
