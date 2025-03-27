@@ -20,6 +20,8 @@ const SocialAccountLinkContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
   const userOauthConnection = myInfo.userOauthConnection;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // TODO : 변수명 변경 필요. 다른 계정 연결 한다는 의미 담긴
+  const [isUnlinkModalOpen, setIsUnlinkModalOpen] = useState(false);
   const [newProvider, setNewProvider] = useState<TOAuthProvider>(ftProvider);
   const connectedProvider = userOauthConnection
     ? userOauthConnection.providerType
@@ -64,12 +66,6 @@ const SocialAccountLinkContainer = () => {
     }
   };
 
-  const handleDisconnectButton = async () => {
-    const response = await tryDisconnectSocialAccount();
-
-    if (response.status === HttpStatusCode.Ok) getMyInfo();
-  };
-
   const connectService = (provider: TOAuthProvider) => {
     window.location.replace(getOAuthRedirectUrl(provider));
   };
@@ -90,16 +86,19 @@ const SocialAccountLinkContainer = () => {
       onConnectService={handleConnectService}
       oAuthConnectionAry={oAuthConnectionAry}
       connectedProvider={connectedProvider}
-      handleDisconnectButton={handleDisconnectButton}
       isModalOpen={isModalOpen}
       setIsModalOpen={setIsModalOpen}
       newProvider={newProvider}
       tryDisconnectSocialAccount={tryDisconnectSocialAccount}
       connectService={connectService}
       setMyInfo={setMyInfo}
+      isUnlinkModalOpen={isUnlinkModalOpen}
+      setIsUnlinkModalOpen={setIsUnlinkModalOpen}
+      getMyInfo={getMyInfo}
     />
   );
 };
 
 export default SocialAccountLinkContainer;
 // TODO : SocialAccountLinkCardContainer로 이름 변경
+// TODO : 연동 -> 연결

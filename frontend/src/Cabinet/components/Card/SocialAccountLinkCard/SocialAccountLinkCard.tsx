@@ -18,13 +18,15 @@ interface ISocialAccountLinkCardProps {
   onConnectService: (provider: TOAuthProvider) => void;
   oAuthConnectionAry: IUserOAuthConnectionDto[];
   connectedProvider: TOAuthProvider | "";
-  handleDisconnectButton: () => void;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   newProvider: TOAuthProvider;
   tryDisconnectSocialAccount: () => Promise<any>;
   connectService: (provider: TOAuthProvider) => void;
   setMyInfo: SetterOrUpdater<UserDto>;
+  isUnlinkModalOpen: boolean;
+  setIsUnlinkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  getMyInfo: () => Promise<void>;
 }
 // TODO : props diet?
 
@@ -32,13 +34,15 @@ const SocialAccountLinkCard = ({
   onConnectService,
   oAuthConnectionAry,
   connectedProvider,
-  handleDisconnectButton,
   isModalOpen,
   setIsModalOpen,
   newProvider,
   tryDisconnectSocialAccount,
   connectService,
   setMyInfo,
+  isUnlinkModalOpen,
+  setIsUnlinkModalOpen,
+  getMyInfo,
 }: ISocialAccountLinkCardProps) => {
   return (
     <>
@@ -66,7 +70,7 @@ const SocialAccountLinkCard = ({
                   <ButtonWrapperStyled isConnected={isConnected}>
                     {isConnected ? (
                       <MinusCircleIcon
-                        onClick={handleDisconnectButton}
+                        onClick={() => setIsUnlinkModalOpen(true)}
                         aria-label="연결 해제"
                       />
                     ) : (
@@ -82,7 +86,12 @@ const SocialAccountLinkCard = ({
           })}
         </>
       </Card>
-      {isModalOpen && <SocialAccountUnlinkModal />}
+      {isUnlinkModalOpen && (
+        <SocialAccountUnlinkModal
+          tryDisconnectSocialAccount={tryDisconnectSocialAccount}
+          getMyInfo={getMyInfo}
+        />
+      )}
       {isModalOpen && connectedProvider !== "" && (
         <SocialAccountLinkCardModal
           setIsModalOpen={setIsModalOpen}
