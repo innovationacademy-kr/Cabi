@@ -2,8 +2,8 @@ import { HttpStatusCode } from "axios";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
-import SnsConnectionCardModal from "@/Cabinet/components/Card/SocialAccountLinkCard/SnsConnectionCardModal";
 import SocialAccountLinkCard from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard";
+import SocialAccountLinkCardModal from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCardModal";
 import {
   TOAuthProvider,
   ftProvider,
@@ -95,7 +95,7 @@ const SocialAccountLinkContainer = () => {
         handleDisconnectButton={handleDisconnectButton}
       />
       {isModalOpen && connectedProvider !== "" && (
-        <SnsConnectionCardModal
+        <SocialAccountLinkCardModal
           setIsModalOpen={setIsModalOpen}
           currentProvider={connectedProvider}
           newProvider={newProvider}
