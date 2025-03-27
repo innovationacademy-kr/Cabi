@@ -6,6 +6,7 @@ import SnsConnectionCard from "@/Cabinet/components/Card/SnsConnectionCard/SnsCo
 import SnsConnectionCardModal from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCardModal";
 import {
   TOAuthProvider,
+  ftProvider,
   socialOAuthProviders,
 } from "@/Cabinet/assets/data/oAuth";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
@@ -20,7 +21,7 @@ const SnsConnectionCardContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
   const userOauthConnection = myInfo.userOauthConnection;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newProvider, setNewProvider] = useState<TOAuthProvider>("42"); // 기본값: "42"
+  const [newProvider, setNewProvider] = useState<TOAuthProvider>(ftProvider);
   const connectedProvider = userOauthConnection
     ? userOauthConnection.providerType
     : "";

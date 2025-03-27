@@ -69,9 +69,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
 };
 
 export const allOAuthProviders = Object.keys(OAUTH_CONFIG) as TOAuthProvider[];
-export const socialOAuthProviders: TOAuthProvider[] = allOAuthProviders.filter(
-  (elem) => elem !== "42"
-);
 export const ftProvider = allOAuthProviders[0]; // "42"
-
-// TODO : sns 파일들도 적용
+export const socialOAuthProviders: TOAuthProvider[] = allOAuthProviders.filter(
+  (elem) => elem !== ftProvider
+);
