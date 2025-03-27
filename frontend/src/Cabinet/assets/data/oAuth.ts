@@ -3,7 +3,6 @@ import { ReactComponent as FTLogo } from "@/Cabinet/assets/images/42Logo.svg";
 import { ReactComponent as GithubLogo } from "@/Cabinet/assets/images/githubLogo.svg";
 import { ReactComponent as GoogleLogo } from "@/Cabinet/assets/images/googleLogo.svg";
 import { ReactComponent as KakaoLogo } from "@/Cabinet/assets/images/kakaoLogo.svg";
-import { getAllOAuthProviders } from "@/Cabinet/utils/oAuthUtils";
 
 export type TOAuthProvider = "42" | "google" | "kakao" | "github";
 
@@ -70,8 +69,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
 };
 // TODO : 이것도 대문자 적합?
 
-export const allOAuthProviders = getAllOAuthProviders();
-// TODO : getAllOAuthProviders util에서 제거?
+export const allOAuthProviders = Object.keys(OAUTH_CONFIG) as TOAuthProvider[];
 export const socialOAuthProviders: TOAuthProvider[] = allOAuthProviders.filter(
   (elem) => elem !== "42"
 );

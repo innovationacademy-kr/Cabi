@@ -4,17 +4,14 @@ import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
 import SnsConnectionCard from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCard";
 import SnsConnectionCardModal from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCardModal";
-import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
+import { TOAuthProvider, allOAuthProviders } from "@/Cabinet/assets/data/oAuth";
 import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {
   axiosDisconnectSocialAccount,
   axiosMyInfo,
 } from "@/Cabinet/api/axios/axios.custom";
-import {
-  getAllOAuthProviders,
-  getOAuthRedirectUrl,
-} from "@/Cabinet/utils/oAuthUtils";
+import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
 
 const SnsConnectionCardContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
@@ -26,10 +23,8 @@ const SnsConnectionCardContainer = () => {
     : "";
   // 'google'
 
-  const allProviders = getAllOAuthProviders();
-
   // allProviders에서 42(excludeProviders) 제외한 프로바이더 배열
-  const allProvidersWO42: TOAuthProvider[] = allProviders.filter(
+  const allProvidersWO42: TOAuthProvider[] = allOAuthProviders.filter(
     (elem) => elem !== "42"
   );
 
@@ -49,7 +44,7 @@ const SnsConnectionCardContainer = () => {
   const excludeProviders: TOAuthProvider[] = ["42"];
   // ['42']
 
-  const availableProviders = allProviders.filter(
+  const availableProviders = allOAuthProviders.filter(
     (provider) =>
       !excludeProviders.includes(provider) && connectedProvider !== provider
   ); // 아직 연동 안된 프로바이더. 42가 아니고, 연동된 프로바이더가 아닌 프로바이더들
