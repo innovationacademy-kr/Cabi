@@ -15,9 +15,9 @@ interface ISocialAccountLinkCardModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   currentProvider: TOAuthProvider;
   newProvider: TOAuthProvider;
-  tryDisconnectSocialAccount: () => Promise<any>;
+  tryUnlinkSocialAccount: () => Promise<any>;
   setMyInfo: SetterOrUpdater<UserDto>;
-  connectService: (provider: TOAuthProvider) => void;
+  tryLinkSocialAccount: (provider: TOAuthProvider) => void;
 }
 
 // 모달에 관련된건 되도록이면 이 컴포넌트안에.
@@ -25,9 +25,9 @@ const SocialAccountSwitchModal = ({
   setIsModalOpen,
   currentProvider,
   newProvider,
-  tryDisconnectSocialAccount,
+  tryUnlinkSocialAccount,
   setMyInfo,
-  connectService,
+  tryLinkSocialAccount,
 }: ISocialAccountLinkCardModalProps) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
@@ -41,7 +41,7 @@ const SocialAccountSwitchModal = ({
   // TODO : 기존 연결 끊고 -> 새로운 소셜 계정 연결. 주석 변경 필요
   const trySwitchSocialAccount = async () => {
     try {
-      const response = await tryDisconnectSocialAccount();
+      const response = await tryUnlinkSocialAccount();
 
       if (response.status === HttpStatusCode.Ok) {
         try {
@@ -49,7 +49,7 @@ const SocialAccountSwitchModal = ({
           setMyInfo(data);
 
           if (data.userOauthConnection === null) {
-            await connectService(newProvider);
+            await tryLinkSocialAccount(newProvider);
             setModalTitle("연결 성공");
           }
         } catch (error) {
@@ -65,7 +65,7 @@ const SocialAccountSwitchModal = ({
     }
   };
 
-  const connectServiceModalContents: IModalContents = {
+  const linkSocialAccountModalContents: IModalContents = {
     type: "hasProceedBtn",
     iconType: IconType.CHECKICON,
     title: "소셜 계정 전환",
@@ -79,7 +79,7 @@ const SocialAccountSwitchModal = ({
   return (
     <>
       {!showResponseModal && (
-        <Modal modalContents={connectServiceModalContents} />
+        <Modal modalContents={linkSocialAccountModalContents} />
       )}
       {showResponseModal &&
         (hasErrorOnResponse ? (
