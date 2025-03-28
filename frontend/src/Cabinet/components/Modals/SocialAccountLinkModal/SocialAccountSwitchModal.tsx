@@ -2,7 +2,6 @@ import { HttpStatusCode } from "axios";
 import { useState } from "react";
 import { SetterOrUpdater } from "recoil";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
-import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import {
   FailResponseModal,
   SuccessResponseModal,
@@ -37,7 +36,7 @@ const SocialAccountSwitchModal = ({
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-  }; // TODO : 다른 모달들도 필요하면(생기면) 상위 컴포넌트로 이동
+  };
 
   // TODO : 기존 연결 끊고 -> 새로운 소셜 계정 연결. 주석 변경 필요
   const connectAnotherService = async () => {
@@ -51,7 +50,6 @@ const SocialAccountSwitchModal = ({
 
           if (data.userOauthConnection === null) {
             await connectService(newProvider);
-            // TODO : await 필요한가? 테스트 후 삭제
             setModalTitle("연결 성공");
           }
         } catch (error) {
@@ -79,7 +77,7 @@ const SocialAccountSwitchModal = ({
   };
 
   return (
-    <ModalPortal>
+    <>
       {!showResponseModal && (
         <Modal modalContents={connectServiceModalContents} />
       )}
@@ -95,7 +93,7 @@ const SocialAccountSwitchModal = ({
             closeModal={handleCloseModal}
           />
         ))}
-    </ModalPortal>
+    </>
   );
 };
 

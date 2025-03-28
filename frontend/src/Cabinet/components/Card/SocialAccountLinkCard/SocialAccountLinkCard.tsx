@@ -5,6 +5,7 @@ import {
   CardContentStyled,
   CardContentWrapper,
 } from "@/Cabinet/components/Card/CardStyles";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import SocialAccountSwitchModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountSwitchModal";
 import SocialAccountUnlinkModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountUnlinkModal";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
@@ -86,22 +87,26 @@ const SocialAccountLinkCard = ({
           })}
         </>
       </Card>
-      {isUnlinkModalOpen && (
-        <SocialAccountUnlinkModal
-          tryDisconnectSocialAccount={tryDisconnectSocialAccount}
-          getMyInfo={getMyInfo}
-        />
-      )}
-      {isSwitchModalOpen && connectedProvider !== "" && (
-        <SocialAccountSwitchModal
-          setIsModalOpen={setIsSwitchModalOpen}
-          currentProvider={connectedProvider}
-          newProvider={newProvider}
-          tryDisconnectSocialAccount={tryDisconnectSocialAccount}
-          setMyInfo={setMyInfo}
-          connectService={connectService}
-        />
-      )}
+      <ModalPortal>
+        {isUnlinkModalOpen && (
+          <SocialAccountUnlinkModal
+            tryDisconnectSocialAccount={tryDisconnectSocialAccount}
+            getMyInfo={getMyInfo}
+            setIsModalOpen={setIsUnlinkModalOpen}
+            currentProvider={connectedProvider}
+          />
+        )}
+        {isSwitchModalOpen && connectedProvider !== "" && (
+          <SocialAccountSwitchModal
+            setIsModalOpen={setIsSwitchModalOpen}
+            currentProvider={connectedProvider}
+            newProvider={newProvider}
+            tryDisconnectSocialAccount={tryDisconnectSocialAccount}
+            setMyInfo={setMyInfo}
+            connectService={connectService}
+          />
+        )}
+      </ModalPortal>
     </>
   );
 };
