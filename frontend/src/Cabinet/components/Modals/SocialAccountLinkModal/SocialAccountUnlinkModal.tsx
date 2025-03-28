@@ -9,12 +9,12 @@ import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 
 const SocialAccountUnlinkModal = ({
-  tryDisconnectSocialAccount,
+  tryUnlinkSocialAccount,
   getMyInfo,
   setIsModalOpen,
   currentProvider,
 }: {
-  tryDisconnectSocialAccount: () => Promise<any>;
+  tryUnlinkSocialAccount: () => Promise<any>;
   getMyInfo: () => Promise<void>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   currentProvider: "" | TOAuthProvider;
@@ -28,9 +28,9 @@ const SocialAccountUnlinkModal = ({
     setIsModalOpen(false);
   };
 
-  const tryUnlinkSocialAccount = async () => {
+  const handleUnlinkButton = async () => {
     try {
-      const response = await tryDisconnectSocialAccount();
+      const response = await tryUnlinkSocialAccount();
 
       if (response.status === HttpStatusCode.Ok) {
         await getMyInfo();
@@ -52,7 +52,7 @@ const SocialAccountUnlinkModal = ({
     detail: modalDetail,
     proceedBtnText: "네, 해제할게요",
     cancelBtnText: "취소",
-    onClickProceed: tryUnlinkSocialAccount,
+    onClickProceed: handleUnlinkButton,
     closeModal: handleCloseModal,
   };
 
