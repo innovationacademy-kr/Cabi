@@ -33,13 +33,13 @@ const SocialAccountSwitchModal = ({
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
-  const modalDetail = `연동돼 있는 ${currentProvider} 연동 해제하고 ${newProvider}을 연동할까요?`;
+  const modalDetail = `연결돼 있는 ${currentProvider} 연결 해제하고 ${newProvider}을 연결할까요?`;
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   }; // TODO : 다른 모달들도 필요하면(생기면) 상위 컴포넌트로 이동
 
-  // TODO : 기존 연결 끊고 -> 새로운 소셜 계정 연동. 주석 변경 필요
+  // TODO : 기존 연결 끊고 -> 새로운 소셜 계정 연결. 주석 변경 필요
   const connectAnotherService = async () => {
     try {
       const response = await tryDisconnectSocialAccount();
@@ -52,8 +52,7 @@ const SocialAccountSwitchModal = ({
           if (data.userOauthConnection === null) {
             await connectService(newProvider);
             // TODO : await 필요한가? 테스트 후 삭제
-            setModalTitle("연동 성공");
-            // TODO : 메시지 변경
+            setModalTitle("연결 성공");
           }
         } catch (error) {
           console.error(error);
@@ -61,8 +60,7 @@ const SocialAccountSwitchModal = ({
       }
     } catch (error) {
       console.error(error);
-      setModalTitle("연동 실패");
-      // TODO : 메시지 변경
+      setModalTitle("연결 실패");
       setHasErrorOnResponse(true);
     } finally {
       setShowResponseModal(true);
@@ -72,10 +70,9 @@ const SocialAccountSwitchModal = ({
   const connectServiceModalContents: IModalContents = {
     type: "hasProceedBtn",
     iconType: IconType.CHECKICON,
-    title: "소셜 계정 연동",
-    // TODO : title 수정
+    title: "소셜 계정 전환",
     detail: modalDetail,
-    proceedBtnText: "네, 새 계정을 연동하겠습니다",
+    proceedBtnText: "네, 변경할게요",
     cancelBtnText: "취소",
     onClickProceed: connectAnotherService,
     closeModal: handleCloseModal,

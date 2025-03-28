@@ -70,14 +70,14 @@ const SocialAccountLinkContainer = () => {
 
   const handleConnectService = (provider: TOAuthProvider) => {
     if (connectedProvider === "") {
-      // 연동 아무것도 안함
+      // 연결 아무것도 안함
       connectService(provider);
     } else {
-      // 연동한 상태에서 다른 소셜 계정 연동 시도
+      // 연결한 상태에서 다른 소셜 계정 연결 시도
       setNewProvider(provider);
       setIsSwitchModalOpen(true);
     }
-  }; // 서비스 연동 기능 - 유틸리티 함수 사용. 연동 버튼 눌렀을때 실행
+  }; // TODO : 서비스 연결 기능 - 유틸리티 함수 사용. 연결 버튼 눌렀을때 실행. 주석 변경 필요
 
   return (
     <SocialAccountLinkCard
@@ -99,4 +99,3 @@ const SocialAccountLinkContainer = () => {
 
 export default SocialAccountLinkContainer;
 // TODO : SocialAccountLinkCardContainer로 이름 변경
-// TODO : 연동 -> 연결
