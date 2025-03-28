@@ -21,46 +21,45 @@ const SocialAccountUnlinkModal = ({
 }) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
+  const [modalTitle, setModalTitle] = useState("소셜 계정 연결 해제");
   const modalDetail = `${currentProvider} 계정 연결을 해제하시겠습니까?`;
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-  // TODO : 아무 버튼 누르면 모든 실행이 다 끝나고 finally setIsUnlinkModalOpen(false)
 
-  const tryUnlinkService = async () => {
+  const tryUnlinkSocialAccount = async () => {
     try {
       const response = await tryDisconnectSocialAccount();
+
       if (response.status === HttpStatusCode.Ok) {
         await getMyInfo();
         setModalTitle("연결 해제 성공");
       }
     } catch (error) {
-      console.error(error);
       setHasErrorOnResponse(true);
       setModalTitle("연결 해제 실패");
+      console.error(error);
     } finally {
       setShowResponseModal(true);
     }
   };
 
-  const connectServiceModalContents: IModalContents = {
+  const socialAccountUnlinkModalContents: IModalContents = {
     type: "hasProceedBtn",
     iconType: IconType.CHECKICON,
-    title: "소셜 계정 연결 해제",
-    // TODO : modalTitle state 사용?
+    title: modalTitle,
     detail: modalDetail,
     proceedBtnText: "네, 해제할게요",
     cancelBtnText: "취소",
-    onClickProceed: tryUnlinkService,
+    onClickProceed: tryUnlinkSocialAccount,
     closeModal: handleCloseModal,
   };
 
   return (
     <>
       {!showResponseModal && (
-        <Modal modalContents={connectServiceModalContents} />
+        <Modal modalContents={socialAccountUnlinkModalContents} />
       )}
       {showResponseModal &&
         (hasErrorOnResponse ? (

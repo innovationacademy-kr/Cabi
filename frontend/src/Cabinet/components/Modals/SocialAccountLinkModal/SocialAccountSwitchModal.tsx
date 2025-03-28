@@ -39,7 +39,7 @@ const SocialAccountSwitchModal = ({
   };
 
   // TODO : 기존 연결 끊고 -> 새로운 소셜 계정 연결. 주석 변경 필요
-  const connectAnotherService = async () => {
+  const trySwitchSocialAccount = async () => {
     try {
       const response = await tryDisconnectSocialAccount();
 
@@ -72,7 +72,7 @@ const SocialAccountSwitchModal = ({
     detail: modalDetail,
     proceedBtnText: "네, 변경할게요",
     cancelBtnText: "취소",
-    onClickProceed: connectAnotherService,
+    onClickProceed: trySwitchSocialAccount,
     closeModal: handleCloseModal,
   };
 
