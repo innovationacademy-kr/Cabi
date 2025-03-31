@@ -17,7 +17,7 @@ import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
 
 const SocialAccountLinkContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
-  const linkedOAuthInfo = myInfo.linkedOAuthInfo;
+  const linkedOAuthInfo = myInfo.userOauthConnection;
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
   const [isUnlinkModalOpen, setIsUnlinkModalOpen] = useState(false);
   const [newProvider, setNewProvider] = useState<TOAuthProvider>(ftProvider);

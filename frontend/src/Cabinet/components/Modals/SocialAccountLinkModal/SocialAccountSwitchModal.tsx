@@ -20,7 +20,6 @@ interface ISocialAccountLinkCardModalProps {
   tryLinkSocialAccount: (provider: TOAuthProvider) => void;
 }
 
-// 모달에 관련된건 되도록이면 이 컴포넌트안에.
 const SocialAccountSwitchModal = ({
   setIsModalOpen,
   currentProvider,
@@ -32,13 +31,49 @@ const SocialAccountSwitchModal = ({
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
-  const modalDetail = `연결돼 있는 ${currentProvider} 연결 해제하고 ${newProvider}을 연결할까요?`;
+  const modalDetail = `${currentProvider} 계정 연결을 해제하고 
+  ${newProvider} 계정을 연결할까요?`;
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  // TODO : 기존 연결 끊고 -> 새로운 소셜 계정 연결. 주석 변경 필요
+  /**
+   const trySwitchSocialAccount = async () => {
+  try {
+    await handleUnlink();
+    const userInfo = await fetchUserInfo();
+
+    if (!userInfo.userOauthConnection) {
+      await handleLink();
+      setModalTitle("연결 성공");
+    }
+  } catch (error) {
+    console.error(error);
+    setModalTitle("연결 실패");
+    setHasErrorOnResponse(true);
+  } finally {
+    setShowResponseModal(true);
+  }
+};
+
+const handleUnlink = async () => {
+  const response = await tryUnlinkSocialAccount();
+  if (response.status !== HttpStatusCode.Ok) {
+    throw new Error("Unlink failed");
+  }
+};
+
+const fetchUserInfo = async () => {
+  const { data } = await axiosMyInfo();
+  setMyInfo(data);
+  return data;
+};
+
+const handleLink = async () => {
+  await tryLinkSocialAccount(newProvider);
+};
+   */
   const trySwitchSocialAccount = async () => {
     try {
       const response = await tryUnlinkSocialAccount();
@@ -48,7 +83,7 @@ const SocialAccountSwitchModal = ({
           const { data } = await axiosMyInfo();
           setMyInfo(data);
 
-          if (data.linkedOAuthInfo === null) {
+          if (data.userOauthConnection === null) {
             await tryLinkSocialAccount(newProvider);
             setModalTitle("연결 성공");
           }
@@ -98,4 +133,3 @@ const SocialAccountSwitchModal = ({
 };
 
 export default SocialAccountSwitchModal;
-// TODO : 컴포넌트, 파일 이름 및 위치 변경

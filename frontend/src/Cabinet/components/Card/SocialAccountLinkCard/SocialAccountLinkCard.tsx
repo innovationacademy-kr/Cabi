@@ -86,7 +86,7 @@ const SocialAccountLinkCard = ({
         </>
       </Card>
       <ModalPortal>
-        {isUnlinkModalOpen && (
+        {isUnlinkModalOpen && linkedProvider !== "" && (
           <SocialAccountUnlinkModal
             tryUnlinkSocialAccount={tryUnlinkSocialAccount}
             getMyInfo={getMyInfo}

@@ -24,7 +24,7 @@ export interface UserDto {
   alarmTypes: AlarmInfo | null;
   isDeviceTokenExpired: boolean | null;
   coins: number | null; // 보유 코인
-  linkedOAuthInfo: IUserOAuthLinkInfoDto | null;
+  userOauthConnection: IUserOAuthLinkInfoDto | null;
 }
 
 export interface UserInfo {

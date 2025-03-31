@@ -17,7 +17,7 @@ const SocialAccountUnlinkModal = ({
   tryUnlinkSocialAccount: () => Promise<any>;
   getMyInfo: () => Promise<void>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  currentProvider: "" | TOAuthProvider;
+  currentProvider: TOAuthProvider;
 }) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
