@@ -40,7 +40,8 @@ const SocialAccountLinkCard = ({
 }: ISocialAccountLinkCardProps) => {
   return (
     <>
-      <Card title="소셜 로그인" gridArea="socialAccountLink" height="248px">
+      {/* TODO : icon bg color */}
+      <Card title="소셜 로그인" gridArea="socialAccountLink" height="276px">
         <CardContentWrapper>
           {userOAuthLinks.map((linkInfo) => {
             const providerKey = linkInfo.providerType;
@@ -101,9 +102,26 @@ const SocialAccountLinkCard = ({
   );
 };
 
+const CardContentWrapper = styled.div`
+  border-radius: 10px;
+  margin: 0 5px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const CardContentStyled = styled.div`
+  background-color: #ffffff;
+  height: 60px;
+  border-radius: 10px;
+  margin: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const ProviderInfoWrapper = styled.div`
   display: flex;
-  align-items: center;
 `;
 
 const ProviderIconWrapper = styled.div`
@@ -123,10 +141,10 @@ const ProviderNameStyled = styled.div`
 `;
 
 const EmailAddressStyled = styled.div<{ isLinked: boolean }>`
-  font-size: 14px;
+  font-size: 13px;
   color: var(--gray-text-color);
   color: var(--ref-gray-500);
-  margin-top: 5px;
+  margin-top: 6px;
 `;
 
 const ButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
@@ -158,24 +176,6 @@ const ButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
     stroke-width: 1.2;
     stroke: ${(props) => !props.isLinked && "var(--line-color)"};
   }
-`;
-
-const CardContentStyled = styled.div`
-  background-color: #ffffff;
-  height: 52px;
-  border-radius: 10px;
-  margin: 5px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const CardContentWrapper = styled.div`
-  border-radius: 10px;
-  margin: 0 5px;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
 `;
 
 export default SocialAccountLinkCard;
