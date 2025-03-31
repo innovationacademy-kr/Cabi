@@ -1,11 +1,6 @@
 import { HttpStatusCode } from "axios";
-import { useState } from "react";
 import { SetterOrUpdater } from "recoil";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
@@ -29,9 +24,6 @@ const SocialAccountSwitchModal = ({
   setMyInfo,
   tryLinkSocialAccount,
 }: ISocialAccountLinkCardModalProps) => {
-  const [showResponseModal, setShowResponseModal] = useState(false);
-  const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
   const modalDetail = `${currentProvider} 계정 연결을 해제하고 
 ${newProvider} 계정을 연결할까요?`;
 
@@ -58,7 +50,6 @@ ${newProvider} 계정을 연결할까요?`;
 
   const handleLink = async () => {
     tryLinkSocialAccount(newProvider);
-    setModalTitle("계정 전환 성공");
   };
   // TODO: handleUnlink, getMyInfo, handleLink 상위 컴포넌트 내의 함수와 통일
 
@@ -70,10 +61,6 @@ ${newProvider} 계정을 연결할까요?`;
       handleLink();
     } catch (error) {
       console.error(error);
-      setModalTitle("계정 전환 실패");
-      setHasErrorOnResponse(true);
-    } finally {
-      setShowResponseModal(true);
     }
   };
 
@@ -88,25 +75,7 @@ ${newProvider} 계정을 연결할까요?`;
     closeModal: handleCloseModal,
   };
 
-  return (
-    <>
-      {!showResponseModal && (
-        <Modal modalContents={linkSocialAccountModalContents} />
-      )}
-      {showResponseModal &&
-        (hasErrorOnResponse ? (
-          <FailResponseModal
-            modalTitle={modalTitle}
-            closeModal={handleCloseModal}
-          />
-        ) : (
-          <SuccessResponseModal
-            modalTitle={modalTitle}
-            closeModal={handleCloseModal}
-          />
-        ))}
-    </>
-  );
+  return <Modal modalContents={linkSocialAccountModalContents} />;
 };
 
 export default SocialAccountSwitchModal;
