@@ -51,7 +51,11 @@ const SocialAccountLinkCard = ({
             return (
               <CardContentStyled key={providerKey}>
                 <ProviderInfoWrapper>
-                  <ProviderIconWrapper>{displayInfo.icon}</ProviderIconWrapper>
+                  <ProviderIconWrapper
+                    backgroundColor={displayInfo.backgroundColor}
+                  >
+                    {displayInfo.icon}
+                  </ProviderIconWrapper>
                   <ProviderInfoTextStyled>
                     <ProviderNameStyled>{displayInfo.text}</ProviderNameStyled>
                     {linkInfo.email && (
@@ -111,6 +115,7 @@ const CardContentWrapper = styled.div`
 `;
 
 const CardContentStyled = styled.div`
+  // TODO : 위 아래 padding
   background-color: #ffffff;
   height: 60px;
   border-radius: 10px;
@@ -122,12 +127,22 @@ const CardContentStyled = styled.div`
 
 const ProviderInfoWrapper = styled.div`
   display: flex;
+  align-items: center;
 `;
 
-const ProviderIconWrapper = styled.div`
+const ProviderIconWrapper = styled.div<{ backgroundColor: string }>`
   margin: 0 16px;
   display: flex;
-  width: 20px;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background-color: ${(props) => props.backgroundColor};
+  border-radius: 50%;
+  border-radius: 10px;
+
+  & > svg {
+    width: 20px;
+  }
 `;
 
 const ProviderInfoTextStyled = styled.div`
@@ -141,7 +156,7 @@ const ProviderNameStyled = styled.div`
 `;
 
 const EmailAddressStyled = styled.div<{ isLinked: boolean }>`
-  font-size: 13px;
+  font-size: 12px;
   color: var(--gray-text-color);
   color: var(--ref-gray-500);
   margin-top: 6px;
