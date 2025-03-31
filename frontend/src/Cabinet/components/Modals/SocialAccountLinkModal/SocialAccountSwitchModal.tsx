@@ -21,10 +21,6 @@ const SocialAccountSwitchModal = ({
 <strong>새로운 계정이 연결</strong>됩니다.
 계속 진행하시겠습니까?`;
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
   const trySwitchSocialAccount = async () => {
     try {
       await tryUnlinkSocialAccount();
@@ -36,7 +32,11 @@ const SocialAccountSwitchModal = ({
     }
   };
 
-  const socialAccountLinkModalContents: IModalContents = {
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const modalContents: IModalContents = {
     type: "hasProceedBtn",
     iconType: IconType.CHECKICON,
     title: "소셜 계정 전환",
@@ -47,7 +47,7 @@ const SocialAccountSwitchModal = ({
     closeModal: handleCloseModal,
   };
 
-  return <Modal modalContents={socialAccountLinkModalContents} />;
+  return <Modal modalContents={modalContents} />;
 };
 
 export default SocialAccountSwitchModal;

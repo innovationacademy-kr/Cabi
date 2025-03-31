@@ -1,4 +1,3 @@
-import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
 import {
@@ -12,7 +11,6 @@ import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
 import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/login.dto";
-import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
 interface ISocialAccountLinkCardProps {
@@ -24,7 +22,6 @@ interface ISocialAccountLinkCardProps {
   newProvider: TOAuthProvider;
   tryUnlinkSocialAccount: () => Promise<any>;
   tryLinkSocialAccount: (provider: TOAuthProvider) => void;
-  setMyInfo: SetterOrUpdater<UserDto>;
   isUnlinkModalOpen: boolean;
   setIsUnlinkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   getMyInfo: () => Promise<void>;
@@ -40,7 +37,6 @@ const SocialAccountLinkCard = ({
   newProvider,
   tryUnlinkSocialAccount,
   tryLinkSocialAccount,
-  setMyInfo,
   isUnlinkModalOpen,
   setIsUnlinkModalOpen,
   getMyInfo,

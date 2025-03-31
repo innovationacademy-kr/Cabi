@@ -88,7 +88,6 @@ const SocialAccountLinkContainer = () => {
       newProvider={newProvider}
       tryUnlinkSocialAccount={tryUnlinkSocialAccount}
       tryLinkSocialAccount={tryLinkSocialAccount}
-      setMyInfo={setMyInfo}
       isUnlinkModalOpen={isUnlinkModalOpen}
       setIsUnlinkModalOpen={setIsUnlinkModalOpen}
       getMyInfo={getMyInfo}

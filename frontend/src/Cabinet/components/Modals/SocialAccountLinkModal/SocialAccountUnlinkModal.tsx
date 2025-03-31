@@ -1,4 +1,3 @@
-import { HttpStatusCode } from "axios";
 import { useState } from "react";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import {
@@ -22,7 +21,9 @@ const SocialAccountUnlinkModal = ({
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("소셜 계정 연결 해제");
-  const modalDetail = `${currentProvider} 계정 연결을 해제하시겠습니까?`;
+  const modalDetail = `${
+    currentProvider || "소셜"
+  } 계정 연결을 해제하시겠습니까?`;
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -30,22 +31,18 @@ const SocialAccountUnlinkModal = ({
 
   const handleUnlinkButton = async () => {
     try {
-      const response = await tryUnlinkSocialAccount();
-
-      if (response.status === HttpStatusCode.Ok) {
-        await getMyInfo();
-        setModalTitle("연결 해제 성공");
-      }
+      await tryUnlinkSocialAccount();
+      await getMyInfo();
+      setModalTitle("연결 해제 성공");
     } catch (error) {
       setHasErrorOnResponse(true);
       setModalTitle("연결 해제 실패");
-      console.error(error);
     } finally {
       setShowResponseModal(true);
     }
   };
 
-  const socialAccountUnlinkModalContents: IModalContents = {
+  const modalContents: IModalContents = {
     type: "hasProceedBtn",
     iconType: IconType.CHECKICON,
     title: modalTitle,
@@ -56,25 +53,21 @@ const SocialAccountUnlinkModal = ({
     closeModal: handleCloseModal,
   };
 
-  return (
-    <>
-      {!showResponseModal && (
-        <Modal modalContents={socialAccountUnlinkModalContents} />
-      )}
-      {showResponseModal &&
-        (hasErrorOnResponse ? (
-          <FailResponseModal
-            modalTitle={modalTitle}
-            closeModal={handleCloseModal}
-          />
-        ) : (
-          <SuccessResponseModal
-            modalTitle={modalTitle}
-            closeModal={handleCloseModal}
-          />
-        ))}
-    </>
-  );
+  if (!showResponseModal) return <Modal modalContents={modalContents} />;
+  if (hasErrorOnResponse)
+    return (
+      <FailResponseModal
+        modalTitle={modalTitle}
+        closeModal={handleCloseModal}
+      />
+    );
+  else
+    return (
+      <SuccessResponseModal
+        modalTitle={modalTitle}
+        closeModal={handleCloseModal}
+      />
+    );
 };
 
 export default SocialAccountUnlinkModal;
