@@ -45,6 +45,11 @@ const SocialAccountLinkCard = ({
   setIsUnlinkModalOpen,
   getMyInfo,
 }: ISocialAccountLinkCardProps) => {
+  console.log(
+    "linkedProvider, isUnlinkModalOpen",
+    linkedProvider,
+    isUnlinkModalOpen
+  );
   return (
     <>
       <Card title="소셜 로그인" gridArea="socialAccountLink" height="290px">
@@ -86,7 +91,7 @@ const SocialAccountLinkCard = ({
         </>
       </Card>
       <ModalPortal>
-        {isUnlinkModalOpen && linkedProvider !== "" && (
+        {isUnlinkModalOpen && (
           <SocialAccountUnlinkModal
             tryUnlinkSocialAccount={tryUnlinkSocialAccount}
             getMyInfo={getMyInfo}
