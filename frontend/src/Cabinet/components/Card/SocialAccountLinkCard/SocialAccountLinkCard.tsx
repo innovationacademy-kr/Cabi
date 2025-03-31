@@ -94,10 +94,9 @@ const SocialAccountLinkCard = ({
             currentProvider={linkedProvider}
           />
         )}
-        {isSwitchModalOpen && linkedProvider !== "" && (
+        {isSwitchModalOpen && (
           <SocialAccountSwitchModal
             setIsModalOpen={setIsSwitchModalOpen}
-            currentProvider={linkedProvider}
             newProvider={newProvider}
             tryUnlinkSocialAccount={tryUnlinkSocialAccount}
             tryLinkSocialAccount={tryLinkSocialAccount}

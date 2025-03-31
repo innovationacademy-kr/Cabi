@@ -4,7 +4,6 @@ import IconType from "@/Cabinet/types/enum/icon.type.enum";
 
 interface ISocialAccountLinkCardModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  currentProvider: TOAuthProvider;
   newProvider: TOAuthProvider;
   tryUnlinkSocialAccount: () => Promise<any>;
   tryLinkSocialAccount: (provider: TOAuthProvider) => void;
@@ -13,15 +12,14 @@ interface ISocialAccountLinkCardModalProps {
 
 const SocialAccountSwitchModal = ({
   setIsModalOpen,
-  currentProvider,
   newProvider,
   tryUnlinkSocialAccount,
   tryLinkSocialAccount,
   getMyInfo,
 }: ISocialAccountLinkCardModalProps) => {
-  const modalDetail = `${currentProvider} 계정 연결을 해제하고 
-${newProvider} 계정을 연결할까요?`;
-  // TODO : 원래 계정 연결이 해제되고, 새로운 계정이 연결됩니다. 계속하시겠습니까? 로 수정
+  const modalDetail = `<strong>현재 연결된 계정이 해제</strong>되고,
+<strong>새로운 계정이 연결</strong>됩니다.
+계속 진행하시겠습니까?`;
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -43,7 +41,7 @@ ${newProvider} 계정을 연결할까요?`;
     iconType: IconType.CHECKICON,
     title: "소셜 계정 전환",
     detail: modalDetail,
-    proceedBtnText: "네, 변경할게요",
+    proceedBtnText: "네, 전환할게요",
     cancelBtnText: "취소",
     onClickProceed: trySwitchSocialAccount,
     closeModal: handleCloseModal,
