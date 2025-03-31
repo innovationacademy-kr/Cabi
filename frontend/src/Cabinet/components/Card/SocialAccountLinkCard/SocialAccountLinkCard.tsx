@@ -11,19 +11,19 @@ import SocialAccountUnlinkModal from "@/Cabinet/components/Modals/SocialAccountL
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
-import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
+import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/login.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
 interface ISocialAccountLinkCardProps {
-  onConnectService: (provider: TOAuthProvider) => void;
-  oAuthConnectionAry: IUserOAuthConnectionDto[];
-  connectedProvider: TOAuthProvider | "";
+  onLinkSocialAccount: (provider: TOAuthProvider) => void;
+  userOAuthLinks: IUserOAuthLinkInfoDto[];
+  linkedProvider: TOAuthProvider | "";
   isSwitchModalOpen: boolean;
   setIsSwitchModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   newProvider: TOAuthProvider;
-  tryDisconnectSocialAccount: () => Promise<any>;
-  connectService: (provider: TOAuthProvider) => void;
+  tryUnlinkSocialAccount: () => Promise<any>;
+  tryLinkSocialAccount: (provider: TOAuthProvider) => void;
   setMyInfo: SetterOrUpdater<UserDto>;
   isUnlinkModalOpen: boolean;
   setIsUnlinkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,14 +32,14 @@ interface ISocialAccountLinkCardProps {
 // TODO : props diet?
 
 const SocialAccountLinkCard = ({
-  onConnectService,
-  oAuthConnectionAry,
-  connectedProvider,
+  onLinkSocialAccount,
+  userOAuthLinks,
+  linkedProvider,
   isSwitchModalOpen,
   setIsSwitchModalOpen,
   newProvider,
-  tryDisconnectSocialAccount,
-  connectService,
+  tryUnlinkSocialAccount,
+  tryLinkSocialAccount,
   setMyInfo,
   isUnlinkModalOpen,
   setIsUnlinkModalOpen,
@@ -49,34 +49,32 @@ const SocialAccountLinkCard = ({
     <>
       <Card title="소셜 로그인" gridArea="socialAccountLink" height="290px">
         <>
-          {oAuthConnectionAry.map((connection) => {
-            const providerKey = connection.providerType;
+          {userOAuthLinks.map((linkInfo) => {
+            const providerKey = linkInfo.providerType;
             const displayInfo = getOAuthDisplayInfo(providerKey);
-            const isConnected = connectedProvider === providerKey;
+            const isLinked = linkedProvider === providerKey;
 
             return (
               <CardContentWrapper key={providerKey}>
                 <CardContentStyled>
                   <ProviderInfoWrapper>
                     <IconWrapperStyled>{displayInfo.icon}</IconWrapperStyled>
-                    <ConnectionInfo>
+                    <LinkInfo>
                       <ProviderName>{displayInfo.text}</ProviderName>
-                      {connection.email && (
-                        <Email isConnected={isConnected}>
-                          {connection.email}
-                        </Email>
+                      {linkInfo.email && (
+                        <Email isLinked={isLinked}>{linkInfo.email}</Email>
                       )}
-                    </ConnectionInfo>
+                    </LinkInfo>
                   </ProviderInfoWrapper>
-                  <ButtonWrapperStyled isConnected={isConnected}>
-                    {isConnected ? (
+                  <ButtonWrapperStyled isLinked={isLinked}>
+                    {isLinked ? (
                       <MinusCircleIcon
                         onClick={() => setIsUnlinkModalOpen(true)}
                         aria-label="연결 해제"
                       />
                     ) : (
                       <PlusCircleIcon
-                        onClick={() => onConnectService(providerKey)}
+                        onClick={() => onLinkSocialAccount(providerKey)}
                         aria-label="연결"
                       />
                     )}
@@ -90,20 +88,20 @@ const SocialAccountLinkCard = ({
       <ModalPortal>
         {isUnlinkModalOpen && (
           <SocialAccountUnlinkModal
-            tryDisconnectSocialAccount={tryDisconnectSocialAccount}
+            tryUnlinkSocialAccount={tryUnlinkSocialAccount}
             getMyInfo={getMyInfo}
             setIsModalOpen={setIsUnlinkModalOpen}
-            currentProvider={connectedProvider}
+            currentProvider={linkedProvider}
           />
         )}
-        {isSwitchModalOpen && connectedProvider !== "" && (
+        {isSwitchModalOpen && linkedProvider !== "" && (
           <SocialAccountSwitchModal
             setIsModalOpen={setIsSwitchModalOpen}
-            currentProvider={connectedProvider}
+            currentProvider={linkedProvider}
             newProvider={newProvider}
-            tryDisconnectSocialAccount={tryDisconnectSocialAccount}
+            tryUnlinkSocialAccount={tryUnlinkSocialAccount}
             setMyInfo={setMyInfo}
-            connectService={connectService}
+            tryLinkSocialAccount={tryLinkSocialAccount}
           />
         )}
       </ModalPortal>
@@ -117,7 +115,7 @@ const IconWrapperStyled = styled.div`
   width: 20px;
 `;
 
-const ConnectionInfo = styled.div`
+const LinkInfo = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -127,14 +125,14 @@ const ProviderName = styled.div`
   color: var(--normal-text-color);
 `;
 
-const Email = styled.div<{ isConnected: boolean }>`
-  font-size: ${(props) => (props.isConnected ? "14px" : "13px")};
+const Email = styled.div<{ isLinked: boolean }>`
+  font-size: ${(props) => (props.isLinked ? "14px" : "13px")};
   color: var(--gray-text-color);
   color: var(--ref-gray-500);
   margin-top: 5px;
 `;
 
-const ButtonWrapperStyled = styled.button<{ isConnected: boolean }>`
+const ButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
   margin-right: 10px;
   width: 18px;
   height: 18px;
@@ -156,12 +154,12 @@ const ButtonWrapperStyled = styled.button<{ isConnected: boolean }>`
 
   & > svg > circle {
     stroke-width: 1.2;
-    stroke: ${(props) => !props.isConnected && "var(--line-color)"};
+    stroke: ${(props) => !props.isLinked && "var(--line-color)"};
   }
 
   & > svg > path {
     stroke-width: 1.2;
-    stroke: ${(props) => !props.isConnected && "var(--line-color)"};
+    stroke: ${(props) => !props.isLinked && "var(--line-color)"};
   }
 `;
 

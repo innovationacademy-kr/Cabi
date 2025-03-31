@@ -7,7 +7,7 @@ import {
   ftProvider,
   socialOAuthProviders,
 } from "@/Cabinet/assets/data/oAuth";
-import { IUserOAuthConnectionDto } from "@/Cabinet/types/dto/login.dto";
+import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/login.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {
   axiosDisconnectSocialAccount,
@@ -21,13 +21,13 @@ const SocialAccountLinkContainer = () => {
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
   const [isUnlinkModalOpen, setIsUnlinkModalOpen] = useState(false);
   const [newProvider, setNewProvider] = useState<TOAuthProvider>(ftProvider);
-  const connectedProvider = userOauthConnection
+  const linkedProvider = userOauthConnection
     ? userOauthConnection.providerType
     : "";
 
-  const oAuthConnectionAry: IUserOAuthConnectionDto[] =
-    socialOAuthProviders.map((provider) => {
-      if (connectedProvider === provider) {
+  const userOAuthLinks: IUserOAuthLinkInfoDto[] = socialOAuthProviders.map(
+    (provider) => {
+      if (linkedProvider === provider) {
         return userOauthConnection!;
       } else {
         return {
@@ -35,7 +35,8 @@ const SocialAccountLinkContainer = () => {
           email: "",
         };
       }
-    });
+    }
+  );
 
   const getMyInfo = async () => {
     try {
@@ -46,7 +47,7 @@ const SocialAccountLinkContainer = () => {
     }
   };
 
-  const tryDisconnectSocialAccount = async () => {
+  const tryUnlinkSocialAccount = async () => {
     if (userOauthConnection) {
       try {
         const mailState = userOauthConnection.email;
@@ -64,14 +65,14 @@ const SocialAccountLinkContainer = () => {
     }
   };
 
-  const connectService = (provider: TOAuthProvider) => {
+  const tryLinkSocialAccount = (provider: TOAuthProvider) => {
     window.location.replace(getOAuthRedirectUrl(provider));
   };
 
-  const handleConnectService = (provider: TOAuthProvider) => {
-    if (connectedProvider === "") {
+  const handleLinkSocialAccount = (provider: TOAuthProvider) => {
+    if (linkedProvider === "") {
       // 연결 아무것도 안함
-      connectService(provider);
+      tryLinkSocialAccount(provider);
     } else {
       // 연결한 상태에서 다른 소셜 계정 연결 시도
       setNewProvider(provider);
@@ -81,14 +82,14 @@ const SocialAccountLinkContainer = () => {
 
   return (
     <SocialAccountLinkCard
-      onConnectService={handleConnectService}
-      oAuthConnectionAry={oAuthConnectionAry}
-      connectedProvider={connectedProvider}
+      onLinkSocialAccount={handleLinkSocialAccount}
+      userOAuthLinks={userOAuthLinks}
+      linkedProvider={linkedProvider}
       isSwitchModalOpen={isSwitchModalOpen}
       setIsSwitchModalOpen={setIsSwitchModalOpen}
       newProvider={newProvider}
-      tryDisconnectSocialAccount={tryDisconnectSocialAccount}
-      connectService={connectService}
+      tryUnlinkSocialAccount={tryUnlinkSocialAccount}
+      tryLinkSocialAccount={tryLinkSocialAccount}
       setMyInfo={setMyInfo}
       isUnlinkModalOpen={isUnlinkModalOpen}
       setIsUnlinkModalOpen={setIsUnlinkModalOpen}
