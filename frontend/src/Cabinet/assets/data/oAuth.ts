@@ -9,7 +9,7 @@ export type TOAuthProvider = "42" | "google" | "kakao" | "github";
 export interface IOAuthDisplay {
   text: string;
   backgroundColor: string;
-  fontColor: string;
+  fontColor?: string;
   icon: React.ReactNode;
 }
 export interface IOAuthConfig {
@@ -26,8 +26,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
     // NOTE : forty-two 42
     display: {
       text: "42",
-      backgroundColor: "#9747FF",
-      fontColor: "#FFFFFF",
+      backgroundColor: "var(--sys-main-color)",
       icon: React.createElement(FTLogo, {
         "aria-label": "42",
       }),
@@ -37,8 +36,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}google`,
     display: {
       text: "Google",
-      backgroundColor: "var(--ref-gray-100)",
-      fontColor: "var(--ref-gray-900)",
+      backgroundColor: "var(--card-bg-color)",
       icon: React.createElement(GoogleLogo, {
         "aria-label": "google",
       }),
@@ -48,8 +46,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}kakao`,
     display: {
       text: "kakao",
-      backgroundColor: "#FEE500",
-      fontColor: "#000000d9",
+      backgroundColor: "var(--ref-yellow-100)",
       icon: React.createElement(KakaoLogo, {
         "aria-label": "kakao",
       }),
@@ -59,8 +56,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}github`,
     display: {
       text: "gitHub",
-      backgroundColor: "#24292f",
-      fontColor: "#ffffff",
+      backgroundColor: "var(--github-bg-color)",
       icon: React.createElement(GithubLogo, {
         "aria-label": "github",
       }),

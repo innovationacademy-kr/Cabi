@@ -54,6 +54,9 @@ const lightValues = css`
   --left-nav-border-shadow-color: var(--ref-black-shadow-200);
   --page-btn-shadow-color: var(--ref-black-shadow-300);
 
+  /* social oauth brand color */
+  --github-bg-color: var(--ref-blue-900);
+
   color: var(--normal-text-color);
   background-color: var(--bg-color);
 `;
@@ -112,6 +115,8 @@ const darkValues = css`
   --menu-bg-shadow-color: var(--ref-black-shadow-300);
   --left-nav-border-shadow-color: var(--ref-black-shadow-400);
   --page-btn-shadow-color: var(--ref-black-shadow-400);
+
+  /* social oauth brand color */
 
   color: var(--normal-text-color);
   background-color: var(--bg-color);
