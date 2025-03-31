@@ -1,10 +1,10 @@
 import { useState } from "react";
+import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLink.container";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
-import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 
 const SocialAccountUnlinkModal = ({
@@ -16,7 +16,7 @@ const SocialAccountUnlinkModal = ({
   tryUnlinkSocialAccount: () => Promise<any>;
   getMyInfo: () => Promise<void>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  currentProvider: "" | TOAuthProvider;
+  currentProvider: TOAuthProviderOrEmpty;
 }) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);

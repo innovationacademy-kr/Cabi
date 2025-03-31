@@ -4,6 +4,7 @@ import {
   CardContentStyled,
   CardContentWrapper,
 } from "@/Cabinet/components/Card/CardStyles";
+import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLink.container";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import SocialAccountSwitchModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountSwitchModal";
 import SocialAccountUnlinkModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountUnlinkModal";
@@ -16,7 +17,7 @@ import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 interface ISocialAccountLinkCardProps {
   onLinkSocialAccount: (provider: TOAuthProvider) => void;
   userOAuthLinks: IUserOAuthLinkInfoDto[];
-  linkedProvider: TOAuthProvider | "";
+  linkedProvider: TOAuthProviderOrEmpty;
   isSwitchModalOpen: boolean;
   setIsSwitchModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   newProvider: TOAuthProvider;

@@ -15,13 +15,17 @@ import {
 } from "@/Cabinet/api/axios/axios.custom";
 import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
 
+export type TOAuthProviderOrEmpty = TOAuthProvider | "";
+
 const SocialAccountLinkContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
   const linkedOAuthInfo = myInfo.userOauthConnection;
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
   const [isUnlinkModalOpen, setIsUnlinkModalOpen] = useState(false);
   const [newProvider, setNewProvider] = useState<TOAuthProvider>(ftProvider);
-  const linkedProvider = linkedOAuthInfo ? linkedOAuthInfo.providerType : "";
+  const linkedProvider: TOAuthProviderOrEmpty = linkedOAuthInfo
+    ? linkedOAuthInfo.providerType
+    : "";
 
   const userOAuthLinks: IUserOAuthLinkInfoDto[] = socialOAuthProviders.map(
     (provider) => {
