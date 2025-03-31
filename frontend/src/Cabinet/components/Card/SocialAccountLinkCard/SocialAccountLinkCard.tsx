@@ -54,15 +54,21 @@ const SocialAccountLinkCard = ({
             return (
               <CardContentWrapper key={providerKey}>
                 <CardContentStyled>
-                  <ProviderInfoWrapper>
-                    <IconWrapperStyled>{displayInfo.icon}</IconWrapperStyled>
-                    <LinkInfo>
-                      <ProviderName>{displayInfo.text}</ProviderName>
+                  <LinkInfoWrapper>
+                    <ProviderIconWrapper>
+                      {displayInfo.icon}
+                    </ProviderIconWrapper>
+                    <LinkInfoTextStyled>
+                      <ProviderNameStyled>
+                        {displayInfo.text}
+                      </ProviderNameStyled>
                       {linkInfo.email && (
-                        <Email isLinked={isLinked}>{linkInfo.email}</Email>
+                        <EmailAddressStyled isLinked={isLinked}>
+                          {linkInfo.email}
+                        </EmailAddressStyled>
                       )}
-                    </LinkInfo>
-                  </ProviderInfoWrapper>
+                    </LinkInfoTextStyled>
+                  </LinkInfoWrapper>
                   <ButtonWrapperStyled isLinked={isLinked}>
                     {isLinked ? (
                       <MinusCircleIcon
@@ -105,23 +111,29 @@ const SocialAccountLinkCard = ({
   );
 };
 
-const IconWrapperStyled = styled.div`
+const LinkInfoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+`;
+
+const ProviderIconWrapper = styled.div`
   margin-right: 14px;
   display: flex;
   width: 20px;
 `;
 
-const LinkInfo = styled.div`
+const LinkInfoTextStyled = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const ProviderName = styled.div`
+const ProviderNameStyled = styled.div`
   font-size: 16px;
   color: var(--normal-text-color);
 `;
 
-const Email = styled.div<{ isLinked: boolean }>`
+const EmailAddressStyled = styled.div<{ isLinked: boolean }>`
   font-size: ${(props) => (props.isLinked ? "14px" : "13px")};
   color: var(--gray-text-color);
   color: var(--ref-gray-500);
@@ -157,12 +169,6 @@ const ButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
     stroke-width: 1.2;
     stroke: ${(props) => !props.isLinked && "var(--line-color)"};
   }
-`;
-
-const ProviderInfoWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
 `;
 
 export default SocialAccountLinkCard;
