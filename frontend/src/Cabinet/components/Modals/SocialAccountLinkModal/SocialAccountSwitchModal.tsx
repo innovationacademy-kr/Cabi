@@ -19,6 +19,7 @@ interface ISocialAccountLinkCardModalProps {
   setMyInfo: SetterOrUpdater<UserDto>;
   tryLinkSocialAccount: (provider: TOAuthProvider) => void;
 }
+// TODO : 인터페이스 정의? 너무 장황하긴 함..
 
 const SocialAccountSwitchModal = ({
   setIsModalOpen,
@@ -32,68 +33,44 @@ const SocialAccountSwitchModal = ({
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const modalDetail = `${currentProvider} 계정 연결을 해제하고 
-  ${newProvider} 계정을 연결할까요?`;
+${newProvider} 계정을 연결할까요?`;
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  /**
-   const trySwitchSocialAccount = async () => {
-  try {
-    await handleUnlink();
-    const userInfo = await fetchUserInfo();
-
-    if (!userInfo.userOauthConnection) {
-      await handleLink();
-      setModalTitle("연결 성공");
+  const handleUnlink = async () => {
+    const response = await tryUnlinkSocialAccount();
+    if (response.status !== HttpStatusCode.Ok) {
+      throw new Error("unlink failed.");
     }
-  } catch (error) {
-    console.error(error);
-    setModalTitle("연결 실패");
-    setHasErrorOnResponse(true);
-  } finally {
-    setShowResponseModal(true);
-  }
-};
+  };
 
-const handleUnlink = async () => {
-  const response = await tryUnlinkSocialAccount();
-  if (response.status !== HttpStatusCode.Ok) {
-    throw new Error("Unlink failed");
-  }
-};
+  const getMyInfo = async () => {
+    const response = await axiosMyInfo();
+    if (response.status === HttpStatusCode.Ok) {
+      setMyInfo(response.data);
+      return response.data;
+    } else {
+      throw new Error("fetch user's info failed");
+    }
+  };
 
-const fetchUserInfo = async () => {
-  const { data } = await axiosMyInfo();
-  setMyInfo(data);
-  return data;
-};
+  const handleLink = async () => {
+    tryLinkSocialAccount(newProvider);
+    setModalTitle("계정 전환 성공");
+  };
+  // TODO: handleUnlink, getMyInfo, handleLink 상위 컴포넌트 내의 함수와 통일
 
-const handleLink = async () => {
-  await tryLinkSocialAccount(newProvider);
-};
-   */
   const trySwitchSocialAccount = async () => {
     try {
-      const response = await tryUnlinkSocialAccount();
+      await handleUnlink();
+      await getMyInfo();
 
-      if (response.status === HttpStatusCode.Ok) {
-        try {
-          const { data } = await axiosMyInfo();
-          setMyInfo(data);
-
-          if (data.userOauthConnection === null) {
-            await tryLinkSocialAccount(newProvider);
-            setModalTitle("연결 성공");
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      }
+      handleLink();
     } catch (error) {
       console.error(error);
-      setModalTitle("연결 실패");
+      setModalTitle("계정 전환 실패");
       setHasErrorOnResponse(true);
     } finally {
       setShowResponseModal(true);
