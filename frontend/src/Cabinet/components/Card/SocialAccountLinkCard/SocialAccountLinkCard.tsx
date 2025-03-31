@@ -1,9 +1,5 @@
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
-import {
-  CardContentStyled,
-  CardContentWrapper,
-} from "@/Cabinet/components/Card/CardStyles";
 import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLink.container";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import SocialAccountSwitchModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountSwitchModal";
@@ -44,49 +40,43 @@ const SocialAccountLinkCard = ({
 }: ISocialAccountLinkCardProps) => {
   return (
     <>
-      <Card title="소셜 로그인" gridArea="socialAccountLink" height="290px">
-        <>
+      <Card title="소셜 로그인" gridArea="socialAccountLink" height="248px">
+        <CardContentWrapper>
           {userOAuthLinks.map((linkInfo) => {
             const providerKey = linkInfo.providerType;
             const displayInfo = getOAuthDisplayInfo(providerKey);
             const isLinked = linkedProvider === providerKey;
 
             return (
-              <CardContentWrapper key={providerKey}>
-                <CardContentStyled>
-                  <LinkInfoWrapper>
-                    <ProviderIconWrapper>
-                      {displayInfo.icon}
-                    </ProviderIconWrapper>
-                    <LinkInfoTextStyled>
-                      <ProviderNameStyled>
-                        {displayInfo.text}
-                      </ProviderNameStyled>
-                      {linkInfo.email && (
-                        <EmailAddressStyled isLinked={isLinked}>
-                          {linkInfo.email}
-                        </EmailAddressStyled>
-                      )}
-                    </LinkInfoTextStyled>
-                  </LinkInfoWrapper>
-                  <ButtonWrapperStyled isLinked={isLinked}>
-                    {isLinked ? (
-                      <MinusCircleIcon
-                        onClick={() => setIsUnlinkModalOpen(true)}
-                        aria-label="연결 해제"
-                      />
-                    ) : (
-                      <PlusCircleIcon
-                        onClick={() => onLinkSocialAccount(providerKey)}
-                        aria-label="연결"
-                      />
+              <CardContentStyled key={providerKey}>
+                <ProviderInfoWrapper>
+                  <ProviderIconWrapper>{displayInfo.icon}</ProviderIconWrapper>
+                  <ProviderInfoTextStyled>
+                    <ProviderNameStyled>{displayInfo.text}</ProviderNameStyled>
+                    {linkInfo.email && (
+                      <EmailAddressStyled isLinked={isLinked}>
+                        {linkInfo.email}
+                      </EmailAddressStyled>
                     )}
-                  </ButtonWrapperStyled>
-                </CardContentStyled>
-              </CardContentWrapper>
+                  </ProviderInfoTextStyled>
+                </ProviderInfoWrapper>
+                <ButtonWrapperStyled isLinked={isLinked}>
+                  {isLinked ? (
+                    <MinusCircleIcon
+                      onClick={() => setIsUnlinkModalOpen(true)}
+                      aria-label="연결 해제"
+                    />
+                  ) : (
+                    <PlusCircleIcon
+                      onClick={() => onLinkSocialAccount(providerKey)}
+                      aria-label="연결"
+                    />
+                  )}
+                </ButtonWrapperStyled>
+              </CardContentStyled>
             );
           })}
-        </>
+        </CardContentWrapper>
       </Card>
       <ModalPortal>
         {isUnlinkModalOpen && (
@@ -111,19 +101,18 @@ const SocialAccountLinkCard = ({
   );
 };
 
-const LinkInfoWrapper = styled.div`
+const ProviderInfoWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 10px;
 `;
 
 const ProviderIconWrapper = styled.div`
-  margin-right: 14px;
+  margin: 0 16px;
   display: flex;
   width: 20px;
 `;
 
-const LinkInfoTextStyled = styled.div`
+const ProviderInfoTextStyled = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -134,14 +123,14 @@ const ProviderNameStyled = styled.div`
 `;
 
 const EmailAddressStyled = styled.div<{ isLinked: boolean }>`
-  font-size: ${(props) => (props.isLinked ? "14px" : "13px")};
+  font-size: 14px;
   color: var(--gray-text-color);
   color: var(--ref-gray-500);
   margin-top: 5px;
 `;
 
 const ButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
-  margin-right: 10px;
+  margin-right: 16px;
   width: 18px;
   height: 18px;
   display: flex;
@@ -171,4 +160,24 @@ const ButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
   }
 `;
 
+const CardContentStyled = styled.div`
+  background-color: #ffffff;
+  height: 52px;
+  border-radius: 10px;
+  margin: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const CardContentWrapper = styled.div`
+  border-radius: 10px;
+  margin: 0 5px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+`;
+
 export default SocialAccountLinkCard;
+
+// TODO: plus minus icon 파일명 변경 필요

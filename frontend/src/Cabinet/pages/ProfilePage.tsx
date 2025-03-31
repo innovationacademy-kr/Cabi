@@ -75,15 +75,15 @@ const CardGridWrapper = styled.div`
   width: 100%;
   grid-gap: 20px;
   grid-template-columns: 350px 350px;
-  grid-template-rows: 163px 183px 230px 290px;
+  grid-template-rows: 163px 183px 230px 248px;
   grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "displayStyle lentInfo" // h: 183px
     "pointColor alarm" // h: 230px h: 230px
-    "socialAccountLink socialAccountLink"; // h: 290px
+    "socialAccountLink socialAccountLink"; // h: 248px
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
-    grid-template-rows: 163px 366px 183px 230px 230px 290px;
+    grid-template-rows: 163px 366px 183px 230px 230px 248px;
     grid-template-areas:
       "profile"
       "lentInfo"
