@@ -100,8 +100,8 @@ const SocialAccountLinkCard = ({
             currentProvider={linkedProvider}
             newProvider={newProvider}
             tryUnlinkSocialAccount={tryUnlinkSocialAccount}
-            setMyInfo={setMyInfo}
             tryLinkSocialAccount={tryLinkSocialAccount}
+            getMyInfo={getMyInfo}
           />
         )}
       </ModalPortal>

@@ -1,70 +1,44 @@
-import { HttpStatusCode } from "axios";
-import { SetterOrUpdater } from "recoil";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
-import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
-import { axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 
 interface ISocialAccountLinkCardModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   currentProvider: TOAuthProvider;
   newProvider: TOAuthProvider;
   tryUnlinkSocialAccount: () => Promise<any>;
-  setMyInfo: SetterOrUpdater<UserDto>;
   tryLinkSocialAccount: (provider: TOAuthProvider) => void;
+  getMyInfo: () => Promise<void>;
 }
-// TODO : 인터페이스 정의? 너무 장황하긴 함..
 
 const SocialAccountSwitchModal = ({
   setIsModalOpen,
   currentProvider,
   newProvider,
   tryUnlinkSocialAccount,
-  setMyInfo,
   tryLinkSocialAccount,
+  getMyInfo,
 }: ISocialAccountLinkCardModalProps) => {
   const modalDetail = `${currentProvider} 계정 연결을 해제하고 
 ${newProvider} 계정을 연결할까요?`;
+  // TODO : 원래 계정 연결이 해제되고, 새로운 계정이 연결됩니다. 계속하시겠습니까? 로 수정
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  const handleUnlink = async () => {
-    const response = await tryUnlinkSocialAccount();
-    if (response.status !== HttpStatusCode.Ok) {
-      throw new Error("unlink failed.");
-    }
-  };
-
-  const getMyInfo = async () => {
-    const response = await axiosMyInfo();
-    if (response.status === HttpStatusCode.Ok) {
-      setMyInfo(response.data);
-      return response.data;
-    } else {
-      throw new Error("fetch user's info failed");
-    }
-  };
-
-  const handleLink = async () => {
-    tryLinkSocialAccount(newProvider);
-  };
-  // TODO: handleUnlink, getMyInfo, handleLink 상위 컴포넌트 내의 함수와 통일
-
   const trySwitchSocialAccount = async () => {
     try {
-      await handleUnlink();
+      await tryUnlinkSocialAccount();
       await getMyInfo();
 
-      handleLink();
+      tryLinkSocialAccount(newProvider);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const linkSocialAccountModalContents: IModalContents = {
+  const socialAccountLinkModalContents: IModalContents = {
     type: "hasProceedBtn",
     iconType: IconType.CHECKICON,
     title: "소셜 계정 전환",
@@ -75,7 +49,7 @@ ${newProvider} 계정을 연결할까요?`;
     closeModal: handleCloseModal,
   };
 
-  return <Modal modalContents={linkSocialAccountModalContents} />;
+  return <Modal modalContents={socialAccountLinkModalContents} />;
 };
 
 export default SocialAccountSwitchModal;
