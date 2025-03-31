@@ -10,25 +10,23 @@ import {
 import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/login.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {
-  axiosDisconnectSocialAccount,
   axiosMyInfo,
+  axiosUnlinkSocialAccount,
 } from "@/Cabinet/api/axios/axios.custom";
 import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
 
 const SocialAccountLinkContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
-  const userOauthConnection = myInfo.userOauthConnection;
+  const linkedOAuthInfo = myInfo.linkedOAuthInfo;
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
   const [isUnlinkModalOpen, setIsUnlinkModalOpen] = useState(false);
   const [newProvider, setNewProvider] = useState<TOAuthProvider>(ftProvider);
-  const linkedProvider = userOauthConnection
-    ? userOauthConnection.providerType
-    : "";
+  const linkedProvider = linkedOAuthInfo ? linkedOAuthInfo.providerType : "";
 
   const userOAuthLinks: IUserOAuthLinkInfoDto[] = socialOAuthProviders.map(
     (provider) => {
       if (linkedProvider === provider) {
-        return userOauthConnection!;
+        return linkedOAuthInfo!;
       } else {
         return {
           providerType: provider,
@@ -48,12 +46,12 @@ const SocialAccountLinkContainer = () => {
   };
 
   const tryUnlinkSocialAccount = async () => {
-    if (userOauthConnection) {
+    if (linkedOAuthInfo) {
       try {
-        const mailState = userOauthConnection.email;
-        const providerTypeState = userOauthConnection.providerType;
+        const mailState = linkedOAuthInfo.email;
+        const providerTypeState = linkedOAuthInfo.providerType;
 
-        const response = await axiosDisconnectSocialAccount(
+        const response = await axiosUnlinkSocialAccount(
           mailState,
           providerTypeState
         );

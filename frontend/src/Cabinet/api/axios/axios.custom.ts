@@ -496,7 +496,7 @@ export const axiosAGUReturnCancel = async (): Promise<any> => {
 };
 
 const axiosSocialAccountLinkURL = "/v5/oauth/link";
-export const axiosDisconnectSocialAccount = async (
+export const axiosUnlinkSocialAccount = async (
   mail: string, // 연결 해지하려는 mail
   provider: TOAuthProvider // 연결되어있는 provider
 ): Promise<any> => {

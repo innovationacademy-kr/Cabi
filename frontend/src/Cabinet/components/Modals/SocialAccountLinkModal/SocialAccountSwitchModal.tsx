@@ -48,7 +48,7 @@ const SocialAccountSwitchModal = ({
           const { data } = await axiosMyInfo();
           setMyInfo(data);
 
-          if (data.userOauthConnection === null) {
+          if (data.linkedOAuthInfo === null) {
             await tryLinkSocialAccount(newProvider);
             setModalTitle("연결 성공");
           }
