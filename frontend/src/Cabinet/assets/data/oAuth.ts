@@ -9,7 +9,6 @@ export type TOAuthProvider = "42" | "google" | "kakao" | "github";
 export interface IOAuthDisplay {
   text: string;
   backgroundColor: string;
-  fontColor?: string;
   icon: React.ReactNode;
 }
 export interface IOAuthConfig {
@@ -19,7 +18,6 @@ export interface IOAuthConfig {
 
 const OAUTH_BASE_URL = `${import.meta.env.VITE_BE_HOST}/oauth2/authorization/`;
 
-// TODO : 색상 토큰 사용
 export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
   42: {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}ft`,
@@ -36,7 +34,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}google`,
     display: {
       text: "Google",
-      backgroundColor: "var(--card-bg-color)",
+      backgroundColor: "var(--ref-gray-100)",
       icon: React.createElement(GoogleLogo, {
         "aria-label": "google",
       }),
@@ -56,7 +54,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}github`,
     display: {
       text: "gitHub",
-      backgroundColor: "var(--github-bg-color)",
+      backgroundColor: "var(--ref-gray-100)",
       icon: React.createElement(GithubLogo, {
         "aria-label": "github",
       }),
