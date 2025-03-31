@@ -14,41 +14,4 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PresentationPolicyService {
 
-	private static final Integer MAXIMUM_MONTH = 3;
-	private final PresentationRepository presentationRepository;
-
-	/**
-	 * 발표 날짜에 대해 예약 가능한지 검증한다.
-	 * <p>
-	 * 범위 내의 날짜(등록일 기준 3개월 이내), 예약 날짜인지 검증
-	 *
-	 * @param localDateTime 원하는 발표 날짜
-	 */
-	public void verifyReservationDate(LocalDateTime localDateTime) {
-		LocalDate now = LocalDate.now();
-		LocalDate reservationDate = localDateTime.toLocalDate();
-
-		LocalDateTime startOfDay = reservationDate.atStartOfDay();
-		LocalDateTime endOfDay = startOfDay.plusDays(1);
-
-		if (isOverRangeDate(reservationDate, now)
-				|| isAlreadyRegisteredDate(startOfDay, endOfDay)) {
-			throw ExceptionStatus.INVALID_DATE.asServiceException();
-		}
-	}
-
-	private boolean isAlreadyRegisteredDate(LocalDateTime startOfDay, LocalDateTime endOfDay) {
-		List<Presentation> presentations =
-				presentationRepository.findAllByDateTimeBetween(startOfDay, endOfDay);
-
-		return presentations.stream()
-				.anyMatch(presentation -> presentation.getUser() != null
-						&& presentation.getPresentationStatus()
-						.equals(PresentationStatus.EXPECTED));
-	}
-
-	private boolean isOverRangeDate(LocalDate reservationDate, LocalDate now) {
-		return reservationDate.isBefore(now) ||
-				reservationDate.isAfter(now.plusMonths(MAXIMUM_MONTH));
-	}
 }

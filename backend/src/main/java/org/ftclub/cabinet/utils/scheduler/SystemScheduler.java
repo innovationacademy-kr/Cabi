@@ -188,10 +188,4 @@ public class SystemScheduler {
 		sectionAlarmManager.sendSectionAlarm();
 	}
 
-	@Scheduled(cron = "${cabinet.schedule.cron.generate-presentation-form}") // dev yml에도 추가하기
-	public void generatePresentationForm() {
-		log.info("generate presentation forms every 3 months");
-		LocalDate nowDate = LocalDate.now();
-		presentationService.generatePresentationFormsEveryThreeMonth(nowDate);
-	}
 }

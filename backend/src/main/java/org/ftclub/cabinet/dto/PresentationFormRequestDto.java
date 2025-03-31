@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
-import org.ftclub.cabinet.presentation.domain.PresentationTime;
+import org.ftclub.cabinet.presentation.domain.Duration;
 import org.hibernate.validator.constraints.Length;
 
 @AllArgsConstructor
@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.Length;
 public class PresentationFormRequestDto {
 
 	private Category category;
-	private PresentationTime presentationTime;
+	private Duration duration;
 	private PresentationLocation presentationLocation;
 	private LocalDateTime dateTime;
 	@NotBlank

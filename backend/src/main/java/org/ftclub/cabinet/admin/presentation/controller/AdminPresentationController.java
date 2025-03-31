@@ -17,23 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/v5/admin/presentation")
+@RequestMapping("/v6/admin/presentations")
 @RequiredArgsConstructor
 public class AdminPresentationController {
 
 	private final PresentationService presentationService;
 
-	@PatchMapping("/{formId}/update")
-	public void updatePresentationByFormId(
-			@PathVariable("formId") Long formId,
-			@Valid @RequestBody PresentationUpdateDto dto) {
-		presentationService.updatePresentationByFormId(formId, dto);
-	}
-
-	@GetMapping("/schedule")
-	public PresentationFormResponseDto adminSchedulePage(@RequestParam(value = "yearMonth")
-	@DateTimeFormat(pattern = "yyyy-MM")
-	YearMonth yearMonth) {
-		return presentationService.getAdminPresentationSchedule(yearMonth);
-	}
 }
