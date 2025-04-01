@@ -108,9 +108,9 @@ const ToolTipIcon = styled.div`
   height: 16px;
   margin-top: 0.1rem;
   margin-left: 0.25rem;
-  opacity: 0.6;
-  cursor: pointer;
+  opacity: 0.7;
   &:hover {
+    cursor: pointer;
     opacity: 1;
   }
 `;

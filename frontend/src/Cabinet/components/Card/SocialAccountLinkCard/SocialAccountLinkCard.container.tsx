@@ -23,6 +23,7 @@ const SocialAccountLinkCardContainer = () => {
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
   const [isUnlinkModalOpen, setIsUnlinkModalOpen] = useState(false);
   const [newProvider, setNewProvider] = useState<TOAuthProvider>(ftProvider);
+  const [isToolTipClicked, setIsToolTipClicked] = useState(false);
   const linkedProvider: TOAuthProviderOrEmpty = linkedOAuthInfo
     ? linkedOAuthInfo.providerType
     : "";
@@ -95,6 +96,8 @@ const SocialAccountLinkCardContainer = () => {
       isUnlinkModalOpen={isUnlinkModalOpen}
       setIsUnlinkModalOpen={setIsUnlinkModalOpen}
       getMyInfo={getMyInfo}
+      isToolTipClicked={isToolTipClicked}
+      setIsToolTipClicked={setIsToolTipClicked}
     />
   );
 };
