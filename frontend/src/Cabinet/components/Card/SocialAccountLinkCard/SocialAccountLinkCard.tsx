@@ -23,7 +23,7 @@ interface ISocialAccountLinkCardProps {
   setIsUnlinkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   getMyInfo: () => Promise<void>;
 }
-// TODO : props diet?
+// TODO : props diet
 
 const SocialAccountLinkCard = ({
   onLinkSocialAccount,
@@ -64,7 +64,7 @@ const SocialAccountLinkCard = ({
                     )}
                   </ProviderInfoTextStyled>
                 </ProviderInfoWrapper>
-                <ButtonWrapperStyled isLinked={isLinked}>
+                <LinkButtonWrapperStyled isLinked={isLinked}>
                   {isLinked ? (
                     <MinusCircleIcon
                       onClick={() => setIsUnlinkModalOpen(true)}
@@ -76,7 +76,7 @@ const SocialAccountLinkCard = ({
                       aria-label="연결"
                     />
                   )}
-                </ButtonWrapperStyled>
+                </LinkButtonWrapperStyled>
               </CardContentStyled>
             );
           })}
@@ -158,7 +158,7 @@ const EmailAddressStyled = styled.div<{ isLinked: boolean }>`
   margin-top: 6px;
 `;
 
-const ButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
+const LinkButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
   margin-right: 16px;
   width: 18px;
   height: 18px;
@@ -186,5 +186,3 @@ const ButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
 `;
 
 export default SocialAccountLinkCard;
-
-// TODO: plus minus icon 파일명 변경 필요

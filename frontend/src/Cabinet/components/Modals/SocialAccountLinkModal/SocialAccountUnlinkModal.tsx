@@ -6,6 +6,7 @@ import {
   SuccessResponseModal,
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import useDebounce from "@/Cabinet/hooks/useDebounce";
 
 const SocialAccountUnlinkModal = ({
   tryUnlinkSocialAccount,
@@ -21,6 +22,7 @@ const SocialAccountUnlinkModal = ({
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("소셜 계정 연결 해제");
+  const { debounce } = useDebounce();
   const modalDetail = `${
     currentProvider || "소셜"
   } 계정 연결을 해제하시겠습니까?`;
@@ -29,17 +31,25 @@ const SocialAccountUnlinkModal = ({
     setIsModalOpen(false);
   };
 
-  const handleUnlinkButton = async () => {
-    try {
-      await tryUnlinkSocialAccount();
-      await getMyInfo();
-      setModalTitle("연결 해제 성공");
-    } catch (error) {
-      setHasErrorOnResponse(true);
-      setModalTitle("연결 해제 실패");
-    } finally {
-      setShowResponseModal(true);
-    }
+  const handleClickUnlinkButton = (
+    e: React.MouseEvent<Element, MouseEvent>
+  ) => {
+    debounce(
+      "accountUnlink",
+      async () => {
+        try {
+          await tryUnlinkSocialAccount();
+          await getMyInfo();
+          setModalTitle("연결 해제 성공");
+        } catch (error) {
+          setHasErrorOnResponse(true);
+          setModalTitle("연결 해제 실패");
+        } finally {
+          setShowResponseModal(true);
+        }
+      },
+      300
+    );
   };
 
   const modalContents: IModalContents = {
@@ -49,7 +59,7 @@ const SocialAccountUnlinkModal = ({
     detail: modalDetail,
     proceedBtnText: "네, 해제할게요",
     cancelBtnText: "취소",
-    onClickProceed: handleUnlinkButton,
+    onClickProceed: (e) => Promise.resolve(handleClickUnlinkButton(e)),
     closeModal: handleCloseModal,
   };
 
