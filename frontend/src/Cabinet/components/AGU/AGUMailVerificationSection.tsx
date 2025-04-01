@@ -35,9 +35,9 @@ const AGUMailVerificationSection = ({
       }
     } catch (error: any) {
       console.error(error);
-      alert(error.response.data.message);
+      if (error.response?.status !== HttpStatusCode.Forbidden)
+        alert(error.response.data.message);
       if (inputRef.current) inputRef.current.value = "";
-    } finally {
     }
   };
 
