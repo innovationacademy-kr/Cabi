@@ -40,7 +40,6 @@ const ButtonWrapperStyled = styled.button<{ backgroundColor: string }>`
   padding: 0;
 
   &:disabled {
-    opacity: 0.3;
     cursor: not-allowed;
   }
 `;
