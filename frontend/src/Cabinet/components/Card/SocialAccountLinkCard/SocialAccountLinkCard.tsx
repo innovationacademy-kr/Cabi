@@ -53,7 +53,7 @@ const SocialAccountLinkCard = ({
       >
         <CardContentWrapper>
           {isToolTipClicked && (
-            <TooltipBox>하나의 소셜 계정만 연결할 수 있습니다.</TooltipBox>
+            <TooltipBox>소셜 계정은 하나만 연결할 수 있습니다.</TooltipBox>
           )}
           {/* <TooltipCard ref={tooltipCardRef}> */}
           {/* <TooltipCard>
@@ -233,7 +233,7 @@ const ToolTipIconStyled = styled.div`
 `;
 
 const TooltipBox = styled.div`
-  margin: 10px auto;
+  margin: 0 auto;
   background-color: var(--tooltip-shadow-color);
   width: 280px;
   padding: 10px;
@@ -243,6 +243,9 @@ const TooltipBox = styled.div`
   line-height: 1.25rem;
   letter-spacing: -0.02rem;
   color: var(--white-text-with-bg-color);
+  margin-top: -40px;
+  transform: translateY(40px);
+  box-shadow: 2px 2px 8px 0px var(--hover-box-shadow-color);
 `;
 
 const HoverBox = styled.div<{
