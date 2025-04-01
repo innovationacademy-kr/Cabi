@@ -68,6 +68,7 @@
   --ref-black-shadow-200: rgba(0, 0, 0, 0.25);
   --ref-black-shadow-300: rgba(0, 0, 0, 0.4);
   --ref-black-shadow-400: rgba(0, 0, 0, 0.8);
+  --ref-white-shadow: rgba(255, 255, 255, 0.8);
 
   /* cabinet */
   --full-color: var(--ref-gray-200);

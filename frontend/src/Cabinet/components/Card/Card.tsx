@@ -170,7 +170,6 @@ export const CardButtonStyled = styled.div<{
 
 const ToolTipIcon = styled.div`
   background-image: url("/src/Cabinet/assets/images/notificationSign_grey.svg");
-  /* TODO : svg로 */
   background-size: contain;
   width: 16px;
   height: 16px;
@@ -184,7 +183,7 @@ const ToolTipIcon = styled.div`
 
 const TooltipBox = styled.div`
   margin: 0 auto;
-  background-color: var(--tooltip-shadow-color);
+  background-color: var(--tooltip-bg-color);
   width: 280px;
   padding: 10px;
   border-radius: 4px;
@@ -192,12 +191,12 @@ const TooltipBox = styled.div`
   text-align: center;
   line-height: 1.25rem;
   letter-spacing: -0.02rem;
-  color: var(--white-text-with-bg-color);
+  color: var(--tooltip-text-color);
   box-shadow: 2px 2px 8px 0px var(--hover-box-shadow-color);
   visibility: hidden;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, 10px);
 `;
 
 const TooltipSection = styled.div`
