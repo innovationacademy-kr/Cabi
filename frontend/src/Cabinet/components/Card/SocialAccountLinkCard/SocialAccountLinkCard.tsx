@@ -23,8 +23,6 @@ interface ISocialAccountLinkCardProps {
   isUnlinkModalOpen: boolean;
   setIsUnlinkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   getMyInfo: () => Promise<void>;
-  isToolTipClicked: boolean;
-  setIsToolTipClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 // TODO : props diet
 
@@ -40,8 +38,6 @@ const SocialAccountLinkCard = ({
   isUnlinkModalOpen,
   setIsUnlinkModalOpen,
   getMyInfo,
-  isToolTipClicked,
-  setIsToolTipClicked,
 }: ISocialAccountLinkCardProps) => {
   return (
     <>
@@ -49,22 +45,9 @@ const SocialAccountLinkCard = ({
         title="소셜 로그인"
         gridArea="socialAccountLink"
         height="276px"
-        onClickToolTip={() => setIsToolTipClicked((prev) => !prev)}
+        tooltipText="소셜 계정은 하나만 연결할 수 있습니다."
       >
         <CardContentWrapper>
-          {isToolTipClicked && (
-            <TooltipBox>소셜 계정은 하나만 연결할 수 있습니다.</TooltipBox>
-          )}
-          {/* <TooltipCard ref={tooltipCardRef}> */}
-          {/* <TooltipCard>
-            <ToolTipIconStyled />
-            <TooltipBox>test</TooltipBox>
-          </TooltipCard> */}
-          {/* <HoverBox>
-            <AlertImgStyled src={alertImg} />
-            공유사물함을 단독으로 이용 시, <br />
-            연장권을 사용할 수 없습니다.
-          </HoverBox> */}
           {userOAuthLinks.map((linkInfo) => {
             const providerKey = linkInfo.providerType;
             const displayInfo = getOAuthDisplayInfo(providerKey);
@@ -206,78 +189,6 @@ const LinkButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
     stroke-width: 1.2;
     stroke: ${(props) => !props.isLinked && "var(--line-color)"};
   }
-`;
-
-const ToolTipIconWrapperStyled = styled.div`
-  background-color: blue;
-  width: 16px;
-  height: 16px;
-  opacity: 0.7;
-
-  cursor: pointer;
-  &:hover {
-    opacity: 1;
-  }
-`;
-
-const ToolTipIconStyled = styled.div`
-  background-image: url("/src/Cabinet/assets/images/cautionSign.svg");
-  width: 24px;
-  height: 24px;
-  margin: 0px auto;
-  opacity: 0.6;
-  cursor: pointer;
-  &:hover {
-    opacity: 1;
-  }
-`;
-
-const TooltipBox = styled.div`
-  margin: 0 auto;
-  background-color: var(--tooltip-shadow-color);
-  width: 280px;
-  padding: 10px;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  text-align: center;
-  line-height: 1.25rem;
-  letter-spacing: -0.02rem;
-  color: var(--white-text-with-bg-color);
-  margin-top: -40px;
-  transform: translateY(40px);
-  box-shadow: 2px 2px 8px 0px var(--hover-box-shadow-color);
-`;
-
-const HoverBox = styled.div<{
-  canUseExtendTicket?: boolean;
-}>`
-  /* position: absolute; */
-  opacity: 0;
-  /* visibility: hidden; */
-  /* top: -120%; */
-  width: 270px;
-  height: 80px;
-  padding: 10px;
-  background-color: rgba(73, 73, 73, 0.99);
-  background-color: blue;
-  border-radius: 10px;
-  box-shadow: 4px 4px 20px 0px var(--hover-box-shadow-color);
-  font-size: 0.875rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  transition: opacity 0.3s ease;
-  line-height: 1.2;
-  z-index: 1;
-`;
-
-const AlertImgStyled = styled.img`
-  width: 20px;
-  height: 20px;
-  /* filter: invert(99%) sepia(100%) saturate(3%) hue-rotate(32deg)
-    brightness(104%) contrast(100%); */
 `;
 
 export default SocialAccountLinkCard;
