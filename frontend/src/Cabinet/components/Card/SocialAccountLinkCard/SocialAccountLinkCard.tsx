@@ -7,7 +7,7 @@ import SocialAccountUnlinkModal from "@/Cabinet/components/Modals/SocialAccountL
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { ReactComponent as MinusCircleIcon } from "@/Cabinet/assets/images/minusCircle.svg";
 import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCircle.svg";
-import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/login.dto";
+import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/oAuth.dto";
 import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
 interface ISocialAccountLinkCardProps {

@@ -7,7 +7,7 @@ import {
   ftProvider,
   socialOAuthProviders,
 } from "@/Cabinet/assets/data/oAuth";
-import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/login.dto";
+import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/oAuth.dto";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {
   axiosMyInfo,
@@ -100,4 +100,3 @@ const SocialAccountLinkCardContainer = () => {
 };
 
 export default SocialAccountLinkCardContainer;
-// TODO : SocialAccountLinkCardContainer로 이름 변경

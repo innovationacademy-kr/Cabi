@@ -1,7 +1,7 @@
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { CabinetInfo } from "@/Cabinet/types/dto/cabinet.dto";
 import { LentExtensionDto } from "@/Cabinet/types/dto/lent.dto";
-import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/login.dto";
+import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/oAuth.dto";
 
 /**
  * @description 유저 정보
