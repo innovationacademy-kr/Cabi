@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Card from "@/Cabinet/components/Card/Card";
-import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLink.container";
+import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard.container";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import SocialAccountSwitchModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountSwitchModal";
 import SocialAccountUnlinkModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountUnlinkModal";
@@ -178,16 +178,11 @@ const ButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
     opacity: 0.8;
   }
 
-  & > svg > circle {
-    stroke-width: 1.2;
-    stroke: ${(props) => !props.isLinked && "var(--line-color)"};
-  }
-
+  & > svg > circle,
   & > svg > path {
     stroke-width: 1.2;
     stroke: ${(props) => !props.isLinked && "var(--line-color)"};
   }
-  /* TODO : 선택자 */
 `;
 
 export default SocialAccountLinkCard;

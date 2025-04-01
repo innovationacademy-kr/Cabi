@@ -17,7 +17,7 @@ import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
 
 export type TOAuthProviderOrEmpty = TOAuthProvider | "";
 
-const SocialAccountLinkContainer = () => {
+const SocialAccountLinkCardContainer = () => {
   const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
   const linkedOAuthInfo = myInfo.userOauthConnection;
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
@@ -80,7 +80,7 @@ const SocialAccountLinkContainer = () => {
       setNewProvider(provider);
       setIsSwitchModalOpen(true);
     }
-  }; // TODO : 서비스 연결 기능 - 유틸리티 함수 사용. 연결 버튼 눌렀을때 실행. 주석 변경 필요
+  };
 
   return (
     <SocialAccountLinkCard
@@ -99,5 +99,5 @@ const SocialAccountLinkContainer = () => {
   );
 };
 
-export default SocialAccountLinkContainer;
+export default SocialAccountLinkCardContainer;
 // TODO : SocialAccountLinkCardContainer로 이름 변경

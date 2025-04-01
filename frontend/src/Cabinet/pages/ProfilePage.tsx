@@ -12,7 +12,7 @@ import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCar
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
 import PointColorCardContainer from "@/Cabinet/components/Card/PointColorCard/PointColorCard.container";
 import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileCard.container";
-import SocialAccountLinkContainer from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLink.container";
+import SocialAccountLinkCardContainer from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import {
   axiosMyInfo,
@@ -60,7 +60,7 @@ const ProfilePage = () => {
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
           <AlarmCardContainer alarm={myInfo.alarmTypes} />
-          <SocialAccountLinkContainer />
+          <SocialAccountLinkCardContainer />
         </CardGridWrapper>
       )}
     </>

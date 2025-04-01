@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLink.container";
+import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard.container";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import {
   FailResponseModal,
