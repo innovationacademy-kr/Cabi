@@ -1,5 +1,6 @@
 import { HttpStatusCode } from "axios";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AGUHeaderStyled, AGUSubHeaderStyled } from "@/Cabinet/pages/AGUPage";
 import Button from "@/Cabinet/components/Common/Button";
@@ -14,6 +15,7 @@ const AGUMailVerificationSection = ({
 }) => {
   const [mail, setMail] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const navigator = useNavigate();
   const subHeaderMsg = mail
     ? `<span>${mail}</span>로 인증 링크가 전송되었습니다.`
     : `인트라 아이디를 입력하시면 <span>인트라 이메일 주소</span>로 <span>인증 링크</span>가 전송됩니다.`;
@@ -53,6 +55,13 @@ const AGUMailVerificationSection = ({
         onClick={() => handleButtonClick("aguUserVerification", verifyAGUUSer)}
         theme="fill"
         text={ButtonText}
+        maxWidth="500px"
+        disabled={isProcessingButtonClick}
+      ></Button>
+      <Button
+        onClick={() => navigator("/login")}
+        theme="grayLine"
+        text="취소"
         maxWidth="500px"
         disabled={isProcessingButtonClick}
       ></Button>

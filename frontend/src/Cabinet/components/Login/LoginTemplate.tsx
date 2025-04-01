@@ -40,7 +40,7 @@ const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
           </CardTitleBoxStyled>
           <LoginButtonGroup />
           <AGUURLSectionStyled onClick={() => navigator("/agu")}>
-            A.G.U 유저라면?
+            A.G.U 유저이신가요?
           </AGUURLSectionStyled>
         </LoginCardStyled>
       </RightSectionStyled>
