@@ -51,10 +51,6 @@ const IconWrapperStyled = styled.div<{ provider: TOAuthProvider }>`
   justify-content: center;
   width: 20px;
   height: 20px;
-
-  & > svg > path {
-    fill: ${(props) => props.provider === "github" && "#ffffff"};
-  }
 `;
 
 const LoadingAnimationWrapper = styled.div`

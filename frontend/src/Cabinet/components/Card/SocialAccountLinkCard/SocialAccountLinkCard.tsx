@@ -40,7 +40,6 @@ const SocialAccountLinkCard = ({
 }: ISocialAccountLinkCardProps) => {
   return (
     <>
-      {/* TODO : icon bg color */}
       <Card title="소셜 로그인" gridArea="socialAccountLink" height="276px">
         <CardContentWrapper>
           {userOAuthLinks.map((linkInfo) => {
@@ -115,8 +114,7 @@ const CardContentWrapper = styled.div`
 `;
 
 const CardContentStyled = styled.div`
-  // TODO : 위 아래 padding
-  background-color: #ffffff;
+  background-color: var(--card-content-bg-color);
   height: 60px;
   border-radius: 10px;
   margin: 5px 0;
@@ -138,7 +136,6 @@ const ProviderIconWrapper = styled.div<{ backgroundColor: string }>`
   height: 42px;
   background-color: ${(props) => props.backgroundColor};
   border-radius: 50%;
-  border-radius: 10px;
 
   & > svg {
     width: 20px;
@@ -157,8 +154,7 @@ const ProviderNameStyled = styled.div`
 
 const EmailAddressStyled = styled.div<{ isLinked: boolean }>`
   font-size: 12px;
-  color: var(--gray-text-color);
-  color: var(--ref-gray-500);
+  color: var(--gray-line-btn-color);
   margin-top: 6px;
 `;
 
@@ -171,7 +167,7 @@ const ButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
   justify-content: center;
   border-radius: 50%;
   padding: 0;
-  background-color: var(--bg-color);
+  background-color: var(--card-content-bg-color);
 
   & > svg {
     width: 16px;
@@ -191,6 +187,7 @@ const ButtonWrapperStyled = styled.button<{ isLinked: boolean }>`
     stroke-width: 1.2;
     stroke: ${(props) => !props.isLinked && "var(--line-color)"};
   }
+  /* TODO : 선택자 */
 `;
 
 export default SocialAccountLinkCard;

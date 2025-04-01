@@ -20,7 +20,6 @@ const FTLoginButton = ({
   return (
     <ButtonWrapperStyled
       onClick={() => onLoginButtonClick(provider)}
-      fontColor={display.fontColor}
       disabled={isClicked}
     >
       {isClicked && isTarget ? (
@@ -39,7 +38,7 @@ const FTLoginButton = ({
   );
 };
 
-const ButtonWrapperStyled = styled.button<{ fontColor: string }>`
+const ButtonWrapperStyled = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
