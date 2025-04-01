@@ -40,10 +40,10 @@ const Card = ({
           <CardTitleWrapperStyled>
             {title && <CardTitleStyled>{title}</CardTitleStyled>}
             {tooltipText && (
-              <TooltipSection>
-                <ToolTipIcon />
-                <TooltipBox>{tooltipText}</TooltipBox>
-              </TooltipSection>
+              <TooltipSectionStyled>
+                <ToolTipIconStyled />
+                <TooltipBoxStyled>{tooltipText}</TooltipBoxStyled>
+              </TooltipSectionStyled>
             )}
           </CardTitleWrapperStyled>
           {buttons.length > 0 && (
@@ -168,7 +168,7 @@ export const CardButtonStyled = styled.div<{
   }
 `;
 
-const ToolTipIcon = styled.div`
+const ToolTipIconStyled = styled.div`
   background-image: url("/src/Cabinet/assets/images/notificationSign_grey.svg");
   background-size: contain;
   width: 16px;
@@ -181,7 +181,7 @@ const ToolTipIcon = styled.div`
   }
 `;
 
-const TooltipBox = styled.div`
+const TooltipBoxStyled = styled.div`
   margin: 0 auto;
   background-color: var(--tooltip-bg-color);
   width: 280px;
@@ -199,13 +199,13 @@ const TooltipBox = styled.div`
   transform: translate(-50%, 10px);
 `;
 
-const TooltipSection = styled.div`
+const TooltipSectionStyled = styled.div`
   width: 16px;
   height: 16px;
   margin-top: 0.1rem;
   margin-left: 0.25rem;
 
-  & ${ToolTipIcon}:hover + ${TooltipBox} {
+  & ${ToolTipIconStyled}:hover + ${TooltipBoxStyled} {
     visibility: visible;
   }
 `;

@@ -10,7 +10,6 @@ import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCi
 import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/oAuth.dto";
 import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
-// TODO : notificationSign_grey notificationSignGray로 이름 변경
 interface ISocialAccountLinkCardProps {
   onLinkSocialAccount: (provider: TOAuthProvider) => void;
   userOAuthLinks: IUserOAuthLinkInfoDto[];
