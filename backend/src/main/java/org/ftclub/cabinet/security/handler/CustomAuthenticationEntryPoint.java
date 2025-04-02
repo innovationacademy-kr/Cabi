@@ -5,9 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -29,7 +29,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException {
 
-		log.error("Authorization Fail: {}, Request Uri : {}",
+		log.error("Authentication Fail: {}, Request Uri : {}",
 				authException.getMessage(), request.getRequestURI());
 		SpringSecurityException exception =
 				new SpringSecurityException(ExceptionStatus.UNAUTHORIZED);
