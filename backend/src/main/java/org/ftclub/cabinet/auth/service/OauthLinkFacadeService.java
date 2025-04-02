@@ -1,22 +1,20 @@
-package org.ftclub.cabinet.oauth.service;
+package org.ftclub.cabinet.auth.service;
 
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
-import org.ftclub.cabinet.auth.service.AuthPolicyService;
-import org.ftclub.cabinet.auth.service.CookieService;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtService;
-import org.ftclub.cabinet.oauth.domain.CustomOAuth2User;
-import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
-import org.ftclub.cabinet.oauth.domain.OauthLink;
-import org.ftclub.cabinet.oauth.domain.OauthResult;
+import org.ftclub.cabinet.auth.domain.CustomOAuth2User;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
+import org.ftclub.cabinet.auth.domain.OauthLink;
+import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.service.UserFacadeService;
+import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +32,8 @@ public class OauthLinkFacadeService {
 	private final UserQueryService userQueryService;
 	private final AuthPolicyService authPolicyService;
 	private final ApplicationTokenManager applicationTokenManager;
-	private final UserFacadeService userFacadeService;
 	private final CookieService cookieService;
+	private final UserCommandService userCommandService;
 
 	/**
 	 * providerId(unique), type을 기준으로 계정 연동 상태를 확인한 후,
@@ -70,8 +68,10 @@ public class OauthLinkFacadeService {
 		try {
 			FtOauthProfile profile = oauthProfileService.getProfileByIntraName(
 					applicationTokenManager.getFtAccessToken(), user.getName());
+			String roles = FtRole.combineRolesToString(profile.getRoles());
 
-			userFacadeService.updateUserStatus(profile, user);
+			userCommandService.updateUserRoleAndBlackHoledAt(user, roles,
+					profile.getBlackHoledAt());
 		} catch (Exception e) {
 			log.info("42 API 호출 도중 에러발생. blackHole, role update 생략. "
 							+ "name = {}, message = {}",
@@ -108,7 +108,6 @@ public class OauthLinkFacadeService {
 		}
 		OauthLink connection =
 				OauthLink.of(user, providerType, providerId, oauthMail);
-		log.info("mail = {}", oauthMail);
 		oauthLinkCommandService.save(connection);
 		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getProfileUrl());
 	}

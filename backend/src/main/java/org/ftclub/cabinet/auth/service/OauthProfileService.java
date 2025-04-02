@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.oauth.service;
+package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -91,7 +91,7 @@ public class OauthProfileService {
 
 		// inactive에 대해서는 단일 권한을 반환. inactive / blackhole
 		if (!isActive) {
-			addInactiveRolse(blackHoledAt, roles);
+			addInactiveRoles(blackHoledAt, roles);
 			return roles;
 		}
 		// user -> 여러 권한 핸들링.
@@ -112,7 +112,7 @@ public class OauthProfileService {
 		return roles;
 	}
 
-	private void addInactiveRolse(LocalDateTime blackHoledAt, Set<FtRole> roles) {
+	private void addInactiveRoles(LocalDateTime blackHoledAt, Set<FtRole> roles) {
 		if (blackHoledAt != null && blackHoledAt.isAfter(LocalDateTime.now())) {
 			roles.add(FtRole.AGU);
 		} else {

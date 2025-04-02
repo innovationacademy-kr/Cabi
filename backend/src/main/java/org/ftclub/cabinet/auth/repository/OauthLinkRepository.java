@@ -1,7 +1,7 @@
-package org.ftclub.cabinet.oauth.repository;
+package org.ftclub.cabinet.auth.repository;
 
 import java.util.Optional;
-import org.ftclub.cabinet.oauth.domain.OauthLink;
+import org.ftclub.cabinet.auth.domain.OauthLink;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +13,7 @@ public interface OauthLinkRepository extends JpaRepository<OauthLink, Long> {
 			+ "WHERE uc.deletedAt IS NULL "
 			+ "AND uc.providerId = :providerId "
 			+ "AND uc.providerType = :providerType")
-	Optional<OauthLink> findByProviderIdAndProviderType(
+	Optional<OauthLink> findByProviderIdAndProviderTypeWithUser(
 			@Param("providerId") String providerId,
 			@Param("providerType") String providerType);
 

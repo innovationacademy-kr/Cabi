@@ -1,10 +1,10 @@
-package org.ftclub.cabinet.oauth.service;
+package org.ftclub.cabinet.auth.service;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.oauth.domain.OauthLink;
-import org.ftclub.cabinet.oauth.repository.OauthLinkRepository;
+import org.ftclub.cabinet.auth.domain.OauthLink;
+import org.ftclub.cabinet.auth.repository.OauthLinkRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +21,7 @@ public class OauthLinkQueryService {
 	}
 
 	public Optional<OauthLink> findByProviderIdAndProviderType(String name, String type) {
-		return oauthLinkRepository.findByProviderIdAndProviderType(name, type);
+		return oauthLinkRepository.findByProviderIdAndProviderTypeWithUser(name, type);
 	}
 
 	public boolean isExistByUserId(Long userId) {

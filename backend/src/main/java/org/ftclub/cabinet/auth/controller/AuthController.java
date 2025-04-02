@@ -7,8 +7,14 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.dto.AguMailResponse;
+import org.ftclub.cabinet.dto.OauthUnlinkRequestDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
 	private final AuthFacadeService authFacadeService;
+	private final OauthLinkFacadeService oauthLinkFacadeService;
 
 	/**
 	 * AGU 유저의 임시 로그인 메일 발송
@@ -64,5 +71,12 @@ public class AuthController {
 	@PostMapping("/logout")
 	public void logout(HttpServletRequest request, HttpServletResponse response) {
 		authFacadeService.userLogout(request, response);
+	}
+
+	@DeleteMapping("/link")
+	public void unLinkOauthMail(@AuthenticationPrincipal UserInfoDto userInfoDto,
+			@RequestBody OauthUnlinkRequestDto dto) {
+		oauthLinkFacadeService.deleteOauthMail(userInfoDto.getUserId(), dto.getOauthMail(),
+				dto.getProvider());
 	}
 }

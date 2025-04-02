@@ -1,8 +1,8 @@
-package org.ftclub.cabinet.oauth.service;
+package org.ftclub.cabinet.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.oauth.domain.OauthLink;
-import org.ftclub.cabinet.oauth.repository.OauthLinkRepository;
+import org.ftclub.cabinet.auth.domain.OauthLink;
+import org.ftclub.cabinet.auth.repository.OauthLinkRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

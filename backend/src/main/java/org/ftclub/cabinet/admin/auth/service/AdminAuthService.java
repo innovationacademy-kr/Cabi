@@ -21,7 +21,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
-import org.ftclub.cabinet.oauth.domain.OauthResult;
+import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

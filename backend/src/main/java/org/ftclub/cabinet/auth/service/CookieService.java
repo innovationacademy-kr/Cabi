@@ -11,7 +11,6 @@ import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
-import org.ftclub.cabinet.security.CsrfCookieConfig;
 import org.springframework.stereotype.Service;
 
 /**
@@ -79,9 +78,7 @@ public class CookieService {
 	public void deleteAllCookies(Cookie[] cookies, String serverName, HttpServletResponse res) {
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				if (!CsrfCookieConfig.CSRF_HEADER.equals(cookie.getName())) {
-					cookieManager.deleteCookie(res, serverName, cookie.getName());
-				}
+				cookieManager.deleteCookie(res, serverName, cookie.getName());
 			}
 		}
 	}

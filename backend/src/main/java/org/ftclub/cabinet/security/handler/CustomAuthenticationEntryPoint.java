@@ -5,9 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -28,13 +28,16 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException {
-
-		log.error("Authorization Fail: {}, Request Uri : {}",
+		Exception exceptionToHandle = authException;
+		if (authException.getCause() instanceof SpringSecurityException) {
+			exceptionToHandle = (SpringSecurityException) authException.getCause();
+		} else {
+			exceptionToHandle = new SpringSecurityException(ExceptionStatus.UNAUTHORIZED);
+		}
+		log.error("Authentication Fail: {}, Request Uri : {}",
 				authException.getMessage(), request.getRequestURI());
-		SpringSecurityException exception =
-				new SpringSecurityException(ExceptionStatus.UNAUTHORIZED);
 
 		SecurityContextHolder.clearContext();
-		securityExceptionHandlerManager.handle(response, exception, false);
+		securityExceptionHandlerManager.handle(response, exceptionToHandle, true);
 	}
 }

@@ -17,7 +17,9 @@ import org.ftclub.cabinet.alarm.domain.EmailVerificationAlarm;
 import org.ftclub.cabinet.alarm.repository.AguCodeRedis;
 import org.ftclub.cabinet.alarm.service.AguCodeRedisService;
 import org.ftclub.cabinet.auth.domain.CookieInfo;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
+import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.dto.AguMailResponse;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
@@ -26,9 +28,6 @@ import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
-import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
-import org.ftclub.cabinet.oauth.domain.OauthResult;
-import org.ftclub.cabinet.oauth.service.OauthProfileService;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -182,12 +181,9 @@ public class AuthFacadeService {
 		FtOauthProfile profile = oauthProfileService.getProfileByIntraName(
 				applicationTokenManager.getFtAccessToken(), name);
 
-		if (!user.isContainRole(FtRole.AGU.name()) && !profile.hasRole(FtRole.AGU)) {
-			throw ExceptionStatus.ACCESS_DENIED.asServiceException();
-		}
+		authPolicyService.verifyAguRole(user.getRoles(), FtRole.AGU.name(), profile.getRoles());
 		lentQueryService.getUserActiveLentHistory(user.getId())
 				.orElseThrow(ExceptionStatus.NO_ACTIVE_LENT_FOUND::asServiceException);
-
 		// 코드가 있는데 발급 요청이면 에러(3분 내로 재요청)
 		if (aguCodeRedisService.isAlreadyExist(name)) {
 			throw ExceptionStatus.CODE_ALREADY_SENT.asServiceException();

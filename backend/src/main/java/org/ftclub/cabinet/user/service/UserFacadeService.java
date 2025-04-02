@@ -24,8 +24,8 @@ import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.UserMapper;
-import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
-import org.ftclub.cabinet.oauth.service.OauthLinkQueryService;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
+import org.ftclub.cabinet.auth.service.OauthLinkQueryService;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
@@ -164,33 +164,15 @@ public class UserFacadeService {
 		banHistoryCommandService.updateBanDate(recentBanHistory, reducedUnbannedAt);
 	}
 
-	/**
-	 * profile, user 내의 요소를 비교해 일치하지 않을 경우 정보 업데이트
-	 *
-	 * @param profile
-	 * @param user
-	 */
 	@Transactional
-	public void updateUserStatus(FtOauthProfile profile, User user) {
-		LocalDateTime blackHoledAt = profile.getBlackHoledAt();
-		String roles = FtRole.combineRolesToString(profile.getRoles());
-
-		// role, blackholedAt 검수
-		if (!user.isSameBlackHoledAtAndRole(blackHoledAt, roles)) {
-			userCommandService.updateUserBlackholeAndRole(user, blackHoledAt, roles);
-		}
-	}
-
-	/**
-	 * profile 내의 name 기준으로 유저가 존재하지 않으면 생성
-	 *
-	 * @param profile
-	 * @return
-	 */
-	@Transactional
-	public User createUserIfNotExistFromProfile(FtOauthProfile profile) {
-		return userQueryService.findUser(profile.getIntraName())
+	public User createOrUpdateUserFromProfile(FtOauthProfile profile) {
+		User user = userQueryService.findUser(profile.getIntraName())
 				.orElseGet(() -> userCommandService.createUserByFtOauthProfile(profile));
+
+		String roles = FtRole.combineRolesToString(profile.getRoles());
+		LocalDateTime blackHoledAt = profile.getBlackHoledAt();
+		userCommandService.updateUserRoleAndBlackHoledAt(user, roles, blackHoledAt);
+		return user;
 	}
 
 }
