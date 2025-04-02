@@ -4,6 +4,9 @@ import { axiosReissueToken } from "@/Cabinet/api/axios/axios.custom";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 
+// NOTE : 토큰 재발급 시도 중인지 확인하는 플래그
+let isRefreshing = false;
+
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BE_HOST,
   withCredentials: true,
@@ -39,6 +42,10 @@ const redirectToLoginWithAlert = (error: any) => {
 };
 
 const handleReissueToken = async (error: any) => {
+  if (isRefreshing) {
+    return Promise.reject(error);
+  }
+
   const token = getCookie("access_token");
   const domain =
     import.meta.env.VITE_IS_LOCAL === "true" ? "localhost" : "cabi.42seoul.io";
@@ -51,31 +58,34 @@ const handleReissueToken = async (error: any) => {
         domain,
       });
     }
+
     return Promise.reject(error);
   }
 
   try {
+    isRefreshing = true;
     const response = await axiosReissueToken(); // refresh token으로 access token 재발급
 
     if (response.status === HttpStatusCode.Ok) {
       const originalRequest = error.config;
       const newToken = getCookie("access_token");
       setAuthorizationHeader(originalRequest, newToken);
-
       return instance(originalRequest);
     }
   } catch (error) {
     console.error("Token reissue failed:", error);
+
+    removeCookie("access_token", {
+      path: "/",
+      domain,
+    });
+
+    redirectToLoginWithAlert(error);
+
+    return Promise.reject(error);
+  } finally {
+    isRefreshing = false;
   }
-
-  removeCookie("access_token", {
-    path: "/",
-    domain,
-  });
-
-  redirectToLoginWithAlert(error);
-
-  return Promise.reject(error);
 };
 
 const handleErrorResponse = async (error: any) => {
