@@ -60,8 +60,6 @@ public class Oauth2Attributes {
 	}
 
 	private static Oauth2Attributes ofFt(Map<String, Object> attributes, String attributeKey) {
-		log.info("attributeKey = {}", attributeKey);
-		log.info("attributes = {}", attributes);
 		return new Oauth2Attributes(
 				"ft",
 				(String) attributes.get(attributeKey),
