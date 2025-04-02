@@ -8,11 +8,6 @@ const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
   const { pageTitle, pageSubTitle } = props;
   const navigator = useNavigate();
 
-  // const onClickRedirectButton = (location: string) => {
-  //    closeLeftNav();
-  //   navigator(location);
-  // };
-
   return (
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">
@@ -44,16 +39,9 @@ const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
             <CardSubTitleStyled>{pageSubTitle}</CardSubTitleStyled>
           </CardTitleBoxStyled>
           <LoginButtonGroup />
-          <span
-            onClick={() => navigator("/agu")}
-            style={{
-              textDecoration: "underline",
-              cursor: "pointer",
-              // TODO: 회색
-            }}
-          >
-            A.G.U
-          </span>
+          <AGUURLSectionStyled onClick={() => navigator("/agu")}>
+            A.G.U 유저이신가요?
+          </AGUURLSectionStyled>
         </LoginCardStyled>
       </RightSectionStyled>
     </LoginPageStyled>
@@ -77,6 +65,7 @@ const LeftSectionStyled = styled.section`
   flex-direction: column;
   padding-left: 7%;
 `;
+
 const TopContentsStyled = styled.div`
   font-size: 2rem;
   font-family: var(--main-font);
@@ -150,6 +139,18 @@ const CardTitleStyled = styled.h1`
 
 const CardSubTitleStyled = styled.p`
   color: var(--sys-main-color);
+`;
+
+const AGUURLSectionStyled = styled.span`
+  text-decoration: underline;
+  font-size: 0.875rem;
+  color: var(--gray-line-btn-color);
+  font-size: 12px;
+  letter-spacing: -0.02rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export default LoginTemplate;
