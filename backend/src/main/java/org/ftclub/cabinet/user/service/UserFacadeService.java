@@ -164,33 +164,15 @@ public class UserFacadeService {
 		banHistoryCommandService.updateBanDate(recentBanHistory, reducedUnbannedAt);
 	}
 
-	/**
-	 * profile, user 내의 요소를 비교해 일치하지 않을 경우 정보 업데이트
-	 *
-	 * @param profile
-	 * @param user
-	 */
 	@Transactional
-	public void updateUserStatus(FtOauthProfile profile, User user) {
-		LocalDateTime blackHoledAt = profile.getBlackHoledAt();
-		String roles = FtRole.combineRolesToString(profile.getRoles());
-
-		// role, blackholedAt 검수
-		if (!user.isSameBlackHoledAtAndRole(blackHoledAt, roles)) {
-			userCommandService.updateUserBlackholeAndRole(user, blackHoledAt, roles);
-		}
-	}
-
-	/**
-	 * profile 내의 name 기준으로 유저가 존재하지 않으면 생성
-	 *
-	 * @param profile
-	 * @return
-	 */
-	@Transactional
-	public User createUserIfNotExistFromProfile(FtOauthProfile profile) {
-		return userQueryService.findUser(profile.getIntraName())
+	public User createOrUpdateUserFromProfile(FtOauthProfile profile) {
+		User user = userQueryService.findUser(profile.getIntraName())
 				.orElseGet(() -> userCommandService.createUserByFtOauthProfile(profile));
+
+		String roles = FtRole.combineRolesToString(profile.getRoles());
+		LocalDateTime blackHoledAt = profile.getBlackHoledAt();
+		userCommandService.updateUserRoleAndBlackHoledAt(user, roles, blackHoledAt);
+		return user;
 	}
 
 }

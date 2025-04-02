@@ -91,7 +91,7 @@ public class OauthProfileService {
 
 		// inactive에 대해서는 단일 권한을 반환. inactive / blackhole
 		if (!isActive) {
-			addInactiveRolse(blackHoledAt, roles);
+			addInactiveRoles(blackHoledAt, roles);
 			return roles;
 		}
 		// user -> 여러 권한 핸들링.
@@ -112,7 +112,7 @@ public class OauthProfileService {
 		return roles;
 	}
 
-	private void addInactiveRolse(LocalDateTime blackHoledAt, Set<FtRole> roles) {
+	private void addInactiveRoles(LocalDateTime blackHoledAt, Set<FtRole> roles) {
 		if (blackHoledAt != null && blackHoledAt.isAfter(LocalDateTime.now())) {
 			roles.add(FtRole.AGU);
 		} else {

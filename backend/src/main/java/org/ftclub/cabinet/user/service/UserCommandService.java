@@ -171,4 +171,11 @@ public class UserCommandService {
 	public void deleteAndUpdateRole(Long userId, String roles, LocalDateTime now) {
 		userRepository.deleteAndUpdateRole(userId, roles, now);
 	}
+
+	public void updateUserRoleAndBlackHoledAt(User user, String roles, LocalDateTime blackHoledAt) {
+		if (!user.isSameBlackHoledAtAndRole(blackHoledAt, roles)) {
+			user.changeUserRole(roles);
+			user.changeBlackholedAt(blackHoledAt);
+		}
+	}
 }

@@ -36,6 +36,21 @@ public class OauthFacadeService {
 	private final OauthLinkFacadeService oauthLinkFacadeService;
 
 	/**
+	 * ft 로그인 핸들링
+	 * <p>
+	 * 42 api로부터 정보를 받아온 후, 없는 유저라면 생성합니다.
+	 *
+	 * @param rootNode ftProfile -> JsonNode
+	 * @return 필요한 정보만 파싱한 객체 {@link OauthResult}
+	 */
+	public OauthResult handleFtLogin(JsonNode rootNode) {
+		FtOauthProfile profile = oauthProfileService.convertJsonNodeToFtOauthProfile(rootNode);
+		User user = userFacadeService.createOrUpdateUserFromProfile(profile);
+
+		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getMainHomeUrl());
+	}
+
+	/**
 	 * ft oauth 로그인 외에 로그인 시도
 	 * <p>
 	 * admin 페이지에서 요청이 왔을 경우 admin 계정연동 수행
@@ -56,24 +71,6 @@ public class OauthFacadeService {
 		}
 
 		return oauthLinkFacadeService.handleLinkUser(request, oauth2User);
-	}
-
-	/**
-	 * ft 로그인 핸들링
-	 * <p>
-	 * 42 api로부터 정보를 받아온 후, 없는 유저라면 생성합니다.
-	 *
-	 * @param rootNode ftProfile -> JsonNode
-	 * @return 필요한 정보만 파싱한 객체 {@link OauthResult}
-	 */
-	@Transactional
-	public OauthResult handleFtLogin(JsonNode rootNode) {
-		FtOauthProfile profile = oauthProfileService.convertJsonNodeToFtOauthProfile(rootNode);
-		User user =
-				userFacadeService.createUserIfNotExistFromProfile(profile);
-		userFacadeService.updateUserStatus(profile, user);
-
-		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getMainHomeUrl());
 	}
 
 	/**
