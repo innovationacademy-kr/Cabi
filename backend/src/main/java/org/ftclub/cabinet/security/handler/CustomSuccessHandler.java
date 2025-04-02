@@ -3,19 +3,16 @@ package org.ftclub.cabinet.security.handler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.oauth.domain.CustomOAuth2User;
 import org.ftclub.cabinet.oauth.domain.OauthResult;
 import org.ftclub.cabinet.oauth.service.OauthFacadeService;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
-import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,9 +29,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-
-	private static final List<String> availableProvider =
-			List.of("ft", "google", "kakao", "naver", "github");
 	private final OauthFacadeService oauthFacadeService;
 	private final ObjectMapper objectMapper;
 	private final AuthPolicyService authPolicyService;
@@ -60,12 +54,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		try {
 			OauthResult oauthResult = processOAuthLogin(request, provider, fromLoadUser);
 			authFacadeService.processAuthentication(request, response, oauthResult, provider);
-			String redirectUrl = oauthResult.getRedirectionUrl();
 
-			if (oauthResult.hasRole("AGU")) {
-				redirectUrl = authPolicyService.getAGUUrl();
-			}
-			response.sendRedirect(redirectUrl);
+			redirectUser(response, oauthResult);
 		} catch (Exception e) {
 			SecurityContextHolder.clearContext();
 			securityExceptionHandlerManager.handle(response, e, true);
@@ -73,7 +63,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	}
 
 	/**
-	 * oauth2 login 위치에 따라 OauthResult 생성, redirect 경로 지정
+	 * oauth2 login 위치에 따라 OauthResult 생성
 	 *
 	 * @param req
 	 * @param provider
@@ -89,10 +79,15 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 			return oauthFacadeService.handleFtLogin(rootNode);
 		}
-		if (availableProvider.contains(provider)) {
-			return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
-		}
-		throw new SpringSecurityException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
+		return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
+	}
+
+	private void redirectUser(HttpServletResponse response, OauthResult oauthResult)
+			throws IOException {
+		String redirectUrl = oauthResult.hasRole("AGU")
+				? authPolicyService.getAGUUrl()
+				: oauthResult.getRedirectionUrl();
+		response.sendRedirect(redirectUrl);
 	}
 
 }
