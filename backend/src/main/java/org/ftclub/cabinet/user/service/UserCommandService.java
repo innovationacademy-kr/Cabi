@@ -9,7 +9,7 @@ import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
-import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;

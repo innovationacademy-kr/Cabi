@@ -3,7 +3,7 @@ package org.ftclub.cabinet.oauth.controller;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.OauthUnlinkRequestDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
-import org.ftclub.cabinet.oauth.service.OauthLinkFacadeService;
+import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;

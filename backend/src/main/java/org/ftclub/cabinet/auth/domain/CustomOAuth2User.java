@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.oauth.domain;
+package org.ftclub.cabinet.auth.domain;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,9 +13,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 public class CustomOAuth2User implements OAuth2User {
 
 	private final Oauth2Attributes oauth2Attributes;
-	private String name;
-	private String provider;
-	private String email;
 
 	public String getEmail() {
 		return oauth2Attributes.getEmail();

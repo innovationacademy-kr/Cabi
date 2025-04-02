@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.oauth.domain;
+package org.ftclub.cabinet.auth.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

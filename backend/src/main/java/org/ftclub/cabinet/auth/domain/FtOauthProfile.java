@@ -1,10 +1,9 @@
-package org.ftclub.cabinet.oauth.domain;
+package org.ftclub.cabinet.auth.domain;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
-import org.ftclub.cabinet.auth.domain.FtRole;
 
 @Builder
 @Getter

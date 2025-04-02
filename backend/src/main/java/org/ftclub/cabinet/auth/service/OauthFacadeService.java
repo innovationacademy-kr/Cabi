@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.oauth.service;
+package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
@@ -6,10 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.auth.service.AdminAuthService;
-import org.ftclub.cabinet.auth.service.AuthPolicyService;
-import org.ftclub.cabinet.oauth.domain.CustomOAuth2User;
-import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
-import org.ftclub.cabinet.oauth.domain.OauthResult;
+import org.ftclub.cabinet.auth.domain.CustomOAuth2User;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
+import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.security.SecurityPathPolicyService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserFacadeService;

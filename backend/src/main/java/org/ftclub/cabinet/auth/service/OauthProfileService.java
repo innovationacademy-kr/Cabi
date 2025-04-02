@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.oauth.service;
+package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
