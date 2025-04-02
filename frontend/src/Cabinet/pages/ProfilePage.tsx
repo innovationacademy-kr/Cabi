@@ -12,25 +12,12 @@ import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCar
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
 import PointColorCardContainer from "@/Cabinet/components/Card/PointColorCard/PointColorCard.container";
 import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileCard.container";
-import SnsConnectionCardContainer from "@/Cabinet/components/Card/SnsConnectionCard/SnsConnectionCard.container";
+import SocialAccountLinkCardContainer from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import {
   axiosMyInfo,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
-import instance from "../api/axios/axios.instance";
-
-const axiosLinkGoogleAccount = async (oauthMail: string) => {
-  try {
-    const { data } = await instance.post(
-      `${import.meta.env.VITE_BE_HOST}/v4/auth/mail`,
-      { oauthMail }
-    );
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -59,16 +46,6 @@ const ProfilePage = () => {
     }, 350);
   }, []);
 
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    const oauthMail = url.searchParams.get("oauthMail");
-    if (oauthMail) {
-      console.log(oauthMail);
-      // link google account
-      axiosLinkGoogleAccount(oauthMail);
-    }
-  }, []);
-
   return (
     <>
       {isLoading ? (
@@ -83,9 +60,7 @@ const ProfilePage = () => {
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
           <AlarmCardContainer alarm={myInfo.alarmTypes} />
-          {/* <SnsConnectionCardContainer
-            userOauthConnection={myInfo.userOauthConnection}
-          /> */}
+          <SocialAccountLinkCardContainer />
         </CardGridWrapper>
       )}
     </>
@@ -100,22 +75,22 @@ const CardGridWrapper = styled.div`
   width: 100%;
   grid-gap: 20px;
   grid-template-columns: 350px 350px;
-  grid-template-rows: 163px 183px 230px 230px;
+  grid-template-rows: 163px 183px 230px 276px;
   grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "displayStyle lentInfo" // h: 183px
     "pointColor alarm" // h: 230px h: 230px
-    "snsConnection snsConnection"; // h: 230px
+    "socialAccountLink socialAccountLink"; // h: 276px
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
-    grid-template-rows: 163px 366px 183px 230px 230px 230px;
+    grid-template-rows: 163px 366px 183px 230px 230px 276px;
     grid-template-areas:
       "profile"
       "lentInfo"
       "displayStyle"
       "pointColor"
       "alarm"
-      "snsConnection";
+      "socialAccountLink";
   }
 `;
 

@@ -5,6 +5,7 @@ import io.jsonwebtoken.JwtException;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -12,6 +13,7 @@ import org.ftclub.cabinet.exception.ServiceException;
 /**
  * Spring security 에서 발생하는 예외들을 핸들링합니다.
  */
+@Slf4j
 @RequiredArgsConstructor
 public class SecurityExceptionHandlerManager {
 
@@ -44,6 +46,9 @@ public class SecurityExceptionHandlerManager {
 		}
 		if (e instanceof NullPointerException) {
 			return ExceptionStatus.JSON_PROCESSING_EXCEPTION;
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Exception Trace Stack : ", e);
 		}
 		return ExceptionStatus.INTERNAL_SERVER_ERROR;
 	}

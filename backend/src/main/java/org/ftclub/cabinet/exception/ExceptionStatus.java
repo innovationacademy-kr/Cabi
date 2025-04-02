@@ -95,7 +95,7 @@ public enum ExceptionStatus {
 	EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
 	INVALID_AUTHORIZATION(HttpStatus.UNAUTHORIZED, "Oauth로부터 정보를 받아오지 못했습니다."),
 	DUPLICATED_OAUTH_MAIL(HttpStatus.BAD_REQUEST, "이미 등록된 oauthMail 입니다."),
-	NOT_FT_LOGIN_STATUS(HttpStatus.FORBIDDEN, "42 Oauth 인증 상태가 아닙니다."),
+	NOT_FT_LINK_STATUS(HttpStatus.FORBIDDEN, "42 계정과 연동 상태가 아닙니다."),
 	NOT_SUPPORT_OAUTH_TYPE(HttpStatus.FORBIDDEN, "지원하지 않는 OAuth 타입입니다."),
 	OAUTH_EMAIL_ALREADY_LINKED(HttpStatus.CONFLICT, "이미 다른 oauth 계정이 연동되어 있습니다."),
 	AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),

@@ -10,7 +10,7 @@ import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtService;
-import org.ftclub.cabinet.oauth.domain.CustomOauth2User;
+import org.ftclub.cabinet.oauth.domain.CustomOAuth2User;
 import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
 import org.ftclub.cabinet.oauth.domain.OauthLink;
 import org.ftclub.cabinet.oauth.domain.OauthResult;
@@ -47,7 +47,7 @@ public class OauthLinkFacadeService {
 	 * @return
 	 */
 	public OauthResult handleLinkUser(HttpServletRequest req,
-			CustomOauth2User oauth2User) {
+			CustomOAuth2User oauth2User) {
 		String oauthMail = oauth2User.getEmail();
 		String providerId = oauth2User.getName();
 		String providerType = oauth2User.getProvider();
@@ -98,20 +98,17 @@ public class OauthLinkFacadeService {
 
 		String refreshToken = cookieService.getCookieValue(req, JwtTokenConstants.REFRESH_TOKEN);
 		if (refreshToken == null) {
-			throw new SpringSecurityException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
+			throw new SpringSecurityException(ExceptionStatus.NOT_FT_LINK_STATUS);
 		}
 
 		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(refreshToken);
-		if (!"ft".equals(userInfoDto.getOauth())) {
-			throw new SpringSecurityException(ExceptionStatus.NOT_FT_LOGIN_STATUS);
-		}
+		User user = userQueryService.getUser(userInfoDto.getUserId());
 		if (oauthLinkQueryService.isExistByUserId(userInfoDto.getUserId())) {
 			throw new SpringSecurityException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
 		}
-
-		User user = userQueryService.getUser(userInfoDto.getUserId());
 		OauthLink connection =
 				OauthLink.of(user, providerType, providerId, oauthMail);
+		log.info("mail = {}", oauthMail);
 		oauthLinkCommandService.save(connection);
 		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getProfileUrl());
 	}

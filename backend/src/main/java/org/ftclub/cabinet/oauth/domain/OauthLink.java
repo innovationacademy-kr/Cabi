@@ -2,6 +2,7 @@ package org.ftclub.cabinet.oauth.domain;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.Email;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +38,6 @@ public class OauthLink {
 	private LocalDateTime createdAt;
 	@Column(name = "DELETED_AT")
 	private LocalDateTime deletedAt;
-	@Email
 	@Column(name = "EMAIL")
 	private String email;
 
@@ -66,9 +65,14 @@ public class OauthLink {
 	}
 
 	private boolean isValid() {
-		return this.user != null
-				&& this.email != null && this.createdAt != null
-				&& this.providerId != null && this.providerType != null;
+		return this.user != null && this.email != null && this.createdAt != null
+				&& this.providerId != null && this.providerType != null
+				&& (this.providerType.equals("github") || isValidEmail(this.email));
+	}
+
+	private boolean isValidEmail(String email) {
+		String emailRegex = "^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+\\.*[A-Za-z0-9\\-]*$";
+		return Pattern.matches(emailRegex, email);
 	}
 
 	public void generateDeletedAt() {

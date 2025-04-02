@@ -53,6 +53,8 @@ const lightValues = css`
   --menu-bg-shadow-color: var(--ref-black-shadow-100);
   --left-nav-border-shadow-color: var(--ref-black-shadow-200);
   --page-btn-shadow-color: var(--ref-black-shadow-300);
+  --tooltip-bg-color: var(--ref-black-shadow-400);
+  --tooltip-text-color: var(--ref-gray-100);
 
   color: var(--normal-text-color);
   background-color: var(--bg-color);
@@ -112,6 +114,8 @@ const darkValues = css`
   --menu-bg-shadow-color: var(--ref-black-shadow-300);
   --left-nav-border-shadow-color: var(--ref-black-shadow-400);
   --page-btn-shadow-color: var(--ref-black-shadow-400);
+  --tooltip-bg-color: var(--ref-white-shadow);
+  --tooltip-text-color: var(--ref-black);
 
   color: var(--normal-text-color);
   background-color: var(--bg-color);

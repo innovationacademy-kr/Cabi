@@ -176,7 +176,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
         resetBuilding();
         resetCurrentFloor();
         resetCurrentSection();
-        navigator("/login");
+        navigator("/admin/login");
       }
     } catch (error) {
       console.error(error);

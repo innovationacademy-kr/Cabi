@@ -18,7 +18,7 @@ public class SecurityRedirectExceptionHandler implements SecurityExceptionHandle
 
 	@Override
 	public void handle(HttpServletResponse res, ExceptionStatus status) throws IOException {
-		String uri = UriComponentsBuilder.fromPath(authPolicyService.getLoginUrl())
+		String uri = UriComponentsBuilder.fromHttpUrl(authPolicyService.getLoginUrl())
 				.queryParam("code", status.getError())
 				.queryParam("status", status.getStatusCode())
 				.queryParam("message", status.name())

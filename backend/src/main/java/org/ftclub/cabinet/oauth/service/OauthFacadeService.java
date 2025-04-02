@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.auth.service.AdminAuthService;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
-import org.ftclub.cabinet.oauth.domain.CustomOauth2User;
+import org.ftclub.cabinet.oauth.domain.CustomOAuth2User;
 import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
 import org.ftclub.cabinet.oauth.domain.OauthResult;
 import org.ftclub.cabinet.security.SecurityPathPolicyService;
@@ -47,7 +47,7 @@ public class OauthFacadeService {
 	 * @return
 	 */
 	@Transactional
-	public OauthResult handleExternalOAuthLogin(CustomOauth2User oauth2User,
+	public OauthResult handleExternalOAuthLogin(CustomOAuth2User oauth2User,
 			HttpServletRequest request) {
 
 		String oauthMail = oauth2User.getEmail();

@@ -14,7 +14,7 @@ export interface IButtonProps {
 
 interface CardProps {
   title?: string;
-  onClickToolTip?: () => void;
+  tooltipText?: string;
   children: React.ReactElement;
   buttons?: IButtonProps[];
   gridArea: string;
@@ -25,7 +25,7 @@ interface CardProps {
 
 const Card = ({
   title,
-  onClickToolTip,
+  tooltipText,
   gridArea,
   width = "350px",
   height = "163px",
@@ -39,7 +39,12 @@ const Card = ({
         <CardHeaderStyled cardType={cardType}>
           <CardTitleWrapperStyled>
             {title && <CardTitleStyled>{title}</CardTitleStyled>}
-            {onClickToolTip && <ToolTipIcon onClick={onClickToolTip} />}
+            {tooltipText && (
+              <TooltipSectionStyled>
+                <ToolTipIconStyled />
+                <TooltipBoxStyled>{tooltipText}</TooltipBoxStyled>
+              </TooltipSectionStyled>
+            )}
           </CardTitleWrapperStyled>
           {buttons.length > 0 && (
             <CardButtonsWrapper>
@@ -79,6 +84,7 @@ export const CardStyled = styled.div<{
   align-items: center;
   height: ${(props) => props.height};
   grid-area: ${(props) => props.gridArea};
+  position: relative;
 `;
 
 export const CardHeaderStyled = styled.div<{ cardType?: string }>`
@@ -99,20 +105,6 @@ export const CardTitleStyled = styled.div`
   font-size: 1.2em;
   font-weight: bold;
   margin-right: auto;
-`;
-
-const ToolTipIcon = styled.div`
-  background-image: url("/src/Cabinet/assets/images/notificationSign_grey.svg");
-  background-size: contain;
-  width: 16px;
-  height: 16px;
-  margin-top: 0.1rem;
-  margin-left: 0.25rem;
-  opacity: 0.6;
-  cursor: pointer;
-  &:hover {
-    opacity: 1;
-  }
 `;
 
 export const CardButtonsWrapper = styled.div`
@@ -173,6 +165,48 @@ export const CardButtonStyled = styled.div<{
     transform: ${(props) =>
       props.icon?.name === "SvgLock" ? "" : "scale(1.1)"};
     stroke: var(--normal-text-color);
+  }
+`;
+
+const ToolTipIconStyled = styled.div`
+  background-image: url("/src/Cabinet/assets/images/notificationSign_grey.svg");
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+    cursor: pointer;
+  }
+`;
+
+const TooltipBoxStyled = styled.div`
+  margin: 0 auto;
+  background-color: var(--tooltip-bg-color);
+  width: 280px;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  text-align: center;
+  line-height: 1.25rem;
+  letter-spacing: -0.02rem;
+  color: var(--tooltip-text-color);
+  box-shadow: 2px 2px 8px 0px var(--hover-box-shadow-color);
+  visibility: hidden;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 10px);
+`;
+
+const TooltipSectionStyled = styled.div`
+  width: 16px;
+  height: 16px;
+  margin-top: 0.1rem;
+  margin-left: 0.25rem;
+
+  & ${ToolTipIconStyled}:hover + ${TooltipBoxStyled} {
+    visibility: visible;
   }
 `;
 
