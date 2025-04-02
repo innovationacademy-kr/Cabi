@@ -23,8 +23,17 @@ const LoginButtonGroup = () => {
         <LoginButton
           key={provider}
           onLogin={() => {
-            window.location.replace(getSocialAuthUrl(provider));
-            console.log(getSocialAuthUrl(provider), provider);
+            const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
+
+            if (isLoggedOut) {
+              window.location.replace(
+                getSocialAuthUrl(provider) + "?prompt=login"
+              );
+              localStorage.removeItem("isLoggedOut");
+            } else {
+              window.location.replace(getSocialAuthUrl(provider));
+            }
+
             setLoginStatus({ isClicked: true, target: provider });
           }}
           display={getSocialDisplayInfo(provider)}
