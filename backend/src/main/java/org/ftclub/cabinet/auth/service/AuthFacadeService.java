@@ -27,7 +27,6 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
-import org.ftclub.cabinet.lent.service.LentPolicyService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
@@ -63,7 +62,6 @@ public class AuthFacadeService {
 	private final LentQueryService lentQueryService;
 	private final OauthProfileService oauthProfileService;
 	private final CookieService cookieService;
-	private final LentPolicyService lentPolicyService;
 
 	@Value("${cabinet.server.be-host}")
 	private String beHost;

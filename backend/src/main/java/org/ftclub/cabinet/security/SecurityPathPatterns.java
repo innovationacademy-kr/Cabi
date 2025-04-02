@@ -8,11 +8,11 @@ public class SecurityPathPatterns {
 			"/ping",
 			"/actuator/**",
 			"/favicon.ico",
-			"/v4/auth/**",
+
 			"/v5/auth/**",
 			"/v4/admin/auth/**",
+
 			"/v5/jwt/reissue",
-			"/v4/admin/auth/login"
 	};
 
 	public static final String[] ADMIN_ENDPOINTS = {
@@ -21,13 +21,7 @@ public class SecurityPathPatterns {
 			"/v5/admin/**"
 	};
 
-	public static final String[] USER_ADMIN_ENDPOINTS = {
-			"/v4/cabinets/**",
-			"/v5/items",
-			"/v4/lent/cabinets/share/cancel/*"
-	};
-
-	public static final String[] USER_AGU_ENDPOINTS = {
+	public static final String[] AGU_ENDPOINTS = {
 			"/v4/lent/me",
 			"/v4/lent/return"
 	};

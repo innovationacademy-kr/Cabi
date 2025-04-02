@@ -50,13 +50,9 @@ public class SecurityConfig {
 				)
 				.authorizeRequests(auth -> auth
 						.expressionHandler(expressionHandler)
-						.mvcMatchers(SecurityPathPatterns.PUBLIC_ENDPOINTS)
-						.permitAll()
+						.mvcMatchers(SecurityPathPatterns.PUBLIC_ENDPOINTS).permitAll()
 						.mvcMatchers(SecurityPathPatterns.ADMIN_ENDPOINTS).hasRole("ADMIN")
-						.mvcMatchers(SecurityPathPatterns.USER_ADMIN_ENDPOINTS)
-						.hasAnyRole("USER", "ADMIN")
-						.mvcMatchers(SecurityPathPatterns.USER_AGU_ENDPOINTS)
-						.hasAnyRole("USER", "AGU")
+						.mvcMatchers(SecurityPathPatterns.AGU_ENDPOINTS).hasRole("AGU")
 						.anyRequest().hasRole("USER")
 				)
 				.oauth2Login(oauth -> oauth
