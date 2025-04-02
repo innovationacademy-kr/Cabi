@@ -163,24 +163,20 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     try {
       const response = await axiosLogout();
       if (response.status === HttpStatusCode.Ok) {
-        localStorage.setItem("isLoggedOut", "true");
+        const domain =
+          import.meta.env.VITE_IS_LOCAL === "true"
+            ? "localhost"
+            : "cabi.42seoul.io";
 
-        const adminToken = isAdmin ? "admin_" : "";
-        if (import.meta.env.VITE_IS_LOCAL === "true") {
-          removeCookie(adminToken + "access_token", {
-            path: "/",
-            domain: "localhost",
-          });
-        } else {
-          removeCookie(adminToken + "access_token", {
-            path: "/",
-            domain: "cabi.42seoul.io",
-          });
-        }
+        removeCookie("access_token", {
+          path: "/",
+          domain: domain,
+        });
+        localStorage.setItem("isLoggedOut", "true");
         resetBuilding();
         resetCurrentFloor();
         resetCurrentSection();
-        navigator("/login");
+        navigator("/admin/login");
       }
     } catch (error) {
       console.error(error);

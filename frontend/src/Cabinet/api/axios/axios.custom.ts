@@ -1,9 +1,10 @@
 import { captureException } from "@sentry/react";
+import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import ErrorType from "@/Cabinet/types/enum/error.type.enum";
+import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
@@ -433,13 +434,22 @@ export const axiosUseItem = async (
 };
 
 // Admin API
-const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
+const axiosAdminAuthURL = "/v4/admin/auth";
+export const axiosAdminGetCSRFToken = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosAdminAuthURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const axiosAdminAuthLogin = async (
   id: string,
   password: string
 ): Promise<any> => {
   try {
-    const response = await instance.post(axiosAdminAuthLoginURL, {
+    const response = await instance.post(axiosAdminAuthURL + "/login", {
       id,
       password,
     });
@@ -485,16 +495,16 @@ export const axiosAGUReturnCancel = async (): Promise<any> => {
   }
 };
 
-const axiosSocialAccountLinkURL = "/v5/oauth/link";
-export const axiosDisconnectSocialAccount = async (
-  mail: string,
-  provider: string
+const axiosSocialAccountLinkURL = "/v5/auth/link";
+export const axiosUnlinkSocialAccount = async (
+  mail: string, // 연결 해지하려는 mail
+  provider: TOAuthProvider // 연결되어있는 provider
 ): Promise<any> => {
   try {
     const response = await instance.delete(axiosSocialAccountLinkURL, {
       data: {
-        oauthMail: mail, // 연동 해지하려는 mail
-        provider: provider, // 연동되어있는 providerType
+        oauthMail: mail,
+        provider: provider,
       },
     });
     return response;

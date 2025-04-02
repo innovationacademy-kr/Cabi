@@ -1,5 +1,5 @@
 import axios, { HttpStatusCode, InternalAxiosRequestConfig } from "axios";
-import ErrorType from "@/Cabinet/types/enum/error.type.enum";
+import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { axiosReissueToken } from "@/Cabinet/api/axios/axios.custom";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
@@ -34,7 +34,7 @@ instance.interceptors.request.use(async (config) => {
 });
 
 const redirectToLoginWithAlert = (error: any) => {
-  window.location.href = "login";
+  window.location.href = "/login";
   alert(error.response?.data?.message || "로그인이 필요합니다.");
 };
 
