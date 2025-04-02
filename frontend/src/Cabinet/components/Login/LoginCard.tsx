@@ -14,7 +14,7 @@ const LoginCard = () => {
         <CardSubTitleStyled>여러분의 일상을 가볍게</CardSubTitleStyled>
       </CardTitleBoxStyled>
       <LoginButtonGroupContainer />
-      <AGUURLSectionStyled to="/agu">A.G.U 유저라면?</AGUURLSectionStyled>
+      <AGUURLSectionStyled to="/agu">A.G.U 유저이신가요?</AGUURLSectionStyled>
     </LoginCardStyled>
   );
 };
