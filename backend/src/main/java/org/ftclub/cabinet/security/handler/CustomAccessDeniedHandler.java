@@ -13,8 +13,6 @@ import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.csrf.InvalidCsrfTokenException;
-import org.springframework.security.web.csrf.MissingCsrfTokenException;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
@@ -45,12 +43,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
 		SpringSecurityException exception =
 				new SpringSecurityException(ExceptionStatus.FORBIDDEN_USER);
-		if (accessDeniedException instanceof InvalidCsrfTokenException) {
-			exception = new SpringSecurityException(ExceptionStatus.INVALID_CSRF);
-		}
-		if (accessDeniedException instanceof MissingCsrfTokenException) {
-			exception = new SpringSecurityException(ExceptionStatus.MISSING_CSRF);
-		}
 		securityExceptionHandlerManager.handle(response, exception, false);
 	}
 }
