@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,10 @@ import org.ftclub.cabinet.user.domain.User;
 
 @Entity
 @Getter
+@Table(name = "OAUTH_LINK", uniqueConstraints = {
+		@UniqueConstraint(name = "UK_PROVIDER_TYPE_PROVIDER_ID",
+				columnNames = {"PROVIDER_ID", "PROVIDER_TYPE"})
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OauthLink {
 
@@ -27,18 +33,18 @@ public class OauthLink {
 	@Column(name = "ID")
 	private Long id;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "USER_ID")
 	private User user;
-	@Column(name = "PROVIDER_TYPE")
+	@Column(name = "PROVIDER_TYPE", nullable = false)
 	private String providerType; // google, ft
-	@Column(name = "PROVIDER_ID")
+	@Column(name = "PROVIDER_ID", nullable = false)
 	private String providerId; // UUID
-	@Column(name = "CREATED_AT")
+	@Column(name = "CREATED_AT", nullable = false)
 	private LocalDateTime createdAt;
 	@Column(name = "DELETED_AT")
 	private LocalDateTime deletedAt;
-	@Column(name = "EMAIL")
+	@Column(name = "EMAIL", nullable = false)
 	private String email;
 
 	protected OauthLink(User user, String providerType, String providerId, String email) {
