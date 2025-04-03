@@ -8,10 +8,10 @@ import org.ftclub.cabinet.admin.auth.service.AdminAuthService;
 import org.ftclub.cabinet.auth.domain.CustomOAuth2User;
 import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.OauthResult;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.security.SecurityPathPolicyService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserFacadeService;
-import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +26,12 @@ public class OauthFacadeService {
 
 
 	private final UserFacadeService userFacadeService;
-	private final UserQueryService userQueryService;
 	private final AuthPolicyService authPolicyService;
 	private final OauthProfileService oauthProfileService;
 	private final SecurityPathPolicyService securityPathPolicy;
 	private final AdminAuthService adminAuthService;
 	private final OauthLinkFacadeService oauthLinkFacadeService;
+	private final CookieService cookieService;
 
 	/**
 	 * ft 로그인 핸들링
@@ -68,6 +68,11 @@ public class OauthFacadeService {
 			return adminAuthService.handleAdminLogin(oauthMail);
 		}
 
+		// 계정 연동과 로그인을 구분해야한다.
+		String refreshToken = cookieService.getCookieValue(request,
+				JwtTokenConstants.REFRESH_TOKEN);
+		// uri 기준으로 가르기??
+//		log.warn("Request Uri = {}", );
 		return oauthLinkFacadeService.handleLinkUser(request, oauth2User);
 	}
 

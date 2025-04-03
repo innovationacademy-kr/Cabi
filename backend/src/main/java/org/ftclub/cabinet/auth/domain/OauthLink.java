@@ -11,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,10 +19,6 @@ import org.ftclub.cabinet.user.domain.User;
 
 @Entity
 @Getter
-@Table(name = "OAUTH_LINK", uniqueConstraints = {
-		@UniqueConstraint(name = "UK_PROVIDER_TYPE_PROVIDER_ID",
-				columnNames = {"PROVIDER_ID", "PROVIDER_TYPE"})
-})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OauthLink {
 
