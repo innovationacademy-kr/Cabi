@@ -16,10 +16,23 @@ const AGUMailVerificationSection = ({
   const [mail, setMail] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const navigator = useNavigate();
-  const subHeaderMsg = mail
-    ? `<span>${mail}</span>로 인증 링크가 전송되었습니다.`
-    : `인트라 아이디를 입력하시면 <span>인트라 이메일 주소</span>로 <span>인증 링크</span>가 전송됩니다.`;
   const ButtonText = mail ? "재요청" : "인증 요청";
+
+  const renderSubHeaderMsg = () => {
+    if (mail)
+      return (
+        <>
+          <span>{mail}</span>로 인증 링크가 전송되었습니다.
+        </>
+      );
+
+    return (
+      <>
+        인트라 아이디를 입력하시면 <span>인트라 이메일 주소</span>로{" "}
+        <span>인증 링크</span>가 전송됩니다.
+      </>
+    );
+  };
 
   const verifyAGUUser = async () => {
     try {
@@ -44,9 +57,7 @@ const AGUMailVerificationSection = ({
   return (
     <>
       <AGUHeaderStyled>A.G.U 이메일 인증</AGUHeaderStyled>
-      <AGUSubHeaderStyled
-        dangerouslySetInnerHTML={{ __html: subHeaderMsg }}
-      ></AGUSubHeaderStyled>
+      <AGUSubHeaderStyled>{renderSubHeaderMsg()}</AGUSubHeaderStyled>
       <FormInputStyled
         ref={inputRef}
         placeholder="인트라 아이디를 입력해주세요"
