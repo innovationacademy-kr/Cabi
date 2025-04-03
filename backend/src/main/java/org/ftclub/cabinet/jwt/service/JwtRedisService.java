@@ -33,13 +33,13 @@ public class JwtRedisService {
 	public boolean isUsedAdminAccessToken(Long adminId, String accessToken) {
 		String expiredAccessToken = jwtRedis.getAdminAccessToken(String.valueOf(adminId));
 
-		return expiredAccessToken.equals(accessToken);
+		return accessToken.equals(expiredAccessToken);
 	}
 
 	public boolean isUsedAdminRefreshToken(Long id, String refreshToken) {
 		String expiredRefreshToken = jwtRedis.getAdminRefreshToken(String.valueOf(id));
 
-		return expiredRefreshToken.equals(refreshToken);
+		return refreshToken.equals(expiredRefreshToken);
 	}
 
 	public void addUsedAdminTokensToBlackList(Long id, String accessToken, String refreshToken) {

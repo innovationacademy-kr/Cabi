@@ -1,9 +1,10 @@
 import { captureException } from "@sentry/react";
+import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import ErrorType from "@/Cabinet/types/enum/error.type.enum";
+import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
@@ -270,7 +271,7 @@ export const axiosReturn = async (): Promise<any> => {
 const axiosSendCabinetPasswordURL = "/v4/lent/return-memo";
 export const axiosSendCabinetPassword = async (password: string) => {
   try {
-    const response = await instance.patch(axiosSendCabinetPasswordURL, {
+    await instance.patch(axiosSendCabinetPasswordURL, {
       cabinetMemo: password,
     });
   } catch (error) {
@@ -376,7 +377,6 @@ export const axiosItems = async (): Promise<any> => {
     const response = await instance.get(axiosItemsURL);
     return response;
   } catch (error) {
-    console.log(error);
     logAxiosError(
       error,
       ErrorType.STORE,
@@ -392,7 +392,6 @@ export const axiosAdminItems = async (): Promise<any> => {
     const response = await instance.get(axiosAdminItemsURL);
     return response;
   } catch (error) {
-    console.log(error);
     logAxiosError(
       error,
       ErrorType.STORE,
@@ -435,13 +434,22 @@ export const axiosUseItem = async (
 };
 
 // Admin API
-const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
+const axiosAdminAuthURL = "/v4/admin/auth";
+export const axiosAdminGetCSRFToken = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosAdminAuthURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const axiosAdminAuthLogin = async (
   id: string,
   password: string
 ): Promise<any> => {
   try {
-    const response = await instance.post(axiosAdminAuthLoginURL, {
+    const response = await instance.post(axiosAdminAuthURL + "/login", {
       id,
       password,
     });
@@ -467,47 +475,50 @@ export const axiosAdminCabinetInfoByCabinetId = async (
 };
 
 const axiosAGUURL = "/v5/auth/agu";
-export const axiosAGU = async (intraId: string): Promise<any> => {
-  // if (intraId === null) return;
+export const axiosVerifyAGUUser = async (intraId: string): Promise<any> => {
   try {
     const response = await instance.post(axiosAGUURL, null, {
       params: { name: intraId },
     });
     return response;
   } catch (error) {
-    // logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");
     throw error;
   }
 };
 
-// export const axiosAGUCancel = async (intraId: string): Promise<any> => {
-export const axiosAGUCancel = async (): Promise<any> => {
-  // if (intraId === null) return;
+export const axiosAGUReturnCancel = async (): Promise<any> => {
   try {
     const response = await instance.post(axiosAGUURL + "/cancel");
     return response;
   } catch (error) {
-    // logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");
     throw error;
   }
 };
 
-const axiosLinkURL = "/v5/auth/link";
-export const axiosLink = async (
-  mail: string,
-  provider: string
+const axiosSocialAccountLinkURL = "/v5/auth/link";
+export const axiosUnlinkSocialAccount = async (
+  mail: string, // 연결 해지하려는 mail
+  provider: TOAuthProvider // 연결되어있는 provider
 ): Promise<any> => {
-  // if (intraId === null) return;
   try {
-    const response = await instance.delete(axiosLinkURL, {
+    const response = await instance.delete(axiosSocialAccountLinkURL, {
       data: {
-        oauthMail: mail, // 연동 해지하려는 mail
-        provider: provider, // 연동되어있는 providerType
+        oauthMail: mail,
+        provider: provider,
       },
     });
     return response;
   } catch (error) {
-    // logAxiosError(error, ErrorType.LENT, "개인사물함 대여 중 오류 발생");
+    throw error;
+  }
+};
+
+const axiosReissueTokenURL = "/v5/jwt/reissue";
+export const axiosReissueToken = async (): Promise<any> => {
+  try {
+    const response = await instance.post(axiosReissueTokenURL);
+    return response;
+  } catch (error) {
     throw error;
   }
 };

@@ -1,37 +1,43 @@
-import { useState } from "react";
 import styled from "styled-components";
-import {
-  getEnabledProviders,
-  getSocialAuthUrl,
-  getSocialDisplayInfo,
-} from "@/Cabinet/utils/loginUtils";
-import { LoginProvider } from "@/Presentation/types/common/login";
-import LoginButton from "./LoginButton";
+import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
+import { ILoginStatus } from "@/Cabinet/components/Login/LoginButtonGroup.container";
+import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
+import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
+import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
-const LoginButtonGroup = () => {
-  const [loginStatus, setLoginStatus] = useState<{
-    isClicked: boolean;
-    target: LoginProvider | null;
-  }>({
-    isClicked: false,
-    target: null,
-  });
-
+const LoginButtonGroup = ({
+  ftProvider,
+  onLoginButtonClick,
+  loginStatus,
+  socialProviderAry,
+}: {
+  ftProvider: TOAuthProvider;
+  onLoginButtonClick: (provider: TOAuthProvider) => void;
+  loginStatus: ILoginStatus;
+  socialProviderAry: TOAuthProvider[];
+}) => {
   return (
     <LoginButtonGroupStyled>
-      {getEnabledProviders().map((provider) => (
-        <LoginButton
-          key={provider}
-          onLogin={() => {
-            window.location.replace(getSocialAuthUrl(provider));
-            console.log(getSocialAuthUrl(provider), provider);
-            setLoginStatus({ isClicked: true, target: provider });
-          }}
-          display={getSocialDisplayInfo(provider)}
-          isClicked={loginStatus.isClicked}
-          isTarget={loginStatus.target === provider}
-        />
-      ))}
+      <FTLoginButton
+        key={ftProvider}
+        onLoginButtonClick={() => onLoginButtonClick(ftProvider)}
+        display={getOAuthDisplayInfo(ftProvider)}
+        isClicked={loginStatus.isClicked}
+        isTarget={loginStatus.target === ftProvider}
+        provider={ftProvider}
+      />
+      <SocialLoginButtonGroupWrapper>
+        {socialProviderAry.map((provider) => (
+          <SocialLoginButton
+            key={provider}
+            onLoginButtonClick={() => onLoginButtonClick(provider)}
+            display={getOAuthDisplayInfo(provider)}
+            isClicked={loginStatus.isClicked}
+            isTarget={loginStatus.target === provider}
+            provider={provider}
+          />
+        ))}
+      </SocialLoginButtonGroupWrapper>
     </LoginButtonGroupStyled>
   );
 };
@@ -39,7 +45,16 @@ const LoginButtonGroup = () => {
 const LoginButtonGroupStyled = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  margin-top: 60px;
+`;
+
+const SocialLoginButtonGroupWrapper = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+  width: 200px;
+  height: 40px;
 `;
 
 export default LoginButtonGroup;

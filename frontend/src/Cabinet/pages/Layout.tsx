@@ -136,11 +136,9 @@ const Layout = (): JSX.Element => {
 
   useEffect(() => {
     deleteOldPointColors();
-    console.log("token : ", token);
     if (isAGUPage) navigate("/agu");
     else if (!token && !isLoginPage) navigate("/login");
     else if (token) {
-      console.log("getMyInfo");
       getMyInfo();
       Promise.all([getBuildingsData(), getMyLentInfo()]).then(() =>
         setIsLoading(false)

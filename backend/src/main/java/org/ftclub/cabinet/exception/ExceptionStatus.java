@@ -95,7 +95,7 @@ public enum ExceptionStatus {
 	EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
 	INVALID_AUTHORIZATION(HttpStatus.UNAUTHORIZED, "Oauth로부터 정보를 받아오지 못했습니다."),
 	DUPLICATED_OAUTH_MAIL(HttpStatus.BAD_REQUEST, "이미 등록된 oauthMail 입니다."),
-	NOT_FT_LOGIN_STATUS(HttpStatus.FORBIDDEN, "42 Oauth 인증 상태가 아닙니다."),
+	NOT_FT_LINK_STATUS(HttpStatus.FORBIDDEN, "42 계정과 연동 상태가 아닙니다."),
 	NOT_SUPPORT_OAUTH_TYPE(HttpStatus.FORBIDDEN, "지원하지 않는 OAuth 타입입니다."),
 	OAUTH_EMAIL_ALREADY_LINKED(HttpStatus.CONFLICT, "이미 다른 oauth 계정이 연동되어 있습니다."),
 	AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
@@ -113,6 +113,8 @@ public enum ExceptionStatus {
 	NOT_FOUND_VERIFICATION_LINK(HttpStatus.BAD_REQUEST, "인증 링크가 일치하지 않습니다"),
 	NOT_FOUND_OAUTH_CONNECTION(HttpStatus.NOT_FOUND, "Oauth 연동 기록이 존재하지 않습니다"),
 	INVALID_OAUTH_CONNECTION(HttpStatus.BAD_REQUEST, "Oauth 연동 기록이 일치하지 않습니다"),
+	INVALID_CSRF(HttpStatus.FORBIDDEN, "잘못된 형식의 CSRF 토큰입니다"),
+	MISSING_CSRF(HttpStatus.FORBIDDEN, "CSRF 토큰이 존재하지 않습니다"),
 	CODE_ALREADY_SENT(HttpStatus.TOO_MANY_REQUESTS, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다.");
 
 	final private int statusCode;

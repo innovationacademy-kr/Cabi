@@ -25,7 +25,6 @@ import {
 } from "@/Cabinet/assets/data/maps";
 import alertImg from "@/Cabinet/assets/images/cautionSign.svg";
 import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/extension.svg";
-import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 
 const CabinetInfoArea: React.FC<{
@@ -45,13 +44,15 @@ const CabinetInfoArea: React.FC<{
   expireDate,
   isMine,
   isAvailable,
-  isExtensible,
   userModal,
   openModal,
   closeModal,
   isSwappable,
 }) => {
-  const isExtensionVisible = isMine && selectedCabinetInfo && selectedCabinetInfo.status !== "IN_SESSION";
+  const isExtensionVisible =
+    isMine &&
+    selectedCabinetInfo &&
+    selectedCabinetInfo.status !== "IN_SESSION";
   const isHoverBoxVisible =
     selectedCabinetInfo &&
     selectedCabinetInfo.lentsLength <= 1 &&

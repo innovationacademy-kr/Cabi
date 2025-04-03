@@ -63,6 +63,7 @@ const StoreMainPage = () => {
     setIsModalOpen(false);
     setSelectedItem(null);
   };
+
   return (
     <WrapperStyled>
       <HeaderStyled>
