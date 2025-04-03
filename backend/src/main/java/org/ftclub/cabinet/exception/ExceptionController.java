@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.discord.DiscordWebAlarmMessage;
 import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
@@ -108,13 +109,13 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 			log.error("[SpringMVCException] {} : {} at {}",
 					status.getReasonPhrase(), e.getMessage(), requestUri);
 			log.error("Exception stack trace: ", e);
-//			discordWebHookMessenger.sendMessage(
-//					DiscordWebAlarmMessage.fromWebRequest(
-//							request,
-//							SPRING_MVC_ERROR_MESSAGE_VALUE,
-//							responseBody.toString()
-//					)
-//			);
+			discordWebHookMessenger.sendMessage(
+					DiscordWebAlarmMessage.fromWebRequest(
+							request,
+							SPRING_MVC_ERROR_MESSAGE_VALUE,
+							responseBody.toString()
+					)
+			);
 		} else {
 			log.warn("[SpringMVCException] {} : {} at {}",
 					status.getReasonPhrase(), e.getMessage(), requestUri);
@@ -134,13 +135,13 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 		responseBody.put("message", DEFAULT_ERROR_MESSAGE_VALUE);
 		responseBody.put("error", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
 
-//		discordWebHookMessenger.sendMessage(
-//				DiscordWebAlarmMessage.fromHttpServletRequest(
-//						request,
-//						DEFAULT_ERROR_MESSAGE_VALUE,
-//						responseBody.toString()
-//				)
-//		);
+		discordWebHookMessenger.sendMessage(
+				DiscordWebAlarmMessage.fromHttpServletRequest(
+						request,
+						DEFAULT_ERROR_MESSAGE_VALUE,
+						responseBody.toString()
+				)
+		);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
 	}
 }

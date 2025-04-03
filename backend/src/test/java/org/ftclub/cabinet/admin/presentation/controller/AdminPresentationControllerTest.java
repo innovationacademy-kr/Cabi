@@ -1,0 +1,52 @@
+package org.ftclub.cabinet.admin.presentation.controller;
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
+import org.ftclub.cabinet.admin.dto.AdminPresentationSlotRequestDto;
+import org.ftclub.cabinet.admin.presentation.service.AdminPresentationService;
+import org.ftclub.cabinet.presentation.domain.PresentationLocation;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+//@WebMvcTest(controllers = AdminPresentationController.class)
+class AdminPresentationControllerTest {
+
+	@Autowired
+	private MockMvc mockMvc;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@MockBean
+	private AdminPresentationService adminPresentationService;
+
+	@DisplayName("프레젠테이션 슬롯을 생성하여 등록한다.")
+	@Test
+	void registerPresentationSlot() throws Exception {
+		// given
+		AdminPresentationSlotRequestDto requestDto = new AdminPresentationSlotRequestDto(
+				LocalDateTime.now().plusDays(1),
+				PresentationLocation.BASEMENT
+		);
+
+		// then
+		mockMvc.perform(MockMvcRequestBuilders.post("/v6/admin/presentations/slots")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(requestDto))
+				)
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+
+}
