@@ -8,12 +8,12 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-@Slf4j
+@Log4j2
 public class LoggingFilter extends OncePerRequestFilter {
 
 	private static final List<String> IP_HEADERS = Arrays.asList("X-Forwarded-For",
