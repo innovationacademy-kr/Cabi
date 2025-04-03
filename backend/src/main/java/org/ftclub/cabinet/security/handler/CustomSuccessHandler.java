@@ -6,12 +6,12 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.auth.service.AuthFacadeService;
-import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.domain.CustomOAuth2User;
 import org.ftclub.cabinet.auth.domain.OauthResult;
+import org.ftclub.cabinet.auth.service.AuthFacadeService;
+import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.service.OauthFacadeService;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
  * token을 만들어 발급
  */
 @Component
-@Slf4j
+@Logging
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 

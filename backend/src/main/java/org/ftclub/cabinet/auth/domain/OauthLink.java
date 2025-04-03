@@ -14,11 +14,16 @@ import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.User;
 
 @Entity
 @Getter
+@ToString
+@Logging(level = LogLevel.DEBUG)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OauthLink {
 

@@ -13,16 +13,18 @@ import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtService;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
-import org.springframework.cloud.commons.httpclient.ApacheHttpClientConnectionManagerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Logging(level = LogLevel.DEBUG)
 @RequiredArgsConstructor
 public class OauthLinkFacadeService {
 
@@ -36,7 +38,6 @@ public class OauthLinkFacadeService {
 	private final ApplicationTokenManager applicationTokenManager;
 	private final CookieService cookieService;
 	private final UserCommandService userCommandService;
-	private final ApacheHttpClientConnectionManagerFactory connManFactory;
 
 	/**
 	 * providerId(unique), type을 기준으로 계정 연동 상태를 확인한 후,
