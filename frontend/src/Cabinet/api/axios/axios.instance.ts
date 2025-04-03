@@ -9,9 +9,9 @@ let isRefreshing = false;
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BE_HOST,
-  withCredentials: true,
-  xsrfCookieName: "XSRF-TOKEN",
-  xsrfHeaderName: "X-XSRF-TOKEN",
+  // withCredentials: true,
+  // xsrfCookieName: "XSRF-TOKEN",
+  // xsrfHeaderName: "X-XSRF-TOKEN",
 });
 
 const setAuthorizationHeader = (
