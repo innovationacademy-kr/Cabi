@@ -21,7 +21,7 @@ const AGUMailVerificationSection = ({
     : `인트라 아이디를 입력하시면 <span>인트라 이메일 주소</span>로 <span>인증 링크</span>가 전송됩니다.`;
   const ButtonText = mail ? "재요청" : "인증 요청";
 
-  const verifyAGUUSer = async () => {
+  const verifyAGUUser = async () => {
     try {
       if (inputRef.current) {
         const id = inputRef.current.value;
@@ -52,7 +52,7 @@ const AGUMailVerificationSection = ({
         placeholder="인트라 아이디를 입력해주세요"
       />
       <Button
-        onClick={() => handleButtonClick("aguUserVerification", verifyAGUUSer)}
+        onClick={() => handleButtonClick("aguUserVerification", verifyAGUUser)}
         theme="fill"
         text={ButtonText}
         maxWidth="500px"
