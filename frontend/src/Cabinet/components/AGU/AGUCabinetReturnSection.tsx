@@ -26,7 +26,7 @@ const AGUCabinetReturnSection = ({
       ></AGUSubHeaderStyled>
       <ReturnDetailWrapper>
         <ReturnDetailMsgStyled
-          dangerouslySetInnerHTML={{ __html: returnDetailMsg! }}
+          dangerouslySetInnerHTML={{ __html: returnDetailMsg }}
         />
       </ReturnDetailWrapper>
       <ButtonContainer
