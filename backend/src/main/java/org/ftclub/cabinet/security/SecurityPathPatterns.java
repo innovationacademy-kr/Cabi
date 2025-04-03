@@ -9,7 +9,7 @@ public class SecurityPathPatterns {
 			"/actuator/**",
 			"/favicon.ico",
 
-			"/v5/auth/**",
+			"/v5/auth/agu/**",
 			"/v4/admin/auth/**",
 
 			"/v5/jwt/reissue",

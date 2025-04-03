@@ -11,6 +11,7 @@ import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.domain.CookieInfo;
+import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.service.CookieService;
 import org.ftclub.cabinet.dto.AccessTokenDto;
@@ -21,7 +22,6 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
-import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -66,7 +66,6 @@ public class AdminAuthService {
 	 * @param masterLoginDto 마스터 로그인 정보 {@link MasterLoginDto}
 	 * @param req            요청 시의 서블렛 {@link HttpServletRequest}
 	 * @param res            요청 시의 서블렛 {@link HttpServletResponse}
-	 * @param now            현재 시각
 	 */
 	public AccessTokenDto masterLogin(MasterLoginDto masterLoginDto, HttpServletRequest req,
 			HttpServletResponse res) {
@@ -90,10 +89,9 @@ public class AdminAuthService {
 	 * <p>
 	 * 쿠키에 저장된 관리자 토큰을 제거합니다.
 	 *
-	 * @param res 요청 시의 서블렛 {@link HttpServletResponse}
+	 * @param response 요청 시의 서블렛 {@link HttpServletResponse}
 	 */
-	public void adminLogout(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void adminLogout(HttpServletRequest request, HttpServletResponse response) {
 
 		String accessToken = jwtService.extractToken(request);
 		String refreshToken =
