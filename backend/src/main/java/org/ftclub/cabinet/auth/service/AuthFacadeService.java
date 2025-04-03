@@ -207,4 +207,21 @@ public class AuthFacadeService {
 				.build()
 				.toUriString();
 	}
+
+	/**
+	 * public 로그인 요청 시 토큰을 발급합니다.
+	 *
+	 * @param name
+	 * @throws IOException
+	 */
+	public void handlePublicLogin(HttpServletRequest req, HttpServletResponse res,
+			String name) throws IOException {
+		User user = userQueryService.getUserByName(name);
+
+		OauthResult result = new OauthResult(user.getId(), user.getRoles(),
+				authPolicyService.getMainHomeUrl());
+
+		processAuthentication(req, res, result, "Temporary");
+		res.sendRedirect(result.getRedirectionUrl());
+	}
 }

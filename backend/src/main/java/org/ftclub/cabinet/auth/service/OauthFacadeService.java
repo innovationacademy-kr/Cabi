@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,18 +69,6 @@ public class OauthFacadeService {
 		}
 
 		return oauthLinkFacadeService.handleLinkUser(request, oauth2User);
-	}
-
-	/**
-	 * public 로그인 요청 시 토큰을 발급합니다.
-	 *
-	 * @param name
-	 * @throws IOException
-	 */
-	public OauthResult handlePublicLogin(String name) {
-		User user = userQueryService.getUserByName(name);
-
-		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getMainHomeUrl());
 	}
 
 }
