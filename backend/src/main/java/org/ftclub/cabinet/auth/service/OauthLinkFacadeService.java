@@ -1,21 +1,23 @@
 package org.ftclub.cabinet.auth.service;
 
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.auth.domain.CustomOAuth2User;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
+import org.ftclub.cabinet.auth.domain.OauthLink;
+import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtService;
-import org.ftclub.cabinet.auth.domain.CustomOAuth2User;
-import org.ftclub.cabinet.auth.domain.FtOauthProfile;
-import org.ftclub.cabinet.auth.domain.OauthLink;
-import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
+import org.springframework.cloud.commons.httpclient.ApacheHttpClientConnectionManagerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,7 @@ public class OauthLinkFacadeService {
 	private final ApplicationTokenManager applicationTokenManager;
 	private final CookieService cookieService;
 	private final UserCommandService userCommandService;
+	private final ApacheHttpClientConnectionManagerFactory connManFactory;
 
 	/**
 	 * providerId(unique), type을 기준으로 계정 연동 상태를 확인한 후,
@@ -49,9 +52,15 @@ public class OauthLinkFacadeService {
 		String oauthMail = oauth2User.getEmail();
 		String providerId = oauth2User.getName();
 		String providerType = oauth2User.getProvider();
+		Optional<OauthLink> result = oauthLinkQueryService.findByProviderIdAndProviderType(
+				providerId, providerType);
+		String refreshToken = cookieService.getCookieValue(req, JwtTokenConstants.REFRESH_TOKEN);
 
-		return oauthLinkQueryService.findByProviderIdAndProviderType(providerId, providerType)
-				.map(this::handleExistingLinkedUser)
+		// 계정 연동 클릭했는디 이미 연동당한 계정임
+		if (refreshToken != null && result.isPresent()) {
+			throw new SpringSecurityException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
+		}
+		return result.map(this::handleExistingLinkedUser)
 				.orElseGet(() -> handleNewLinkUser(req, providerType, providerId, oauthMail));
 	}
 
