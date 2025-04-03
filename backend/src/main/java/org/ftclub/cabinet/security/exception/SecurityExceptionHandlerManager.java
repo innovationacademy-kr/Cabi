@@ -20,12 +20,18 @@ public class SecurityExceptionHandlerManager {
 	private final SecurityDefaultExceptionHandler defaultHandler;
 	private final SecurityRedirectExceptionHandler redirectHandler;
 
-	public void handle(HttpServletResponse res, Exception e, boolean isRedirect)
-			throws IOException {
+	public void handle(HttpServletResponse res, Exception e, boolean isRedirect) {
 		ExceptionStatus status = extractStatus(e);
 		SecurityExceptionHandler handler = isRedirect ? redirectHandler : defaultHandler;
 
-		handler.handle(res, status);
+		try {
+
+			handler.handle(res, status);
+		} catch (IOException ioException) {
+			// handler 에서 response 생성 도중 예외 발생
+			log.error("Failed to write response: ", ioException);
+			res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	private ExceptionStatus extractStatus(Exception e) {
