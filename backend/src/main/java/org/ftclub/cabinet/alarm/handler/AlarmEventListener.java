@@ -37,11 +37,10 @@ public class AlarmEventListener {
 	@EventListener
 	public void handleAlarmEvent(AlarmEvent alarmEvent) {
 		log.info("handleAlarmEvent = {}", alarmEvent);
-		//TODO: 테스트 후 풀기
-//		if (!alarmProperties.getIsProduction()) {
-//			log.info("handleAlarmEvent is not production");
-//			return;
-//		}
+		if (!alarmProperties.getIsProduction()) {
+			log.info("handleAlarmEvent is not production");
+			return;
+		}
 		eventProceed(alarmEvent);
 	}
 
