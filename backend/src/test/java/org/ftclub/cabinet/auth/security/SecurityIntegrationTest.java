@@ -3,7 +3,7 @@ package org.ftclub.cabinet.auth.security;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.ftclub.cabinet.jwt.service.JwtTokenProvider;
+import org.ftclub.cabinet.jwt.service.JwtProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class SecurityIntegrationTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private JwtTokenProvider tokenProvider;
+	private JwtProvider tokenProvider;
 
 	// 공개된 EndPoint 가 없다..;;
 //	@Test

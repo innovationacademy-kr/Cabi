@@ -1,7 +1,18 @@
 package org.ftclub.cabinet.cabinet.controller;
 
+import static org.ftclub.testutils.TestUtils.mockRequest;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.ftclub.cabinet.config.JwtProperties;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.Cookie;
+import javax.transaction.Transactional;
+import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
 import org.ftclub.testutils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -11,14 +22,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
-
-import javax.servlet.http.Cookie;
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static org.ftclub.testutils.TestUtils.mockRequest;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,7 +33,7 @@ public class AdminCabinetControllerTest {
 	MockMvc mvc;
 
 	@Autowired
-	JwtProperties jwtProperties;
+	JwtTokenProperties jwtProperties;
 
 	String adminToken;
 	Cookie cookie;
