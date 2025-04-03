@@ -20,6 +20,12 @@ public class LoggingFilter extends OncePerRequestFilter {
 			"Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR");
 
 	@Override
+	protected boolean shouldNotFilter(HttpServletRequest req) {
+		String path = req.getRequestURI();
+		return path.startsWith("/actuator/") || path.equals("/");
+	}
+
+	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			FilterChain filterChain) throws ServletException, IOException {
 
