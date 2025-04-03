@@ -4,7 +4,7 @@ package org.ftclub.cabinet.admin.presentation.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import org.ftclub.cabinet.admin.dto.AdminPresentationSlotRequestDto;
-import org.ftclub.cabinet.admin.presentation.service.AdminPresentationService;
+import org.ftclub.cabinet.admin.presentation.service.AdminPresentationSlotService;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AdminPresentationControllerTest {
+class AdminPresentationSlotControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -29,7 +29,7 @@ class AdminPresentationControllerTest {
 	private ObjectMapper objectMapper;
 
 	@MockBean
-	private AdminPresentationService adminPresentationService;
+	private AdminPresentationSlotService adminPresentationSlotService;
 
 	@DisplayName("어드민이 프레젠테이션 슬롯을 생성하여 등록한다.")
 	@WithMockUser(roles = "ADMIN")
