@@ -162,12 +162,12 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const onClickLogoutButton = async (): Promise<void> => {
     try {
       const response = await axiosLogout();
+
       if (response.status === HttpStatusCode.Ok) {
         const domain =
           import.meta.env.VITE_IS_LOCAL === "true"
             ? "localhost"
             : "cabi.42seoul.io";
-
         removeCookie("access_token", {
           path: "/",
           domain: domain,
