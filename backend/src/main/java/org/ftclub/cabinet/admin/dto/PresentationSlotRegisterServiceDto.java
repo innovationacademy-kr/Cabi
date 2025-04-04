@@ -9,7 +9,7 @@ import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 @Getter
 @ToString
 @AllArgsConstructor
-public class AdminPresentationSlotServiceDto {
+public class PresentationSlotRegisterServiceDto {
 
 	private LocalDateTime startTime;
 	private PresentationLocation location;

@@ -10,8 +10,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 class PresentationSlotRepositoryTest {
 
 	@Autowired
@@ -38,7 +40,7 @@ class PresentationSlotRepositoryTest {
 
 	@DisplayName("주어진 시간 범위와 겹치는 프레젠테이션 슬롯을 조회한다")
 	@Test
-	void findOverlappingSlots() {
+	void findByStartTimeBetween() {
 		// given
 		LocalDateTime now = LocalDateTime.now();
 		PresentationSlot slot1 = new PresentationSlot(now.minusHours(2),
@@ -50,7 +52,7 @@ class PresentationSlotRepositoryTest {
 		slotRepository.saveAll(List.of(slot1, slot2, slot3));
 
 		// when
-		List<PresentationSlot> overlappingSlots = slotRepository.findOverlappingSlots(
+		List<PresentationSlot> overlappingSlots = slotRepository.findByStartTimeBetween(
 				now.minusHours(2),
 				now.plusHours(2));
 

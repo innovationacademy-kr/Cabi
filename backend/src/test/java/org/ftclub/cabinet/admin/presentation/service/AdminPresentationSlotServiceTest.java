@@ -4,7 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
-import org.ftclub.cabinet.admin.dto.AdminPresentationSlotServiceDto;
+import org.ftclub.cabinet.admin.dto.PresentationSlotRegisterServiceDto;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
@@ -12,8 +13,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 class AdminPresentationSlotServiceTest {
 
 	@Autowired
@@ -26,7 +29,7 @@ class AdminPresentationSlotServiceTest {
 	@Test
 	void registerPresentationSlot() {
 		// given
-		AdminPresentationSlotServiceDto slotServiceDto = new AdminPresentationSlotServiceDto(
+		PresentationSlotRegisterServiceDto slotServiceDto = new PresentationSlotRegisterServiceDto(
 				LocalDateTime.now().plusHours(1),
 				PresentationLocation.BASEMENT
 		);
@@ -45,14 +48,15 @@ class AdminPresentationSlotServiceTest {
 	@Test
 	void registerPresentationSlotWithPastTime() {
 		// given
-		AdminPresentationSlotServiceDto slotServiceDto = new AdminPresentationSlotServiceDto(
+		PresentationSlotRegisterServiceDto slotServiceDto = new PresentationSlotRegisterServiceDto(
 				LocalDateTime.now().minusHours(1),
 				PresentationLocation.BASEMENT
 		);
 
 		// then
 		assertThatThrownBy(() -> slotService.registerPresentationSlot(slotServiceDto))
-				.isInstanceOf(RuntimeException.class); // todo : 예외 처리 하면 바꿀것
+				.isInstanceOf(ServiceException.class)
+				.hasMessage("과거 시간으로는 발표 슬롯을 생성할 수 없습니다.");
 	}
 
 	@DisplayName("시간대가 겹치는 슬롯이 있으면 슬롯을 등록할 수 없다.")
@@ -61,19 +65,20 @@ class AdminPresentationSlotServiceTest {
 		// given
 		LocalDateTime now = LocalDateTime.now();
 
-		AdminPresentationSlotServiceDto slotServiceDto1 = new AdminPresentationSlotServiceDto(
+		PresentationSlotRegisterServiceDto slotServiceDto1 = new PresentationSlotRegisterServiceDto(
 				now.plusHours(1),
 				PresentationLocation.BASEMENT
 		);
 		slotService.registerPresentationSlot(slotServiceDto1);
 
-		AdminPresentationSlotServiceDto slotServiceDto2 = new AdminPresentationSlotServiceDto(
+		PresentationSlotRegisterServiceDto slotServiceDto2 = new PresentationSlotRegisterServiceDto(
 				now.plusHours(2),
 				PresentationLocation.BASEMENT
 		);
 
 		// then
 		assertThatThrownBy(() -> slotService.registerPresentationSlot(slotServiceDto2))
-				.isInstanceOf(RuntimeException.class); // todo : 예외 처리 하면 바꿀것
+				.isInstanceOf(ServiceException.class)
+				.hasMessage("해당 시간에는 이미 발표 슬롯이 존재합니다.");
 	}
 }

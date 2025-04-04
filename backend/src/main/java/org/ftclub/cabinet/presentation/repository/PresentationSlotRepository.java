@@ -19,6 +19,6 @@ public interface PresentationSlotRepository extends JpaRepository<PresentationSl
 	@Query("SELECT ps "
 			+ "FROM PresentationSlot ps "
 			+ "WHERE ps.startTime > :startTime AND ps.startTime < :endTime")
-	List<PresentationSlot> findOverlappingSlots(@Param("startTime") LocalDateTime startTime,
+	List<PresentationSlot> findByStartTimeBetween(@Param("startTime") LocalDateTime startTime,
 			@Param("endTime") LocalDateTime endTime);
 }
