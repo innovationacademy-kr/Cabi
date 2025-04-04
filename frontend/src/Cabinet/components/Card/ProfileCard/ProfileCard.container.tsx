@@ -21,8 +21,6 @@ const ProfileCardContainer = ({ name }: { name: string | null }) => {
       const response = await axiosLogout();
 
       if (response.status === HttpStatusCode.Ok) {
-        localStorage.setItem("isLoggedOut", "true");
-
         removeCookie("access_token", {
           path: "/",
           domain:
@@ -30,6 +28,7 @@ const ProfileCardContainer = ({ name }: { name: string | null }) => {
               ? "localhost"
               : "cabi.42seoul.io",
         });
+        localStorage.setItem("isLoggedOut", "true");
         resetBuilding();
         resetCurrentFloor();
         resetCurrentSection();

@@ -9,7 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.jwt.service.JwtService;
@@ -21,7 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-@Slf4j
+@Log4j2
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(token);
 			Authentication auth = getAuthentication(userInfoDto);
 
-			log.info("JWT Filter: userId = {}, role = {}",
+			log.debug("JWT Filter: userId = {}, role = {}",
 					userInfoDto.getUserId(),
 					userInfoDto.getRoles()
 			);

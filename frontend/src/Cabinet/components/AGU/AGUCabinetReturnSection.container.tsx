@@ -28,21 +28,28 @@ const AGUCabinetReturnSectionContainer = ({
   const resetMyLentInfo = useResetRecoilState(myCabinetInfoState);
   const navigator = useNavigate();
   const subHeaderMsg = `현재 대여중인 사물함 정보입니다. <span>지금 반납 하시겠습니까?</span>`;
-  const formattedDate = formatDate(
-    myLentInfo ? new Date(myLentInfo.lents[0].expiredAt) : null,
-    "/",
-    4,
-    2,
-    2
-  );
-  const returnDetailMsg = myLentInfo
-    ? `<strong>${myLentInfo.floor}층 - ${myLentInfo.section}, ${myLentInfo.visibleNum}번</strong>
-대여기간 : <strong>${formattedDate}</strong>까지`
-    : "";
-  /*
-  2층 - End of Cluster 1, 8번
-  대여기간 : 2022/12/21 23:59까지
-  */
+
+  const renderReturnDetailMsg = () => {
+    if (!myLentInfo) return <></>;
+
+    const formattedDate = formatDate(
+      new Date(myLentInfo.lents[0].expiredAt),
+      "/",
+      4,
+      2,
+      2
+    );
+
+    return (
+      <>
+        <strong>
+          {myLentInfo.floor}층 - {myLentInfo.section},{myLentInfo.visibleNum}번
+        </strong>
+        <br></br>
+        대여기간 : <strong>{formattedDate}</strong>까지
+      </>
+    );
+  };
 
   const tryReturnRequest = async () => {
     try {
@@ -110,9 +117,9 @@ const AGUCabinetReturnSectionContainer = ({
       handleButtonClick={handleButtonClick}
       isProcessingButtonClick={isProcessingButtonClick}
       subHeaderMsg={subHeaderMsg}
-      returnDetailMsg={returnDetailMsg}
       tryReturnRequest={tryReturnRequest}
       handlePageExit={handlePageExit}
+      renderReturnDetailMsg={renderReturnDetailMsg}
     />
   );
 };

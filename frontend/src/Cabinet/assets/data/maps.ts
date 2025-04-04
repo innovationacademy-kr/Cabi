@@ -295,7 +295,7 @@ export const oAuthErrorMsgMap = {
   [OAuthErrorType.NOT_FT_LINK_STATUS]:
     "아직 연결되지 않은 소셜 계정입니다. 계정을 연결한 후 다시 로그인해 주세요.",
   [OAuthErrorType.OAUTH_EMAIL_ALREADY_LINKED]:
-    "이미 연결된 소셜 계정이 있습니다. 다른 계정을 사용하려면 기존 계정 연결을 해제해주세요.",
+    "해당 소셜 계정은 이미 사용 중입니다. 기존 계정 연결을 해제 후 다시 시도해 주세요.",
   [OAuthErrorType.NOT_SUPPORT_OAUTH_TYPE]:
     "지원하지 않는 소셜 계정입니다. 다른 계정을 사용해 주세요.",
 };

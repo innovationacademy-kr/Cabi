@@ -4,8 +4,9 @@ import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 
 /**
@@ -17,8 +18,8 @@ import org.ftclub.cabinet.security.exception.SpringSecurityException;
  * <p>
  * attribute: oauth별로 사용한 정보들
  */
-@Slf4j
-@ToString
+@ToString(exclude = {"attributes"})
+@Logging(level = LogLevel.DEBUG)
 @Getter
 @Builder
 public class Oauth2Attributes {
@@ -69,7 +70,6 @@ public class Oauth2Attributes {
 	}
 
 	private static Oauth2Attributes ofGithub(Map<String, Object> attributes, String attributeKey) {
-		log.info("id = {}, email = {}", attributes.get(attributeKey), attributes.get("email"));
 		String email = (String) attributes.get("email");
 		return new Oauth2Attributes(
 				"github",

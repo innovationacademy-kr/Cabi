@@ -7,16 +7,16 @@ const AGUCabinetReturnSection = ({
   handleButtonClick,
   isProcessingButtonClick,
   subHeaderMsg,
-  returnDetailMsg,
   tryReturnRequest,
   handlePageExit,
+  renderReturnDetailMsg,
 }: {
   handleButtonClick: (key: string, callback: () => void) => void;
   isProcessingButtonClick: boolean;
   subHeaderMsg: string;
-  returnDetailMsg: string;
   tryReturnRequest: () => Promise<void>;
   handlePageExit: (e: TAGUReturnPageExitEvent, url?: string) => Promise<void>;
+  renderReturnDetailMsg: () => JSX.Element;
 }) => {
   return (
     <>
@@ -25,9 +25,7 @@ const AGUCabinetReturnSection = ({
         dangerouslySetInnerHTML={{ __html: subHeaderMsg }}
       ></AGUSubHeaderStyled>
       <ReturnDetailWrapper>
-        <ReturnDetailMsgStyled
-          dangerouslySetInnerHTML={{ __html: returnDetailMsg! }}
-        />
+        <ReturnDetailMsgStyled>{renderReturnDetailMsg()}</ReturnDetailMsgStyled>
       </ReturnDetailWrapper>
       <ButtonContainer
         onClick={() => {
