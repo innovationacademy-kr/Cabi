@@ -37,7 +37,11 @@ instance.interceptors.request.use(async (config) => {
 });
 
 const redirectToLoginWithAlert = (error: any) => {
-  window.location.href = "/login";
+  const loginUrl = "/login";
+  const isAdmin = window.location.pathname.includes("/admin");
+  const redirectUrl = `${isAdmin ? "/admin" : ""}${loginUrl}`;
+
+  window.location.replace(redirectUrl);
   alert(error.response?.data?.message || "로그인이 필요합니다.");
 };
 
