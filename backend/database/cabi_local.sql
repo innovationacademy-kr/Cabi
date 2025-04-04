@@ -612,7 +612,7 @@ DROP TABLE IF EXISTS `user`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user`
 (
-    `id`            bigint(20)                 NOT NULL AUTO_INCREMENT,
+    `id`            bigint(20)   NOT NULL AUTO_INCREMENT,
     `blackholed_at` datetime(6)  DEFAULT NULL,
     `deleted_at`    datetime(6)  DEFAULT NULL,
     `email`         varchar(255) DEFAULT NULL,
@@ -620,6 +620,8 @@ CREATE TABLE `user`
     `slack_alarm`   tinyint(1)   DEFAULT TRUE  NOT NULL,
     `email_alarm`   tinyint(1)   DEFAULT TRUE  NOT NULL,
     `push_alarm`    tinyint(1)   DEFAULT FALSE NOT NULL,
+    `coin`          bigint(20)   DEFAULT 0     NOT NULL,
+    `roles`         varchar(255) DEFAULT 'USER',
     PRIMARY KEY (`id`),
     UNIQUE KEY `user_name_unique_key` (`name`),
     UNIQUE KEY `user_email_unique_key` (`email`)
@@ -628,6 +630,12 @@ CREATE TABLE `user`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+-- LOCK TABLES `user` WRITE;
+INSERT INTO `user`
+VALUES  (1, null, null, test1@student.42seoul.kr, "test1", 1, 1, 0, 0, 'USER'),
+        (2, null, null, test2@student.42seoul.kr, "test2", 1, 1, 0, 0, 'USER'),
+        (3, null, null, test3@student.42seoul.kr, "test3", 1, 1, 0, 0, 'USER');
 
 
 DROP TABLE IF EXISTS `lent_extension`;
