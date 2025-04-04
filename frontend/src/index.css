@@ -30,7 +30,8 @@
   --ref-orange-200: #ef8172;
 
   /* yellow */
-  --ref-yellow: #ffc74c;
+  --ref-yellow-100: #fee500;
+  --ref-yellow-200: #ffc74c;
 
   /* green */
   --ref-green-100: #47ffa7;
@@ -73,6 +74,7 @@
   --ref-black-shadow-200: rgba(0, 0, 0, 0.25);
   --ref-black-shadow-300: rgba(0, 0, 0, 0.4);
   --ref-black-shadow-400: rgba(0, 0, 0, 0.8);
+  --ref-white-shadow: rgba(255, 255, 255, 0.8);
 
   /* cabinet */
   --full-color: var(--ref-gray-200);
@@ -90,7 +92,7 @@
   --custom-purple-100: var(--ref-purple-300);
   --custom-purple-200: var(--ref-purple-500);
   --custom-orange: var(--ref-orange-100);
-  --custom-yellow: var(--ref-yellow);
+  --custom-yellow: var(--ref-yellow-200);
   --custom-green-100: var(--ref-green-300);
   --custom-green-200: var(--ref-green-400);
 

@@ -21,7 +21,8 @@ public class RoleHierarchyConfig {
 
 		roleHierarchy.setHierarchy(
 				"ROLE_MASTER > ROLE_ADMIN\n" +
-						"ROLE_MASTER > ROLE_ADMIN"
+						"ROLE_ADMIN > ROLE_USER\n" +
+						"ROLE_USER > ROLE_AGU"
 		);
 		return roleHierarchy;
 	}

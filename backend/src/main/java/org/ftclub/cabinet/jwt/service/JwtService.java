@@ -124,8 +124,10 @@ public class JwtService {
 
 			return reissueUserToken(req, res, currentTokens, userInfoDto);
 		} catch (ExpiredJwtException e) {
+			cookieService.deleteAllCookies(req.getCookies(), req.getServerName(), res);
 			throw ExceptionStatus.EXPIRED_JWT_TOKEN.asServiceException();
 		} catch (JwtException e) {
+			cookieService.deleteAllCookies(req.getCookies(), req.getServerName(), res);
 			throw ExceptionStatus.JWT_EXCEPTION.asServiceException();
 		}
 	}

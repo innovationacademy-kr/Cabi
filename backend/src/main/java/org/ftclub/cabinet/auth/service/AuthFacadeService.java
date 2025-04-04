@@ -17,7 +17,9 @@ import org.ftclub.cabinet.alarm.domain.EmailVerificationAlarm;
 import org.ftclub.cabinet.alarm.repository.AguCodeRedis;
 import org.ftclub.cabinet.alarm.service.AguCodeRedisService;
 import org.ftclub.cabinet.auth.domain.CookieInfo;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
+import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.dto.AguMailResponse;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
@@ -26,9 +28,8 @@ import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
-import org.ftclub.cabinet.oauth.domain.FtOauthProfile;
-import org.ftclub.cabinet.oauth.domain.OauthResult;
-import org.ftclub.cabinet.oauth.service.OauthProfileService;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -49,6 +50,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @Slf4j
 @Service
+@Logging(level = LogLevel.DEBUG)
 @RequiredArgsConstructor
 public class AuthFacadeService {
 
@@ -182,12 +184,9 @@ public class AuthFacadeService {
 		FtOauthProfile profile = oauthProfileService.getProfileByIntraName(
 				applicationTokenManager.getFtAccessToken(), name);
 
-		if (!user.isContainRole(FtRole.AGU.name()) && !profile.hasRole(FtRole.AGU)) {
-			throw ExceptionStatus.ACCESS_DENIED.asServiceException();
-		}
+		authPolicyService.verifyAguRole(user.getRoles(), FtRole.AGU.name(), profile.getRoles());
 		lentQueryService.getUserActiveLentHistory(user.getId())
 				.orElseThrow(ExceptionStatus.NO_ACTIVE_LENT_FOUND::asServiceException);
-
 		// 코드가 있는데 발급 요청이면 에러(3분 내로 재요청)
 		if (aguCodeRedisService.isAlreadyExist(name)) {
 			throw ExceptionStatus.CODE_ALREADY_SENT.asServiceException();
@@ -210,5 +209,22 @@ public class AuthFacadeService {
 				.encode(StandardCharsets.UTF_8)
 				.build()
 				.toUriString();
+	}
+
+	/**
+	 * public 로그인 요청 시 토큰을 발급합니다.
+	 *
+	 * @param name
+	 * @throws IOException
+	 */
+	public void handlePublicLogin(HttpServletRequest req, HttpServletResponse res,
+			String name) throws IOException {
+		User user = userQueryService.getUserByName(name);
+
+		OauthResult result = new OauthResult(user.getId(), user.getRoles(),
+				authPolicyService.getMainHomeUrl());
+
+		processAuthentication(req, res, result, "Temporary");
+		res.sendRedirect(result.getRedirectionUrl());
 	}
 }

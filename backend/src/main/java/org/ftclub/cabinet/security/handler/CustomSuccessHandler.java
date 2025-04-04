@@ -6,15 +6,13 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.auth.domain.CustomOAuth2User;
+import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.oauth.domain.CustomOauth2User;
-import org.ftclub.cabinet.oauth.domain.OauthResult;
-import org.ftclub.cabinet.oauth.service.OauthFacadeService;
+import org.ftclub.cabinet.auth.service.OauthFacadeService;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
-import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,21 +25,17 @@ import org.springframework.stereotype.Component;
  * token을 만들어 발급
  */
 @Component
-@Slf4j
+@Logging
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
 
 	private final OauthFacadeService oauthFacadeService;
 	private final ObjectMapper objectMapper;
 	private final AuthPolicyService authPolicyService;
 	private final AuthFacadeService authFacadeService;
 	private final SecurityExceptionHandlerManager securityExceptionHandlerManager;
-
 	@Value("${spring.security.oauth2.client.registration.ft.client-name}")
-	private String ftProvider;
-	@Value("${spring.security.oauth2.client.registration.google.client-name}")
-	private String googleProvider;
+	private String mainProvider;
 
 	/**
 	 * oauth2 로그인 성공 후, role에 맞는 인가 부여 및 토큰을 발행합니다.
@@ -54,18 +48,14 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException {
-		CustomOauth2User fromLoadUser = (CustomOauth2User) authentication.getPrincipal();
+		CustomOAuth2User fromLoadUser = (CustomOAuth2User) authentication.getPrincipal();
 		String provider = fromLoadUser.getProvider();
 
 		try {
 			OauthResult oauthResult = processOAuthLogin(request, provider, fromLoadUser);
 			authFacadeService.processAuthentication(request, response, oauthResult, provider);
-			String redirectUrl = oauthResult.getRedirectionUrl();
 
-			if (oauthResult.hasRole("AGU")) {
-				redirectUrl = authPolicyService.getAGUUrl();
-			}
-			response.sendRedirect(redirectUrl);
+			redirectUser(response, oauthResult);
 		} catch (Exception e) {
 			SecurityContextHolder.clearContext();
 			securityExceptionHandlerManager.handle(response, e, true);
@@ -73,7 +63,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	}
 
 	/**
-	 * oauth2 login 위치에 따라 OauthResult 생성, redirect 경로 지정
+	 * oauth2 login 위치에 따라 OauthResult 생성
 	 *
 	 * @param req
 	 * @param provider
@@ -81,28 +71,23 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	 * @return
 	 */
 	private OauthResult processOAuthLogin(HttpServletRequest req,
-			String provider, CustomOauth2User oauth2User) {
+			String provider, CustomOAuth2User oauth2User) {
 
-		if (provider.equals(ftProvider)) {
+		if (provider.equals(mainProvider)) {
 			JsonNode rootNode =
 					objectMapper.convertValue(oauth2User.getAttributes(), JsonNode.class);
 
 			return oauthFacadeService.handleFtLogin(rootNode);
 		}
-		if (isExternalProvider(provider)) {
-			return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
-		}
-		throw new SpringSecurityException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
+		return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
 	}
 
-	/**
-	 * 지정한 oauth provider인지 검증합니다.
-	 *
-	 * @param provider
-	 * @return
-	 */
-	private boolean isExternalProvider(String provider) {
-		return provider.equals(googleProvider);
+	private void redirectUser(HttpServletResponse response, OauthResult oauthResult)
+			throws IOException {
+		String redirectUrl = oauthResult.hasRole("AGU")
+				? authPolicyService.getAGUUrl()
+				: oauthResult.getRedirectionUrl();
+		response.sendRedirect(redirectUrl);
 	}
 
 }
