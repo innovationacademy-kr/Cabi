@@ -115,7 +115,11 @@ public enum ExceptionStatus {
 	INVALID_OAUTH_CONNECTION(HttpStatus.BAD_REQUEST, "Oauth 연동 기록이 일치하지 않습니다"),
 	INVALID_CSRF(HttpStatus.FORBIDDEN, "잘못된 형식의 CSRF 토큰입니다"),
 	MISSING_CSRF(HttpStatus.FORBIDDEN, "CSRF 토큰이 존재하지 않습니다"),
-	CODE_ALREADY_SENT(HttpStatus.TOO_MANY_REQUESTS, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다.");
+	CODE_ALREADY_SENT(HttpStatus.TOO_MANY_REQUESTS, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다."),
+
+	// Presentation 관련
+	CANNOT_CREATE_SLOT_IN_PAST(HttpStatus.BAD_REQUEST, "과거 시간으로는 발표 슬롯을 생성할 수 없습니다."),
+	SLOT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 시간에는 이미 발표 슬롯이 존재합니다.");
 
 	final private int statusCode;
 	final private String message;

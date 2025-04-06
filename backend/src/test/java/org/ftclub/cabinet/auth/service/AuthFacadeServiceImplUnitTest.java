@@ -1,15 +1,15 @@
 package org.ftclub.cabinet.auth.service;
 
+import static org.mockito.Mockito.mock;
+
 import org.ftclub.cabinet.auth.domain.CookieManager;
-import org.ftclub.cabinet.config.ApiProperties;
-import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
+import org.ftclub.cabinet.jwt.service.JwtProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class AuthFacadeServiceImplUnitTest {
@@ -17,17 +17,16 @@ class AuthFacadeServiceImplUnitTest {
 	//	@InjectMocks
 //	AuthFacadeServiceImpl authFacadeService;
 	@Mock
-	JwtProperties jwtProperties = mock(JwtProperties.class);
+	JwtTokenProperties jwtProperties = mock(JwtTokenProperties.class);
 	@Mock
-	TokenProvider tokenProvider = mock(TokenProvider.class);
+	JwtProvider tokenProvider = mock(JwtProvider.class);
 	@Mock
 	CookieManager cookieManager = mock(CookieManager.class);
 	@Mock
 	AuthService authService = mock(AuthService.class);
 	//	@Mock
 //	OauthService oauthService = mock(OauthService.class);
-	@Mock
-	ApiProperties apiProperties = mock(ApiProperties.class);
+
 
 	MockHttpServletRequest request = new MockHttpServletRequest();
 	MockHttpServletResponse response = new MockHttpServletResponse();

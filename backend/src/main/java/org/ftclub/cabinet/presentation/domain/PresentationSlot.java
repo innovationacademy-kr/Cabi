@@ -22,6 +22,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PresentationSlot {
 
+	public static final int PRESENTATION_SLOT_DURATION = 2;
+
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	@Id
