@@ -18,7 +18,8 @@ public class SecurityPathPatterns {
 	public static final String[] ADMIN_ENDPOINTS = {
 			"/slack/**",
 			"/v4/admin/**",
-			"/v5/admin/**"
+			"/v5/admin/**",
+			"/v6/admin/**"
 	};
 
 	public static final String[] AGU_ENDPOINTS = {

@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.auth.controller;
 
-import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +13,7 @@ public class AuthControllerUnitTest {
 	@Autowired
 	MockMvc mvc;
 	@Autowired
-	JwtProperties jwtProperties;
+	JwtTokenProperties jwtProperties;
 
 //	@Test
 //	void 유저_로그인_요청() throws Exception {

@@ -1,6 +1,12 @@
 package org.ftclub.cabinet.cabinet.controller;
 
-import org.ftclub.cabinet.config.JwtProperties;
+import static org.ftclub.testutils.TestUtils.mockRequest;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDateTime;
+import javax.servlet.http.Cookie;
+import javax.transaction.Transactional;
+import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,13 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.servlet.http.Cookie;
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-
-import static org.ftclub.testutils.TestUtils.mockRequest;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -29,7 +28,7 @@ public class CabinetControllerTest {
 	MockMvc mvc;
 
 	@Autowired
-	JwtProperties jwtProperties;
+	JwtTokenProperties jwtProperties;
 
 	String userToken;
 	Cookie cookie;
