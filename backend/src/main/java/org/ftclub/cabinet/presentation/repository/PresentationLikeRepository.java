@@ -2,7 +2,9 @@ package org.ftclub.cabinet.presentation.repository;
 
 import org.ftclub.cabinet.presentation.domain.PresentationLike;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PresentationLikeRepository extends CrudRepository<PresentationLike, Long> {
-
+	void deleteByPresentationIdAndUserId(Long presentationId, Long userId);
 }

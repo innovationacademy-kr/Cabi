@@ -16,15 +16,32 @@ import java.time.LocalDateTime;
 public class PresentationLikeController {
 
 	private PresentationLikeService presentationLikeService;
-	PresentationLikeDto dto;
+//	PresentationLikeDto dto;
 
 	@PostMapping("/{presentationId}/likes")
 	public void postLike(
 			@PathVariable Long presentationId,
-			@AuthenticationPrincipal UserInfoDto userInfoDto,
-			@CookieValue("jwt") String jwtToken) {
+			@AuthenticationPrincipal UserInfoDto userInfoDto) {
 		Long userId = userInfoDto.getUserId();
 		LocalDateTime now = LocalDateTime.now();
 		presentationLikeService.postLike(new PresentationLikeDto(presentationId, userId, now));
 	}
+
+	@DeleteMapping("/{presentationId}/likes")
+	public void deleteLike(
+			@PathVariable Long presentationId,
+			@AuthenticationPrincipal UserInfoDto userInfoDto) {
+		Long userId = userInfoDto.getUserId();
+		LocalDateTime now = LocalDateTime.now();
+		presentationLikeService.deleteLike(new PresentationLikeDto(presentationId, userId, now));
+	}
+
+//	@PostMapping("/{presentationId}/likes")
+//	public void postLike(
+//			@PathVariable Long presentationId,
+//			@AuthenticationPrincipal UserInfoDto userInfoDto) {
+//		Long userId = userInfoDto.getUserId();
+//		LocalDateTime now = LocalDateTime.now();
+//		presentationLikeService.postLike(new PresentationLikeDto(presentationId, userId, now));
+//	}
 }

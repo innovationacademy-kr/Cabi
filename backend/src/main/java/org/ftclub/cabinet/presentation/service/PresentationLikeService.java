@@ -45,7 +45,10 @@ public class PresentationLikeService {
 	}
 
 	public  void deleteLike(PresentationLikeDto presentationLikeDto) {
-
+		User user = getUserById(presentationLikeDto.getUserId());
+		Presentation presentation = getPresentationById(presentationLikeDto.getPresentationId());
+		PresentationLike presentationLike = new PresentationLike(presentation, user);
+		likeRepository.deleteByPresentationIdAndUserId(presentationLikeDto.getPresentationId(), user.getId());
 	}
 
 	public void getPostsLikedByUser(Long userId){
