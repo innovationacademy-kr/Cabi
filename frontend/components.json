@@ -6,16 +6,16 @@
   "tailwind": {
     "config": "tailwind.config.js",
     "css": "src/Presentation/tailwind.css",
-    "baseColor": "slate",
+    "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
   "aliases": {
-    "components": "src/Presentation/components",
-    "utils": "src/Presentation//lib/utils",
-    "ui": "src/Presentation//components/ui",
-    "lib": "src/Presentation//lib",
-    "hooks": "src/Presentation//hooks"
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
   },
   "iconLibrary": "lucide"
 }
