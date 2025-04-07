@@ -23,12 +23,12 @@ const StoreMainPage = lazy(() => import("@/Cabinet/pages/StoreMainPage"));
 
 // NOTE : 수요지식회
 const PresentationHomePage = lazy(
-  () => import("@/Presentation/pages/HomePage")
+  () => import("@/Presentation_legacy/pages/HomePage")
 );
-const PresentationLayout = lazy(() => import("@/Presentation/pages/Layout"));
-const DetailPage = lazy(() => import("@/Presentation/pages/DetailPage"));
-const PresentationLogPage = lazy(() => import("@/Presentation/pages/LogPage"));
-const RegisterPage = lazy(() => import("@/Presentation/pages/RegisterPage"));
+const PresentationLayout = lazy(() => import("@/Presentation_legacy/pages/Layout"));
+const DetailPage = lazy(() => import("@/Presentation_legacy/pages/DetailPage"));
+const PresentationLogPage = lazy(() => import("@/Presentation_legacy/pages/LogPage"));
+const RegisterPage = lazy(() => import("@/Presentation_legacy/pages/RegisterPage"));
 
 // NOTE : admin
 const AdminLayout = lazy(() => import("@/Cabinet/pages/admin/AdminLayout"));
@@ -49,7 +49,7 @@ const AdminStorePage = lazy(
   () => import("@/Cabinet/pages/admin/AdminStorePage")
 );
 const AdminPresentationLayout = lazy(
-  () => import("@/Presentation/pages/admin/AdminLayout")
+  () => import("@/Presentation_legacy/pages/admin/AdminLayout")
 );
 
 function App(): React.ReactElement {
