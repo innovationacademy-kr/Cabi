@@ -7,10 +7,10 @@ import Button from "@/Cabinet/components/Common/Button";
 import { axiosVerifyAGUUser } from "@/Cabinet/api/axios/axios.custom";
 
 const AGUMailVerificationSection = ({
-  handleButtonClick,
+  handleUserAction,
   isProcessingButtonClick,
 }: {
-  handleButtonClick: (key: string, callback: () => void) => void;
+  handleUserAction: (key: string, callback: () => void) => void;
   isProcessingButtonClick: boolean;
 }) => {
   const [mail, setMail] = useState("");
@@ -61,9 +61,13 @@ const AGUMailVerificationSection = ({
       <FormInputStyled
         ref={inputRef}
         placeholder="인트라 아이디를 입력해주세요"
+        onKeyUp={(e) => {
+          if (e.key === "Enter")
+            handleUserAction("aguUserVerification", verifyAGUUser);
+        }}
       />
       <Button
-        onClick={() => handleButtonClick("aguUserVerification", verifyAGUUser)}
+        onClick={() => handleUserAction("aguUserVerification", verifyAGUUser)}
         theme="fill"
         text={ButtonText}
         maxWidth="500px"

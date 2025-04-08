@@ -38,7 +38,7 @@ const AGUPage = () => {
     } else setIsFetchingMyLentInfo(false);
   }, []);
 
-  const handleButtonClick = (key: string, callback: () => void) => {
+  const handleUserAction = (key: string, callback: () => void) => {
     setIsProcessingButtonClick(true);
     debounce(
       key,
@@ -59,12 +59,12 @@ const AGUPage = () => {
           <UtilsSectionStyled></UtilsSectionStyled>
           {aguToken && userId ? (
             <AGUCabinetReturnSectionContainer
-              handleButtonClick={handleButtonClick}
+              handleUserAction={handleUserAction}
               isProcessingButtonClick={isProcessingButtonClick}
             />
           ) : (
             <AGUMailVerificationSection
-              handleButtonClick={handleButtonClick}
+              handleUserAction={handleUserAction}
               isProcessingButtonClick={isProcessingButtonClick}
             />
           )}
