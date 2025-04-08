@@ -46,7 +46,7 @@ const AGUPage = () => {
         await callback();
         setIsProcessingButtonClick(false);
       },
-      100
+      300
     );
   };
 
