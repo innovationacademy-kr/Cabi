@@ -984,24 +984,6 @@ export const axiosSendSlackAlarmToChannel = async (
   }
 };
 
-// TODO: 확인하고 필요없으면 지우기
-const axiosItemAssignURL = "v5/admin/items/assign";
-export const axiosItemAssign = async (
-  itemSku: string,
-  userIds: number[]
-): Promise<any> => {
-  try {
-    const response = await instance.post(axiosItemAssignURL, {
-      itemSku,
-      userIds,
-    });
-    return response;
-  } catch (error) {
-    logAxiosError(error, ErrorType.STORE, "아이템 지급 중 오류 발생", true);
-    throw error;
-  }
-};
-
 const axiosCoinAssignURL = "v5/admin/items/assign";
 export const axiosCoinAssign = async (
   itemSku: string,
