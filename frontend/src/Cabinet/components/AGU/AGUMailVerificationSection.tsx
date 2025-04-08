@@ -54,34 +54,35 @@ const AGUMailVerificationSection = ({
     }
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleUserAction("aguUserVerification", verifyAGUUser);
+  };
+
   return (
     <>
       <AGUHeaderStyled>A.G.U 이메일 인증</AGUHeaderStyled>
       <AGUSubHeaderStyled>{renderSubHeaderMsg()}</AGUSubHeaderStyled>
-      <FormStyled>
+      <FormStyled onSubmit={handleSubmit}>
         <FormInputStyled
           ref={inputRef}
           placeholder="인트라 아이디를 입력해주세요"
-          onKeyUp={(e) => {
-            if (e.key === "Enter")
-              handleUserAction("aguUserVerification", verifyAGUUser);
-          }}
         />
         <Button
-          onClick={() => handleUserAction("aguUserVerification", verifyAGUUser)}
+          onClick={() => {}}
           theme="fill"
           text={ButtonText}
           maxWidth="500px"
           disabled={isProcessingButtonClick}
         ></Button>
-        <Button
-          onClick={() => navigator("/login")}
-          theme="grayLine"
-          text="취소"
-          maxWidth="500px"
-          disabled={isProcessingButtonClick}
-        ></Button>
       </FormStyled>
+      <Button
+        onClick={() => navigator("/login")}
+        theme="grayLine"
+        text="취소"
+        maxWidth="500px"
+        disabled={isProcessingButtonClick}
+      ></Button>
     </>
   );
 };
@@ -94,6 +95,7 @@ const FormStyled = styled.form`
   flex-direction: column;
   align-items: center;
   margin-top: 48px;
+  margin-bottom: 8px;
 `;
 
 const FormInputStyled = styled.input`
