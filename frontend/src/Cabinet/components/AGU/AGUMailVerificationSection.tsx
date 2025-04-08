@@ -58,31 +58,43 @@ const AGUMailVerificationSection = ({
     <>
       <AGUHeaderStyled>A.G.U 이메일 인증</AGUHeaderStyled>
       <AGUSubHeaderStyled>{renderSubHeaderMsg()}</AGUSubHeaderStyled>
-      <FormInputStyled
-        ref={inputRef}
-        placeholder="인트라 아이디를 입력해주세요"
-        onKeyUp={(e) => {
-          if (e.key === "Enter")
-            handleUserAction("aguUserVerification", verifyAGUUser);
-        }}
-      />
-      <Button
-        onClick={() => handleUserAction("aguUserVerification", verifyAGUUser)}
-        theme="fill"
-        text={ButtonText}
-        maxWidth="500px"
-        disabled={isProcessingButtonClick}
-      ></Button>
-      <Button
-        onClick={() => navigator("/login")}
-        theme="grayLine"
-        text="취소"
-        maxWidth="500px"
-        disabled={isProcessingButtonClick}
-      ></Button>
+      <FormStyled>
+        <FormInputStyled
+          ref={inputRef}
+          placeholder="인트라 아이디를 입력해주세요"
+          onKeyUp={(e) => {
+            if (e.key === "Enter")
+              handleUserAction("aguUserVerification", verifyAGUUser);
+          }}
+        />
+        <Button
+          onClick={() => handleUserAction("aguUserVerification", verifyAGUUser)}
+          theme="fill"
+          text={ButtonText}
+          maxWidth="500px"
+          disabled={isProcessingButtonClick}
+        ></Button>
+        <Button
+          onClick={() => navigator("/login")}
+          theme="grayLine"
+          text="취소"
+          maxWidth="500px"
+          disabled={isProcessingButtonClick}
+        ></Button>
+      </FormStyled>
     </>
   );
 };
+
+const FormStyled = styled.form`
+  width: 100%;
+  width: 70%;
+  min-width: 290px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 48px;
+`;
 
 const FormInputStyled = styled.input`
   height: 60px;
@@ -91,11 +103,11 @@ const FormInputStyled = styled.input`
   background-color: var(--card-content-bg-color);
   text-align: left;
   padding: 0 16px;
-  margin: 48px 0 24px 0;
+  margin-bottom: 24px;
   color: var(--notion-btn-text-color);
   min-width: 290px;
   max-width: 500px;
-  width: 70%;
+  width: 100%;
 
   :focus {
     border: 1px solid var(--sys-main-color);
