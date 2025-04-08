@@ -43,7 +43,8 @@ const AGUMailVerificationSection = ({
           const oauthMail = response.data.oauthMail;
 
           setMail(oauthMail);
-          alert(`${oauthMail}로 인증 링크가 전송되었습니다.`);
+          alert(`${oauthMail}로 인증 링크가 전송되었습니다.
+메일이 보이지 않는다면 스팸함을 확인해주세요.`);
         }
       }
     } catch (error: any) {
