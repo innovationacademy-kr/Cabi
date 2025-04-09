@@ -11,6 +11,7 @@ import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Service;
 
 /**
@@ -108,5 +109,21 @@ public class CookieService {
 				.map(Cookie::getValue)
 				.findFirst()
 				.orElse(null);
+	}
+
+	public void generateAndSetCsrfCookie(CsrfToken token, String serverName,
+			HttpServletResponse res) {
+		boolean isSecure = !cookieManager.isLocalEnvironment(serverName);
+
+		Cookie csrfCookie = cookieManager.createCookie(
+				"XSRF-TOKEN",
+				token.getToken(),
+				-1,
+				"/",
+				false,
+				isSecure
+		);
+		cookieManager.setDomainByEnv(csrfCookie, serverName);
+		res.addCookie(csrfCookie);
 	}
 }
