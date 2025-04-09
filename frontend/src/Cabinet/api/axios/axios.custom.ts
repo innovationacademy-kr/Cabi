@@ -8,6 +8,7 @@ import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
+import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const axiosCSRFTokenURL = "/v5/auth/csrf";
 export const axiosGetCSRFToken = async (): Promise<any> => {
@@ -23,11 +24,18 @@ const axiosLogoutUrl = "/logout";
 export const axiosLogout = async (): Promise<any> => {
   try {
     await axiosGetCSRFToken();
+    const csrfTokenCookie = getCookie("XSRF-TOKEN");
+    console.log("getCookie(XSRF-TOKEN) : ", getCookie("XSRF-TOKEN"));
+    console.log("before instance : ", instance.defaults);
     const response = await instance.post(axiosLogoutUrl, null, {
+      headers: {
+        "X-XSRF-TOKEN": csrfTokenCookie,
+      },
       withCredentials: true,
       xsrfCookieName: "XSRF-TOKEN",
       xsrfHeaderName: "X-XSRF-TOKEN",
     });
+    console.log("after instance : ", instance.defaults);
     return response;
   } catch (error) {
     throw error;
