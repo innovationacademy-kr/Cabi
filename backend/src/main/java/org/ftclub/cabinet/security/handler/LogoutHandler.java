@@ -11,7 +11,6 @@ import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +27,6 @@ public class LogoutHandler implements LogoutSuccessHandler {
 	@Override
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) {
-		log.info("Authentication before logout: {}", authentication);
-		log.info("SecurityContext before logout : {}",
-				SecurityContextHolder.getContext().getAuthentication());
 		try {
 			if (isAdminUser(request)) {
 				log.info("adminLogoutStart!");

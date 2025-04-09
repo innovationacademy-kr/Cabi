@@ -52,7 +52,7 @@ public class AdminAuthService {
 			throws IOException {
 		// 쿠키에 로그인 현상 저장
 		Cookie cookie = new Cookie("login_source", "admin");
-		CookieInfo cookieInfo = new CookieInfo(req.getServerName(), 15, true);
+		CookieInfo cookieInfo = new CookieInfo(req.getServerName(), 60, true);
 
 		cookieService.setToClient(cookie, cookieInfo, res);
 		res.sendRedirect(beHost + "/oauth2/authorization/google");
