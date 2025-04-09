@@ -9,10 +9,10 @@ import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.auth.service.CookieService;
 import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
 import org.ftclub.cabinet.dto.AguMailResponse;
-import org.ftclub.cabinet.dto.CsrfTokenDto;
 import org.ftclub.cabinet.dto.OauthUnlinkRequestDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.log.Logging;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,11 +49,11 @@ public class AuthController {
 	 * @return
 	 */
 	@GetMapping("/csrf")
-	public CsrfTokenDto getCsrfToken(CsrfToken token, HttpServletRequest req,
+	public ResponseEntity<Void> getCsrfToken(CsrfToken token, HttpServletRequest req,
 			HttpServletResponse res) {
 
 		cookieService.generateAndSetCsrfCookie(token, req.getServerName(), res);
-		return new CsrfTokenDto(token.getToken(), token.getHeaderName());
+		return ResponseEntity.noContent().build();
 	}
 
 	/**
