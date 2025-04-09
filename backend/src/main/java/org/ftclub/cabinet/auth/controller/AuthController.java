@@ -37,8 +37,15 @@ public class AuthController {
 		return authFacadeService.requestTemporaryLogin(name);
 	}
 
+	/**
+	 * csrf 토큰 발급
+	 *
+	 * @param token
+	 * @return
+	 */
 	@GetMapping("/csrf")
 	public CsrfToken getCsrfToken(CsrfToken token) {
+
 		return token;
 	}
 
