@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
+import org.ftclub.cabinet.auth.service.CookieService;
 import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
 import org.ftclub.cabinet.dto.AguMailResponse;
 import org.ftclub.cabinet.dto.CsrfTokenDto;
@@ -30,6 +31,7 @@ public class AuthController {
 
 	private final AuthFacadeService authFacadeService;
 	private final OauthLinkFacadeService oauthLinkFacadeService;
+	private final CookieService cookieService;
 
 	/**
 	 * AGU 유저의 임시 로그인 메일 발송
@@ -47,8 +49,10 @@ public class AuthController {
 	 * @return
 	 */
 	@GetMapping("/csrf")
-	public CsrfTokenDto getCsrfToken(CsrfToken token) {
+	public CsrfTokenDto getCsrfToken(CsrfToken token, HttpServletRequest req,
+			HttpServletResponse res) {
 
+		cookieService.generateAndSetCsrfCookie(token, req.getServerName(), res);
 		return new CsrfTokenDto(token.getToken(), token.getHeaderName());
 	}
 
