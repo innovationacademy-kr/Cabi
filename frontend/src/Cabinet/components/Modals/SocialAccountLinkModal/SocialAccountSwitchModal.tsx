@@ -4,19 +4,19 @@ import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useDebounce from "@/Cabinet/hooks/useDebounce";
 
 interface ISocialAccountLinkCardModalProps {
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   newProvider: TOAuthProvider;
   tryUnlinkSocialAccount: () => Promise<any>;
-  tryLinkSocialAccount: (provider: TOAuthProvider) => void;
   getMyInfo: () => Promise<void>;
+  tryLinkSocialAccount: (provider: TOAuthProvider) => void;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SocialAccountSwitchModal = ({
-  setIsModalOpen,
   newProvider,
   tryUnlinkSocialAccount,
-  tryLinkSocialAccount,
   getMyInfo,
+  tryLinkSocialAccount,
+  setIsModalOpen,
 }: ISocialAccountLinkCardModalProps) => {
   const { debounce } = useDebounce();
   const modalDetail = `<strong>현재 연결된 계정이 해제</strong>되고,

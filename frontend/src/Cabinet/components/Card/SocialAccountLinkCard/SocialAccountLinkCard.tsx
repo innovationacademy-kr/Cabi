@@ -9,14 +9,13 @@ import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/oAuth.dto";
 import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
-// TODO : props diet
 interface ISocialAccountLinkCardProps {
-  handleLinkSocialAccount: (provider: TOAuthProvider) => void;
   userOAuthLinks: IUserOAuthLinkInfoDto[];
   linkedProvider: TOAuthProviderOrEmpty;
   newProvider: TOAuthProvider;
-  tryUnlinkSocialAccount: () => Promise<any>;
+  handleLinkSocialAccount: (provider: TOAuthProvider) => void;
   tryLinkSocialAccount: (provider: TOAuthProvider) => void;
+  tryUnlinkSocialAccount: () => Promise<any>;
   getMyInfo: () => Promise<void>;
   modals: {
     isSwitchModalOpen: boolean;
@@ -27,12 +26,12 @@ interface ISocialAccountLinkCardProps {
 }
 
 const SocialAccountLinkCard = ({
-  handleLinkSocialAccount,
   userOAuthLinks,
   linkedProvider,
   newProvider,
-  tryUnlinkSocialAccount,
+  handleLinkSocialAccount,
   tryLinkSocialAccount,
+  tryUnlinkSocialAccount,
   getMyInfo,
   modals,
 }: ISocialAccountLinkCardProps) => {
@@ -51,11 +50,11 @@ const SocialAccountLinkCard = ({
             return (
               <SocialAccountLinkCardContentItem
                 key={provider}
-                provider={provider}
-                handleLinkSocialAccount={handleLinkSocialAccount}
-                displayInfo={getOAuthDisplayInfo(provider)}
                 linkInfo={linkInfo}
+                provider={provider}
+                displayInfo={getOAuthDisplayInfo(provider)}
                 isLinked={linkedProvider === provider}
+                handleLinkSocialAccount={handleLinkSocialAccount}
                 setIsUnlinkModalOpen={modals.setIsUnlinkModalOpen}
               />
             );
@@ -65,19 +64,19 @@ const SocialAccountLinkCard = ({
       <ModalPortal>
         {modals.isUnlinkModalOpen && (
           <SocialAccountUnlinkModal
+            currentProvider={linkedProvider}
             tryUnlinkSocialAccount={tryUnlinkSocialAccount}
             getMyInfo={getMyInfo}
             setIsModalOpen={modals.setIsUnlinkModalOpen}
-            currentProvider={linkedProvider}
           />
         )}
         {modals.isSwitchModalOpen && (
           <SocialAccountSwitchModal
-            setIsModalOpen={modals.setIsSwitchModalOpen}
             newProvider={newProvider}
             tryUnlinkSocialAccount={tryUnlinkSocialAccount}
-            tryLinkSocialAccount={tryLinkSocialAccount}
             getMyInfo={getMyInfo}
+            tryLinkSocialAccount={tryLinkSocialAccount}
+            setIsModalOpen={modals.setIsSwitchModalOpen}
           />
         )}
       </ModalPortal>

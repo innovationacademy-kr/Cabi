@@ -5,18 +5,18 @@ import { ReactComponent as PlusCircleIcon } from "@/Cabinet/assets/images/plusCi
 import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/oAuth.dto";
 
 const SocialAccountLinkCardContentItem = ({
-  provider,
-  handleLinkSocialAccount,
-  displayInfo,
   linkInfo,
+  provider,
+  displayInfo,
   isLinked,
+  handleLinkSocialAccount,
   setIsUnlinkModalOpen,
 }: {
-  provider: TOAuthProvider;
-  handleLinkSocialAccount: (provider: TOAuthProvider) => void;
-  displayInfo: IOAuthDisplay;
   linkInfo: IUserOAuthLinkInfoDto;
+  provider: TOAuthProvider;
+  displayInfo: IOAuthDisplay;
   isLinked: boolean;
+  handleLinkSocialAccount: (provider: TOAuthProvider) => void;
   setIsUnlinkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (

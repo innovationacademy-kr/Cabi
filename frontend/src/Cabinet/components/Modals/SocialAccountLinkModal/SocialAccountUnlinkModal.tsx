@@ -9,15 +9,15 @@ import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useDebounce from "@/Cabinet/hooks/useDebounce";
 
 const SocialAccountUnlinkModal = ({
+  currentProvider,
   tryUnlinkSocialAccount,
   getMyInfo,
   setIsModalOpen,
-  currentProvider,
 }: {
+  currentProvider: TOAuthProviderOrEmpty;
   tryUnlinkSocialAccount: () => Promise<any>;
   getMyInfo: () => Promise<void>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  currentProvider: TOAuthProviderOrEmpty;
 }) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);

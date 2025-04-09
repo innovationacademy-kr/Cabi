@@ -117,12 +117,12 @@ const SocialAccountLinkCardContainer = () => {
 
   return (
     <SocialAccountLinkCard
-      handleLinkSocialAccount={handleLinkSocialAccount}
       userOAuthLinks={userOAuthLinks}
       linkedProvider={linkedProvider}
       newProvider={newProvider}
-      tryUnlinkSocialAccount={tryUnlinkSocialAccount}
+      handleLinkSocialAccount={handleLinkSocialAccount}
       tryLinkSocialAccount={tryLinkSocialAccount}
+      tryUnlinkSocialAccount={tryUnlinkSocialAccount}
       getMyInfo={getMyInfo}
       modals={modals}
     />
