@@ -9,9 +9,6 @@ let isRefreshing = false;
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BE_HOST,
-  // withCredentials: true,
-  // xsrfCookieName: "XSRF-TOKEN",
-  // xsrfHeaderName: "X-XSRF-TOKEN",
 });
 
 const setAuthorizationHeader = (
@@ -109,8 +106,18 @@ const handleErrorResponse = async (error: any) => {
   if (error.response?.status === HttpStatusCode.InternalServerError) {
     logAxiosError(error, ErrorType.INTERNAL_SERVER_ERROR, "서버 에러");
   } else if (error.response?.status === HttpStatusCode.Forbidden) {
+    const domain =
+      import.meta.env.VITE_IS_LOCAL === "true"
+        ? "localhost"
+        : "cabi.42seoul.io";
+
     redirectToLoginWithAlert(error);
     logAxiosError(error, ErrorType.FORBIDDEN, "접근 권한 없음");
+    removeCookie("access_token", {
+      path: "/",
+      domain,
+    });
+    // TODO : 쿠키 지우는 방법 따로 빼기?
   }
 
   return Promise.reject(error);
