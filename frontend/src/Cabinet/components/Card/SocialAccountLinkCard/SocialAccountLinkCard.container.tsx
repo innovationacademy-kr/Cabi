@@ -27,7 +27,6 @@ const SocialAccountLinkCardContainer = () => {
   const linkedProvider: TOAuthProviderOrEmpty = linkedOAuthInfo
     ? linkedOAuthInfo.providerType
     : "";
-
   const userOAuthLinks: IUserOAuthLinkInfoDto[] = socialOAuthProviders.map(
     (provider) => {
       if (linkedProvider === provider) {
@@ -40,6 +39,12 @@ const SocialAccountLinkCardContainer = () => {
       }
     }
   );
+  const modals = {
+    isSwitchModalOpen,
+    setIsSwitchModalOpen,
+    isUnlinkModalOpen,
+    setIsUnlinkModalOpen,
+  };
 
   const getMyInfo = async () => {
     try {
@@ -112,17 +117,14 @@ const SocialAccountLinkCardContainer = () => {
 
   return (
     <SocialAccountLinkCard
-      onLinkSocialAccount={handleLinkSocialAccount}
+      handleLinkSocialAccount={handleLinkSocialAccount}
       userOAuthLinks={userOAuthLinks}
       linkedProvider={linkedProvider}
-      isSwitchModalOpen={isSwitchModalOpen}
-      setIsSwitchModalOpen={setIsSwitchModalOpen}
       newProvider={newProvider}
       tryUnlinkSocialAccount={tryUnlinkSocialAccount}
       tryLinkSocialAccount={tryLinkSocialAccount}
-      isUnlinkModalOpen={isUnlinkModalOpen}
-      setIsUnlinkModalOpen={setIsUnlinkModalOpen}
       getMyInfo={getMyInfo}
+      modals={modals}
     />
   );
 };

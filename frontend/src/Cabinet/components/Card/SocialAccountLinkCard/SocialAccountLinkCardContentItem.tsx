@@ -6,14 +6,14 @@ import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/oAuth.dto";
 
 const SocialAccountLinkCardContentItem = ({
   provider,
-  onLinkSocialAccount,
+  handleLinkSocialAccount,
   displayInfo,
   linkInfo,
   isLinked,
   setIsUnlinkModalOpen,
 }: {
   provider: TOAuthProvider;
-  onLinkSocialAccount: (provider: TOAuthProvider) => void;
+  handleLinkSocialAccount: (provider: TOAuthProvider) => void;
   displayInfo: IOAuthDisplay;
   linkInfo: IUserOAuthLinkInfoDto;
   isLinked: boolean;
@@ -42,7 +42,7 @@ const SocialAccountLinkCardContentItem = ({
           />
         ) : (
           <PlusCircleIcon
-            onClick={() => onLinkSocialAccount(provider)}
+            onClick={() => handleLinkSocialAccount(provider)}
             aria-label="연결"
           />
         )}
