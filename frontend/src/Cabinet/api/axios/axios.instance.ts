@@ -9,7 +9,7 @@ let isRefreshing = false;
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BE_HOST,
-  withCredentials: true,
+  // withCredentials: true,
   // xsrfCookieName: "XSRF-TOKEN",
   // xsrfHeaderName: "X-XSRF-TOKEN",
 });
@@ -32,6 +32,15 @@ instance.interceptors.request.use(async (config) => {
   } else {
     setAuthorizationHeader(config, accessToken);
   }
+
+  /* 
+    if (로그인, 리이슈, 로그아웃)
+    헤더에 설정
+    config.withCredentials = true;
+    config.xsrfCookieName = "XSRF-TOKEN";
+    config.xsrfHeaderName = "X-XSRF-TOKEN";
+    TODO : interceptor에서?
+  */
 
   return config;
 });

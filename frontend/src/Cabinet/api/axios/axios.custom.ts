@@ -9,10 +9,25 @@ import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 
-const axiosLogoutUrl = "/v5/auth/logout";
+const axiosCSRFTokenURL = "/v5/auth/csrf";
+export const axiosGetCSRFToken = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosCSRFTokenURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosLogoutUrl = "/logout";
 export const axiosLogout = async (): Promise<any> => {
   try {
-    const response = await instance.post(axiosLogoutUrl);
+    await axiosGetCSRFToken();
+    const response = await instance.post(axiosLogoutUrl, null, {
+      withCredentials: true,
+      xsrfCookieName: "XSRF-TOKEN",
+      xsrfHeaderName: "X-XSRF-TOKEN",
+    });
     return response;
   } catch (error) {
     throw error;
@@ -435,15 +450,6 @@ export const axiosUseItem = async (
 
 // Admin API
 const axiosAdminAuthURL = "/v4/admin/auth";
-export const axiosAdminGetCSRFToken = async (): Promise<any> => {
-  try {
-    const response = await instance.get(axiosAdminAuthURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const axiosAdminAuthLogin = async (
   id: string,
   password: string
@@ -513,10 +519,15 @@ export const axiosUnlinkSocialAccount = async (
   }
 };
 
-const axiosReissueTokenURL = "/v5/jwt/reissue";
+const axiosReissueTokenURL = "/jwt/reissue";
 export const axiosReissueToken = async (): Promise<any> => {
   try {
-    const response = await instance.post(axiosReissueTokenURL);
+    await axiosGetCSRFToken();
+    const response = await instance.post(axiosReissueTokenURL, null, {
+      withCredentials: true,
+      xsrfCookieName: "XSRF-TOKEN",
+      xsrfHeaderName: "X-XSRF-TOKEN",
+    });
     return response;
   } catch (error) {
     throw error;
