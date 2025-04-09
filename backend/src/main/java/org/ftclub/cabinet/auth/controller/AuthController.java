@@ -11,6 +11,7 @@ import org.ftclub.cabinet.dto.AguMailResponse;
 import org.ftclub.cabinet.dto.CsrfTokenDto;
 import org.ftclub.cabinet.dto.OauthUnlinkRequestDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Logging
 @RestController
 @RequestMapping("/v5/auth")
 @RequiredArgsConstructor
