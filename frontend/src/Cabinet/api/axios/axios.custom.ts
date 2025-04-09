@@ -25,8 +25,8 @@ export const axiosLogout = async (): Promise<any> => {
   try {
     await axiosGetCSRFToken();
     const csrfTokenCookie = getCookie("XSRF-TOKEN");
-    console.log("getCookie(XSRF-TOKEN) : ", getCookie("XSRF-TOKEN"));
-    console.log("before instance : ", instance.defaults);
+    // console.log("getCookie(XSRF-TOKEN) : ", getCookie("XSRF-TOKEN"));
+    // console.log("before instance : ", instance.defaults);
     const response = await instance.post(axiosLogoutUrl, null, {
       headers: {
         "X-XSRF-TOKEN": csrfTokenCookie,
@@ -35,7 +35,7 @@ export const axiosLogout = async (): Promise<any> => {
       xsrfCookieName: "XSRF-TOKEN",
       xsrfHeaderName: "X-XSRF-TOKEN",
     });
-    console.log("after instance : ", instance.defaults);
+    // console.log("after instance : ", instance.defaults);
     return response;
   } catch (error) {
     throw error;
@@ -531,7 +531,11 @@ const axiosReissueTokenURL = "/jwt/reissue";
 export const axiosReissueToken = async (): Promise<any> => {
   try {
     await axiosGetCSRFToken();
+    const csrfTokenCookie = getCookie("XSRF-TOKEN");
     const response = await instance.post(axiosReissueTokenURL, null, {
+      headers: {
+        "X-XSRF-TOKEN": csrfTokenCookie,
+      },
       withCredentials: true,
       xsrfCookieName: "XSRF-TOKEN",
       xsrfHeaderName: "X-XSRF-TOKEN",
