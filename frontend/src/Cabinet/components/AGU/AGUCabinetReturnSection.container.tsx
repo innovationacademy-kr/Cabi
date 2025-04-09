@@ -17,10 +17,10 @@ export type TAGUReturnPageExitEvent =
   | MouseEvent;
 
 const AGUCabinetReturnSectionContainer = ({
-  handleButtonClick,
+  handleUserAction,
   isProcessingButtonClick,
 }: {
-  handleButtonClick: (key: string, callback: () => void) => void;
+  handleUserAction: (key: string, callback: () => void) => void;
   isProcessingButtonClick: boolean;
 }) => {
   const myLentInfo =
@@ -114,7 +114,7 @@ const AGUCabinetReturnSectionContainer = ({
 
   return (
     <AGUCabinetReturnSection
-      handleButtonClick={handleButtonClick}
+      handleUserAction={handleUserAction}
       isProcessingButtonClick={isProcessingButtonClick}
       subHeaderMsg={subHeaderMsg}
       tryReturnRequest={tryReturnRequest}
