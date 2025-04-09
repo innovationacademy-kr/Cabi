@@ -52,7 +52,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		String provider = fromLoadUser.getProvider();
 
 		try {
-			OauthResult oauthResult = processOAuthLogin(request, provider, fromLoadUser);
+			OauthResult oauthResult = processOAuthLogin(request, response, provider, fromLoadUser);
 			authFacadeService.processAuthentication(request, response, oauthResult, provider);
 
 			redirectUser(response, oauthResult);
