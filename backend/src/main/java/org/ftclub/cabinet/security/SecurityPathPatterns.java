@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.security;
 
+import java.util.List;
+
 public class SecurityPathPatterns {
 
 	public static final String[] PUBLIC_ENDPOINTS = {
@@ -25,6 +27,11 @@ public class SecurityPathPatterns {
 			"/v4/lent/me",
 			"/v4/lent/return"
 	};
+
+	public static final List<String> CSRF_ENDPOINTS = List.of(
+			"/logout",
+			"/jwt"
+	);
 
 	private SecurityPathPatterns() {
 	}
