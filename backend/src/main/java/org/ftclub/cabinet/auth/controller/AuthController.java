@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
 import org.ftclub.cabinet.dto.AguMailResponse;
+import org.ftclub.cabinet.dto.CsrfTokenDto;
 import org.ftclub.cabinet.dto.OauthUnlinkRequestDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -44,9 +45,9 @@ public class AuthController {
 	 * @return
 	 */
 	@GetMapping("/csrf")
-	public CsrfToken getCsrfToken(CsrfToken token) {
+	public CsrfTokenDto getCsrfToken(CsrfToken token) {
 
-		return token;
+		return new CsrfTokenDto(token.getToken(), token.getHeaderName());
 	}
 
 	/**
