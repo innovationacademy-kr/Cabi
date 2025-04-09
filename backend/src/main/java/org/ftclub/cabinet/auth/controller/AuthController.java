@@ -14,7 +14,6 @@ import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,14 +44,11 @@ public class AuthController {
 	/**
 	 * csrf 토큰 발급
 	 *
-	 * @param token
 	 * @return
 	 */
 	@GetMapping("/csrf")
-	public ResponseEntity<Void> getCsrfToken(CsrfToken token, HttpServletRequest req,
-			HttpServletResponse res) {
+	public ResponseEntity<Void> getCsrfToken() {
 
-		cookieService.generateAndSetCsrfCookie(token, req.getServerName(), res);
 		return ResponseEntity.noContent().build();
 	}
 
