@@ -42,6 +42,9 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
 		Cookie[] cookies = request.getCookies();
 		cookieService.deleteAllCookies(cookies, request.getServerName(), response);
+		for (Cookie cookie : cookies) {
+			log.info("Cookie name = {}, MaxAge = {}", cookie.getName(), cookie.getMaxAge());
+		}
 
 		SpringSecurityException exception =
 				new SpringSecurityException(ExceptionStatus.FORBIDDEN_USER);

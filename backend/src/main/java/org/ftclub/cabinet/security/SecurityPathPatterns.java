@@ -12,6 +12,7 @@ public class SecurityPathPatterns {
 			"/favicon.ico",
 
 			"/v5/auth/agu/**",
+			"/v5/auth/csrf",
 			"/v4/admin/auth/**",
 
 			"/jwt/reissue",
