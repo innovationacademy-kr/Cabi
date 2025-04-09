@@ -22,13 +22,17 @@ export const axiosGetCSRFToken = async (): Promise<any> => {
 const axiosLogoutUrl = "/logout";
 export const axiosLogout = async (): Promise<any> => {
   try {
-    await axiosGetCSRFToken();
-    const response = await instance.post(axiosLogoutUrl, null, {
+    const csrfTokenResponse = await axiosGetCSRFToken();
+    const headerName = csrfTokenResponse.data.headerName;
+    const token = csrfTokenResponse.data.token;
+
+    const logoutResponse = await instance.post(axiosLogoutUrl, null, {
+      headers: {
+        [headerName]: token,
+      },
       withCredentials: true,
-      xsrfCookieName: "XSRF-TOKEN",
-      xsrfHeaderName: "X-XSRF-TOKEN",
     });
-    return response;
+    return logoutResponse;
   } catch (error) {
     throw error;
   }
@@ -522,13 +526,17 @@ export const axiosUnlinkSocialAccount = async (
 const axiosReissueTokenURL = "/jwt/reissue";
 export const axiosReissueToken = async (): Promise<any> => {
   try {
-    await axiosGetCSRFToken();
-    const response = await instance.post(axiosReissueTokenURL, null, {
+    const csrfTokenResponse = await axiosGetCSRFToken();
+    const headerName = csrfTokenResponse.data.headerName;
+    const token = csrfTokenResponse.data.token;
+
+    const reissueResponse = await instance.post(axiosReissueTokenURL, null, {
+      headers: {
+        [headerName]: token,
+      },
       withCredentials: true,
-      xsrfCookieName: "XSRF-TOKEN",
-      xsrfHeaderName: "X-XSRF-TOKEN",
     });
-    return response;
+    return reissueResponse;
   } catch (error) {
     throw error;
   }
