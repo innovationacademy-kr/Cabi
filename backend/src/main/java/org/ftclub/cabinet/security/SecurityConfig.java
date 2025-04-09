@@ -11,16 +11,15 @@ import org.ftclub.cabinet.security.handler.CustomSuccessHandler;
 import org.ftclub.cabinet.security.handler.LogoutHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -35,13 +34,16 @@ public class SecurityConfig {
 	private final CustomSuccessHandler customSuccessHandler;
 	private final CustomAuthenticationEntryPoint entryPoint;
 	private final CustomAccessDeniedHandler accessDeniedHandler;
-	private final SecurityExpressionHandler<FilterInvocation> expressionHandler;
 	private final LogoutHandler logoutHandler;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http)
 			throws Exception {
-		http.csrf(AbstractHttpConfigurer::disable)
+		http.csrf(csrf -> csrf
+						.ignoringRequestMatchers(request ->
+								SecurityPathPatterns.CSRF_ENDPOINTS.stream()
+										.noneMatch(request.getRequestURI()::startsWith))
+						.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 				.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.cors().and()
@@ -49,10 +51,12 @@ public class SecurityConfig {
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				)
 				.authorizeRequests(auth -> auth
-						.expressionHandler(expressionHandler)
 						.mvcMatchers(SecurityPathPatterns.PUBLIC_ENDPOINTS).permitAll()
-						.mvcMatchers(SecurityPathPatterns.ADMIN_ENDPOINTS).hasRole("ADMIN")
-						.mvcMatchers(SecurityPathPatterns.AGU_ENDPOINTS).hasRole("AGU")
+						.mvcMatchers(SecurityPathPatterns.ADMIN_ENDPOINTS)
+						.hasAnyRole("ADMIN", "MASTER")
+						.antMatchers(SecurityPathPatterns.ADMIN_USER_ENDPOINTS)
+						.hasAnyRole("USER", "ADMIN", "MASTER")
+						.mvcMatchers(SecurityPathPatterns.AGU_ENDPOINTS).hasAnyRole("AGU", "USER")
 						.anyRequest().hasRole("USER")
 				)
 				.oauth2Login(oauth -> oauth
@@ -60,7 +64,7 @@ public class SecurityConfig {
 						.successHandler(customSuccessHandler)
 				)
 				.logout(logout -> logout
-						.logoutUrl("/v5/auth/logout")
+						.logoutUrl("/logout")
 						.logoutSuccessHandler(logoutHandler)
 						.invalidateHttpSession(true)
 						.clearAuthentication(true)

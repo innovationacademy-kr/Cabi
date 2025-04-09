@@ -6,11 +6,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
+import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
 import org.ftclub.cabinet.dto.AguMailResponse;
 import org.ftclub.cabinet.dto.OauthUnlinkRequestDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
-import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,18 @@ public class AuthController {
 	public AguMailResponse requestAGULogin(@RequestParam(name = "name") String name)
 			throws JsonProcessingException {
 		return authFacadeService.requestTemporaryLogin(name);
+	}
+
+	/**
+	 * csrf 토큰 발급
+	 *
+	 * @param token
+	 * @return
+	 */
+	@GetMapping("/csrf")
+	public CsrfToken getCsrfToken(CsrfToken token) {
+
+		return token;
 	}
 
 	/**
