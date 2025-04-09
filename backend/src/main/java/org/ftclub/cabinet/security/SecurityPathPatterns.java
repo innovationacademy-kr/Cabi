@@ -14,13 +14,19 @@ public class SecurityPathPatterns {
 			"/v5/auth/agu/**",
 			"/v4/admin/auth/**",
 
-			"/v5/jwt/reissue",
+			"/jwt/reissue",
 	};
 
 	public static final String[] ADMIN_ENDPOINTS = {
 			"/slack/**",
 			"/v4/admin/**",
 			"/v5/admin/**"
+	};
+
+	public static final String[] ADMIN_USER_ENDPOINTS = {
+			"/v4/cabinets/**",
+			"/v4/lent/cabinets/share/cancel/{cabinetId}",
+			"/v5/items"
 	};
 
 	public static final String[] AGU_ENDPOINTS = {
