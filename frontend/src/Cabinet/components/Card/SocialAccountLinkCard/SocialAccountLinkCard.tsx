@@ -4,10 +4,6 @@ import SocialAccountLinkCardContent from "@/Cabinet/components/Card/SocialAccoun
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
 import SocialAccountSwitchModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountSwitchModal";
 import SocialAccountUnlinkModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountUnlinkModal";
-import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
-
-export type TOAuthProviderOrEmpty = TOAuthProvider | "";
-// TODO : 위치 변경
 
 const SocialAccountLinkCard = () => {
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);

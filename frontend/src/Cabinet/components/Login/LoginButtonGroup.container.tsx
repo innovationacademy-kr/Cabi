@@ -1,11 +1,11 @@
 import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard";
 import LoginButtonGroup from "@/Cabinet/components/Login/LoginButtonGroup";
 import { oAuthErrorMsgMap } from "@/Cabinet/assets/data/maps";
 import {
   TOAuthProvider,
+  TOAuthProviderOrEmpty,
   ftProvider,
   socialOAuthProviders,
 } from "@/Cabinet/assets/data/oAuth";
