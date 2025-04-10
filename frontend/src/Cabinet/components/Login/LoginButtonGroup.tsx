@@ -16,7 +16,7 @@ export interface ILoginButtonStatus {
   target: TOAuthProviderOrEmpty;
 }
 
-const LoginButtonGroupContainer = () => {
+const LoginButtonGroup = () => {
   const [loginButtonStatus, setLoginButtonStatus] =
     useState<ILoginButtonStatus>({
       isClicked: false,
@@ -76,4 +76,4 @@ const SocialLoginButtonGroupWrapper = styled.div`
   height: 40px;
 `;
 
-export default LoginButtonGroupContainer;
+export default LoginButtonGroup;
