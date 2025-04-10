@@ -80,6 +80,12 @@ const Layout = (): JSX.Element => {
   const handleClickBg = () => {
     closeAll();
   };
+  console.log(
+    "isLoginPage, token, isLoading : ",
+    isLoginPage,
+    token,
+    isLoading
+  );
 
   return isLoginPage ? (
     <Outlet />
