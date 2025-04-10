@@ -9,12 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.log.Logging;
 
 /**
  * Spring security 에서 발생하는 예외들을 핸들링합니다.
  */
 @Slf4j
 @RequiredArgsConstructor
+@Logging
 public class SecurityExceptionHandlerManager {
 
 	private final SecurityDefaultExceptionHandler defaultHandler;
