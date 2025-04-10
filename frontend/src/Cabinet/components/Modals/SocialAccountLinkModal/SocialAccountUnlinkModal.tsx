@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard";
+import { useRecoilValue } from "recoil";
+import { linkedProviderState } from "@/Cabinet/recoil/selectors";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import {
   FailResponseModal,
@@ -10,18 +11,17 @@ import useDebounce from "@/Cabinet/hooks/useDebounce";
 import useOAuth from "@/Cabinet/hooks/useOAuth";
 
 const SocialAccountUnlinkModal = ({
-  currentProvider,
   setIsModalOpen,
 }: {
-  currentProvider: TOAuthProviderOrEmpty;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("소셜 계정 연결 해제");
   const { debounce } = useDebounce();
+  const linkedProvider = useRecoilValue(linkedProviderState);
   const modalDetail = `${
-    currentProvider || "소셜"
+    linkedProvider || "소셜"
   } 계정 연결을 해제하시겠습니까?`;
   const { tryUnlinkSocialAccount, getMyInfo } = useOAuth();
 

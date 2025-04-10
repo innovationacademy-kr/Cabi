@@ -1,7 +1,6 @@
 import { useRecoilValue } from "recoil";
 import { targetProviderState } from "@/Cabinet/recoil/atoms";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
-import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useDebounce from "@/Cabinet/hooks/useDebounce";
 import useOAuth from "@/Cabinet/hooks/useOAuth";

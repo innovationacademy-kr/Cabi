@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { targetProviderState } from "@/Cabinet/recoil/atoms";
 import {
@@ -6,7 +6,6 @@ import {
   linkedProviderState,
 } from "@/Cabinet/recoil/selectors";
 import {
-  IOAuthDisplay,
   TOAuthProvider,
   socialOAuthProviders,
 } from "@/Cabinet/assets/data/oAuth";
