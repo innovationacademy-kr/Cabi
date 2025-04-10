@@ -1,10 +1,11 @@
+import { useRecoilValue } from "recoil";
+import { targetProviderState } from "@/Cabinet/recoil/atoms";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useDebounce from "@/Cabinet/hooks/useDebounce";
 
 interface ISocialAccountLinkCardModalProps {
-  newProvider: TOAuthProvider;
   tryUnlinkSocialAccount: () => Promise<any>;
   getMyInfo: () => Promise<void>;
   tryLinkSocialAccount: (provider: TOAuthProvider) => void;
@@ -12,7 +13,6 @@ interface ISocialAccountLinkCardModalProps {
 }
 
 const SocialAccountSwitchModal = ({
-  newProvider,
   tryUnlinkSocialAccount,
   getMyInfo,
   tryLinkSocialAccount,
@@ -22,6 +22,7 @@ const SocialAccountSwitchModal = ({
   const modalDetail = `<strong>현재 연결된 계정이 해제</strong>되고,
 <strong>새로운 계정이 연결</strong>됩니다.
 계속 진행하시겠습니까?`;
+  const targetProvider = useRecoilValue(targetProviderState);
 
   const trySwitchSocialAccount = (e: React.MouseEvent<Element, MouseEvent>) => {
     debounce(
@@ -31,7 +32,7 @@ const SocialAccountSwitchModal = ({
           await tryUnlinkSocialAccount();
           await getMyInfo();
 
-          tryLinkSocialAccount(newProvider);
+          tryLinkSocialAccount(targetProvider);
         } catch (error) {
           console.error(error);
         }
