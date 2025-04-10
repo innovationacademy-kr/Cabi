@@ -54,7 +54,7 @@ const SocialAccountLinkCardContent = ({
   };
 
   return (
-    <CardContentWrapper>
+    <SocialAccountLinkCardContentWrapper>
       {userOAuthLinks.map((linkInfo) => {
         const provider = linkInfo.providerType;
         const displayInfo = getOAuthDisplayInfo(provider);
@@ -93,18 +93,17 @@ const SocialAccountLinkCardContent = ({
           </CardContentStyled>
         );
       })}
-    </CardContentWrapper>
+    </SocialAccountLinkCardContentWrapper>
   );
 };
 
-const CardContentWrapper = styled.div`
+const SocialAccountLinkCardContentWrapper = styled.div`
   border-radius: 10px;
   margin: 0 5px;
   width: 90%;
   display: flex;
   flex-direction: column;
 `;
-// TODO : 다른 곳에서도 사용되니까 CardContentWrapper 이름 변경
 
 const CardContentStyled = styled.div`
   background-color: var(--card-content-bg-color);

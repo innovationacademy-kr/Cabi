@@ -1,10 +1,10 @@
 import { useState } from "react";
+import Card from "@/Cabinet/components/Card/Card";
+import SocialAccountLinkCardContent from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCardContent";
+import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
+import SocialAccountSwitchModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountSwitchModal";
+import SocialAccountUnlinkModal from "@/Cabinet/components/Modals/SocialAccountLinkModal/SocialAccountUnlinkModal";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
-import ModalPortal from "../../Modals/ModalPortal";
-import SocialAccountSwitchModal from "../../Modals/SocialAccountLinkModal/SocialAccountSwitchModal";
-import SocialAccountUnlinkModal from "../../Modals/SocialAccountLinkModal/SocialAccountUnlinkModal";
-import Card from "../Card";
-import SocialAccountLinkCardContent from "./SocialAccountLinkCardContent";
 
 export type TOAuthProviderOrEmpty = TOAuthProvider | "";
 // TODO : 타입 다른데에서도 사용

@@ -3,13 +3,13 @@ import { MouseEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
+import AGUCabinetReturnSection from "@/Cabinet/components/AGU/AGUCabinetReturnSection";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import {
   axiosAGUReturnCancel,
   axiosReturn,
 } from "@/Cabinet/api/axios/axios.custom";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import AGUCabinetReturnSection from "./AGUCabinetReturnSection";
 
 export type TAGUReturnPageExitEvent =
   | BeforeUnloadEvent
