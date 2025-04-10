@@ -23,8 +23,7 @@ import SocialAccountLinkCardContent from "./SocialAccountLinkCardContent";
 export type TOAuthProviderOrEmpty = TOAuthProvider | "";
 // TODO : 타입 다른데에서도 사용
 
-// TODO : SocialAccountLinkCardContainer -> SocialAccountLinkCard로 변경 컴포넌트 & 파일명
-const SocialAccountLinkCardContainer = () => {
+const SocialAccountLinkCard = () => {
   const linkedProvider = useRecoilValue(linkedProviderState);
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
   const [isUnlinkModalOpen, setIsUnlinkModalOpen] = useState(false);
@@ -57,4 +56,4 @@ const SocialAccountLinkCardContainer = () => {
   );
 };
 
-export default SocialAccountLinkCardContainer;
+export default SocialAccountLinkCard;

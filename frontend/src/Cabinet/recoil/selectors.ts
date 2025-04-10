@@ -8,7 +8,7 @@ import {
   currentSectionNameState,
   userState,
 } from "@/Cabinet/recoil/atoms";
-import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard.container";
+import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard";
 import {
   IFloorSectionColNum,
   ISectionColNum,
