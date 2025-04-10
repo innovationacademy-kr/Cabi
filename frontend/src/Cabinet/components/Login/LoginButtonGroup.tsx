@@ -9,17 +9,9 @@ import {
 } from "@/Cabinet/assets/data/oAuth";
 import useOAuth from "@/Cabinet/hooks/useOAuth";
 
-interface ICurrentLoginButtonInfo {
-  isClicked: boolean;
-  provider: TOAuthProviderOrEmpty;
-}
-
 const LoginButtonGroup = () => {
-  const [currentLoginButtonInfo, setCurrentLoginButtonInfo] =
-    useState<ICurrentLoginButtonInfo>({
-      isClicked: false,
-      provider: "",
-    });
+  const [clickedProvider, setClickedProvider] =
+    useState<TOAuthProviderOrEmpty>("");
   const { handleOAuthRedirect } = useOAuth();
 
   // TODO : target으로 설정하면 괜찮지 않을까? atom
@@ -27,7 +19,7 @@ const LoginButtonGroup = () => {
   const onLoginButtonClick = (provider: TOAuthProvider) => {
     const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
 
-    setCurrentLoginButtonInfo({ isClicked: true, provider: provider });
+    setClickedProvider(provider);
     handleOAuthRedirect(provider, isLoggedOut, () =>
       localStorage.removeItem("isLoggedOut")
     );
@@ -38,8 +30,8 @@ const LoginButtonGroup = () => {
       <LoginButton
         provider={ftProvider}
         onLoginButtonClick={() => onLoginButtonClick(ftProvider)}
-        isClicked={currentLoginButtonInfo.isClicked}
-        isTarget={currentLoginButtonInfo.provider === ftProvider}
+        isClicked={!!clickedProvider}
+        isTarget={clickedProvider === ftProvider}
       />
       <SocialLoginButtonGroupWrapper>
         {socialOAuthProviders.map((provider) => (
@@ -47,8 +39,8 @@ const LoginButtonGroup = () => {
             key={provider}
             provider={provider}
             onLoginButtonClick={() => onLoginButtonClick(provider)}
-            isClicked={currentLoginButtonInfo.isClicked}
-            isTarget={currentLoginButtonInfo.provider === provider}
+            isClicked={!!clickedProvider}
+            isTarget={clickedProvider === provider}
             isSocial={true}
           />
         ))}
