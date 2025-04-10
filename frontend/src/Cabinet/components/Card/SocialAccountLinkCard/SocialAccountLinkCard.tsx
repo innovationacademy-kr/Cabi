@@ -24,6 +24,7 @@ interface ISocialAccountLinkCardProps {
     setIsUnlinkModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   };
 }
+// TODO : handleLinkSocialAccount, tryLinkSocialAccount 이름 좀 구분가게 지어야할듯
 
 const SocialAccountLinkCard = ({
   userOAuthLinks,

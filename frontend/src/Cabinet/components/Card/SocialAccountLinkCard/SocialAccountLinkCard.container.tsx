@@ -1,7 +1,9 @@
-import { HttpStatusCode } from "axios";
 import { useState } from "react";
-import { useRecoilState } from "recoil";
-import { userState } from "@/Cabinet/recoil/atoms";
+import { useRecoilValue } from "recoil";
+import {
+  linkedOAuthInfoState,
+  linkedProviderState,
+} from "@/Cabinet/recoil/selectors";
 import SocialAccountLinkCard from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard";
 import {
   TOAuthProvider,
@@ -9,25 +11,23 @@ import {
   socialOAuthProviders,
 } from "@/Cabinet/assets/data/oAuth";
 import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/oAuth.dto";
-import { UserDto } from "@/Cabinet/types/dto/user.dto";
-import {
-  axiosMyInfo,
-  axiosUnlinkSocialAccount,
-} from "@/Cabinet/api/axios/axios.custom";
-import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
+import useOAuth from "@/Cabinet/hooks/useOAuth";
 
 export type TOAuthProviderOrEmpty = TOAuthProvider | "";
+// TODO : 타입 다른데에서도 사용
 
 const SocialAccountLinkCardContainer = () => {
-  const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
-  const linkedOAuthInfo = myInfo.userOauthConnection;
+  const linkedOAuthInfo = useRecoilValue(linkedOAuthInfoState);
+  const linkedProvider = useRecoilValue(linkedProviderState);
+  const { tryLinkSocialAccount, tryUnlinkSocialAccount, getMyInfo } =
+    useOAuth();
+  // TODO : 주석 삭제. tryUnlinkSocialAccount, getMyInfo 넘겨주기 위한 용
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
   const [isUnlinkModalOpen, setIsUnlinkModalOpen] = useState(false);
   const [newProvider, setNewProvider] = useState<TOAuthProvider>(ftProvider);
-  const linkedProvider: TOAuthProviderOrEmpty = linkedOAuthInfo
-    ? linkedOAuthInfo.providerType
-    : "";
+  // TODO : 주석 삭제. 한군데에서만 사용됨
   const userOAuthLinks: IUserOAuthLinkInfoDto[] = socialOAuthProviders.map(
+    // TODO : 주석 삭제. 여기에
     (provider) => {
       if (linkedProvider === provider) {
         return linkedOAuthInfo!;
@@ -46,64 +46,6 @@ const SocialAccountLinkCardContainer = () => {
     setIsUnlinkModalOpen,
   };
 
-  const getMyInfo = async () => {
-    try {
-      const response = await axiosMyInfo();
-      setMyInfo(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  function updateUnlinkedProviderStatus(
-    provider: TOAuthProvider,
-    status: boolean
-  ) {
-    const currentValue = JSON.parse(localStorage.getItem("isUnlinked") || "{}");
-    const updatedValue = {
-      ...currentValue,
-      [provider]: status,
-    };
-
-    localStorage.setItem("isUnlinked", JSON.stringify(updatedValue));
-  }
-
-  const tryUnlinkSocialAccount = async () => {
-    if (linkedOAuthInfo) {
-      try {
-        const mailState = linkedOAuthInfo.email;
-        const providerTypeState = linkedOAuthInfo.providerType;
-
-        const response = await axiosUnlinkSocialAccount(
-          mailState,
-          providerTypeState
-        );
-
-        if (response.status === HttpStatusCode.Ok && linkedProvider) {
-          updateUnlinkedProviderStatus(linkedProvider, true);
-        }
-
-        return response;
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
-  const tryLinkSocialAccount = (provider: TOAuthProvider) => {
-    const redirectUrl = getOAuthRedirectUrl(provider);
-    const isUnlinkedValue = JSON.parse(
-      localStorage.getItem("isUnlinked") || "{}"
-    );
-
-    if (isUnlinkedValue[provider] === true) {
-      updateUnlinkedProviderStatus(provider, false);
-      window.location.replace(redirectUrl + "?prompt=login");
-    } else {
-      window.location.replace(redirectUrl);
-    }
-  };
-
   const handleLinkSocialAccount = (provider: TOAuthProvider) => {
     if (linkedProvider === "") {
       // 연결 아무것도 안함
@@ -113,7 +55,7 @@ const SocialAccountLinkCardContainer = () => {
       setNewProvider(provider);
       setIsSwitchModalOpen(true);
     }
-  };
+  }; // TODO : 주석 삭제. 한군데에서만 사용됨
 
   return (
     <SocialAccountLinkCard
