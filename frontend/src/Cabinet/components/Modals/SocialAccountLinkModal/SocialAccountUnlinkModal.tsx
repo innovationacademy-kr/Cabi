@@ -7,16 +7,13 @@ import {
 } from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useDebounce from "@/Cabinet/hooks/useDebounce";
+import useOAuth from "@/Cabinet/hooks/useOAuth";
 
 const SocialAccountUnlinkModal = ({
   currentProvider,
-  tryUnlinkSocialAccount,
-  getMyInfo,
   setIsModalOpen,
 }: {
   currentProvider: TOAuthProviderOrEmpty;
-  tryUnlinkSocialAccount: () => Promise<any>;
-  getMyInfo: () => Promise<void>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
@@ -26,6 +23,7 @@ const SocialAccountUnlinkModal = ({
   const modalDetail = `${
     currentProvider || "소셜"
   } 계정 연결을 해제하시겠습니까?`;
+  const { tryUnlinkSocialAccount, getMyInfo } = useOAuth();
 
   const handleCloseModal = () => {
     setIsModalOpen(false);

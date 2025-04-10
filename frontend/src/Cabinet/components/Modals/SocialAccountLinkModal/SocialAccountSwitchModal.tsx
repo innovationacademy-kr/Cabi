@@ -4,18 +4,13 @@ import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useDebounce from "@/Cabinet/hooks/useDebounce";
+import useOAuth from "@/Cabinet/hooks/useOAuth";
 
 interface ISocialAccountLinkCardModalProps {
-  tryUnlinkSocialAccount: () => Promise<any>;
-  getMyInfo: () => Promise<void>;
-  tryLinkSocialAccount: (provider: TOAuthProvider) => void;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SocialAccountSwitchModal = ({
-  tryUnlinkSocialAccount,
-  getMyInfo,
-  tryLinkSocialAccount,
   setIsModalOpen,
 }: ISocialAccountLinkCardModalProps) => {
   const { debounce } = useDebounce();
@@ -23,6 +18,8 @@ const SocialAccountSwitchModal = ({
 <strong>새로운 계정이 연결</strong>됩니다.
 계속 진행하시겠습니까?`;
   const targetProvider = useRecoilValue(targetProviderState);
+  const { tryLinkSocialAccount, tryUnlinkSocialAccount, getMyInfo } =
+    useOAuth();
 
   const trySwitchSocialAccount = (e: React.MouseEvent<Element, MouseEvent>) => {
     debounce(
