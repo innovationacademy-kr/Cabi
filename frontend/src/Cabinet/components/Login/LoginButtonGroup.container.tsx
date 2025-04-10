@@ -10,7 +10,7 @@ import {
   socialOAuthProviders,
 } from "@/Cabinet/assets/data/oAuth";
 import { OAuthErrorType } from "@/Cabinet/types/enum/error.type.enum";
-import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
+import useOAuth from "@/Cabinet/hooks/useOAuth";
 
 export interface ILoginStatus {
   isClicked: boolean;
@@ -22,6 +22,7 @@ const LoginButtonGroupContainer = () => {
     isClicked: false,
     target: "",
   });
+  const { handleOAuthRedirect } = useOAuth();
   const navigator = useNavigate();
   const [searchParams] = useSearchParams();
   const messageParamValue = searchParams.get("message");
@@ -51,18 +52,14 @@ const LoginButtonGroupContainer = () => {
     }
   }, []);
 
+  // TODO : target으로 설정하면 괜찮지 않을까? atom
   const onLoginButtonClick = (provider: TOAuthProvider) => {
     const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
-    const redirectUrl = getOAuthRedirectUrl(provider);
-
-    if (isLoggedOut) {
-      window.location.replace(redirectUrl + "?prompt=login");
-      localStorage.removeItem("isLoggedOut");
-    } else {
-      window.location.replace(redirectUrl);
-    }
 
     setLoginStatus({ isClicked: true, target: provider });
+    handleOAuthRedirect(provider, isLoggedOut, () =>
+      localStorage.removeItem("isLoggedOut")
+    );
   };
 
   return (
