@@ -38,9 +38,10 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) {
 
-		Cookie[] cookies = request.getCookies();
-		cookieService.deleteAllCookies(cookies, request.getServerName(), response);
-
+		cookieService.deleteAllCookies(request.getCookies(), request.getServerName(), response);
+		for (Cookie cookie : request.getCookies()) {
+			log.info("cookie = {}, maxAge = {}", cookie.getName(), cookie.getMaxAge());
+		}
 		securityExceptionHandlerManager.handle(response, accessDeniedException, false);
 	}
 }
