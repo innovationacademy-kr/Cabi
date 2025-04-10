@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.admin.auth.service;
 
 import java.io.IOException;
-import java.time.Duration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,18 +72,7 @@ public class AdminAuthService {
 				.orElseThrow(ExceptionStatus.UNAUTHORIZED_ADMIN::asServiceException);
 		TokenDto masterToken =
 				jwtService.createPairTokens(master.getId(), master.getRole().name(), "master");
-		ResponseCookie accessCookie = ResponseCookie.from("access_token",
-						masterToken.getAccessToken())
-				.httpOnly(false)  // JS에서 접근하려면 false
-				.secure(true)
-				.sameSite("None")  // 중요!!
-				.domain("cabi.42seoul.io")
-				.path("/")
-				.maxAge(Duration.ofMinutes(60))
-				.build();
-
-//		cookieService.setPairTokenCookiesToClient(res, masterToken, req.getServerName());
-		res.addHeader("Set-Cookie", accessCookie.toString());
+		cookieService.setPairTokenCookiesToClient(res, masterToken, req.getServerName());
 		return new AccessTokenDto(masterToken.getAccessToken());
 	}
 
