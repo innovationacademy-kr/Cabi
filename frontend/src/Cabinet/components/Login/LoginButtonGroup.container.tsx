@@ -1,6 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { TOAuthProviderOrEmpty } from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard";
 import LoginButtonGroup from "@/Cabinet/components/Login/LoginButtonGroup";
 import { oAuthErrorMsgMap } from "@/Cabinet/assets/data/maps";
 import {
@@ -13,13 +14,13 @@ import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
 
 export interface ILoginStatus {
   isClicked: boolean;
-  target: TOAuthProvider | null;
+  target: TOAuthProviderOrEmpty;
 }
 
 const LoginButtonGroupContainer = () => {
   const [loginStatus, setLoginStatus] = useState<ILoginStatus>({
     isClicked: false,
-    target: null,
+    target: "",
   });
   const navigator = useNavigate();
   const [searchParams] = useSearchParams();

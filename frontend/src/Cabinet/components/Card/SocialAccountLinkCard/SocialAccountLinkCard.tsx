@@ -7,7 +7,7 @@ import SocialAccountUnlinkModal from "@/Cabinet/components/Modals/SocialAccountL
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 
 export type TOAuthProviderOrEmpty = TOAuthProvider | "";
-// TODO : 타입 다른데에서도 사용
+// TODO : 위치 변경
 
 const SocialAccountLinkCard = () => {
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
