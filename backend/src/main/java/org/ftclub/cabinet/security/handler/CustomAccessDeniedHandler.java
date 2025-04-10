@@ -8,9 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.service.CookieService;
-import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
-import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 @Slf4j
+@Logging
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
 	private final CookieService cookieService;
@@ -36,13 +36,12 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	 */
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
-			AccessDeniedException accessDeniedException) throws IOException, ServletException {
+			AccessDeniedException accessDeniedException) {
 
-		Cookie[] cookies = request.getCookies();
-		cookieService.deleteAllCookies(cookies, request.getServerName(), response);
-
-		SpringSecurityException exception =
-				new SpringSecurityException(ExceptionStatus.FORBIDDEN_USER);
-		securityExceptionHandlerManager.handle(response, exception, false);
+		cookieService.deleteAllCookies(request.getCookies(), request.getServerName(), response);
+		for (Cookie cookie : request.getCookies()) {
+			log.info("cookie = {}, maxAge = {}", cookie.getName(), cookie.getMaxAge());
+		}
+		securityExceptionHandlerManager.handle(response, accessDeniedException, false);
 	}
 }

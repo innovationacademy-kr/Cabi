@@ -1,3 +1,4 @@
 [submodule "config"]
 	path = config
 	url = git@github.com:42cabi/config.git
+	branch = main
