@@ -18,11 +18,11 @@ const SocialAccountUnlinkModal = ({
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState(false);
   const [modalTitle, setModalTitle] = useState("소셜 계정 연결 해제");
-  const { debounce } = useDebounce();
   const linkedProvider = useRecoilValue(linkedProviderState);
   const modalDetail = `${
     linkedProvider || "소셜"
   } 계정 연결을 해제하시겠습니까?`;
+  const { debounce } = useDebounce();
   const { tryUnlinkSocialAccount, getMyInfo } = useOAuth();
 
   const handleCloseModal = () => {
