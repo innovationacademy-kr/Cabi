@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
-import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
+import LoginButton from "@/Cabinet/components/Login/LoginButton";
 import {
   TOAuthProvider,
   TOAuthProviderOrEmpty,
@@ -37,7 +36,7 @@ const LoginButtonGroup = () => {
 
   return (
     <LoginButtonGroupStyled>
-      <FTLoginButton
+      <LoginButton
         key={ftProvider}
         provider={ftProvider}
         display={getOAuthDisplayInfo(ftProvider)}
@@ -47,13 +46,14 @@ const LoginButtonGroup = () => {
       />
       <SocialLoginButtonGroupWrapper>
         {socialOAuthProviders.map((provider) => (
-          <SocialLoginButton
+          <LoginButton
             key={provider}
             provider={provider}
             display={getOAuthDisplayInfo(provider)}
             onLoginButtonClick={() => onLoginButtonClick(provider)}
             isClicked={loginButtonStatus.isClicked}
             isTarget={loginButtonStatus.target === provider}
+            isSocial={true}
           />
         ))}
       </SocialLoginButtonGroupWrapper>
