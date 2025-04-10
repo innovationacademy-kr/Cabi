@@ -27,7 +27,7 @@ public class SecurityExceptionHandlerManager {
 		SecurityExceptionHandler handler = isRedirect ? redirectHandler : defaultHandler;
 
 		try {
-
+			log.info("Error = {}", status.getError());
 			handler.handle(res, status);
 		} catch (IOException ioException) {
 			// handler 에서 response 생성 도중 예외 발생
