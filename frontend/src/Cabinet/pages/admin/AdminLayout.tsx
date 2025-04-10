@@ -17,6 +17,7 @@ import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
 const Layout = (): JSX.Element => {
+  console.log("adminLayout");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,9 +37,11 @@ const Layout = (): JSX.Element => {
   const isSearchPage: boolean = location.pathname === "/admin/search";
 
   useEffect(() => {
+    console.log("adminLayout useeffect");
     deleteOldPointColors();
     if (!token && !isLoginPage) navigate("/admin/login");
     else if (token) {
+      console.log("adminLayout useeffect else if");
       setIsLoading(true);
       if (checkPath()) navigate("/admin/home");
     }
