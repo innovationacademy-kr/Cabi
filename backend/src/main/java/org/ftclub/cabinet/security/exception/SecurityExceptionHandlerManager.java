@@ -9,12 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.log.Logging;
 
 /**
  * Spring security 에서 발생하는 예외들을 핸들링합니다.
  */
 @Slf4j
 @RequiredArgsConstructor
+@Logging
 public class SecurityExceptionHandlerManager {
 
 	private final SecurityDefaultExceptionHandler defaultHandler;
@@ -25,7 +27,7 @@ public class SecurityExceptionHandlerManager {
 		SecurityExceptionHandler handler = isRedirect ? redirectHandler : defaultHandler;
 
 		try {
-
+			log.info("Error = {}", status.getError());
 			handler.handle(res, status);
 		} catch (IOException ioException) {
 			// handler 에서 response 생성 도중 예외 발생
