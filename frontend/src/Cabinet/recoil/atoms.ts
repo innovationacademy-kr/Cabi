@@ -1,6 +1,10 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { TOAuthProvider, ftProvider } from "@/Cabinet/assets/data/oAuth";
+import {
+  TOAuthProvider,
+  TOAuthProviderOrEmpty,
+  ftProvider,
+} from "@/Cabinet/assets/data/oAuth";
 import { staticColNumData } from "@/Cabinet/assets/data/sectionColNumData";
 import { IBuildingColNum } from "@/Cabinet/assets/data/sectionColNumData";
 import { ITableData } from "@/Cabinet/types/dto/admin.dto";
@@ -209,4 +213,10 @@ export const displayStyleState = atom<DisplayStyleToggleType>({
 export const targetProviderState = atom<TOAuthProvider>({
   key: "targetProvider",
   default: ftProvider,
+});
+// TODO : 변수명 변경 - 프로필, 연동 대상
+
+export const clickedLoginProviderState = atom<TOAuthProviderOrEmpty>({
+  key: "clickedLoginProvider",
+  default: "",
 });

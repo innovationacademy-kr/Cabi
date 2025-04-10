@@ -1,24 +1,22 @@
+import { useRecoilValue } from "recoil";
 import styled, { css } from "styled-components";
+import { clickedLoginProviderState } from "@/Cabinet/recoil/atoms";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
+import useOAuth from "@/Cabinet/hooks/useOAuth";
 import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
 interface ILoginButtonProps {
   provider: TOAuthProvider;
-  onLoginButtonClick: (provider: TOAuthProvider) => void;
-  isClicked: boolean;
-  isTarget: boolean;
   isSocial?: boolean;
 }
 
-const LoginButton = ({
-  provider,
-  onLoginButtonClick,
-  isClicked,
-  isTarget,
-  isSocial = false,
-}: ILoginButtonProps) => {
+const LoginButton = ({ provider, isSocial = false }: ILoginButtonProps) => {
   const display = getOAuthDisplayInfo(provider);
+  const clickedLoginProvider = useRecoilValue(clickedLoginProviderState);
+  const isClicked = !!clickedLoginProvider;
+  const { onLoginButtonClick } = useOAuth();
+  const isTarget = clickedLoginProvider === provider;
 
   return (
     <ButtonWrapperStyled

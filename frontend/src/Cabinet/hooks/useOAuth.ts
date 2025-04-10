@@ -1,6 +1,6 @@
 import { HttpStatusCode } from "axios";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { userState } from "@/Cabinet/recoil/atoms";
+import { clickedLoginProviderState, userState } from "@/Cabinet/recoil/atoms";
 import {
   linkedOAuthInfoState,
   linkedProviderState,
@@ -17,6 +17,7 @@ const useOAuth = () => {
   const linkedOAuthInfo = useRecoilValue(linkedOAuthInfoState);
   const linkedProvider = useRecoilValue(linkedProviderState);
   const setMyInfo = useSetRecoilState<UserDto>(userState);
+  const setClickedLoginProvider = useSetRecoilState(clickedLoginProviderState);
 
   const handleOAuthRedirect = (
     provider: TOAuthProvider, // TODO : useOAuth 리팩토링 이후 주석 삭제. 필요함
@@ -32,6 +33,16 @@ const useOAuth = () => {
 
     window.location.replace(redirectUrl);
   };
+
+  const onLoginButtonClick = (provider: TOAuthProvider) => {
+    const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
+
+    setClickedLoginProvider(provider);
+    handleOAuthRedirect(provider, isLoggedOut, () =>
+      localStorage.removeItem("isLoggedOut")
+    );
+  };
+//   TODO : 함수명 변경
 
   // TODO : 함수 매개변수 필요없는거 삭제
   const updateUnlinkedProviderStatus = (
@@ -93,7 +104,7 @@ const useOAuth = () => {
     tryLinkSocialAccount,
     tryUnlinkSocialAccount,
     getMyInfo,
-    handleOAuthRedirect,
+    onLoginButtonClick,
   };
 };
 
