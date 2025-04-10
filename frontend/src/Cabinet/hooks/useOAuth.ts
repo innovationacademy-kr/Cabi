@@ -18,18 +18,16 @@ const useOAuth = () => {
   const linkedProvider = useRecoilValue(linkedProviderState);
   const setMyInfo = useSetRecoilState<UserDto>(userState);
 
-  //   TODO : tryLinkSocialAccount, onLoginButtonClick
   const handleOAuthRedirect = (
     provider: TOAuthProvider, // TODO : useOAuth 리팩토링 이후 주석 삭제. 필요함
     shouldForceLoginPrompt: boolean,
-    updateLocalStorage: () => void
-    // TODO : updateLocalStorage 이름명 좀 더 구체적으로? 플래그 false로 변경한다는 끈다는 느낌으로
+    resetFlag: () => void
   ) => {
     let redirectUrl = getOAuthRedirectUrl(provider);
 
     if (shouldForceLoginPrompt) {
       redirectUrl += "?prompt=login";
-      updateLocalStorage();
+      resetFlag();
     }
 
     window.location.replace(redirectUrl);
