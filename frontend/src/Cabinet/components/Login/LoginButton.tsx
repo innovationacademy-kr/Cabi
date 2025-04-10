@@ -1,10 +1,10 @@
 import styled, { css } from "styled-components";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { IOAuthDisplay, TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
+import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
+import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
 interface ILoginButtonProps {
   provider: TOAuthProvider;
-  display: IOAuthDisplay;
   onLoginButtonClick: (provider: TOAuthProvider) => void;
   isClicked: boolean;
   isTarget: boolean;
@@ -13,12 +13,13 @@ interface ILoginButtonProps {
 
 const LoginButton = ({
   provider,
-  display,
   onLoginButtonClick,
   isClicked,
   isTarget,
   isSocial = false,
 }: ILoginButtonProps) => {
+  const display = getOAuthDisplayInfo(provider);
+
   return (
     <ButtonWrapperStyled
       onClick={() => onLoginButtonClick(provider)}

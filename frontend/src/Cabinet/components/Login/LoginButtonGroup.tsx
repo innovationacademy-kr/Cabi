@@ -8,18 +8,17 @@ import {
   socialOAuthProviders,
 } from "@/Cabinet/assets/data/oAuth";
 import useOAuth from "@/Cabinet/hooks/useOAuth";
-import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
-export interface ILoginButtonStatus {
+interface ICurrentLoginButtonInfo {
   isClicked: boolean;
-  target: TOAuthProviderOrEmpty;
+  provider: TOAuthProviderOrEmpty;
 }
 
 const LoginButtonGroup = () => {
-  const [loginButtonStatus, setLoginButtonStatus] =
-    useState<ILoginButtonStatus>({
+  const [currentLoginButtonInfo, setCurrentLoginButtonInfo] =
+    useState<ICurrentLoginButtonInfo>({
       isClicked: false,
-      target: "",
+      provider: "",
     });
   const { handleOAuthRedirect } = useOAuth();
 
@@ -28,7 +27,7 @@ const LoginButtonGroup = () => {
   const onLoginButtonClick = (provider: TOAuthProvider) => {
     const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
 
-    setLoginButtonStatus({ isClicked: true, target: provider });
+    setCurrentLoginButtonInfo({ isClicked: true, provider: provider });
     handleOAuthRedirect(provider, isLoggedOut, () =>
       localStorage.removeItem("isLoggedOut")
     );
@@ -37,22 +36,19 @@ const LoginButtonGroup = () => {
   return (
     <LoginButtonGroupStyled>
       <LoginButton
-        key={ftProvider}
         provider={ftProvider}
-        display={getOAuthDisplayInfo(ftProvider)}
         onLoginButtonClick={() => onLoginButtonClick(ftProvider)}
-        isClicked={loginButtonStatus.isClicked}
-        isTarget={loginButtonStatus.target === ftProvider}
+        isClicked={currentLoginButtonInfo.isClicked}
+        isTarget={currentLoginButtonInfo.provider === ftProvider}
       />
       <SocialLoginButtonGroupWrapper>
         {socialOAuthProviders.map((provider) => (
           <LoginButton
             key={provider}
             provider={provider}
-            display={getOAuthDisplayInfo(provider)}
             onLoginButtonClick={() => onLoginButtonClick(provider)}
-            isClicked={loginButtonStatus.isClicked}
-            isTarget={loginButtonStatus.target === provider}
+            isClicked={currentLoginButtonInfo.isClicked}
+            isTarget={currentLoginButtonInfo.provider === provider}
             isSocial={true}
           />
         ))}
