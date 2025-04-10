@@ -40,6 +40,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 				log.debug("Exception stack trace: ", e);
 			}
 			SecurityContextHolder.clearContext();
+//			securityExceptionHandlerManager.handle(response, e, false);
 			throw e;
 		}
 	}
