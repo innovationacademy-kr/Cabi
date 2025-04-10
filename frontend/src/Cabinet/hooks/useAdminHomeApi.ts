@@ -26,6 +26,7 @@ export async function useAdminHomeApi(
   >,
   setOverdueUserList: SetterOrUpdater<ITableData[]>
 ) {
+  console.log("useAdminHomeApi");
   const bannedUserData = await axiosGetBannedUserList();
   const brokenCabinetData = await axiosGetBrokenCabinetList();
   const cabinetNumbersPerFloorData = await axiosGetCabinetNumbersPerFloor();
