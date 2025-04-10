@@ -10,6 +10,7 @@ import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.log.Logging;
+import org.springframework.security.access.AccessDeniedException;
 
 /**
  * Spring security 에서 발생하는 예외들을 핸들링합니다.
@@ -54,6 +55,9 @@ public class SecurityExceptionHandlerManager {
 		}
 		if (e instanceof NullPointerException) {
 			return ExceptionStatus.JSON_PROCESSING_EXCEPTION;
+		}
+		if (e instanceof AccessDeniedException) {
+			return ExceptionStatus.FORBIDDEN_USER;
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Exception Trace Stack : ", e);

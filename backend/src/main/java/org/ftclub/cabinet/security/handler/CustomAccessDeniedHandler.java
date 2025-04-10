@@ -8,10 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.service.CookieService;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
-import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -38,16 +36,11 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	 */
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
-			AccessDeniedException accessDeniedException) throws IOException, ServletException {
+			AccessDeniedException accessDeniedException) {
 
 		Cookie[] cookies = request.getCookies();
 		cookieService.deleteAllCookies(cookies, request.getServerName(), response);
-		for (Cookie cookie : cookies) {
-			log.info("Cookie name = {}, MaxAge = {}", cookie.getName(), cookie.getMaxAge());
-		}
 
-		SpringSecurityException exception =
-				new SpringSecurityException(ExceptionStatus.FORBIDDEN_USER);
-		securityExceptionHandlerManager.handle(response, exception, false);
+		securityExceptionHandlerManager.handle(response, accessDeniedException, false);
 	}
 }
