@@ -3,19 +3,19 @@ import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { IOAuthDisplay, TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 
 export interface ILoginButtonProps {
-  onLoginButtonClick: (provider: TOAuthProvider) => void;
+  provider: TOAuthProvider;
   display: IOAuthDisplay;
+  onLoginButtonClick: (provider: TOAuthProvider) => void;
   isClicked: boolean;
   isTarget: boolean;
-  provider: TOAuthProvider;
 }
 
 const FTLoginButton = ({
-  onLoginButtonClick,
+  provider,
   display,
+  onLoginButtonClick,
   isClicked,
   isTarget,
-  provider,
 }: ILoginButtonProps) => {
   return (
     <ButtonWrapperStyled

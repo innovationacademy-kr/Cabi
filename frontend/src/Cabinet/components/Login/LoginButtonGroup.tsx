@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
-import { ILoginStatus } from "@/Cabinet/components/Login/LoginButtonGroup.container";
+import { ILoginButtonStatus } from "@/Cabinet/components/Login/LoginButtonGroup.container";
 import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
@@ -8,33 +8,33 @@ import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 const LoginButtonGroup = ({
   ftProvider,
   onLoginButtonClick,
-  loginStatus,
+  loginButtonStatus,
   socialProviderAry,
 }: {
   ftProvider: TOAuthProvider;
   onLoginButtonClick: (provider: TOAuthProvider) => void;
-  loginStatus: ILoginStatus;
+  loginButtonStatus: ILoginButtonStatus;
   socialProviderAry: TOAuthProvider[];
 }) => {
   return (
     <LoginButtonGroupStyled>
       <FTLoginButton
         key={ftProvider}
-        onLoginButtonClick={() => onLoginButtonClick(ftProvider)}
-        display={getOAuthDisplayInfo(ftProvider)}
-        isClicked={loginStatus.isClicked}
-        isTarget={loginStatus.target === ftProvider}
         provider={ftProvider}
+        display={getOAuthDisplayInfo(ftProvider)}
+        onLoginButtonClick={() => onLoginButtonClick(ftProvider)}
+        isClicked={loginButtonStatus.isClicked}
+        isTarget={loginButtonStatus.target === ftProvider}
       />
       <SocialLoginButtonGroupWrapper>
         {socialProviderAry.map((provider) => (
           <SocialLoginButton
             key={provider}
-            onLoginButtonClick={() => onLoginButtonClick(provider)}
-            display={getOAuthDisplayInfo(provider)}
-            isClicked={loginStatus.isClicked}
-            isTarget={loginStatus.target === provider}
             provider={provider}
+            display={getOAuthDisplayInfo(provider)}
+            onLoginButtonClick={() => onLoginButtonClick(provider)}
+            isClicked={loginButtonStatus.isClicked}
+            isTarget={loginButtonStatus.target === provider}
           />
         ))}
       </SocialLoginButtonGroupWrapper>

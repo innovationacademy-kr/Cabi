@@ -8,23 +8,25 @@ import {
 } from "@/Cabinet/assets/data/oAuth";
 import useOAuth from "@/Cabinet/hooks/useOAuth";
 
-export interface ILoginStatus {
+export interface ILoginButtonStatus {
   isClicked: boolean;
   target: TOAuthProviderOrEmpty;
 }
 
 const LoginButtonGroupContainer = () => {
-  const [loginStatus, setLoginStatus] = useState<ILoginStatus>({
-    isClicked: false,
-    target: "",
-  });
+  const [loginButtonStatus, setLoginButtonStatus] =
+    useState<ILoginButtonStatus>({
+      isClicked: false,
+      target: "",
+    });
   const { handleOAuthRedirect } = useOAuth();
 
   // TODO : target으로 설정하면 괜찮지 않을까? atom
+  // TODO : useoauth로?
   const onLoginButtonClick = (provider: TOAuthProvider) => {
     const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
 
-    setLoginStatus({ isClicked: true, target: provider });
+    setLoginButtonStatus({ isClicked: true, target: provider });
     handleOAuthRedirect(provider, isLoggedOut, () =>
       localStorage.removeItem("isLoggedOut")
     );
@@ -34,7 +36,7 @@ const LoginButtonGroupContainer = () => {
     <LoginButtonGroup
       ftProvider={ftProvider}
       onLoginButtonClick={onLoginButtonClick}
-      loginStatus={loginStatus}
+      loginButtonStatus={loginButtonStatus}
       socialProviderAry={socialOAuthProviders}
     />
   );
