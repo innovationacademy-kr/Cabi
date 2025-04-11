@@ -57,28 +57,15 @@ const handleReissueToken = async (error: any) => {
     return Promise.reject(error);
   }
 
-  const token = getCookie("access_token");
-  if (!token) {
-    const isAGUPage = window.location.pathname === "/agu";
-    if (isAGUPage) {
-      removeCookie("agu_token", {
-        path: "/",
-        domain: getDomain(),
-      });
-    }
-
-    return Promise.reject(error);
-  }
-
   try {
     isRefreshing = true;
     const response = await axiosReissueToken(); // refresh token으로 access token 재발급
 
     if (response.status === HttpStatusCode.Ok) {
-      const originalRequest = error.config;
+      const requestConfig = error.config;
       const newToken = getCookie("access_token");
-      setAuthorizationHeader(originalRequest, newToken);
-      return instance(originalRequest);
+      setAuthorizationHeader(requestConfig, newToken);
+      return instance(requestConfig);
     }
   } catch (error) {
     console.error("Token reissue failed:", error);
@@ -96,6 +83,21 @@ const handleReissueToken = async (error: any) => {
   }
 };
 
+const handleUnauthorizedError = (error: any) => {
+  const token = getCookie("access_token");
+  if (token) return handleReissueToken(error);
+
+  const isAGUPage = window.location.pathname === "/agu";
+  if (isAGUPage) {
+    removeCookie("agu_token", {
+      path: "/",
+      domain: getDomain(),
+    });
+  }
+
+  return Promise.reject(error);
+};
+
 const handleForbiddenError = (error: any) => {
   logAxiosError(error, ErrorType.FORBIDDEN, "접근 권한 없음");
   removeCookie("access_token", {
@@ -108,7 +110,7 @@ const handleForbiddenError = (error: any) => {
 
 const handleErrorResponse = async (error: any) => {
   if (error.response?.status === HttpStatusCode.Unauthorized) {
-    return handleReissueToken(error);
+    return handleUnauthorizedError(error);
   } else if (error.response?.status === HttpStatusCode.InternalServerError) {
     logAxiosError(error, ErrorType.INTERNAL_SERVER_ERROR, "서버 에러");
   } else if (error.response?.status === HttpStatusCode.Forbidden) {
