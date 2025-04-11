@@ -12,7 +12,7 @@ const SocialAccountSwitchModal = ({
 }) => {
   const targetProvider = useRecoilValue(targetProviderState);
   const { debounce } = useDebounce();
-  const { tryLinkSocialAccount, tryUnlinkSocialAccount, getMyInfo } =
+  const { handleSocialAccountLink, tryUnlinkSocialAccount, getMyInfo } =
     useOAuth();
   const modalDetail = `<strong>현재 연결된 계정이 해제</strong>되고,
 <strong>새로운 계정이 연결</strong>됩니다.
@@ -26,7 +26,7 @@ const SocialAccountSwitchModal = ({
           await tryUnlinkSocialAccount();
           await getMyInfo();
 
-          tryLinkSocialAccount(targetProvider);
+          handleSocialAccountLink(targetProvider);
         } catch (error) {
           console.error(error);
         }

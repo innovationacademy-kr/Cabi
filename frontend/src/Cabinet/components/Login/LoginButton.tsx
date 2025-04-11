@@ -6,21 +6,22 @@ import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import useOAuth from "@/Cabinet/hooks/useOAuth";
 import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
-interface ILoginButtonProps {
+const LoginButton = ({
+  provider,
+  isSocial = false,
+}: {
   provider: TOAuthProvider;
   isSocial?: boolean;
-}
-
-const LoginButton = ({ provider, isSocial = false }: ILoginButtonProps) => {
-  const display = getOAuthDisplayInfo(provider);
+}) => {
   const clickedLoginProvider = useRecoilValue(clickedLoginProviderState);
+  const { handleOAuthLogin } = useOAuth();
+  const display = getOAuthDisplayInfo(provider);
   const isClicked = !!clickedLoginProvider;
-  const { onLoginButtonClick } = useOAuth();
   const isTarget = clickedLoginProvider === provider;
 
   return (
     <ButtonWrapperStyled
-      onClick={() => onLoginButtonClick(provider)}
+      onClick={() => handleOAuthLogin(provider)}
       backgroundColor={display.backgroundColor}
       disabled={isClicked}
       isSocial={isSocial}

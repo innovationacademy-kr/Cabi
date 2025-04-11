@@ -450,14 +450,14 @@ export const axiosUseItem = async (
 };
 
 // Admin API
-const axiosAdminAuthURL = "/v4/admin/auth";
+export const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
 export const axiosAdminAuthLogin = async (
   id: string,
   password: string
 ): Promise<any> => {
   try {
     const response = await instance.post(
-      axiosAdminAuthURL + "/login",
+      axiosAdminAuthLoginURL,
       {
         id,
         password,

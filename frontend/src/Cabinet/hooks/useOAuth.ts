@@ -34,7 +34,7 @@ const useOAuth = () => {
     window.location.replace(redirectUrl);
   };
 
-  const onLoginButtonClick = (provider: TOAuthProvider) => {
+  const handleOAuthLogin = (provider: TOAuthProvider) => {
     const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
 
     setClickedLoginProvider(provider);
@@ -42,7 +42,7 @@ const useOAuth = () => {
       localStorage.removeItem("isLoggedOut")
     );
   };
-//   TODO : 함수명 변경
+  //   TODO : 함수명 변경
 
   // TODO : 함수 매개변수 필요없는거 삭제
   const updateUnlinkedProviderStatus = (
@@ -58,7 +58,7 @@ const useOAuth = () => {
     localStorage.setItem("isUnlinked", JSON.stringify(updatedValue));
   };
 
-  const tryLinkSocialAccount = (provider: TOAuthProvider) => {
+  const handleSocialAccountLink = (provider: TOAuthProvider) => {
     const isUnlinkedValue = JSON.parse(
       localStorage.getItem("isUnlinked") || "{}"
     );
@@ -101,10 +101,10 @@ const useOAuth = () => {
   };
 
   return {
-    tryLinkSocialAccount,
+    handleSocialAccountLink,
     tryUnlinkSocialAccount,
     getMyInfo,
-    onLoginButtonClick,
+    handleOAuthLogin,
   };
 };
 

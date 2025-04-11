@@ -25,7 +25,7 @@ const SocialAccountLinkCardContent = ({
   const linkedOAuthInfo = useRecoilValue(linkedOAuthInfoState);
   const linkedProvider = useRecoilValue(linkedProviderState);
   const setTargetProvider = useSetRecoilState(targetProviderState);
-  const { tryLinkSocialAccount } = useOAuth();
+  const { handleSocialAccountLink } = useOAuth();
   const userOAuthLinks: IUserOAuthLinkInfoDto[] = socialOAuthProviders.map(
     (provider) => {
       if (linkedProvider === provider) {
@@ -43,7 +43,7 @@ const SocialAccountLinkCardContent = ({
     setTargetProvider(provider);
     if (linkedProvider === "") {
       // 연결 아무것도 안함
-      tryLinkSocialAccount(provider);
+      handleSocialAccountLink(provider);
     } else {
       // 연결한 상태에서 다른 소셜 계정 연결 시도
       setIsSwitchModalOpen(true);
