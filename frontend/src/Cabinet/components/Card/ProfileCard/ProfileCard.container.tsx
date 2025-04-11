@@ -8,6 +8,7 @@ import {
 } from "@/Cabinet/recoil/atoms";
 import ProfileCard from "@/Cabinet/components/Card/ProfileCard/ProfileCard";
 import { axiosLogout } from "@/Cabinet/api/axios/axios.custom";
+import { setLocalStorageItem } from "@/Cabinet/api/local_storage/local.storage";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const ProfileCardContainer = ({ name }: { name: string | null }) => {
@@ -28,7 +29,7 @@ const ProfileCardContainer = ({ name }: { name: string | null }) => {
               ? "localhost"
               : "cabi.42seoul.io",
         });
-        localStorage.setItem("isLoggedOut", "true");
+        setLocalStorageItem("isLoggedOut", "true");
         resetBuilding();
         resetCurrentFloor();
         resetCurrentSection();

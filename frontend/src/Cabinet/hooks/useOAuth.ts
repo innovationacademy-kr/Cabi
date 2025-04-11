@@ -11,6 +11,11 @@ import {
   axiosMyInfo,
   axiosUnlinkSocialAccount,
 } from "@/Cabinet/api/axios/axios.custom";
+import {
+  getLocalStorageItem,
+  removeLocalStorageItem,
+  setLocalStorageItem,
+} from "@/Cabinet/api/local_storage/local.storage";
 import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
 
 const useOAuth = () => {
@@ -20,7 +25,7 @@ const useOAuth = () => {
   const setClickedLoginProvider = useSetRecoilState(clickedLoginProviderState);
 
   const handleOAuthRedirect = (
-    provider: TOAuthProvider, // TODO : useOAuth 리팩토링 이후 주석 삭제. 필요함
+    provider: TOAuthProvider,
     shouldForceLoginPrompt: boolean,
     resetFlag: () => void
   ) => {
@@ -35,32 +40,29 @@ const useOAuth = () => {
   };
 
   const handleOAuthLogin = (provider: TOAuthProvider) => {
-    const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
+    const isLoggedOut = getLocalStorageItem("isLoggedOut") === "true";
 
     setClickedLoginProvider(provider);
     handleOAuthRedirect(provider, isLoggedOut, () =>
-      localStorage.removeItem("isLoggedOut")
+      removeLocalStorageItem("isLoggedOut")
     );
   };
-  //   TODO : 함수명 변경
 
-  // TODO : 함수 매개변수 필요없는거 삭제
   const updateUnlinkedProviderStatus = (
     provider: TOAuthProvider,
     status: boolean
   ) => {
-    const currentValue = JSON.parse(localStorage.getItem("isUnlinked") || "{}");
+    const currentValue = JSON.parse(getLocalStorageItem("isUnlinked") || "{}");
     const updatedValue = {
       ...currentValue,
       [provider]: status,
     };
-
-    localStorage.setItem("isUnlinked", JSON.stringify(updatedValue));
+    setLocalStorageItem("isUnlinked", JSON.stringify(updatedValue));
   };
 
   const handleSocialAccountLink = (provider: TOAuthProvider) => {
     const isUnlinkedValue = JSON.parse(
-      localStorage.getItem("isUnlinked") || "{}"
+      getLocalStorageItem("isUnlinked") || "{}"
     );
     const isProviderUnlinked = isUnlinkedValue[provider] === true;
 

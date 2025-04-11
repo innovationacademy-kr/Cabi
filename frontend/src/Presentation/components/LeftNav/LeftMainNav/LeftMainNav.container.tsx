@@ -7,6 +7,7 @@ import {
   currentSectionNameState,
 } from "@/Cabinet/recoil/atoms";
 import { axiosLogout } from "@/Cabinet/api/axios/axios.custom";
+import { setLocalStorageItem } from "@/Cabinet/api/local_storage/local.storage";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import LeftMainNav from "@/Presentation/components/LeftNav/LeftMainNav/LeftMainNav";
@@ -57,7 +58,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
           path: "/",
           domain: domain,
         });
-        localStorage.setItem("isLoggedOut", "true");
+        setLocalStorageItem("isLoggedOut", "true");
         resetBuilding();
         resetCurrentFloor();
         resetCurrentSection();
