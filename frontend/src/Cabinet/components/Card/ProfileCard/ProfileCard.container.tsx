@@ -10,6 +10,7 @@ import ProfileCard from "@/Cabinet/components/Card/ProfileCard/ProfileCard";
 import { axiosLogout } from "@/Cabinet/api/axios/axios.custom";
 import { setLocalStorageItem } from "@/Cabinet/api/local_storage/local.storage";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
+import { getDomain } from "@/Cabinet/utils/domainUtils";
 
 const ProfileCardContainer = ({ name }: { name: string | null }) => {
   const navigator = useNavigate();
@@ -24,10 +25,7 @@ const ProfileCardContainer = ({ name }: { name: string | null }) => {
       if (response.status === HttpStatusCode.Ok) {
         removeCookie("access_token", {
           path: "/",
-          domain:
-            import.meta.env.VITE_IS_LOCAL === "true"
-              ? "localhost"
-              : "cabi.42seoul.io",
+          domain: getDomain(),
         });
         setLocalStorageItem("isLoggedOut", "true");
         resetBuilding();

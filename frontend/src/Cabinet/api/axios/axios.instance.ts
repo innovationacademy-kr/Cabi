@@ -3,6 +3,7 @@ import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { axiosReissueToken } from "@/Cabinet/api/axios/axios.custom";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
+import { getDomain } from "@/Cabinet/utils/domainUtils";
 
 // NOTE : 토큰 재발급 시도 중인지 확인하는 플래그
 let isRefreshing = false;
@@ -57,15 +58,12 @@ const handleReissueToken = async (error: any) => {
   }
 
   const token = getCookie("access_token");
-  const domain =
-    import.meta.env.VITE_IS_LOCAL === "true" ? "localhost" : "cabi.42seoul.io";
-
   if (!token) {
     const isAGUPage = window.location.pathname === "/agu";
     if (isAGUPage) {
       removeCookie("agu_token", {
         path: "/",
-        domain,
+        domain: getDomain(),
       });
     }
 
@@ -87,7 +85,7 @@ const handleReissueToken = async (error: any) => {
 
     removeCookie("access_token", {
       path: "/",
-      domain,
+      domain: getDomain(),
     });
 
     redirectToLoginWithAlert(error);
@@ -106,16 +104,11 @@ const handleErrorResponse = async (error: any) => {
   if (error.response?.status === HttpStatusCode.InternalServerError) {
     logAxiosError(error, ErrorType.INTERNAL_SERVER_ERROR, "서버 에러");
   } else if (error.response?.status === HttpStatusCode.Forbidden) {
-    const domain =
-      import.meta.env.VITE_IS_LOCAL === "true"
-        ? "localhost"
-        : "cabi.42seoul.io";
-
     redirectToLoginWithAlert(error);
     logAxiosError(error, ErrorType.FORBIDDEN, "접근 권한 없음");
     removeCookie("access_token", {
       path: "/",
-      domain,
+      domain: getDomain(),
     });
     // TODO : 쿠키 지우는 방법 따로 빼기?
   }

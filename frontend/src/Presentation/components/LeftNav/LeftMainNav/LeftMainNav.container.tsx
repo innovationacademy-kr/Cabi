@@ -10,6 +10,7 @@ import { axiosLogout } from "@/Cabinet/api/axios/axios.custom";
 import { setLocalStorageItem } from "@/Cabinet/api/local_storage/local.storage";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
+import { getDomain } from "@/Cabinet/utils/domainUtils";
 import LeftMainNav from "@/Presentation/components/LeftNav/LeftMainNav/LeftMainNav";
 
 const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
@@ -50,13 +51,9 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       const response = await axiosLogout();
 
       if (response.status === HttpStatusCode.Ok) {
-        const domain =
-          import.meta.env.VITE_IS_LOCAL === "true"
-            ? "localhost"
-            : "cabi.42seoul.io";
         removeCookie("access_token", {
           path: "/",
-          domain: domain,
+          domain: getDomain(),
         });
         setLocalStorageItem("isLoggedOut", "true");
         resetBuilding();
