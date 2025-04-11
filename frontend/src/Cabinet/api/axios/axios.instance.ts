@@ -96,21 +96,23 @@ const handleReissueToken = async (error: any) => {
   }
 };
 
+const handleForbiddenError = (error: any) => {
+  logAxiosError(error, ErrorType.FORBIDDEN, "접근 권한 없음");
+  removeCookie("access_token", {
+    path: "/",
+    domain: getDomain(),
+  });
+  // TODO : 쿠키 지우는 방법 따로 빼기?
+  redirectToLoginWithAlert(error);
+};
+
 const handleErrorResponse = async (error: any) => {
   if (error.response?.status === HttpStatusCode.Unauthorized) {
     return handleReissueToken(error);
-  }
-
-  if (error.response?.status === HttpStatusCode.InternalServerError) {
+  } else if (error.response?.status === HttpStatusCode.InternalServerError) {
     logAxiosError(error, ErrorType.INTERNAL_SERVER_ERROR, "서버 에러");
   } else if (error.response?.status === HttpStatusCode.Forbidden) {
-    redirectToLoginWithAlert(error);
-    logAxiosError(error, ErrorType.FORBIDDEN, "접근 권한 없음");
-    removeCookie("access_token", {
-      path: "/",
-      domain: getDomain(),
-    });
-    // TODO : 쿠키 지우는 방법 따로 빼기?
+    handleForbiddenError(error);
   }
 
   return Promise.reject(error);
