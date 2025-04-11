@@ -210,13 +210,12 @@ export const displayStyleState = atom<DisplayStyleToggleType>({
   default: DisplayStyleToggleType.DEVICE,
 });
 
-export const targetProviderState = atom<TOAuthProvider>({
+export const targetLinkProviderState = atom<TOAuthProvider>({
   key: "targetProvider",
   default: ftProvider,
 });
-// TODO : 변수명 변경 - 프로필, 연동 대상
 
-export const clickedLoginProviderState = atom<TOAuthProviderOrEmpty>({
+export const targetLoginProviderState = atom<TOAuthProviderOrEmpty>({
   key: "clickedLoginProvider",
   default: "",
 });

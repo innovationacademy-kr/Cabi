@@ -1,6 +1,6 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { targetProviderState } from "@/Cabinet/recoil/atoms";
+import { targetLinkProviderState } from "@/Cabinet/recoil/atoms";
 import {
   linkedOAuthInfoState,
   linkedProviderState,
@@ -24,7 +24,7 @@ const SocialAccountLinkCardContent = ({
 }) => {
   const linkedOAuthInfo = useRecoilValue(linkedOAuthInfoState);
   const linkedProvider = useRecoilValue(linkedProviderState);
-  const setTargetProvider = useSetRecoilState(targetProviderState);
+  const setTargetProvider = useSetRecoilState(targetLinkProviderState);
   const { handleSocialAccountLink } = useOAuth();
   const userOAuthLinks: IUserOAuthLinkInfoDto[] = socialOAuthProviders.map(
     (provider) => {

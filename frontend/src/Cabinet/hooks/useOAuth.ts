@@ -1,6 +1,6 @@
 import { HttpStatusCode } from "axios";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { clickedLoginProviderState, userState } from "@/Cabinet/recoil/atoms";
+import { targetLoginProviderState, userState } from "@/Cabinet/recoil/atoms";
 import {
   linkedOAuthInfoState,
   linkedProviderState,
@@ -22,7 +22,7 @@ const useOAuth = () => {
   const linkedOAuthInfo = useRecoilValue(linkedOAuthInfoState);
   const linkedProvider = useRecoilValue(linkedProviderState);
   const setMyInfo = useSetRecoilState<UserDto>(userState);
-  const setClickedLoginProvider = useSetRecoilState(clickedLoginProviderState);
+  const setClickedLoginProvider = useSetRecoilState(targetLoginProviderState);
 
   const handleOAuthRedirect = (
     provider: TOAuthProvider,
@@ -72,17 +72,14 @@ const useOAuth = () => {
   };
 
   const tryUnlinkSocialAccount = async () => {
-    if (linkedOAuthInfo) {
+    if (linkedOAuthInfo && linkedProvider) {
       try {
-        const mailState = linkedOAuthInfo.email;
-        const providerTypeState = linkedOAuthInfo.providerType;
-
         const response = await axiosUnlinkSocialAccount(
-          mailState,
-          providerTypeState
+          linkedOAuthInfo.email,
+          linkedProvider
         );
 
-        if (response.status === HttpStatusCode.Ok && linkedProvider) {
+        if (response.status === HttpStatusCode.Ok) {
           updateUnlinkedProviderStatus(linkedProvider, true);
         }
 

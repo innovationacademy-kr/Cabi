@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
 import styled, { css } from "styled-components";
-import { clickedLoginProviderState } from "@/Cabinet/recoil/atoms";
+import { targetLoginProviderState } from "@/Cabinet/recoil/atoms";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import useOAuth from "@/Cabinet/hooks/useOAuth";
@@ -13,7 +13,7 @@ const LoginButton = ({
   provider: TOAuthProvider;
   isSocial?: boolean;
 }) => {
-  const clickedLoginProvider = useRecoilValue(clickedLoginProviderState);
+  const clickedLoginProvider = useRecoilValue(targetLoginProviderState);
   const { handleOAuthLogin } = useOAuth();
   const display = getOAuthDisplayInfo(provider);
   const isClicked = !!clickedLoginProvider;

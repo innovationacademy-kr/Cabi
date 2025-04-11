@@ -123,7 +123,6 @@ export const linkedOAuthInfoState = selector<IUserOAuthLinkInfoDto | null>({
     return myInfo.userOauthConnection;
   },
 });
-// TODO : 다른 데에서도 사용하는지 확인하고 적용
 
 export const linkedProviderState = selector<TOAuthProviderOrEmpty>({
   key: "LinkedProvider",
@@ -136,4 +135,3 @@ export const linkedProviderState = selector<TOAuthProviderOrEmpty>({
     return linkedProvider;
   },
 });
-// TODO : 다른 데에서도 사용하는지 확인하고 적용

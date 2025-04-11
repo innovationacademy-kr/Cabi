@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { targetProviderState } from "@/Cabinet/recoil/atoms";
+import { targetLinkProviderState } from "@/Cabinet/recoil/atoms";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useDebounce from "@/Cabinet/hooks/useDebounce";
@@ -10,7 +10,7 @@ const SocialAccountSwitchModal = ({
 }: {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const targetProvider = useRecoilValue(targetProviderState);
+  const targetProvider = useRecoilValue(targetLinkProviderState);
   const { debounce } = useDebounce();
   const { handleSocialAccountLink, tryUnlinkSocialAccount, getMyInfo } =
     useOAuth();
