@@ -29,12 +29,10 @@ public class LogoutHandler implements LogoutSuccessHandler {
 			Authentication authentication) {
 		try {
 			if (isAdminUser(request)) {
-				log.info("adminLogoutStart!");
 				adminAuthService.adminLogout(request, response);
 				response.setStatus(HttpServletResponse.SC_OK);
 				return;
 			}
-			log.info("user Logout Start!! ");
 			authFacadeService.userLogout(request, response);
 			response.setStatus(HttpServletResponse.SC_OK);
 		} catch (SpringSecurityException e) {

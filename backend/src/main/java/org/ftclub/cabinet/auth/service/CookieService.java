@@ -56,7 +56,6 @@ public class CookieService {
 	public void setPairTokenCookiesToClient(HttpServletResponse res, TokenDto tokens,
 			String serverName) {
 
-		log.info("Server Name = {}", serverName);
 		boolean isSecure = !cookieManager.isLocalEnvironment(serverName);
 
 		Cookie accessTokenCookie = cookieManager.createCookie(
