@@ -13,7 +13,6 @@ import useMenu from "@/Cabinet/hooks/useMenu";
 const AdminTopNavContainer: React.FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
 }> = (props) => {
-  console.log("AdminTopNavContainer");
   const [buildingClicked, setbuildingClicked] = useState(false);
   const [currentBuildingName, setCurrentBuildingName] = useRecoilState(
     currentBuildingNameState
@@ -31,7 +30,6 @@ const AdminTopNavContainer: React.FC<{
 
   useEffect(() => {
     /* test timeout */
-    console.log("AdminTopNavContainer useEffect1");
     function setTimeoutPromise(delay: number) {
       return new Promise((resolve) => setTimeout(resolve, delay));
     }
@@ -39,18 +37,14 @@ const AdminTopNavContainer: React.FC<{
     const getBuildingsData = async () => {
       try {
         await setTimeoutPromise(500);
-        console.log("getBuildingsData1");
         const buildingsFloorData = await axiosBuildingFloor();
-        console.log("getBuildingsData2");
         setBuildingsFloor([...buildingsFloorData.data]);
       } catch (error) {
         console.log(error);
       }
     };
-    console.log("AdminTopNavContainer useEffect2");
 
     getBuildingsData().then(() => setIsLoading(false));
-    console.log("AdminTopNavContainer useEffect3");
   }, []);
 
   useEffect(() => {

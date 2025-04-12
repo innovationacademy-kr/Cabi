@@ -26,7 +26,6 @@ import { useAdminHomeApi } from "@/Cabinet/hooks/useAdminHomeApi";
 import useMenu from "@/Cabinet/hooks/useMenu";
 
 const AdminHomePage = () => {
-  console.log("AdminHomePage");
   const [overdueUserList, setOverdueUserList] = useRecoilState<ITableData[]>(
     overdueCabinetListState
   );
@@ -106,7 +105,6 @@ const AdminHomePage = () => {
   };
 
   useEffect(() => {
-    console.log("AdminHomePage useEffect");
     useAdminHomeApi(
       setMonthlyData,
       setBannedUserList,
