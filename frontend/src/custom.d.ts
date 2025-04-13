@@ -1,3 +1,5 @@
+import "axios";
+
 declare module "*.svg" {
   import * as React from "react";
 
@@ -19,5 +21,11 @@ declare namespace JSX {
       loop?: boolean;
       autoplay?: boolean;
     };
+  }
+}
+
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    csrfRequired?: boolean;
   }
 }
