@@ -1,24 +1,19 @@
+import { useRecoilValue } from "recoil";
+import { targetLinkProviderState } from "@/Cabinet/recoil/atoms";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
-import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
 import useDebounce from "@/Cabinet/hooks/useDebounce";
-
-interface ISocialAccountLinkCardModalProps {
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  newProvider: TOAuthProvider;
-  tryUnlinkSocialAccount: () => Promise<any>;
-  tryLinkSocialAccount: (provider: TOAuthProvider) => void;
-  getMyInfo: () => Promise<void>;
-}
+import useOAuth from "@/Cabinet/hooks/useOAuth";
 
 const SocialAccountSwitchModal = ({
   setIsModalOpen,
-  newProvider,
-  tryUnlinkSocialAccount,
-  tryLinkSocialAccount,
-  getMyInfo,
-}: ISocialAccountLinkCardModalProps) => {
+}: {
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const targetLinkProvider = useRecoilValue(targetLinkProviderState);
   const { debounce } = useDebounce();
+  const { handleSocialAccountLink, tryUnlinkSocialAccount, getMyInfo } =
+    useOAuth();
   const modalDetail = `<strong>현재 연결된 계정이 해제</strong>되고,
 <strong>새로운 계정이 연결</strong>됩니다.
 계속 진행하시겠습니까?`;
@@ -31,7 +26,7 @@ const SocialAccountSwitchModal = ({
           await tryUnlinkSocialAccount();
           await getMyInfo();
 
-          tryLinkSocialAccount(newProvider);
+          handleSocialAccountLink(targetLinkProvider);
         } catch (error) {
           console.error(error);
         }
