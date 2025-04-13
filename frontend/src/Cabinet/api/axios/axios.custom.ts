@@ -8,7 +8,6 @@ import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
-import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const axiosCSRFTokenURL = "/v5/auth/csrf";
 export const axiosGetCSRFToken = async (): Promise<any> => {
@@ -23,11 +22,8 @@ export const axiosGetCSRFToken = async (): Promise<any> => {
 const axiosLogoutUrl = "/logout";
 export const axiosLogout = async (): Promise<any> => {
   try {
-    await axiosGetCSRFToken();
-    const csrfToken = getCookie("XSRF-TOKEN");
     const response = await instance.post(axiosLogoutUrl, null, {
-      headers: { "X-XSRF-TOKEN": csrfToken },
-      withCredentials: true,
+      csrfRequired: true, // 인터셉터에서 사용할 플래그
     });
     return response;
   } catch (error) {
@@ -527,11 +523,8 @@ export const axiosUnlinkSocialAccount = async (
 const axiosReissueTokenURL = "/jwt/reissue";
 export const axiosReissueToken = async (): Promise<any> => {
   try {
-    await axiosGetCSRFToken();
-    const csrfToken = getCookie("XSRF-TOKEN");
     const response = await instance.post(axiosReissueTokenURL, null, {
-      headers: { "X-XSRF-TOKEN": csrfToken },
-      withCredentials: true,
+      csrfRequired: true,
     });
     return response;
   } catch (error) {
