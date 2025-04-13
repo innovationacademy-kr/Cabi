@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.PresentationSlotRegisterServiceDto;
+import org.ftclub.cabinet.admin.dto.PresentationSlotUpdateServiceDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
@@ -62,5 +63,15 @@ public class AdminPresentationSlotService {
 		if (!overlappingSlots.isEmpty()) {
 			throw ExceptionStatus.SLOT_ALREADY_EXISTS.asServiceException();
 		}
+	}
+
+	/**
+	 * 프레젠테이션 슬롯을 업데이트합니다.
+	 *
+	 * @param serviceDto 프레젠테이션 슬롯 정보
+	 */
+	public void updatePresentationSlot(
+			PresentationSlotUpdateServiceDto serviceDto) {
+
 	}
 }
