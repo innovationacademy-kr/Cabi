@@ -15,14 +15,18 @@ instance.interceptors.request.use(async (config) => {
     setAuthorizationHeader(config, accessToken);
   }
 
-  // if (config.csrfRequired) {
-  //   await axiosGetCSRFToken();
-  //   const csrfToken = getCookie("XSRF-TOKEN");
-  //   setHeader(config, "X-XSRF-TOKEN", csrfToken);
-  //   config.withCredentials = true;
-  // }
+  if (config.csrfRequired) {
+    try {
+      await axiosGetCSRFToken();
+      const csrfToken = getCookie("XSRF-TOKEN");
+      setHeader(config, "X-XSRF-TOKEN", csrfToken);
+      config.withCredentials = true;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
 
-  /* 
+  /*
 	  config.xsrfCookieName = "XSRF-TOKEN";
 	  config.xsrfHeaderName = "X-XSRF-TOKEN";
 	  TODO : 테스트
