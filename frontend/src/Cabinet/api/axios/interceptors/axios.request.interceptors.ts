@@ -29,7 +29,7 @@ instance.interceptors.request.use(async (config) => {
   /*
 	  config.xsrfCookieName = "XSRF-TOKEN";
 	  config.xsrfHeaderName = "X-XSRF-TOKEN";
-	  TODO : 테스트
+	  TODO : dev에서 테스트
 	*/
 
   return config;
