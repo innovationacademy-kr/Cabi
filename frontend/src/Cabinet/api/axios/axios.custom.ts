@@ -8,11 +8,27 @@ import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
+import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
-const axiosLogoutUrl = "/v5/auth/logout";
+const axiosCSRFTokenURL = "/v5/auth/csrf";
+export const axiosGetCSRFToken = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosCSRFTokenURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosLogoutUrl = "/logout";
 export const axiosLogout = async (): Promise<any> => {
   try {
-    const response = await instance.post(axiosLogoutUrl);
+    await axiosGetCSRFToken();
+    const csrfToken = getCookie("XSRF-TOKEN");
+    const response = await instance.post(axiosLogoutUrl, null, {
+      headers: { "X-XSRF-TOKEN": csrfToken },
+      withCredentials: true,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -435,24 +451,19 @@ export const axiosUseItem = async (
 
 // Admin API
 const axiosAdminAuthURL = "/v4/admin/auth";
-export const axiosAdminGetCSRFToken = async (): Promise<any> => {
-  try {
-    const response = await instance.get(axiosAdminAuthURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const axiosAdminAuthLogin = async (
   id: string,
   password: string
 ): Promise<any> => {
   try {
-    const response = await instance.post(axiosAdminAuthURL + "/login", {
-      id,
-      password,
-    });
+    const response = await instance.post(
+      axiosAdminAuthURL + "/login",
+      {
+        id,
+        password,
+      },
+      { withCredentials: true }
+    );
     return response;
   } catch (error) {
     throw error;
@@ -513,10 +524,15 @@ export const axiosUnlinkSocialAccount = async (
   }
 };
 
-const axiosReissueTokenURL = "/v5/jwt/reissue";
+const axiosReissueTokenURL = "/jwt/reissue";
 export const axiosReissueToken = async (): Promise<any> => {
   try {
-    const response = await instance.post(axiosReissueTokenURL);
+    await axiosGetCSRFToken();
+    const csrfToken = getCookie("XSRF-TOKEN");
+    const response = await instance.post(axiosReissueTokenURL, null, {
+      headers: { "X-XSRF-TOKEN": csrfToken },
+      withCredentials: true,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -980,24 +996,6 @@ export const axiosSendSlackAlarmToChannel = async (
       message: message,
     });
   } catch (error) {
-    throw error;
-  }
-};
-
-// TODO: 확인하고 필요없으면 지우기
-const axiosItemAssignURL = "v5/admin/items/assign";
-export const axiosItemAssign = async (
-  itemSku: string,
-  userIds: number[]
-): Promise<any> => {
-  try {
-    const response = await instance.post(axiosItemAssignURL, {
-      itemSku,
-      userIds,
-    });
-    return response;
-  } catch (error) {
-    logAxiosError(error, ErrorType.STORE, "아이템 지급 중 오류 발생", true);
     throw error;
   }
 };

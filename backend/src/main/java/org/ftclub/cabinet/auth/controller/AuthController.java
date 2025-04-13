@@ -6,10 +6,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
+import org.ftclub.cabinet.auth.service.CookieService;
+import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
 import org.ftclub.cabinet.dto.AguMailResponse;
 import org.ftclub.cabinet.dto.OauthUnlinkRequestDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
-import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
+import org.ftclub.cabinet.log.Logging;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Logging
 @RestController
 @RequestMapping("/v5/auth")
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ public class AuthController {
 
 	private final AuthFacadeService authFacadeService;
 	private final OauthLinkFacadeService oauthLinkFacadeService;
+	private final CookieService cookieService;
 
 	/**
 	 * AGU 유저의 임시 로그인 메일 발송
@@ -34,6 +39,17 @@ public class AuthController {
 	public AguMailResponse requestAGULogin(@RequestParam(name = "name") String name)
 			throws JsonProcessingException {
 		return authFacadeService.requestTemporaryLogin(name);
+	}
+
+	/**
+	 * csrf 토큰 발급
+	 *
+	 * @return
+	 */
+	@GetMapping("/csrf")
+	public ResponseEntity<Void> getCsrfToken() {
+
+		return ResponseEntity.noContent().build();
 	}
 
 	/**

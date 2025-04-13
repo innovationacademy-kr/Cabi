@@ -10,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +32,8 @@ public class OauthLink {
 	@Column(name = "ID")
 	private Long id;
 
-	@OneToOne(fetch = FetchType.LAZY, optional = false)
+	// 현재는 한 계정당 하나만 연결이지만, 추후 확장 가능성
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "USER_ID")
 	private User user;
 	@Column(name = "PROVIDER_TYPE", nullable = false)

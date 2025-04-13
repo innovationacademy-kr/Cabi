@@ -30,7 +30,7 @@ const toggleList: toggleItem[] = [
 ];
 
 /* TODO: DISABLED_FLOOR 을 환경변수로 넣기 */
-export const DISABLED_FLOOR = ["4"];
+export const DISABLED_FLOOR = ["4", "5"];
 
 const AvailablePage = () => {
   const [toggleType, setToggleType] = useState<AvailableCabinetsType>(

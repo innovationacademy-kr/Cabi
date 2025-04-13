@@ -52,7 +52,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		String provider = fromLoadUser.getProvider();
 
 		try {
-			OauthResult oauthResult = processOAuthLogin(request, provider, fromLoadUser);
+			OauthResult oauthResult = processOAuthLogin(request, response, provider, fromLoadUser);
 			authFacadeService.processAuthentication(request, response, oauthResult, provider);
 
 			redirectUser(response, oauthResult);
@@ -70,7 +70,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	 * @param oauth2User
 	 * @return
 	 */
-	private OauthResult processOAuthLogin(HttpServletRequest req,
+	private OauthResult processOAuthLogin(
+			HttpServletRequest req,
+			HttpServletResponse res,
 			String provider, CustomOAuth2User oauth2User) {
 
 		if (provider.equals(mainProvider)) {
@@ -79,7 +81,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 			return oauthFacadeService.handleFtLogin(rootNode);
 		}
-		return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
+		return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req, res);
 	}
 
 	private void redirectUser(HttpServletResponse response, OauthResult oauthResult)

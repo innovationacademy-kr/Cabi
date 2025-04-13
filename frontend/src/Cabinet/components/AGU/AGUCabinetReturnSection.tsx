@@ -4,14 +4,14 @@ import { TAGUReturnPageExitEvent } from "@/Cabinet/components/AGU/AGUCabinetRetu
 import ButtonContainer from "@/Cabinet/components/Common/Button";
 
 const AGUCabinetReturnSection = ({
-  handleButtonClick,
+  handleUserAction,
   isProcessingButtonClick,
   subHeaderMsg,
   tryReturnRequest,
   handlePageExit,
   renderReturnDetailMsg,
 }: {
-  handleButtonClick: (key: string, callback: () => void) => void;
+  handleUserAction: (key: string, callback: () => void) => void;
   isProcessingButtonClick: boolean;
   subHeaderMsg: string;
   tryReturnRequest: () => Promise<void>;
@@ -29,7 +29,7 @@ const AGUCabinetReturnSection = ({
       </ReturnDetailWrapper>
       <ButtonContainer
         onClick={() => {
-          handleButtonClick("aguReturn", tryReturnRequest);
+          handleUserAction("aguReturn", tryReturnRequest);
         }}
         text="네, 반납할게요"
         theme="fill"
@@ -38,7 +38,7 @@ const AGUCabinetReturnSection = ({
       />
       <ButtonContainer
         onClick={(e) => {
-          handleButtonClick("aguReturnCancel", () =>
+          handleUserAction("aguReturnCancel", () =>
             handlePageExit(e, "/login")
           );
         }}

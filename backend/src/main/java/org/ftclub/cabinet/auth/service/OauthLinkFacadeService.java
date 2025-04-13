@@ -35,7 +35,6 @@ public class OauthLinkFacadeService {
 	private final JwtService jwtService;
 	private final UserQueryService userQueryService;
 	private final AuthPolicyService authPolicyService;
-	private final ApplicationTokenManager applicationTokenManager;
 	private final CookieService cookieService;
 	private final UserCommandService userCommandService;
 
@@ -76,8 +75,7 @@ public class OauthLinkFacadeService {
 	public OauthResult handleExistingLinkedUser(OauthLink connection) {
 		User user = connection.getUser();
 		try {
-			FtOauthProfile profile = oauthProfileService.getProfileByIntraName(
-					applicationTokenManager.getFtAccessToken(), user.getName());
+			FtOauthProfile profile = oauthProfileService.getProfileByIntraName(user.getName());
 			String roles = FtRole.combineRolesToString(profile.getRoles());
 
 			userCommandService.updateUserRoleAndBlackHoledAt(user, roles,

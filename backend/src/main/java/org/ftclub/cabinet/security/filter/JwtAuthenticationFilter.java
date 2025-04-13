@@ -30,7 +30,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-		return request.getRequestURI().equals("/v5/jwt/reissue");
+		return request.getRequestURI().equals("/jwt/reissue")
+				|| request.getRequestURI().contains("/csrf");
 	}
 
 	/**

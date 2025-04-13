@@ -3,11 +3,10 @@ package org.ftclub.cabinet.utils.leave.absence;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.auth.domain.FtRole;
-import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
-import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.auth.domain.FtOauthProfile;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.service.OauthProfileService;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,6 @@ import org.springframework.web.client.HttpClientErrorException;
 @Log4j2
 public class LeaveAbsenceManager {
 
-	private final ApplicationTokenManager tokenManager;
 	private final LentFacadeService lentFacadeService;
 	private final UserCommandService userCommandService;
 	private final OauthProfileService oauthProfileService;
@@ -26,8 +24,7 @@ public class LeaveAbsenceManager {
 	public void handleLeaveAbsence(Long userId, String name) {
 		log.info("called handleLeaveAbsence {} {}", userId, name);
 		try {
-			FtOauthProfile ftProfile = oauthProfileService.getProfileByIntraName(
-					tokenManager.getFtAccessToken(), name);
+			FtOauthProfile ftProfile = oauthProfileService.getProfileByIntraName(name);
 			if (ftProfile.hasRole((FtRole.INACTIVE))) {
 				lentFacadeService.endUserLent(userId, null);
 			}
