@@ -57,7 +57,7 @@ public class SecurityExceptionHandlerManager {
 			return ExceptionStatus.JSON_PROCESSING_EXCEPTION;
 		}
 		if (e instanceof AccessDeniedException) {
-			return ExceptionStatus.FORBIDDEN_USER;
+			return ExceptionStatus.ACCESS_DENIED;
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Exception Trace Stack : ", e);
