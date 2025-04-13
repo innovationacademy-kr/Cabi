@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v6/presentations")
+@RequestMapping("/v6/presentations/{presentationId}/comments")
 @RequiredArgsConstructor
 public class PresentationCommentController {
 
 	private final PresentationCommentService presentationCommentService;
 
-	@PostMapping("/{presentationId}/comments")
+	@PostMapping
 	public PresentationCommentResponseDto createPresentationComment(
 			@AuthenticationPrincipal UserInfoDto user,
 			Long presentationId,
