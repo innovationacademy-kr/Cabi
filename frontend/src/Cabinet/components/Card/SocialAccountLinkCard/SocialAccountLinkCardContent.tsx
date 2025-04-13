@@ -24,7 +24,7 @@ const SocialAccountLinkCardContent = ({
 }) => {
   const linkedOAuthInfo = useRecoilValue(linkedOAuthInfoState);
   const linkedProvider = useRecoilValue(linkedProviderState);
-  const setTargetProvider = useSetRecoilState(targetLinkProviderState);
+  const setTargetLinkProvider = useSetRecoilState(targetLinkProviderState);
   const { handleSocialAccountLink } = useOAuth();
   const userOAuthLinks: IUserOAuthLinkInfoDto[] = socialOAuthProviders.map(
     (provider) => {
@@ -40,7 +40,7 @@ const SocialAccountLinkCardContent = ({
   );
 
   const handleLinkSocialAccount = (provider: TOAuthProvider) => {
-    setTargetProvider(provider);
+    setTargetLinkProvider(provider);
     if (linkedProvider === "") {
       // 연결 아무것도 안함
       handleSocialAccountLink(provider);

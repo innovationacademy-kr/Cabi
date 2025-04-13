@@ -10,7 +10,7 @@ const SocialAccountSwitchModal = ({
 }: {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const targetProvider = useRecoilValue(targetLinkProviderState);
+  const targetLinkProvider = useRecoilValue(targetLinkProviderState);
   const { debounce } = useDebounce();
   const { handleSocialAccountLink, tryUnlinkSocialAccount, getMyInfo } =
     useOAuth();
@@ -26,7 +26,7 @@ const SocialAccountSwitchModal = ({
           await tryUnlinkSocialAccount();
           await getMyInfo();
 
-          handleSocialAccountLink(targetProvider);
+          handleSocialAccountLink(targetLinkProvider);
         } catch (error) {
           console.error(error);
         }

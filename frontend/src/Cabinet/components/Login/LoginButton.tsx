@@ -13,11 +13,11 @@ const LoginButton = ({
   provider: TOAuthProvider;
   isSocial?: boolean;
 }) => {
-  const clickedLoginProvider = useRecoilValue(targetLoginProviderState);
+  const targetLoginProvider = useRecoilValue(targetLoginProviderState);
   const { handleOAuthLogin } = useOAuth();
   const display = getOAuthDisplayInfo(provider);
-  const isClicked = !!clickedLoginProvider;
-  const isTarget = clickedLoginProvider === provider;
+  const isClicked = !!targetLoginProvider;
+  const isTarget = targetLoginProvider === provider;
 
   return (
     <ButtonWrapperStyled

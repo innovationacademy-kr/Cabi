@@ -22,7 +22,7 @@ const useOAuth = () => {
   const linkedOAuthInfo = useRecoilValue(linkedOAuthInfoState);
   const linkedProvider = useRecoilValue(linkedProviderState);
   const setMyInfo = useSetRecoilState<UserDto>(userState);
-  const setClickedLoginProvider = useSetRecoilState(targetLoginProviderState);
+  const setTargetLoginProvider = useSetRecoilState(targetLoginProviderState);
 
   const handleOAuthRedirect = (
     provider: TOAuthProvider,
@@ -42,7 +42,7 @@ const useOAuth = () => {
   const handleOAuthLogin = (provider: TOAuthProvider) => {
     const isLoggedOut = getLocalStorageItem("isLoggedOut") === "true";
 
-    setClickedLoginProvider(provider);
+    setTargetLoginProvider(provider);
     handleOAuthRedirect(provider, isLoggedOut, () =>
       removeLocalStorageItem("isLoggedOut")
     );
