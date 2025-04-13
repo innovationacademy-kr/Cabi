@@ -1,6 +1,7 @@
+import { axiosGetCSRFToken } from "@/Cabinet/api/axios/axios.custom";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
-import { setAuthorizationHeader } from "@/Cabinet/utils/axiosUtils";
+import { setAuthorizationHeader, setHeader } from "@/Cabinet/utils/axiosUtils";
 
 instance.interceptors.request.use(async (config) => {
   const accessToken = getCookie("access_token");
@@ -8,19 +9,23 @@ instance.interceptors.request.use(async (config) => {
   const isAGUPage = window.location.pathname === "/agu";
 
   if (isAGUPage) {
-    config.headers.set("X-Client-Path", "/agu");
+    setHeader(config, "X-Client-Path", "/agu");
     setAuthorizationHeader(config, aguToken);
   } else {
     setAuthorizationHeader(config, accessToken);
   }
 
+  // if (config.csrfRequired) {
+  //   await axiosGetCSRFToken();
+  //   const csrfToken = getCookie("XSRF-TOKEN");
+  //   setHeader(config, "X-XSRF-TOKEN", csrfToken);
+  //   config.withCredentials = true;
+  // }
+
   /* 
-	  if (로그인, 리이슈, 로그아웃)
-	  헤더에 설정
-	  config.withCredentials = true;
 	  config.xsrfCookieName = "XSRF-TOKEN";
 	  config.xsrfHeaderName = "X-XSRF-TOKEN";
-	  TODO : interceptor에서?
+	  TODO : 테스트
 	*/
 
   return config;

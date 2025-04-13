@@ -71,7 +71,6 @@ const handleForbiddenError = (error: any) => {
     path: "/",
     domain: getDomain(),
   });
-  // TODO : 쿠키 지우는 방법 따로 빼기?
   redirectToLoginWithAlert(error);
 };
 
