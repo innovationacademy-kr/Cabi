@@ -2,6 +2,7 @@ package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.auth.service.AdminAuthService;
@@ -60,10 +61,12 @@ public class OauthFacadeService {
 	 */
 	@Transactional
 	public OauthResult handleExternalOAuthLogin(CustomOAuth2User oauth2User,
-			HttpServletRequest request) {
+			HttpServletRequest request, HttpServletResponse response) {
 
 		String oauthMail = oauth2User.getEmail();
 		if (securityPathPolicy.isAdminContext()) {
+			cookieService.deleteAdminCookie(request.getCookies(), request.getServerName(),
+					response);
 			return adminAuthService.handleAdminLogin(oauthMail);
 		}
 

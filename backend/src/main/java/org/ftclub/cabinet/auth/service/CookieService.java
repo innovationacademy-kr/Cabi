@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CookieService {
 
+	private static final String LOGIN_SOURCE = "login_source";
 	private final CookieManager cookieManager;
 	private final JwtTokenProperties jwtTokenProperties;
 
@@ -38,10 +39,23 @@ public class CookieService {
 		res.addCookie(cookie);
 	}
 
+	public void addAdminCookie(HttpServletRequest req, HttpServletResponse res) {
+		Cookie cookie = new Cookie(LOGIN_SOURCE, "admin");
+		CookieInfo cookieInfo = new CookieInfo(req.getServerName(), 60, true);
+		setToClient(cookie, cookieInfo, res);
+	}
+
+	public void deleteAdminCookie(Cookie[] cookies, String serverName, HttpServletResponse res) {
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(LOGIN_SOURCE)) {
+				cookieManager.deleteCookie(res, serverName, cookie.getName());
+			}
+		}
+	}
+
 	public void setPairTokenCookiesToClient(HttpServletResponse res, TokenDto tokens,
 			String serverName) {
 
-		log.info("Server Name = {}", serverName);
 		boolean isSecure = !cookieManager.isLocalEnvironment(serverName);
 
 		Cookie accessTokenCookie = cookieManager.createCookie(
