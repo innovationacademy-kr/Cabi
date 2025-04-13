@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
 import org.ftclub.cabinet.admin.dto.PresentationSlotRegisterServiceDto;
+import org.ftclub.cabinet.admin.dto.PresentationSlotUpdateServiceDto;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
@@ -44,6 +45,29 @@ class AdminPresentationSlotServiceTest {
 		assertThat(savedSlot.getStartTime()).isEqualTo(slotServiceDto.getStartTime());
 	}
 
+	@DisplayName("어드민이 프레젠테이션 슬롯을 2시간 간격으로 연속하여 등록한다")
+	@Test
+	void registerTwoPresentationSlots() {
+		// given
+		LocalDateTime now = LocalDateTime.now();
+		PresentationSlotRegisterServiceDto slotServiceDto1 = new PresentationSlotRegisterServiceDto(
+				now.plusHours(1),
+				PresentationLocation.BASEMENT
+		);
+		slotService.registerPresentationSlot(slotServiceDto1);
+
+		PresentationSlotRegisterServiceDto slotServiceDto2 = new PresentationSlotRegisterServiceDto(
+				now.plusHours(3),
+				PresentationLocation.BASEMENT
+		);
+
+		// when
+		slotService.registerPresentationSlot(slotServiceDto2);
+
+		// then
+		assertThat(slotRepository.findAll().size()).isEqualTo(2);
+	}
+
 	@DisplayName("등록하려는 슬롯의 시간이 현재 기준으로 과거일 수 없다.")
 	@Test
 	void registerPresentationSlotWithPastTime() {
@@ -78,6 +102,91 @@ class AdminPresentationSlotServiceTest {
 
 		// then
 		assertThatThrownBy(() -> slotService.registerPresentationSlot(slotServiceDto2))
+				.isInstanceOf(ServiceException.class)
+				.hasMessage("해당 시간에는 이미 발표 슬롯이 존재합니다.");
+	}
+
+	@DisplayName("프레젠테이션 슬롯을 새로운 정보로 업데이트한다.")
+	@Test
+	void updatePresentationSlot() {
+		// given
+		LocalDateTime now = LocalDateTime.now();
+		PresentationSlotRegisterServiceDto slotServiceDto1 = new PresentationSlotRegisterServiceDto(
+				now.plusHours(3),
+				PresentationLocation.BASEMENT
+		);
+		slotService.registerPresentationSlot(slotServiceDto1);
+
+		Long slotId = slotRepository.findAll().get(0).getId();
+
+		PresentationSlotRegisterServiceDto slotServiceDto2 = new PresentationSlotRegisterServiceDto(
+				now.plusHours(5),
+				PresentationLocation.BASEMENT
+		);
+		slotService.registerPresentationSlot(slotServiceDto2);
+
+		// when
+		slotService.updatePresentationSlot(new PresentationSlotUpdateServiceDto(
+				slotId,
+				now.plusHours(2),
+				PresentationLocation.BASEMENT
+		));
+
+		// then
+		assertThat(slotRepository.findById(slotId).get().getStartTime()).isEqualTo(
+				now.plusHours(2));
+	}
+
+	@DisplayName("슬롯을 업데이트 하려는 시간이 과거일 수 없다.")
+	@Test
+	void updatePresentationSlotWithPastTime() {
+		// given
+		LocalDateTime now = LocalDateTime.now();
+		PresentationSlotRegisterServiceDto slotServiceDto = new PresentationSlotRegisterServiceDto(
+				now.plusHours(1),
+				PresentationLocation.BASEMENT
+		);
+		slotService.registerPresentationSlot(slotServiceDto);
+
+		Long slotId = slotRepository.findAll().get(0).getId();
+
+		// then
+		assertThatThrownBy(
+				() -> slotService.updatePresentationSlot(new PresentationSlotUpdateServiceDto(
+						slotId,
+						now.minusHours(1),
+						PresentationLocation.BASEMENT
+				)))
+				.isInstanceOf(ServiceException.class)
+				.hasMessage("과거 시간으로는 발표 슬롯을 생성할 수 없습니다.");
+	}
+
+	@DisplayName("업데이트 하려는 슬롯의 시간이 겹치는 슬롯이 있으면 업데이트할 수 없다.")
+	@Test
+	void updatePresentationSlotWithOverlappingTime() {
+		// given
+		LocalDateTime now = LocalDateTime.now();
+		PresentationSlotRegisterServiceDto slotServiceDto1 = new PresentationSlotRegisterServiceDto(
+				now.plusHours(1),
+				PresentationLocation.BASEMENT
+		);
+		slotService.registerPresentationSlot(slotServiceDto1);
+
+		Long slotId = slotRepository.findAll().get(0).getId();
+
+		PresentationSlotRegisterServiceDto slotServiceDto2 = new PresentationSlotRegisterServiceDto(
+				now.plusHours(3),
+				PresentationLocation.BASEMENT
+		);
+		slotService.registerPresentationSlot(slotServiceDto2);
+
+		// then
+		assertThatThrownBy(
+				() -> slotService.updatePresentationSlot(new PresentationSlotUpdateServiceDto(
+						slotId,
+						now.plusHours(2),
+						PresentationLocation.BASEMENT
+				)))
 				.isInstanceOf(ServiceException.class)
 				.hasMessage("해당 시간에는 이미 발표 슬롯이 존재합니다.");
 	}
