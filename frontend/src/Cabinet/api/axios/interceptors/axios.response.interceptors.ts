@@ -3,7 +3,11 @@ import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { axiosReissueToken } from "@/Cabinet/api/axios/axios.custom";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
-import { getCookie, removeCookie } from "@/Cabinet/api/react_cookie/cookies";
+import {
+  getCookie,
+  removeAllCookies,
+  removeCookie,
+} from "@/Cabinet/api/react_cookie/cookies";
 import { setAuthorizationHeader } from "@/Cabinet/utils/axiosUtils";
 import { getDomain } from "@/Cabinet/utils/domainUtils";
 
@@ -67,10 +71,7 @@ const handleUnauthorizedError = (error: any) => {
 
 const handleForbiddenError = (error: any) => {
   logAxiosError(error, ErrorType.FORBIDDEN, "접근 권한 없음");
-  removeCookie("access_token", {
-    path: "/",
-    domain: getDomain(),
-  });
+  removeAllCookies({ path: "/", domain: getDomain() });
   redirectToLoginWithAlert(error);
 };
 
