@@ -1,13 +1,19 @@
 package org.ftclub.cabinet.presentation.controller;
 
+import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.PresentationCommentRequestDto;
 import org.ftclub.cabinet.dto.PresentationCommentResponseDto;
 import org.ftclub.cabinet.dto.PresentationCommentServiceCreationDto;
+import org.ftclub.cabinet.dto.PresentationCommentServiceUpdateDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.presentation.service.PresentationCommentService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +26,22 @@ public class PresentationCommentController {
 
 	private final PresentationCommentService presentationCommentService;
 
+	@GetMapping
+	public Map<String, List<PresentationCommentResponseDto>> getPresentationComments(
+			@AuthenticationPrincipal UserInfoDto user,
+			@PathVariable Long presentationId
+	) {
+		List<PresentationCommentResponseDto> commentList =
+				presentationCommentService.getCommentsByPresentationId(presentationId,
+						user.getUserId());
+
+		return Map.of("data", commentList);
+	}
+
 	@PostMapping
 	public PresentationCommentResponseDto createPresentationComment(
 			@AuthenticationPrincipal UserInfoDto user,
-			Long presentationId,
+			@PathVariable Long presentationId,
 			@RequestBody @Valid PresentationCommentRequestDto requestDto
 	) {
 		//
@@ -33,6 +51,21 @@ public class PresentationCommentController {
 				presentationId,
 				requestDto.getCommentDetail()
 			)
+		);
+	}
+
+	@PatchMapping("/{commentId}")
+	public PresentationCommentResponseDto updatePresentationComment(
+			@AuthenticationPrincipal UserInfoDto user,
+			@PathVariable Long commentId,
+			@RequestBody @Valid PresentationCommentRequestDto requestDto
+	) {
+		return presentationCommentService.updatePresentationComment(
+				new PresentationCommentServiceUpdateDto(
+						user.getUserId(),
+						commentId,
+						requestDto.getCommentDetail()
+				)
 		);
 	}
 }
