@@ -1,10 +1,10 @@
+import TopNav from "@/Presentation/components/TopNav";
 import React, { SetStateAction, useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import { axiosMyLentInfo } from "@/Cabinet/api/axios/axios.custom";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import TopNav from "@/Presentation_legacy/components/TopNav/TopNav";
 
 const TopNavContainer: React.FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
@@ -31,7 +31,7 @@ const TopNavContainer: React.FC<{
     Promise.all([getMyLentInfo()]).then(() => setIsLoading(false));
   }, []);
 
-  return <TopNav onClickLogo={onClickLogo} />;
+  return <TopNav />;
 };
 
 export default TopNavContainer;

@@ -1,11 +1,7 @@
-
 import { Button } from "@/components/ui/button";
 
-const HomePage_test = () => {
-  return <div className="bg-blue-100 w-full h-full">test
-  <Button title="home" >test</Button>
-
-  </div>;
+const HomePage = () => {
+  return <div className="bg-blue-100 w-full h-full">test</div>;
 };
 
-export default HomePage_test;
+export default HomePage;

@@ -5,13 +5,13 @@ import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import TopNavDomainGroup from "@/Cabinet/components/TopNav/TopNavDomainGroup/TopNavDomainGroup";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import LeftNav from "@/Presentation_legacy/components/LeftNav/LeftNav";
 import TopNavContainer from "@/Presentation_legacy/components/TopNav/TopNav.container";
-import TopNavDomainGroup from "@/Cabinet/components/TopNav/TopNavDomainGroup/TopNavDomainGroup";
 
 const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
@@ -75,13 +75,14 @@ const Layout = (): JSX.Element => {
     <Outlet />
   ) : (
     <React.Fragment>
-      <TopNavDomainGroup /> 
-        <WrapperStyled>
-          <MainStyled>
-            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
-            <Outlet />
-          </MainStyled>
-        </WrapperStyled>
+      <TopNavDomainGroup />
+      <TopNavContainer setIsLoading={setIsLoading} />
+      <WrapperStyled>
+        <MainStyled>
+          <MenuBgStyled onClick={handleClickBg} id="menuBg" />
+          <Outlet />
+        </MainStyled>
+      </WrapperStyled>
     </React.Fragment>
   );
 };
