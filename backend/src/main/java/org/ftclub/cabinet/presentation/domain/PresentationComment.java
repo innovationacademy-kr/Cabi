@@ -62,4 +62,8 @@ public class PresentationComment {
 		this.user = user;
 		this.detail = detail;
 	}
+
+	public void updateDetail(String detail) {
+		this.detail = detail;
+	}
 }
