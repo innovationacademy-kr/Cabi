@@ -12,11 +12,11 @@ import org.jetbrains.annotations.NotNull;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminPresentationSlotRequestDto {
+public class AdminPresentationSlotUpdateRequestDto {
 
 	@NotNull
 	private LocalDateTime startTime;
-	
+
 	@NotNull
 	private PresentationLocation location;
 }

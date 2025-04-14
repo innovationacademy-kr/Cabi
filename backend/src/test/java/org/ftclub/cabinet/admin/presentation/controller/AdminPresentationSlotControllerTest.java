@@ -65,4 +65,22 @@ class AdminPresentationSlotControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isForbidden());
 	}
 
+	@DisplayName("어드민이 프레젠테이션 슬롯을 수정한다.")
+	@WithMockUser(roles = "ADMIN")
+	@Test
+	void updatePresentationSlot() throws Exception {
+		// given
+		Long slotId = 1L;
+		AdminPresentationSlotRequestDto requestDto = new AdminPresentationSlotRequestDto(
+				LocalDateTime.now().plusDays(1),
+				PresentationLocation.BASEMENT
+		);
+		// then
+		mockMvc.perform(
+						MockMvcRequestBuilders.patch("/v6/admin/presentations/slots/{slotId}", slotId)
+								.contentType(MediaType.APPLICATION_JSON)
+								.content(objectMapper.writeValueAsString(requestDto))
+				)
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
 }

@@ -119,7 +119,8 @@ public enum ExceptionStatus {
 
 	// Presentation 관련
 	CANNOT_CREATE_SLOT_IN_PAST(HttpStatus.BAD_REQUEST, "과거 시간으로는 발표 슬롯을 생성할 수 없습니다."),
-	SLOT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 시간에는 이미 발표 슬롯이 존재합니다.");
+	SLOT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 시간에는 이미 발표 슬롯이 존재합니다."),
+	SLOT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 발표 슬롯이 존재하지 않습니다.");
 
 	final private int statusCode;
 	final private String message;
