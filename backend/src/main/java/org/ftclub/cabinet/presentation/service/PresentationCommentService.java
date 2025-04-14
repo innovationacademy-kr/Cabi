@@ -1,8 +1,11 @@
 package org.ftclub.cabinet.presentation.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.PresentationCommentResponseDto;
 import org.ftclub.cabinet.dto.PresentationCommentServiceCreationDto;
+import org.ftclub.cabinet.dto.PresentationCommentServiceUpdateDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.PresentationComment;
 import org.ftclub.cabinet.presentation.repository.PresentationCommentRepository;
@@ -47,5 +50,43 @@ public class PresentationCommentService {
 		if (commentDetail.isBlank()) {
 			throw ExceptionStatus.PRESENTATION_COMMENT_EMPTY.asServiceException();
 		}
+	}
+
+	public List<PresentationCommentResponseDto> getCommentsByPresentationId(
+			Long userId,
+			Long presentationId
+	) {
+		List<PresentationComment> comments = commentRepository.findByPresentationIdOrderByCreatedAtAsc(presentationId);
+		return comments.stream()
+				.map(comment -> new PresentationCommentResponseDto(
+						comment.getId(),
+						comment.getUser().getName(),
+						comment.getDetail(),
+						comment.getCreatedAt(),
+						comment.getUser().getId().equals(userId),
+						comment.isBanned(),
+						comment.getUpdatedAt().isAfter(comment.getCreatedAt())
+				)).collect(Collectors.toList());
+	}
+
+	public PresentationCommentResponseDto updatePresentationComment(
+			PresentationCommentServiceUpdateDto dto
+	) {
+		PresentationComment comment = commentRepository.findById(dto.getCommentId())
+				.orElseThrow(ExceptionStatus.PRESENTATION_COMMENT_NOT_FOUND::asServiceException);
+
+		if (comment.getUser().getId() != dto.getUserId()) {
+			throw ExceptionStatus.PRESENTATION_COMMENT_NOT_AUTHORIZED.asServiceException();
+		}
+
+		comment.updateDetail(dto.getCommentDetail());
+		commentRepository.save(comment);
+		return new PresentationCommentResponseDto(
+				comment.getId(),
+				comment.getUser().getName(),
+				comment.getDetail(),
+				comment.getUpdatedAt(),
+				true, comment.isBanned(), true
+		);
 	}
 }
