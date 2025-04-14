@@ -446,7 +446,7 @@ export const axiosUseItem = async (
 };
 
 // Admin API
-export const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
+const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
 export const axiosAdminAuthLogin = async (
   id: string,
   password: string
