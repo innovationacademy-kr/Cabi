@@ -11,6 +11,7 @@ import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import LeftNav from "@/Presentation_legacy/components/LeftNav/LeftNav";
 import TopNavContainer from "@/Presentation_legacy/components/TopNav/TopNav.container";
+import TopNavDomainGroup from "@/Cabinet/components/TopNav/TopNavDomainGroup/TopNavDomainGroup";
 
 const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
@@ -74,18 +75,13 @@ const Layout = (): JSX.Element => {
     <Outlet />
   ) : (
     <React.Fragment>
-      {isValidToken && <TopNavContainer setIsLoading={setIsLoading} />}
-      {isLoading ? (
-        <LoadingAnimation />
-      ) : (
+      <TopNavDomainGroup /> 
         <WrapperStyled>
-          <LeftNav isVisible={isHomePage} />
           <MainStyled>
             <MenuBgStyled onClick={handleClickBg} id="menuBg" />
             <Outlet />
           </MainStyled>
         </WrapperStyled>
-      )}
     </React.Fragment>
   );
 };
