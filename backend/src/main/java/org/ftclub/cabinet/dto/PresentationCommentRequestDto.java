@@ -12,5 +12,5 @@ import lombok.ToString;
 @AllArgsConstructor
 public class PresentationCommentRequestDto {
 	@NotBlank
-	private String commentDetail;
+	private String detail;
 }
