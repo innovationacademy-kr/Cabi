@@ -38,9 +38,9 @@ const AdminLoginTemplate = (props: {
       return;
     }
     try {
-      const loginResponse = await axiosAdminAuthLogin(adminId, adminPw);
+      const response = await axiosAdminAuthLogin(adminId, adminPw);
 
-      if (loginResponse.status === HttpStatusCode.Ok) {
+      if (response.status === HttpStatusCode.Ok) {
         navigate("/admin/home");
       }
     } catch (error) {
