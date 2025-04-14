@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
+import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.dto.PresentationCommentServiceCreationDto;
 import org.ftclub.cabinet.dto.PresentationCommentServiceUpdateDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
@@ -41,7 +42,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(PresentationCommentController.class)
+@WebMvcTest(
+		controllers = PresentationCommentController.class,
+		properties = {"cabinet.local=true"}
+)
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "api.cabi.42seoul.io") // Adjust host/port
 public class PresentationCommentControllerTest {
     @Autowired
@@ -67,6 +71,9 @@ public class PresentationCommentControllerTest {
 
 	@MockBean
 	private JpaMetamodelMappingContext jpaMappingContext;
+
+	@MockBean
+	private AuthPolicyService authPolicyService;
 
 	// Helper method to create mock authentication
 	private Authentication createMockAuthentication(Long userId) {
