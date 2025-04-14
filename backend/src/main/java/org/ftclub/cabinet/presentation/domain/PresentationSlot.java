@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 
 @Entity
 @Getter
@@ -44,4 +45,16 @@ public class PresentationSlot {
 		this.presentationLocation = presentationLocation;
 		this.presentation = null;
 	}
+
+	public void changeSlotStartTime(LocalDateTime startTime) {
+		if (this.startTime.isBefore(java.time.LocalDateTime.now())) {
+			throw ExceptionStatus.CANNOT_CREATE_SLOT_IN_PAST.asDomainException();
+		}
+		this.startTime = startTime;
+	}
+
+	public void changeSlotLocation(PresentationLocation location) {
+		this.presentationLocation = location;
+	}
+
 }
