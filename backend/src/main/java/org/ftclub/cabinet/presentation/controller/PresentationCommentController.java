@@ -32,8 +32,10 @@ public class PresentationCommentController {
 			@PathVariable Long presentationId
 	) {
 		List<PresentationCommentResponseDto> commentList =
-				presentationCommentService.getCommentsByPresentationId(presentationId,
-						user.getUserId());
+				presentationCommentService.getCommentsByPresentationId(
+						user.getUserId(),
+						presentationId
+				);
 
 		return new PresentationCommentsResponseDto(commentList);
 	}
@@ -49,7 +51,7 @@ public class PresentationCommentController {
 			new PresentationCommentServiceCreationDto(
 				user.getUserId(),
 				presentationId,
-				requestDto.getCommentDetail()
+				requestDto.getDetail()
 			)
 		);
 	}
@@ -64,7 +66,7 @@ public class PresentationCommentController {
 				new PresentationCommentServiceUpdateDto(
 						user.getUserId(),
 						commentId,
-						requestDto.getCommentDetail()
+						requestDto.getDetail()
 				)
 		);
 	}
