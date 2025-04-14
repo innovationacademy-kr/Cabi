@@ -6,16 +6,18 @@ import {
   currentFloorCabinetState,
   currentFloorNumberState,
   currentSectionNameState,
+  userState,
 } from "@/Cabinet/recoil/atoms";
+import { TOAuthProviderOrEmpty } from "@/Cabinet/assets/data/oAuth";
 import {
   IFloorSectionColNum,
   ISectionColNum,
 } from "@/Cabinet/assets/data/sectionColNumData";
 import {
-  CabinetInfo,
   CabinetPreviewInfo,
   ICurrentSectionInfo,
 } from "@/Cabinet/types/dto/cabinet.dto";
+import { IUserOAuthLinkInfoDto } from "@/Cabinet/types/dto/oAuth.dto";
 
 export const buildingsState = selector<Array<string>>({
   key: "Buildings",
@@ -110,5 +112,26 @@ export const currentSectionColNumState = selector<number | undefined>({
 
     if (currentSectionIdx === -1) return undefined;
     return currentFloorColNum[currentSectionIdx].colNum;
+  },
+});
+
+export const linkedOAuthInfoState = selector<IUserOAuthLinkInfoDto | null>({
+  key: "LinkedOAuthInfo",
+  get: ({ get }) => {
+    const myInfo = get(userState);
+
+    return myInfo.userOauthConnection;
+  },
+});
+
+export const linkedProviderState = selector<TOAuthProviderOrEmpty>({
+  key: "LinkedProvider",
+  get: ({ get }) => {
+    const linkedOAuthInfo = get(linkedOAuthInfoState);
+    const linkedProvider: TOAuthProviderOrEmpty = linkedOAuthInfo
+      ? linkedOAuthInfo.providerType
+      : "";
+
+    return linkedProvider;
   },
 });
