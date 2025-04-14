@@ -55,7 +55,7 @@ public enum ExceptionStatus {
 	CLUB_HAS_LENT_CABINET(HttpStatus.NOT_ACCEPTABLE, "대여 중인 사물함을 반납 후 삭제할 수 있습니다."),
 	HANEAPI_ERROR(HttpStatus.BAD_GATEWAY, "24HANE API 통신에 에러가 있습니다."),
 	EXTENSION_NOT_FOUND(HttpStatus.BAD_REQUEST, "연장권이 존재하지 않습니다."),
-	EXTENSION_LENT_DELAYED(HttpStatus.FORBIDDEN, "연장권은 연체된 사물함에 사용할 수 없습니다."),
+	EXTENSION_LENT_DELAYED(HttpStatus.FORBIDDEN,     "연장권은 연체된 사물함에 사용할 수 없습니다."),
 	EXTENSION_SOLO_IN_SHARE_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "연장권은 1명일 때 사용할 수 없습니다."),
 	MAIL_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "메일 전송 중 에러가 발생했습니다"),
 	SLACK_REQUEST_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "슬랙 인증 중 에러가 발생했습니다."),
@@ -73,12 +73,6 @@ public enum ExceptionStatus {
 	INVALID_CLUB_MASTER(HttpStatus.BAD_REQUEST, "동아리에 동아리 장이 없습니다."),
 	NOT_FOUND_CLUB_LENT_HISTORY(HttpStatus.NOT_FOUND, "동아리가 대여한 사물함이 없습니다."),
 	INVALID_PRESENTATION_CATEGORY(HttpStatus.BAD_REQUEST, "발표회에 정의된 카테고리가 아닙니다."),
-	INVALID_PRESENTATION_DATE(HttpStatus.BAD_REQUEST, "가능한 발표 날짜가 아닙니다"),
-	INVALID_DATE(HttpStatus.BAD_REQUEST, "잘못된 날짜입니다."),
-	PRESENTATION_ALREADY_EXISTED(HttpStatus.CONFLICT, "이미 예약된 발표 날짜입니다"),
-	NOT_FOUND_FORM(HttpStatus.NOT_FOUND, "신청서가 존재하지 않습니다."),
-	INVALID_FORM_ID(HttpStatus.BAD_REQUEST, "잘못된 신청번호입니다."),
-	INVALID_LOCATION(HttpStatus.BAD_REQUEST, "잘못된 장소입니다."),
 	INVALID_ITEM_USE_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 아이템 사용 요청입니다."),
 	ITEM_NOT_ON_SALE(HttpStatus.BAD_REQUEST, "구매할 수 없는 아이템입니다."),
 	NOT_ENOUGH_COIN(HttpStatus.BAD_REQUEST, "보유한 코인이 아이템 가격보다 적습니다."),
@@ -115,7 +109,15 @@ public enum ExceptionStatus {
 	INVALID_OAUTH_CONNECTION(HttpStatus.BAD_REQUEST, "Oauth 연동 기록이 일치하지 않습니다"),
 	INVALID_CSRF(HttpStatus.FORBIDDEN, "잘못된 형식의 CSRF 토큰입니다"),
 	MISSING_CSRF(HttpStatus.FORBIDDEN, "CSRF 토큰이 존재하지 않습니다"),
-	CODE_ALREADY_SENT(HttpStatus.TOO_MANY_REQUESTS, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다.");
+	CODE_ALREADY_SENT(HttpStatus.TOO_MANY_REQUESTS, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다."),
+
+	//수지회 관련 에러
+	INVALID_PRESENTATION_DATE(HttpStatus.BAD_REQUEST, "가능한 발표 날짜가 아닙니다"),
+	INVALID_DATE(HttpStatus.BAD_REQUEST, "잘못된 날짜입니다."),
+	PRESENTATION_ALREADY_EXISTED(HttpStatus.CONFLICT, "이미 예약된 발표 날짜입니다"),
+	NOT_FOUND_FORM(HttpStatus.NOT_FOUND, "신청서가 존재하지 않습니다."),
+	INVALID_FORM_ID(HttpStatus.BAD_REQUEST, "잘못된 신청번호입니다."),
+	INVALID_LOCATION(HttpStatus.BAD_REQUEST, "잘못된 장소입니다.");
 
 	final private int statusCode;
 	final private String message;
