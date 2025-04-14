@@ -1,11 +1,11 @@
 package org.ftclub.cabinet.presentation.controller;
 
 import java.util.List;
-import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.PresentationCommentRequestDto;
 import org.ftclub.cabinet.dto.PresentationCommentResponseDto;
+import org.ftclub.cabinet.dto.PresentationCommentsResponseDto;
 import org.ftclub.cabinet.dto.PresentationCommentServiceCreationDto;
 import org.ftclub.cabinet.dto.PresentationCommentServiceUpdateDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
@@ -27,7 +27,7 @@ public class PresentationCommentController {
 	private final PresentationCommentService presentationCommentService;
 
 	@GetMapping
-	public Map<String, List<PresentationCommentResponseDto>> getPresentationComments(
+	public PresentationCommentsResponseDto getPresentationComments(
 			@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long presentationId
 	) {
@@ -35,7 +35,7 @@ public class PresentationCommentController {
 				presentationCommentService.getCommentsByPresentationId(presentationId,
 						user.getUserId());
 
-		return Map.of("data", commentList);
+		return new PresentationCommentsResponseDto(commentList);
 	}
 
 	@PostMapping
