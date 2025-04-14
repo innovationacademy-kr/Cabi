@@ -63,7 +63,8 @@ class PresentationCommentServiceTest {
 		// Mock Presentation
 		Presentation mockPresentation = mock(Presentation.class);
 		given(mockPresentation.getId()).willReturn(presentationId);
-		given(presentationQueryService.getPresentation(presentationId)).willReturn(mockPresentation);
+		given(presentationQueryService.getPresentation(presentationId)).willReturn(
+				mockPresentation);
 
 		// Mock Repository Save 동작 정의
 		given(presentationCommentRepository.save(any(PresentationComment.class)))
@@ -140,7 +141,6 @@ class PresentationCommentServiceTest {
 		Long presentationId = 10L;
 		String emptyComment = "   "; // Blank comment
 
-
 		PresentationCommentServiceCreationDto dto =
 				new PresentationCommentServiceCreationDto(userId, presentationId, emptyComment);
 
@@ -188,7 +188,8 @@ class PresentationCommentServiceTest {
 
 		// Mock Presentation
 		Presentation mockPresentation = mock(Presentation.class);
-		given(presentationQueryService.getPresentation(presentationId)).willReturn(mockPresentation);
+		given(presentationQueryService.getPresentation(presentationId)).willReturn(
+				mockPresentation);
 
 		PresentationCommentServiceCreationDto dto =
 				new PresentationCommentServiceCreationDto(nonExistentUserId, presentationId,

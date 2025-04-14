@@ -10,6 +10,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class PresentationCommentResponseDto {
+
 	@NotNull
 	private final Long id;
 	@NotNull

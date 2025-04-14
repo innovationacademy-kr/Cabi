@@ -33,7 +33,7 @@ public class PresentationCommentService {
 				userQueryService.getUser(dto.getUserId()),
 				dto.getCommentDetail()
 		));
-		
+
 		return new PresentationCommentResponseDto(
 				savedComment.getId(),
 				savedComment.getUser().getName(),
@@ -56,7 +56,8 @@ public class PresentationCommentService {
 			Long userId,
 			Long presentationId
 	) {
-		List<PresentationComment> comments = commentRepository.findByPresentationIdOrderByCreatedAtAsc(presentationId);
+		List<PresentationComment> comments = commentRepository.findByPresentationIdOrderByCreatedAtAsc(
+				presentationId);
 		return comments.stream()
 				.map(comment -> new PresentationCommentResponseDto(
 						comment.getId(),
@@ -69,6 +70,7 @@ public class PresentationCommentService {
 				)).collect(Collectors.toList());
 	}
 
+	// TODO: Presentation 존재하는지, Presentation 내의 Comment 인지 확인
 	public PresentationCommentResponseDto updatePresentationComment(
 			PresentationCommentServiceUpdateDto dto
 	) {

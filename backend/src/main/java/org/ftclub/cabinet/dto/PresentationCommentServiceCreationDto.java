@@ -9,7 +9,8 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class PresentationCommentServiceCreationDto {
-    private final Long userId;
+
+	private final Long userId;
 	private final Long presentationId;
 	private final String commentDetail;
 }

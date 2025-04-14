@@ -48,7 +48,8 @@ import org.springframework.test.web.servlet.MockMvc;
 )
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "api.cabi.42seoul.io") // Adjust host/port
 public class PresentationCommentControllerTest {
-    @Autowired
+
+	@Autowired
 	private MockMvc mockMvc;
 
 	@Autowired
@@ -77,7 +78,8 @@ public class PresentationCommentControllerTest {
 
 	// Helper method to create mock authentication
 	private Authentication createMockAuthentication(Long userId) {
-		given(userInfoDto.getUserId()).willReturn(userId); // Make sure UserInfoDto mock returns the ID
+		given(userInfoDto.getUserId()).willReturn(
+				userId); // Make sure UserInfoDto mock returns the ID
 		List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
 		// Use the UserInfoDto mock as the principal
 		return new UsernamePasswordAuthenticationToken(userInfoDto, null, authorities);
@@ -96,24 +98,24 @@ public class PresentationCommentControllerTest {
 
 		PresentationCommentRequestDto requestDto = new PresentationCommentRequestDto(commentDetail);
 		PresentationCommentResponseDto mockResponseDto = new PresentationCommentResponseDto(
-			commentId,
-			userName,
-			commentDetail,
-			createdAt,
-			true,
-			false,
-			false
+				commentId,
+				userName,
+				commentDetail,
+				createdAt,
+				true,
+				false,
+				false
 		);
 		PresentationCommentServiceCreationDto presentationCommentServiceCreationDto = new PresentationCommentServiceCreationDto(
-			userId,
-			presentationId,
-			commentDetail
+				userId,
+				presentationId,
+				commentDetail
 		);
 
 		given(userInfoDto.getUserId()).willReturn(userId);
 
 		given(presentationCommentService.createPresentationComment(
-			presentationCommentServiceCreationDto
+				presentationCommentServiceCreationDto
 		)).willReturn(mockResponseDto);
 
 		// --- Authentication 객체 생성 ---
@@ -134,10 +136,11 @@ public class PresentationCommentControllerTest {
 								.content(objectMapper.writeValueAsString(requestDto))
 								.with(authentication(mockAuthentication))
 								.with(csrf())
-								// TODO: JWT Authentication 추가 해야 함
+						// TODO: JWT Authentication 추가 해야 함
 				)
 				.andExpect(status().isOk())
-				.andDo(document("create-presentation-comment", // Identifier for the generated snippets
+				.andDo(document("create-presentation-comment",
+						// Identifier for the generated snippets
 						preprocessRequest(prettyPrint()),   // Format request JSON
 						preprocessResponse(prettyPrint())  // Format response JSON
 				));
@@ -161,7 +164,8 @@ public class PresentationCommentControllerTest {
 		);
 		List<PresentationCommentResponseDto> commentList = Arrays.asList(comment1, comment2);
 
-		given(presentationCommentService.getCommentsByPresentationId(eq(userId), eq(presentationId)))
+		given(presentationCommentService.getCommentsByPresentationId(eq(userId),
+				eq(presentationId)))
 				.willReturn(commentList);
 
 		Authentication mockAuthentication = createMockAuthentication(userId);
@@ -171,7 +175,8 @@ public class PresentationCommentControllerTest {
 						get("/v6/presentations/{presentationId}/comments", presentationId)
 								.accept(MediaType.APPLICATION_JSON)
 								.with(authentication(mockAuthentication))
-								.with(csrf()) // CSRF might not be needed for GET, but include for consistency if configured
+								.with(csrf())
+						// CSRF might not be needed for GET, but include for consistency if configured
 				)
 				.andExpect(status().isOk())
 				.andDo(document("presentation/comment/get-presentation-comments",
@@ -180,7 +185,8 @@ public class PresentationCommentControllerTest {
 				));
 
 		// Verify service method was called
-		verify(presentationCommentService).getCommentsByPresentationId(eq(presentationId), eq(userId));
+		verify(presentationCommentService).getCommentsByPresentationId(eq(presentationId),
+				eq(userId));
 	}
 
 	@DisplayName("프레젠테이션 댓글 수정 성공 테스트")
@@ -208,7 +214,8 @@ public class PresentationCommentControllerTest {
 		);
 
 		// Mock the service method for updating
-		given(presentationCommentService.updatePresentationComment(presentationCommentServiceUpdateDto))
+		given(presentationCommentService.updatePresentationComment(
+				presentationCommentServiceUpdateDto))
 				.willReturn(mockResponseDto);
 
 		Authentication mockAuthentication = createMockAuthentication(userId);
@@ -230,6 +237,7 @@ public class PresentationCommentControllerTest {
 				));
 
 		// Verify service method was called
-		verify(presentationCommentService).updatePresentationComment(presentationCommentServiceUpdateDto);
+		verify(presentationCommentService).updatePresentationComment(
+				presentationCommentServiceUpdateDto);
 	}
 }

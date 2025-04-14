@@ -48,11 +48,11 @@ public class PresentationCommentController {
 	) {
 		//
 		return presentationCommentService.createPresentationComment(
-			new PresentationCommentServiceCreationDto(
-				user.getUserId(),
-				presentationId,
-				requestDto.getDetail()
-			)
+				new PresentationCommentServiceCreationDto(
+						user.getUserId(),
+						presentationId,
+						requestDto.getDetail()
+				)
 		);
 	}
 
