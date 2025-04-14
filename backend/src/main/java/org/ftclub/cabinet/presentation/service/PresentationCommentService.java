@@ -80,7 +80,6 @@ public class PresentationCommentService {
 		}
 
 		comment.updateDetail(dto.getCommentDetail());
-		commentRepository.save(comment);
 		return new PresentationCommentResponseDto(
 				comment.getId(),
 				comment.getUser().getName(),
