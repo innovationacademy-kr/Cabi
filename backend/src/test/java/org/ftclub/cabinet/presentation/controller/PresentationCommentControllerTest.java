@@ -1,19 +1,24 @@
 package org.ftclub.cabinet.presentation.controller;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
 import java.util.List;
 import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
 import org.ftclub.cabinet.dto.PresentationCommentServiceCreationDto;
+import org.ftclub.cabinet.dto.PresentationCommentServiceUpdateDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
@@ -63,9 +68,17 @@ public class PresentationCommentControllerTest {
 	@MockBean
 	private JpaMetamodelMappingContext jpaMappingContext;
 
-	@DisplayName("프레젠테이션 댓글 정상 등록 테스트")
+	// Helper method to create mock authentication
+	private Authentication createMockAuthentication(Long userId) {
+		given(userInfoDto.getUserId()).willReturn(userId); // Make sure UserInfoDto mock returns the ID
+		List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+		// Use the UserInfoDto mock as the principal
+		return new UsernamePasswordAuthenticationToken(userInfoDto, null, authorities);
+	}
+
+	@DisplayName("프레젠테이션 댓글 생성 성공 테스트")
 	@Test
-	void createPresentationComment() throws Exception {
+	void createPresentationComment_성공() throws Exception {
 		// given
 		Long userId = 1L;
 		String userName = "testUser";
@@ -116,11 +129,100 @@ public class PresentationCommentControllerTest {
 								.with(csrf())
 								// TODO: JWT Authentication 추가 해야 함
 				)
-				.andDo(print())
 				.andExpect(status().isOk())
 				.andDo(document("create-presentation-comment", // Identifier for the generated snippets
 						preprocessRequest(prettyPrint()),   // Format request JSON
 						preprocessResponse(prettyPrint())  // Format response JSON
 				));
+	}
+
+	@DisplayName("특정 프레젠테이션 댓글 목록 조회 성공 테스트")
+	@Test
+	void listPresentationComments_성공() throws Exception {
+		// given
+		Long presentationId = 42L;
+		Long userId = 1L; // Logged-in user
+
+		LocalDateTime time1 = LocalDateTime.of(2025, 3, 9, 15, 30, 0);
+		LocalDateTime time2 = LocalDateTime.of(2025, 3, 9, 15, 35, 0);
+
+		PresentationCommentResponseDto comment1 = new PresentationCommentResponseDto(
+				27L, "sokwon", "잘 봤어용 :)", time1, true, false, false // is_mine = true
+		);
+		PresentationCommentResponseDto comment2 = new PresentationCommentResponseDto(
+				28L, "jnam", "발표 좋네요!", time2, false, false, false // is_mine = false
+		);
+		List<PresentationCommentResponseDto> commentList = Arrays.asList(comment1, comment2);
+
+		given(presentationCommentService.getCommentsByPresentationId(eq(userId), eq(presentationId)))
+				.willReturn(commentList);
+
+		Authentication mockAuthentication = createMockAuthentication(userId);
+
+		// when & then
+		mockMvc.perform(
+						get("/v6/presentations/{presentationId}/comments", presentationId)
+								.accept(MediaType.APPLICATION_JSON)
+								.with(authentication(mockAuthentication))
+								.with(csrf()) // CSRF might not be needed for GET, but include for consistency if configured
+				)
+				.andExpect(status().isOk())
+				.andDo(document("presentation/comment/get-presentation-comments",
+						preprocessRequest(prettyPrint()),
+						preprocessResponse(prettyPrint())
+				));
+
+		// Verify service method was called
+		verify(presentationCommentService).getCommentsByPresentationId(eq(presentationId), eq(userId));
+	}
+
+	@DisplayName("프레젠테이션 댓글 수정 성공 테스트")
+	@Test
+	void updatePresentationComment_성공() throws Exception {
+		// given
+		Long userId = 1L; // User performing the update
+		Long presentationId = 42L;
+		Long commentId = 27L; // Comment being updated
+		String updatedDetail = "업데이트된 댓글 내용입니다.";
+		String userName = "sokwon";
+		LocalDateTime updatedTime = LocalDateTime.of(2025, 3, 10, 10, 0, 0);
+
+		PresentationCommentRequestDto requestDto = new PresentationCommentRequestDto(
+				updatedDetail);
+
+		PresentationCommentServiceUpdateDto presentationCommentServiceUpdateDto = new PresentationCommentServiceUpdateDto(
+				userId,
+				commentId,
+				updatedDetail
+		);
+
+		PresentationCommentResponseDto mockResponseDto = new PresentationCommentResponseDto(
+				commentId, userName, updatedDetail, updatedTime, true, false, true
+		);
+
+		// Mock the service method for updating
+		given(presentationCommentService.updatePresentationComment(presentationCommentServiceUpdateDto))
+				.willReturn(mockResponseDto);
+
+		Authentication mockAuthentication = createMockAuthentication(userId);
+
+		// when & then
+		mockMvc.perform(
+						patch("/v6/presentations/{presentationId}/comments/{commentId}", presentationId,
+								commentId)
+								.contentType(MediaType.APPLICATION_JSON)
+								.accept(MediaType.APPLICATION_JSON)
+								.content(objectMapper.writeValueAsString(requestDto))
+								.with(authentication(mockAuthentication))
+								.with(csrf())
+				)
+				.andExpect(status().isOk())
+				.andDo(document("presentation/comment/update-presentation-comment",
+						preprocessRequest(prettyPrint()),
+						preprocessResponse(prettyPrint())
+				));
+
+		// Verify service method was called
+		verify(presentationCommentService).updatePresentationComment(presentationCommentServiceUpdateDto);
 	}
 }
