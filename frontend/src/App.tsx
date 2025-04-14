@@ -8,6 +8,8 @@ import Layout from "@/Cabinet/pages/Layout";
 import LoginPage from "@/Cabinet/pages/LoginPage";
 import PostLogin from "@/Cabinet/pages/PostLogin";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import HomePage_test from "@/Presentation/pages/HomePage";
+
 
 const LoginFailurePage = lazy(() => import("@/Cabinet/pages/LoginFailurePage"));
 const NotFoundPage = lazy(() => import("@/Cabinet/pages/NotFoundPage"));
@@ -25,10 +27,10 @@ const StoreMainPage = lazy(() => import("@/Cabinet/pages/StoreMainPage"));
 const PresentationHomePage = lazy(
   () => import("@/Presentation/pages/HomePage")
 );
-const PresentationLayout = lazy(() => import("@/Presentation/pages/Layout"));
-const DetailPage = lazy(() => import("@/Presentation/pages/DetailPage"));
-const PresentationLogPage = lazy(() => import("@/Presentation/pages/LogPage"));
-const RegisterPage = lazy(() => import("@/Presentation/pages/RegisterPage"));
+const PresentationLayout = lazy(() => import("@/Presentation_legacy/pages/Layout"));
+const DetailPage = lazy(() => import("@/Presentation_legacy/pages/DetailPage"));
+const PresentationLogPage = lazy(() => import("@/Presentation_legacy/pages/LogPage"));
+const RegisterPage = lazy(() => import("@/Presentation_legacy/pages/RegisterPage"));
 
 // NOTE : admin
 const AdminLayout = lazy(() => import("@/Cabinet/pages/admin/AdminLayout"));
@@ -49,7 +51,7 @@ const AdminStorePage = lazy(
   () => import("@/Cabinet/pages/admin/AdminStorePage")
 );
 const AdminPresentationLayout = lazy(
-  () => import("@/Presentation/pages/admin/AdminLayout")
+  () => import("@/Presentation_legacy/pages/admin/AdminLayout")
 );
 
 function App(): React.ReactElement {
@@ -76,6 +78,8 @@ function App(): React.ReactElement {
             <Route path="agu" element={<AGUPage />} />
           </Route>
           <Route path="/presentation/" element={<PresentationLayout />}>
+          {/* test */}
+            <Route path="test" element={<HomePage_test/>} /> 
             <Route path="home" element={<PresentationHomePage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="detail" element={<DetailPage />} />

@@ -13,6 +13,7 @@ import "@/Cabinet/assets/css/reset.css";
 import "@/index.css";
 import App from "@/App";
 import { GlobalStyle } from "@/Cabinet/assets/data/ColorTheme";
+import '@/Presentation/tailwind.css';
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,

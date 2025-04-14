@@ -60,7 +60,6 @@ public class AuthFacadeService {
 	private final AuthPolicyService authPolicyService;
 	private final JwtRedisService jwtRedisService;
 	private final JwtService jwtService;
-	private final ApplicationTokenManager applicationTokenManager;
 	private final ApplicationEventPublisher eventPublisher;
 	private final LentQueryService lentQueryService;
 	private final OauthProfileService oauthProfileService;
@@ -181,8 +180,7 @@ public class AuthFacadeService {
 	 */
 	public AguMailResponse requestTemporaryLogin(String name) throws JsonProcessingException {
 		User user = userQueryService.getUserByName(name);
-		FtOauthProfile profile = oauthProfileService.getProfileByIntraName(
-				applicationTokenManager.getFtAccessToken(), name);
+		FtOauthProfile profile = oauthProfileService.getProfileByIntraName(name);
 
 		authPolicyService.verifyAguRole(user.getRoles(), FtRole.AGU.name(), profile.getRoles());
 		lentQueryService.getUserActiveLentHistory(user.getId())

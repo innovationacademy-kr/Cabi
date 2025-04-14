@@ -1,13 +1,11 @@
-import { useNavigate } from "react-router-dom";
-import RecentPresentation from "@/Presentation/components/Home/RecentPresentation";
 
-const HomePage = () => {
-  const navigator = useNavigate();
+import { Button } from "@/components/ui/button";
 
-  const presentButtonHandler = () => {
-    navigator("/presentation/register");
-  };
-  return <RecentPresentation presentButtonHandler={presentButtonHandler} />;
+const HomePage_test = () => {
+  return <div className="bg-blue-100 w-full h-full">test
+  <Button title="test" >test</Button>
+
+  </div>;
 };
 
-export default HomePage;
+export default HomePage_test;

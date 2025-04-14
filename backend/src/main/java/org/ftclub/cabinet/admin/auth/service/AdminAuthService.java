@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.admin.auth.service;
 
 import java.io.IOException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,6 @@ import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
-import org.ftclub.cabinet.auth.domain.CookieInfo;
 import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.auth.service.CookieService;
@@ -37,7 +35,6 @@ public class AdminAuthService {
 	private final JwtRedisService jwtRedisService;
 	private final AdminCommandService adminCommandService;
 	private final CookieService cookieService;
-
 	@Value("${cabinet.server.be-host}")
 	private String beHost;
 
@@ -51,10 +48,7 @@ public class AdminAuthService {
 	public void requestAdminLogin(HttpServletRequest req, HttpServletResponse res)
 			throws IOException {
 		// 쿠키에 로그인 현상 저장
-		Cookie cookie = new Cookie("login_source", "admin");
-		CookieInfo cookieInfo = new CookieInfo(req.getServerName(), 15, true);
-
-		cookieService.setToClient(cookie, cookieInfo, res);
+		cookieService.addAdminCookie(req, res);
 		res.sendRedirect(beHost + "/oauth2/authorization/google");
 	}
 
@@ -78,7 +72,6 @@ public class AdminAuthService {
 				.orElseThrow(ExceptionStatus.UNAUTHORIZED_ADMIN::asServiceException);
 		TokenDto masterToken =
 				jwtService.createPairTokens(master.getId(), master.getRole().name(), "master");
-
 		cookieService.setPairTokenCookiesToClient(res, masterToken, req.getServerName());
 		return new AccessTokenDto(masterToken.getAccessToken());
 	}
@@ -115,7 +108,6 @@ public class AdminAuthService {
 	public OauthResult handleAdminLogin(String adminMail) {
 		Admin admin = adminQueryService.findByEmail(adminMail)
 				.orElseGet(() -> adminCommandService.createAdminByEmail(adminMail));
-
 		return new OauthResult(admin.getId(),
 				admin.getRole().name(),
 				authPolicyService.getAdminHomeUrl());

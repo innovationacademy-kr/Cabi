@@ -6,11 +6,13 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * 예외 발생 시 쿼리에 예외 상황을 담아 redirect 수행
  */
+@Logging
 @RequiredArgsConstructor
 public class SecurityRedirectExceptionHandler implements SecurityExceptionHandler {
 

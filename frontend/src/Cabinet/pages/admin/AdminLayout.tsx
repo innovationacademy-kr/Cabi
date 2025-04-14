@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled, { css } from "styled-components";
 import { selectedTypeOnSearchState } from "@/Cabinet/recoil/atoms";
-import AdminItemUsageLogPage from "@/Cabinet/pages/admin/AdminItemUsageLogPage";
 import CabinetInfoAreaContainer from "@/Cabinet/components/CabinetInfoArea/CabinetInfoArea.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import LeftNav from "@/Cabinet/components/LeftNav/LeftNav";
