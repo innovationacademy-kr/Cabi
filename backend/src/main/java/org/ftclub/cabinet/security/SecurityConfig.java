@@ -6,6 +6,7 @@ import org.ftclub.cabinet.security.filter.JwtExceptionFilter;
 import org.ftclub.cabinet.security.filter.LoggingFilter;
 import org.ftclub.cabinet.security.handler.CustomAccessDeniedHandler;
 import org.ftclub.cabinet.security.handler.CustomAuthenticationEntryPoint;
+import org.ftclub.cabinet.security.handler.CustomAuthorizationRequestResolver;
 import org.ftclub.cabinet.security.handler.CustomOAuth2UserService;
 import org.ftclub.cabinet.security.handler.CustomSuccessHandler;
 import org.ftclub.cabinet.security.handler.LogoutHandler;
@@ -35,6 +36,7 @@ public class SecurityConfig {
 	private final CustomAccessDeniedHandler accessDeniedHandler;
 	private final LogoutHandler logoutHandler;
 	private final CsrfCookieConfig csrfCookieConfig;
+	private final CustomAuthorizationRequestResolver requestResolver;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http)
@@ -60,6 +62,8 @@ public class SecurityConfig {
 						.anyRequest().hasRole("USER")
 				)
 				.oauth2Login(oauth -> oauth
+						.authorizationEndpoint(auth -> auth
+								.authorizationRequestResolver(requestResolver))
 						.userInfoEndpoint(user -> user.userService(customOAuth2UserService))
 						.successHandler(customSuccessHandler)
 				)

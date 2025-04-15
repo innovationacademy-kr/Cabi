@@ -49,11 +49,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException {
 		CustomOAuth2User fromLoadUser = (CustomOAuth2User) authentication.getPrincipal();
-		String provider = fromLoadUser.getProvider();
 
 		try {
-			OauthResult oauthResult = processOAuthLogin(request, response, provider, fromLoadUser);
-			authFacadeService.processAuthentication(request, response, oauthResult, provider);
+			OauthResult oauthResult = processOAuthLogin(request, fromLoadUser);
+			authFacadeService.processAuthentication(request, response, oauthResult,
+					fromLoadUser.getProvider());
 
 			redirectUser(response, oauthResult);
 		} catch (Exception e) {
@@ -66,22 +66,21 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	 * oauth2 login 위치에 따라 OauthResult 생성
 	 *
 	 * @param req
-	 * @param provider
 	 * @param oauth2User
 	 * @return
 	 */
 	private OauthResult processOAuthLogin(
 			HttpServletRequest req,
-			HttpServletResponse res,
-			String provider, CustomOAuth2User oauth2User) {
+			CustomOAuth2User oauth2User) {
 
+		String provider = oauth2User.getProvider();
 		if (provider.equals(mainProvider)) {
 			JsonNode rootNode =
 					objectMapper.convertValue(oauth2User.getAttributes(), JsonNode.class);
 
 			return oauthFacadeService.handleFtLogin(rootNode);
 		}
-		return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req, res);
+		return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
 	}
 
 	private void redirectUser(HttpServletResponse response, OauthResult oauthResult)
