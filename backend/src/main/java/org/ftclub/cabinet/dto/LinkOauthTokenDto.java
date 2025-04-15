@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LinkOauthRedirectDto {
+public class LinkOauthTokenDto {
 
-	private String state;
+	private String token;
 }

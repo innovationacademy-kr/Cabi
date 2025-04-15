@@ -9,8 +9,8 @@ import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.auth.service.CookieService;
 import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
 import org.ftclub.cabinet.dto.AguMailResponse;
-import org.ftclub.cabinet.dto.LinkOauthRedirectDto;
 import org.ftclub.cabinet.dto.LinkOauthRedirectUrlServiceDto;
+import org.ftclub.cabinet.dto.LinkOauthTokenDto;
 import org.ftclub.cabinet.dto.OauthUnlinkRequestDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.log.Logging;
@@ -113,7 +113,7 @@ public class AuthController {
 	 * @return
 	 */
 	@GetMapping("/link/{provider}")
-	public LinkOauthRedirectDto getOauthLinkRedirectUrl(
+	public LinkOauthTokenDto getOauthLinkRedirectUrl(
 			@AuthenticationPrincipal UserInfoDto userInfoDto,
 			@PathVariable("provider") String provider) {
 		return oauthLinkFacadeService.generateRedirectUrl(

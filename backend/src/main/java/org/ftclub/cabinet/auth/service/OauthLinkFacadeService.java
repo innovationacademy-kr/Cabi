@@ -9,8 +9,8 @@ import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.OauthLink;
 import org.ftclub.cabinet.auth.domain.OauthResult;
-import org.ftclub.cabinet.dto.LinkOauthRedirectDto;
 import org.ftclub.cabinet.dto.LinkOauthRedirectUrlServiceDto;
+import org.ftclub.cabinet.dto.LinkOauthTokenDto;
 import org.ftclub.cabinet.dto.StateInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.service.JwtService;
@@ -107,7 +107,7 @@ public class OauthLinkFacadeService {
 		oauthLinkCommandService.softDelete(connection);
 	}
 
-	public LinkOauthRedirectDto generateRedirectUrl(
+	public LinkOauthTokenDto generateRedirectUrl(
 			LinkOauthRedirectUrlServiceDto linkOauthRedirectUrlServiceDto) {
 		Long userId = linkOauthRedirectUrlServiceDto.getUserId();
 
@@ -116,6 +116,6 @@ public class OauthLinkFacadeService {
 		claims.put("mode", "connect");
 		String stateToken = jwtService.generateToken(claims, (long) 30 * 60 * 1000);
 
-		return new LinkOauthRedirectDto(stateToken);
+		return new LinkOauthTokenDto(stateToken);
 	}
 }

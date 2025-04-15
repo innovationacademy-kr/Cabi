@@ -1,14 +1,17 @@
 package org.ftclub.cabinet.security.handler;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
+@Slf4j
 @RequiredArgsConstructor
 public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRequestResolver {
 
@@ -38,15 +41,21 @@ public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRe
 
 		String existingState = oauth2Request.getState();
 		String context = servletRequest.getParameter("context");
-		Claims claims = jwtService.validateAndParseToken(existingState);
+		String token = servletRequest.getParameter("token");
+
+		Claims claims = Jwts.claims();
+		claims.put("existingStatus", existingState);
+		if (token != null) {
+			claims = jwtService.validateAndParseToken(existingState);
+		}
 
 		if ("admin".equals(context)) {
 			claims.put("context", context);
 		}
 
-		String token = jwtService.generateToken(claims, (long) 30 * 60 * 1000);
+		String stateToken = jwtService.generateToken(claims, (long) 30 * 60 * 1000);
 		OAuth2AuthorizationRequest.Builder builder =
-				OAuth2AuthorizationRequest.from(oauth2Request).state(token);
+				OAuth2AuthorizationRequest.from(oauth2Request).state(stateToken);
 
 		String loginParam = servletRequest.getParameter("login");
 		if (loginParam != null) {
