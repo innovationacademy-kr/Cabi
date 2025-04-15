@@ -74,4 +74,16 @@ public class JwtRedis {
 
 		return jwtTemplate.opsForValue().get(key);
 	}
+
+	public void deleteAdminRefreshToken(String adminId) {
+		String key = adminId + ADMIN_JWT_REFRESH_KEY_SUFFIX;
+
+		jwtTemplate.delete(key);
+	}
+
+	public void deleteUserRefreshToken(String userId) {
+		String key = userId + USER_JWT_REFRESH_KEY_SUFFIX;
+		jwtTemplate.delete(key);
+	}
+
 }
