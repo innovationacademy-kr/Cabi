@@ -520,6 +520,19 @@ export const axiosUnlinkSocialAccount = async (
   }
 };
 
+export const axiosLinkSocialAccount = async (
+  provider: TOAuthProvider
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      axiosSocialAccountLinkURL + `/${provider}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosReissueTokenURL = "/jwt/reissue";
 export const axiosReissueToken = async (): Promise<any> => {
   try {

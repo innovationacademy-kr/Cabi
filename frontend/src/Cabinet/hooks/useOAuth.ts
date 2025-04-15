@@ -8,6 +8,7 @@ import {
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {
+  axiosLinkSocialAccount,
   axiosMyInfo,
   axiosUnlinkSocialAccount,
 } from "@/Cabinet/api/axios/axios.custom";
@@ -27,11 +28,15 @@ const useOAuth = () => {
   const createOAuthRedirectUrl = (
     provider: TOAuthProvider,
     shouldForceLoginPrompt?: boolean,
-    isAdmin?: boolean
+    isAdmin?: boolean,
+    linkParamVal?: string
   ) => {
     const baseUrl = getOAuthRedirectUrl(provider);
     const url = new URL(baseUrl);
 
+    if (linkParamVal) {
+      url.searchParams.set("token", linkParamVal);
+    }
     if (isAdmin) {
       url.searchParams.set("context", "admin");
     }
@@ -46,12 +51,16 @@ const useOAuth = () => {
     provider: TOAuthProvider,
     shouldForceLoginPrompt: boolean,
     resetFlag: () => void,
-    isAdmin?: boolean
+    isAdmin?: boolean,
+    // isLink?: boolean // TODO : 로그인 말고 계정 연결인지 확인
+    linkParamVal?: string // TODO : 계정 연결 state=~
   ) => {
+    console.log("handleOAuthRedirect");
     const redirectUrl = createOAuthRedirectUrl(
       provider,
       shouldForceLoginPrompt,
-      isAdmin
+      isAdmin,
+      linkParamVal
     );
 
     // let redirectUrl = getOAuthRedirectUrl(provider);
@@ -90,15 +99,29 @@ const useOAuth = () => {
     setLocalStorageItem("isUnlinked", JSON.stringify(updatedValue));
   };
 
-  const handleSocialAccountLink = (provider: TOAuthProvider) => {
+  const handleSocialAccountLink = async (provider: TOAuthProvider) => {
     const isUnlinkedValue = JSON.parse(
       getLocalStorageItem("isUnlinked") || "{}"
     );
     const isProviderUnlinked = isUnlinkedValue[provider] === true;
 
-    handleOAuthRedirect(provider, isProviderUnlinked, () =>
-      updateUnlinkedProviderStatus(provider, false)
-    );
+    try {
+      // TODO : 로딩 애니메이션
+      const response: any = await axiosLinkSocialAccount(provider);
+      const linkParamVal = response.data.token;
+      // TODO : dto 정의
+      handleOAuthRedirect(
+        provider,
+        isProviderUnlinked,
+        () => updateUnlinkedProviderStatus(provider, false),
+        false,
+        linkParamVal
+      );
+
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const tryUnlinkSocialAccount = async () => {
