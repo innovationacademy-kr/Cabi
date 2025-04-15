@@ -56,6 +56,20 @@ public class JwtService {
 		}
 	}
 
+	public Claims validateAndParseToken(String token) {
+		try {
+			return tokenProvider.parseToken(token);
+		} catch (ExpiredJwtException e) {
+			throw new SpringSecurityException(ExceptionStatus.EXPIRED_JWT_TOKEN);
+		} catch (JwtException e) {
+			log.info("JwtException : {}", e.getMessage(), e);
+			throw new SpringSecurityException(ExceptionStatus.JWT_EXCEPTION);
+		} catch (DomainException e) {
+			log.info("Claims has null value : {}", e.getMessage());
+			throw new SpringSecurityException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+	}
+
 	/**
 	 * AGU 토큰 발급
 	 *
@@ -88,6 +102,10 @@ public class JwtService {
 		claims.put(JwtTokenConstants.OAUTH, provider);
 
 		return tokenProvider.createAccessAndRefreshToken(claims);
+	}
+
+	public String generateToken(Claims claims, Long validity) {
+		return tokenProvider.createToken(claims, validity);
 	}
 
 
@@ -203,6 +221,7 @@ public class JwtService {
 
 		return header.substring(JwtTokenConstants.BEARER.length());
 	}
+
 }
 
 
