@@ -24,27 +24,57 @@ const useOAuth = () => {
   const setMyInfo = useSetRecoilState<UserDto>(userState);
   const setTargetLoginProvider = useSetRecoilState(targetLoginProviderState);
 
+  const createOAuthRedirectUrl = (
+    provider: TOAuthProvider,
+    shouldForceLoginPrompt?: boolean,
+    isAdmin?: boolean
+  ) => {
+    const baseUrl = getOAuthRedirectUrl(provider);
+    const url = new URL(baseUrl);
+
+    if (isAdmin) {
+      url.searchParams.set("context", "admin");
+    }
+    if (shouldForceLoginPrompt) {
+      url.searchParams.set("prompt", "login");
+    }
+
+    return url.toString();
+  };
+
   const handleOAuthRedirect = (
     provider: TOAuthProvider,
     shouldForceLoginPrompt: boolean,
-    resetFlag: () => void
+    resetFlag: () => void,
+    isAdmin?: boolean
   ) => {
-    let redirectUrl = getOAuthRedirectUrl(provider);
+    const redirectUrl = createOAuthRedirectUrl(
+      provider,
+      shouldForceLoginPrompt,
+      isAdmin
+    );
 
+    // let redirectUrl = getOAuthRedirectUrl(provider);
+
+    // if (isAdmin) {
+    //   redirectUrl += "?context=admin";
+    // }
     if (shouldForceLoginPrompt) {
-      redirectUrl += "?prompt=login";
       resetFlag();
     }
 
     window.location.replace(redirectUrl);
   };
 
-  const handleOAuthLogin = (provider: TOAuthProvider) => {
+  const handleOAuthLogin = (provider: TOAuthProvider, isAdmin?: boolean) => {
     const isLoggedOut = getLocalStorageItem("isLoggedOut") === "true";
 
     setTargetLoginProvider(provider);
-    handleOAuthRedirect(provider, isLoggedOut, () =>
-      removeLocalStorageItem("isLoggedOut")
+    handleOAuthRedirect(
+      provider,
+      isLoggedOut,
+      () => removeLocalStorageItem("isLoggedOut"),
+      isAdmin
     );
   };
 

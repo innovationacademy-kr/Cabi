@@ -8,21 +8,21 @@ import { additionalModalType } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as AdminLoginImg } from "@/Cabinet/assets/images/adminLoginImg.svg";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 import { axiosAdminAuthLogin } from "@/Cabinet/api/axios/axios.custom";
+import useOAuth from "@/Cabinet/hooks/useOAuth";
 
 const AdminLoginTemplate = (props: {
-  url: string;
   pageTitle: string;
   pageSubTitle: string;
-  imgSrc: string;
 }) => {
   const navigate = useNavigate();
-  const { url, pageTitle, pageSubTitle, imgSrc } = props;
+  const { pageTitle, pageSubTitle } = props;
   const [isClicked, setIsClicked] = useState(false);
   const [isIdFocused, setIsIdFocused] = useState(false);
   const [isPwFocused, setIsPwFocused] = useState(false);
   const [adminId, setAdminId] = useState("");
   const [adminPw, setAdminPw] = useState("");
   const [showUnavailableModal, setShowUnavailableModal] = useState(false);
+  const { handleOAuthLogin } = useOAuth();
 
   const handleOpenUnavailableModal = () => {
     setShowUnavailableModal(true);
@@ -126,7 +126,7 @@ const AdminLoginTemplate = (props: {
           </button>
           <CardGoogleOauthStyled
             onClick={() => {
-              window.location.replace(url);
+              handleOAuthLogin("google", true);
             }}
           >
             Sign in with Google
