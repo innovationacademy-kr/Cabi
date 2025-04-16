@@ -25,65 +25,58 @@ const useOAuth = () => {
   const setMyInfo = useSetRecoilState<UserDto>(userState);
   const setTargetLoginProvider = useSetRecoilState(targetLoginProviderState);
 
+  interface IOAuthRedirectOptions {
+    forceLoginPrompt: boolean;
+    isAdmin: boolean;
+    linkToken?: string;
+  }
+
+  // TODO : interface 정의?
   const createOAuthRedirectUrl = (
     provider: TOAuthProvider,
-    shouldForceLoginPrompt?: boolean,
-    isAdmin?: boolean,
-    linkParamVal?: string
+    options: IOAuthRedirectOptions
   ) => {
     const baseUrl = getOAuthRedirectUrl(provider);
     const url = new URL(baseUrl);
 
-    if (linkParamVal) {
-      url.searchParams.set("token", linkParamVal);
+    if (options.linkToken) {
+      url.searchParams.set("token", options.linkToken);
     }
-    if (isAdmin) {
+    if (options.isAdmin) {
       url.searchParams.set("context", "admin");
     }
-    if (shouldForceLoginPrompt) {
+    if (options.forceLoginPrompt) {
       url.searchParams.set("prompt", "login");
     }
-
     return url.toString();
   };
 
   const handleOAuthRedirect = (
     provider: TOAuthProvider,
-    shouldForceLoginPrompt: boolean,
-    resetFlag: () => void,
-    isAdmin?: boolean,
-    // isLink?: boolean // TODO : 로그인 말고 계정 연결인지 확인
-    linkParamVal?: string // TODO : 계정 연결 state=~
+    options: IOAuthRedirectOptions,
+    resetFlag: () => void
   ) => {
-    console.log("handleOAuthRedirect");
-    const redirectUrl = createOAuthRedirectUrl(
-      provider,
-      shouldForceLoginPrompt,
-      isAdmin,
-      linkParamVal
-    );
+    const redirectUrl = createOAuthRedirectUrl(provider, options);
 
-    // let redirectUrl = getOAuthRedirectUrl(provider);
-
-    // if (isAdmin) {
-    //   redirectUrl += "?context=admin";
-    // }
-    if (shouldForceLoginPrompt) {
+    if (options.forceLoginPrompt) {
       resetFlag();
     }
 
     window.location.replace(redirectUrl);
   };
 
-  const handleOAuthLogin = (provider: TOAuthProvider, isAdmin?: boolean) => {
+  const handleOAuthLogin = (provider: TOAuthProvider, isAdmin = false) => {
     const isLoggedOut = getLocalStorageItem("isLoggedOut") === "true";
 
     setTargetLoginProvider(provider);
     handleOAuthRedirect(
       provider,
-      isLoggedOut,
-      () => removeLocalStorageItem("isLoggedOut"),
-      isAdmin
+      {
+        forceLoginPrompt: isLoggedOut,
+        isAdmin,
+      },
+      () => removeLocalStorageItem("isLoggedOut")
+      // TODO : 위치 변경 필요. 로그인이나 연결 제대로 된 후에 삭제해야함. 지금은 리다이렉트할때마다 삭제함.
     );
   };
 
@@ -106,16 +99,16 @@ const useOAuth = () => {
     const isProviderUnlinked = isUnlinkedValue[provider] === true;
 
     try {
-      // TODO : 로딩 애니메이션
       const response: any = await axiosLinkSocialAccount(provider);
-      const linkParamVal = response.data.token;
-      // TODO : dto 정의
+      const linkToken = response.data.token;
       handleOAuthRedirect(
         provider,
-        isProviderUnlinked,
-        () => updateUnlinkedProviderStatus(provider, false),
-        false,
-        linkParamVal
+        {
+          forceLoginPrompt: isProviderUnlinked,
+          isAdmin: false,
+          linkToken,
+        },
+        () => updateUnlinkedProviderStatus(provider, false)
       );
 
       return response;
