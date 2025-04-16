@@ -14,4 +14,8 @@ public class OauthResult {
 	public boolean hasRole(String role) {
 		return role != null && role.contains(roles);
 	}
+
+	public String getRedirectionUrl() {
+		return this.redirectionUrl + "?status=200";
+	}
 }
