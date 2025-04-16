@@ -35,6 +35,11 @@ const useOAuth = () => {
     provider: TOAuthProvider,
     options: IOAuthRedirectOptions
   ) => {
+    console.log(
+      "createOAuthRedirectUrl provider options.forceLoginPrompt : ",
+      provider,
+      options.forceLoginPrompt
+    );
     const baseUrl = getOAuthRedirectUrl(provider);
     const url = new URL(baseUrl);
 

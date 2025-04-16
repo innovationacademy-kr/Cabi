@@ -48,6 +48,10 @@ const ProfilePage = () => {
   };
 
   const socialAccountLinkSuccessHandler = () => {
+    console.log(
+      "socialAccountLinkSuccessHandler linkedProvider : ",
+      linkedProvider
+    );
     if (linkedProvider) updateUnlinkedProviderStatus(linkedProvider, false);
   };
 
