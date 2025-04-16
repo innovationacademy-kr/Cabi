@@ -35,11 +35,6 @@ const useOAuth = () => {
     provider: TOAuthProvider,
     options: IOAuthRedirectOptions
   ) => {
-    console.log(
-      "createOAuthRedirectUrl provider options.forceLoginPrompt : ",
-      provider,
-      options.forceLoginPrompt
-    );
     const baseUrl = getOAuthRedirectUrl(provider);
     const url = new URL(baseUrl);
 
@@ -83,6 +78,11 @@ const useOAuth = () => {
     provider: TOAuthProvider,
     status: boolean
   ) => {
+    console.log(
+      "updateUnlinkedProviderStatus provider status : ",
+      provider,
+      status
+    );
     const currentValue = getUnlinkedProviderStatus();
     const updatedValue = {
       ...currentValue,
