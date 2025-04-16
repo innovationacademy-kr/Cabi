@@ -440,10 +440,15 @@ export const axiosAdminAuthLogin = async (
   password: string
 ): Promise<any> => {
   try {
-    const response = await instance.post(axiosAdminAuthLoginURL, {
-      id,
-      password,
-    });
+    const response = await instance.post(
+      axiosAdminAuthLoginURL,
+      {
+        id,
+        password,
+      },
+      { withCredentials: true }
+    );
+
     return response;
   } catch (error) {
     throw error;
