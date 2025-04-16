@@ -34,6 +34,7 @@ const ProfilePage = () => {
   const { updateUnlinkedProviderStatus } = useOAuth();
 
   const getMyInfo = async () => {
+    console.log("getMyInfo");
     try {
       const { data: myInfo } = await axiosMyInfo();
       if (myInfo.alarmTypes?.push && myInfo.isDeviceTokenExpired) {
@@ -46,6 +47,8 @@ const ProfilePage = () => {
       throw error;
     }
   };
+
+  console.log("linkedProvider : ", linkedProvider);
 
   const socialAccountLinkSuccessHandler = () => {
     console.log(
