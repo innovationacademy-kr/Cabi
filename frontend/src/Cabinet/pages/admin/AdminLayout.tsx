@@ -35,6 +35,7 @@ const Layout = (): JSX.Element => {
   const isSearchPage: boolean = location.pathname === "/admin/search";
 
   useEffect(() => {
+    console.log("useEffect token : ", token);
     deleteOldPointColors();
     if (!token && !isLoginPage) navigate("/admin/login");
     else if (token) {
