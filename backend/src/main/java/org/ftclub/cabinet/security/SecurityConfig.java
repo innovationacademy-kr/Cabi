@@ -35,17 +35,12 @@ public class SecurityConfig {
 	private final CustomAuthenticationEntryPoint entryPoint;
 	private final CustomAccessDeniedHandler accessDeniedHandler;
 	private final LogoutHandler logoutHandler;
-	private final CsrfCookieConfig csrfCookieConfig;
 	private final CustomAuthorizationRequestResolver requestResolver;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http)
 			throws Exception {
-		http.csrf(csrf -> csrf
-						.ignoringRequestMatchers(request ->
-								SecurityPathPatterns.CSRF_ENDPOINTS.stream()
-										.noneMatch(request.getRequestURI()::startsWith))
-						.csrfTokenRepository(csrfCookieConfig))
+		http.csrf(AbstractHttpConfigurer::disable)
 				.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.cors().and()
