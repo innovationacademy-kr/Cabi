@@ -525,7 +525,9 @@ export const axiosLinkSocialAccount = async (
 const axiosReissueTokenURL = "/jwt/reissue";
 export const axiosReissueToken = async (): Promise<any> => {
   try {
-    const response = await instance.post(axiosReissueTokenURL);
+    const response = await instance.post(axiosReissueTokenURL, null, {
+      withCredentials: true,
+    });
     return response;
   } catch (error) {
     throw error;
