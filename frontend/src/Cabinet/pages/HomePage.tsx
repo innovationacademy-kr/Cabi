@@ -6,7 +6,7 @@ import "@/Cabinet/assets/css/homePage.css";
 import { currentFloorNumberState } from "@/Cabinet/recoil/atoms";
 import { currentBuildingFloorState } from "@/Cabinet/recoil/selectors";
 import ServiceManual from "@/Cabinet/components/Home/ServiceManual";
-import { removeLocalStorageItem } from "../api/local_storage/local.storage";
+import { removeLocalStorageItem } from "@/Cabinet/api/local_storage/local.storage";
 
 const HomePage = () => {
   const floors = useRecoilValue<Array<number>>(currentBuildingFloorState);
@@ -31,6 +31,7 @@ const HomePage = () => {
       navigator("/home");
     }
   }, []);
+
   return <ServiceManual lentStartHandler={lentStartHandler} />;
 };
 

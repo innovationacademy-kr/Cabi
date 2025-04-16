@@ -114,6 +114,7 @@ const useOAuth = () => {
         );
 
         if (response.status === HttpStatusCode.Ok) {
+          // TODO : socialAccountUnlinkSuccessHandler
           updateUnlinkedProviderStatus(linkedProvider, true);
         }
 
@@ -138,6 +139,7 @@ const useOAuth = () => {
     tryUnlinkSocialAccount,
     getMyInfo,
     handleOAuthLogin,
+    updateUnlinkedProviderStatus,
   };
 };
 
