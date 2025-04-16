@@ -9,6 +9,8 @@ import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.auth.service.CookieService;
 import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
 import org.ftclub.cabinet.dto.AguMailResponse;
+import org.ftclub.cabinet.dto.LinkOauthRedirectUrlServiceDto;
+import org.ftclub.cabinet.dto.LinkOauthTokenDto;
 import org.ftclub.cabinet.dto.OauthUnlinkRequestDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.log.Logging;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -89,10 +92,31 @@ public class AuthController {
 		authFacadeService.userLogout(request, response);
 	}
 
+	/**
+	 * 계정 연동 해제 요청
+	 *
+	 * @param userInfoDto
+	 * @param dto
+	 */
 	@DeleteMapping("/link")
 	public void unLinkOauthMail(@AuthenticationPrincipal UserInfoDto userInfoDto,
 			@RequestBody OauthUnlinkRequestDto dto) {
 		oauthLinkFacadeService.deleteOauthMail(userInfoDto.getUserId(), dto.getOauthMail(),
 				dto.getProvider());
+	}
+
+	/**
+	 * 계정 연동 시 state 파람을 JWT로 생성합니다.
+	 *
+	 * @param userInfoDto
+	 * @param provider
+	 * @return
+	 */
+	@GetMapping("/link/{provider}")
+	public LinkOauthTokenDto getOauthLinkRedirectUrl(
+			@AuthenticationPrincipal UserInfoDto userInfoDto,
+			@PathVariable("provider") String provider) {
+		return oauthLinkFacadeService.generateRedirectUrl(
+				new LinkOauthRedirectUrlServiceDto(userInfoDto.getUserId(), provider));
 	}
 }

@@ -8,12 +8,12 @@ import {
 import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import {
+  axiosLinkSocialAccount,
   axiosMyInfo,
   axiosUnlinkSocialAccount,
 } from "@/Cabinet/api/axios/axios.custom";
 import {
   getLocalStorageItem,
-  removeLocalStorageItem,
   setLocalStorageItem,
 } from "@/Cabinet/api/local_storage/local.storage";
 import { getOAuthRedirectUrl } from "@/Cabinet/utils/oAuthUtils";
@@ -24,35 +24,61 @@ const useOAuth = () => {
   const setMyInfo = useSetRecoilState<UserDto>(userState);
   const setTargetLoginProvider = useSetRecoilState(targetLoginProviderState);
 
+  interface IOAuthRedirectOptions {
+    forceLoginPrompt: boolean;
+    isAdmin: boolean;
+    linkToken?: string;
+  }
+
+  // TODO : interface 정의?
+  const createOAuthRedirectUrl = (
+    provider: TOAuthProvider,
+    options: IOAuthRedirectOptions
+  ) => {
+    const baseUrl = getOAuthRedirectUrl(provider);
+    const url = new URL(baseUrl);
+
+    if (options.linkToken) {
+      url.searchParams.set("token", options.linkToken);
+    }
+    if (options.isAdmin) {
+      url.searchParams.set("context", "admin");
+    }
+    if (options.forceLoginPrompt) {
+      url.searchParams.set("prompt", "login");
+    }
+
+    return url.toString();
+  };
+
   const handleOAuthRedirect = (
     provider: TOAuthProvider,
-    shouldForceLoginPrompt: boolean,
-    resetFlag: () => void
+    options: IOAuthRedirectOptions
   ) => {
-    let redirectUrl = getOAuthRedirectUrl(provider);
-
-    if (shouldForceLoginPrompt) {
-      redirectUrl += "?prompt=login";
-      resetFlag();
-    }
+    const redirectUrl = createOAuthRedirectUrl(provider, options);
 
     window.location.replace(redirectUrl);
   };
 
-  const handleOAuthLogin = (provider: TOAuthProvider) => {
+  const handleOAuthLogin = (provider: TOAuthProvider, isAdmin = false) => {
     const isLoggedOut = getLocalStorageItem("isLoggedOut") === "true";
 
     setTargetLoginProvider(provider);
-    handleOAuthRedirect(provider, isLoggedOut, () =>
-      removeLocalStorageItem("isLoggedOut")
-    );
+    handleOAuthRedirect(provider, {
+      forceLoginPrompt: isLoggedOut,
+      isAdmin,
+    });
+  };
+
+  const getUnlinkedProviderStatus = () => {
+    return JSON.parse(getLocalStorageItem("isUnlinked") || "{}");
   };
 
   const updateUnlinkedProviderStatus = (
     provider: TOAuthProvider,
     status: boolean
   ) => {
-    const currentValue = JSON.parse(getLocalStorageItem("isUnlinked") || "{}");
+    const currentValue = getUnlinkedProviderStatus();
     const updatedValue = {
       ...currentValue,
       [provider]: status,
@@ -60,15 +86,23 @@ const useOAuth = () => {
     setLocalStorageItem("isUnlinked", JSON.stringify(updatedValue));
   };
 
-  const handleSocialAccountLink = (provider: TOAuthProvider) => {
-    const isUnlinkedValue = JSON.parse(
-      getLocalStorageItem("isUnlinked") || "{}"
-    );
+  const handleSocialAccountLink = async (provider: TOAuthProvider) => {
+    const isUnlinkedValue = getUnlinkedProviderStatus();
     const isProviderUnlinked = isUnlinkedValue[provider] === true;
 
-    handleOAuthRedirect(provider, isProviderUnlinked, () =>
-      updateUnlinkedProviderStatus(provider, false)
-    );
+    try {
+      const response: any = await axiosLinkSocialAccount(provider);
+      const linkToken = response.data.token;
+      handleOAuthRedirect(provider, {
+        forceLoginPrompt: isProviderUnlinked,
+        isAdmin: false,
+        linkToken,
+      });
+
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const tryUnlinkSocialAccount = async () => {
@@ -80,6 +114,7 @@ const useOAuth = () => {
         );
 
         if (response.status === HttpStatusCode.Ok) {
+          // TODO : socialAccountUnlinkSuccessHandler
           updateUnlinkedProviderStatus(linkedProvider, true);
         }
 
@@ -104,6 +139,7 @@ const useOAuth = () => {
     tryUnlinkSocialAccount,
     getMyInfo,
     handleOAuthLogin,
+    updateUnlinkedProviderStatus,
   };
 };
 

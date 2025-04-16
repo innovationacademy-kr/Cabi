@@ -6,6 +6,7 @@ import org.ftclub.cabinet.security.filter.JwtExceptionFilter;
 import org.ftclub.cabinet.security.filter.LoggingFilter;
 import org.ftclub.cabinet.security.handler.CustomAccessDeniedHandler;
 import org.ftclub.cabinet.security.handler.CustomAuthenticationEntryPoint;
+import org.ftclub.cabinet.security.handler.CustomAuthorizationRequestResolver;
 import org.ftclub.cabinet.security.handler.CustomOAuth2UserService;
 import org.ftclub.cabinet.security.handler.CustomSuccessHandler;
 import org.ftclub.cabinet.security.handler.LogoutHandler;
@@ -34,16 +35,12 @@ public class SecurityConfig {
 	private final CustomAuthenticationEntryPoint entryPoint;
 	private final CustomAccessDeniedHandler accessDeniedHandler;
 	private final LogoutHandler logoutHandler;
-	private final CsrfCookieConfig csrfCookieConfig;
+	private final CustomAuthorizationRequestResolver requestResolver;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http)
 			throws Exception {
-		http.csrf(csrf -> csrf
-						.ignoringRequestMatchers(request ->
-								SecurityPathPatterns.CSRF_ENDPOINTS.stream()
-										.noneMatch(request.getRequestURI()::startsWith))
-						.csrfTokenRepository(csrfCookieConfig))
+		http.csrf(AbstractHttpConfigurer::disable)
 				.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.cors().and()
@@ -60,6 +57,8 @@ public class SecurityConfig {
 						.anyRequest().hasRole("USER")
 				)
 				.oauth2Login(oauth -> oauth
+						.authorizationEndpoint(auth -> auth
+								.authorizationRequestResolver(requestResolver))
 						.userInfoEndpoint(user -> user.userService(customOAuth2UserService))
 						.successHandler(customSuccessHandler)
 				)

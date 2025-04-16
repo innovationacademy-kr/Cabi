@@ -3,10 +3,13 @@ import {
   deleteFcmToken,
   requestFcmAndGetDeviceToken,
 } from "@/Cabinet/firebase/firebase-messaging-sw";
+import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
+import { linkedProviderState } from "@/Cabinet/recoil/selectors";
 import AlarmCardContainer from "@/Cabinet/components/Card/AlarmCard/AlarmCard.container";
 import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
@@ -18,10 +21,17 @@ import {
   axiosMyInfo,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
+import useOAuth from "../hooks/useOAuth";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [myInfo, setMyInfo] = useRecoilState(userState);
+  const navigator = useNavigate();
+  const [searchParams] = useSearchParams();
+  const statusParamValue = searchParams.get("status");
+  // TODO : hook / utils로 분리
+  const linkedProvider = useRecoilValue(linkedProviderState);
+  const { updateUnlinkedProviderStatus } = useOAuth();
 
   const getMyInfo = async () => {
     try {
@@ -37,10 +47,18 @@ const ProfilePage = () => {
     }
   };
 
+  const socialAccountLinkSuccessHandler = () => {
+    if (linkedProvider) updateUnlinkedProviderStatus(linkedProvider, false);
+  };
+
   useEffect(() => {
     setIsLoading(true);
     deleteRecoilPersistFloorSection();
     getMyInfo();
+    if (statusParamValue && Number(statusParamValue) === HttpStatusCode.Ok) {
+      socialAccountLinkSuccessHandler();
+      navigator("/profile");
+    }
     setTimeout(() => {
       setIsLoading(false);
     }, 350);

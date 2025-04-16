@@ -1,12 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
-import {
-  axiosLogout,
-  axiosReissueToken,
-} from "@/Cabinet/api/axios/axios.custom";
+import { axiosReissueToken } from "@/Cabinet/api/axios/axios.custom";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
-import { removeLocalStorageItem } from "@/Cabinet/api/local_storage/local.storage";
 import {
   getCookie,
   removeAllCookies,
@@ -73,23 +69,13 @@ const handleUnauthorizedError = (error: any) => {
   return Promise.reject(error);
 };
 
-const requestLogout = async () => {
-  try {
-    await axiosLogout();
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const handleForbiddenError = async (error: any) => {
+const handleForbiddenError = (error: any) => {
   logAxiosError(error, ErrorType.FORBIDDEN, "접근 권한 없음");
-  await requestLogout();
-  removeLocalStorageItem("recoil-persist");
   removeAllCookies({ path: "/", domain: getDomain() });
   redirectToLoginWithAlert(error);
 };
 
-const handleErrorResponse = async (error: any) => {
+const handleErrorResponse = (error: any) => {
   if (error.response?.status === HttpStatusCode.Unauthorized) {
     return handleUnauthorizedError(error);
   } else if (error.response?.status === HttpStatusCode.InternalServerError) {
