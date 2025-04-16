@@ -46,7 +46,7 @@ public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRe
 		Claims claims = Jwts.claims();
 		claims.put("existingStatus", existingState);
 		if (token != null) {
-			claims = jwtService.validateAndParseToken(existingState);
+			claims = jwtService.validateAndParseToken(token);
 		}
 
 		if ("admin".equals(context)) {
@@ -57,7 +57,7 @@ public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRe
 		OAuth2AuthorizationRequest.Builder builder =
 				OAuth2AuthorizationRequest.from(oauth2Request).state(stateToken);
 
-		String loginParam = servletRequest.getParameter("login");
+		String loginParam = servletRequest.getParameter("prompt");
 		if (loginParam != null) {
 			Map<String, Object> params = new HashMap<>(oauth2Request.getAdditionalParameters());
 			params.put("prompt", loginParam);
