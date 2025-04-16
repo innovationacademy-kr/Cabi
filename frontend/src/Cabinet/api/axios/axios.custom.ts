@@ -9,22 +9,10 @@ import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 
-const axiosCSRFTokenURL = "/v5/auth/csrf";
-export const axiosGetCSRFToken = async (): Promise<any> => {
-  try {
-    const response = await instance.get(axiosCSRFTokenURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
 const axiosLogoutUrl = "/logout";
 export const axiosLogout = async (): Promise<any> => {
   try {
-    const response = await instance.post(axiosLogoutUrl, null, {
-      csrfRequired: true, // 인터셉터에서 사용할 플래그
-    });
+    const response = await instance.post(axiosLogoutUrl);
     return response;
   } catch (error) {
     throw error;
@@ -459,6 +447,7 @@ export const axiosAdminAuthLogin = async (
         password,
       },
       { withCredentials: true }
+      // TODO: 확인 후 삭제
     );
     return response;
   } catch (error) {
@@ -536,9 +525,7 @@ export const axiosLinkSocialAccount = async (
 const axiosReissueTokenURL = "/jwt/reissue";
 export const axiosReissueToken = async (): Promise<any> => {
   try {
-    const response = await instance.post(axiosReissueTokenURL, null, {
-      csrfRequired: true,
-    });
+    const response = await instance.post(axiosReissueTokenURL);
     return response;
   } catch (error) {
     throw error;
