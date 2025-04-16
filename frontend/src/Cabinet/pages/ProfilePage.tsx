@@ -50,26 +50,23 @@ const ProfilePage = () => {
 
   console.log("linkedProvider : ", linkedProvider);
 
-  const socialAccountLinkSuccessHandler = () => {
-    console.log(
-      "socialAccountLinkSuccessHandler linkedProvider : ",
-      linkedProvider
-    );
-    if (linkedProvider) updateUnlinkedProviderStatus(linkedProvider, false);
-  };
-
   useEffect(() => {
     setIsLoading(true);
     deleteRecoilPersistFloorSection();
     getMyInfo();
-    if (statusParamValue && Number(statusParamValue) === HttpStatusCode.Ok) {
-      socialAccountLinkSuccessHandler();
-      navigator("/profile");
-    }
     setTimeout(() => {
       setIsLoading(false);
     }, 350);
   }, []);
+
+  useEffect(() => {
+    if (statusParamValue && Number(statusParamValue) === HttpStatusCode.Ok) {
+      if (linkedProvider) {
+        updateUnlinkedProviderStatus(linkedProvider, false);
+        navigator("/profile");
+      }
+    }
+  }, [linkedProvider]);
 
   return (
     <>
