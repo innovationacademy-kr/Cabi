@@ -32,7 +32,6 @@ import org.ftclub.cabinet.dto.ItemStoreResponseDto;
 import org.ftclub.cabinet.dto.ItemUseRequestDto;
 import org.ftclub.cabinet.dto.MyItemResponseDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
-import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.item.domain.CoinHistoryType;
 import org.ftclub.cabinet.item.domain.Item;
@@ -104,9 +103,9 @@ public class ItemFacadeService {
 	 * @return 유저의 보유 아이템
 	 */
 	@Transactional(readOnly = true)
-	public MyItemResponseDto getMyItems(UserSessionDto user) {
+	public MyItemResponseDto getMyItems(Long userId) {
 		List<ItemHistory> userItemHistories = itemHistoryQueryService.findAllItemHistoryByUser(
-				user.getUserId());
+				userId);
 
 		Map<ItemType, List<ItemDto>> itemMap = userItemHistories.stream()
 				.map(ItemHistory::getItem)

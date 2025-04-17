@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminItemHistoryPaginationDto;
 import org.ftclub.cabinet.admin.item.service.AdminItemFacadeService;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.ItemAssignRequestDto;
 import org.ftclub.cabinet.dto.ItemCreateDto;
 import org.ftclub.cabinet.dto.ItemDetailsDto;
@@ -40,14 +38,12 @@ public class AdminItemController {
 	private final ItemMapper itemMapper;
 
 	@PostMapping("")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void createItem(@RequestBody ItemCreateDto itemCreateDto) {
 		adminItemFacadeService.createItem(itemCreateDto.getPrice(),
 				itemCreateDto.getSku(), itemCreateDto.getType());
 	}
 
 	@GetMapping("")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public ItemStoreResponseDto getAllItems() {
 		List<Item> allItems = itemQueryService.getAllItems();
 		Map<ItemType, List<ItemDetailsDto>> itemMap = allItems.stream()
@@ -65,7 +61,6 @@ public class AdminItemController {
 	}
 
 	@PostMapping("/assign")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void assignItem(@RequestBody ItemAssignRequestDto itemAssignRequestDto) {
 		adminItemFacadeService.assignItem(itemAssignRequestDto.getUserIds(),
 				itemAssignRequestDto.getItemSku(), itemAssignRequestDto.getAmount());
@@ -79,7 +74,6 @@ public class AdminItemController {
 	 * @return
 	 */
 	@GetMapping("/users/{userId}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public AdminItemHistoryPaginationDto getUserItemHistoryPagination(
 			@PathVariable(value = "userId") Long userId, Pageable pageable) {
 		return adminItemFacadeService.getUserItemHistories(userId, pageable);

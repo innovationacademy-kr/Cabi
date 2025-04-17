@@ -51,9 +51,6 @@ public class User {
 	private LocalDateTime blackholedAt = null;
 	@Column(name = "DELETED_AT", length = 32)
 	private LocalDateTime deletedAt = null;
-	//	@Enumerated(value = EnumType.STRING)
-//	@Column(name = "ROLE", length = 32, nullable = false)
-//	private UserRole role;
 	@Column(name = "SLACK_ALARM", columnDefinition = "boolean default true")
 	private boolean slackAlarm;
 	@Column(name = "EMAIL_ALARM", columnDefinition = "boolean default true")
@@ -61,21 +58,25 @@ public class User {
 	@Column(name = "PUSH_ALARM", columnDefinition = "boolean default false")
 	private boolean pushAlarm;
 
+	@Column(name = "ROLES")
+	private String roles;
+
 	@NotNull
 	@Column(name = "COIN")
 	private Long coin;
 
-	protected User(String name, String email, LocalDateTime blackholedAt) {
+	protected User(String name, String email, LocalDateTime blackholedAt, String roles) {
 		this.name = name;
 		this.email = email;
 		this.blackholedAt = blackholedAt;
 		this.coin = 0L;
-//		this.role = userRole;
+		this.roles = roles;
 		setDefaultAlarmStatus();
 	}
 
-	public static User of(String name, String email, LocalDateTime blackholedAt) {
-		User user = new User(name, email, blackholedAt);
+	public static User of(String name, String email, LocalDateTime blackholedAt,
+			String roles) {
+		User user = new User(name, email, blackholedAt, roles);
 		ExceptionUtil.throwIfFalse(user.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return user;
@@ -160,6 +161,23 @@ public class User {
 		}
 
 		return this.blackholedAt.isEqual(blackholedAt);
+	}
+
+	public boolean isSameUserRole(String otherRoles) {
+		return roles.equals(otherRoles);
+	}
+
+	public boolean isContainRole(String otherRole) {
+		return roles.contains(otherRole);
+	}
+
+	public void changeUserRole(String roles) {
+		log.info("Called changeUserRole - from {} to {}", this.roles, roles);
+		this.roles = roles;
+	}
+
+	public boolean isSameBlackHoledAtAndRole(LocalDateTime blackHoledAt, String otherRoles) {
+		return isSameBlackholedAt(blackHoledAt) && isSameUserRole(otherRoles);
 	}
 
 

@@ -12,15 +12,19 @@ import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCar
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
 import PointColorCardContainer from "@/Cabinet/components/Card/PointColorCard/PointColorCard.container";
 import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileCard.container";
+import SocialAccountLinkCard from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import {
   axiosMyInfo,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
+import useOAuthStatus from "@/Cabinet/hooks/useOAuthStatus";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [myInfo, setMyInfo] = useRecoilState(userState);
+
+  useOAuthStatus();
 
   const getMyInfo = async () => {
     try {
@@ -56,9 +60,10 @@ const ProfilePage = () => {
             name={myInfo.name}
             unbannedAt={myInfo.unbannedAt}
           />
-          <AlarmCardContainer alarm={myInfo.alarmTypes} />
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
+          <AlarmCardContainer alarm={myInfo.alarmTypes} />
+          <SocialAccountLinkCard />
         </CardGridWrapper>
       )}
     </>
@@ -73,20 +78,22 @@ const CardGridWrapper = styled.div`
   width: 100%;
   grid-gap: 20px;
   grid-template-columns: 350px 350px;
-  grid-template-rows: 163px 183px 230px;
+  grid-template-rows: 163px 183px 230px 276px;
   grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "displayStyle lentInfo" // h: 183px
-    "pointColor alarm"; // h: 230px h: 230px
+    "pointColor alarm" // h: 230px h: 230px
+    "socialAccountLink socialAccountLink"; // h: 276px
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
-    grid-template-rows: 163px 366px 183px 230px 230px;
+    grid-template-rows: 163px 366px 183px 230px 230px 276px;
     grid-template-areas:
       "profile"
       "lentInfo"
       "displayStyle"
       "pointColor"
-      "alarm";
+      "alarm"
+      "socialAccountLink";
   }
 `;
 

@@ -12,9 +12,10 @@ import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
+import org.ftclub.cabinet.dto.UserOauthConnectionDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.auth.domain.OauthLink;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.User;
@@ -38,10 +39,13 @@ public interface UserMapper {
 	@Mapping(target = "userId", source = "user.id")
 	UserProfileDto toUserProfileDto(User user);
 
-	@Mapping(target = "userId", source = "user.userId")
-	@Mapping(target = "name", source = "user.name")
+	UserOauthConnectionDto toUserOauthConnectionDto(OauthLink userOauthConnection);
+
+	@Mapping(target = "userId", source = "user.id")
 	@Mapping(target = "cabinetId", source = "cabinet.id")
-	MyProfileResponseDto toMyProfileResponseDto(UserSessionDto user,
+	@Mapping(target = "email", source = "user.email")
+	MyProfileResponseDto toMyProfileResponseDto(User user,
+			UserOauthConnectionDto userOauthConnection,
 			Cabinet cabinet, BanHistory banHistory,
 			AlarmTypeResponseDto alarmTypes, boolean isDeviceTokenExpired, Long coins);
 

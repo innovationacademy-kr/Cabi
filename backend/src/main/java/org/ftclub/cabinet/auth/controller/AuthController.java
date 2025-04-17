@@ -1,50 +1,85 @@
 package org.ftclub.cabinet.auth.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
+import org.ftclub.cabinet.auth.service.CookieService;
+import org.ftclub.cabinet.auth.service.OauthLinkFacadeService;
+import org.ftclub.cabinet.dto.AguMailResponse;
+import org.ftclub.cabinet.dto.LinkOauthRedirectUrlServiceDto;
+import org.ftclub.cabinet.dto.LinkOauthTokenDto;
+import org.ftclub.cabinet.dto.OauthUnlinkRequestDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.log.Logging;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-
+@Logging
 @RestController
-@RequestMapping("/v4/auth")
+@RequestMapping("/v5/auth")
 @RequiredArgsConstructor
-@Log4j2
 public class AuthController {
 
 	private final AuthFacadeService authFacadeService;
+	private final OauthLinkFacadeService oauthLinkFacadeService;
+	private final CookieService cookieService;
 
 	/**
-	 * 사용자 로그인 페이지로 리다이렉트합니다.
-	 *
-	 * @param response 요청 시의 서블렛 {@link HttpServletResponse}
-	 * @throws IOException 입출력 예외
+	 * AGU 유저의 임시 로그인 메일 발송
 	 */
-	@GetMapping("/login")
-	public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		authFacadeService.requestUserLogin(request, response);
+	@PostMapping("/agu")
+	public AguMailResponse requestAGULogin(@RequestParam(name = "name") String name)
+			throws JsonProcessingException {
+		return authFacadeService.requestTemporaryLogin(name);
 	}
 
 	/**
-	 * 사용자 로그인 콜백을 처리합니다.
+	 * csrf 토큰 발급
 	 *
-	 * @param code 로그인 성공으로 받은 authorization 코드
-	 * @param res  요청 시의 서블릿 {@link HttpServletResponse}
-	 * @throws IOException 입출력 예외
+	 * @return
 	 */
-	@GetMapping("/login/callback")
-	public void loginCallback(
-			@RequestParam String code,
-			HttpServletRequest req,
-			HttpServletResponse res) throws IOException, ExecutionException, InterruptedException {
-		authFacadeService.handleUserLogin(req, res, code);
+	@GetMapping("/csrf")
+	public ResponseEntity<Void> getCsrfToken() {
+
+		return ResponseEntity.noContent().build();
+	}
+
+	/**
+	 * agu link 와 비교 후 토큰 발급
+	 *
+	 * @param req
+	 * @param res
+	 * @param code
+	 * @param name
+	 * @throws IOException
+	 */
+	@GetMapping("/agu")
+	public void verifyAguCode(HttpServletRequest req,
+			HttpServletResponse res,
+			@RequestParam(name = "code") String code,
+			@RequestParam(name = "name") String name) throws IOException {
+		authFacadeService.verifyTemporaryCode(req, res, name, code);
+	}
+
+	/**
+	 * Agu 유저의 사물함 반납 취소
+	 *
+	 * @param req
+	 */
+	@PostMapping("/agu/cancel")
+	public void aguCancel(HttpServletRequest req, HttpServletResponse res) {
+		authFacadeService.deleteAguCookie(req, res);
 	}
 
 	/**
@@ -52,8 +87,36 @@ public class AuthController {
 	 *
 	 * @param res 요청 시의 서블릿 {@link HttpServletResponse}
 	 */
-	@GetMapping("/logout")
-	public void logout(HttpServletResponse res) {
-		authFacadeService.userLogout(res);
+	@PostMapping("/logout")
+	public void logout(HttpServletRequest request, HttpServletResponse response) {
+		authFacadeService.userLogout(request, response);
+	}
+
+	/**
+	 * 계정 연동 해제 요청
+	 *
+	 * @param userInfoDto
+	 * @param dto
+	 */
+	@DeleteMapping("/link")
+	public void unLinkOauthMail(@AuthenticationPrincipal UserInfoDto userInfoDto,
+			@RequestBody OauthUnlinkRequestDto dto) {
+		oauthLinkFacadeService.deleteOauthMail(userInfoDto.getUserId(), dto.getOauthMail(),
+				dto.getProvider());
+	}
+
+	/**
+	 * 계정 연동 시 state 파람을 JWT로 생성합니다.
+	 *
+	 * @param userInfoDto
+	 * @param provider
+	 * @return
+	 */
+	@GetMapping("/link/{provider}")
+	public LinkOauthTokenDto getOauthLinkRedirectUrl(
+			@AuthenticationPrincipal UserInfoDto userInfoDto,
+			@PathVariable("provider") String provider) {
+		return oauthLinkFacadeService.generateRedirectUrl(
+				new LinkOauthRedirectUrlServiceDto(userInfoDto.getUserId(), provider));
 	}
 }

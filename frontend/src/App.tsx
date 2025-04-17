@@ -2,6 +2,7 @@ import PageTracker from "@/api/analytics/PageTracker";
 import * as Sentry from "@sentry/react";
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AGUPage from "@/Cabinet/pages/AGUPage";
 import HomePage from "@/Cabinet/pages/HomePage";
 import Layout from "@/Cabinet/pages/Layout";
 import LoginPage from "@/Cabinet/pages/LoginPage";
@@ -72,6 +73,7 @@ function App(): React.ReactElement {
             <Route path="store/inventory" element={<InventoryPage />} />
             <Route path="store/item-use-log" element={<ItemUsageLogPage />} />
             <Route path="store/coin-log" element={<CoinLogPage />} />
+            <Route path="agu" element={<AGUPage />} />
           </Route>
           <Route path="/presentation/" element={<PresentationLayout />}>
             <Route path="home" element={<PresentationHomePage />} />

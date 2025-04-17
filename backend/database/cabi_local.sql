@@ -612,7 +612,7 @@ DROP TABLE IF EXISTS `user`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user`
 (
-    `id`            bigint(20)                 NOT NULL AUTO_INCREMENT,
+    `id`            bigint(20)   NOT NULL AUTO_INCREMENT,
     `blackholed_at` datetime(6)  DEFAULT NULL,
     `deleted_at`    datetime(6)  DEFAULT NULL,
     `email`         varchar(255) DEFAULT NULL,
@@ -620,6 +620,8 @@ CREATE TABLE `user`
     `slack_alarm`   tinyint(1)   DEFAULT TRUE  NOT NULL,
     `email_alarm`   tinyint(1)   DEFAULT TRUE  NOT NULL,
     `push_alarm`    tinyint(1)   DEFAULT FALSE NOT NULL,
+    `coin`          bigint(20)   DEFAULT 0     NOT NULL,
+    `roles`         varchar(255) DEFAULT 'USER',
     PRIMARY KEY (`id`),
     UNIQUE KEY `user_name_unique_key` (`name`),
     UNIQUE KEY `user_email_unique_key` (`email`)
@@ -629,6 +631,12 @@ CREATE TABLE `user`
   COLLATE = utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+-- LOCK TABLES `user` WRITE;
+INSERT INTO `user`
+VALUES  (1, null, null, 'test1@student.42seoul.kr', 'test1', 1, 1, 0, 0, 'USER'),
+        (2, null, null, 'test2@student.42seoul.kr', 'test2', 1, 1, 0, 0, 'USER'),
+        (3, null, null, 'test3@student.42seoul.kr', 'test3', 1, 1, 0, 0, 'USER');
+UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `lent_extension`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
@@ -820,10 +828,10 @@ VALUES (1, 'JOB', '2024-10-09 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF'
        (9, NULL, '2025-02-12 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
        (10, NULL, '2025-02-26 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
        (11, NULL, '2025-03-12 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
-       (12, NULL, '2025-03-26 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
-       (13, NULL, '2025-04-09 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
-       (14, NULL, '2025-04-23 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
-       (15, NULL, '2025-05-07 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
+       (12, NULL, '2025-03-26 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (13, NULL, '2025-04-09 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (14, NULL, '2025-04-23 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
+       (15, NULL, '2025-05-07 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
        (16, NULL, '2025-05-21 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
 /*!40000 ALTER TABLE `presentation`
     ENABLE KEYS */;

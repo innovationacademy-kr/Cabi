@@ -86,7 +86,36 @@ public enum ExceptionStatus {
 	NOT_FOUND_SECTION(HttpStatus.BAD_REQUEST, "사물함 구역 정보를 찾을 수 없습니다."),
 	ITEM_NOT_OWNED(HttpStatus.BAD_REQUEST, "해당 아이템을 보유하고 있지 않습니다"),
 	ITEM_USE_DUPLICATED(HttpStatus.FORBIDDEN, "아이템이 중복 사용되었습니다."),
-	INVALID_AMOUNT(HttpStatus.BAD_REQUEST, "코인 지급양은 비어있을 수 없습니다.");
+	INVALID_AMOUNT(HttpStatus.BAD_REQUEST, "코인 지급양은 비어있을 수 없습니다."),
+	FORBIDDEN_USER(HttpStatus.FORBIDDEN, "권한이 부족한 유저입니다"),
+	NO_ACTIVE_LENT_FOUND(HttpStatus.BAD_REQUEST, "대여 기록이 존재하지 않습니다"),
+
+	// Security 토큰 관련 -> 존재하지 않거나, malFormed, signature, expired
+	INVALID_TYPE_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "올바르지 않은 토큰입니다."),
+	EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+	INVALID_AUTHORIZATION(HttpStatus.UNAUTHORIZED, "Oauth로부터 정보를 받아오지 못했습니다."),
+	DUPLICATED_OAUTH_MAIL(HttpStatus.BAD_REQUEST, "이미 등록된 oauthMail 입니다."),
+	NOT_FT_LINK_STATUS(HttpStatus.FORBIDDEN, "42 계정과 연동 상태가 아닙니다."),
+	NOT_SUPPORT_OAUTH_TYPE(HttpStatus.FORBIDDEN, "지원하지 않는 OAuth 타입입니다."),
+	OAUTH_EMAIL_ALREADY_LINKED(HttpStatus.CONFLICT, "이미 다른 oauth 계정이 연동되어 있습니다."),
+	AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
+	ACCESS_DENIED(HttpStatus.FORBIDDEN, "권한이 부족합니다"),
+
+	// JWT 관련 에러,
+	JWT_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT 토큰이 존재하지 않습니다."),
+	JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+	JWT_EXCEPTION(HttpStatus.UNAUTHORIZED, "JWT 에러가 발생하였습니다."),
+	JWT_INVALID(HttpStatus.UNAUTHORIZED, "토큰의 서명이 올바르지 않거나, 변조되었습니다."),
+	JWT_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "지원하지 않는 토큰 형식입니다."),
+	JWT_NOT_EXPIRED(HttpStatus.BAD_REQUEST, "만료되지 않은 토큰의 재발급 요청입니다"),
+	JWT_ALREADY_USED(HttpStatus.BAD_REQUEST, "이미 사용된 토큰입니다."),
+	NOT_FOUND_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "기한이 만료되었거나, 올바르지 않은 코드입니다."),
+	NOT_FOUND_VERIFICATION_LINK(HttpStatus.BAD_REQUEST, "인증 링크가 일치하지 않습니다"),
+	NOT_FOUND_OAUTH_CONNECTION(HttpStatus.NOT_FOUND, "Oauth 연동 기록이 존재하지 않습니다"),
+	INVALID_OAUTH_CONNECTION(HttpStatus.BAD_REQUEST, "Oauth 연동 기록이 일치하지 않습니다"),
+	INVALID_CSRF(HttpStatus.FORBIDDEN, "잘못된 형식의 CSRF 토큰입니다"),
+	MISSING_CSRF(HttpStatus.FORBIDDEN, "CSRF 토큰이 존재하지 않습니다"),
+	CODE_ALREADY_SENT(HttpStatus.TOO_MANY_REQUESTS, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다.");
 
 	final private int statusCode;
 	final private String message;
@@ -113,4 +142,5 @@ public enum ExceptionStatus {
 	public UtilException asUtilException() {
 		return new UtilException(this);
 	}
+
 }

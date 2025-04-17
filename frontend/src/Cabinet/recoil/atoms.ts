@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
+import {
+  TOAuthProvider,
+  TOAuthProviderOrEmpty,
+  ftProvider,
+} from "@/Cabinet/assets/data/oAuth";
 import { staticColNumData } from "@/Cabinet/assets/data/sectionColNumData";
 import { IBuildingColNum } from "@/Cabinet/assets/data/sectionColNumData";
 import { ITableData } from "@/Cabinet/types/dto/admin.dto";
@@ -34,6 +39,7 @@ export const userState = atom<UserDto>({
     alarmTypes: null,
     isDeviceTokenExpired: null,
     coins: null,
+    userOauthConnection: null,
   },
 });
 
@@ -41,22 +47,6 @@ export const myCabinetInfoState = atom<MyCabinetInfoResponseDto>({
   key: "MyLentInfo",
   default: undefined,
 });
-// export const myCabinetInfoState = atom<MyCabinetInfoResponseDto>({
-//   key: "MyLentInfo",
-//   default: {
-//     status: CabinetStatus.AVAILABLE,
-//     lent_info: [],
-//     building: "",
-//     floor: -1,
-//     section: "",
-//     cabinet_memo: "",
-//     cabinetId: -1,
-//     visibleNum: -1,
-//     lentType: "",
-//     cabinet_title: "",
-//     max_user: -1,
-//   },
-// });
 
 export const buildingsFloorState = atom<CabinetBuildingFloorDto[]>({
   key: "CurrentBuildingData",
@@ -218,4 +208,14 @@ export const currentFloorSectionNamesState = atom<string[]>({
 export const displayStyleState = atom<DisplayStyleToggleType>({
   key: "displayStyle",
   default: DisplayStyleToggleType.DEVICE,
+});
+
+export const targetLinkProviderState = atom<TOAuthProvider>({
+  key: "targetProvider",
+  default: ftProvider,
+});
+
+export const targetLoginProviderState = atom<TOAuthProviderOrEmpty>({
+  key: "clickedLoginProvider",
+  default: "",
 });

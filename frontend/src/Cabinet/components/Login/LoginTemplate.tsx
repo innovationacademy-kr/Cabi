@@ -1,18 +1,8 @@
-import { useState } from "react";
 import styled from "styled-components";
-import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import LoginCard from "@/Cabinet/components/Login/LoginCard";
 import { ReactComponent as LoginImg } from "@/Cabinet/assets/images/loginImg.svg";
-import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
 
-const LoginTemplate = (props: {
-  url: string;
-  pageTitle: string;
-  pageSubTitle: string;
-  imgSrc: string;
-}) => {
-  const { url, pageTitle, pageSubTitle, imgSrc } = props;
-  const [isClicked, setIsClicked] = useState(false);
-
+const LoginTemplate = () => {
   return (
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">
@@ -35,24 +25,7 @@ const LoginTemplate = (props: {
         </BottomContentsStyled>
       </LeftSectionStyled>
       <RightSectionStyled className="rightLoginPage">
-        <LoginCardStyled className="modal">
-          <CardLogoStyled>
-            <LogoImg />
-          </CardLogoStyled>
-          <CardTitleBoxStyled>
-            <CardTitleStyled>{pageTitle}</CardTitleStyled>
-            <CardSubTitleStyled>{pageSubTitle}</CardSubTitleStyled>
-          </CardTitleBoxStyled>
-          <button
-            onClick={() => {
-              window.location.replace(url);
-              setIsClicked(true);
-            }}
-            disabled={isClicked}
-          >
-            {isClicked ? <LoadingAnimation></LoadingAnimation> : "L O G I N"}
-          </button>
-        </LoginCardStyled>
+        <LoginCard />
       </RightSectionStyled>
     </LoginPageStyled>
   );
@@ -75,6 +48,7 @@ const LeftSectionStyled = styled.section`
   flex-direction: column;
   padding-left: 7%;
 `;
+
 const TopContentsStyled = styled.div`
   font-size: 2rem;
   font-family: var(--main-font);
@@ -113,41 +87,6 @@ const RightSectionStyled = styled.section`
   justify-content: center;
   align-items: center;
   background-color: var(--sys-main-color);
-`;
-
-const LoginCardStyled = styled.div`
-  width: 350px;
-  height: 500px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: column;
-  padding: 85px 0;
-  background-color: var(--bg-color);
-`;
-
-const CardLogoStyled = styled.div`
-  width: 70px;
-  height: 70px;
-  svg {
-    .logo_svg__currentPath {
-      fill: var(--sys-main-color);
-    }
-  }
-`;
-
-const CardTitleBoxStyled = styled.div`
-  text-align: center;
-  margin-top: -40px;
-`;
-
-const CardTitleStyled = styled.h1`
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-`;
-
-const CardSubTitleStyled = styled.p`
-  color: var(--sys-main-color);
 `;
 
 export default LoginTemplate;

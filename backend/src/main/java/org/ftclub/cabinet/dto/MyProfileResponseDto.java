@@ -16,6 +16,7 @@ public class MyProfileResponseDto {
 
 	private final Long userId;
 	private final String name;
+	private final String email;
 	private final Long cabinetId;
 	private final LocalDateTime unbannedAt;
 	private final String date = LocalDateTime.now().format(
@@ -24,4 +25,5 @@ public class MyProfileResponseDto {
 	private final AlarmTypeResponseDto alarmTypes;
 	private final Boolean isDeviceTokenExpired;
 	private final Long coins;
+	private final UserOauthConnectionDto userOauthConnection;
 }

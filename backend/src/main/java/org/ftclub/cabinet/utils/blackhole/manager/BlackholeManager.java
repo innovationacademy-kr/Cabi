@@ -5,9 +5,10 @@ import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.auth.domain.FtProfile;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
-import org.ftclub.cabinet.auth.service.UserOauthService;
+import org.ftclub.cabinet.auth.service.OauthProfileService;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -23,10 +24,10 @@ import org.springframework.web.client.HttpClientErrorException;
 @Log4j2
 public class BlackholeManager {
 
-	private final UserOauthService userOauthService;
 	private final ApplicationTokenManager tokenManager;
 	private final LentFacadeService lentFacadeService;
 	private final UserCommandService userCommandService;
+	private final OauthProfileService oauthProfileService;
 
 	/**
 	 * 블랙홀에 빠진 유저를 강제 반납 및 삭제 처리한다.
@@ -36,19 +37,19 @@ public class BlackholeManager {
 	private void terminateInvalidUser(UserBlackHoleEvent userBlackHoleEvent, LocalDateTime now) {
 		log.info("{}는 유효하지 않은 사용자입니다.", userBlackHoleEvent);
 		lentFacadeService.endUserLent(userBlackHoleEvent.getUserId(), null);
-		userCommandService.deleteById(userBlackHoleEvent.getUserId(), now);
+		userCommandService.deleteAndUpdateRole(
+				userBlackHoleEvent.getUserId(), FtRole.INACTIVE.name(), now);
 	}
 
 	/**
 	 * 42 API를 통해 유저의 프로필을 가져온다.
 	 *
 	 * @param userName 42 intra name
-	 * @return 유저 프로필 {@link FtProfile}
+	 * @return 유저 프로필 {@link FtOauthProfile}
 	 */
-	public FtProfile getUserRecentIntraProfile(String userName) {
+	public FtOauthProfile getUserRecentIntraProfile(String userName) {
 		try {
-			return userOauthService.getProfileByIntraName(tokenManager.getFtAccessToken(),
-					userName);
+			return oauthProfileService.getProfileByIntraName(userName);
 		} catch (JsonProcessingException e) {
 			log.error("getUserRecentIntraProfile Exception: {}", userName, e);
 			throw ExceptionStatus.OAUTH_BAD_GATEWAY.asServiceException();
@@ -66,12 +67,13 @@ public class BlackholeManager {
 	public void handleBlackHole(UserBlackHoleEvent dto) {
 		LocalDateTime now = LocalDateTime.now();
 		try {
-			FtProfile userRecentIntraProfile = getUserRecentIntraProfile(dto.getName());
-			if (!userRecentIntraProfile.getRole().isInCursus()) {
+			FtOauthProfile userRecentIntraProfile = getUserRecentIntraProfile(dto.getName());
+			if (!FtRole.isActiveUser(userRecentIntraProfile.getRoles())) {
 				terminateInvalidUser(dto, now);
 			}
-			userCommandService.updateUserBlackholeStatus(dto.getUserId(),
-					userRecentIntraProfile.getBlackHoledAt());
+			userCommandService.updateUserBlackholeAndRole(dto.getUserId(),
+					userRecentIntraProfile.getBlackHoledAt(),
+					FtRole.combineRolesToString(userRecentIntraProfile.getRoles()));
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
 			if (status.equals(HttpStatus.UNAUTHORIZED) || status.equals(HttpStatus.FORBIDDEN)) {
@@ -96,7 +98,7 @@ public class BlackholeManager {
 
 
 	public void blackholeUpdate(User user) {
-		FtProfile userRecentIntraProfile = getUserRecentIntraProfile(user.getName());
+		FtOauthProfile userRecentIntraProfile = getUserRecentIntraProfile(user.getName());
 		userCommandService.updateUserBlackholeStatus(user.getId(),
 				userRecentIntraProfile.getBlackHoledAt());
 	}
@@ -106,7 +108,7 @@ public class BlackholeManager {
 	}
 
 	public boolean isBlackholedUser(User user) {
-		FtProfile userRecentIntraProfile = getUserRecentIntraProfile(user.getName());
+		FtOauthProfile userRecentIntraProfile = getUserRecentIntraProfile(user.getName());
 		return isBlackholeRemains(userRecentIntraProfile.getBlackHoledAt());
 	}
 

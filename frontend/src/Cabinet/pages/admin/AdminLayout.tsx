@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled, { css } from "styled-components";
 import { selectedTypeOnSearchState } from "@/Cabinet/recoil/atoms";
-import AdminItemUsageLogPage from "@/Cabinet/pages/admin/AdminItemUsageLogPage";
 import CabinetInfoAreaContainer from "@/Cabinet/components/CabinetInfoArea/CabinetInfoArea.container";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import LeftNav from "@/Cabinet/components/LeftNav/LeftNav";
@@ -22,7 +21,7 @@ const Layout = (): JSX.Element => {
   const location = useLocation();
   const selectedTypeOnSearch = useRecoilValue(selectedTypeOnSearchState);
 
-  const token = getCookie("admin_access_token");
+  const token = getCookie("access_token");
 
   const checkPath = () => {
     if (location.pathname === "/admin") return true;

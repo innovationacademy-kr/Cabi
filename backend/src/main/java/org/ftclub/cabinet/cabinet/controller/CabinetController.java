@@ -2,17 +2,15 @@ package org.ftclub.cabinet.cabinet.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.log.Logging;
-import org.ftclub.cabinet.user.domain.UserSession;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +33,6 @@ public class CabinetController {
 	 * @return 모든 건물과 층에 대한 정보를 반환합니다.
 	 */
 	@GetMapping("/buildings/floors")
-	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
 		return cabinetFacadeService.getBuildingFloorsResponse();
 	}
@@ -49,9 +46,8 @@ public class CabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@GetMapping("/buildings/{building}/floors/{floor}")
-	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
-			@UserSession UserSessionDto user,
+			@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable("building") String building,
 			@PathVariable("floor") Integer floor) {
 		return cabinetFacadeService.getCabinetsPerSection(building, floor,
@@ -66,7 +62,6 @@ public class CabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@GetMapping("/{cabinetId}")
-	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public CabinetInfoResponseDto getCabinetInfo(
 			@PathVariable("cabinetId") Long cabinetId) {
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
@@ -78,7 +73,6 @@ public class CabinetController {
 	 * @return 오픈 예정인 사물함들의 정보를 반환합니다.
 	 */
 	@GetMapping("/buildings/{building}/available")
-	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public CabinetPendingResponseDto getAvailableCabinets(
 			@PathVariable("building") String building) {
 		return cabinetFacadeService.getAvailableCabinets(building);

@@ -1,185 +1,226 @@
 package org.ftclub.cabinet.auth.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.concurrent.ExecutionException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.admin.admin.domain.Admin;
-import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
-import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
-import org.ftclub.cabinet.auth.domain.CookieManager;
-import org.ftclub.cabinet.auth.domain.FtProfile;
-import org.ftclub.cabinet.auth.domain.GoogleProfile;
-import org.ftclub.cabinet.dto.MasterLoginDto;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpHeaders;
+import org.ftclub.cabinet.alarm.domain.AlarmEvent;
+import org.ftclub.cabinet.alarm.domain.EmailVerificationAlarm;
+import org.ftclub.cabinet.alarm.repository.AguCodeRedis;
+import org.ftclub.cabinet.alarm.service.AguCodeRedisService;
+import org.ftclub.cabinet.auth.domain.CookieInfo;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
+import org.ftclub.cabinet.auth.domain.FtRole;
+import org.ftclub.cabinet.auth.domain.OauthResult;
+import org.ftclub.cabinet.dto.AguMailResponse;
+import org.ftclub.cabinet.dto.TokenDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
+import org.ftclub.cabinet.jwt.service.JwtRedisService;
+import org.ftclub.cabinet.jwt.service.JwtService;
+import org.ftclub.cabinet.lent.service.LentQueryService;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
+import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * 인증 관련 비즈니스 로직을 처리하는 서비스입니다.
+ * 토큰 관리, 인증 정보 관리, 인가 부여
+ * <p>
+ * 리뉴얼된 AuthFacadeService
  */
+@Slf4j
 @Service
+@Logging(level = LogLevel.DEBUG)
 @RequiredArgsConstructor
 public class AuthFacadeService {
 
-	private static final String REDIRECT_COOKIE_NAME = "redirect";
+	private static final String VERIFICATION_API = "/v5/auth/agu";
+	private final AguCodeRedisService aguCodeRedisService;
 	private final UserQueryService userQueryService;
-	private final UserCommandService userCommandService;
-	private final AdminQueryService adminQueryService;
-	private final AdminCommandService adminCommandService;
-	private final UserOauthService userOauthService;
-	private final AdminOauthService adminOauthService;
 	private final AuthPolicyService authPolicyService;
-	private final TokenProvider tokenProvider;
-	private final CookieManager cookieManager;
+	private final JwtRedisService jwtRedisService;
+	private final JwtService jwtService;
+	private final ApplicationEventPublisher eventPublisher;
+	private final LentQueryService lentQueryService;
+	private final OauthProfileService oauthProfileService;
+	private final CookieService cookieService;
+
+	@Value("${cabinet.server.be-host}")
+	private String beHost;
 
 	/**
-	 * 유저 로그인 페이지로 리다이렉트합니다.
+	 * 토큰을 생성해 cookie에 저장하고, securityContextHolder에 정보를 저장합니다.
 	 *
-	 * @param req 요청 시의 서블렛 {@link HttpServletRequest}
-	 * @param res 응답 시의 서블렛 {@link HttpServletResponse}
-	 * @throws IOException 입출력 예외
+	 * @param req      HttpServletRequest
+	 * @param res      HttpServletResponse
+	 * @param result   oauthLogin 파싱 결과
+	 * @param provider oauthLogin 타입
 	 */
-	public void requestUserLogin(HttpServletRequest req, HttpServletResponse res)
-			throws IOException {
-		String redirect = req.getParameter(REDIRECT_COOKIE_NAME);
-		if (redirect != null) {
-			cookieManager.setCookieToClient(
-					res, cookieManager.cookieOf(REDIRECT_COOKIE_NAME, redirect),
-					"/", req.getServerName());
+	public void processAuthentication(HttpServletRequest req, HttpServletResponse res,
+			OauthResult result, String provider) {
+
+		TokenDto tokens = jwtService.createPairTokens(result.getUserId(), result.getRoles(),
+				provider);
+		cookieService.setAccessTokenCookiesToClient(res, tokens, req.getServerName());
+
+		Authentication auth = createAuthenticationForUser(result, provider);
+		SecurityContextHolder.getContext().setAuthentication(auth);
+	}
+
+
+	/**
+	 * SecurityContextHolder에 저장할 유저 정보
+	 *
+	 * @param user
+	 * @param provider
+	 * @return
+	 */
+	public Authentication createAuthenticationForUser(OauthResult user, String provider) {
+		UserInfoDto userInfoDto =
+				new UserInfoDto(user.getUserId(), provider, user.getRoles());
+
+		List<GrantedAuthority> authorityList = Stream.of(user.getRoles().split(FtRole.DELIMITER))
+				.map(role -> new SimpleGrantedAuthority(FtRole.ROLE + role))
+				.collect(Collectors.toList());
+
+		return new UsernamePasswordAuthenticationToken(userInfoDto, null, authorityList);
+	}
+
+
+	/**
+	 * 토큰들을 블랙리스트에 추가하고, 쿠키를 제거합니다.
+	 *
+	 * @param request
+	 * @param response
+	 */
+	public void userLogout(HttpServletRequest request, HttpServletResponse response) {
+
+		String accessToken = jwtService.extractToken(request);
+
+		if (accessToken == null) {
+			throw new SpringSecurityException(ExceptionStatus.JWT_TOKEN_NOT_FOUND);
 		}
-		userOauthService.requestLogin(res);
-	}
-
-	/**
-	 * 관리자 로그인 페이지로 리다이렉트합니다.
-	 *
-	 * @param res 응답 시의 서블렛 {@link HttpServletResponse}
-	 * @throws IOException 입출력 예외
-	 */
-	public void requestAdminLogin(HttpServletResponse res) throws IOException {
-		adminOauthService.requestLogin(res);
-	}
-
-	/**
-	 * 유저 로그인 콜백으로 받은 authorization_code로 유저 프로필 정보를 가져오고, 반환합니다.
-	 * <p>
-	 * 유저가 처음 로그인 한 경우에는 유저를 생성합니다.
-	 *
-	 * @param code 유저 로그인 콜백 시 발급받은 authorization_code
-	 * @throws IOException          HTTP 통신에서 일어나는 입출력 예외
-	 * @throws ExecutionException   비동기 처리시 스레드에서 발생한 오류 처리 예외
-	 * @throws InterruptedException 비동기 처리시 스레드 종료를 위한 예외
-	 */
-	public void handleUserLogin(HttpServletRequest req, HttpServletResponse res, String code)
-			throws IOException, ExecutionException, InterruptedException {
-		FtProfile profile = userOauthService.getProfileByCode(code);
-		User user = userQueryService.findUser(profile.getIntraName())
-				.orElseGet(() -> userCommandService.createUserByFtProfile(profile));
-		// 블랙홀이 API에서 가져온 날짜와 다르다면 갱신
-		if (!user.isSameBlackholedAt(profile.getBlackHoledAt())) {
-			userCommandService.updateUserBlackholeStatus(user.getId(), profile.getBlackHoledAt());
+		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(accessToken);
+		if (!userInfoDto.hasRole(FtRole.USER.name())) {
+			throw new SpringSecurityException(ExceptionStatus.FORBIDDEN_USER);
 		}
-		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
-		Cookie cookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
-		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
-		if (cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME) != null) {
-			String redirect = cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME);
-			cookieManager.deleteCookie(res, REDIRECT_COOKIE_NAME);
-			res.sendRedirect(redirect);
-			return;
+		// 내부 모든 쿠키 및 토큰 삭제
+		jwtRedisService.handleLogoutUserTokens(userInfoDto.getUserId(), accessToken);
+		cookieService.deleteAllCookies(request.getCookies(),
+				request.getHeader(HttpHeaders.HOST), response);
+	}
+
+	/**
+	 * 쿠키 제거
+	 *
+	 * @param req
+	 */
+	public void deleteAguCookie(HttpServletRequest req, HttpServletResponse res) {
+		cookieService.deleteAllCookies(req.getCookies(), req.getServerName(), res);
+	}
+
+
+	/**
+	 * redis 내의 코드와 비교하여 검증합니다.
+	 * <p>
+	 * 성공 시 임시토큰을 쿠키에 설정하고, AGU 페이지로 리다이렉트합니다.
+	 *
+	 * @param name
+	 * @param code
+	 * @return
+	 */
+	public void verifyTemporaryCode(HttpServletRequest req,
+			HttpServletResponse res,
+			String name,
+			String code) throws IOException {
+
+		User user = userQueryService.getUserByName(name);
+		aguCodeRedisService.verifyTemporaryCode(name, code);
+
+		String temporaryToken =
+				jwtService.createAguToken(user.getId());
+
+		Cookie cookie = new Cookie(JwtTokenConstants.AGU_TOKEN, temporaryToken);
+		CookieInfo cookieInfo = new CookieInfo(req.getServerName(), 60 * 60, false);
+
+		cookieService.setToClient(cookie, cookieInfo, res);
+		res.sendRedirect(authPolicyService.getAGUUrl());
+	}
+
+	/**
+	 * 이름으로 유저를 검색합니다
+	 * <p>
+	 * AGU 유저라면 code를 만들어 redis에 저장하고, 메일을 발송합니다.
+	 *
+	 * @param name
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	public AguMailResponse requestTemporaryLogin(String name) throws JsonProcessingException {
+		User user = userQueryService.getUserByName(name);
+		FtOauthProfile profile = oauthProfileService.getProfileByIntraName(name);
+
+		authPolicyService.verifyAguRole(user.getRoles(), FtRole.AGU.name(), profile.getRoles());
+		lentQueryService.getUserActiveLentHistory(user.getId())
+				.orElseThrow(ExceptionStatus.NO_ACTIVE_LENT_FOUND::asServiceException);
+		// 코드가 있는데 발급 요청이면 에러(3분 내로 재요청)
+		if (aguCodeRedisService.isAlreadyExist(name)) {
+			throw ExceptionStatus.CODE_ALREADY_SENT.asServiceException();
 		}
-		res.sendRedirect(authPolicyService.getMainHomeUrl());
+
+		String aguCode = aguCodeRedisService.createAguCode(user.getName());
+
+		String verificationLink = generateVerificationLink(aguCode, name);
+		AlarmEvent alarmEvent =
+				AlarmEvent.of(user.getId(), new EmailVerificationAlarm(verificationLink));
+		eventPublisher.publishEvent(alarmEvent);
+		return new AguMailResponse(user.getEmail(), AguCodeRedis.EXPIRY_MIN);
 	}
 
-	public void handlePublicLogin(HttpServletRequest req, HttpServletResponse res, String name)
-			throws IOException {
-
-		User user = userQueryService.findUser(name).orElseThrow(
-				ExceptionStatus.NOT_FOUND_USER::asServiceException);
-		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
-		Cookie cookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
-		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
-		if (cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME) != null) {
-			String redirect = cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME);
-			cookieManager.deleteCookie(res, REDIRECT_COOKIE_NAME);
-			res.sendRedirect(redirect);
-			return;
-		}
-		res.sendRedirect(authPolicyService.getMainHomeUrl());
-	}
-
-	/**
-	 * 관리자 로그인 콜백으로 받은 authorization_code로 관리자 프로필 정보를 가져오고, 반환합니다.
-	 * <p>
-	 * 관리자가 처음 로그인 한 경우에는 관리자를 생성합니다.
-	 *
-	 * @param code 관리자 로그인 콜백 시 발급받은 authorization_code
-	 * @throws IOException          HTTP 통신에서 일어나는 입출력 예외
-	 * @throws ExecutionException   비동기 처리시 스레드에서 발생한 오류 처리 예외
-	 * @throws InterruptedException 비동기 처리시 스레드 종료를 위한 예외
-	 */
-	public void handleAdminLogin(HttpServletRequest req, HttpServletResponse res, String code)
-			throws IOException, ExecutionException, InterruptedException {
-		GoogleProfile profile = adminOauthService.getProfileByCode(code);
-		Admin admin = adminQueryService.findByEmail(profile.getEmail())
-				.orElseGet(() -> adminCommandService.createAdminByEmail(profile.getEmail()));
-		String token = tokenProvider.createAdminToken(admin, LocalDateTime.now());
-		Cookie cookie = cookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, token);
-		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
-		res.sendRedirect(authPolicyService.getAdminHomeUrl());
+	private String generateVerificationLink(String aguCode, String name) {
+		return UriComponentsBuilder.fromHttpUrl(beHost)
+				.path(VERIFICATION_API)
+				.queryParam("code", aguCode)
+				.queryParam("name", name)
+				.encode(StandardCharsets.UTF_8)
+				.build()
+				.toUriString();
 	}
 
 	/**
-	 * 마스터 로그인을 처리합니다.
-	 * <p>
-	 * 정적으로 설정된 마스터 계정 정보와 일치하는지 확인합니다.
+	 * public 로그인 요청 시 토큰을 발급합니다.
 	 *
-	 * @param masterLoginDto 마스터 로그인 정보 {@link MasterLoginDto}
-	 * @param req            요청 시의 서블렛 {@link HttpServletRequest}
-	 * @param res            요청 시의 서블렛 {@link HttpServletResponse}
-	 * @param now            현재 시각
+	 * @param name
+	 * @throws IOException
 	 */
-	public void masterLogin(MasterLoginDto masterLoginDto, HttpServletRequest req,
-			HttpServletResponse res, LocalDateTime now) {
-		// TODO : 서비스로 빼기
-		if (!authPolicyService.isMatchWithMasterAuthInfo(masterLoginDto.getId(),
-				masterLoginDto.getPassword())) {
-			throw ExceptionStatus.UNAUTHORIZED_ADMIN.asServiceException();
-		}
-		Admin master = adminQueryService.findByEmail(authPolicyService.getMasterEmail())
-				.orElseThrow(ExceptionStatus.UNAUTHORIZED_ADMIN::asServiceException);
-		String masterToken = tokenProvider.createAdminToken(master, now);
-		Cookie cookie = cookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, masterToken);
-		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
-	}
+	public void handlePublicLogin(HttpServletRequest req, HttpServletResponse res,
+			String name) throws IOException {
+		User user = userQueryService.getUserByName(name);
 
-	/**
-	 * 유저 로그아웃을 처리합니다.
-	 * <p>
-	 * 쿠키에 저장된 유저 토큰을 제거합니다.
-	 *
-	 * @param res 요청 시의 서블렛 {@link HttpServletResponse}
-	 */
-	public void userLogout(HttpServletResponse res) {
-		Cookie userCookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, "");
-		cookieManager.setCookieToClient(res, userCookie, "/", res.getHeader("host"));
-	}
+		OauthResult result = new OauthResult(user.getId(), user.getRoles(),
+				authPolicyService.getMainHomeUrl());
 
-	/**
-	 * 관리자 로그아웃을 처리합니다.
-	 * <p>
-	 * 쿠키에 저장된 관리자 토큰을 제거합니다.
-	 *
-	 * @param res 요청 시의 서블렛 {@link HttpServletResponse}
-	 */
-	public void adminLogout(HttpServletResponse res) {
-		Cookie adminCookie = cookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, "");
-		cookieManager.setCookieToClient(res, adminCookie, "/", res.getHeader("host"));
+		processAuthentication(req, res, result, "Temporary");
+		res.sendRedirect(result.getRedirectionUrl());
 	}
 }

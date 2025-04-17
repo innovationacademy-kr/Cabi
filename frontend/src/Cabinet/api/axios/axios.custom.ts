@@ -1,17 +1,18 @@
 import { captureException } from "@sentry/react";
+import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import ErrorType from "@/Cabinet/types/enum/error.type.enum";
+import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 
-const axiosLogoutUrl = "/v4/auth/logout";
+const axiosLogoutUrl = "/logout";
 export const axiosLogout = async (): Promise<any> => {
   try {
-    const response = await instance.get(axiosLogoutUrl);
+    const response = await instance.post(axiosLogoutUrl);
     return response;
   } catch (error) {
     throw error;
@@ -270,7 +271,7 @@ export const axiosReturn = async (): Promise<any> => {
 const axiosSendCabinetPasswordURL = "/v4/lent/return-memo";
 export const axiosSendCabinetPassword = async (password: string) => {
   try {
-    const response = await instance.patch(axiosSendCabinetPasswordURL, {
+    await instance.patch(axiosSendCabinetPasswordURL, {
       cabinetMemo: password,
     });
   } catch (error) {
@@ -376,7 +377,6 @@ export const axiosItems = async (): Promise<any> => {
     const response = await instance.get(axiosItemsURL);
     return response;
   } catch (error) {
-    console.log(error);
     logAxiosError(
       error,
       ErrorType.STORE,
@@ -392,7 +392,6 @@ export const axiosAdminItems = async (): Promise<any> => {
     const response = await instance.get(axiosAdminItemsURL);
     return response;
   } catch (error) {
-    console.log(error);
     logAxiosError(
       error,
       ErrorType.STORE,
@@ -441,10 +440,15 @@ export const axiosAdminAuthLogin = async (
   password: string
 ): Promise<any> => {
   try {
-    const response = await instance.post(axiosAdminAuthLoginURL, {
-      id,
-      password,
-    });
+    const response = await instance.post(
+      axiosAdminAuthLoginURL,
+      {
+        id,
+        password,
+      },
+      { withCredentials: true }
+    );
+
     return response;
   } catch (error) {
     throw error;
@@ -460,6 +464,70 @@ export const axiosAdminCabinetInfoByCabinetId = async (
     const response = await instance.get(
       axiosAdminCabinetInfoByIdURL + cabinetId
     );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosAGUURL = "/v5/auth/agu";
+export const axiosVerifyAGUUser = async (intraId: string): Promise<any> => {
+  try {
+    const response = await instance.post(axiosAGUURL, null, {
+      params: { name: intraId },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosAGUReturnCancel = async (): Promise<any> => {
+  try {
+    const response = await instance.post(axiosAGUURL + "/cancel");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosSocialAccountLinkURL = "/v5/auth/link";
+export const axiosUnlinkSocialAccount = async (
+  mail: string, // 연결 해지하려는 mail
+  provider: TOAuthProvider // 연결되어있는 provider
+): Promise<any> => {
+  try {
+    const response = await instance.delete(axiosSocialAccountLinkURL, {
+      data: {
+        oauthMail: mail,
+        provider: provider,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosLinkSocialAccount = async (
+  provider: TOAuthProvider
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      axiosSocialAccountLinkURL + `/${provider}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosReissueTokenURL = "/jwt/reissue";
+export const axiosReissueToken = async (): Promise<any> => {
+  try {
+    const response = await instance.post(axiosReissueTokenURL, null, {
+      withCredentials: true,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -765,9 +833,9 @@ export const axiosLentClubCabinet = async (
   try {
     const response = await instance.post(
       axiosLentClubCabinetURL +
-      clubId.toString() +
-      "/cabinets/" +
-      cabinetId.toString()
+        clubId.toString() +
+        "/cabinets/" +
+        cabinetId.toString()
     );
     return response;
   } catch (error) {
@@ -923,24 +991,6 @@ export const axiosSendSlackAlarmToChannel = async (
       message: message,
     });
   } catch (error) {
-    throw error;
-  }
-};
-
-// TODO: 확인하고 필요없으면 지우기
-const axiosItemAssignURL = "v5/admin/items/assign";
-export const axiosItemAssign = async (
-  itemSku: string,
-  userIds: number[]
-): Promise<any> => {
-  try {
-    const response = await instance.post(axiosItemAssignURL, {
-      itemSku,
-      userIds,
-    });
-    return response;
-  } catch (error) {
-    logAxiosError(error, ErrorType.STORE, "아이템 지급 중 오류 발생", true);
     throw error;
   }
 };

@@ -7,15 +7,16 @@ import {
   storeBoxStyles,
 } from "@/Cabinet/components/Home/ManualContentBoxStyles";
 import { ReactComponent as ClubIcon } from "@/Cabinet/assets/images/clubIcon.svg";
-import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
 import { ReactComponent as PrivateIcon } from "@/Cabinet/assets/images/privateIcon.svg";
 import { ReactComponent as ShareIcon } from "@/Cabinet/assets/images/shareIcon.svg";
 import { ReactComponent as AlarmImg } from "@/Cabinet/assets/images/storeAlarm.svg";
+import { ReactComponent as ExtensionImg } from "@/Cabinet/assets/images/storeExtension.svg";
 import { ReactComponent as SwapImg } from "@/Cabinet/assets/images/storeMove.svg";
 import { ReactComponent as PenaltyImg } from "@/Cabinet/assets/images/storePenalty.svg";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
 import ContentStatus from "@/Cabinet/types/enum/content.status.enum";
+import { OAuthErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import {
   StoreExtensionType,
   StoreItemType,
@@ -288,4 +289,13 @@ export const ContentStatusStylesMap: {
   [ContentStatus.PRIVATE]: css``,
   [ContentStatus.SHARE]: css``,
   [ContentStatus.CLUB]: css``,
+};
+
+export const oAuthErrorMsgMap = {
+  [OAuthErrorType.NOT_FT_LINK_STATUS]:
+    "아직 연결되지 않은 소셜 계정입니다. 계정을 연결한 후 다시 로그인해 주세요.",
+  [OAuthErrorType.OAUTH_EMAIL_ALREADY_LINKED]:
+    "해당 소셜 계정은 이미 사용 중입니다. 기존 계정 연결을 해제 후 다시 시도해 주세요.",
+  [OAuthErrorType.NOT_SUPPORT_OAUTH_TYPE]:
+    "지원하지 않는 소셜 계정입니다. 다른 계정을 사용해 주세요.",
 };
