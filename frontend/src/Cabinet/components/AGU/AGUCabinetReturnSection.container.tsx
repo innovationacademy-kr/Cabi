@@ -9,7 +9,9 @@ import {
   axiosAGUReturnCancel,
   axiosReturn,
 } from "@/Cabinet/api/axios/axios.custom";
+import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
+import { getDomain } from "@/Cabinet/utils/domainUtils";
 
 export type TAGUReturnPageExitEvent =
   | BeforeUnloadEvent
@@ -71,6 +73,10 @@ const AGUCabinetReturnSectionContainer = ({
       const response = await axiosAGUReturnCancel();
 
       if (response.status === HttpStatusCode.Ok) {
+        removeCookie("agu_token", {
+          path: "/",
+          domain: getDomain(),
+        });
         resetMyLentInfo();
       }
     } catch (error: any) {
