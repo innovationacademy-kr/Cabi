@@ -2,11 +2,14 @@ package org.ftclub.cabinet.jwt.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Logging(level = LogLevel.DEBUG)
 public class JwtRedis {
 
 	private static final String USER_JWT_ACCESS_KEY_SUFFIX = ":usedUserAccessToken";

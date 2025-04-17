@@ -6,10 +6,13 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 @ToString
+@Logging(level = LogLevel.DEBUG)
 @Getter
 @RequiredArgsConstructor
 public class CustomOAuth2User implements OAuth2User {

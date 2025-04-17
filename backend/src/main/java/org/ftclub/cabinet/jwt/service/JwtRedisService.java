@@ -3,10 +3,13 @@ package org.ftclub.cabinet.jwt.service;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.repository.JwtRedis;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Logging(level = LogLevel.DEBUG)
 public class JwtRedisService {
 
 	private final JwtRedis jwtRedis;
