@@ -32,7 +32,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @RequiredArgsConstructor
 public class AdminApiLogAspect {
 
-	private final static String ADMIN_CUD_POINTCUT = "@target(org.springframework.web.bind.annotation.RestController) && !@annotation(org.springframework.web.bind.annotation.GetMapping)";
+	private final static String ADMIN_CUD_POINTCUT =
+			"@target(org.springframework.web.bind.annotation.RestController) && " +
+					"!@annotation(org.springframework.web.bind.annotation.GetMapping) && " +
+					"within(org.ftclub.cabinet.*.controller.*)"; // 특정 패키지로 제한
 	private final ParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
 	private final LogParser logParser;
 	private final DiscordWebHookMessenger discordWebHookMessenger;
@@ -81,7 +84,7 @@ public class AdminApiLogAspect {
 		if (!isAdmin) {
 			return;
 		}
-		String name = authentication.getName() != null ? authentication.getName() : "Unknown User";
+		String name = "Unknown User";
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
 
