@@ -47,7 +47,7 @@ const AdminLoginTemplate = (props: {
       if (
         axios.isAxiosError(error) &&
         error.response &&
-        error.response.status == 400
+        error.response.status == HttpStatusCode.BadRequest
       ) {
         handleOpenUnavailableModal();
       }

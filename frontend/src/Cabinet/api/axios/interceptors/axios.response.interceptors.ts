@@ -40,12 +40,10 @@ const handleReissueToken = async (error: any) => {
     }
   } catch (error) {
     console.error("Token reissue failed:", error);
-
     removeCookie("access_token", {
       path: "/",
       domain: getDomain(),
     });
-
     redirectToLoginWithAlert(error);
 
     return Promise.reject(error);

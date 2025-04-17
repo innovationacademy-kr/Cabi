@@ -5,7 +5,7 @@ import {
 } from "@/Cabinet/firebase/firebase-messaging-sw";
 import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
@@ -21,20 +21,19 @@ import {
   axiosMyInfo,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
-import useOAuth from "../hooks/useOAuth";
+import useOAuth from "@/Cabinet/hooks/useOAuth";
+import useURLSearchParams from "@/Cabinet/hooks/useURLSearchParams";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [myInfo, setMyInfo] = useRecoilState(userState);
-  const navigator = useNavigate();
-  const [searchParams] = useSearchParams();
-  const statusParamValue = searchParams.get("status");
-  // TODO : hook / utils로 분리
   const linkedProvider = useRecoilValue(linkedProviderState);
   const { updateUnlinkedProviderStatus } = useOAuth();
+  const { getSearchParam } = useURLSearchParams();
+  const statusParamValue = getSearchParam("status");
+  const navigator = useNavigate();
 
   const getMyInfo = async () => {
-    console.log("getMyInfo");
     try {
       const { data: myInfo } = await axiosMyInfo();
       if (myInfo.alarmTypes?.push && myInfo.isDeviceTokenExpired) {
@@ -47,8 +46,6 @@ const ProfilePage = () => {
       throw error;
     }
   };
-
-  console.log("linkedProvider : ", linkedProvider);
 
   useEffect(() => {
     setIsLoading(true);
