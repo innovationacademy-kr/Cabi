@@ -24,6 +24,8 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [myInfo, setMyInfo] = useRecoilState(userState);
 
+  useOAuthStatus();
+
   const getMyInfo = async () => {
     try {
       const { data: myInfo } = await axiosMyInfo();
@@ -46,9 +48,6 @@ const ProfilePage = () => {
       setIsLoading(false);
     }, 350);
   }, []);
-
-  useOAuthStatus();
-  // TODO : 렌더링될때마다 useOAuthStatus가 실행되는지 확인 필요
 
   return (
     <>

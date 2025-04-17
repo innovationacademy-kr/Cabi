@@ -12,7 +12,6 @@ const HomePage = () => {
   const navigator = useNavigate();
 
   useOAuthStatus();
-  // TODO : 렌더링될때마다 useOAuthStatus가 실행되는지 확인 필요
 
   const lentStartHandler = () => {
     setCurrentFloor(floors[0]);

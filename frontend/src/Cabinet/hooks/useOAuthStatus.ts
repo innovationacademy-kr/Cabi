@@ -29,45 +29,35 @@ const useOAuthStatus = () => {
     return defaultErrorMsg;
   };
 
-  // 로그인 성공 처리
-  useEffect(() => {
-    if (
-      pathname.includes("home") &&
-      status &&
-      Number(status) === HttpStatusCode.Ok
-    ) {
-      removeLocalStorageItem("isLoggedOut");
-      navigator("/home");
-    }
-  }, [status]);
+  const handleOAuthStatusByPath = () => {
+    const statusCode = Number(status);
 
-  // 계정 연결 성공 처리
-  useEffect(() => {
-    if (
-      pathname.includes("profile") &&
-      status &&
-      Number(status) === HttpStatusCode.Ok
-    ) {
-      if (linkedProvider) {
+    if (statusCode === HttpStatusCode.Ok) {
+      // 로그인 성공 처리
+      if (pathname.includes("home")) {
+        removeLocalStorageItem("isLoggedOut");
+        navigator("/home");
+      }
+      // 계정 연결 성공 처리
+      if (pathname.includes("profile") && linkedProvider) {
         updateUnlinkedProviderStatus(linkedProvider, false);
         navigator("/profile");
       }
+    } else {
+      // 실패 처리
+      if (pathname.includes("login")) {
+        const alertMsg = getOAuthErrorMessage(message);
+        alert(alertMsg);
+        navigator("/login");
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (status) {
+      handleOAuthStatusByPath();
     }
   }, [status, linkedProvider]);
-
-  // 실패 처리
-  useEffect(() => {
-    if (
-      pathname.includes("login") &&
-      status &&
-      Number(status) !== HttpStatusCode.Ok
-    ) {
-      const alertMsg = getOAuthErrorMessage(message);
-
-      alert(alertMsg);
-      navigator("/login");
-    }
-  }, [status]);
 };
 
 export default useOAuthStatus;
