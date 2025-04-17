@@ -78,11 +78,6 @@ const useOAuth = () => {
     provider: TOAuthProvider,
     status: boolean
   ) => {
-    console.log(
-      "updateUnlinkedProviderStatus provider status : ",
-      provider,
-      status
-    );
     const currentValue = getUnlinkedProviderStatus();
     const updatedValue = {
       ...currentValue,
