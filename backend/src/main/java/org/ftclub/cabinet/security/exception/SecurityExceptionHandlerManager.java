@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.log.Logging;
 import org.springframework.security.access.AccessDeniedException;
 
 /**
@@ -17,7 +16,6 @@ import org.springframework.security.access.AccessDeniedException;
  */
 @Slf4j
 @RequiredArgsConstructor
-@Logging
 public class SecurityExceptionHandlerManager {
 
 	private final SecurityDefaultExceptionHandler defaultHandler;

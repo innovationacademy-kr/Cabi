@@ -7,13 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.log.Logging;
 import org.springframework.http.MediaType;
 
 /**
  * 예외 response 를 만들어 응답
  */
-@Logging
 public class SecurityDefaultExceptionHandler implements SecurityExceptionHandler {
 
 	private final ObjectMapper objectMapper = new ObjectMapper();

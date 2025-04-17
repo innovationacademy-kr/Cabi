@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.log.LogLevel;
-import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 
 /**
@@ -19,7 +17,6 @@ import org.ftclub.cabinet.security.exception.SpringSecurityException;
  * attribute: oauth별로 사용한 정보들
  */
 @ToString(exclude = {"attributes"})
-@Logging(level = LogLevel.DEBUG)
 @Getter
 @Builder
 public class Oauth2Attributes {

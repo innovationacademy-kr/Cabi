@@ -28,8 +28,6 @@ import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
-import org.ftclub.cabinet.log.LogLevel;
-import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -50,7 +48,6 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @Slf4j
 @Service
-@Logging(level = LogLevel.DEBUG)
 @RequiredArgsConstructor
 public class AuthFacadeService {
 
