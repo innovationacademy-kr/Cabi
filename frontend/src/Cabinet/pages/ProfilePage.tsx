@@ -3,13 +3,10 @@ import {
   deleteFcmToken,
   requestFcmAndGetDeviceToken,
 } from "@/Cabinet/firebase/firebase-messaging-sw";
-import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/Cabinet/recoil/atoms";
-import { linkedProviderState } from "@/Cabinet/recoil/selectors";
 import AlarmCardContainer from "@/Cabinet/components/Card/AlarmCard/AlarmCard.container";
 import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCard/DisplayStyleCard.container";
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
@@ -21,17 +18,11 @@ import {
   axiosMyInfo,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
-import useOAuth from "@/Cabinet/hooks/useOAuth";
-import useURLSearchParams from "@/Cabinet/hooks/useURLSearchParams";
+import useOAuthStatus from "@/Cabinet/hooks/useOAuthStatus";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [myInfo, setMyInfo] = useRecoilState(userState);
-  const linkedProvider = useRecoilValue(linkedProviderState);
-  const { updateUnlinkedProviderStatus } = useOAuth();
-  const { getSearchParam } = useURLSearchParams();
-  const statusParamValue = getSearchParam("status");
-  const navigator = useNavigate();
 
   const getMyInfo = async () => {
     try {
@@ -56,14 +47,8 @@ const ProfilePage = () => {
     }, 350);
   }, []);
 
-  useEffect(() => {
-    if (statusParamValue && Number(statusParamValue) === HttpStatusCode.Ok) {
-      if (linkedProvider) {
-        updateUnlinkedProviderStatus(linkedProvider, false);
-        navigator("/profile");
-      }
-    }
-  }, [linkedProvider]);
+  useOAuthStatus();
+  // TODO : 렌더링될때마다 useOAuthStatus가 실행되는지 확인 필요
 
   return (
     <>
