@@ -105,7 +105,11 @@ public class JwtService {
 
 		TokenDto tokens = tokenProvider.createAccessAndRefreshToken(claims);
 
-		jwtRedisService.addRefreshToken(userId, tokens.getRefreshToken());
+		if (roles.contains(AdminRole.ADMIN.name()) || roles.contains(AdminRole.MASTER.name())) {
+			jwtRedisService.addAdminRefreshToken(userId, tokens.getRefreshToken());
+		} else {
+			jwtRedisService.addRefreshToken(userId, tokens.getRefreshToken());
+		}
 		return tokens;
 	}
 
@@ -136,6 +140,7 @@ public class JwtService {
 		try {
 			Claims claims = parseClaimsEvenIfExpired(accessToken);
 			UserInfoDto userInfoDto = UserInfoDto.fromClaims(claims);
+			log.info("Role = {}", userInfoDto.getRoles());
 
 			if (userInfoDto.hasRole(AdminRole.ADMIN.name())
 					|| userInfoDto.hasRole(AdminRole.MASTER.name())) {
