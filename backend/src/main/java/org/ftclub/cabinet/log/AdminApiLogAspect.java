@@ -83,7 +83,7 @@ public class AdminApiLogAspect {
 	 */
 	private void sendLogMessage(JoinPoint joinPoint, String responseString) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) {
+		if (authentication == null || !(authentication.getPrincipal() instanceof UserInfoDto)) {
 			return;
 		}
 		UserInfoDto adminInfoFromToken
@@ -91,7 +91,7 @@ public class AdminApiLogAspect {
 		if (!adminInfoFromToken.isAdmin()) {
 			return;
 		}
-		
+
 		Optional<Admin> admin = adminQueryService.findById(adminInfoFromToken.getUserId());
 		String name = admin.isPresent() ? admin.get().getEmail() : "Unknown User";
 

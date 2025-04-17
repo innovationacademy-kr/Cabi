@@ -50,7 +50,7 @@ public class JwtService {
 		} catch (ExpiredJwtException e) {
 			throw new SpringSecurityException(ExceptionStatus.EXPIRED_JWT_TOKEN);
 		} catch (JwtException e) {
-			log.info("JwtException : {}", e.getMessage(), e);
+			log.info("JwtException : {}", e.getMessage());
 			throw new SpringSecurityException(ExceptionStatus.JWT_EXCEPTION);
 		} catch (DomainException e) {
 			log.info("Claims has null value : {}", e.getMessage());
@@ -64,7 +64,7 @@ public class JwtService {
 		} catch (ExpiredJwtException e) {
 			throw new SpringSecurityException(ExceptionStatus.EXPIRED_JWT_TOKEN);
 		} catch (JwtException e) {
-			log.info("JwtException : {}", e.getMessage(), e);
+			log.info("JwtException : {}", e.getMessage());
 			throw new SpringSecurityException(ExceptionStatus.JWT_EXCEPTION);
 		} catch (DomainException e) {
 			log.info("Claims has null value : {}", e.getMessage());
