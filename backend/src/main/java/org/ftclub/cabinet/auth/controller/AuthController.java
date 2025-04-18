@@ -14,7 +14,6 @@ import org.ftclub.cabinet.dto.LinkOauthTokenDto;
 import org.ftclub.cabinet.dto.OauthUnlinkRequestDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.log.Logging;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,17 +41,6 @@ public class AuthController {
 	public AguMailResponse requestAGULogin(@RequestParam(name = "name") String name)
 			throws JsonProcessingException {
 		return authFacadeService.requestTemporaryLogin(name);
-	}
-
-	/**
-	 * csrf 토큰 발급
-	 *
-	 * @return
-	 */
-	@GetMapping("/csrf")
-	public ResponseEntity<Void> getCsrfToken() {
-
-		return ResponseEntity.noContent().build();
 	}
 
 	/**
