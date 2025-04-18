@@ -79,8 +79,11 @@ public class AuthFacadeService {
 	public void processAuthentication(HttpServletRequest req, HttpServletResponse res,
 			OauthResult result, String provider) {
 
-		TokenDto tokens = jwtService.createPairTokens(result.getUserId(), result.getRoles(),
-				provider);
+		TokenDto tokens = result.isAdmin() ?
+				jwtService.createAdminTokens(result.getUserId(), result.getRoles(), provider,
+						result.getEmail())
+				: jwtService.createPairTokens(result.getUserId(), result.getRoles(), provider);
+
 		cookieService.setAccessTokenCookiesToClient(res, tokens, req.getServerName());
 
 		Authentication auth = createAuthenticationForUser(result, provider);
