@@ -32,7 +32,7 @@ public class SecurityExceptionHandlerManager {
 			handler.handle(res, status);
 		} catch (IOException ioException) {
 			// handler 에서 response 생성 도중 예외 발생
-			log.error("Failed to write response: ", ioException);
+			log.error("Failed to write response: {}", ioException.getMessage());
 			res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
