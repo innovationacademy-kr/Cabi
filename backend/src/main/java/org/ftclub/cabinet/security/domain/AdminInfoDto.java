@@ -3,7 +3,6 @@ package org.ftclub.cabinet.security.domain;
 import io.jsonwebtoken.Claims;
 import lombok.Getter;
 import lombok.ToString;
-import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 

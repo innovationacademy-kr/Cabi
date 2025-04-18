@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.dto;
+package org.ftclub.cabinet.security.domain;
 
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
