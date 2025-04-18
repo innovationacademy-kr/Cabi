@@ -3,7 +3,7 @@ package org.ftclub.cabinet.jwt.domain;
 public class JwtTokenConstants {
 
 	public static final String ACCESS_TOKEN = "access_token";
-	public static final String REFRESH_TOKEN = "refresh_token";
+	public static final String EMAIL = "email";
 	public static final String AGU_TOKEN = "agu_token";
 	public static final String OAUTH = "oauth";
 	public static final String USER_ID = "userId";

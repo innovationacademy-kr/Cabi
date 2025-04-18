@@ -19,6 +19,7 @@ import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
+import org.ftclub.cabinet.security.domain.AdminInfoDto;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -46,7 +47,11 @@ public class JwtService {
 	public UserInfoDto validateTokenAndGetUserInfo(String token) {
 		try {
 			Claims claims = tokenProvider.parseToken(token);
-			return UserInfoDto.fromClaims(claims);
+			UserInfoDto userInfoDto = UserInfoDto.fromClaims(claims);
+			if (userInfoDto.isAdmin() && claims.containsKey(JwtTokenConstants.EMAIL)) {
+				return AdminInfoDto.fromClaims(claims);
+			}
+			return userInfoDto;
 		} catch (ExpiredJwtException e) {
 			throw new SpringSecurityException(ExceptionStatus.EXPIRED_JWT_TOKEN);
 		} catch (JwtException e) {
@@ -104,12 +109,21 @@ public class JwtService {
 		claims.put(JwtTokenConstants.OAUTH, provider);
 
 		TokenDto tokens = tokenProvider.createAccessAndRefreshToken(claims);
+		jwtRedisService.addRefreshToken(userId, tokens.getRefreshToken());
+		return tokens;
+	}
 
-		if (roles.contains(AdminRole.ADMIN.name()) || roles.contains(AdminRole.MASTER.name())) {
-			jwtRedisService.addAdminRefreshToken(userId, tokens.getRefreshToken());
-		} else {
-			jwtRedisService.addRefreshToken(userId, tokens.getRefreshToken());
-		}
+	public TokenDto createAdminTokens(Long userId, String roles, String provider, String email) {
+		Claims claims = Jwts.claims();
+
+		claims.put(JwtTokenConstants.USER_ID, userId);
+		claims.put(JwtTokenConstants.ROLES, roles);
+		claims.put(JwtTokenConstants.OAUTH, provider);
+		claims.put(JwtTokenConstants.EMAIL, email);
+
+		TokenDto tokens = tokenProvider.createAccessAndRefreshToken(claims);
+		jwtRedisService.addAdminRefreshToken(userId, tokens.getRefreshToken());
+
 		return tokens;
 	}
 
