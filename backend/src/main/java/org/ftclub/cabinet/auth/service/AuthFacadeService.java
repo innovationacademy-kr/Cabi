@@ -29,6 +29,7 @@ import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
+import org.ftclub.cabinet.security.domain.AdminInfoDto;
 import org.ftclub.cabinet.security.domain.UserInfoDto;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.ftclub.cabinet.user.domain.User;
@@ -99,8 +100,13 @@ public class AuthFacadeService {
 	 * @return
 	 */
 	public Authentication createAuthenticationForUser(OauthResult user, String provider) {
-		UserInfoDto userInfoDto =
-				new UserInfoDto(user.getUserId(), provider, user.getRoles());
+		UserInfoDto userInfoDto;
+		if (user.isAdmin()) {
+			userInfoDto =
+					new AdminInfoDto(user.getUserId(), provider, user.getRoles(), user.getEmail());
+		} else {
+			userInfoDto = new UserInfoDto(user.getUserId(), provider, user.getRoles());
+		}
 
 		List<GrantedAuthority> authorityList = Stream.of(user.getRoles().split(FtRole.DELIMITER))
 				.map(role -> new SimpleGrantedAuthority(FtRole.ROLE + role))
