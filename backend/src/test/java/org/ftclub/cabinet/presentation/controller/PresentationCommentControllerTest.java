@@ -184,8 +184,9 @@ public class PresentationCommentControllerTest {
 				));
 
 		// Verify service method was called
-		verify(presentationCommentService).getCommentsByPresentationId(eq(presentationId),
-				eq(userId));
+		verify(presentationCommentService).getCommentsByPresentationId(eq(userId),
+				eq(presentationId)
+		);
 	}
 
 	@DisplayName("프레젠테이션 댓글 수정 성공 테스트")
