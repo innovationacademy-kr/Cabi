@@ -1,8 +1,11 @@
 package org.ftclub.cabinet.auth.service;
 
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.MasterProperties;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,6 +28,12 @@ public class AuthPolicyService {
 	public boolean isMatchWithMasterAuthInfo(String id, String password) {
 		return masterProperties.getId().equals(id)
 				&& masterProperties.getPassword().equals(password);
+	}
+
+	public void verifyAguRole(String userRoles, String role, Set<FtRole> profileRoles) {
+		if (!profileRoles.contains(FtRole.AGU) && !userRoles.contains(role)) {
+			throw ExceptionStatus.ACCESS_DENIED.asServiceException();
+		}
 	}
 
 	public String getMasterEmail() {

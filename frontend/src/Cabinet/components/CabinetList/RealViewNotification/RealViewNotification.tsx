@@ -43,6 +43,7 @@ const ToolTipIcon = styled.div<{ hasEnoughWidth: boolean }>`
     opacity: 1;
   }
 `;
+
 const TooltipBox = styled.div`
   position: relative;
   margin: 10px auto;

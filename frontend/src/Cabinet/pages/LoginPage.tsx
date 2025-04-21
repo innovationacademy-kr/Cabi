@@ -1,10 +1,11 @@
 import "@/Cabinet/assets/css/loginPage.css";
 import LoginTemplate from "@/Cabinet/components/Login/LoginTemplate";
+import useOAuthStatus from "@/Cabinet/hooks/useOAuthStatus";
 
 const LoginPage = () => {
-  return (
-    <LoginTemplate pageTitle="Cabi" pageSubTitle="여러분의 일상을 가볍게" />
-  );
+  useOAuthStatus();
+
+  return <LoginTemplate />;
 };
 
 export default LoginPage;

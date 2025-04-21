@@ -30,8 +30,10 @@ import {
   axiosCabinetByBuildingFloor,
   axiosLogout,
 } from "@/Cabinet/api/axios/axios.custom";
+import { setLocalStorageItem } from "@/Cabinet/api/local_storage/local.storage";
 import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
+import { getDomain } from "@/Cabinet/utils/domainUtils";
 
 const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const currentBuildingName = useRecoilValue(currentBuildingNameState);
@@ -162,25 +164,17 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const onClickLogoutButton = async (): Promise<void> => {
     try {
       const response = await axiosLogout();
-      if (response.status === HttpStatusCode.Ok) {
-        localStorage.setItem("isLoggedOut", "true");
 
-        const adminToken = isAdmin ? "admin_" : "";
-        if (import.meta.env.VITE_IS_LOCAL === "true") {
-          removeCookie(adminToken + "access_token", {
-            path: "/",
-            domain: "localhost",
-          });
-        } else {
-          removeCookie(adminToken + "access_token", {
-            path: "/",
-            domain: "cabi.42seoul.io",
-          });
-        }
+      if (response.status === HttpStatusCode.Ok) {
+        removeCookie("access_token", {
+          path: "/",
+          domain: getDomain(),
+        });
+        setLocalStorageItem("isLoggedOut", "true");
         resetBuilding();
         resetCurrentFloor();
         resetCurrentSection();
-        navigator("/login");
+        navigator("/admin/login");
       }
     } catch (error) {
       console.error(error);

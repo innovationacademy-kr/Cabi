@@ -55,7 +55,7 @@ public class JwtProvider {
 				.compact();
 	}
 
-	private String createToken(Claims claims, Long validity) {
+	public String createToken(Claims claims, Long validity) {
 		Date now = new Date();
 
 		return Jwts.builder()

@@ -1,6 +1,6 @@
 import { captureException } from "@sentry/react";
 import { HttpStatusCode } from "axios";
-import ErrorType from "@/Cabinet/types/enum/error.type.enum";
+import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 const token = getCookie("access_token");

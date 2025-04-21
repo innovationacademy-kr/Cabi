@@ -11,7 +11,6 @@ import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.domain.JwtTokenProperties;
-import org.ftclub.cabinet.security.CsrfCookieConfig;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CookieService {
 
+	private static final String LOGIN_SOURCE = "login_source";
 	private final CookieManager cookieManager;
 	private final JwtTokenProperties jwtTokenProperties;
 
@@ -39,10 +39,15 @@ public class CookieService {
 		res.addCookie(cookie);
 	}
 
-	public void setPairTokenCookiesToClient(HttpServletResponse res, TokenDto tokens,
+	public void addAdminCookie(HttpServletRequest req, HttpServletResponse res) {
+		Cookie cookie = new Cookie(LOGIN_SOURCE, "admin");
+		CookieInfo cookieInfo = new CookieInfo(req.getServerName(), 60, true);
+		setToClient(cookie, cookieInfo, res);
+	}
+
+	public void setAccessTokenCookiesToClient(HttpServletResponse res, TokenDto tokens,
 			String serverName) {
 
-		log.info("Server Name = {}", serverName);
 		boolean isSecure = !cookieManager.isLocalEnvironment(serverName);
 
 		Cookie accessTokenCookie = cookieManager.createCookie(
@@ -55,18 +60,6 @@ public class CookieService {
 		);
 		cookieManager.setDomainByEnv(accessTokenCookie, serverName);
 		res.addCookie(accessTokenCookie);
-
-		Cookie refreshTokenCookie = cookieManager.createCookie(
-				JwtTokenConstants.REFRESH_TOKEN,
-				tokens.getRefreshToken(),
-				jwtTokenProperties.getRefreshExpirySeconds() + 180,
-				"/",
-				true,
-				isSecure
-		);
-
-		cookieManager.setDomainByEnv(refreshTokenCookie, serverName);
-		res.addCookie(refreshTokenCookie);
 	}
 
 	/**
@@ -79,9 +72,7 @@ public class CookieService {
 	public void deleteAllCookies(Cookie[] cookies, String serverName, HttpServletResponse res) {
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				if (!CsrfCookieConfig.CSRF_HEADER.equals(cookie.getName())) {
-					cookieManager.deleteCookie(res, serverName, cookie.getName());
-				}
+				cookieManager.deleteCookie(res, serverName, cookie.getName());
 			}
 		}
 	}

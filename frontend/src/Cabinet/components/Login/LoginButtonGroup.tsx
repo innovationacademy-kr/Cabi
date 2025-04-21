@@ -1,46 +1,16 @@
-import { useState } from "react";
 import styled from "styled-components";
-import {
-  getEnabledProviders,
-  getSocialAuthUrl,
-  getSocialDisplayInfo,
-} from "@/Cabinet/utils/loginUtils";
-import { LoginProvider } from "@/Presentation/types/common/loginType";
-import LoginButton from "./LoginButton";
+import LoginButton from "@/Cabinet/components/Login/LoginButton";
+import { ftProvider, socialOAuthProviders } from "@/Cabinet/assets/data/oAuth";
 
 const LoginButtonGroup = () => {
-  const [loginStatus, setLoginStatus] = useState<{
-    isClicked: boolean;
-    target: LoginProvider | null;
-  }>({
-    isClicked: false,
-    target: null,
-  });
-
   return (
     <LoginButtonGroupStyled>
-      {getEnabledProviders().map((provider) => (
-        <LoginButton
-          key={provider}
-          onLogin={() => {
-            const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
-
-            if (isLoggedOut) {
-              window.location.replace(
-                getSocialAuthUrl(provider) + "?prompt=login"
-              );
-              localStorage.removeItem("isLoggedOut");
-            } else {
-              window.location.replace(getSocialAuthUrl(provider));
-            }
-
-            setLoginStatus({ isClicked: true, target: provider });
-          }}
-          display={getSocialDisplayInfo(provider)}
-          isClicked={loginStatus.isClicked}
-          isTarget={loginStatus.target === provider}
-        />
-      ))}
+      <LoginButton provider={ftProvider} />
+      <SocialLoginButtonGroupWrapper>
+        {socialOAuthProviders.map((provider) => (
+          <LoginButton key={provider} provider={provider} isSocial={true} />
+        ))}
+      </SocialLoginButtonGroupWrapper>
     </LoginButtonGroupStyled>
   );
 };
@@ -48,7 +18,16 @@ const LoginButtonGroup = () => {
 const LoginButtonGroupStyled = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  margin-top: 60px;
+`;
+
+const SocialLoginButtonGroupWrapper = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+  width: 200px;
+  height: 40px;
 `;
 
 export default LoginButtonGroup;

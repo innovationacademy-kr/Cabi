@@ -1,104 +1,128 @@
-import styled from "styled-components";
+import { useRecoilValue } from "recoil";
+import styled, { css } from "styled-components";
+import { targetLoginProviderState } from "@/Cabinet/recoil/atoms";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { ISocialLoginConfig } from "@/Presentation/types/common/loginType";
+import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
+import useOAuth from "@/Cabinet/hooks/useOAuth";
+import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
 
-interface LoginButtonProps {
-  onLogin: () => void;
-  display: ISocialLoginConfig["display"];
-  isClicked: boolean;
-  isTarget: boolean;
-}
-
-interface ButtonStyledProps {
-  backgroundColor: string;
-  fontColor: string;
-}
-
-const LoginButton: React.FC<LoginButtonProps> = ({
-  onLogin,
-  display,
-  isClicked,
-  isTarget,
+const LoginButton = ({
+  provider,
+  isSocial = false,
+}: {
+  provider: TOAuthProvider;
+  isSocial?: boolean;
 }) => {
+  const targetLoginProvider = useRecoilValue(targetLoginProviderState);
+  const { handleOAuthLogin } = useOAuth();
+  const display = getOAuthDisplayInfo(provider);
+  const isClicked = !!targetLoginProvider;
+  const isTarget = targetLoginProvider === provider;
+
   return (
-    <ButtonStyled
-      onClick={onLogin}
+    <ButtonWrapperStyled
+      onClick={() => handleOAuthLogin(provider)}
       backgroundColor={display.backgroundColor}
-      fontColor={display.fontColor}
       disabled={isClicked}
+      isSocial={isSocial}
     >
       {isClicked && isTarget ? (
-        <LoginAnimationContainer>
+        <LoadingAnimationWrapper isSocial={isSocial}>
           <LoadingAnimation />
-        </LoginAnimationContainer>
+        </LoadingAnimationWrapper>
       ) : (
         <>
-          <IconContainer>{display.icon}</IconContainer>
-          <TextContainer>{display.text}</TextContainer>
+          <IconWrapperStyled provider={provider} isSocial={isSocial}>
+            {display.icon}
+          </IconWrapperStyled>
+          {!isSocial && (
+            <TextWrapperStyled>
+              {display.text + " Seoul 로그인"}
+            </TextWrapperStyled>
+          )}
         </>
       )}
-    </ButtonStyled>
+    </ButtonWrapperStyled>
   );
 };
 
-const ButtonStyled = styled.button<ButtonStyledProps>`
+const ButtonWrapperStyled = styled.button<{
+  backgroundColor: string;
+  isSocial: boolean;
+}>`
   background-color: ${(props) => props.backgroundColor};
-  color: ${(props) => props.fontColor};
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
-  border: none;
-  border-radius: 4px;
-  padding: 0 16px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  gap: 12px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    filter: brightness(95%);
-  }
-
-  &:active {
-    transform: translateY(1px);
-  }
 
   &:disabled {
-    background-color: #c4c4c4;
-    color: #ffffff;
+    cursor: not-allowed;
+  }
+
+  ${(props) =>
+    props.isSocial
+      ? css`
+          padding: 0;
+          height: 40px;
+          width: 40px;
+          border-radius: 50%;
+        `
+      : css`
+          padding: 15px;
+          height: 50px;
+          &:active {
+            transform: translateY(1px);
+          }
+        `}
+`;
+
+const LoadingAnimationWrapper = styled.div<{ isSocial: boolean }>`
+  & > div {
+    ${({ isSocial }) =>
+      isSocial &&
+      css`
+        transform: scale(0.5);
+      `}
   }
 `;
 
-const IconContainer = styled.div`
+const IconWrapperStyled = styled.div<{
+  provider: TOAuthProvider;
+  isSocial: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  min-width: 36px;
+
+  ${(props) =>
+    props.isSocial
+      ? css`
+          width: 20px;
+          height: 20px;
+
+          & > svg {
+            width: 20px;
+          }
+        `
+      : css`
+          width: 28px;
+          height: 100%;
+          margin-right: 15px;
+
+          & > svg {
+            width: 28px;
+            height: 20px;
+          }
+        `}
+`;
+
+const TextWrapperStyled = styled.div`
+  text-align: start;
+  width: 100%;
   height: 100%;
-
-  img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-  }
-`;
-
-const TextContainer = styled.div`
-  flex: 1;
-  text-align: center;
-`;
-
-const LoginAnimationContainer = styled.div`
-  width: 30px;
-  height: 24px;
-
-  & > div {
-    transform: scale(0.5);
-    transform-origin: center center;
-  }
+  line-height: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
 `;
 
 export default LoginButton;

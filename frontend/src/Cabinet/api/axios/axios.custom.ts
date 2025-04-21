@@ -1,14 +1,15 @@
 import { captureException } from "@sentry/react";
+import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
 import { AlarmInfo } from "@/Cabinet/types/dto/alarm.dto";
 import { ClubUserDto } from "@/Cabinet/types/dto/lent.dto";
 import CabinetStatus from "@/Cabinet/types/enum/cabinet.status.enum";
 import CabinetType from "@/Cabinet/types/enum/cabinet.type.enum";
-import ErrorType from "@/Cabinet/types/enum/error.type.enum";
+import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
 
-const axiosLogoutUrl = "/v5/auth/logout";
+const axiosLogoutUrl = "/logout";
 export const axiosLogout = async (): Promise<any> => {
   try {
     const response = await instance.post(axiosLogoutUrl);
@@ -439,10 +440,15 @@ export const axiosAdminAuthLogin = async (
   password: string
 ): Promise<any> => {
   try {
-    const response = await instance.post(axiosAdminAuthLoginURL, {
-      id,
-      password,
-    });
+    const response = await instance.post(
+      axiosAdminAuthLoginURL,
+      {
+        id,
+        password,
+      },
+      { withCredentials: true }
+    );
+
     return response;
   } catch (error) {
     throw error;
@@ -485,16 +491,16 @@ export const axiosAGUReturnCancel = async (): Promise<any> => {
   }
 };
 
-const axiosSocialAccountLinkURL = "/v5/oauth/link";
-export const axiosDisconnectSocialAccount = async (
-  mail: string,
-  provider: string
+const axiosSocialAccountLinkURL = "/v5/auth/link";
+export const axiosUnlinkSocialAccount = async (
+  mail: string, // 연결 해지하려는 mail
+  provider: TOAuthProvider // 연결되어있는 provider
 ): Promise<any> => {
   try {
     const response = await instance.delete(axiosSocialAccountLinkURL, {
       data: {
-        oauthMail: mail, // 연동 해지하려는 mail
-        provider: provider, // 연동되어있는 providerType
+        oauthMail: mail,
+        provider: provider,
       },
     });
     return response;
@@ -503,10 +509,25 @@ export const axiosDisconnectSocialAccount = async (
   }
 };
 
-const axiosReissueTokenURL = "/v5/jwt/reissue";
+export const axiosLinkSocialAccount = async (
+  provider: TOAuthProvider
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      axiosSocialAccountLinkURL + `/${provider}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosReissueTokenURL = "/jwt/reissue";
 export const axiosReissueToken = async (): Promise<any> => {
   try {
-    const response = await instance.post(axiosReissueTokenURL);
+    const response = await instance.post(axiosReissueTokenURL, null, {
+      withCredentials: true,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -970,24 +991,6 @@ export const axiosSendSlackAlarmToChannel = async (
       message: message,
     });
   } catch (error) {
-    throw error;
-  }
-};
-
-// TODO: 확인하고 필요없으면 지우기
-const axiosItemAssignURL = "v5/admin/items/assign";
-export const axiosItemAssign = async (
-  itemSku: string,
-  userIds: number[]
-): Promise<any> => {
-  try {
-    const response = await instance.post(axiosItemAssignURL, {
-      itemSku,
-      userIds,
-    });
-    return response;
-  } catch (error) {
-    logAxiosError(error, ErrorType.STORE, "아이템 지급 중 오류 발생", true);
     throw error;
   }
 };

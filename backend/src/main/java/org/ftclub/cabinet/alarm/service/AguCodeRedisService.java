@@ -17,8 +17,6 @@ public class AguCodeRedisService {
 	public void verifyTemporaryCode(String name, String code) {
 		String codeInRedis = codeRedis.findAguCodeByName(name);
 
-		log.info("codeInRedis = {}", codeInRedis);
-
 		if (codeInRedis == null || !codeInRedis.equals(code)) {
 			throw ExceptionStatus.NOT_FOUND_VERIFICATION_LINK.asServiceException();
 		}

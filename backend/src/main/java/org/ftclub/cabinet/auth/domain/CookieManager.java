@@ -54,11 +54,8 @@ public class CookieManager {
 		Cookie cookie = new Cookie(name, null);
 		cookie.setMaxAge(0);
 		cookie.setPath("/");
-		if (isLocalEnvironment(serverName)) {
-			cookie.setDomain(domainProperties.getLocal());
-		} else {
-			cookie.setDomain(domainProperties.getCookieDomain());
-		}
+		cookie.setSecure(!isLocalEnvironment(serverName));
+		setDomainByEnv(cookie, serverName);
 		res.addCookie(cookie);
 	}
 

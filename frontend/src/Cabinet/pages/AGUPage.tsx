@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
-import AGUCabinetReturnSection from "@/Cabinet/components/AGU/AGUCabinetReturnSection";
+import AGUCabinetReturnSectionContainer from "@/Cabinet/components/AGU/AGUCabinetReturnSection.container";
 import AGUMailVerificationSection from "@/Cabinet/components/AGU/AGUMailVerificationSection";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
@@ -38,7 +38,7 @@ const AGUPage = () => {
     } else setIsFetchingMyLentInfo(false);
   }, []);
 
-  const handleButtonClick = (key: string, callback: () => void) => {
+  const handleUserAction = (key: string, callback: () => void) => {
     setIsProcessingButtonClick(true);
     debounce(
       key,
@@ -46,7 +46,7 @@ const AGUPage = () => {
         await callback();
         setIsProcessingButtonClick(false);
       },
-      100
+      300
     );
   };
 
@@ -57,15 +57,14 @@ const AGUPage = () => {
       ) : (
         <>
           <UtilsSectionStyled></UtilsSectionStyled>
-          <HeaderStyled>A.G.U 사물함 반납</HeaderStyled>
           {aguToken && userId ? (
-            <AGUCabinetReturnSection
-              handleButtonClick={handleButtonClick}
+            <AGUCabinetReturnSectionContainer
+              handleUserAction={handleUserAction}
               isProcessingButtonClick={isProcessingButtonClick}
             />
           ) : (
             <AGUMailVerificationSection
-              handleButtonClick={handleButtonClick}
+              handleUserAction={handleUserAction}
               isProcessingButtonClick={isProcessingButtonClick}
             />
           )}
@@ -93,7 +92,7 @@ const UtilsSectionStyled = styled.section`
   margin-top: 50px;
 `;
 
-const HeaderStyled = styled.h1`
+export const AGUHeaderStyled = styled.h1`
   font-size: 2rem;
   font-weight: 700;
   margin-top: 30px;

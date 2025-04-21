@@ -9,7 +9,6 @@ import org.ftclub.cabinet.admin.auth.service.AdminAuthService;
 import org.ftclub.cabinet.dto.AccessTokenDto;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.log.Logging;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,13 +53,4 @@ public class AdminAuthController {
 		return adminAuthService.masterLogin(masterLoginDto, req, res);
 	}
 
-	/**
-	 * 자체 로그인 수행 시 csrf 토큰 발급용
-	 *
-	 * @return
-	 */
-	@GetMapping("")
-	public ResponseEntity<Void> getCsrfToken() {
-		return ResponseEntity.ok().build();
-	}
 }

@@ -3,19 +3,16 @@ package org.ftclub.cabinet.security.handler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.auth.domain.CustomOAuth2User;
+import org.ftclub.cabinet.auth.domain.OauthResult;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.oauth.domain.CustomOAuth2User;
-import org.ftclub.cabinet.oauth.domain.OauthResult;
-import org.ftclub.cabinet.oauth.service.OauthFacadeService;
+import org.ftclub.cabinet.auth.service.OauthFacadeService;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
-import org.ftclub.cabinet.security.exception.SpringSecurityException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,13 +25,10 @@ import org.springframework.stereotype.Component;
  * token을 만들어 발급
  */
 @Component
-@Slf4j
+@Logging
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-
-	private static final List<String> availableProvider =
-			List.of("ft", "google", "kakao", "naver", "github");
 	private final OauthFacadeService oauthFacadeService;
 	private final ObjectMapper objectMapper;
 	private final AuthPolicyService authPolicyService;
@@ -55,17 +49,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException {
 		CustomOAuth2User fromLoadUser = (CustomOAuth2User) authentication.getPrincipal();
-		String provider = fromLoadUser.getProvider();
 
 		try {
-			OauthResult oauthResult = processOAuthLogin(request, provider, fromLoadUser);
-			authFacadeService.processAuthentication(request, response, oauthResult, provider);
-			String redirectUrl = oauthResult.getRedirectionUrl();
+			OauthResult oauthResult = processOAuthLogin(request, fromLoadUser);
+			authFacadeService.processAuthentication(request, response, oauthResult,
+					fromLoadUser.getProvider());
 
-			if (oauthResult.hasRole("AGU")) {
-				redirectUrl = authPolicyService.getAGUUrl();
-			}
-			response.sendRedirect(redirectUrl);
+			redirectUser(response, oauthResult);
 		} catch (Exception e) {
 			SecurityContextHolder.clearContext();
 			securityExceptionHandlerManager.handle(response, e, true);
@@ -73,26 +63,32 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	}
 
 	/**
-	 * oauth2 login 위치에 따라 OauthResult 생성, redirect 경로 지정
+	 * oauth2 login 위치에 따라 OauthResult 생성
 	 *
 	 * @param req
-	 * @param provider
 	 * @param oauth2User
 	 * @return
 	 */
-	private OauthResult processOAuthLogin(HttpServletRequest req,
-			String provider, CustomOAuth2User oauth2User) {
+	private OauthResult processOAuthLogin(
+			HttpServletRequest req,
+			CustomOAuth2User oauth2User) {
 
+		String provider = oauth2User.getProvider();
 		if (provider.equals(mainProvider)) {
 			JsonNode rootNode =
 					objectMapper.convertValue(oauth2User.getAttributes(), JsonNode.class);
 
 			return oauthFacadeService.handleFtLogin(rootNode);
 		}
-		if (availableProvider.contains(provider)) {
-			return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
-		}
-		throw new SpringSecurityException(ExceptionStatus.NOT_SUPPORT_OAUTH_TYPE);
+		return oauthFacadeService.handleExternalOAuthLogin(oauth2User, req);
+	}
+
+	private void redirectUser(HttpServletResponse response, OauthResult oauthResult)
+			throws IOException {
+		String redirectUrl = oauthResult.hasRole("AGU")
+				? authPolicyService.getAGUUrl()
+				: oauthResult.getRedirectionUrl();
+		response.sendRedirect(redirectUrl);
 	}
 
 }

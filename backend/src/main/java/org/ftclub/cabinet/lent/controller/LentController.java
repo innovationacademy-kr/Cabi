@@ -2,7 +2,6 @@ package org.ftclub.cabinet.lent.controller;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/v4/lent")
 @Logging
-@Slf4j
 public class LentController {
 
 	private final LentFacadeService lentFacadeService;
@@ -127,7 +125,6 @@ public class LentController {
 	@GetMapping("/me")
 	public ResponseEntity<MyCabinetResponseDto> getMyLentInfo(
 			@AuthenticationPrincipal UserInfoDto user) {
-		log.info("userInformation = {}", user.getUserId());
 		MyCabinetResponseDto myCabinetResponseDto = lentFacadeService.getMyLentInfo(
 				user.getUserId());
 		if (myCabinetResponseDto == null) {

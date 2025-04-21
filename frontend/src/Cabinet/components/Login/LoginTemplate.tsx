@@ -1,13 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import LoginCard from "@/Cabinet/components/Login/LoginCard";
 import { ReactComponent as LoginImg } from "@/Cabinet/assets/images/loginImg.svg";
-import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
-import LoginButtonGroup from "./LoginButtonGroup";
 
-const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
-  const { pageTitle, pageSubTitle } = props;
-  const navigator = useNavigate();
-
+const LoginTemplate = () => {
   return (
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">
@@ -30,19 +25,7 @@ const LoginTemplate = (props: { pageTitle: string; pageSubTitle: string }) => {
         </BottomContentsStyled>
       </LeftSectionStyled>
       <RightSectionStyled className="rightLoginPage">
-        <LoginCardStyled className="modal">
-          <CardLogoStyled>
-            <LogoImg />
-          </CardLogoStyled>
-          <CardTitleBoxStyled>
-            <CardTitleStyled>{pageTitle}</CardTitleStyled>
-            <CardSubTitleStyled>{pageSubTitle}</CardSubTitleStyled>
-          </CardTitleBoxStyled>
-          <LoginButtonGroup />
-          <AGUURLSectionStyled onClick={() => navigator("/agu")}>
-            A.G.U 유저라면?
-          </AGUURLSectionStyled>
-        </LoginCardStyled>
+        <LoginCard />
       </RightSectionStyled>
     </LoginPageStyled>
   );
@@ -104,53 +87,6 @@ const RightSectionStyled = styled.section`
   justify-content: center;
   align-items: center;
   background-color: var(--sys-main-color);
-`;
-
-const LoginCardStyled = styled.div`
-  width: 350px;
-  height: 500px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: column;
-  padding: 85px 0;
-  background-color: var(--bg-color);
-`;
-
-const CardLogoStyled = styled.div`
-  width: 70px;
-  height: 70px;
-  svg {
-    .logo_svg__currentPath {
-      fill: var(--sys-main-color);
-    }
-  }
-`;
-
-const CardTitleBoxStyled = styled.div`
-  text-align: center;
-  margin-top: -40px;
-`;
-
-const CardTitleStyled = styled.h1`
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-`;
-
-const CardSubTitleStyled = styled.p`
-  color: var(--sys-main-color);
-`;
-
-const AGUURLSectionStyled = styled.span`
-  text-decoration: underline;
-  font-size: 0.875rem;
-  color: var(--gray-line-btn-color);
-  font-size: 12px;
-  letter-spacing: -0.02rem;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 export default LoginTemplate;

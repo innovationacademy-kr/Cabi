@@ -13,6 +13,8 @@ import "@/Cabinet/assets/css/reset.css";
 import "@/index.css";
 import App from "@/App";
 import { GlobalStyle } from "@/Cabinet/assets/data/ColorTheme";
+import "@/Cabinet/api/axios/interceptors/axios.request.interceptors.ts";
+import "@/Cabinet/api/axios/interceptors/axios.response.interceptors.ts";
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,

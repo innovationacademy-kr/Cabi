@@ -113,6 +113,8 @@ public enum ExceptionStatus {
 	NOT_FOUND_VERIFICATION_LINK(HttpStatus.BAD_REQUEST, "인증 링크가 일치하지 않습니다"),
 	NOT_FOUND_OAUTH_CONNECTION(HttpStatus.NOT_FOUND, "Oauth 연동 기록이 존재하지 않습니다"),
 	INVALID_OAUTH_CONNECTION(HttpStatus.BAD_REQUEST, "Oauth 연동 기록이 일치하지 않습니다"),
+	INVALID_CSRF(HttpStatus.FORBIDDEN, "잘못된 형식의 CSRF 토큰입니다"),
+	MISSING_CSRF(HttpStatus.FORBIDDEN, "CSRF 토큰이 존재하지 않습니다"),
 	CODE_ALREADY_SENT(HttpStatus.TOO_MANY_REQUESTS, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다.");
 
 	final private int statusCode;

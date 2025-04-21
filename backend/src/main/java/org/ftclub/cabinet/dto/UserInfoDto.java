@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 
@@ -29,5 +30,10 @@ public class UserInfoDto {
 
 	public boolean hasRole(String otherRole) {
 		return this.roles.contains(otherRole);
+	}
+
+	public boolean isAdmin() {
+		return this.roles.contains(AdminRole.ADMIN.name())
+				|| this.roles.contains(AdminRole.MASTER.name());
 	}
 }
