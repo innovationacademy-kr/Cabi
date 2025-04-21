@@ -59,12 +59,14 @@ public class PresentationCommentController {
 	@PatchMapping("/{commentId}")
 	public PresentationCommentResponseDto updatePresentationComment(
 			@AuthenticationPrincipal UserInfoDto user,
+			@PathVariable Long presentationId,
 			@PathVariable Long commentId,
 			@RequestBody @Valid PresentationCommentRequestDto requestDto
 	) {
 		return presentationCommentService.updatePresentationComment(
 				new PresentationCommentServiceUpdateDto(
 						user.getUserId(),
+						presentationId,
 						commentId,
 						requestDto.getDetail()
 				)
