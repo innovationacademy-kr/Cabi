@@ -44,11 +44,11 @@ public class PresentationCommentService {
 	}
 
 	private void verifyCommentSize(String commentDetail) {
+		if (commentDetail == null || commentDetail.isBlank()) {
+			throw ExceptionStatus.PRESENTATION_COMMENT_EMPTY.asServiceException();
+		}
 		if (commentDetail.length() > 500) {
 			throw ExceptionStatus.PRESENTATION_COMMENT_TOO_LONG.asServiceException();
-		}
-		if (commentDetail.isBlank()) {
-			throw ExceptionStatus.PRESENTATION_COMMENT_EMPTY.asServiceException();
 		}
 	}
 
