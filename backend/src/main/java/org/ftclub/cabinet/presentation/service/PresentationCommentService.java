@@ -7,8 +7,10 @@ import org.ftclub.cabinet.dto.PresentationCommentResponseDto;
 import org.ftclub.cabinet.dto.PresentationCommentServiceCreationDto;
 import org.ftclub.cabinet.dto.PresentationCommentServiceUpdateDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationComment;
 import org.ftclub.cabinet.presentation.repository.PresentationCommentRepository;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +30,13 @@ public class PresentationCommentService {
 	) {
 		verifyCommentSize(dto.getCommentDetail());
 
+		Presentation presentation = presentationQueryService.getPresentation(
+				dto.getPresentationId());
+		User user = userQueryService.getUser(dto.getUserId());
+
 		PresentationComment savedComment = commentRepository.save(new PresentationComment(
-				presentationQueryService.getPresentation(dto.getPresentationId()),
-				userQueryService.getUser(dto.getUserId()),
+				presentation,
+				user,
 				dto.getCommentDetail()
 		));
 
@@ -56,8 +62,12 @@ public class PresentationCommentService {
 			Long userId,
 			Long presentationId
 	) {
+		// Presentation 존재하는지 확인
+		presentationQueryService.getPresentation(presentationId);
+
 		List<PresentationComment> comments = commentRepository.findByPresentationIdOrderByCreatedAtAsc(
 				presentationId);
+
 		return comments.stream()
 				.map(comment -> new PresentationCommentResponseDto(
 						comment.getId(),
@@ -70,18 +80,22 @@ public class PresentationCommentService {
 				)).collect(Collectors.toList());
 	}
 
-	// TODO: Presentation 존재하는지, Presentation 내의 Comment 인지 확인
 	public PresentationCommentResponseDto updatePresentationComment(
 			PresentationCommentServiceUpdateDto dto
 	) {
 		PresentationComment comment = commentRepository.findById(dto.getCommentId())
 				.orElseThrow(ExceptionStatus.PRESENTATION_COMMENT_NOT_FOUND::asServiceException);
 
-		if (comment.getUser().getId() != dto.getUserId()) {
+		verifyPresentationAndCommentAssociation(comment, dto.getPresentationId());
+		verifyCommentSize(dto.getCommentDetail());
+
+		// 수정 권한 확인
+		if (!comment.getUser().getId().equals(dto.getUserId())) {
 			throw ExceptionStatus.PRESENTATION_COMMENT_NOT_AUTHORIZED.asServiceException();
 		}
 
 		comment.updateDetail(dto.getCommentDetail());
+
 		return new PresentationCommentResponseDto(
 				comment.getId(),
 				comment.getUser().getName(),
@@ -89,5 +103,15 @@ public class PresentationCommentService {
 				comment.getUpdatedAt(),
 				true, comment.isBanned(), true
 		);
+	}
+
+	private void verifyPresentationAndCommentAssociation(PresentationComment comment,
+			Long presentationId) {
+		presentationQueryService.getPresentation(presentationId);
+
+		Presentation presentationOfComment = comment.getPresentation();
+		if (!presentationOfComment.getId().equals(presentationId)) {
+			throw ExceptionStatus.PRESENTATION_COMMENT_INVALID_ASSOCIATION.asServiceException();
+		}
 	}
 }
