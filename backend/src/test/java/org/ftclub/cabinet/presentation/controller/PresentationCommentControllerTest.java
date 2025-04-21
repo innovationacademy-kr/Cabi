@@ -61,7 +61,7 @@ public class PresentationCommentControllerTest {
 	@MockBean
 	private UserInfoDto userInfoDto;
 
-	@MockBean // TODO: 왜 필요하지?
+	@MockBean
 	private DiscordWebHookMessenger discordWebHookMessenger;
 
 	@MockBean
@@ -136,7 +136,6 @@ public class PresentationCommentControllerTest {
 								.content(objectMapper.writeValueAsString(requestDto))
 								.with(authentication(mockAuthentication))
 								.with(csrf())
-						// TODO: JWT Authentication 추가 해야 함
 				)
 				.andExpect(status().isOk())
 				.andDo(document("create-presentation-comment",
@@ -205,6 +204,7 @@ public class PresentationCommentControllerTest {
 
 		PresentationCommentServiceUpdateDto presentationCommentServiceUpdateDto = new PresentationCommentServiceUpdateDto(
 				userId,
+				presentationId,
 				commentId,
 				updatedDetail
 		);
