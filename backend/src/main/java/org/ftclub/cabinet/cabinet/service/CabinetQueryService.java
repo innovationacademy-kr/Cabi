@@ -81,7 +81,7 @@ public class CabinetQueryService {
 	}
 
 	public Cabinet getById(Long cabinetId) {
-		return cabinetRepository.findById(cabinetId)
+		return cabinetRepository.findByIdWithCabinetPlace(cabinetId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_CABINET::asServiceException);
 	}
 

@@ -37,11 +37,16 @@ public class LentController {
 	 * @param user      사용자 세션
 	 * @param cabinetId 대여할 사물함 ID
 	 */
-	@PostMapping("/cabinets/{cabinetId}")
-	public void startLentCabinet(
-			@AuthenticationPrincipal UserInfoDto user,
-			@PathVariable Long cabinetId) {
-		lentFacadeService.startLentCabinet(user.getUserId(), cabinetId);
+	@PostMapping("/cabinets/{cabinetId}/{userId}")
+	public void startLentCabinet(@PathVariable(name = "cabinetId") Long cabinetId,
+			@PathVariable(name = "userId") Long userId) {
+		lentFacadeService.startLentCabinet(userId, cabinetId);
+	}
+
+	@PostMapping("/cabinets/{cabinetId}/{userId}/2")
+	public void startLentCabinet2(@PathVariable(name = "cabinetId") Long cabinetId,
+			@PathVariable(name = "userId") Long userId) {
+		lentFacadeService.startLentCabinetWithDistributedLock(cabinetId, userId);
 	}
 
 	/**

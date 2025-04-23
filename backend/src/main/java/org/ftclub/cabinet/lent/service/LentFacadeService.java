@@ -9,6 +9,7 @@ import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.DistributedLock;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
@@ -107,7 +108,7 @@ public class LentFacadeService {
 			}
 			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
 			List<User> userList = userQueryService.findUsers(usersInCabinet);
-			userActiveCabinet = cabinetQueryService.getCabinet(cabinetId);
+			userActiveCabinet = cabinetQueryService.getByIdWithCabinetPlace(cabinetId);
 			lentDtoList = userList.stream().map(u -> lentMapper.toLentDto(u, null))
 					.collect(Collectors.toList());
 		} else {
@@ -167,8 +168,38 @@ public class LentFacadeService {
 		lentPolicyService.verifyUserForLent(
 				new UserVerifyRequestDto(user.getBlackholedAt(), lentCount,
 						cabinetId, cabinet.getStatus(), banHistories));
-//				new UserVerifyRequestDto(user.getRole(), user.getBlackholedAt(), lentCount,
-//						cabinetId, cabinet.getStatus(), banHistories));
+		lentPolicyService.verifyCabinetForLent(cabinet.getStatus(), cabinet.getLentType());
+
+		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now, LentType.PRIVATE,
+				1);
+		lentCommandService.startLent(user.getId(), cabinet.getId(), now, expiredAt);
+		cabinetCommandService.changeStatus(cabinet, CabinetStatus.FULL);
+		cabinetCommandService.changeUserCount(cabinet, lentCount + 1);
+		eventPublisher.publishEvent(AlarmEvent.of(userId,
+				new LentSuccessAlarm(cabinet.getCabinetPlace().getLocation(),
+						cabinet.getVisibleNum(), expiredAt)));
+	}
+
+	@DistributedLock(lockName = "CABINET_LENT")
+	@Transactional
+	public void startLentCabinetWithDistributedLock(Long cabinetId, Long userId) {
+		LocalDateTime now = LocalDateTime.now();
+		User user = userQueryService.getUser(userId);
+		Cabinet cabinet = cabinetQueryService.getById(cabinetId);
+		int lentCount = lentQueryService.countUserActiveLent(userId);
+		List<BanHistory> banHistories = banHistoryQueryService.findActiveBanHistories(userId, now);
+		int userCount = lentQueryService.countCabinetUser(cabinetId);
+
+		if (user.isBlackholed()) {
+			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
+		}
+
+		lentPolicyService.verifyCabinetLentCount(cabinet.getLentType(), cabinet.getMaxUser(),
+				userCount);
+		lentPolicyService.verifyCabinetType(cabinet.getLentType(), LentType.PRIVATE);
+		lentPolicyService.verifyUserForLent(
+				new UserVerifyRequestDto(user.getBlackholedAt(), lentCount,
+						cabinetId, cabinet.getStatus(), banHistories));
 		lentPolicyService.verifyCabinetForLent(cabinet.getStatus(), cabinet.getLentType());
 
 		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now, LentType.PRIVATE,
@@ -242,7 +273,7 @@ public class LentFacadeService {
 	@Transactional
 	public void startLentClubCabinet(Long clubId, Long cabinetId) {
 		LocalDateTime now = LocalDateTime.now();
-		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetQueryService.getCabinetForUpdate(cabinetId);
 		Club club = clubQueryService.getClub(clubId);
 		int userCount = lentQueryService.countCabinetUser(cabinetId);
 
@@ -313,7 +344,7 @@ public class LentFacadeService {
 	@Transactional
 	public void endLentClub(Long clubId, Long cabinetId, String memo) {
 		LocalDateTime now = LocalDateTime.now();
-		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetQueryService.getByIdWithCabinetPlace(cabinetId);
 		ClubLentHistory clubLentHistory =
 				clubLentQueryService.getClubActiveLentHistory(clubId, cabinetId);
 		lentPolicyService.verifyCabinetType(cabinet.getLentType(), LentType.CLUB);

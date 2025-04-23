@@ -1,6 +1,21 @@
 version: "3"
 
 services:
+  influxdb:
+    image: bitnami/influxdb:1.8.5
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+      - "8085:8088"
+    environment:
+      - INFLUXDB_ADMIN_USER_PASSWORD=bitnami123
+      - INFLUXDB_ADMIN_USER_TOKEN=admintoken123
+      - INFLUXDB_HTTP_AUTH_ENABLED=false
+      - INFLUXDB_DB=myk6db
+  grafana:
+    image: bitnami/grafana:latest
+    ports:
+      - "3000:3000"
   mariadb:
     container_name: db
     build: ./
@@ -31,6 +46,6 @@ services:
       - ../redis/config/:/user/local/etc/redis/
     command: redis-server /user/local/etc/redis/redis.conf
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       timeout: 20s
       retries: 10

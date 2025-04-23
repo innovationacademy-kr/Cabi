@@ -21,40 +21,36 @@ import org.springframework.stereotype.Component;
 public class DistributedLockAop {
 
 	private final RedissonClient redissonClient;
+	private final TransactionAspect transactionAspect;
 	private final CabinetQueryService cabinetQueryService;
 
-	@Around("@annotation(org.ftclub.cabinet.cabinet.domain.DistributedLock)")
-	public Object applyDistributedLock(ProceedingJoinPoint joinPoint) throws Throwable {
+	@Around("@annotation(org.ftclub.cabinet.cabinet.domain.DistributedLock) && args(targetId)")
+	public Object applyDistributedLock(ProceedingJoinPoint joinPoint, Long targetId)
+			throws Throwable {
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		Method method = signature.getMethod();
 		DistributedLock annotation = method.getAnnotation(DistributedLock.class);
 
-		Long value = (Long) CustomSpringEPLParser.getDynamicValue(signature.getParameterNames(),
-				joinPoint.getArgs(), annotation.pk());
-		String key = value + ":" + annotation.entity();
-		RLock fairLock = redissonClient.getLock(key);
+		String key = getLockName(targetId, annotation);
+		RLock lock = redissonClient.getLock(key);
 
-		boolean isAcquired = false;
 		log.info("lock 획득 시도 : {}", key);
 		try {
-			isAcquired = fairLock.tryLock(annotation.waitTime(), annotation.leaseTime(),
+			boolean available = lock.tryLock(annotation.waitTime(), annotation.leaseTime(),
 					annotation.timeUnit());
-			if (!isAcquired) {
+			if (!available) {
 
 				log.error("Lock 획득 실패, {}", key);
 				throw ExceptionStatus.LOCK_ACQUISITION_FAILED.asServiceException();
 			}
-			log.info("lock 획득 성공, {}", key);
 
-			return joinPoint.proceed();
+			log.info("lock 획득 성공, {}", key);
+			return transactionAspect.proceed(joinPoint);
 		} catch (RedisConnectionException e) {
-			return handleWithXLockFallback(joinPoint, value, annotation.entity());
+			return handleWithXLockFallback(joinPoint, targetId, annotation.lockName());
 		} finally {
 			try {
-				if (isAcquired && fairLock.isHeldByCurrentThread()) {
-					log.info("lock 반납, {}", key);
-					fairLock.unlock();
-				}
+				lock.unlock();
 			} catch (IllegalMonitorStateException e) {
 				// leaseTime 지난 후 자동해제가 되는데 unlock 시도 시 발생
 				log.error("Lock 반납 오류 (이미 만료): {}{}", e, key);
@@ -72,11 +68,18 @@ public class DistributedLockAop {
 	private Object handleWithXLockFallback(ProceedingJoinPoint joinPoint, Object pkValue,
 			String entityName)
 			throws Throwable {
-		if (entityName.equals("CABINET")) {
+		if (entityName.equals("CABINET_LENT")) {
 			cabinetQueryService.getCabinetForUpdate((Long) pkValue);
 		}
 
 		return joinPoint.proceed();
+	}
+
+	private String getLockName(Long targetId, DistributedLock annotation) {
+		String lockNameFormat = "%s:%s_lock";
+		String relevantParam = targetId.toString();
+
+		return String.format(lockNameFormat, relevantParam, annotation.lockName());
 	}
 
 }

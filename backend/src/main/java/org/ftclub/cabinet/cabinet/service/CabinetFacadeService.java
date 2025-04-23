@@ -88,7 +88,7 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
-		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetQueryService.getByIdWithCabinetPlace(cabinetId);
 		if (cabinet.getLentType().equals(LentType.CLUB)) {
 			ClubLentHistory activeClubLentHistory =
 					clubLentQueryService.findActiveLentHistoryWithClub(cabinetId);
@@ -302,7 +302,7 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateCabinetStatusNote(Long cabinetId, String statusNote) {
-		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetQueryService.getById(cabinetId);
 		cabinetCommandService.changeCabinetStatusNote(cabinet, statusNote);
 	}
 
@@ -315,7 +315,7 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateCabinetTitle(Long cabinetId, String title) {
-		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetQueryService.getById(cabinetId);
 		cabinetCommandService.updateTitle(cabinet, title);
 	}
 
@@ -328,7 +328,7 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateCabinetGrid(Long cabinetId, Integer row, Integer col) {
-		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetQueryService.getById(cabinetId);
 		cabinetCommandService.updateGrid(cabinet, Grid.of(row, col));
 	}
 
@@ -340,7 +340,7 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateCabinetVisibleNum(Long cabinetId, Integer visibleNum) {
-		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetQueryService.getById(cabinetId);
 		cabinetCommandService.updateVisibleNum(cabinet, visibleNum);
 	}
 

@@ -16,6 +16,7 @@ public class SecurityPathPatterns {
 			"/v4/admin/auth/**",
 
 			"/jwt/reissue",
+			"/v4/lent/cabinets/**",
 	};
 
 	public static final String[] ADMIN_ENDPOINTS = {
