@@ -120,7 +120,17 @@ public enum ExceptionStatus {
 	// Presentation 관련
 	CANNOT_CREATE_SLOT_IN_PAST(HttpStatus.BAD_REQUEST, "과거 시간으로는 발표 슬롯을 생성할 수 없습니다."),
 	SLOT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 시간에는 이미 발표 슬롯이 존재합니다."),
-	SLOT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 발표 슬롯이 존재하지 않습니다.");
+	SLOT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 발표 슬롯이 존재하지 않습니다."),
+	INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "잘못된 파일 확장자입니다."),
+
+//	NOT_PUBLIC_PRESENTATION(HttpStatus.FORBIDDEN, "비공개 글입니다."),
+
+	// Presentation - User 권한 관련
+	NOT_LOGGED_IN(HttpStatus.UNAUTHORIZED, "로그인이 필요한 서비스입니다."),
+	PRESENTATION_ACCESS_DENIED(HttpStatus.FORBIDDEN, "권한이 부족합니다."),
+
+	// REMOVE (just for conflict)
+	REMOVE(HttpStatus.BAD_REQUEST, "삭제할 내용(오로지 마지막 ; 작성 용)");
 
 	final private int statusCode;
 	final private String message;

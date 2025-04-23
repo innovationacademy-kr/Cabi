@@ -87,6 +87,9 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.9'
 
+    // aws - s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.11.1000'
 
     // test
     testCompileOnly 'org.projectlombok:lombok'

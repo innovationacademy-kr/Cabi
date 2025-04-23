@@ -1,9 +1,10 @@
 package org.ftclub.cabinet.presentation.service;
 
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
+import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class PresentationCommandService {
 	public void createPresentation(User user,
 			PresentationFormRequestDto form,
 			PresentationSlot slot,
-			MultipartFile thumbnail) {
+			MultipartFile thumbnail) throws IOException {
 
 		// upload thumbnail in S3
 		String thumbnailLink = thumbnailStorageService.uploadImage(thumbnail);

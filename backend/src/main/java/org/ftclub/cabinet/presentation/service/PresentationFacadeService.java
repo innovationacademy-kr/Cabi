@@ -1,9 +1,11 @@
 package org.ftclub.cabinet.presentation.service;
 
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.dto.PresentationFormRequestDto;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
+import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -26,16 +28,17 @@ public class PresentationFacadeService {
 	/**
 	 * 프레젠테이션을 등록합니다.
 	 *
-	 * @param userId    사용자 ID
+	 * @param userInfo  사용자 정보
 	 * @param form      프레젠테이션 등록 요청 DTO
 	 * @param thumbnail 썸네일 이미지 파일
 	 */
-	public void registerPresentation(Long userId,
+	public void registerPresentation(UserInfoDto userInfo,
 			PresentationFormRequestDto form,
-			MultipartFile thumbnail) {
+			MultipartFile thumbnail) throws IOException {
 
-		// TODO: user role 검증
-		User user = userQueryService.getUser(userId);
+		// check user role
+		policyService.validatePresentator(userInfo);
+		User user = userQueryService.getUser(userInfo.getUserId());
 
 		// TODO: slot 검증 및 slotService에서 slotId 가져오는 것으로 변경 (현재의 orElseThrow 제거)
 		PresentationSlot slot = slotRepository.findById(form.getSlotId())
