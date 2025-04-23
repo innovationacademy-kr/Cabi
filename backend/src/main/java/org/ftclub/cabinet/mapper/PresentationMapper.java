@@ -1,9 +1,7 @@
 package org.ftclub.cabinet.mapper;
 
-import java.time.LocalDate;
 import java.util.List;
 import org.ftclub.cabinet.dto.PresentationFormData;
-import org.ftclub.cabinet.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.dto.PresentationMainData;
 import org.ftclub.cabinet.dto.PresentationMyPageDto;
 import org.ftclub.cabinet.presentation.domain.Presentation;
@@ -20,5 +18,5 @@ public interface PresentationMapper {
 	PresentationMyPageDto toPresentationMyPageDto(Presentation presentation);
 
 	PresentationMainData toPresentationMainData(List<PresentationFormData> past,
-		List<PresentationFormData> upcoming);
+			List<PresentationFormData> upcoming);
 }

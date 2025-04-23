@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.utils.scheduler;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,7 +12,6 @@ import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.FtClubCabinetException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
-import org.ftclub.cabinet.presentation.service.PresentationService;
 import org.ftclub.cabinet.user.service.LentExtensionManager;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
@@ -41,7 +39,6 @@ public class SystemScheduler {
 	private final BlackholeManager blackholeManager;
 	private final ReleaseManager releaseManager;
 	private final DiscordWebHookMessenger discordWebHookMessenger;
-	private final PresentationService presentationService;
 
 	private void errorHandle(Exception e, DiscordScheduleAlarmMessage message) {
 		if (!(e instanceof FtClubCabinetException)) {
