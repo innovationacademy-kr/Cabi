@@ -1,4 +1,5 @@
 #!/bin/sh
+# minio init script
 
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -8,38 +9,37 @@ echo -e "Wating for MinIO server to be ready..."
 
 MAX_WAIT=30
 CURRENT_WAIT=0
+TIME_WAIT=2
 
 # Health checking
 while [ $CURRENT_WAIT -lt $MAX_WAIT ]; do
-  # Try to access MinIO server with mc(MinIO Client)
-  mc alias set healthcheck $MINIO_LOCAL_SERVER dummy_key dummy_secret --api S3v4 > /dev/null 2>&1
-  mc ping healthcheck --count 1 > /dev/null 2>&1
+  # Try to check endpoints with curl
+  curl -sf $MINIO_API_ADDRESS/minio/health/live > /dev/null 2>&1
 
   # Succeed
   if [ $? -eq 0 ]; then
     echo -e "${GREEN} MinIO server is ready! ${RESET}"
-    mc alias remove healthcheck > /dev/null 2>&1
     break
   fi
 
-  # Failed to ping, wait and try again
-  mc alias remove healthcheck > /dev/null 2>&1
-  echo -e "Still waiting for MinIO server... (${CURRENT_WAIT}s/${MAX_WAIT}s)"
-  sleep 2
-  CURRENT_WAIT=$((CURRENT_WAIT + 2))
+  # If failed
+#  echo -e "Still waiting for MinIO server... (${CURRENT_WAIT}s/${MAX_WAIT}s)"
+  printf "\r\033[KStill waiting for MinIO server... (${CURRENT_WAIT}s/${MAX_WAIT}s)"
+  sleep $TIME_WAIT
+  CURRENT_WAIT=$((CURRENT_WAIT + TIME_WAIT))
 done
 
 # If failed
 if [ $CURRENT_WAIT -ge $MAX_WAIT ]; then
   # Error and exit
   echo -e "${RED} MinIO server is not become ready within ${MAX_WAIT}s. Exiting. ${RESET}"
-  exit 1
+  exit 1    # passed to entrypoint-wrapper.sh
 fi
 
 
-# Set up MinIO
+# Set up MinIO with user and password (same as access and secret key in MinIO, only for local)
 echo -e "Configuring MinIO client(mc)..."
-mc alias set local $MINIO_LOCAL_SERVER $MINIO_S3_ACCESS_KEY $MINIO_S3_SECRET_KEY --api S3v4
+mc alias set local $MINIO_API_ADDRESS $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD --api S3v4
 
 # If failed
 if [ $? -ne 0 ]; then
@@ -63,6 +63,6 @@ else
   exit 1
 fi
 
-# Finish and start MinIO
+# Finish script and start MinIO
 echo -e "${GREEN} MinIO initialization completed successfully. ${RESET}"
-exec "$@"
+exit 0
