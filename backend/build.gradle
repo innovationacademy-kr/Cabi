@@ -17,6 +17,8 @@ sourceCompatibility = '11'
 
 ext {
     set('springCloudVersion', "2021.0.8")
+    set('awsSdkVersion', "2.25.20")
+    set('springCloudAwsVersion', "2.4.4")
 }
 
 configurations {
@@ -88,8 +90,8 @@ dependencies {
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.9'
 
     // aws - s3
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-    implementation 'com.amazonaws:aws-java-sdk-s3:1.11.1000'
+    implementation 'software.amazon.awssdk:s3'
+    implementation 'io.awspring.cloud:spring-cloud-aws-context'
 
     // test
     testCompileOnly 'org.projectlombok:lombok'
@@ -106,6 +108,8 @@ dependencies {
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "software.amazon.awssdk:bom:${awsSdkVersion}"
+        mavenBom "io.awspring.cloud:spring-cloud-aws-dependencies:${springCloudAwsVersion}"
     }
 }
 
