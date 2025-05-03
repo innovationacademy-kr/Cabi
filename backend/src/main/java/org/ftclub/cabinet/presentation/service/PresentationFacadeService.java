@@ -3,6 +3,7 @@ package org.ftclub.cabinet.presentation.service;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.auth.service.OauthPolicyService;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
@@ -23,6 +24,7 @@ public class PresentationFacadeService {
 	private final PresentationQueryService queryService;
 	private final PresentationPolicyService policyService;
 	private final UserQueryService userQueryService;
+	private final OauthPolicyService oauthPolicyService;
 	private final PresentationSlotRepository slotRepository; // TODO: service로 변경 필요
 
 	/**
@@ -37,7 +39,7 @@ public class PresentationFacadeService {
 			MultipartFile thumbnail) throws IOException {
 
 		// check user role
-		policyService.validatePresentator(userInfo);
+		oauthPolicyService.validatePresentationUser(userInfo);
 		User user = userQueryService.getUser(userInfo.getUserId());
 
 		// TODO: slot 검증 및 slotService에서 slotId 가져오는 것으로 변경 (현재의 orElseThrow 제거)
