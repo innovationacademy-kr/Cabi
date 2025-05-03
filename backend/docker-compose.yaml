@@ -4,7 +4,9 @@ services:
   # database
   mariadb:
     container_name: db
-    build: ./
+    build:
+      context: ./
+      dockerfile: mariadb.Dockerfile
     restart: always
     environment:
       MARIADB_DATABASE_HOST: localhost
@@ -48,22 +50,19 @@ services:
 
   # minio
   minio:
-    image: minio/minio:latest
     container_name: minio
+    build:
+      context: ./
+      dockerfile: minio.Dockerfile
     restart: on-failure   # always
-    ports:
-      - "9000:9000"   # API port
-      - "9001:9001"   # Console port
-    volumes:
-      - ./minio/entrypoint-wrapper.sh:/user/local/bin/entrypoint-wrapper.sh # wrapper
-      - ./minio/init.sh:/app/scripts/init.sh                                # initialization
     environment:
       MINIO_ROOT_USER: minio_root
       MINIO_ROOT_PASSWORD: rootPassword
       MINIO_S3_BUCKET: local-cabi-bucket
       MINIO_API_ADDRESS: http://localhost:9000
-    entrypoint: [ "/user/local/bin/entrypoint-wrapper.sh" ]
-    command: [ "server", "/data", "--console-address", ":9001" ]    # console port (Web UI)
+    ports:
+      - "9000:9000"   # API port
+      - "9001:9001"   # Console port
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
       timeout: 10s

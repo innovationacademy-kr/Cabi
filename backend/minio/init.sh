@@ -53,7 +53,7 @@ echo -e "${GREEN} MinIO client configured successfully. ${RESET}"
 
 # Create bucket
 echo -e "Creating bucket..."
-mc mb --ignore-exiting "local/$MINIO_S3_BUCKET"
+mc mb --ignore-existing "local/$MINIO_S3_BUCKET"
 
 if [ $? -eq 0 ]; then
   echo -e "${GREEN} Bucket $MINIO_S3_BUCKET created successfully(or already exists). ${RESET}"
