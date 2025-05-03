@@ -12,6 +12,7 @@ import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.FtClubCabinetException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
+import org.ftclub.cabinet.presentation.service.PresentationFacadeService;
 import org.ftclub.cabinet.user.service.LentExtensionManager;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
@@ -39,6 +40,8 @@ public class SystemScheduler {
 	private final BlackholeManager blackholeManager;
 	private final ReleaseManager releaseManager;
 	private final DiscordWebHookMessenger discordWebHookMessenger;
+	private final PresentationFacadeService presentationFacadeService;
+	private final SectionAlarmManager sectionAlarmManager;
 
 	private void errorHandle(Exception e, DiscordScheduleAlarmMessage message) {
 		if (!(e instanceof FtClubCabinetException)) {
@@ -48,8 +51,6 @@ public class SystemScheduler {
 			log.warn("Handled FtClubCabinetException, no notification sent: ", e);
 		}
 	}
-
-	private final SectionAlarmManager sectionAlarmManager;
 
 	/**
 	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거
