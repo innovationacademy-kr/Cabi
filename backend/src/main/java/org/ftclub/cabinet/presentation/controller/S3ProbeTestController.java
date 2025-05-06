@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.presentation.service.PresentationService;
 import org.ftclub.cabinet.presentation.service.ThumbnailStorageService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,6 +26,7 @@ public class S3ProbeTestController {
 
 	/**
 	 * 썸네일 이미지를 S3에 업로드하고, presigned URL을 생성합니다.
+	 *
 	 * @param thumbnail
 	 * @return Map<String, String> key, getUrl
 	 * @throws IOException
@@ -50,6 +50,7 @@ public class S3ProbeTestController {
 
 	/**
 	 * 해당 썸네일 이미지를 S3에서 삭제합니다.
+	 *
 	 * @param imageUrl
 	 * @return
 	 */
