@@ -22,13 +22,13 @@ public class S3Config {
 	private Boolean isLocal;
 
 	// local values
-	@Value("${cloud.aws.credentials.access-key}")
+	@Value("${cloud.aws.credentials.access-key:#{null}}")
 	private String accessKey;
-	@Value("${cloud.aws.credentials.secret-key}")
+	@Value("${cloud.aws.credentials.secret-key:#{null}}")
 	private String secretKey;
-	@Value("${cloud.aws.s3.endpoint}")
+	@Value("${cloud.aws.s3.endpoint:#{null}}")
 	private String endpoint;
-	@Value("${cloud.aws.s3.path-style-access-enabled}")
+	@Value("${cloud.aws.s3.path-style-access-enabled:#{null}}")
 	private Boolean pathStyleAccessEnabled;
 
 	// common values
