@@ -17,7 +17,6 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
-import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Slf4j
 @Service
@@ -28,7 +27,7 @@ public class ThumbnailStorageService {
 	private static final Duration DEFAULT_EXPIRATION = Duration.ofMinutes(5);
 
 	private final S3Client s3Client;
-	private final S3Presigner s3Presigner;
+	//	private final S3Presigner s3Presigner;
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 	@Value("${cloud.aws.s3.image-folder}")
