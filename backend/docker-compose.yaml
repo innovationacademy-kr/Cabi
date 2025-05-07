@@ -1,9 +1,12 @@
 version: "3"
 
 services:
+  # database
   mariadb:
     container_name: db
-    build: ./
+    build:
+      context: ./
+      dockerfile: mariadb.Dockerfile
     restart: always
     environment:
       MARIADB_DATABASE_HOST: localhost
@@ -14,6 +17,10 @@ services:
     ports:
       - "3307:3306"
     tty: true
+    networks:
+      - cabi-network
+
+  # nginx
   gateway:
     container_name: nginx_gateway
     image: nginx:latest
@@ -21,6 +28,10 @@ services:
       - "80:80"
     volumes:
       - ../dev/:/etc/nginx/conf.d/
+    networks:
+      - cabi-network
+
+  # redis
   redis:
     image: redis:latest
     restart: always
@@ -31,6 +42,34 @@ services:
       - ../redis/config/:/user/local/etc/redis/
     command: redis-server /user/local/etc/redis/redis.conf
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       timeout: 20s
       retries: 10
+    networks:
+      - cabi-network
+
+  # minio
+  minio:
+    container_name: minio
+    build:
+      context: ./
+      dockerfile: minio.Dockerfile
+    restart: always
+    environment:
+      MINIO_ROOT_USER: minio_root
+      MINIO_ROOT_PASSWORD: rootPassword
+      MINIO_S3_BUCKET: local-cabi-bucket
+      MINIO_API_ADDRESS: http://localhost:9000
+    ports:
+      - "9000:9000"   # API port
+      - "9001:9001"   # Console port
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      timeout: 10s
+      retries: 5
+    networks:
+      - cabi-network
+
+networks:
+  cabi-network:
+    driver: bridge

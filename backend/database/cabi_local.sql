@@ -867,7 +867,7 @@ VALUES (1, 1, 'DEVELOP', 'HALF',
 
        (2, 2, 'JOB', 'HOUR',
         '4월 발표', '4월 요약', '4월 아웃라인', '4월 상세 내용',
-        0, NULL, NULL, 1, 1,
+        0, NULL, NULL, 1, 0,
         4, '2025-04-15 14:00:00', 'BASEMENT'),
 
        (3, 3, 'DEVELOP', 'HOUR_HALF',

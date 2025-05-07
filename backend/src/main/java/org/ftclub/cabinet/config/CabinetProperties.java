@@ -30,7 +30,7 @@ public class CabinetProperties {
 	private Long shareMaxAttemptCount;
 	@Value("${cabinet.policy.swap.term.private}")
 	private Integer swapTermPrivateDays;
-	@Value(("${cabinet.policy.swap.minimum-require-days}"))
+	@Value("${cabinet.policy.swap.minimum-require-days}")
 	private Integer requireSwapMinimumDays;
 
 }
