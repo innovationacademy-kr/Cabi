@@ -2,12 +2,6 @@
 
 FROM minio/minio:latest
 
-#RUN yum update -y && \
-#    yum install -y curl && \
-#    # yum 캐시 정리 (이미지 용량 감소)
-#    yum clean all && \
-#    rm -rf /var/cache/yum
-
 COPY ./minio/entrypoint-wrapper.sh /usr/local/bin/entrypoint-wrapper.sh
 COPY ./minio/init.sh /app/scripts/init.sh
 
