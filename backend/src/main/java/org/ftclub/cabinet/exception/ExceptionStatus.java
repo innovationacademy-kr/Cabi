@@ -121,6 +121,7 @@ public enum ExceptionStatus {
 	CANNOT_CREATE_SLOT_IN_PAST(HttpStatus.BAD_REQUEST, "과거 시간으로는 발표 슬롯을 생성할 수 없습니다."),
 	SLOT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 시간에는 이미 발표 슬롯이 존재합니다."),
 	SLOT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 발표 슬롯이 존재하지 않습니다."),
+	FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 크기가 너무 큽니다."),
 	INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "잘못된 파일 확장자입니다."),
 	S3_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 업로드 중 에러가 발생했습니다."),
 	S3_GET_URL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 URL 생성 중 에러가 발생했습니다."),
