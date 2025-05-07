@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.service.OauthPolicyService;
 import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
@@ -26,6 +27,7 @@ public class PresentationFacadeService {
 	private final UserQueryService userQueryService;
 	private final OauthPolicyService oauthPolicyService;
 	private final PresentationSlotRepository slotRepository; // TODO: service로 변경 필요
+//	private final PresentationSlotFacadeService slotFacadeService;  // TODO: 구현 후 연결 필요
 
 	/**
 	 * 프레젠테이션을 등록합니다.
@@ -46,7 +48,10 @@ public class PresentationFacadeService {
 		PresentationSlot slot = slotRepository.findById(form.getSlotId())
 				.orElseThrow(() -> new IllegalArgumentException("Invalid slot ID"));
 
-		commandService.createPresentation(user, form, slot, thumbnail);
+		Presentation newPresentation =
+				commandService.createPresentation(user, form, slot, thumbnail);
 
+		// TODO: 검증된 slot에 presentation id 등록
+//		slotFacadeService.registerSlot(newPresentation);
 	}
 }

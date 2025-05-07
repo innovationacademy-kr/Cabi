@@ -17,7 +17,7 @@ public class PresentationCommandService {
 	private final PresentationRepository presentationRepository;
 	private final ThumbnailStorageService thumbnailStorageService;
 
-	public void createPresentation(User user,
+	public Presentation createPresentation(User user,
 			PresentationFormRequestDto form,
 			PresentationSlot slot,
 			MultipartFile thumbnail) throws IOException {
@@ -41,6 +41,6 @@ public class PresentationCommandService {
 		);
 
 		// save
-		presentationRepository.save(newPresentation);
+		return presentationRepository.save(newPresentation);
 	}
 }
