@@ -76,13 +76,15 @@ const Layout = (): JSX.Element => {
   ) : (
     <React.Fragment>
       <TopNavDomainGroup />
-      <TopNavContainer setIsLoading={setIsLoading} />
-      <WrapperStyled>
-        <MainStyled>
-          <MenuBgStyled onClick={handleClickBg} id="menuBg" />
-          <Outlet />
-        </MainStyled>
-      </WrapperStyled>
+      <div className="font-pretendard">
+        <TopNavContainer setIsLoading={setIsLoading} />
+        <WrapperStyled>
+          <MainStyled>
+            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
+            <Outlet />
+          </MainStyled>
+        </WrapperStyled>
+      </div>
     </React.Fragment>
   );
 };
