@@ -32,6 +32,8 @@ const domains: ITopNavDomain[] = [
 const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
   const navigator = useNavigate();
   const { pathname } = useLocation();
+  const isPresentation = pathname.includes("presentation");
+
   return (
     <DomainGroupContainerStyled>
       {domains.map((domain, index) => (
@@ -59,9 +61,11 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
           {index < domains.length - 1 && <DomainSeparatorStyled />}
         </DomainWrapperStyled>
       ))}
-      <ToggleWrapperStyled>
-        <DarkModeToggleSwitch id="darkModeToggleSwitch" />
-      </ToggleWrapperStyled>
+      {!isPresentation && (
+        <ToggleWrapperStyled>
+          <DarkModeToggleSwitch id="darkModeToggleSwitch" />
+        </ToggleWrapperStyled>
+      )}
     </DomainGroupContainerStyled>
   );
 };
