@@ -1,11 +1,5 @@
-
-import { Button } from "@/components/ui/button";
-
-const HomePage_test = () => {
-  return <div className="bg-blue-100 w-full h-full">test
-  <Button title="test" >test</Button>
-
-  </div>;
+const HomePage = () => {
+  return <div className="p-5 flex">모아보기 페이지</div>;
 };
 
-export default HomePage_test;
+export default HomePage;
