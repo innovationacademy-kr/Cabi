@@ -11,6 +11,7 @@ import org.ftclub.cabinet.security.handler.CustomSuccessHandler;
 import org.ftclub.cabinet.security.handler.LogoutHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -51,12 +52,16 @@ public class SecurityConfig {
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				)
 				.authorizeRequests(auth -> auth
-						.mvcMatchers(SecurityPathPatterns.PUBLIC_ENDPOINTS).permitAll()
+						.mvcMatchers(SecurityPathPatterns.PUBLIC_ENDPOINTS)
+						.permitAll()
 						.mvcMatchers(SecurityPathPatterns.ADMIN_ENDPOINTS)
 						.hasAnyRole("ADMIN", "MASTER")
 						.antMatchers(SecurityPathPatterns.ADMIN_USER_ENDPOINTS)
 						.hasAnyRole("USER", "ADMIN", "MASTER")
-						.mvcMatchers(SecurityPathPatterns.AGU_ENDPOINTS).hasAnyRole("AGU", "USER")
+						.mvcMatchers(SecurityPathPatterns.AGU_ENDPOINTS)
+						.hasAnyRole("AGU", "USER")
+						.mvcMatchers(HttpMethod.GET, SecurityPathPatterns.ANONYMOUS_ENDPOINTS)
+						.hasAnyRole("ANONYMOUS", "USER")
 						.anyRequest().hasRole("USER")
 				)
 				.oauth2Login(oauth -> oauth
