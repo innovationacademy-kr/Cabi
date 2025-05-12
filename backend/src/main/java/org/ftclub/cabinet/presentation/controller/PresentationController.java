@@ -31,7 +31,6 @@ public class PresentationController {
 			@Valid @RequestPart("form") PresentationFormRequestDto form,
 			@RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
 	) throws IOException {
-		log.debug("registerPresentation user: {}: if blank, it's anonymous-user", user);
 		presentationFacadeService.registerPresentation(
 				user,
 				form,
