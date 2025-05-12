@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react"; // 로딩 아이콘
 import RegisterInput from "./RegisterInput";
 import RegisterTextarea from "./RegisterTextarea";
 import RegisterCheckbox from "./RegisterCheckbox";
-import RegisterDatePicker from "./DatePicker";
+import RegisterDatePicker from "./RegisterDatePicker";
 import { PresentationTimeKey } from "@/Presentation_legacy/pages/RegisterPage";
 import { RegisterTimeSelect, SelectForm } from "./RegisterTimeSelect";
 const MAX_TITLE = 20
@@ -115,7 +115,7 @@ const RegisterForm = () => {
     
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} 
-      className="flex flex-col items-center space-y-6 w-full mx-auto sm:max-w-lg lg:max-w-3xl p-4 min-w-64">
+      className="mt-32 mb-64 flex flex-col items-center space-y-6 w-full sm:max-w-lg lg:max-w-3xl p-4 min-w-64 ">
       {/* <DatePickerDemo></DatePickerDemo> */}
       <div className=" w-full flex flex-col md:flex-row justify-between gap-4">
         <RegisterDatePicker
@@ -169,7 +169,7 @@ const RegisterForm = () => {
         <Button 
           type="submit" 
           disabled={isSubmitting || isSuccess}
-          className="w-full py-2 text-sm sm:text-base sm:max-w-lg lg:max-w-56 "
+          className="bg-blue-500 w-full py-2 text-sm sm:text-base sm:max-w-lg lg:max-w-56 "
         >
           {isSubmitting ? (
             <>
@@ -179,7 +179,7 @@ const RegisterForm = () => {
           ) : isSuccess ? (
             "전송 완료!"
           ) : (
-            "문의하기"
+            "신청하기"
           )}
         </Button>
       </form>

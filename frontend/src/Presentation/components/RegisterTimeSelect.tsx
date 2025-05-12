@@ -97,7 +97,7 @@ export const RegisterTimeSelect: React.FC<RegisterTimeSelectProps> = ({control, 
                 <FormLabel className="text-base text-black font-medium sm:text-lg">{title}</FormLabel> 
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                    <SelectTrigger className="w-full lg:w-80 md:w-48 px-3 py-2 text-sm sm:text-base border rounded-md">
+                    <SelectTrigger className="w-full lg:w-80 md:w-48 px-3 py-2 font-normal text-sm sm:text-base border rounded-md">
                         <SelectValue placeholder="Select a verified email to display" />
                     </SelectTrigger>
                     </FormControl>

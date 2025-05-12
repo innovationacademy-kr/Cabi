@@ -1,10 +1,10 @@
-import ContactForm from "../components/RegisterForm";
+import RegisterForm from "../components/RegisterForm";
 
 const RegisterPage = () => {
-    return <div className="flex justify-center items-center bg-neutral-100 dark:bg-neutral-800 transition-colors">
-      <div className=" w-full px-10">
-        <ContactForm/>
-      </div>
+    return <div className="flex items-start  justify-center bg-neutral-100 dark:bg-neutral-800 transition-colors overflow-y-auto max-h-screen ">
+      {/* <div className=" w-full h-full px-10 bg-red-100"> */}
+        <RegisterForm/>
+      {/* </div> */}
     </div>;
   };
 
