@@ -11,11 +11,11 @@ const TopNav = () => {
     <header className="h-16 w-full bg-white border-b border-solid border-[#BCBCBC]">
       <NavigationMenu className="h-16 w-full">
         <NavigationMenuList>
-          <Logo className="ml-6" />
+          <Logo className="ml-6 scale-[90%]" />
           <NavigationMenuItem>
             <Link
               to="home"
-              className="ml-5 p-3 text-foreground font-semibold h-full flex items-center"
+              className="ml-3 p-3 text-foreground font-semibold h-full flex items-center"
             >
               모아보기
             </Link>
