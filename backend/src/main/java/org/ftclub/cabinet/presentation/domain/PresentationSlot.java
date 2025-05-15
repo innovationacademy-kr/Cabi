@@ -57,4 +57,15 @@ public class PresentationSlot {
 		this.presentationLocation = location;
 	}
 
+	public boolean hasPresentation() {
+		return this.presentation != null;
+	}
+
+	public void assignPresentation(Presentation presentation) {
+		if (this.presentation != null) {
+			throw ExceptionStatus.PRESENTATION_SLOT_ALREADY_ASSIGNED.asDomainException();
+		}
+		this.presentation = presentation;
+	}
+
 }
