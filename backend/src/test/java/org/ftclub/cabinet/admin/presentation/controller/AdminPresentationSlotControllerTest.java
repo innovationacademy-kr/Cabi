@@ -83,4 +83,18 @@ class AdminPresentationSlotControllerTest {
 				)
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
+
+	@DisplayName("어드민이 프레젠테이션 슬롯을 삭제한다.")
+	@WithMockUser(roles = "ADMIN")
+	@Test
+	void deletePresentationSlot() throws Exception {
+		// given
+		Long slotId = 1L;
+		// then
+		mockMvc.perform(
+						MockMvcRequestBuilders.delete("/v6/admin/presentations/slots/{slotId}", slotId))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+
 }

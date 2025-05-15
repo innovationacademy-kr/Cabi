@@ -4,6 +4,8 @@ server:
 #------------------------------CABINET------------------------------
 cabinet:
   production: false # 배포 환경에서는 true
+  local: false
+
   server:
     fe-host: http://localhost
     be-host: http://localhost

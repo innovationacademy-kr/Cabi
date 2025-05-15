@@ -4,8 +4,12 @@ import static org.ftclub.cabinet.presentation.domain.PresentationSlot.PRESENTATI
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.PresentationSlotRegisterServiceDto;
+import org.ftclub.cabinet.admin.dto.PresentationSlotResponseDto;
+import org.ftclub.cabinet.admin.dto.PresentationSlotSearchServiceDto;
 import org.ftclub.cabinet.admin.dto.PresentationSlotUpdateServiceDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
@@ -53,7 +57,8 @@ public class AdminPresentationSlotService {
 	 *
 	 * @param startTime
 	 */
-	private void validateSlotOverlapped(LocalDateTime startTime) {
+	@Transactional(readOnly = true)
+	public void validateSlotOverlapped(LocalDateTime startTime) {
 		LocalDateTime overlapStartTime = startTime.minusHours(PRESENTATION_SLOT_DURATION);
 		LocalDateTime overlapEndTime = startTime.plusHours(PRESENTATION_SLOT_DURATION);
 
@@ -71,7 +76,8 @@ public class AdminPresentationSlotService {
 	 * @param slotId       슬롯 ID
 	 * @param newStartTime 시작 시간
 	 */
-	private void validateSlotUpdateOverlap(Long slotId, LocalDateTime newStartTime) {
+	@Transactional(readOnly = true)
+	public void validateSlotUpdateOverlap(Long slotId, LocalDateTime newStartTime) {
 		LocalDateTime overlapStartTime = newStartTime.minusHours(PRESENTATION_SLOT_DURATION);
 		LocalDateTime overlapEndTime = newStartTime.plusHours(PRESENTATION_SLOT_DURATION);
 
@@ -99,4 +105,51 @@ public class AdminPresentationSlotService {
 		slot.changeSlotLocation(serviceDto.getLocation());
 		// TODO : 프레젠테이션에 연결된 발표 정보도 수정해야 한다면 발표 수정 기능 개발 후에 추가
 	}
+
+	/**
+	 * 프레젠테이션 슬롯을 삭제합니다.
+	 *
+	 * @param slotId 프레젠테이션 슬롯 ID
+	 */
+	public void deletePresentationSlot(Long slotId) {
+		PresentationSlot slot = slotRepository.findById(slotId)
+				.orElseThrow(ExceptionStatus.SLOT_NOT_FOUND::asServiceException);
+		if (slot.hasPresentation()) {
+			throw ExceptionStatus.CANNOT_DELETE_SLOT_WITH_PRESENTATION.asServiceException();
+		}
+		slotRepository.delete(slot);
+	}
+
+	/**
+	 * 어드민이 프레젠테이션 슬롯을 조회합니다.
+	 *
+	 * @param slotSearchServiceDto 프레젠테이션 슬롯 조회 요청 DTO
+	 * @return 프레젠테이션 슬롯 리스트
+	 */
+	public List<PresentationSlotResponseDto> getAvailableSlots(
+			@Valid PresentationSlotSearchServiceDto slotSearchServiceDto) {
+		int year = slotSearchServiceDto.getYear();
+		int month = slotSearchServiceDto.getMonth();
+		LocalDateTime now = LocalDateTime.now();
+
+		// 만약 연도와 월이 과거라면 에러를 반환합니다.
+		if (year < now.getYear() || (year == now.getYear() && month < now.getMonthValue())) {
+			throw ExceptionStatus.CANNOT_SEARCH_PAST_SLOT.asServiceException();
+		}
+
+		// 주어진 월에 있는 슬롯을 전부 조회해서, 현재 날짜 이후이면서 발표가 없는 슬롯만 모아 List로 반환합니다.
+		List<PresentationSlotResponseDto> responseDtoList = slotRepository.findByStartTimeBetween(
+						LocalDateTime.of(year, month, 1, 0, 0),
+						LocalDateTime.of(year, month + 1, 1, 0, 0)
+				).stream().filter(slot -> slot.getStartTime().isAfter(now) && !slot.hasPresentation())
+				.map(slot -> new PresentationSlotResponseDto(
+						slot.getId(),
+						slot.getStartTime(),
+						slot.getPresentationLocation()
+				)).collect(Collectors.toList());
+
+		return responseDtoList;
+	}
+
+
 }
