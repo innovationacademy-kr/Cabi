@@ -2,20 +2,32 @@ package org.ftclub.cabinet.admin.presentation.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import org.ftclub.cabinet.admin.dto.PresentationSlotRegisterServiceDto;
+import org.ftclub.cabinet.admin.dto.PresentationSlotResponseDto;
+import org.ftclub.cabinet.admin.dto.PresentationSlotSearchServiceDto;
 import org.ftclub.cabinet.admin.dto.PresentationSlotUpdateServiceDto;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.presentation.domain.Category;
+import org.ftclub.cabinet.presentation.domain.Duration;
+import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
+import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
-import org.ftclub.cabinet.presentation.service.PresentationFacadeService;
-import org.ftclub.cabinet.user.service.UserFacadeService;
+import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -29,10 +41,27 @@ class AdminPresentationSlotServiceTest {
 	private AdminPresentationSlotService slotService;
 
 	@Autowired
-	private PresentationFacadeService presentationFacadeService;
+	private PresentationRepository presentationRepository;
 
-	@Autowired
-	private UserFacadeService userFacadeService;
+	@MockBean
+	private UserRepository userRepository;
+
+	private User testUser1;
+
+	@BeforeEach
+	void setUp() {
+		User userToSave1 = User.of("jongmlee", "jongmlee@gmail.com",
+				LocalDateTime.now().plusMonths(10),
+				"MEMBER");
+		when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+			User userArg = invocation.getArgument(0);
+			if (userArg.getId() == null) { // ID가 아직 없는 새 엔티티라면
+				ReflectionTestUtils.setField(userArg, "id", 1L); // 임의의 ID (testUser1 용)
+			}
+			return userArg;
+		});
+		testUser1 = userRepository.save(userToSave1);
+	}
 
 	@DisplayName("어드민이 프레젠테이션 슬롯을 생성하여 등록한다.")
 	@Test
@@ -217,5 +246,69 @@ class AdminPresentationSlotServiceTest {
 
 		// then
 		assertThat(slotRepository.findById(slotId)).isEmpty();
+	}
+
+	@DisplayName("어드민이 특정 월에 포함되는 슬롯중에 프레젠테이션이 지정되지 않는 슬롯을 조회한다.")
+	@Test
+	void getAvailableSlots() {
+		// given
+		LocalDateTime now = LocalDateTime.now();
+		PresentationSlotRegisterServiceDto slotServiceDto1 = new PresentationSlotRegisterServiceDto(
+				now.plusHours(1),
+				PresentationLocation.THIRD
+		);
+		slotService.registerPresentationSlot(slotServiceDto1);
+
+		PresentationSlotRegisterServiceDto slotServiceDto2 = new PresentationSlotRegisterServiceDto(
+				now.plusHours(3),
+				PresentationLocation.BASEMENT
+		);
+		slotService.registerPresentationSlot(slotServiceDto2);
+
+		PresentationSlot slot1 = slotRepository.findAll().get(0);
+
+		Presentation presentation = Presentation.of(testUser1, Category.ETC,
+				Duration.TWO_HOUR, "test", "test", "test", "test",
+				null, false, false, slot1);
+
+		presentationRepository.save(presentation);
+
+		slot1.assignPresentation(presentation);
+
+		// when
+		int year = now.getYear();
+		int month = now.getMonthValue();
+		List<PresentationSlotResponseDto> slots = slotService.getAvailableSlots(
+				new PresentationSlotSearchServiceDto(year, month, "AVAILABLE"));
+
+		// then
+		assertThat(slots.size()).isEqualTo(1);
+		assertThat(slots.get(0).getStartTime()).isEqualTo(now.plusHours(3));
+		assertThat(slots.get(0).getLocation()).isEqualTo(PresentationLocation.BASEMENT);
+	}
+
+	@DisplayName("과거 시점으로는 슬롯을 조회할 수 없다.")
+	@Test
+	void cannotCreateSlotPast() {
+		// given
+		LocalDateTime now = LocalDateTime.now();
+		int currentMonth = now.minusMonths(1).getMonthValue();
+
+		slotRepository.save(new PresentationSlot(
+				now.minusMonths(1),
+				PresentationLocation.BASEMENT
+		));
+
+		// 조회 DTO 생성
+		PresentationSlotSearchServiceDto pastSearchDto = new PresentationSlotSearchServiceDto(
+				now.minusMonths(1).getYear(),
+				currentMonth,
+				"available"
+		);
+
+		// when & then
+		assertThatThrownBy(() -> slotService.getAvailableSlots(pastSearchDto))
+				.isInstanceOf(ServiceException.class)
+				.hasMessage("과거 슬롯은 조회할 수 없습니다.");
 	}
 }
