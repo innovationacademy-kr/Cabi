@@ -23,7 +23,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PresentationSlot {
 
-	public static final int PRESENTATION_SLOT_DURATION = 2;
+	public static final int PRESENTATION_SLOT_DURATION = 30; // 30분
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")

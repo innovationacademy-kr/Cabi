@@ -55,8 +55,8 @@ public class AdminPresentationSlotService {
 	 */
 	@Transactional(readOnly = true)
 	public void validateSlotOverlapped(LocalDateTime startTime) {
-		LocalDateTime overlapStartTime = startTime.minusHours(PRESENTATION_SLOT_DURATION);
-		LocalDateTime overlapEndTime = startTime.plusHours(PRESENTATION_SLOT_DURATION);
+		LocalDateTime overlapStartTime = startTime.minusMinutes(PRESENTATION_SLOT_DURATION);
+		LocalDateTime overlapEndTime = startTime.plusMinutes(PRESENTATION_SLOT_DURATION);
 
 		List<PresentationSlot> overlappingSlots = slotRepository.findByStartTimeBetween(
 				overlapStartTime, overlapEndTime);
@@ -74,8 +74,8 @@ public class AdminPresentationSlotService {
 	 */
 	@Transactional(readOnly = true)
 	public void validateSlotUpdateOverlap(Long slotId, LocalDateTime newStartTime) {
-		LocalDateTime overlapStartTime = newStartTime.minusHours(PRESENTATION_SLOT_DURATION);
-		LocalDateTime overlapEndTime = newStartTime.plusHours(PRESENTATION_SLOT_DURATION);
+		LocalDateTime overlapStartTime = newStartTime.minusMinutes(PRESENTATION_SLOT_DURATION);
+		LocalDateTime overlapEndTime = newStartTime.plusMinutes(PRESENTATION_SLOT_DURATION);
 
 		List<PresentationSlot> overlappingSlots = slotRepository.findByStartTimeBetween(
 				overlapStartTime, overlapEndTime);
