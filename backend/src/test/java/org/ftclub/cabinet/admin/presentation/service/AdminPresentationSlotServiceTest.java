@@ -10,6 +10,8 @@ import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
+import org.ftclub.cabinet.presentation.service.PresentationFacadeService;
+import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,12 @@ class AdminPresentationSlotServiceTest {
 
 	@Autowired
 	private AdminPresentationSlotService slotService;
+
+	@Autowired
+	private PresentationFacadeService presentationFacadeService;
+
+	@Autowired
+	private UserFacadeService userFacadeService;
 
 	@DisplayName("어드민이 프레젠테이션 슬롯을 생성하여 등록한다.")
 	@Test
@@ -45,7 +53,7 @@ class AdminPresentationSlotServiceTest {
 		assertThat(savedSlot.getStartTime()).isEqualTo(slotServiceDto.getStartTime());
 	}
 
-	@DisplayName("어드민이 프레젠테이션 슬롯을 2시간 간격으로 연속하여 등록한다")
+	@DisplayName("어드민이 프레젠테이션 슬롯을 30분 간격으로 연속하여 등록한다")
 	@Test
 	void registerTwoPresentationSlots() {
 		// given
@@ -57,7 +65,7 @@ class AdminPresentationSlotServiceTest {
 		slotService.registerPresentationSlot(slotServiceDto1);
 
 		PresentationSlotRegisterServiceDto slotServiceDto2 = new PresentationSlotRegisterServiceDto(
-				now.plusHours(3),
+				now.plusHours(1).plusMinutes(30),
 				PresentationLocation.BASEMENT
 		);
 
@@ -96,7 +104,7 @@ class AdminPresentationSlotServiceTest {
 		slotService.registerPresentationSlot(slotServiceDto1);
 
 		PresentationSlotRegisterServiceDto slotServiceDto2 = new PresentationSlotRegisterServiceDto(
-				now.plusHours(2),
+				now.plusHours(1).plusMinutes(20),
 				PresentationLocation.BASEMENT
 		);
 
@@ -184,10 +192,30 @@ class AdminPresentationSlotServiceTest {
 		assertThatThrownBy(
 				() -> slotService.updatePresentationSlot(new PresentationSlotUpdateServiceDto(
 						slotId,
-						now.plusHours(2),
+						now.plusHours(2).plusMinutes(40),
 						PresentationLocation.BASEMENT
 				)))
 				.isInstanceOf(ServiceException.class)
 				.hasMessage("해당 시간에는 이미 발표 슬롯이 존재합니다.");
+	}
+
+	@DisplayName("어드민이 프레젠테이션이 지정되지 않은 슬롯을 삭제한다.")
+	@Test
+	void deletePresentationSlot() {
+		// given
+		LocalDateTime now = LocalDateTime.now();
+		PresentationSlotRegisterServiceDto slotServiceDto = new PresentationSlotRegisterServiceDto(
+				now.plusHours(1),
+				PresentationLocation.BASEMENT
+		);
+		slotService.registerPresentationSlot(slotServiceDto);
+
+		Long slotId = slotRepository.findAll().get(0).getId();
+
+		// when
+		slotService.deletePresentationSlot(slotId);
+
+		// then
+		assertThat(slotRepository.findById(slotId)).isEmpty();
 	}
 }
