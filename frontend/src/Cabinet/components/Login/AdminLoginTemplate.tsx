@@ -7,10 +7,7 @@ import UnavailableModal from "@/Cabinet/components/Modals/UnavailableModal/Unava
 import { additionalModalType } from "@/Cabinet/assets/data/maps";
 import { ReactComponent as AdminLoginImg } from "@/Cabinet/assets/images/adminLoginImg.svg";
 import { ReactComponent as LogoImg } from "@/Cabinet/assets/images/logo.svg";
-import {
-  axiosAdminAuthLogin,
-  axiosAdminGetCSRFToken,
-} from "@/Cabinet/api/axios/axios.custom";
+import { axiosAdminAuthLogin } from "@/Cabinet/api/axios/axios.custom";
 
 const AdminLoginTemplate = (props: {
   url: string;
@@ -41,14 +38,10 @@ const AdminLoginTemplate = (props: {
       return;
     }
     try {
-      const csrfTokenResponse = await axiosAdminGetCSRFToken();
+      const loginResponse = await axiosAdminAuthLogin(adminId, adminPw);
 
-      if (csrfTokenResponse.status === HttpStatusCode.Ok) {
-        const loginResponse = await axiosAdminAuthLogin(adminId, adminPw);
-
-        if (loginResponse.status === HttpStatusCode.Ok) {
-          navigate("/admin/home");
-        }
+      if (loginResponse.status === HttpStatusCode.Ok) {
+        navigate("/admin/home");
       }
     } catch (error) {
       if (

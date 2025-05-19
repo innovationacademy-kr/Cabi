@@ -27,8 +27,11 @@ const PresentationHomePage = lazy(
 );
 const PresentationLayout = lazy(() => import("@/Presentation/pages/Layout"));
 const DetailPage = lazy(() => import("@/Presentation/pages/DetailPage"));
-const PresentationLogPage = lazy(() => import("@/Presentation/pages/LogPage"));
+const AboutUsPage = lazy(() => import("@/Presentation/pages/AboutUsPage"));
 const RegisterPage = lazy(() => import("@/Presentation/pages/RegisterPage"));
+const PresentationProfilePage = lazy(
+  () => import("@/Presentation/pages/ProfilePage")
+);
 
 // NOTE : admin
 const AdminLayout = lazy(() => import("@/Cabinet/pages/admin/AdminLayout"));
@@ -49,7 +52,7 @@ const AdminStorePage = lazy(
   () => import("@/Cabinet/pages/admin/AdminStorePage")
 );
 const AdminPresentationLayout = lazy(
-  () => import("@/Presentation/pages/admin/AdminLayout")
+  () => import("@/Presentation_legacy/pages/admin/AdminLayout")
 );
 
 function App(): React.ReactElement {
@@ -76,10 +79,12 @@ function App(): React.ReactElement {
             <Route path="agu" element={<AGUPage />} />
           </Route>
           <Route path="/presentation/" element={<PresentationLayout />}>
+            {/* test */}
             <Route path="home" element={<PresentationHomePage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="detail" element={<DetailPage />} />
-            <Route path="log" element={<PresentationLogPage />} />
+            <Route path="about" element={<AboutUsPage />} />
+            <Route path="profile" element={<PresentationProfilePage />} />
           </Route>
           {/* admin용 라우터 */}
           <Route path="/admin/" element={<AdminLayout />}>

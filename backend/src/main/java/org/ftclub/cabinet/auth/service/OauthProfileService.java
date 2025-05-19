@@ -8,22 +8,35 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OauthProfileService {
 
+	private final ApplicationTokenManager applicationTokenManager;
 	@Value("${spring.security.oauth2.client.provider.ft.users-info-uri}")
 	private String ftUsersInfoUri;
+
+	public FtOauthProfile getProfileByIntraName(String intraName) throws JsonProcessingException {
+		log.info("Called getProfileByIntraName {}", intraName);
+		try {
+			return callFtApi(applicationTokenManager.getFtAccessToken(), intraName);
+		} catch (WebClientResponseException.Unauthorized e) {
+			log.warn("FT Access 토큰 만료, 재발급 시도중..");
+			applicationTokenManager.refreshFtAccessToken();
+			return callFtApi(applicationTokenManager.getFtAccessToken(), intraName);
+		}
+	}
 
 	/**
 	 * 42에서 발급한 accessToken을 활용해 유저의 정보를 받아옵니다
@@ -33,9 +46,7 @@ public class OauthProfileService {
 	 * @return 유저 프로필정보 {@link FtOauthProfile}
 	 * @throws JsonProcessingException
 	 */
-	public FtOauthProfile getProfileByIntraName(String accessToken, String intraName)
-			throws JsonProcessingException {
-		log.info("Called getProfileByIntraName {}", intraName);
+	public FtOauthProfile callFtApi(String accessToken, String intraName) {
 		JsonNode result = WebClient.create().get()
 				.uri(ftUsersInfoUri + '/' + intraName)
 				.accept(MediaType.APPLICATION_JSON)

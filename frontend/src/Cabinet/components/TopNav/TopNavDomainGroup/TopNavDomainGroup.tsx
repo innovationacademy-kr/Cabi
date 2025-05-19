@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import DarkModeToggleSwitch from "@/Cabinet/components/Common/DarkModeToggleSwitch";
 import { ReactComponent as CabiLogo } from "@/Cabinet/assets/images/logo.svg";
-import { ReactComponent as PresentationLogo } from "@/Presentation/assets/images/logo.svg";
+import { ReactComponent as PresentationLogo } from "@/Presentation_legacy/assets/images/logo.svg";
 
 interface ITopNavDomain {
   path: string;
@@ -30,14 +30,15 @@ const domains: ITopNavDomain[] = [
 ];
 
 const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
+
   return (
     <DomainGroupContainerStyled>
       {domains.map((domain, index) => (
         <DomainWrapperStyled key={domain.title}>
           <DomainContainerStyled
-            onClick={() => navigator(isAdmin ? domain.adminPath : domain.path)}
+            onClick={() => navigate(isAdmin ? domain.adminPath : domain.path)}
           >
             <LogoContainerStyled
               domainTitle={domain.title}
@@ -59,9 +60,12 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
           {index < domains.length - 1 && <DomainSeparatorStyled />}
         </DomainWrapperStyled>
       ))}
-      <ToggleWrapperStyled>
-        <DarkModeToggleSwitch id="darkModeToggleSwitch" />
-      </ToggleWrapperStyled>
+
+      {!pathname.includes("presentation") && (
+        <ToggleWrapperStyled>
+          <DarkModeToggleSwitch id="darkModeToggleSwitch" />
+        </ToggleWrapperStyled>
+      )}
     </DomainGroupContainerStyled>
   );
 };
@@ -71,6 +75,10 @@ const DomainGroupContainerStyled = styled.div`
   align-items: center;
   width: 100%;
   height: 40px;
+  min-height: 40px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+
   border-bottom: 1px solid var(--line-color);
   padding: 0 28px;
   color: var(--gray-line-btn-color);
@@ -81,11 +89,14 @@ const DomainGroupContainerStyled = styled.div`
 const DomainWrapperStyled = styled.div`
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 `;
 
 const DomainContainerStyled = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
 `;
 
 const LogoContainerStyled = styled.div<{
@@ -96,17 +107,15 @@ const LogoContainerStyled = styled.div<{
   align-items: center;
   width: 14px;
   height: 14px;
-  cursor: pointer;
+  flex-shrink: 0;
 
   svg {
     .logo_svg__currentPath {
       fill: ${(props) =>
         props.isCabi
-          ? "var(--sys-main-color);"
-          : " var(--sys-default-main-color);"};
+          ? "var(--sys-main-color)"
+          : "var(--sys-default-main-color)"};
     }
-    width: 14px;
-    height: 14px;
   }
 
   & > svg > path {
@@ -122,6 +131,8 @@ const DomainTitleStyled = styled.div<{ fontWeight: string }>`
   font-weight: ${(props) => props.fontWeight};
   margin-left: 4px;
   cursor: pointer;
+  line-height: 1;
+  flex-shrink: 0;
 `;
 
 const DomainSeparatorStyled = styled.div`
@@ -129,6 +140,7 @@ const DomainSeparatorStyled = styled.div`
   height: 20px;
   margin: 0 8px;
   background-color: var(--service-man-title-border-btm-color);
+  flex-shrink: 0;
 `;
 
 const ToggleWrapperStyled = styled.div`
@@ -136,6 +148,7 @@ const ToggleWrapperStyled = styled.div`
   right: 18px;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 `;
 
 export default TopNavDomainGroup;

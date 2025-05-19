@@ -240,6 +240,7 @@ spring:
             authorization-uri: https://api.intra.42.fr/oauth/authorize
             token-uri: https://api.intra.42.fr/oauth/token
             user-info-uri: https://api.intra.42.fr/v2/me
+            users-info-uri: https://api.intra.42.fr/v2/users
             user-name-attribute: login
 
           kakao:
@@ -333,3 +334,18 @@ slack:
 logging:
   level:
     org.springframework.security: DEBUG
+
+#------------------------------AWS(MinIO)------------------------------
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+      auto: false
+    s3:
+      endpoint: http://localhost:9000
+      path-style-access-enabled: true
+      bucket: test-bucket
+      image-folder: test-folder
+    credentials:
+      access-key: test-access-key
+      secret-key: test-secret-key

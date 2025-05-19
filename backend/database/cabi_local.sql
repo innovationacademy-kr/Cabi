@@ -612,7 +612,7 @@ DROP TABLE IF EXISTS `user`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user`
 (
-    `id`            bigint(20)   NOT NULL AUTO_INCREMENT,
+    `id`            bigint(20)                 NOT NULL AUTO_INCREMENT,
     `blackholed_at` datetime(6)  DEFAULT NULL,
     `deleted_at`    datetime(6)  DEFAULT NULL,
     `email`         varchar(255) DEFAULT NULL,
@@ -633,10 +633,10 @@ CREATE TABLE `user`
 
 -- LOCK TABLES `user` WRITE;
 INSERT INTO `user`
-VALUES  (1, null, null, test1@student.42seoul.kr, "test1", 1, 1, 0, 0, 'USER'),
-        (2, null, null, test2@student.42seoul.kr, "test2", 1, 1, 0, 0, 'USER'),
-        (3, null, null, test3@student.42seoul.kr, "test3", 1, 1, 0, 0, 'USER');
-
+VALUES (1, null, null, 'test1@student.42seoul.kr', 'test1', 1, 1, 0, 0, 'USER'),
+       (2, null, null, 'test2@student.42seoul.kr', 'test2', 1, 1, 0, 0, 'USER'),
+       (3, null, null, 'test3@student.42seoul.kr', 'test3', 1, 1, 0, 0, 'USER');
+UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `lent_extension`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
@@ -767,7 +767,7 @@ CREATE TABLE `item_history`
     `user_id`     bigint(20)  NOT NULL,
     `purchase_at` datetime(6) NOT NULL,
     `used_at`     datetime(6) DEFAULT NULL,
-    `amount`       bigint(20)  DEFAULT NULL,
+    `amount`      bigint(20)  DEFAULT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `item_history_item_id` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`),
     CONSTRAINT `item_history_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
@@ -794,45 +794,100 @@ CREATE TABLE `section_alarm`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
 
+
+--
+-- Table structure for table `presentation` & `presentation slot`
+--
+
 DROP TABLE IF EXISTS `presentation`;
-CREATE TABLE `presentation`
+DROP TABLE IF EXISTS presentation_slot;
+
+CREATE TABLE presentation
 (
-    `id`                   BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `category`              VARCHAR(255) NULL,
-    `date_time`             DATETIME(6) NULL,
-    `detail`                VARCHAR(500) NULL,
-    `presentation_location` VARCHAR(255) NULL,
-    `presentation_status`   VARCHAR(255) NULL,
-    `presentation_time`     VARCHAR(255) NULL,
-    `subject`               VARCHAR(25) NULL,
-    `summary`               VARCHAR(40) NULL,
-    `user_id`               BIGINT NULL,
-    CONSTRAINT `presentation_user_id`
-        FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+    id                    BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id               BIGINT       NOT NULL,
+    category              VARCHAR(255) NOT NULL,
+    duration              VARCHAR(255) NOT NULL,
+    title                 VARCHAR(50)  NOT NULL,
+    summary               VARCHAR(100) NOT NULL,
+    outline               VARCHAR(500) NOT NULL,
+    detail                TEXT         NOT NULL,
+    canceled              TINYINT(1)   NOT NULL DEFAULT 0,
+    thumbnail_link        VARCHAR(2048),
+    video_link            VARCHAR(2048),
+    is_recording_allowed  TINYINT(1)   NOT NULL DEFAULT 0,
+    is_public_allowed     TINYINT(1)   NOT NULL DEFAULT 0,
+    presentation_slot_id  BIGINT UNIQUE, -- FK setting later
+    start_time            DATETIME(6)  NOT NULL,
+    presentation_location VARCHAR(20)  NOT NULL,
+
+    CONSTRAINT fk_presentation_user
+        FOREIGN KEY (user_id) REFERENCES user (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
 
-LOCK TABLES `presentation` WRITE;
-/*!40000 ALTER TABLE `presentation`
-    DISABLE KEYS */;
-INSERT INTO `presentation`
-VALUES (1, 'JOB', '2024-10-09 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
-       (2, NULL, '2024-10-23 14:00:00', 'dummy', 'BASEMENT', 'CANCEL', 'HALF', 'dummy', 'dummy', NULL),
-       (3, NULL, '2024-11-05 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
-       (4, 'JOB', '2024-11-19 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
-       (5, NULL, '2024-12-11 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
-       (6, 'JOB', '2024-12-25 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
-       (7, NULL, '2025-01-08 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
-       (8, NULL, '2025-01-22 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
-       (9, NULL, '2025-02-12 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
-       (10, NULL, '2025-02-26 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
-       (11, NULL, '2025-03-12 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL),
-       (12, NULL, '2025-03-26 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
-       (13, NULL, '2025-04-09 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
-       (14, NULL, '2025-04-23 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
-       (15, NULL, '2025-05-07 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
-       (16, NULL, '2025-05-21 14:00:00', 'dummy', 'BASEMENT', 'EXPECTED', 'HALF', 'dummy', 'dummy', NULL);
+CREATE TABLE presentation_slot
+(
+    id                    BIGINT AUTO_INCREMENT PRIMARY KEY,
+    start_time            DATETIME(6)  NOT NULL,
+    presentation_location VARCHAR(255) NOT NULL,
+    presentation_id       BIGINT UNIQUE,
+    CONSTRAINT fk_slot_presentation
+        FOREIGN KEY (presentation_id) REFERENCES presentation (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+
+--
+-- Dumping data for table `presentation`
+--
+
+INSERT INTO presentation_slot (id, start_time, presentation_location)
+VALUES (1, '2025-01-15 14:00:00', 'BASEMENT'),
+       (2, '2025-02-15 14:00:00', 'BASEMENT'),
+       (3, '2025-03-15 14:00:00', 'BASEMENT'),
+       (4, '2025-04-15 14:00:00', 'BASEMENT'),
+       (5, '2025-05-15 14:00:00', 'BASEMENT'),
+       (6, '2025-06-15 14:00:00', 'BASEMENT'),
+       (7, '2025-07-15 14:00:00', 'BASEMENT');
+
+-- LOCK TABLES `presentation` WRITE;
+-- /*!40000 ALTER TABLE `presentation`
+--     DISABLE KEYS */;
+INSERT INTO presentation (id, user_id, category, duration,
+                          title, summary, outline, detail,
+                          canceled, thumbnail_link, video_link,
+                          is_recording_allowed, is_public_allowed,
+                          presentation_slot_id, start_time, presentation_location)
+VALUES (1, 1, 'DEVELOP', 'HALF',
+        '3월 발표', '3월 요약', '3월 아웃라인', '3월 상세 내용',
+        0, NULL, NULL, 1, 1,
+        3, '2025-03-15 14:00:00', 'BASEMENT'),
+
+       (2, 2, 'JOB', 'HOUR',
+        '4월 발표', '4월 요약', '4월 아웃라인', '4월 상세 내용',
+        0, NULL, NULL, 1, 0,
+        4, '2025-04-15 14:00:00', 'BASEMENT'),
+
+       (3, 3, 'DEVELOP', 'HOUR_HALF',
+        '5월 발표', '5월 요약', '5월 아웃라인', '5월 상세 내용',
+        0, NULL, NULL, 1, 0,
+        5, '2025-05-15 14:00:00', 'BASEMENT');
+
+UPDATE presentation_slot
+SET presentation_id = CASE id
+                          WHEN 3 THEN 1
+                          WHEN 4 THEN 2
+                          WHEN 5 THEN 3
+    END
+WHERE id IN (3, 4, 5);
+
+ALTER TABLE presentation
+    ADD CONSTRAINT fk_presentation_slot
+        FOREIGN KEY (presentation_slot_id)
+            REFERENCES presentation_slot (id);
+
 /*!40000 ALTER TABLE `presentation`
     ENABLE KEYS */;
 UNLOCK TABLES;

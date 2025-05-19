@@ -50,6 +50,10 @@ const IconWrapperStyled = styled.div<{ provider: TOAuthProvider }>`
   justify-content: center;
   width: 20px;
   height: 20px;
+
+  & > svg {
+    width: 20px;
+  }
 `;
 
 const LoadingAnimationWrapper = styled.div`

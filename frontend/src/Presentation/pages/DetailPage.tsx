@@ -1,7 +1,7 @@
-import DetailContentContainer from "@/Presentation/components/Details/DetailContent.container";
-
 const DetailPage = () => {
-  return <DetailContentContainer />;
-};
+    return <div className="bg-blue-100 w-full h-full">test
+DetailPage
+    </div>;
+  };
 
 export default DetailPage;

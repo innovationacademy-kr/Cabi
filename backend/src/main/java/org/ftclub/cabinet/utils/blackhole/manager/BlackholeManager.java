@@ -5,14 +5,14 @@ import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
+import org.ftclub.cabinet.auth.service.OauthProfileService;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
-import org.ftclub.cabinet.auth.domain.FtOauthProfile;
-import org.ftclub.cabinet.auth.service.OauthProfileService;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.springframework.http.HttpStatus;
@@ -49,8 +49,7 @@ public class BlackholeManager {
 	 */
 	public FtOauthProfile getUserRecentIntraProfile(String userName) {
 		try {
-			return oauthProfileService.getProfileByIntraName(tokenManager.getFtAccessToken(),
-					userName);
+			return oauthProfileService.getProfileByIntraName(userName);
 		} catch (JsonProcessingException e) {
 			log.error("getUserRecentIntraProfile Exception: {}", userName, e);
 			throw ExceptionStatus.OAUTH_BAD_GATEWAY.asServiceException();

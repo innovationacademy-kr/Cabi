@@ -1,3 +1,4 @@
+import { HttpStatusCode } from "axios";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { userState } from "@/Cabinet/recoil/atoms";
@@ -49,6 +50,19 @@ const SocialAccountLinkCardContainer = () => {
     }
   };
 
+  function updateUnlinkedProviderStatus(
+    provider: TOAuthProvider,
+    status: boolean
+  ) {
+    const currentValue = JSON.parse(localStorage.getItem("isUnlinked") || "{}");
+    const updatedValue = {
+      ...currentValue,
+      [provider]: status,
+    };
+
+    localStorage.setItem("isUnlinked", JSON.stringify(updatedValue));
+  }
+
   const tryUnlinkSocialAccount = async () => {
     if (linkedOAuthInfo) {
       try {
@@ -60,6 +74,10 @@ const SocialAccountLinkCardContainer = () => {
           providerTypeState
         );
 
+        if (response.status === HttpStatusCode.Ok && linkedProvider) {
+          updateUnlinkedProviderStatus(linkedProvider, true);
+        }
+
         return response;
       } catch (error) {
         console.error(error);
@@ -68,7 +86,17 @@ const SocialAccountLinkCardContainer = () => {
   };
 
   const tryLinkSocialAccount = (provider: TOAuthProvider) => {
-    window.location.replace(getOAuthRedirectUrl(provider));
+    const redirectUrl = getOAuthRedirectUrl(provider);
+    const isUnlinkedValue = JSON.parse(
+      localStorage.getItem("isUnlinked") || "{}"
+    );
+
+    if (isUnlinkedValue[provider] === true) {
+      updateUnlinkedProviderStatus(provider, false);
+      window.location.replace(redirectUrl + "?prompt=login");
+    } else {
+      window.location.replace(redirectUrl);
+    }
   };
 
   const handleLinkSocialAccount = (provider: TOAuthProvider) => {
