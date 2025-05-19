@@ -8,6 +8,8 @@ import org.ftclub.cabinet.admin.dto.PresentationSlotUpdateServiceDto;
 import org.ftclub.cabinet.admin.presentation.service.AdminPresentationSlotService;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,5 +54,15 @@ public class AdminPresentationSlotController {
 						slotRequestDto.getStartTime(),
 						slotRequestDto.getLocation()
 				));
+	}
+
+	/**
+	 * 프레젠테이션 슬롯을 삭제합니다.
+	 *
+	 * @param slotId 프레젠테이션 슬롯 ID
+	 */
+	@DeleteMapping("/slots/{slotId}")
+	public void deletePresentationSlot(@PathVariable Long slotId) {
+		adminPresentationSlotService.deletePresentationSlot(slotId);
 	}
 }

@@ -18,6 +18,7 @@ sourceCompatibility = '11'
 
 ext {
     set('springCloudVersion', "2021.0.8")
+    set('awsSdkVersion', "2.25.20")
     set('snippetsDir', file("${buildDir}/generated-snippets"))
 }
 
@@ -90,6 +91,8 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.9'
 
+    // aws - s3
+    implementation 'software.amazon.awssdk:s3'
 
     // test
     testCompileOnly 'org.projectlombok:lombok'
@@ -110,6 +113,7 @@ dependencies {
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "software.amazon.awssdk:bom:${awsSdkVersion}"
     }
 }
 

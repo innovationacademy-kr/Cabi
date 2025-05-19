@@ -126,8 +126,22 @@ public enum ExceptionStatus {
 	PRESENTATION_COMMENT_EMPTY(HttpStatus.BAD_REQUEST, "댓글은 비어있을 수 없습니다"),
 	PRESENTATION_COMMENT_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "댓글 작성자가 아닙니다"),
 	PRESENTATION_COMMENT_INVALID_ASSOCIATION(HttpStatus.BAD_REQUEST, "수정하려는 댓글이 해당 발표에 속하지 않습니다."),
-	SLOT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 발표 슬롯이 존재하지 않습니다.");
+	SLOT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 발표 슬롯이 존재하지 않습니다."),
+	CANNOT_DELETE_SLOT_WITH_PRESENTATION(HttpStatus.BAD_REQUEST, "발표가 있는 슬롯은 삭제할 수 없습니다."),
+	FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 크기가 너무 큽니다."),
+	INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "잘못된 파일 확장자입니다."),
+	S3_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 업로드 중 에러가 발생했습니다."),
+	S3_GET_URL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 URL 생성 중 에러가 발생했습니다."),
+	S3_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 삭제 중 에러가 발생했습니다."),
+	PRESENTATION_SLOT_ALREADY_ASSIGNED(HttpStatus.BAD_REQUEST, "이미 발표 슬롯에 발표가 할당되어 있습니다."),
 
+	// Presentation user 권한 관련
+	NOT_LOGGED_IN(HttpStatus.UNAUTHORIZED, "로그인이 필요한 서비스입니다."),
+	PRESENTATION_ACCESS_DENIED(HttpStatus.FORBIDDEN, "권한이 부족합니다."),
+//	NOT_PUBLIC_PRESENTATION(HttpStatus.FORBIDDEN, "로그인한 유저만 접근할 수 있는 자료입니다."),
+
+	// REMOVE (just for conflict)
+	REMOVE(HttpStatus.BAD_REQUEST, "삭제할 내용(오로지 마지막 ; 작성 용)");
 
 	final private int statusCode;
 	final private String message;

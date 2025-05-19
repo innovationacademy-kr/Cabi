@@ -53,9 +53,10 @@ public class AdminPresentationSlotService {
 	 *
 	 * @param startTime
 	 */
-	private void validateSlotOverlapped(LocalDateTime startTime) {
-		LocalDateTime overlapStartTime = startTime.minusHours(PRESENTATION_SLOT_DURATION);
-		LocalDateTime overlapEndTime = startTime.plusHours(PRESENTATION_SLOT_DURATION);
+	@Transactional(readOnly = true)
+	public void validateSlotOverlapped(LocalDateTime startTime) {
+		LocalDateTime overlapStartTime = startTime.minusMinutes(PRESENTATION_SLOT_DURATION);
+		LocalDateTime overlapEndTime = startTime.plusMinutes(PRESENTATION_SLOT_DURATION);
 
 		List<PresentationSlot> overlappingSlots = slotRepository.findByStartTimeBetween(
 				overlapStartTime, overlapEndTime);
@@ -71,9 +72,10 @@ public class AdminPresentationSlotService {
 	 * @param slotId       슬롯 ID
 	 * @param newStartTime 시작 시간
 	 */
-	private void validateSlotUpdateOverlap(Long slotId, LocalDateTime newStartTime) {
-		LocalDateTime overlapStartTime = newStartTime.minusHours(PRESENTATION_SLOT_DURATION);
-		LocalDateTime overlapEndTime = newStartTime.plusHours(PRESENTATION_SLOT_DURATION);
+	@Transactional(readOnly = true)
+	public void validateSlotUpdateOverlap(Long slotId, LocalDateTime newStartTime) {
+		LocalDateTime overlapStartTime = newStartTime.minusMinutes(PRESENTATION_SLOT_DURATION);
+		LocalDateTime overlapEndTime = newStartTime.plusMinutes(PRESENTATION_SLOT_DURATION);
 
 		List<PresentationSlot> overlappingSlots = slotRepository.findByStartTimeBetween(
 				overlapStartTime, overlapEndTime);
@@ -98,5 +100,19 @@ public class AdminPresentationSlotService {
 		slot.changeSlotStartTime(serviceDto.getStartTime());
 		slot.changeSlotLocation(serviceDto.getLocation());
 		// TODO : 프레젠테이션에 연결된 발표 정보도 수정해야 한다면 발표 수정 기능 개발 후에 추가
+	}
+
+	/**
+	 * 프레젠테이션 슬롯을 삭제합니다.
+	 *
+	 * @param slotId 프레젠테이션 슬롯 ID
+	 */
+	public void deletePresentationSlot(Long slotId) {
+		PresentationSlot slot = slotRepository.findById(slotId)
+				.orElseThrow(ExceptionStatus.SLOT_NOT_FOUND::asServiceException);
+		if (slot.hasPresentation()) {
+			throw ExceptionStatus.CANNOT_DELETE_SLOT_WITH_PRESENTATION.asServiceException();
+		}
+		slotRepository.delete(slot);
 	}
 }
