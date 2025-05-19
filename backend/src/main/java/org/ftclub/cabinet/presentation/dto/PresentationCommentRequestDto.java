@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.dto;
+package org.ftclub.cabinet.presentation.dto;
 
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

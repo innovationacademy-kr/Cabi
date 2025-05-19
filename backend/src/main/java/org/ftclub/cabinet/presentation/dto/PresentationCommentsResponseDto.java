@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.dto;
+package org.ftclub.cabinet.presentation.dto;
 
 import java.util.List;
 import lombok.Getter;

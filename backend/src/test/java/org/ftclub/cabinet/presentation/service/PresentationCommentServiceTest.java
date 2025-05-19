@@ -18,9 +18,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.ftclub.cabinet.dto.PresentationCommentResponseDto;
-import org.ftclub.cabinet.dto.PresentationCommentServiceCreationDto;
-import org.ftclub.cabinet.dto.PresentationCommentServiceUpdateDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentResponseDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceCreationDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceUpdateDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.presentation.domain.Presentation;
@@ -35,7 +35,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @ExtendWith(MockitoExtension.class)
 class PresentationCommentServiceTest {

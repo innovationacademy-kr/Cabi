@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.dto;
+package org.ftclub.cabinet.presentation.dto;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
