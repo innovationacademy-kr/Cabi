@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.presentation.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -7,6 +8,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -20,6 +22,7 @@ import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
 import org.ftclub.cabinet.auth.service.AuthPolicyService;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceCreationDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceUpdateDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceDeleteDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.security.exception.SecurityExceptionHandlerManager;
@@ -30,6 +33,7 @@ import org.ftclub.cabinet.presentation.dto.PresentationCommentResponseDto;
 import org.ftclub.cabinet.presentation.service.PresentationCommentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -240,5 +244,45 @@ public class PresentationCommentControllerTest {
 		// Verify service method was called
 		verify(presentationCommentService).updatePresentationComment(
 				presentationCommentServiceUpdateDto);
+	}
+
+	@DisplayName("프레젠테이션 댓글 삭제 성공 테스트")
+	@Test
+	void deletePresentationComment_성공() throws Exception {
+		// given
+		Long userId = 1L;
+		Long presentationId = 42L;
+		Long commentId = 27L;
+
+		PresentationCommentServiceDeleteDto presentationCommentServiceDeleteDto = new PresentationCommentServiceDeleteDto(
+				userId,
+				presentationId,
+				commentId
+		);
+
+		Authentication mockAuthentication = createMockAuthentication(userId);
+
+		// when & then
+		mockMvc.perform(
+						delete("/v6/presentations/{presentationId}/comments/{commentId}", presentationId,
+								commentId)
+								.with(authentication(mockAuthentication))
+								.with(csrf())
+				)
+				.andExpect(status().isOk())
+				.andDo(document("presentation/comment/delete-presentation-comment",
+						preprocessRequest(prettyPrint()),
+						preprocessResponse(prettyPrint())
+				));
+
+		// Verify service method was called with correct parameters constructed by the controller
+		ArgumentCaptor<PresentationCommentServiceDeleteDto> captor = ArgumentCaptor.forClass(
+				PresentationCommentServiceDeleteDto.class);
+		verify(presentationCommentService).deletePresentationComment(captor.capture());
+
+		PresentationCommentServiceDeleteDto capturedDto = captor.getValue();
+		assertEquals(userId, capturedDto.getUserId());
+		assertEquals(presentationId, capturedDto.getPresentationId());
+		assertEquals(commentId, capturedDto.getCommentId());
 	}
 }

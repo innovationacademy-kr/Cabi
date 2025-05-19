@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceCreationDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceDeleteDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceUpdateDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -569,4 +570,109 @@ class PresentationCommentServiceTest {
 		verify(existingComment, never()).updateDetail(anyString());
 	}
 
+	@Test
+	@DisplayName("프레젠테이션 댓글 삭제 성공")
+	void deletePresentationComment_성공() {
+		// Given
+		Long userId = 1L;
+		Long presentationId = 10L;
+		Long commentId = 101L;
+
+		User ownerUser = mock(User.class);
+		given(ownerUser.getId()).willReturn(userId);
+
+		Presentation presentation = mock(Presentation.class);
+		given(presentation.getId()).willReturn(presentationId);
+
+		PresentationComment existingComment = mock(PresentationComment.class);
+		given(existingComment.getPresentation()).willReturn(presentation);
+		given(existingComment.getUser()).willReturn(ownerUser);
+		given(presentationCommentRepository.findById(commentId)).willReturn(
+				Optional.of(existingComment));
+
+		PresentationCommentServiceDeleteDto dto = new PresentationCommentServiceDeleteDto(userId,
+				presentationId, commentId);
+
+		// When & Then
+		presentationCommentService.deletePresentationComment(dto);
+
+		// Verify
+		verify(existingComment).delete(); // delete() 메서드가 호출되었는지 확인
+	}
+
+	@Test
+	@DisplayName("프레젠테이션 댓글 삭제 실패 - 댓글 없음")
+	void deletePresentationComment_실패_댓글_없음() {
+		// Given
+		Long userId = 1L;
+		Long presentationId = 10L;
+		Long nonExistentCommentId = 999L;
+
+		PresentationCommentServiceDeleteDto dto = new PresentationCommentServiceDeleteDto(userId,
+				presentationId, nonExistentCommentId);
+
+		// When & Then
+		ServiceException exception = assertThrows(ServiceException.class, () -> {
+			presentationCommentService.deletePresentationComment(dto);
+		});
+		assertEquals(ExceptionStatus.PRESENTATION_COMMENT_NOT_FOUND, exception.getStatus());
+		verify(presentationCommentRepository).findById(nonExistentCommentId);
+	}
+
+	@Test
+	@DisplayName("프레젠테이션 댓글 삭제 실패 - 발표 없음")
+	void deletePresentationComment_실패_발표_없음() {
+		// Given
+		Long userId = 1L;
+		Long nonExistentPresentationId = 999L;
+		Long commentId = 101L;
+
+		PresentationCommentServiceDeleteDto dto = new PresentationCommentServiceDeleteDto(userId,
+				nonExistentPresentationId, commentId);
+
+		// When & Then
+		ServiceException exception = assertThrows(ServiceException.class, () -> {
+			presentationCommentService.deletePresentationComment(dto);
+		});
+		assertEquals(ExceptionStatus.PRESENTATION_COMMENT_NOT_FOUND, exception.getStatus());
+	}
+
+	@Test
+	@DisplayName("프레젠테이션 댓글 삭제 실패 - 댓글과 발표 불일치")
+	void deletePresentationComment_실패_댓글_발표_불일치() {
+
+		// Given
+		Long userId = 1L;
+		Long presentationIdInDto = 10L; // DTO의 발표 ID
+		Long actualPresentationId = 20L; // 댓글이 실제 속한 발표 ID (DTO와 다름)
+		Long commentId = 101L;
+
+		User ownerUser = mock(User.class);
+
+		Presentation presentationInDto = mock(Presentation.class); // DTO ID에 해당하는 발표 Mock
+		given(presentationQueryService.getPresentation(presentationIdInDto)).willReturn(
+				presentationInDto);
+
+		Presentation actualPresentation = mock(Presentation.class); // 댓글이 실제 속한 발표 Mock
+		given(actualPresentation.getId()).willReturn(actualPresentationId);
+
+		PresentationComment existingComment = mock(PresentationComment.class);
+		given(existingComment.getPresentation()).willReturn(actualPresentation);
+
+		given(presentationCommentRepository.findById(commentId)).willReturn(
+				Optional.of(existingComment));
+
+		PresentationCommentServiceDeleteDto dto = new PresentationCommentServiceDeleteDto(userId,
+				presentationIdInDto, commentId);
+
+		// When & Then
+		ServiceException exception = assertThrows(ServiceException.class, () -> {
+			presentationCommentService.deletePresentationComment(dto);
+		});
+		assertEquals(ExceptionStatus.PRESENTATION_COMMENT_INVALID_ASSOCIATION,
+				exception.getStatus());
+		verify(presentationCommentRepository).findById(commentId);
+		verify(presentationQueryService).getPresentation(presentationIdInDto);
+		verify(existingComment, never()).delete();
+	}
 }

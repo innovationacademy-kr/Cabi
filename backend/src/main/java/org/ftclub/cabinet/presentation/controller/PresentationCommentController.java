@@ -3,14 +3,16 @@ package org.ftclub.cabinet.presentation.controller;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.dto.PresentationCommentRequestDto;
-import org.ftclub.cabinet.dto.PresentationCommentResponseDto;
-import org.ftclub.cabinet.dto.PresentationCommentsResponseDto;
-import org.ftclub.cabinet.dto.PresentationCommentServiceCreationDto;
-import org.ftclub.cabinet.dto.PresentationCommentServiceUpdateDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentResponseDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceDeleteDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentsResponseDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceCreationDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceUpdateDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.presentation.service.PresentationCommentService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,6 +71,21 @@ public class PresentationCommentController {
 						presentationId,
 						commentId,
 						requestDto.getDetail()
+				)
+		);
+	}
+
+	@DeleteMapping("/{commentId}")
+	public void deletePresentationComment(
+			@AuthenticationPrincipal UserInfoDto user,
+			@PathVariable Long presentationId,
+			@PathVariable Long commentId
+	) {
+		presentationCommentService.deletePresentationComment(
+				new PresentationCommentServiceDeleteDto(
+						user.getUserId(),
+						presentationId,
+						commentId
 				)
 		);
 	}

@@ -66,4 +66,8 @@ public class PresentationComment {
 	public void updateDetail(String detail) {
 		this.detail = detail;
 	}
+
+	public void delete() {
+		this.isDeleted = true;
+	}
 }

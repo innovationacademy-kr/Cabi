@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceCreationDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceDeleteDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceUpdateDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
@@ -113,5 +114,20 @@ public class PresentationCommentService {
 		if (!presentationOfComment.getId().equals(presentationId)) {
 			throw ExceptionStatus.PRESENTATION_COMMENT_INVALID_ASSOCIATION.asServiceException();
 		}
+	}
+
+	public void deletePresentationComment(
+			PresentationCommentServiceDeleteDto dto
+	) {
+		PresentationComment comment = commentRepository.findById(dto.getCommentId())
+				.orElseThrow(ExceptionStatus.PRESENTATION_COMMENT_NOT_FOUND::asServiceException);
+
+		verifyPresentationAndCommentAssociation(comment, dto.getPresentationId());
+
+		if (!comment.getUser().getId().equals(dto.getUserId())) {
+			throw ExceptionStatus.PRESENTATION_COMMENT_NOT_AUTHORIZED.asServiceException();
+		}
+
+		comment.delete();
 	}
 }
