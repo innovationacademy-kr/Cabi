@@ -3,6 +3,7 @@ package org.ftclub.cabinet.presentation.domain;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,8 +18,10 @@ import lombok.NoArgsConstructor;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Table(name = "PRESENTATION_COMMENT")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -58,5 +61,13 @@ public class PresentationComment {
 		this.presentation = presentation;
 		this.user = user;
 		this.detail = detail;
+	}
+
+	public void updateDetail(String detail) {
+		this.detail = detail;
+	}
+
+	public void delete() {
+		this.isDeleted = true;
 	}
 }
