@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class PresentationFacadeService {
 
 	private final PresentationCommandService commandService;
@@ -36,6 +35,7 @@ public class PresentationFacadeService {
 	 * @param form      프레젠테이션 등록 요청 DTO
 	 * @param thumbnail 썸네일 이미지 파일
 	 */
+	@Transactional
 	public void registerPresentation(UserInfoDto userInfo,
 			PresentationFormRequestDto form,
 			MultipartFile thumbnail) throws IOException {

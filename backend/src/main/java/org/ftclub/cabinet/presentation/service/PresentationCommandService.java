@@ -8,9 +8,11 @@ import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PresentationCommandService {
 
