@@ -1,8 +1,6 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap&text=새롬관로그인중수요지식회여기엔사물함이없어4층은현재용불가입니다!");
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap");
-
-
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
 :root {
   /* white, gray, black */
@@ -105,15 +103,9 @@
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;
+  --presentation-main-font: "Pretendard", sans-serif;
   --building-font: "Do Hyeon", sans-serif;
   --size-base: 14px;
-
-  /* default setting */
-  font-family: "Noto Sans KR", Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
-  display: swap;
 }
 
 a {
@@ -133,6 +125,10 @@ body {
   height: 100%;
   user-select: none;
   overflow: hidden;
+  font-family: var(--main-font);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
 }
 
 /* iOS Pinch Zoom disabled */
@@ -200,6 +196,10 @@ input {
   box-sizing: border-box;
 }
 
+.presentation-root {
+  font-family: var(--presentation-main-font);
+}
+
 .modal {
   border-radius: 10px;
   box-shadow: 10px 10px 40px 0px var(--login-card-border-shadow-color);
@@ -249,4 +249,3 @@ input {
 .domainButtonActive {
   color: var(--sys-main-color) !important;
 }
-

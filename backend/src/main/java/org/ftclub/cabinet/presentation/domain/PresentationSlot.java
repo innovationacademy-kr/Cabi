@@ -23,7 +23,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PresentationSlot {
 
-	public static final int PRESENTATION_SLOT_DURATION = 2;
+	public static final int PRESENTATION_SLOT_DURATION = 30; // 30분
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
@@ -55,6 +55,17 @@ public class PresentationSlot {
 
 	public void changeSlotLocation(PresentationLocation location) {
 		this.presentationLocation = location;
+	}
+
+	public boolean hasPresentation() {
+		return this.presentation != null;
+	}
+
+	public void assignPresentation(Presentation presentation) {
+		if (this.presentation != null) {
+			throw ExceptionStatus.PRESENTATION_SLOT_ALREADY_ASSIGNED.asDomainException();
+		}
+		this.presentation = presentation;
 	}
 
 }
