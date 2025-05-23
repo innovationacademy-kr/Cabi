@@ -9,10 +9,10 @@ import org.mapstruct.Mapping;
 public interface PresentationMapper {
 
 	/**
-	 * Presentation 엔티티를 AdminPresentationResponseDto로 변환합니다.
+	 * Presentation 엔티티를 AdminPresentationCalendarItemDto로 변환합니다.
 	 *
 	 * @param presentation 변환할 Presentation 엔티티
-	 * @return 변환된 AdminPresentationResponseDto
+	 * @return 변환된 AdminPresentationCalendarItemDto
 	 */
 	@Mapping(target = "presentationId", source = "id")
 	@Mapping(target = "location", source = "presentationLocation")
