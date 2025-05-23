@@ -4,7 +4,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.admin.dto.AdminPresentationResponseDto;
+import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.service.PresentationQueryService;
@@ -25,13 +25,13 @@ public class AdminPresentationFacadeService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<AdminPresentationResponseDto> getPresentationByDate(YearMonth yearMonth) {
+	public List<AdminPresentationCalendarItemDto> getPresentationByDate(YearMonth yearMonth) {
 		// 연월에 해당하는 모든 프레젠테이션 목록을 조회(취소 포함)
 		List<Presentation> presentations = presentationQueryService.getPresentationByYearMonth(
 				yearMonth);
 
 		return presentations.stream()
-				.map(presentationMapper::toAdminPresentationResponseDto)
+				.map(presentationMapper::toAdminPresentationCalendarItemDto)
 				.collect(Collectors.toList());
 	}
 }

@@ -3,7 +3,7 @@ package org.ftclub.cabinet.admin.presentation.controller;
 import java.time.YearMonth;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.admin.dto.AdminPresentationResponseDto;
+import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
 import org.ftclub.cabinet.admin.presentation.service.AdminPresentationFacadeService;
 import org.ftclub.cabinet.presentation.dto.DataListResponseDto;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,12 +26,12 @@ public class AdminPresentationController {
 	 * @return 프레젠테이션 목록
 	 */
 	@GetMapping
-	public DataListResponseDto<AdminPresentationResponseDto> getPresentationsByDate(
+	public DataListResponseDto<AdminPresentationCalendarItemDto> getPresentationsByDate(
 			@RequestParam(value = "yearMonth")
 			@DateTimeFormat(pattern = "yyyy-MM")
 			YearMonth yearMonth) {
-		List<AdminPresentationResponseDto> results = adminPresentationFacadeService.getPresentationByDate(
-				yearMonth);
+		List<AdminPresentationCalendarItemDto> results =
+				adminPresentationFacadeService.getPresentationByDate(yearMonth);
 
 		return new DataListResponseDto<>(results);
 	}

@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.mapper;
 
-import org.ftclub.cabinet.admin.dto.AdminPresentationResponseDto;
+import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,5 +17,5 @@ public interface PresentationMapper {
 	@Mapping(target = "presentationId", source = "id")
 	@Mapping(target = "location", source = "presentationLocation")
 	@Mapping(target = "slotId", source = "slot.id")
-	AdminPresentationResponseDto toAdminPresentationResponseDto(Presentation presentation);
+	AdminPresentationCalendarItemDto toAdminPresentationCalendarItemDto(Presentation presentation);
 }

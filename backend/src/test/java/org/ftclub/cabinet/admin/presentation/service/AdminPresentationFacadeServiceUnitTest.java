@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 
 import java.time.YearMonth;
 import java.util.List;
-import org.ftclub.cabinet.admin.dto.AdminPresentationResponseDto;
+import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.service.PresentationQueryService;
@@ -40,16 +40,18 @@ class AdminPresentationFacadeServiceUnitTest {
 				.willReturn(mockPresentations);
 
 		// mock responseDto and mapper
-		AdminPresentationResponseDto mockResponseDto1 = mock(AdminPresentationResponseDto.class);
-		AdminPresentationResponseDto mockResponseDto2 = mock(AdminPresentationResponseDto.class);
+		AdminPresentationCalendarItemDto mockResponseDto1 = mock(
+				AdminPresentationCalendarItemDto.class);
+		AdminPresentationCalendarItemDto mockResponseDto2 = mock(
+				AdminPresentationCalendarItemDto.class);
 
-		given(mockPresentationMapper.toAdminPresentationResponseDto(mockPresentation1))
+		given(mockPresentationMapper.toAdminPresentationCalendarItemDto(mockPresentation1))
 				.willReturn(mockResponseDto1);
-		given(mockPresentationMapper.toAdminPresentationResponseDto(mockPresentation2))
+		given(mockPresentationMapper.toAdminPresentationCalendarItemDto(mockPresentation2))
 				.willReturn(mockResponseDto2);
 
 		// when
-		List<AdminPresentationResponseDto> results =
+		List<AdminPresentationCalendarItemDto> results =
 				adminPresentationFacadeService.getPresentationByDate(yearMonth);
 
 		// then
@@ -69,7 +71,7 @@ class AdminPresentationFacadeServiceUnitTest {
 				.willReturn(mockPresentations);
 
 		// when
-		List<AdminPresentationResponseDto> results =
+		List<AdminPresentationCalendarItemDto> results =
 				adminPresentationFacadeService.getPresentationByDate(yearMonth);
 
 		// then

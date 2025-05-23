@@ -7,7 +7,7 @@ import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 
 @Getter
 @AllArgsConstructor
-public class AdminPresentationResponseDto {
+public class AdminPresentationCalendarItemDto {
 
 	private Long presentationId;
 	private Long slotId;
