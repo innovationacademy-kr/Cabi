@@ -850,7 +850,16 @@ VALUES (1, '2025-01-15 14:00:00', 'BASEMENT'),
        (4, '2025-04-15 14:00:00', 'BASEMENT'),
        (5, '2025-05-15 14:00:00', 'BASEMENT'),
        (6, '2025-06-15 14:00:00', 'BASEMENT'),
-       (7, '2025-07-15 14:00:00', 'BASEMENT');
+       (7, '2025-07-15 14:00:00', 'BASEMENT'),
+       (8, '2025-08-15 14:00:00', 'BASEMENT'),
+       (9, '2025-09-15 14:00:00', 'BASEMENT'),
+       (10, '2025-10-15 14:00:00', 'BASEMENT'),
+       (11, '2025-11-15 14:00:00', 'BASEMENT'),
+       (12, '2025-12-15 14:00:00', 'BASEMENT'),
+       (13, '2026-01-15 14:00:00', 'BASEMENT'),
+       (14, '2026-02-15 14:00:00', 'BASEMENT'),
+       (15, '2026-03-15 14:00:00', 'BASEMENT'),
+       (16, '2026-04-15 14:00:00', 'BASEMENT');
 
 -- LOCK TABLES `presentation` WRITE;
 -- /*!40000 ALTER TABLE `presentation`
@@ -861,18 +870,28 @@ INSERT INTO presentation (id, user_id, category, duration,
                           is_recording_allowed, is_public_allowed,
                           presentation_slot_id, start_time, presentation_location)
 VALUES (1, 1, 'DEVELOP', 'HALF',
-        '3월 발표', '3월 요약', '3월 아웃라인', '3월 상세 내용',
-        0, NULL, NULL, 1, 1,
+        '1월 1번 유저 발표: 전체 공개', '1월 요약', '1월 아웃라인', '1월 상세 내용',
+        0, NULL, NULL, 0, 1,
+        1, '2025-01-15 14:00:00', 'BASEMENT'),
+
+       (2, 1, 'JOB', 'HOUR',
+        '2월 1번 유저 발표: 로그인 유저만 열람 가능', '2월 요약', '2월 아웃라인', '2월 상세 내용',
+        0, NULL, NULL, 0, 0,
+        2, '2025-02-15 14:00:00', 'BASEMENT'),
+
+       (3, 1, 'DEVELOP', 'HOUR_HALF',
+        '3월 1번 유저 발표: 취소됨, 로그인 유저만 열람 가능', '5월 요약', '5월 아웃라인', '5월 상세 내용',
+        1, NULL, NULL, 1, 0,
         3, '2025-03-15 14:00:00', 'BASEMENT'),
 
-       (2, 2, 'JOB', 'HOUR',
-        '4월 발표', '4월 요약', '4월 아웃라인', '4월 상세 내용',
-        0, NULL, NULL, 1, 0,
+       (4, 2, 'DEVELOP', 'HOUR',
+        '4월 2번 유저 발표: 전체 공개', '4월 요약', '4월 아웃라인', '4월 상세 내용',
+        0, NULL, NULL, 0, 1,
         4, '2025-04-15 14:00:00', 'BASEMENT'),
 
-       (3, 3, 'DEVELOP', 'HOUR_HALF',
-        '5월 발표', '5월 요약', '5월 아웃라인', '5월 상세 내용',
-        0, NULL, NULL, 1, 0,
+       (5, 3, 'DEVELOP', 'HOUR',
+        '5월 3번 유저 발표: 취소됨, 전체 공개', '5월 요약', '5월 아웃라인', '5월 상세 내용',
+        1, NULL, NULL, 0, 1,
         5, '2025-05-15 14:00:00', 'BASEMENT');
 
 UPDATE presentation_slot
