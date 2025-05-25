@@ -3,8 +3,8 @@ package org.ftclub.cabinet.presentation.service;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.auth.service.OauthPolicyService;
 import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
@@ -24,32 +24,30 @@ public class PresentationFacadeService {
 	private final PresentationQueryService queryService;
 	private final PresentationPolicyService policyService;
 	private final UserQueryService userQueryService;
-	private final OauthPolicyService oauthPolicyService;
+	private final ThumbnailStorageService thumbnailStorageService;
 	private final PresentationSlotRepository slotRepository; // TODO: service로 변경 필요
 //	private final PresentationSlotFacadeService slotFacadeService;  // TODO: 구현 후 연결 필요
 
 	/**
 	 * 프레젠테이션을 등록합니다.
 	 *
-	 * @param userInfo  사용자 정보
+	 * @param userId    사용자 정보
 	 * @param form      프레젠테이션 등록 요청 DTO
 	 * @param thumbnail 썸네일 이미지 파일
 	 */
 	@Transactional
-	public void registerPresentation(UserInfoDto userInfo,
+	public void registerPresentation(Long userId,
 			PresentationFormRequestDto form,
 			MultipartFile thumbnail) throws IOException {
-
-		// check user role
-		oauthPolicyService.validatePresentationUser(userInfo);
-		User user = userQueryService.getUser(userInfo.getUserId());
+		User user = userQueryService.getUser(userId);
+		String thumbnailLink = thumbnailStorageService.uploadImage(thumbnail);
 
 		// TODO: slot 검증 및 slotService에서 slotId 가져오는 것으로 변경 (현재의 orElseThrow 제거)
 		PresentationSlot slot = slotRepository.findById(form.getSlotId())
-				.orElseThrow(() -> new IllegalArgumentException("Invalid slot ID"));
+				.orElseThrow(ExceptionStatus.SLOT_NOT_FOUND::asServiceException);
 
 		Presentation newPresentation =
-				commandService.createPresentation(user, form, slot, thumbnail);
+				commandService.createPresentation(user, form, slot, thumbnailLink);
 
 		// TODO: 검증된 slot에 presentation id 등록
 //		slotFacadeService.registerSlot(newPresentation);
