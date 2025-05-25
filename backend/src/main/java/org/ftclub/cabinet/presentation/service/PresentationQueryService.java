@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,17 @@ public class PresentationQueryService {
 		LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();
 		LocalDateTime endDate = startDate.plusMonths(1);
 		return presentationRepository.findAllWithinPeriod(startDate, endDate);
+	}
+
+	/**
+	 * presetnationId로 프레젠테이션을 조회합니다.
+	 *
+	 * @param presentationId 프레젠테이션 ID
+	 * @return 프레젠테이션
+	 */
+	public Presentation getPresentationById(Long presentationId) {
+		return presentationRepository.findByIdJoinUser(presentationId)
+				.orElseThrow(ExceptionStatus.PRESENTATION_NOT_FOUND::asServiceException);
 	}
 
 }
