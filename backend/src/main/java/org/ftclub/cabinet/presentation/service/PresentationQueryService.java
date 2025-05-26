@@ -17,11 +17,5 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PresentationQueryService {
-	private final PresentationRepository presentationRepository;
-
-	public Presentation getPresentation(Long id){
-		return presentationRepository.findById(id) //optional은 객체가 있거나 널이거나
-				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
-	}
 
 }

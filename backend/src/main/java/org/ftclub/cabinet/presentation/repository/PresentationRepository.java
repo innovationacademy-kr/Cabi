@@ -2,9 +2,6 @@ package org.ftclub.cabinet.presentation.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-
-import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
