@@ -12,22 +12,25 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/v6/presentations")
+@RequestMapping("/v6/presentations/{presentationId}")
 public class PresentationLikeController {
 
-	private PresentationLikeService presentationLikeService;
-//	PresentationLikeDto dto;
+	private final PresentationLikeService presentationLikeService;
 
-	@PostMapping("/{presentationId}/likes")
+	public PresentationLikeController(PresentationLikeService presentationLikeService) {
+		this.presentationLikeService = presentationLikeService;
+	}
+
+	@PostMapping("/likes")
 	public void postLike(
 			@PathVariable Long presentationId,
-			@AuthenticationPrincipal UserInfoDto userInfoDto) {
+			@AuthenticationPrincipal UserInfoDto userInfoDto) { //이거 jwt파싱용으로 이걸 쓰면 userInfoDto에 user 정보 들어감(시큐리티 뭐시기 설정해둬서)
 		Long userId = userInfoDto.getUserId();
 		LocalDateTime now = LocalDateTime.now();
 		presentationLikeService.postLike(new PresentationLikeDto(presentationId, userId, now));
 	}
 
-	@DeleteMapping("/{presentationId}/likes")
+	@DeleteMapping("/likes")
 	public void deleteLike(
 			@PathVariable Long presentationId,
 			@AuthenticationPrincipal UserInfoDto userInfoDto) {
@@ -36,12 +39,12 @@ public class PresentationLikeController {
 		presentationLikeService.deleteLike(new PresentationLikeDto(presentationId, userId, now));
 	}
 
-//	@PostMapping("/{presentationId}/likes")
-//	public void postLike(
-//			@PathVariable Long presentationId,
-//			@AuthenticationPrincipal UserInfoDto userInfoDto) {
-//		Long userId = userInfoDto.getUserId();
-//		LocalDateTime now = LocalDateTime.now();
-//		presentationLikeService.postLike(new PresentationLikeDto(presentationId, userId, now));
-//	}
+	@GetMapping("/me/likes")
+	public void getPostsLikedByUser(
+			@PathVariable Long presentationId,
+			@AuthenticationPrincipal UserInfoDto userInfoDto) {
+		Long userId = userInfoDto.getUserId();
+		LocalDateTime now = LocalDateTime.now();
+		presentationLikeService.getPostsLikedByUser(new PresentationLikeDto(presentationId, userId, now));
+	}
 }
