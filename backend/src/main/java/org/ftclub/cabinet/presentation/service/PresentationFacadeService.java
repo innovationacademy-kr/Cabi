@@ -28,9 +28,9 @@ public class PresentationFacadeService {
 	private final PresentationPolicyService policyService;
 	private final UserQueryService userQueryService;
 	private final ThumbnailStorageService thumbnailStorageService;
-	private final PresentationSlotRepository slotRepository; // TODO: service로 변경 필요
-	//	private final PresentationSlotFacadeService slotFacadeService;  // TODO: 구현 후 연결 필요
-//	private final PresentationLikeQueryService likeQueryService;    // TODO: 구현 후 연결 필요
+	private final PresentationSlotRepository slotRepository;        // TODO
+	//	private final PresentationSlotFacadeService slotFacadeService;  // TODO
+//	private final PresentationLikeQueryService likeQueryService;    // TODO
 	private final PresentationMapper presentationMapper;
 
 	/**
@@ -47,7 +47,7 @@ public class PresentationFacadeService {
 		User user = userQueryService.getUser(userId);
 		String thumbnailLink = thumbnailStorageService.uploadImage(thumbnail);
 
-		// TODO: slot 검증 및 slotService에서 slotId 가져오는 것으로 변경 (현재의 orElseThrow 제거)
+		// TODO: slot 검증로직으로 대체
 		PresentationSlot slot = slotRepository.findById(form.getSlotId())
 				.orElseThrow(ExceptionStatus.SLOT_NOT_FOUND::asServiceException);
 
@@ -72,15 +72,14 @@ public class PresentationFacadeService {
 		// check verification of access to presentation detail
 		policyService.verifyPresentationDetailAccess(userInfo, presentation);
 
-		// TODO: likeQueryService 구현 후 연결 필요
 		Long likesCount = 0L;
-//		likesCount = likeQueryService.getLikesCount(presentationId);
+//		likesCount = likeQueryService.getLikesCount(presentationId);    // TODO: likeQueryService
 		Boolean isLikedByMe = false;
 		Boolean isMine = false;
-		if (userInfo != null) {
+		if (userInfo != null && !userInfo.hasRole("ADMIN")) {
 			Long userId = userInfo.getUserId();
 			Long presentationUserId = presentation.getUser().getId();
-//			isLiked = likeQueryService.isLikedByUser(userId, presentationId);
+//			isLiked = likeQueryService.isLikedByUser(userId, presentationId);   // TODO: likeQueryService
 			isMine = userId.equals(presentationUserId);
 		}
 		Boolean isUpcoming = presentation.getStartTime().isAfter(LocalDateTime.now());

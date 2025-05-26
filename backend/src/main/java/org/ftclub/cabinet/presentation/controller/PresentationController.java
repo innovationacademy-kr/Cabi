@@ -54,7 +54,7 @@ public class PresentationController {
 	 * 프레젠테이션 상세 정보를 조회합니다.
 	 *
 	 * @param presentationId 프레젠테이션 ID
-	 * @return PresentationDetail
+	 * @return 프레젠테이션 상세 정보
 	 */
 	@GetMapping("/{presentationId}")
 	public DataResponseDto<PresentationDetailDto> getPresentationDetail(
