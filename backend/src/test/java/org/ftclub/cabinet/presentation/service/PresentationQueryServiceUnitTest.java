@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.presentation.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -8,6 +9,8 @@ import static org.mockito.Mockito.verify;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -69,6 +72,37 @@ class PresentationQueryServiceUnitTest {
 		// then
 		verify(mockPresentationRepository).findAllWithinPeriod(expectedStartDate, expectedEndDate);
 		assertThat(results).isEmpty();
+	}
+
+	@Test
+	@DisplayName("프레젠테이션 ID로 조회 시, 올바른 ID로 호출하고 결과를 반환한다.")
+	void getPresentationById_성공() {
+		// given
+		Long presentationId = 1L;
+		Presentation mockPresentation = mock(Presentation.class);
+		given(mockPresentationRepository.findByIdJoinUser(presentationId))
+				.willReturn(Optional.of(mockPresentation));
+
+		// when
+		Presentation result = presentationQueryService.getPresentationById(presentationId);
+
+		// then
+		verify(mockPresentationRepository).findByIdJoinUser(presentationId);
+		assertThat(result).isEqualTo(mockPresentation);
+	}
+
+	@Test
+	@DisplayName("프레젠테이션 ID로 조회 시, 존재하지 않는 ID에 대해 예외를 발생시킨다.")
+	void getPresentationById_실패() {
+		// given
+		Long nonExistentId = 999L;
+		given(mockPresentationRepository.findByIdJoinUser(nonExistentId))
+				.willReturn(Optional.empty());
+
+		// when & then
+		assertThrows(ServiceException.class,
+				() -> presentationQueryService.getPresentationById(nonExistentId))
+				.getStatus().equals("PRESENTATION_NOT_FOUND");
 	}
 
 }
