@@ -7,35 +7,44 @@ import org.ftclub.cabinet.presentation.repository.PresentationLikeRepository;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserRepository;
+import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class PresentationLikeService {
 
 	private final PresentationLikeRepository likeRepository;
 
-	@Autowired
-	private UserRepository userRepository;
+	private final UserQueryService userQueryService;
 
-	@Autowired
-	private PresentationRepository presentationRepository;
+	private final PresentationQueryService presentationQueryService;
+
+	private final PresentationLikeQueryService   presentationLikeQueryService;
 
 	public User getUserById(Long id){
-		return (userRepository.findById(id).orElse(null));
+		return (userQueryService.getUser(id));
 	}
 
 	public Presentation getPresentationById(Long id){
-		return (presentationRepository.findById(id).orElse(null));
+		return (presentationQueryService.getPresentation(id));
 	}
 
 	// 생성자에서 주입
-	public PresentationLikeService(PresentationLikeRepository likeRepository) {
+	public PresentationLikeService(PresentationLikeRepository likeRepository, UserQueryService userQueryService, PresentationQueryService presentationQueryService, PresentationLikeQueryService presentationLikeQueryService) {
 		this.likeRepository = likeRepository;
+		this.userQueryService = userQueryService;
+		this.presentationQueryService = presentationQueryService;
+		this.presentationLikeQueryService = presentationLikeQueryService;
 	}
 
+	public Long getLikedCount(long presentationId){
+		return presentationLikeQueryService.getLikedCount(presentationId);
+	}
 
 	public  void postLike(PresentationLikeDto presentationLikeDto) {
 		User user = getUserById(presentationLikeDto.getUserId());
@@ -51,8 +60,10 @@ public class PresentationLikeService {
 		likeRepository.deleteByPresentationIdAndUserId(presentationLikeDto.getPresentationId(), user.getId());
 	}
 
-	public void getPostsLikedByUser(Long userId){
+	@Transactional(readOnly = true)
+	public void getPostsLikedByUser(PresentationLikeDto presentationLikeDto){
 
 	}
 
 }
+//파사드 패턴 도입해야함 -> 이걸 파사드 하위에 쿼리 컨트롤러와 정책 컨트롤러 두기
