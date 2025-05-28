@@ -813,7 +813,7 @@ CREATE TABLE presentation
     outline               VARCHAR(500) NOT NULL,
     detail                TEXT         NOT NULL,
     canceled              TINYINT(1)   NOT NULL DEFAULT 0,
-    thumbnail_link        VARCHAR(2048),
+    thumbnail_s3_key      VARCHAR(2048),
     video_link            VARCHAR(2048),
     is_recording_allowed  TINYINT(1)   NOT NULL DEFAULT 0,
     is_public_allowed     TINYINT(1)   NOT NULL DEFAULT 0,
@@ -866,7 +866,7 @@ VALUES (1, '2025-01-15 14:00:00', 'BASEMENT'),
 --     DISABLE KEYS */;
 INSERT INTO presentation (id, user_id, category, duration,
                           title, summary, outline, detail,
-                          canceled, thumbnail_link, video_link,
+                          canceled, thumbnail_s3_key, video_link,
                           is_recording_allowed, is_public_allowed,
                           presentation_slot_id, start_time, presentation_location)
 VALUES (1, 1, 'DEVELOP', 'HALF',
@@ -882,7 +882,7 @@ VALUES (1, 1, 'DEVELOP', 'HALF',
        (3, 1, 'DEVELOP', 'HOUR_HALF',
         '3월 1번 유저 발표: 취소됨, 로그인 유저만 열람 가능', '5월 요약', '5월 아웃라인', '5월 상세 내용',
         1, NULL, NULL, 1, 0,
-        3, '2025-03-15 14:00:00', 'BASEMENT'),
+        null, '2025-03-15 14:00:00', 'BASEMENT'),
 
        (4, 2, 'DEVELOP', 'HOUR',
         '4월 2번 유저 발표: 전체 공개', '4월 요약', '4월 아웃라인', '4월 상세 내용',
@@ -892,15 +892,20 @@ VALUES (1, 1, 'DEVELOP', 'HALF',
        (5, 3, 'DEVELOP', 'HOUR',
         '5월 3번 유저 발표: 취소됨, 전체 공개', '5월 요약', '5월 아웃라인', '5월 상세 내용',
         1, NULL, NULL, 0, 1,
-        5, '2025-05-15 14:00:00', 'BASEMENT');
+        null, '2025-05-15 14:00:00', 'BASEMENT');
 
-UPDATE presentation_slot
-SET presentation_id = CASE id
-                          WHEN 3 THEN 1
-                          WHEN 4 THEN 2
-                          WHEN 5 THEN 3
-    END
-WHERE id IN (3, 4, 5);
+--
+-- UPDATE presentation_id in presentation_slot table
+--
+
+UPDATE presentation_slot ps
+    JOIN presentation p ON ps.id = p.presentation_slot_id
+SET ps.presentation_id = p.id
+WHERE p.presentation_slot_id IS NOT NULL;
+
+--
+-- Adding foreign key constraint to presentation table
+--
 
 ALTER TABLE presentation
     ADD CONSTRAINT fk_presentation_slot

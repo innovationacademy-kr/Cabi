@@ -19,7 +19,7 @@ public class PresentationCommandService {
 	public Presentation createPresentation(User user,
 			PresentationFormRequestDto form,
 			PresentationSlot slot,
-			String thumbnailLink) {
+			String thumbnailS3Key) {
 		// create
 		Presentation newPresentation = Presentation.of(
 				user,
@@ -29,7 +29,7 @@ public class PresentationCommandService {
 				form.getSummary(),
 				form.getOutline(),
 				form.getDetail(),
-				thumbnailLink,
+				thumbnailS3Key,
 				form.getIsRecordingAllowed(),
 				form.getIsPublicAllowed(),
 				slot

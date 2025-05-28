@@ -45,17 +45,16 @@ public class PresentationFacadeService {
 			PresentationFormRequestDto form,
 			MultipartFile thumbnail) throws IOException {
 		User user = userQueryService.getUser(userId);
-		String thumbnailLink = thumbnailStorageService.uploadImage(thumbnail);
+		String thumbnailS3Key = thumbnailStorageService.uploadImage(thumbnail);
 
 		// TODO: slot 검증로직으로 대체
 		PresentationSlot slot = slotRepository.findById(form.getSlotId())
 				.orElseThrow(ExceptionStatus.SLOT_NOT_FOUND::asServiceException);
 
+		// register presentation and assign presentation to slot
 		Presentation newPresentation =
-				commandService.createPresentation(user, form, slot, thumbnailLink);
-
-		// TODO: 검증된 slot에 presentation id 등록
-//		slotFacadeService.registerSlot(newPresentation);
+				commandService.createPresentation(user, form, slot, thumbnailS3Key);
+		slot.assignPresentation(newPresentation);
 	}
 
 	/**

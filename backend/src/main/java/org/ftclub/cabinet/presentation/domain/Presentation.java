@@ -62,8 +62,8 @@ public class Presentation {
 	@Column(name = "CANCELED", nullable = false)
 	private boolean canceled = false;
 
-	@Column(name = "THUMBNAIL_LINK", length = 2048)
-	private String thumbnailLink;
+	@Column(name = "THUMBNAIL_S3_KEY", length = 2048)
+	private String thumbnailS3Key;
 
 	@Column(name = "VIDEO_LINK", length = 2048)
 	private String videoLink;
@@ -94,16 +94,16 @@ public class Presentation {
 
 	public static Presentation of(User user, Category category, Duration duration,
 			String title, String summary, String outline, String detail,
-			String thumbnailLink, boolean isRecodingAllowed, boolean isPublicAllowed,
+			String thumbnailS3Key, boolean isRecodingAllowed, boolean isPublicAllowed,
 			PresentationSlot slot) {
 		return new Presentation(user, category, duration, title, summary, outline,
-				detail, thumbnailLink, null, isRecodingAllowed, isPublicAllowed,
+				detail, thumbnailS3Key, null, isRecodingAllowed, isPublicAllowed,
 				slot, slot.getStartTime(), slot.getPresentationLocation());
 	}
 
 	protected Presentation(User user, Category category, Duration duration,
 			String title, String summary, String outline, String detail,
-			String thumbnailLink, String videoLink,
+			String thumbnailS3Key, String videoLink,
 			boolean isRecordingAllowed, boolean isPublicAllowed,
 			PresentationSlot slot,
 			LocalDateTime startTime, PresentationLocation presentationLocation) {
@@ -114,7 +114,7 @@ public class Presentation {
 		this.summary = summary;
 		this.outline = outline;
 		this.detail = detail;
-		this.thumbnailLink = thumbnailLink;
+		this.thumbnailS3Key = thumbnailS3Key;
 		this.videoLink = videoLink;
 		this.isRecordingAllowed = isRecordingAllowed;
 		this.isPublicAllowed = isPublicAllowed;
