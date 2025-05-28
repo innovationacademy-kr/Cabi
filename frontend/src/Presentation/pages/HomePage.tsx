@@ -1,3 +1,4 @@
+import { ReactComponent as Banner } from "@/Presentation/assets/mainBanner.svg";
 import {
   Presentation,
   PresentationCard,
@@ -9,9 +10,9 @@ const mockData: Presentation[] = [
   {
     id: 1,
     thumbnailLink:
-      "https://fastly.picsum.photos/id/18/2500/1667.jpg?hmac=JR0Z_jRs9rssQHZJ4b7xKF82kOj8-4Ackq75D_9Wmz8", // 임시방편으로 일단 넣기 -> 썸네일 첨부 안할때 기본 이미지 정해야함
+      "https://fastly.picsum.photos/id/238/2560/1440.jpg?hmac=wKo4dLHwDntZmO_fdtnKtsnmRcPMACca3m5J5vx2AVc",
     category: "학술",
-    isUpcomming: false,
+    isUpcomming: true,
     likeCount: 16,
     title: "이노콘 수요지식회 발표를 마치며",
     startTime: "2025-02-25T15:30:00",
@@ -22,7 +23,7 @@ const mockData: Presentation[] = [
   {
     id: 2,
     thumbnailLink:
-      "https://fastly.picsum.photos/id/4/5000/3333.jpg?hmac=ghf06FdmgiD0-G4c9DdNM8RnBIN7BO0-ZGEw47khHP4",
+      "https://fastly.picsum.photos/id/201/5000/3333.jpg?hmac=NE8fOMa8u9PBfkq4AVwEoJdRqoPTNwUsyKvKWuXyNCk",
     category: "개발",
     isUpcomming: false,
     likeCount: 23,
@@ -35,13 +36,13 @@ const mockData: Presentation[] = [
   {
     id: 3,
     thumbnailLink:
-      "https://fastly.picsum.photos/id/74/4288/2848.jpg?hmac=q02MzzHG23nkhJYRXR-_RgKTr6fpfwRgcXgE0EKvNB8",
-    category: "42",
-    isUpcomming: true,
+      "https://fastly.picsum.photos/id/160/3200/2119.jpg?hmac=cz68HnnDt3XttIwIFu5ymcvkCp-YbkEBAM-Zgq-4DHE",
+    category: "토의",
+    isUpcomming: false,
     likeCount: 8,
     title: "ft_transcendance 회고",
     startTime: "2025-03-01T10:00:00",
-    userName: "gykoh",
+    userName: "jihykim2",
     summary:
       "Cabi 수요지식회에서 발표했던 내용에 대해서 Cabi 수요지식회에서 발표했던 내용에 대해서 Cabi 수요지식회에서 발표했던 내용에 대해서 Cabi 수요지식회에서 Cabi 수요지식회에서 발표했던 내용에 대해서 Cabi 수요지식회에서",
   },
@@ -49,20 +50,22 @@ const mockData: Presentation[] = [
 
 const HomePage: React.FC = () => {
   return (
-    <div className="h-screen overflow-y-auto">
-      <div className="w-full h-[220px] bg-[#ECEEF9] flex items-center justify-center">
-        배너 추가할 섹션
+    <div className="h-[calc(100vh-4rem)] w-full overflow-y-auto pb-11">
+      <div className="relative w-full">
+        <Banner className="w-full h-auto block" />
+        <div className="w-full h-[30px] bg-[#ffffff]" />
       </div>
-
-      <div className="w-full h-[60px] bg-[#ECEEF9] flex items-center justify-center mt-6">
-        카테고리 / 정렬 필터 여기에 추가!
-      </div>
-
-      <div className="max-w-7xl mx-auto mt-5 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap justify-center gap-6">
-          {mockData.map((p) => (
-            <PresentationCard key={p.id} presentation={p} />
-          ))}
+      <div className="w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {mockData.map((p) => (
+              <div key={p.id} className="w-full flex justify-center">
+                <div className="w-full max-w-[360px] aspect-[4/5]">
+                  <PresentationCard presentation={p} />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
