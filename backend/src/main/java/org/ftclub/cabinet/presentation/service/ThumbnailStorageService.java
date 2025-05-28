@@ -50,7 +50,7 @@ public class ThumbnailStorageService {
 	public String uploadImage(MultipartFile imageFile) throws IOException {
 		// 1. Check if the file is empty -> static images will be rendered
 		if (imageFile == null || imageFile.isEmpty()) {
-			return "";
+			return null;
 		}
 
 		// 2. Check file size
@@ -124,7 +124,7 @@ public class ThumbnailStorageService {
 		// 1. Check if the key is null or empty -> static images will be rendered
 		if (!StringUtils.hasText(s3Key)) {
 			log.debug("s3Key is null or empty. Returning empty string.");
-			return "";
+			return null;
 		}
 
 		try {
