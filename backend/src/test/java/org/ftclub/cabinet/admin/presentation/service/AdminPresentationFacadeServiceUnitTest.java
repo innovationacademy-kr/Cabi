@@ -36,7 +36,7 @@ class AdminPresentationFacadeServiceUnitTest {
 		Presentation mockPresentation2 = mock(Presentation.class);
 
 		List<Presentation> mockPresentations = List.of(mockPresentation1, mockPresentation2);
-		given(mockPresentationQueryService.getPresentationByYearMonth(yearMonth))
+		given(mockPresentationQueryService.findPresentationsByYearMonth(yearMonth))
 				.willReturn(mockPresentations);
 
 		// mock responseDto and mapper
@@ -67,7 +67,7 @@ class AdminPresentationFacadeServiceUnitTest {
 		YearMonth yearMonth = YearMonth.of(2025, 7);
 		List<Presentation> mockPresentations = List.of();
 
-		given(mockPresentationQueryService.getPresentationByYearMonth(yearMonth))
+		given(mockPresentationQueryService.findPresentationsByYearMonth(yearMonth))
 				.willReturn(mockPresentations);
 
 		// when

@@ -87,10 +87,10 @@ public class Presentation {
 
 
 	@OneToMany(mappedBy = "presentation")
-	private List<PresentationComment> presentationComments = new ArrayList<>();
+	private final List<PresentationComment> presentationComments = new ArrayList<>();
 
 	@OneToMany(mappedBy = "presentation")
-	private List<PresentationLike> presentationLikes = new ArrayList<>();
+	private final List<PresentationLike> presentationLikes = new ArrayList<>();
 
 	public static Presentation of(User user, Category category, Duration duration,
 			String title, String summary, String outline, String detail,

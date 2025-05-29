@@ -45,7 +45,8 @@ class PresentationQueryServiceUnitTest {
 				.willReturn(mockPresentations);
 
 		// when
-		List<Presentation> results = presentationQueryService.getPresentationByYearMonth(yearMonth);
+		List<Presentation> results = presentationQueryService.findPresentationsByYearMonth(
+				yearMonth);
 
 		// then
 		// 1. findAllWithinPeriod 함수가 expected dates로 호출되었는지 확인
@@ -67,7 +68,8 @@ class PresentationQueryServiceUnitTest {
 				.willReturn(List.of());
 
 		// when
-		List<Presentation> results = presentationQueryService.getPresentationByYearMonth(yearMonth);
+		List<Presentation> results = presentationQueryService.findPresentationsByYearMonth(
+				yearMonth);
 
 		// then
 		verify(mockPresentationRepository).findAllWithinPeriod(expectedStartDate, expectedEndDate);
@@ -84,7 +86,7 @@ class PresentationQueryServiceUnitTest {
 				.willReturn(Optional.of(mockPresentation));
 
 		// when
-		Presentation result = presentationQueryService.getPresentationById(presentationId);
+		Presentation result = presentationQueryService.getPresentationByIdWithUser(presentationId);
 
 		// then
 		verify(mockPresentationRepository).findByIdJoinUser(presentationId);
@@ -101,7 +103,7 @@ class PresentationQueryServiceUnitTest {
 
 		// when & then
 		assertThrows(ServiceException.class,
-				() -> presentationQueryService.getPresentationById(nonExistentId))
+				() -> presentationQueryService.getPresentationByIdWithUser(nonExistentId))
 				.getStatus().equals("PRESENTATION_NOT_FOUND");
 	}
 
