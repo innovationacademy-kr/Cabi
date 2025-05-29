@@ -29,9 +29,10 @@ public interface PresentationMapper {
 	@Mapping(target = "userName", source = "presentation.user.name")
 	PresentationDetailDto toPresentationDetailDto(
 			Presentation presentation,
+			String thumbnailLink,
 			Long likeCount,
-			Boolean isLikedByMe,
-			Boolean isMine,
-			Boolean isUpcoming
+			boolean likedByMe,
+			boolean editAllowed,
+			boolean upcoming
 	);
 }

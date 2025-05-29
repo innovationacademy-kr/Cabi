@@ -68,11 +68,11 @@ public class Presentation {
 	@Column(name = "VIDEO_LINK", length = 2048)
 	private String videoLink;
 
-	@Column(name = "IS_RECORDING_ALLOWED", nullable = false)
-	private boolean isRecordingAllowed = false;
+	@Column(name = "RECORDING_ALLOWED", nullable = false)
+	private boolean recordingAllowed = false;
 
-	@Column(name = "IS_PUBLIC_ALLOWED", nullable = false)
-	private boolean isPublicAllowed = false;
+	@Column(name = "PUBLIC_ALLOWED", nullable = false)
+	private boolean publicAllowed = false;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PRESENTATION_SLOT_ID")
@@ -94,17 +94,17 @@ public class Presentation {
 
 	public static Presentation of(User user, Category category, Duration duration,
 			String title, String summary, String outline, String detail,
-			String thumbnailS3Key, boolean isRecodingAllowed, boolean isPublicAllowed,
+			String thumbnailS3Key, boolean recodingAllowed, boolean publicAllowed,
 			PresentationSlot slot) {
 		return new Presentation(user, category, duration, title, summary, outline,
-				detail, thumbnailS3Key, null, isRecodingAllowed, isPublicAllowed,
+				detail, thumbnailS3Key, null, recodingAllowed, publicAllowed,
 				slot, slot.getStartTime(), slot.getPresentationLocation());
 	}
 
 	protected Presentation(User user, Category category, Duration duration,
 			String title, String summary, String outline, String detail,
 			String thumbnailS3Key, String videoLink,
-			boolean isRecordingAllowed, boolean isPublicAllowed,
+			boolean recordingAllowed, boolean publicAllowed,
 			PresentationSlot slot,
 			LocalDateTime startTime, PresentationLocation presentationLocation) {
 		this.user = user;
@@ -116,8 +116,8 @@ public class Presentation {
 		this.detail = detail;
 		this.thumbnailS3Key = thumbnailS3Key;
 		this.videoLink = videoLink;
-		this.isRecordingAllowed = isRecordingAllowed;
-		this.isPublicAllowed = isPublicAllowed;
+		this.recordingAllowed = recordingAllowed;
+		this.publicAllowed = publicAllowed;
 		this.slot = slot;
 		this.startTime = startTime;
 		this.presentationLocation = presentationLocation;

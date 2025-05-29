@@ -23,13 +23,13 @@ public class PresentationDetailDto {
 	private final String detail;
 	private final String thumbnailLink;
 	private final String videoLink;
-	
-	private final Boolean isRecordingAllowed;
-	private final Boolean isPublicAllowed;
-	private final Boolean canceled;
+
+	private final boolean recordingAllowed;
+	private final boolean publicAllowed;
+	private final boolean canceled;
 
 	private final Long likeCount;
-	private final Boolean isLikedByMe;
-	private final Boolean isUpcoming;
-	private final Boolean isMine;
+	private final boolean likedByMe;
+	private final boolean editAllowed;
+	private final boolean upcoming;
 }
