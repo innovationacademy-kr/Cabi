@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 public class PresentationPolicyService {
 
 	/**
-	 * 프레젠테이션 상세정보 조회에 대한 권한을 검증합니다.
+	 * 유저의 프레젠테이션 상세정보 조회에 대한 권한을 검증합니다.
 	 * <p>
-	 * isPublicAllowed가 true인 경우, 모든 사용자가 조회할 수 있습니다.
+	 * publicAllowed가 true인 경우, 모든 사용자가 조회할 수 있습니다.
 	 * </p>
 	 * <p>
-	 * isCancelled가 true인 경우, 작성자와 어드민만 조회할 수 있습니다.
+	 * canceled가 true인 경우, 작성자만 조회할 수 있습니다.
 	 * </p>
 	 *
 	 * @param userInfoDto  사용자 정보
@@ -24,11 +24,6 @@ public class PresentationPolicyService {
 	 */
 	public void verifyPresentationDetailAccess(UserInfoDto userInfoDto,
 			Presentation presentation) {
-		// ADMIN: all allowed
-		if (userInfoDto != null && userInfoDto.hasRole("ADMIN")) {
-			return;
-		}
-
 		// ANONYMOUS: only public allowed and not cancelled
 		if (userInfoDto == null) {
 			if (!presentation.isPublicAllowed() || presentation.isCanceled()) {

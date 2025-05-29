@@ -66,29 +66,30 @@ public class PresentationFacadeService {
 	@Transactional(readOnly = true)
 	public PresentationDetailDto getPresentationDetail(UserInfoDto userInfo,
 			Long presentationId) {
-		Presentation presentation = queryService.getPresentationById(presentationId);
+		Presentation presentation = queryService.getPresentationByIdWithUser(presentationId);
 
 		// check verification of access to presentation detail
 		policyService.verifyPresentationDetailAccess(userInfo, presentation);
 
-		Long likesCount = 0L;
-//		likesCount = likeQueryService.getLikesCount(presentationId);    // TODO: likeQueryService
-		Boolean isLikedByMe = false;
-		Boolean isMine = false;
-		if (userInfo != null && !userInfo.hasRole("ADMIN")) {
+		String thumbnailLink = thumbnailStorageService.generatePresignedUrl(
+				presentation.getThumbnailS3Key());
+		Long likesCount = 0L;   // likeQueryService.getLikesCount(presentationId);    // TODO: likeQueryService
+		boolean likedByMe = false;
+		boolean editAllowed = false;
+		if (userInfo != null) {
 			Long userId = userInfo.getUserId();
-			Long presentationUserId = presentation.getUser().getId();
-//			isLiked = likeQueryService.isLikedByUser(userId, presentationId);   // TODO: likeQueryService
-			isMine = userId.equals(presentationUserId);
+//			likedByMe = likeQueryService.isLikedByUser(userId, presentationId);   // TODO: likeQueryService
+			editAllowed = userId.equals(presentation.getUser().getId());
 		}
-		Boolean isUpcoming = presentation.getStartTime().isAfter(LocalDateTime.now());
+		boolean upcoming = presentation.getStartTime().isAfter(LocalDateTime.now());
 
 		return presentationMapper.toPresentationDetailDto(
 				presentation,
+				thumbnailLink,
 				likesCount,
-				isLikedByMe,
-				isMine,
-				isUpcoming
+				likedByMe,
+				editAllowed,
+				upcoming
 		);
 	}
 }

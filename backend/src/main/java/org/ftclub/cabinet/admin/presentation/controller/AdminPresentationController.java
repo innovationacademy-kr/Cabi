@@ -5,13 +5,10 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
 import org.ftclub.cabinet.admin.presentation.service.AdminPresentationFacadeService;
-import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.presentation.dto.DataListResponseDto;
 import org.ftclub.cabinet.presentation.dto.DataResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
-import org.ftclub.cabinet.presentation.service.PresentationFacadeService;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminPresentationController {
 
 	private final AdminPresentationFacadeService adminPresentationFacadeService;
-	private final PresentationFacadeService presentationFacadeService;
 
 	/**
 	 * 어드민의 달력에 필요한 발표 데이터를 반환합니다.
@@ -51,10 +47,9 @@ public class AdminPresentationController {
 	 */
 	@GetMapping("/{presentationId}")
 	public DataResponseDto<PresentationDetailDto> getPresentationDetail(
-			@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long presentationId) {
-		PresentationDetailDto detail = presentationFacadeService.getPresentationDetail(
-				user, presentationId);
+		PresentationDetailDto detail = adminPresentationFacadeService.getPresentationDetail(
+				presentationId);
 		return new DataResponseDto<>(detail);
 	}
 }
