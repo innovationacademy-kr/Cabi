@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
@@ -60,24 +59,23 @@ public class PresentationFacadeService {
 	/**
 	 * 프레젠테이션 상세 정보를 조회합니다.
 	 *
-	 * @param userInfo       사용자 정보
+	 * @param userId         사용자 ID (ANONYMOUS=null)
 	 * @param presentationId 프레젠테이션 ID
 	 */
 	@Transactional(readOnly = true)
-	public PresentationDetailDto getPresentationDetail(UserInfoDto userInfo,
+	public PresentationDetailDto getPresentationDetail(Long userId,
 			Long presentationId) {
 		Presentation presentation = queryService.getPresentationByIdWithUser(presentationId);
 
 		// check verification of access to presentation detail
-		policyService.verifyPresentationDetailAccess(userInfo, presentation);
+		policyService.verifyPresentationDetailAccess(userId, presentation);
 
 		String thumbnailLink = thumbnailStorageService.generatePresignedUrl(
 				presentation.getThumbnailS3Key());
 		Long likesCount = 0L;   // likeQueryService.getLikesCount(presentationId);    // TODO: likeQueryService
 		boolean likedByMe = false;
 		boolean editAllowed = false;
-		if (userInfo != null) {
-			Long userId = userInfo.getUserId();
+		if (userId != null) {
 //			likedByMe = likeQueryService.isLikedByUser(userId, presentationId);   // TODO: likeQueryService
 			editAllowed = userId.equals(presentation.getUser().getId());
 		}

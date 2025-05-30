@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.presentation.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.springframework.stereotype.Service;
@@ -19,22 +18,22 @@ public class PresentationPolicyService {
 	 * canceled가 true인 경우, 작성자만 조회할 수 있습니다.
 	 * </p>
 	 *
-	 * @param userInfoDto  사용자 정보
+	 * @param userId       사용자 ID (ANONYMOUS=null)
 	 * @param presentation 프레젠테이션
 	 */
-	public void verifyPresentationDetailAccess(UserInfoDto userInfoDto,
+	public void verifyPresentationDetailAccess(Long userId,
 			Presentation presentation) {
-		// ANONYMOUS: only public allowed and not cancelled
-		if (userInfoDto == null) {
+		// ANONYMOUS: can access only public allowed and not cancelled
+		if (userId == null) {
 			if (!presentation.isPublicAllowed() || presentation.isCanceled()) {
 				throw ExceptionStatus.NOT_LOGGED_IN.asServiceException();
 			}
 			return;
 		}
 
-		// USER: allowed except cancelled
+		// USER: allow all presentations except cancelled (only creator can access cancelled)
 		if (presentation.isCanceled()) {
-			if (userInfoDto.getUserId() != presentation.getUser().getId()) {
+			if (!userId.equals(presentation.getUser().getId())) {
 				throw ExceptionStatus.CANCELLED_PRESENTATION.asServiceException();
 			}
 		}

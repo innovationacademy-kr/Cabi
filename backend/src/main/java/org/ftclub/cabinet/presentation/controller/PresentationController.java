@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.presentation.controller;
 
-
 import java.io.IOException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
 @Slf4j
 @RestController
 @RequestMapping("/v6/presentations")
@@ -32,10 +30,10 @@ public class PresentationController {
 	/**
 	 * 프레젠테이션을 등록합니다.
 	 *
-	 * @param user
-	 * @param form
-	 * @param thumbnail
-	 * @throws IOException
+	 * @param user      사용자 정보 (USER)
+	 * @param form      프레젠테이션 등록 요청 DTO
+	 * @param thumbnail 썸네일 이미지 파일 (선택)
+	 * @throws IOException 썸네일 이미지 업로드 중 발생할 수 있는 IOException
 	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void registerPresentation(
@@ -53,6 +51,7 @@ public class PresentationController {
 	/**
 	 * 프레젠테이션 상세 정보를 조회합니다.
 	 *
+	 * @param user           사용자 정보 (USER, ANONYMOUS=null)
 	 * @param presentationId 프레젠테이션 ID
 	 * @return 프레젠테이션 상세 정보
 	 */
@@ -60,8 +59,9 @@ public class PresentationController {
 	public DataResponseDto<PresentationDetailDto> getPresentationDetail(
 			@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long presentationId) {
+		Long userId = user != null ? user.getUserId() : null;
 		PresentationDetailDto detail = presentationFacadeService.getPresentationDetail(
-				user, presentationId);
+				userId, presentationId);
 		return new DataResponseDto<>(detail);
 	}
 

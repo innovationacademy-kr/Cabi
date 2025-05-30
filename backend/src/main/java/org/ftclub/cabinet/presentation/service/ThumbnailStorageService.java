@@ -117,7 +117,7 @@ public class ThumbnailStorageService {
 	/**
 	 * S3에 저장된 이미지의 Pre-signed URL을 생성합니다. (제한시간: DEFAULT_EXPIRATION)
 	 *
-	 * @param s3Key
+	 * @param s3Key S3에 저장된 이미지의 key (DB에 저장된 값)
 	 * @return Pre-signed URL
 	 */
 	public String generatePresignedUrl(String s3Key) {

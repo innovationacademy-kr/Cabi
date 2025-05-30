@@ -25,8 +25,8 @@ public class AdminPresentationFacadeService {
 	/**
 	 * 일정 관리(달력)에서 해당 연월의 프레젠테이션 목록을 조회합니다.
 	 *
-	 * @param yearMonth
-	 * @return
+	 * @param yearMonth yyyy-MM 형식의 연월
+	 * @return 프레젠테이션 목록
 	 */
 	@Transactional(readOnly = true)
 	public List<AdminPresentationCalendarItemDto> getPresentationByDate(YearMonth yearMonth) {
