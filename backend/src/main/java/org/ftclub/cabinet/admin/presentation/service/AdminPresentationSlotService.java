@@ -1,8 +1,10 @@
 package org.ftclub.cabinet.admin.presentation.service;
 
+import static org.ftclub.cabinet.presentation.domain.PresentationSlot.ALLOWED_PERIOD;
 import static org.ftclub.cabinet.presentation.domain.PresentationSlot.PRESENTATION_SLOT_DURATION;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -26,6 +28,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminPresentationSlotService {
 
 	private final PresentationSlotRepository slotRepository;
+
+	/**
+	 * 프레젠테이션 슬롯이 허용된 기간 내에 있는지 확인합니다.
+	 *
+	 * @param startTime 시작 시간
+	 */
+
+	private static void validateSlotWithinAllowedPeriod(LocalDateTime startTime) {
+		YearMonth nowMonth = YearMonth.now();
+		YearMonth allowedLimit = nowMonth.plusMonths(ALLOWED_PERIOD);
+		YearMonth targetMonth = YearMonth.from(startTime);
+
+		if (targetMonth.isAfter(allowedLimit.minusMonths(1))) {
+			throw ExceptionStatus.NOT_ALLOWED_PERIOD.asServiceException();
+		}
+	}
 
 	/**
 	 * 어드민이 프레젠테이션 슬롯을 등록합니다.
@@ -151,5 +169,19 @@ public class AdminPresentationSlotService {
 		return responseDtoList;
 	}
 
-
+	/**
+	 * 프레젠테이션 슬롯이 과거 시간인지, 허용된 기간 내에 있는지, 그리고 해당 슬롯에 발표가 있는지 확인합니다.
+	 *
+	 * @param slotId 프레젠테이션 슬롯 ID
+	 */
+	@Transactional(readOnly = true)
+	public void validateSlotEligibleForRegistration(Long slotId) {
+		PresentationSlot slot = slotRepository.findById(slotId).orElseThrow(
+				ExceptionStatus.SLOT_NOT_FOUND::asServiceException);
+		validateSlotPassed(slot.getStartTime());
+		validateSlotWithinAllowedPeriod(slot.getStartTime());
+		if (slot.hasPresentation()) {
+			throw ExceptionStatus.CANNOT_DELETE_SLOT_WITH_PRESENTATION.asServiceException();
+		}
+	}
 }

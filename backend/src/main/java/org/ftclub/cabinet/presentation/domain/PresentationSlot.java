@@ -24,6 +24,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 public class PresentationSlot {
 
 	public static final int PRESENTATION_SLOT_DURATION = 2;
+	public static final int ALLOWED_PERIOD = 3; // month
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
