@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.admin.presentation.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -310,5 +311,75 @@ class AdminPresentationSlotServiceTest {
 		assertThatThrownBy(() -> slotService.getAvailableSlots(pastSearchDto))
 				.isInstanceOf(ServiceException.class)
 				.hasMessage("과거 슬롯은 조회할 수 없습니다.");
+	}
+
+	@DisplayName("슬롯이 과거가 아니고 허용된 기간 내이며 발표가 없으면 등록 유효성 검사를 통과한다.")
+	@Test
+	void validateSlotEligibleForRegistration_success() {
+		// given
+		LocalDateTime validTime = LocalDateTime.now().plusMonths(1);
+		PresentationSlot slot = slotRepository.save(new PresentationSlot(
+				validTime,
+				PresentationLocation.BASEMENT
+		));
+
+		// when & then
+		assertThatCode(() -> slotService.validateSlotEligibleForRegistration(slot.getId()))
+				.doesNotThrowAnyException();
+	}
+
+	@DisplayName("슬롯이 과거이면 등록 유효성 검사에 실패한다.")
+	@Test
+	void validateSlotEligibleForRegistration_withPastTime() {
+		// given
+		LocalDateTime pastTime = LocalDateTime.now().minusDays(1);
+		PresentationSlot slot = slotRepository.save(new PresentationSlot(
+				pastTime,
+				PresentationLocation.BASEMENT
+		));
+
+		// when & then
+		assertThatThrownBy(() -> slotService.validateSlotEligibleForRegistration(slot.getId()))
+				.isInstanceOf(ServiceException.class)
+				.hasMessage("과거 시간으로는 발표 슬롯을 생성할 수 없습니다.");
+	}
+
+	@DisplayName("슬롯이 허용된 기간 이후이면 등록 유효성 검사에 실패한다.")
+	@Test
+	void validateSlotEligibleForRegistration_outsideAllowedPeriod() {
+		// given
+		LocalDateTime tooFar = LocalDateTime.now().plusMonths(3);
+		PresentationSlot slot = slotRepository.save(new PresentationSlot(
+				tooFar,
+				PresentationLocation.BASEMENT
+		));
+
+		// when & then
+		assertThatThrownBy(() -> slotService.validateSlotEligibleForRegistration(slot.getId()))
+				.isInstanceOf(ServiceException.class)
+				.hasMessage("허용된 기간 외의 슬롯은 존재할 수 없습니다.");
+	}
+
+	@DisplayName("슬롯에 프레젠테이션이 이미 존재하면 등록 유효성 검사에 실패한다.")
+	@Test
+	void validateSlotEligibleForRegistration_withPresentation() {
+		// given
+		LocalDateTime validTime = LocalDateTime.now().plusDays(1);
+		PresentationSlot slot = slotRepository.save(new PresentationSlot(
+				validTime,
+				PresentationLocation.BASEMENT
+		));
+
+		Presentation presentation = Presentation.of(testUser1, Category.ETC,
+				Duration.TWO_HOUR, "test", "test", "test", "test",
+				null, false, false, slot);
+
+		presentationRepository.save(presentation);
+		slot.assignPresentation(presentation);
+
+		// when & then
+		assertThatThrownBy(() -> slotService.validateSlotEligibleForRegistration(slot.getId()))
+				.isInstanceOf(ServiceException.class)
+				.hasMessage("발표가 있는 슬롯은 삭제할 수 없습니다.");
 	}
 }
