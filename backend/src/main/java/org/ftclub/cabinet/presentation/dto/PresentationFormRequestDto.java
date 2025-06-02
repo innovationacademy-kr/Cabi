@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.presentation.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,16 +10,12 @@ import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Duration;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 @Getter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class PresentationFormRequestDto {
 
-	// TODO: ENUM과 다른 값에 대한 처리
 	@NotNull
 	private Duration duration;
 	@NotNull
@@ -41,7 +39,6 @@ public class PresentationFormRequestDto {
 	@NotNull
 	private Boolean isPublicAllowed;
 
-	// TODO: 유효한 슬롯인지 확인하는 로직 필요
 	@NotNull
 	private Long slotId;
 

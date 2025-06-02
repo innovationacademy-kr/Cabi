@@ -3,7 +3,6 @@ package org.ftclub.cabinet.presentation.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -56,9 +55,7 @@ public class Presentation {
 	@Column(name = "OUTLINE", length = 500, nullable = false)
 	private String outline;
 
-	// TODO: TEXT로 명시적 변경 필요 여부 및 fetchtype 설정이 맞는지 확인
 	@Lob
-	@Basic(fetch = FetchType.LAZY)
 	@Column(name = "DETAIL", length = 10000, nullable = false)
 	private String detail;
 
@@ -124,5 +121,13 @@ public class Presentation {
 		this.slot = slot;
 		this.startTime = startTime;
 		this.presentationLocation = presentationLocation;
+	}
+
+	/**
+	 * 프레젠테이션을 취소합니다.
+	 */
+	public void cancelPresentation() {
+		this.canceled = true;
+		this.slot = null;
 	}
 }
