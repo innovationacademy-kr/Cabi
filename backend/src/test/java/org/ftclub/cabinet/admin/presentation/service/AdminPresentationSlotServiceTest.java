@@ -83,7 +83,7 @@ class AdminPresentationSlotServiceTest {
 		assertThat(savedSlot.getStartTime()).isEqualTo(slotServiceDto.getStartTime());
 	}
 
-	@DisplayName("어드민이 프레젠테이션 슬롯을 2시간 간격으로 연속하여 등록한다")
+	@DisplayName("어드민이 프레젠테이션 슬롯을 30분 간격으로 연속하여 등록한다")
 	@Test
 	void registerTwoPresentationSlots() {
 		// given
@@ -95,7 +95,7 @@ class AdminPresentationSlotServiceTest {
 		slotService.registerPresentationSlot(slotServiceDto1);
 
 		PresentationSlotRegisterServiceDto slotServiceDto2 = new PresentationSlotRegisterServiceDto(
-				now.plusHours(3),
+				now.plusHours(1).plusMinutes(30),
 				PresentationLocation.BASEMENT
 		);
 
@@ -134,7 +134,7 @@ class AdminPresentationSlotServiceTest {
 		slotService.registerPresentationSlot(slotServiceDto1);
 
 		PresentationSlotRegisterServiceDto slotServiceDto2 = new PresentationSlotRegisterServiceDto(
-				now.plusHours(2),
+				now.plusHours(1).plusMinutes(20),
 				PresentationLocation.BASEMENT
 		);
 
@@ -222,7 +222,7 @@ class AdminPresentationSlotServiceTest {
 		assertThatThrownBy(
 				() -> slotService.updatePresentationSlot(new PresentationSlotUpdateServiceDto(
 						slotId,
-						now.plusHours(2),
+						now.plusHours(2).plusMinutes(40),
 						PresentationLocation.BASEMENT
 				)))
 				.isInstanceOf(ServiceException.class)
