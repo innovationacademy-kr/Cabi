@@ -29,12 +29,12 @@ public class AdminPresentationController {
 	 * @return 프레젠테이션 목록
 	 */
 	@GetMapping
-	public DataListResponseDto<AdminPresentationCalendarItemDto> getPresentationsByDate(
+	public DataListResponseDto<AdminPresentationCalendarItemDto> getPresentationsByYearMonth(
 			@RequestParam(value = "yearMonth")
 			@DateTimeFormat(pattern = "yyyy-MM")
 			YearMonth yearMonth) {
 		List<AdminPresentationCalendarItemDto> results =
-				adminPresentationFacadeService.getPresentationByDate(yearMonth);
+				adminPresentationFacadeService.getPresentationsByYearMonth(yearMonth);
 
 		return new DataListResponseDto<>(results);
 	}

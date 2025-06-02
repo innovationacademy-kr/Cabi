@@ -52,7 +52,7 @@ class AdminPresentationFacadeServiceUnitTest {
 
 		// when
 		List<AdminPresentationCalendarItemDto> results =
-				adminPresentationFacadeService.getPresentationByDate(yearMonth);
+				adminPresentationFacadeService.getPresentationsByYearMonth(yearMonth);
 
 		// then
 		assertThat(results).isNotNull();
@@ -72,7 +72,7 @@ class AdminPresentationFacadeServiceUnitTest {
 
 		// when
 		List<AdminPresentationCalendarItemDto> results =
-				adminPresentationFacadeService.getPresentationByDate(yearMonth);
+				adminPresentationFacadeService.getPresentationsByYearMonth(yearMonth);
 
 		// then
 		assertThat(results).isNotNull();

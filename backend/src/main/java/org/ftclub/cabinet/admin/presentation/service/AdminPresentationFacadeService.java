@@ -29,7 +29,7 @@ public class AdminPresentationFacadeService {
 	 * @return 프레젠테이션 목록
 	 */
 	@Transactional(readOnly = true)
-	public List<AdminPresentationCalendarItemDto> getPresentationByDate(YearMonth yearMonth) {
+	public List<AdminPresentationCalendarItemDto> getPresentationsByYearMonth(YearMonth yearMonth) {
 		// 연월에 해당하는 모든 프레젠테이션 목록을 조회(취소 포함)
 		List<Presentation> presentations = queryService.findPresentationsByYearMonth(
 				yearMonth);
