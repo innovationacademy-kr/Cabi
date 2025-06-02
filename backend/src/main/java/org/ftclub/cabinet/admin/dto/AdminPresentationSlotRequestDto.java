@@ -18,5 +18,5 @@ public class AdminPresentationSlotRequestDto {
 	private LocalDateTime startTime;
 	
 	@NotNull
-	private PresentationLocation location;
+	private PresentationLocation presentationLocation;
 }

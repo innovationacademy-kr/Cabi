@@ -38,7 +38,7 @@ public class AdminPresentationSlotController {
 		adminPresentationSlotService.registerPresentationSlot(
 				new PresentationSlotRegisterServiceDto(
 						slotRequestDto.getStartTime(),
-						slotRequestDto.getLocation()
+						slotRequestDto.getPresentationLocation()
 				));
 	}
 
@@ -56,7 +56,7 @@ public class AdminPresentationSlotController {
 				new PresentationSlotUpdateServiceDto(
 						slotId,
 						slotRequestDto.getStartTime(),
-						slotRequestDto.getLocation()
+						slotRequestDto.getPresentationLocation()
 				));
 	}
 
@@ -70,6 +70,14 @@ public class AdminPresentationSlotController {
 		adminPresentationSlotService.deletePresentationSlot(slotId);
 	}
 
+	/**
+	 * 프레젠테이션 슬롯을 조회합니다.
+	 *
+	 * @param year   년도
+	 * @param month  월
+	 * @param status 상태
+	 * @return 프레젠테이션 슬롯 리스트
+	 */
 	@GetMapping("/slots")
 	public List<PresentationSlotResponseDto> getSlots(
 			@RequestParam int year,

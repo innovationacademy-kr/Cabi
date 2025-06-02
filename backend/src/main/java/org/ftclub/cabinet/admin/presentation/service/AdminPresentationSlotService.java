@@ -37,7 +37,7 @@ public class AdminPresentationSlotService {
 		validateSlotOverlapped(serviceDto.getStartTime());
 		slotRepository.save(new PresentationSlot(
 				serviceDto.getStartTime(),
-				serviceDto.getLocation()
+				serviceDto.getPresentationLocation()
 		));
 	}
 
@@ -102,7 +102,7 @@ public class AdminPresentationSlotService {
 		validateSlotPassed(serviceDto.getStartTime());
 		validateSlotUpdateOverlap(serviceDto.getSlotId(), serviceDto.getStartTime());
 		slot.changeSlotStartTime(serviceDto.getStartTime());
-		slot.changeSlotLocation(serviceDto.getLocation());
+		slot.changeSlotLocation(serviceDto.getPresentationLocation());
 		// TODO : 프레젠테이션에 연결된 발표 정보도 수정해야 한다면 발표 수정 기능 개발 후에 추가
 	}
 
