@@ -1,12 +1,10 @@
 import { ReactComponent as Banner } from "@/Presentation/assets/mainBanner.svg";
-import {
-  Presentation,
-  PresentationCard,
-} from "@/Presentation/components/PresentationCard";
-import React from "react";
+import { IPresentation } from "@/Presentation/components/PresentationCard";
+import PresentationCardContainer from "@/Presentation/pages/PresentationCardContainer";
+import React, { useEffect, useState } from "react";
 
 // TODO: mockData 실제 API로 대체해야함!!
-const mockData: Presentation[] = [
+const mockData: IPresentation[] = [
   {
     id: 1,
     thumbnailLink:
@@ -49,24 +47,16 @@ const mockData: Presentation[] = [
 ];
 
 const HomePage: React.FC = () => {
+  const [presentations] = useState<IPresentation[]>(mockData);
+
   return (
     <div className="h-[calc(100vh-4rem)] w-full overflow-y-auto pb-11">
       <div className="relative w-full">
         <Banner className="w-full h-auto block" />
-        <div className="w-full h-[30px] bg-[#ffffff]" />
+        <div className="w-full h-[30px] bg-white" />
       </div>
-      <div className="w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {mockData.map((p) => (
-              <div key={p.id} className="w-full flex justify-center">
-                <div className="w-full max-w-[360px] aspect-[4/5]">
-                  <PresentationCard presentation={p} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <PresentationCardContainer presentations={presentations} />
       </div>
     </div>
   );
