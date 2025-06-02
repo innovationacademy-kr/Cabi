@@ -6,8 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
 import org.ftclub.cabinet.admin.presentation.service.AdminPresentationFacadeService;
 import org.ftclub.cabinet.presentation.dto.DataListResponseDto;
+import org.ftclub.cabinet.presentation.dto.DataResponseDto;
+import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,14 +29,27 @@ public class AdminPresentationController {
 	 * @return 프레젠테이션 목록
 	 */
 	@GetMapping
-	public DataListResponseDto<AdminPresentationCalendarItemDto> getPresentationsByDate(
+	public DataListResponseDto<AdminPresentationCalendarItemDto> getPresentationsByYearMonth(
 			@RequestParam(value = "yearMonth")
 			@DateTimeFormat(pattern = "yyyy-MM")
 			YearMonth yearMonth) {
 		List<AdminPresentationCalendarItemDto> results =
-				adminPresentationFacadeService.getPresentationByDate(yearMonth);
+				adminPresentationFacadeService.getPresentationsByYearMonth(yearMonth);
 
 		return new DataListResponseDto<>(results);
 	}
 
+	/**
+	 * 어드민에서 프레젠테이션 상세 정보를 조회합니다.
+	 *
+	 * @param presentationId 프레젠테이션 ID
+	 * @return 프레젠테이션 상세 정보
+	 */
+	@GetMapping("/{presentationId}")
+	public DataResponseDto<PresentationDetailDto> getPresentationDetail(
+			@PathVariable Long presentationId) {
+		PresentationDetailDto detail = adminPresentationFacadeService.getPresentationDetail(
+				presentationId);
+		return new DataResponseDto<>(detail);
+	}
 }
