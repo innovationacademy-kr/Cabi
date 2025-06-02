@@ -65,7 +65,7 @@ public class PresentationFacadeService {
 	@Transactional(readOnly = true)
 	public PresentationDetailDto getPresentationDetail(Long userId,
 			Long presentationId) {
-		Presentation presentation = queryService.getPresentationByIdWithUser(presentationId);
+		Presentation presentation = queryService.findPresentationByIdWithUser(presentationId);
 
 		// check verification of access to presentation detail
 		policyService.verifyPresentationDetailAccess(userId, presentation);

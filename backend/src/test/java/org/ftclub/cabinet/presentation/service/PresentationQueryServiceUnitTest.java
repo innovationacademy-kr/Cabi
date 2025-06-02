@@ -86,7 +86,7 @@ class PresentationQueryServiceUnitTest {
 				.willReturn(Optional.of(mockPresentation));
 
 		// when
-		Presentation result = presentationQueryService.getPresentationByIdWithUser(presentationId);
+		Presentation result = presentationQueryService.findPresentationByIdWithUser(presentationId);
 
 		// then
 		verify(mockPresentationRepository).findByIdJoinUser(presentationId);
@@ -103,7 +103,7 @@ class PresentationQueryServiceUnitTest {
 
 		// when & then
 		assertThrows(ServiceException.class,
-				() -> presentationQueryService.getPresentationByIdWithUser(nonExistentId))
+				() -> presentationQueryService.findPresentationByIdWithUser(nonExistentId))
 				.getStatus().equals("PRESENTATION_NOT_FOUND");
 	}
 

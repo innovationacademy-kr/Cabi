@@ -38,7 +38,7 @@ public class PresentationQueryService {
 	 * @param presentationId 프레젠테이션 ID
 	 * @return 프레젠테이션
 	 */
-	public Presentation getPresentationByIdWithUser(Long presentationId) {
+	public Presentation findPresentationByIdWithUser(Long presentationId) {
 		return presentationRepository.findByIdJoinUser(presentationId)
 				.orElseThrow(ExceptionStatus.PRESENTATION_NOT_FOUND::asServiceException);
 	}

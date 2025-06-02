@@ -46,7 +46,7 @@ public class AdminPresentationFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public PresentationDetailDto getPresentationDetail(Long presentationId) {
-		Presentation presentation = queryService.getPresentationByIdWithUser(presentationId);
+		Presentation presentation = queryService.findPresentationByIdWithUser(presentationId);
 		String thumbnailLink = thumbnailStorageService.generatePresignedUrl(
 				presentation.getThumbnailS3Key());
 		Long likesCount = 0L;   // likeQueryService.getLikesCount(presentationId);    // TODO: likeQueryService
