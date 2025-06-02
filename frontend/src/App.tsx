@@ -78,7 +78,7 @@ function App(): React.ReactElement {
             <Route path="store/coin-log" element={<CoinLogPage />} />
             <Route path="agu" element={<AGUPage />} />
           </Route>
-          <Route path="/presentation/" element={<PresentationLayout />}>
+          <Route path="/presentations/" element={<PresentationLayout />}>
             {/* test */}
             <Route path="home" element={<PresentationHomePage />} />
             <Route path="register" element={<RegisterPage />} />
@@ -98,7 +98,7 @@ function App(): React.ReactElement {
             <Route path="store" element={<AdminStorePage />} />
           </Route>
           <Route
-            path="/admin/presentation/"
+            path="/admin/presentations/"
             element={<AdminPresentationLayout />}
           >
             <Route path="detail" element={<DetailPage />} />
