@@ -12,5 +12,5 @@ import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 public class PresentationSlotRegisterServiceDto {
 
 	private LocalDateTime startTime;
-	private PresentationLocation location;
+	private PresentationLocation presentationLocation;
 }

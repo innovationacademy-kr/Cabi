@@ -1,18 +1,22 @@
 package org.ftclub.cabinet.admin.presentation.controller;
 
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminPresentationSlotRequestDto;
 import org.ftclub.cabinet.admin.dto.PresentationSlotRegisterServiceDto;
+import org.ftclub.cabinet.admin.dto.PresentationSlotResponseDto;
+import org.ftclub.cabinet.admin.dto.PresentationSlotSearchServiceDto;
 import org.ftclub.cabinet.admin.dto.PresentationSlotUpdateServiceDto;
 import org.ftclub.cabinet.admin.presentation.service.AdminPresentationSlotService;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -34,7 +38,7 @@ public class AdminPresentationSlotController {
 		adminPresentationSlotService.registerPresentationSlot(
 				new PresentationSlotRegisterServiceDto(
 						slotRequestDto.getStartTime(),
-						slotRequestDto.getLocation()
+						slotRequestDto.getPresentationLocation()
 				));
 	}
 
@@ -52,7 +56,7 @@ public class AdminPresentationSlotController {
 				new PresentationSlotUpdateServiceDto(
 						slotId,
 						slotRequestDto.getStartTime(),
-						slotRequestDto.getLocation()
+						slotRequestDto.getPresentationLocation()
 				));
 	}
 
@@ -64,5 +68,25 @@ public class AdminPresentationSlotController {
 	@DeleteMapping("/slots/{slotId}")
 	public void deletePresentationSlot(@PathVariable Long slotId) {
 		adminPresentationSlotService.deletePresentationSlot(slotId);
+	}
+
+	/**
+	 * 프레젠테이션 슬롯을 조회합니다.
+	 *
+	 * @param year   년도
+	 * @param month  월
+	 * @param status 상태
+	 * @return 프레젠테이션 슬롯 리스트
+	 */
+	@GetMapping("/slots")
+	public List<PresentationSlotResponseDto> getSlots(
+			@RequestParam int year,
+			@RequestParam int month,
+			@RequestParam String status) {
+		return adminPresentationSlotService.getAvailableSlots(new PresentationSlotSearchServiceDto(
+				year,
+				month,
+				status
+		));
 	}
 }
