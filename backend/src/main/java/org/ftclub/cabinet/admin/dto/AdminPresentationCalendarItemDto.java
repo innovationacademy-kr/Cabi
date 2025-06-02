@@ -13,6 +13,6 @@ public class AdminPresentationCalendarItemDto {
 	private Long slotId;
 	private LocalDateTime startTime;
 	private String title;
-	private PresentationLocation location;
+	private PresentationLocation presentationLocation;
 	private Boolean canceled;
 }

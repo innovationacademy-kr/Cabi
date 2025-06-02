@@ -16,7 +16,6 @@ public interface PresentationMapper {
 	 * @return 변환된 AdminPresentationCalendarItemDto
 	 */
 	@Mapping(target = "presentationId", source = "id")
-	@Mapping(target = "location", source = "presentationLocation")
 	@Mapping(target = "slotId", source = "slot.id")
 	AdminPresentationCalendarItemDto toAdminPresentationCalendarItemDto(Presentation presentation);
 
