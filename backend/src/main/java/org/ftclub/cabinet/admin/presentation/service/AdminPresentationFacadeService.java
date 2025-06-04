@@ -1,24 +1,32 @@
 package org.ftclub.cabinet.admin.presentation.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
+import org.ftclub.cabinet.admin.dto.AdminPresentationUpdateServiceDto;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
+import org.ftclub.cabinet.presentation.domain.ThumbnailAction;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
+import org.ftclub.cabinet.presentation.service.PresentationCommandService;
+import org.ftclub.cabinet.presentation.service.PresentationPolicyService;
 import org.ftclub.cabinet.presentation.service.PresentationQueryService;
 import org.ftclub.cabinet.presentation.service.ThumbnailStorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class AdminPresentationFacadeService {
 
 	private final PresentationQueryService queryService;
+	private final PresentationCommandService commandService;
+	private final PresentationPolicyService policyService;
 	private final ThumbnailStorageService thumbnailStorageService;
 	private final PresentationMapper presentationMapper;
 
@@ -60,5 +68,38 @@ public class AdminPresentationFacadeService {
 				false,
 				upcoming
 		);
+	}
+
+	/**
+	 * 프레젠테이션을 수정합니다. (User보다 더 넓은 범위의 내용 수정)
+	 *
+	 * @param presentationId 프레젠테이션 ID
+	 * @param updateForm     프레젠테이션 수정 DTO
+	 * @param thumbnail      썸네일 이미지 파일
+	 */
+	@Transactional
+	public void updatePresentation(Long presentationId,
+			AdminPresentationUpdateServiceDto updateForm, MultipartFile thumbnail)
+			throws IOException {
+		Presentation presentation = queryService.getPresentationById(presentationId);
+		// check verification
+		policyService.verifyAdminPresentationEditAccess(presentation);
+
+		// update contents
+		if (updateForm.getThumbnailAction() != ThumbnailAction.KEEP) {
+			commandService.updateThumbnail(presentation, thumbnail);
+		}
+		commandService.updateMainContents(presentation,
+				updateForm.getTitle(),
+				updateForm.getCategory(),
+				updateForm.getDuration());
+		commandService.updateSubContents(presentation,
+				updateForm.getSummary(),
+				updateForm.getOutline(),
+				updateForm.getDetail());
+		commandService.updatePublicAllowed(presentation, updateForm.isPublicAllowed());
+		commandService.updateVideoContents(presentation,
+				updateForm.isRecordingAllowed(),
+				updateForm.getVideoLink());
 	}
 }
