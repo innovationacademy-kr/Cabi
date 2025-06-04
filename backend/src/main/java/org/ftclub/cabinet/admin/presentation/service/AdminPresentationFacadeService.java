@@ -102,4 +102,14 @@ public class AdminPresentationFacadeService {
 				updateForm.isRecordingAllowed(),
 				updateForm.getVideoLink());
 	}
+
+	/**
+	 * 프레젠테이션을 취소합니다.
+	 *
+	 * @param presentationId 프레젠테이션 ID
+	 */
+	@Transactional
+	public void cancelPresentation(Long presentationId) {
+		commandService.cancelPresentation(presentationId);
+	}
 }

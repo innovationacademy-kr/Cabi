@@ -13,6 +13,7 @@ import org.ftclub.cabinet.presentation.dto.DataListResponseDto;
 import org.ftclub.cabinet.presentation.dto.DataResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -90,5 +91,16 @@ public class AdminPresentationController {
 				),
 				thumbnail
 		);
+	}
+
+	/**
+	 * 프레젠테이션을 취소합니다.
+	 *
+	 * @param presentationId 프레젠테이션 ID
+	 */
+	@DeleteMapping("/{presentationId}")
+	public void cancelPresentation(
+			@PathVariable Long presentationId) {
+		adminPresentationFacadeService.cancelPresentation(presentationId);
 	}
 }
