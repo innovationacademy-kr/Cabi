@@ -81,7 +81,7 @@ public class AdminPresentationFacadeService {
 	public void updatePresentation(Long presentationId,
 			AdminPresentationUpdateServiceDto updateForm, MultipartFile thumbnail)
 			throws IOException {
-		Presentation presentation = queryService.getPresentationById(presentationId);
+		Presentation presentation = queryService.findPresentationById(presentationId);
 		// check verification
 		policyService.verifyAdminPresentationEditAccess(presentation);
 

@@ -104,7 +104,7 @@ public class PresentationFacadeService {
 	@Transactional
 	public void updatePresentation(Long userId, Long presentationId,
 			PresentationUpdateServiceDto updateForm, MultipartFile thumbnail) throws IOException {
-		Presentation presentation = queryService.getPresentationById(presentationId);
+		Presentation presentation = queryService.findPresentationById(presentationId);
 		// check verification
 		policyService.verifyPresentationEditAccess(userId, presentation);
 

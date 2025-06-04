@@ -30,6 +30,17 @@ public class PresentationQueryService {
 	}
 
 	/**
+	 * presentationId로 프레젠테이션을 조회합니다. (no join)
+	 *
+	 * @param presentationId 프레젠테이션 ID
+	 * @return 프레젠테이션
+	 */
+	public Presentation findPresentationById(Long presentationId) {
+		return presentationRepository.findById(presentationId)
+				.orElseThrow(ExceptionStatus.PRESENTATION_NOT_FOUND::asServiceException);
+	}
+
+	/**
 	 * presetnationId로 프레젠테이션을 조회합니다.
 	 * <p>
 	 * User도 Join 연산으로 함께 조회한다.
@@ -40,6 +51,19 @@ public class PresentationQueryService {
 	 */
 	public Presentation findPresentationByIdWithUser(Long presentationId) {
 		return presentationRepository.findByIdJoinUser(presentationId)
+				.orElseThrow(ExceptionStatus.PRESENTATION_NOT_FOUND::asServiceException);
+	}
+
+	/**
+	 * presentationId로 프레젠테이션을 조회합니다.
+	 * <p>
+	 * Slot도 Join 연산으로 함께 조회한다.
+	 * </p>
+	 *
+	 * @param presentationId 프레젠테이션 ID
+	 */
+	public Presentation findPresentationByIdWithSlot(Long presentationId) {
+		return presentationRepository.findByIdJoinSlot(presentationId)
 				.orElseThrow(ExceptionStatus.PRESENTATION_NOT_FOUND::asServiceException);
 	}
 
