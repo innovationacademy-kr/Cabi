@@ -128,14 +128,18 @@ public enum ExceptionStatus {
 	S3_GET_URL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 URL 생성 중 에러가 발생했습니다."),
 	S3_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 삭제 중 에러가 발생했습니다."),
 	PRESENTATION_SLOT_ALREADY_ASSIGNED(HttpStatus.BAD_REQUEST, "이미 발표 슬롯에 발표가 할당되어 있습니다."),
+	PRESENTATION_SLOT_ALREADY_CANCELED(HttpStatus.BAD_REQUEST, "이미 발표 슬롯이 취소되었습니다."),
 	CANNOT_SEARCH_PAST_SLOT(HttpStatus.BAD_REQUEST, "과거 슬롯은 조회할 수 없습니다."),
 	NOT_ALLOWED_PERIOD(HttpStatus.BAD_REQUEST, "허용된 기간 외의 슬롯은 존재할 수 없습니다."),
 	PRESENTATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 발표가 존재하지 않습니다."),
+	PRESENTATION_ALREADY_CANCELED(HttpStatus.BAD_REQUEST, "이미 취소된 발표입니다."),
 
 	// Presentation user 권한 관련
 	NOT_LOGGED_IN(HttpStatus.UNAUTHORIZED, "로그인이 필요한 서비스입니다."),
 	PRESENTATION_ACCESS_DENIED(HttpStatus.FORBIDDEN, "권한이 부족합니다."),
-	CANCELLED_PRESENTATION(HttpStatus.FORBIDDEN, "취소된 발표입니다.\n해당 글은 작성자만 확인할 수 있습니다."),
+	CANCELED_PRESENTATION(HttpStatus.FORBIDDEN, "취소된 발표입니다.\n해당 글은 작성자만 확인할 수 있습니다."),
+	NOT_PRESENTATION_CREATOR(HttpStatus.FORBIDDEN, "작성자만 수정할 수 있습니다."),
+	CANCELED_PRESENTATION_EDIT_DENIED(HttpStatus.FORBIDDEN, "취소된 발표는 수정할 수 없습니다."),
 
 	// REMOVE (just for conflict)
 	REMOVE(HttpStatus.BAD_REQUEST, "삭제할 내용(오로지 마지막 ; 작성 용)");
