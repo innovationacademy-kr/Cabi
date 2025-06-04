@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
 
 @Entity
@@ -96,9 +97,14 @@ public class Presentation {
 			String title, String summary, String outline, String detail,
 			String thumbnailS3Key, boolean recodingAllowed, boolean publicAllowed,
 			PresentationSlot slot) {
-		return new Presentation(user, category, duration, title, summary, outline,
-				detail, thumbnailS3Key, null, recodingAllowed, publicAllowed,
+		Presentation presentation = new Presentation(user, category, duration,
+				title, summary, outline, detail,
+				thumbnailS3Key, null, recodingAllowed, publicAllowed,
 				slot, slot.getStartTime(), slot.getPresentationLocation());
+		if (!presentation.isValid()) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		return presentation;
 	}
 
 	protected Presentation(User user, Category category, Duration duration,
@@ -124,10 +130,98 @@ public class Presentation {
 	}
 
 	/**
-	 * 프레젠테이션을 취소합니다.
+	 * 프레젠테이션의 슬롯과 연결된 내용을 변경합니다.
+	 * <p>
+	 * 변경된 슬롯의 시작 시간과 발표 장소를 프레젠테이션에 반영합니다. (중복 엔티티)
+	 * </p>
+	 *
+	 * @param startTime            시작 시간
+	 * @param presentationLocation 발표 장소
 	 */
-	public void cancelPresentation() {
+	public void changeSlotContents(LocalDateTime startTime,
+			PresentationLocation presentationLocation) {
+		this.startTime = startTime;
+		this.presentationLocation = presentationLocation;
+	}
+
+	public void changeCategory(Category category) {
+		if (category == null) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		this.category = category;
+	}
+
+	public void changeDuration(Duration duration) {
+		if (duration == null) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		this.duration = duration;
+	}
+
+	public void changeTitle(String title) {
+		if (title == null || title.isBlank()) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		this.title = title;
+	}
+
+	public void changeSummary(String summary) {
+		if (summary == null || summary.isBlank()) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		this.summary = summary;
+	}
+
+	public void changeOutline(String outline) {
+		if (outline == null || outline.isBlank()) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		this.outline = outline;
+	}
+
+	public void changeDetail(String detail) {
+		if (detail == null || detail.isBlank()) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		this.detail = detail;
+	}
+
+	public void changeThumbnailS3Key(String thumbnailS3Key) {
+		this.thumbnailS3Key = thumbnailS3Key;
+	}
+
+	public void changeVideoLink(String videoLink) {
+		this.videoLink = videoLink;
+	}
+
+	public void changeRecordingAllowed(boolean recordingAllowed) {
+		this.recordingAllowed = recordingAllowed;
+	}
+
+	public void changePublicAllowed(boolean publicAllowed) {
+		this.publicAllowed = publicAllowed;
+	}
+
+	/**
+	 * 프레젠테이션을 취소합니다.
+	 * <p>
+	 * 연결된 slot을 삭제합니다. 취소 시, 되돌릴 수 없습니다.
+	 * </p>
+	 */
+	public void cancel() {
+		if (this.canceled) {
+			throw ExceptionStatus.PRESENTATION_ALREADY_CANCELED.asDomainException();
+		}
 		this.canceled = true;
 		this.slot = null;
+	}
+
+	private boolean isValid() {
+		return (user != null && category != null && duration != null
+				&& title != null && !title.isBlank()
+				&& summary != null && !summary.isBlank()
+				&& outline != null && !outline.isBlank()
+				&& detail != null && !detail.isBlank()
+				&& slot != null);
 	}
 }
