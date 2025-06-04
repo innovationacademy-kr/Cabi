@@ -95,7 +95,7 @@ class AdminPresentationControllerTest {
 		pMay2Canceled = Presentation.of(testUser2, Category.DEVELOP, Duration.HOUR,
 				"2024-05 test title2", "test summary", "test outline", "test detail",
 				null, true, true, slotMay2);
-		pMay2Canceled.cancelPresentation();     // set as canceled(취소된 발표 예시)
+		pMay2Canceled.cancel();     // set as canceled(취소된 발표 예시)
 		pJune1 = Presentation.of(testUser2, Category.DEVELOP, Duration.HOUR,
 				"2024-06 test title", "test summary", "test outline", "test detail",
 				null, true, true, slotJune1);
@@ -130,7 +130,7 @@ class AdminPresentationControllerTest {
 		String jsonResponse = responseResults.getResponse().getContentAsString();
 		DataListResponseDto<AdminPresentationCalendarItemDto> actualResponse =
 				objectMapper.readValue(jsonResponse,
-						new TypeReference<DataListResponseDto<AdminPresentationCalendarItemDto>>() {
+						new TypeReference<>() {
 						});
 
 		assertThat(actualResponse)
@@ -156,7 +156,7 @@ class AdminPresentationControllerTest {
 		String jsonResponse = responseResults.getResponse().getContentAsString();
 		DataListResponseDto<AdminPresentationCalendarItemDto> actualResponse =
 				objectMapper.readValue(jsonResponse,
-						new TypeReference<DataListResponseDto<AdminPresentationCalendarItemDto>>() {
+						new TypeReference<>() {
 						});
 
 		assertThat(actualResponse.getData()).isEmpty();

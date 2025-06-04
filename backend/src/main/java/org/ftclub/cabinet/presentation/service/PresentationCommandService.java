@@ -65,7 +65,7 @@ public class PresentationCommandService {
 	 * @param presentation 프레젠테이션
 	 * @param title        주제
 	 * @param category     카테고리
-	 * @oaram duration     프레젠테이션 시간
+	 * @param duration     프레젠테이션 시간
 	 */
 	public void updateMainContents(Presentation presentation,
 			String title, Category category, Duration duration) {

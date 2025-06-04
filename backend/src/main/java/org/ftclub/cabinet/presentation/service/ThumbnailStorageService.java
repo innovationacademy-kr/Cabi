@@ -12,7 +12,6 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -122,8 +121,7 @@ public class ThumbnailStorageService {
 	 */
 	public String generatePresignedUrl(String s3Key) {
 		// 1. Check if the key is null or empty -> static images will be rendered
-		if (!StringUtils.hasText(s3Key)) {
-			log.debug("s3Key is null or empty. Returning empty string.");
+		if (s3Key == null || s3Key.isEmpty()) {
 			return null;
 		}
 
