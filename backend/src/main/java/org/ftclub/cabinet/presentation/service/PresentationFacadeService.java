@@ -8,7 +8,6 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
-import org.ftclub.cabinet.presentation.domain.ThumbnailAction;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
@@ -109,7 +108,7 @@ public class PresentationFacadeService {
 		policyService.verifyPresentationEditAccess(userId, presentation);
 
 		// update contents
-		if (updateForm.getThumbnailAction() != ThumbnailAction.KEEP) {
+		if (updateForm.isThumbnailUpdated()) {
 			commandService.updateThumbnail(presentation, thumbnail);
 		}
 		commandService.updateSubContents(presentation,

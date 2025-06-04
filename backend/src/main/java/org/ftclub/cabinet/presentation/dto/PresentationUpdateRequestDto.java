@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.ftclub.cabinet.presentation.domain.ThumbnailAction;
 import org.hibernate.validator.constraints.Length;
 
 @Getter
@@ -25,5 +24,5 @@ public class PresentationUpdateRequestDto {
 	private String detail;
 
 	private boolean publicAllowed;
-	private ThumbnailAction thumbnailAction;
+	private boolean thumbnailUpdated;
 }

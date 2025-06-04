@@ -1,13 +1,13 @@
 package org.ftclub.cabinet.admin.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Duration;
-import org.ftclub.cabinet.presentation.domain.ThumbnailAction;
 import org.hibernate.validator.constraints.Length;
 
 @Getter
@@ -16,7 +16,9 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 public class AdminPresentationUpdateRequestDto {
 
+	@NotNull
 	private Duration duration;
+	@NotNull
 	private Category category;
 
 	@NotBlank
@@ -37,5 +39,5 @@ public class AdminPresentationUpdateRequestDto {
 
 	private boolean recordingAllowed;
 	private boolean publicAllowed;
-	private ThumbnailAction thumbnailAction;
+	private boolean thumbnailUpdated;
 }

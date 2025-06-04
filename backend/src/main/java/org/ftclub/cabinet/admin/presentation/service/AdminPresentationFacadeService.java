@@ -10,7 +10,6 @@ import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
 import org.ftclub.cabinet.admin.dto.AdminPresentationUpdateServiceDto;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
-import org.ftclub.cabinet.presentation.domain.ThumbnailAction;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.ftclub.cabinet.presentation.service.PresentationCommandService;
 import org.ftclub.cabinet.presentation.service.PresentationPolicyService;
@@ -86,7 +85,7 @@ public class AdminPresentationFacadeService {
 		policyService.verifyAdminPresentationEditAccess(presentation);
 
 		// update contents
-		if (updateForm.getThumbnailAction() != ThumbnailAction.KEEP) {
+		if (updateForm.isThumbnailUpdated()) {
 			commandService.updateThumbnail(presentation, thumbnail);
 		}
 		commandService.updateMainContents(presentation,

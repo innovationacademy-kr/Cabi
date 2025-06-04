@@ -87,7 +87,7 @@ public class AdminPresentationController {
 						updateForm.getVideoLink(),
 						updateForm.isRecordingAllowed(),
 						updateForm.isPublicAllowed(),
-						updateForm.getThumbnailAction()
+						updateForm.isThumbnailUpdated()
 				),
 				thumbnail
 		);

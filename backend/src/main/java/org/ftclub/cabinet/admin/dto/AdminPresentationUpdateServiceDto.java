@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.ToString;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Duration;
-import org.ftclub.cabinet.presentation.domain.ThumbnailAction;
 
 @EqualsAndHashCode
 @Getter
@@ -25,5 +24,5 @@ public class AdminPresentationUpdateServiceDto {
 
 	private final boolean recordingAllowed;
 	private final boolean publicAllowed;
-	private final ThumbnailAction thumbnailAction;
+	private final boolean thumbnailUpdated;
 }
