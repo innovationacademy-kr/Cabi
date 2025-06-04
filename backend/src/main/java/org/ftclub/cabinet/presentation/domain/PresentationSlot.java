@@ -69,4 +69,11 @@ public class PresentationSlot {
 		this.presentation = presentation;
 	}
 
+	public void cancelPresentation() {
+		if (this.presentation == null) {
+			throw ExceptionStatus.PRESENTATION_SLOT_ALREADY_CANCELED.asDomainException();
+		}
+		this.presentation = null;
+	}
+
 }
