@@ -8,8 +8,10 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
+import org.ftclub.cabinet.presentation.domain.ThumbnailAction;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -89,5 +91,31 @@ public class PresentationFacadeService {
 				editAllowed,
 				upcoming
 		);
+	}
+
+	/**
+	 * 프레젠테이션을 수정합니다.
+	 *
+	 * @param userId         사용자 ID
+	 * @param presentationId 프레젠테이션 ID
+	 * @param updateForm     프레젠테이션 수정 DTO
+	 * @param thumbnail      썸네일 이미지 파일
+	 */
+	@Transactional
+	public void updatePresentation(Long userId, Long presentationId,
+			PresentationUpdateServiceDto updateForm, MultipartFile thumbnail) throws IOException {
+		Presentation presentation = queryService.getPresentationById(presentationId);
+		// check verification
+		policyService.verifyPresentationEditAccess(userId, presentation);
+
+		// update contents
+		if (updateForm.getThumbnailAction() != ThumbnailAction.KEEP) {
+			commandService.updateThumbnail(presentation, thumbnail);
+		}
+		commandService.updateSubContents(presentation,
+				updateForm.getSummary(),
+				updateForm.getOutline(),
+				updateForm.getDetail());
+		commandService.updatePublicAllowed(presentation, updateForm.isPublicAllowed());
 	}
 }
