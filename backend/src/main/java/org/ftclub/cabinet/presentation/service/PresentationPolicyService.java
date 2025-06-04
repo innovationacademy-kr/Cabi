@@ -34,8 +34,50 @@ public class PresentationPolicyService {
 		// USER: allow all presentations except cancelled (only creator can access cancelled)
 		if (presentation.isCanceled()) {
 			if (!userId.equals(presentation.getUser().getId())) {
-				throw ExceptionStatus.CANCELLED_PRESENTATION.asServiceException();
+				throw ExceptionStatus.CANCELED_PRESENTATION.asServiceException();
 			}
 		}
+	}
+
+	/**
+	 * 프레젠테이션이 수정 가능한 상태인지 검증합니다.
+	 * <p>
+	 * 취소된 발표는 원칙적으로 수정이 불가능합니다.
+	 * </p>
+	 *
+	 * @param presentation 프레젠테이션
+	 */
+	private void checkPresentationEditable(Presentation presentation) {
+		if (presentation.isCanceled()) {
+			throw ExceptionStatus.CANCELED_PRESENTATION_EDIT_DENIED.asServiceException();
+		}
+	}
+
+	/**
+	 * 유저의 프레젠테이션의 수정 권한을 검증합니다.
+	 * <p>
+	 * 작성자만 수정할 수 있으며, 취소된 발표는 수정이 불가능합니다.
+	 * </p>
+	 *
+	 * @param userId       사용자 ID
+	 * @param presentation 프레젠테이션
+	 */
+	public void verifyPresentationEditAccess(Long userId, Presentation presentation) {
+		if (!userId.equals(presentation.getUser().getId())) {
+			throw ExceptionStatus.NOT_PRESENTATION_CREATOR.asServiceException();
+		}
+		checkPresentationEditable(presentation);
+	}
+
+	/**
+	 * 어드민의 프레젠테이션 수정 권한을 검증합니다.
+	 * <p>
+	 * 취소된 발표는 수정이 불가능합니다.
+	 * </p>
+	 *
+	 * @param presentation 프레젠테이션
+	 */
+	public void verifyAdminPresentationEditAccess(Presentation presentation) {
+		checkPresentationEditable(presentation);
 	}
 }
