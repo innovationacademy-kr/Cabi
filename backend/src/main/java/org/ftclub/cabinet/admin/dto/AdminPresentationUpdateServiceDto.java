@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.admin.dto;
 
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import org.ftclub.cabinet.presentation.domain.Category;
@@ -21,4 +22,10 @@ public class AdminPresentationUpdateServiceDto {
 	private final boolean recordingAllowed;
 	private final boolean publicAllowed;
 	private final boolean thumbnailUpdated;
+
+	private final Set<String> toUpdate = Set.of(
+			"title", "category", "duration",
+			"summary", "outline", "detail",
+			"publicAllowed", "recordingAllowed", "videoLink"
+	);
 }
