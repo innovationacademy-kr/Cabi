@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.presentation.domain.Category;
-import org.ftclub.cabinet.presentation.domain.Duration;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
@@ -57,41 +56,20 @@ public class PresentationCommandService {
 	}
 
 	/**
-	 * 프레젠테이션의 메인 컨텐츠(title, category, duration)를 변경합니다. (어드민)
+	 * 프레젠테이션을 수정합니다.
 	 * <p>
-	 * 다음 내용은 보칼의 공지와 연관되어 있으므로 어드민에서 관리합니다.
+	 * PresentationUpdateData 내부의 toUpdate 필드에 따라 domain 함수에서 수정을 진행합니다.
 	 * </p>
 	 *
 	 * @param presentation 프레젠테이션
-	 * @param title        주제
-	 * @param category     카테고리
-	 * @param duration     프레젠테이션 시간
+	 * @param data         수정 데이터
 	 */
-	public void updateMainContents(Presentation presentation,
-			String title, Category category, Duration duration) {
-		presentation.changeTitle(title);
-		presentation.changeCategory(category);
-		presentation.changeDuration(duration);
+	public void updatePresentation(Presentation presentation, PresentationUpdateData data) {
+		presentation.update(data);
 	}
 
 	/**
-	 * 프레젠테이션의 서브 컨텐츠(summary, outline, detail)를 변경합니다.
-	 *
-	 * @param presentation 프레젠테이션
-	 * @param summary      요약
-	 * @param outline      개요
-	 * @param detail       상세 내용
-	 */
-	public void updateSubContents(Presentation presentation,
-			String summary, String outline, String detail) {
-		presentation.changeSummary(summary);
-		presentation.changeOutline(outline);
-		presentation.changeDetail(detail);
-	}
-
-	/**
-	 * 프레젠테이션의 썸네일을 변경합니다.
-	 *
+	 * 프레젠테이션의 썸네일을 수정합니다.
 	 * <p>
 	 * 변경된 이미지를 업로드하고 S3 키를 업데이트합니다.
 	 * </p>
@@ -108,33 +86,6 @@ public class PresentationCommandService {
 		// upload new thumbnail and update key
 		String newThumbnailS3Key = thumbnailStorageService.uploadImage(thumbnail);
 		presentation.changeThumbnailS3Key(newThumbnailS3Key);
-	}
-
-	/**
-	 * 프레젠테이션의 비디오 관련 컨텐츠를 변경합니다. (어드민)
-	 * <p>
-	 * 녹화 관련된 부분은 보칼과의 협의가 필요하므로 어드민에서 관리합니다.
-	 * </p>
-	 *
-	 * @param presentation     프레젠테이션
-	 * @param recordingAllowed 녹화 허용 여부
-	 * @param videoLink        비디오 링크
-	 */
-	public void updateVideoContents(Presentation presentation,
-			boolean recordingAllowed, String videoLink) {
-		presentation.changeRecordingAllowed(recordingAllowed);
-		presentation.changeVideoLink(videoLink);
-	}
-
-	/**
-	 * 프레젠테이션의 공개 여부를 변경합니다.
-	 *
-	 * @param presentation  프레젠테이션
-	 * @param publicAllowed 공개 허용 여부
-	 */
-	public void updatePublicAllowed(Presentation presentation,
-			boolean publicAllowed) {
-		presentation.changePublicAllowed(publicAllowed);
 	}
 
 	/**

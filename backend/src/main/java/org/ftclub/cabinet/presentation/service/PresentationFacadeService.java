@@ -10,6 +10,7 @@ import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
 import org.ftclub.cabinet.user.domain.User;
@@ -111,10 +112,8 @@ public class PresentationFacadeService {
 		if (updateForm.isThumbnailUpdated()) {
 			commandService.updateThumbnail(presentation, thumbnail);
 		}
-		commandService.updateSubContents(presentation,
-				updateForm.getSummary(),
-				updateForm.getOutline(),
-				updateForm.getDetail());
-		commandService.updatePublicAllowed(presentation, updateForm.isPublicAllowed());
+		PresentationUpdateData updateData =
+				presentationMapper.toPresentationUpdateData(updateForm);
+		commandService.updatePresentation(presentation, updateData);
 	}
 }

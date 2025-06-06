@@ -11,6 +11,7 @@ import org.ftclub.cabinet.admin.dto.AdminPresentationUpdateServiceDto;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.service.PresentationCommandService;
 import org.ftclub.cabinet.presentation.service.PresentationPolicyService;
 import org.ftclub.cabinet.presentation.service.PresentationQueryService;
@@ -88,18 +89,9 @@ public class AdminPresentationFacadeService {
 		if (updateForm.isThumbnailUpdated()) {
 			commandService.updateThumbnail(presentation, thumbnail);
 		}
-		commandService.updateMainContents(presentation,
-				updateForm.getTitle(),
-				updateForm.getCategory(),
-				updateForm.getDuration());
-		commandService.updateSubContents(presentation,
-				updateForm.getSummary(),
-				updateForm.getOutline(),
-				updateForm.getDetail());
-		commandService.updatePublicAllowed(presentation, updateForm.isPublicAllowed());
-		commandService.updateVideoContents(presentation,
-				updateForm.isRecordingAllowed(),
-				updateForm.getVideoLink());
+		PresentationUpdateData updateData =
+				presentationMapper.toPresentationUpdateData(updateForm);
+		commandService.updatePresentation(presentation, updateData);
 	}
 
 	/**
