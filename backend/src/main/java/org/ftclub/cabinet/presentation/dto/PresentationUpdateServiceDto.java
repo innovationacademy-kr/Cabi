@@ -1,12 +1,10 @@
 package org.ftclub.cabinet.presentation.dto;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString
-@AllArgsConstructor
+@Builder
 public class PresentationUpdateServiceDto {
 
 	private final String summary;

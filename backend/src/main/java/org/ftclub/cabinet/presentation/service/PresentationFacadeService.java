@@ -9,7 +9,7 @@ import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
-import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
@@ -43,7 +43,7 @@ public class PresentationFacadeService {
 	 */
 	@Transactional
 	public void registerPresentation(Long userId,
-			PresentationFormRequestDto form,
+			PresentationRegisterServiceDto form,
 			MultipartFile thumbnail) throws IOException {
 		User user = userQueryService.getUser(userId);
 		String thumbnailS3Key = thumbnailStorageService.uploadImage(thumbnail);

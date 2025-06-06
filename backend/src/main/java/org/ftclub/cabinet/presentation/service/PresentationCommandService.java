@@ -7,7 +7,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
-import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
@@ -34,7 +34,7 @@ public class PresentationCommandService {
 	 * @return 생성된 프레젠테이션
 	 */
 	public Presentation createPresentation(User user,
-			PresentationFormRequestDto form,
+			PresentationRegisterServiceDto form,
 			PresentationSlot slot,
 			String thumbnailS3Key) {
 		// create

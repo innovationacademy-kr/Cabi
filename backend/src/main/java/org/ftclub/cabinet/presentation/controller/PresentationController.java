@@ -8,7 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.presentation.dto.DataResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
-import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationRegisterRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateRequestDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.ftclub.cabinet.presentation.service.PresentationFacadeService;
@@ -43,12 +44,22 @@ public class PresentationController {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void registerPresentation(
 			@AuthenticationPrincipal UserInfoDto user,
-			@Valid @RequestPart("form") PresentationFormRequestDto form,
+			@Valid @RequestPart("form") PresentationRegisterRequestDto form,
 			@RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
 	) throws IOException {
 		presentationFacadeService.registerPresentation(
 				user.getUserId(),
-				form,
+				PresentationRegisterServiceDto.builder()
+						.duration(form.getDuration())
+						.category(form.getCategory())
+						.title(form.getTitle())
+						.summary(form.getSummary())
+						.outline(form.getOutline())
+						.detail(form.getDetail())
+						.recordingAllowed(form.isRecordingAllowed())
+						.publicAllowed(form.isPublicAllowed())
+						.slotId(form.getSlotId())
+						.build(),
 				thumbnail
 		);
 	}
@@ -89,13 +100,12 @@ public class PresentationController {
 		presentationFacadeService.updatePresentation(
 				user.getUserId(),
 				presentationId,
-				new PresentationUpdateServiceDto(
-						updateForm.getSummary(),
-						updateForm.getOutline(),
-						updateForm.getDetail(),
-						updateForm.isPublicAllowed(),
-						updateForm.isThumbnailUpdated()
-				),
+				PresentationUpdateServiceDto.builder()
+						.summary(updateForm.getSummary())
+						.outline(updateForm.getOutline())
+						.detail(updateForm.getDetail())
+						.publicAllowed(updateForm.isPublicAllowed())
+						.build(),
 				thumbnail
 		);
 	}

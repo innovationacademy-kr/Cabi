@@ -77,18 +77,18 @@ public class AdminPresentationController {
 	) throws IOException {
 		adminPresentationFacadeService.updatePresentation(
 				presentationId,
-				new AdminPresentationUpdateServiceDto(
-						updateForm.getDuration(),
-						updateForm.getCategory(),
-						updateForm.getTitle(),
-						updateForm.getSummary(),
-						updateForm.getOutline(),
-						updateForm.getDetail(),
-						updateForm.getVideoLink(),
-						updateForm.isRecordingAllowed(),
-						updateForm.isPublicAllowed(),
-						updateForm.isThumbnailUpdated()
-				),
+				AdminPresentationUpdateServiceDto.builder()
+						.category(updateForm.getCategory())
+						.duration(updateForm.getDuration())
+						.title(updateForm.getTitle())
+						.summary(updateForm.getSummary())
+						.outline(updateForm.getOutline())
+						.detail(updateForm.getDetail())
+						.videoLink(updateForm.getVideoLink())
+						.recordingAllowed(updateForm.isRecordingAllowed())
+						.publicAllowed(updateForm.isPublicAllowed())
+						.thumbnailUpdated(updateForm.isThumbnailUpdated())
+						.build(),
 				thumbnail
 		);
 	}
