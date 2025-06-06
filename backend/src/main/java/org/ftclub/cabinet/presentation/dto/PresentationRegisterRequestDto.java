@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class PresentationFormRequestDto {
+public class PresentationRegisterRequestDto {
 
 	private Duration duration;
 	private Category category;
