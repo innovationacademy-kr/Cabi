@@ -105,6 +105,7 @@ public class PresentationController {
 						.outline(updateForm.getOutline())
 						.detail(updateForm.getDetail())
 						.publicAllowed(updateForm.isPublicAllowed())
+						.thumbnailUpdated(updateForm.isThumbnailUpdated())
 						.build(),
 				thumbnail
 		);
