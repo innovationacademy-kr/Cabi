@@ -21,6 +21,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateData;
 import org.ftclub.cabinet.user.domain.User;
 
 @Entity
@@ -144,6 +145,44 @@ public class Presentation {
 		this.presentationLocation = presentationLocation;
 	}
 
+	/**
+	 * 프레젠테이션을 수정합니다.
+	 * <p>
+	 * PresentationUpdateData 내부의 toUpdate 필드에 따라 수정합니다.
+	 * </p>
+	 *
+	 * @param data 프레젠테이션 수정 데이터
+	 */
+	public void update(PresentationUpdateData data) {
+		if (data.getToUpdate().contains("category")) {
+			changeCategory(data.getCategory());
+		}
+		if (data.getToUpdate().contains("duration")) {
+			changeDuration(data.getDuration());
+		}
+		if (data.getToUpdate().contains("title")) {
+			changeTitle(data.getTitle());
+		}
+		if (data.getToUpdate().contains("summary")) {
+			changeSummary(data.getSummary());
+		}
+		if (data.getToUpdate().contains("outline")) {
+			changeOutline(data.getOutline());
+		}
+		if (data.getToUpdate().contains("detail")) {
+			changeDetail(data.getDetail());
+		}
+		if (data.getToUpdate().contains("videoLink")) {
+			changeVideoLink(data.getVideoLink());
+		}
+		if (data.getToUpdate().contains("recordingAllowed")) {
+			changeRecordingAllowed(data.isRecordingAllowed());
+		}
+		if (data.getToUpdate().contains("publicAllowed")) {
+			changePublicAllowed(data.isPublicAllowed());
+		}
+	}
+
 	public void changeCategory(Category category) {
 		if (category == null) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
@@ -159,28 +198,28 @@ public class Presentation {
 	}
 
 	public void changeTitle(String title) {
-		if (title == null || title.isBlank()) {
+		if (title == null || title.isBlank() || title.length() > 50) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
 		this.title = title;
 	}
 
 	public void changeSummary(String summary) {
-		if (summary == null || summary.isBlank()) {
+		if (summary == null || summary.isBlank() || summary.length() > 100) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
 		this.summary = summary;
 	}
 
 	public void changeOutline(String outline) {
-		if (outline == null || outline.isBlank()) {
+		if (outline == null || outline.isBlank() || outline.length() > 500) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
 		this.outline = outline;
 	}
 
 	public void changeDetail(String detail) {
-		if (detail == null || detail.isBlank()) {
+		if (detail == null || detail.isBlank() || detail.length() > 10000) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
 		this.detail = detail;
@@ -216,12 +255,20 @@ public class Presentation {
 		this.slot = null;
 	}
 
+	/**
+	 * 프레젠테이션이 유효한지 검사합니다.
+	 * <p>
+	 * 객체가 생성될 때에만 유효성을 검사합니다.
+	 * </p>
+	 *
+	 * @return 유효성 검사 결과
+	 */
 	private boolean isValid() {
 		return (user != null && category != null && duration != null
-				&& title != null && !title.isBlank()
-				&& summary != null && !summary.isBlank()
-				&& outline != null && !outline.isBlank()
-				&& detail != null && !detail.isBlank()
+				&& title != null && !title.isBlank() && title.length() <= 50
+				&& summary != null && !summary.isBlank() && summary.length() <= 100
+				&& outline != null && !outline.isBlank() && outline.length() <= 500
+				&& detail != null && !detail.isBlank() && detail.length() <= 10000
 				&& slot != null);
 	}
 }
