@@ -2,12 +2,15 @@ package org.ftclub.cabinet.presentation.controller;
 
 
 import java.io.IOException;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.presentation.dto.DataListResponseDto;
 import org.ftclub.cabinet.presentation.dto.DataResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
+import org.ftclub.cabinet.presentation.dto.PresentationMyListDto;
 import org.ftclub.cabinet.presentation.dto.PresentationRegisterRequestDto;
 import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateRequestDto;
@@ -111,4 +114,18 @@ public class PresentationController {
 		);
 	}
 
+	/**
+	 * 나의 프레젠테이션 기록을 조회합니다.
+	 *
+	 * @param user 사용자 정보 (USER)
+	 * @return 프레젠테이션 기록 목록
+	 */
+	@GetMapping("/me/histories")
+	public DataListResponseDto<PresentationMyListDto> getMyPresentations(
+			@AuthenticationPrincipal UserInfoDto user) {
+		Long userId = user != null ? user.getUserId() : null;
+		List<PresentationMyListDto> myPresentations =
+				presentationFacadeService.getMyPresentations(userId);
+		return new DataListResponseDto<>(myPresentations);
+	}
 }

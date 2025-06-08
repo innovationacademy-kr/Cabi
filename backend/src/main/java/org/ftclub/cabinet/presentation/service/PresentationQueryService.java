@@ -67,4 +67,15 @@ public class PresentationQueryService {
 				.orElseThrow(ExceptionStatus.PRESENTATION_NOT_FOUND::asServiceException);
 	}
 
+	/**
+	 * userId로 프레젠테이션을 조회합니다.
+	 * <p>
+	 * 프레젠테이션을 최신순으로 조회합니다.
+	 * </p>
+	 *
+	 * @param userId 프레젠테이션 유저 ID
+	 */
+	public List<Presentation> findPresentationsByUserId(Long userId) {
+		return presentationRepository.findAllByUserIdAtDesc(userId);
+	}
 }

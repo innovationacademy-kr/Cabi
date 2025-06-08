@@ -2,6 +2,8 @@ package org.ftclub.cabinet.presentation.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -9,6 +11,7 @@ import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
+import org.ftclub.cabinet.presentation.dto.PresentationMyListDto;
 import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
@@ -115,5 +118,25 @@ public class PresentationFacadeService {
 		PresentationUpdateData updateData =
 				presentationMapper.toPresentationUpdateData(updateForm);
 		commandService.updatePresentation(presentation, updateData);
+	}
+
+	/**
+	 * 나의 프레젠테이션 기록을 조회합니다.
+	 *
+	 * @param userId 사용자 ID (ANONYMOUS=null)
+	 * @return 프레젠테이션 기록 목록
+	 */
+	@Transactional(readOnly = true)
+	public List<PresentationMyListDto> getMyPresentations(Long userId) {
+		// check verification
+		policyService.verifyMyPresentationsAccess(userId);
+
+		// get user's presentations
+		List<Presentation> presentations =
+				queryService.findPresentationsByUserId(userId);
+		
+		return presentations.stream()
+				.map(presentationMapper::toPresentationMyListDto)
+				.collect(Collectors.toList());
 	}
 }

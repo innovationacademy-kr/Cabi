@@ -80,4 +80,18 @@ public class PresentationPolicyService {
 	public void verifyAdminPresentationEditAccess(Presentation presentation) {
 		checkPresentationEditable(presentation);
 	}
+
+	/**
+	 * 유저의 프레젠테이션 기록 조회 권한을 검증합니다.
+	 * <p>
+	 * 로그인하지 않은 경우, 조회할 수 없습니다. (현재 조회는 로그인 없이도 요청 가능한 로직)
+	 * </p>
+	 *
+	 * @param userId 사용자 ID
+	 */
+	public void verifyMyPresentationsAccess(Long userId) {
+		if (userId == null) {
+			throw ExceptionStatus.NOT_LOGGED_IN.asServiceException();
+		}
+	}
 }
