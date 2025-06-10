@@ -80,7 +80,7 @@ public class AuthFacadeService {
 			OauthResult result, String provider) {
 
 		TokenDto tokens = jwtService.createPairTokens(result.getUserId(), result.getRoles(),
-				provider);
+				result.getEmail(), provider);
 		cookieService.setAccessTokenCookiesToClient(res, tokens, req.getServerName());
 
 		Authentication auth = createAuthenticationForUser(result, provider);

@@ -96,11 +96,12 @@ public class JwtService {
 	 * @param provider
 	 * @return
 	 */
-	public TokenDto createPairTokens(Long userId, String roles, String provider) {
+	public TokenDto createPairTokens(Long userId, String roles, String email, String provider) {
 		Claims claims = Jwts.claims();
 
 		claims.put(JwtTokenConstants.USER_ID, userId);
 		claims.put(JwtTokenConstants.ROLES, roles);
+		claims.put(JwtTokenConstants.EMAIL, email);
 		claims.put(JwtTokenConstants.OAUTH, provider);
 
 		TokenDto tokens = tokenProvider.createAccessAndRefreshToken(claims);
@@ -202,7 +203,7 @@ public class JwtService {
 		}
 
 		TokenDto tokens = createPairTokens(admin.getId(), admin.getRole().name(),
-				userInfoDto.getOauth());
+				admin.getEmail(), userInfoDto.getOauth());
 
 		cookieService.setAccessTokenCookiesToClient(res, tokens, req.getServerName());
 		jwtRedisService.addAdminAccessTokenToBlackList(admin.getId(), accessToken);
@@ -233,7 +234,8 @@ public class JwtService {
 			throw ExceptionStatus.JWT_EXPIRED.asServiceException();
 		}
 
-		TokenDto tokens = createPairTokens(user.getId(), user.getRoles(), userInfoDto.getOauth());
+		TokenDto tokens = createPairTokens(user.getId(), user.getRoles(),
+				userInfoDto.getEmail(), userInfoDto.getOauth());
 
 		cookieService.setAccessTokenCookiesToClient(res, tokens, req.getServerName());
 		jwtRedisService.addUserAccessTokenToBlackList(user.getId(), accessToken);
