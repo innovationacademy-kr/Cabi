@@ -70,7 +70,8 @@ public class AdminAuthService {
 		Admin master = adminQueryService.findByEmail(authPolicyService.getMasterEmail())
 				.orElseThrow(ExceptionStatus.UNAUTHORIZED_ADMIN::asServiceException);
 		TokenDto masterToken =
-				jwtService.createPairTokens(master.getId(), master.getRole().name(), "master");
+				jwtService.createPairTokens(master.getId(), master.getRole().name(),
+						master.getEmail(), "master");
 		cookieService.setAccessTokenCookiesToClient(res, masterToken, req.getServerName());
 		return new AccessTokenDto(masterToken.getAccessToken());
 	}
@@ -107,6 +108,7 @@ public class AdminAuthService {
 				.orElseGet(() -> adminCommandService.createAdminByEmail(adminMail));
 		return new OauthResult(admin.getId(),
 				admin.getRole().name(),
+				admin.getEmail(),
 				authPolicyService.getAdminHomeUrl());
 	}
 
