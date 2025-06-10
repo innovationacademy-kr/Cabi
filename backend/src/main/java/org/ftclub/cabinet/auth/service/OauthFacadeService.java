@@ -50,7 +50,8 @@ public class OauthFacadeService {
 		FtOauthProfile profile = oauthProfileService.convertJsonNodeToFtOauthProfile(rootNode);
 		User user = userFacadeService.createOrUpdateUserFromProfile(profile);
 
-		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getMainHomeUrl());
+		return new OauthResult(user.getId(), user.getRoles(), user.getEmail(),
+				authPolicyService.getMainHomeUrl());
 	}
 
 	/**

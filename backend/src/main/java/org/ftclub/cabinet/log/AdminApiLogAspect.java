@@ -39,7 +39,7 @@ public class AdminApiLogAspect {
 	private final static String ADMIN_CUD_POINTCUT =
 			"@target(org.springframework.web.bind.annotation.RestController) && " +
 					"!@annotation(org.springframework.web.bind.annotation.GetMapping) && " +
-					"within(org.ftclub.cabinet.*.controller.*)"; // 특정 패키지로 제한
+					"within(org.ftclub.cabinet.admin..controller.*)"; // 특정 패키지로 제한
 	private final ParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
 	private final LogParser logParser;
 	private final DiscordWebHookMessenger discordWebHookMessenger;

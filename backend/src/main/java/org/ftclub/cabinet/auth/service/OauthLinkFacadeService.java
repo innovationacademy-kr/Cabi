@@ -60,7 +60,7 @@ public class OauthLinkFacadeService {
 					user.getName(), e.getMessage());
 		}
 		return new OauthResult(
-				user.getId(), user.getRoles(),
+				user.getId(), user.getRoles(), connection.getEmail(),
 				authPolicyService.getMainHomeUrl());
 	}
 
@@ -87,7 +87,8 @@ public class OauthLinkFacadeService {
 				OauthLink.of(user, oAuth2User.getProvider(), oAuth2User.getName(),
 						oAuth2User.getEmail());
 		oauthLinkCommandService.save(connection);
-		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getProfileUrl());
+		return new OauthResult(user.getId(), user.getRoles(), oAuth2User.getEmail(),
+				authPolicyService.getProfileUrl());
 	}
 
 	/**
@@ -107,6 +108,12 @@ public class OauthLinkFacadeService {
 		oauthLinkCommandService.softDelete(connection);
 	}
 
+	/**
+	 * 계정 연동 시, 유저의 정보가 담긴 임시 토큰을 발급합니다.
+	 *
+	 * @param linkOauthRedirectUrlServiceDto
+	 * @return
+	 */
 	public LinkOauthTokenDto generateRedirectUrl(
 			LinkOauthRedirectUrlServiceDto linkOauthRedirectUrlServiceDto) {
 		Long userId = linkOauthRedirectUrlServiceDto.getUserId();
