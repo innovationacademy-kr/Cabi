@@ -3,7 +3,6 @@ package org.ftclub.cabinet.log;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.lang.reflect.Method;
 import java.util.Objects;
-import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,6 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.alarm.discord.DiscordAlarmMessage;
 import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
@@ -92,8 +90,8 @@ public class AdminApiLogAspect {
 			return;
 		}
 
-		Optional<Admin> admin = adminQueryService.findById(adminInfoFromToken.getUserId());
-		String name = admin.isPresent() ? admin.get().getEmail() : "Unknown User";
+		// 어드민 계정의 이메일 (발생된 로그를 실행한 주체)
+		String name = adminInfoFromToken.getEmail();
 
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
