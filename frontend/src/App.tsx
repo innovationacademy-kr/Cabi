@@ -25,6 +25,9 @@ const StoreMainPage = lazy(() => import("@/Cabinet/pages/StoreMainPage"));
 const PresentationHomePage = lazy(
   () => import("@/Presentation/pages/HomePage")
 );
+const PresentationDetailPage = lazy(
+  () => import("@/Presentation/pages/PresentationDetailPage")
+);
 const PresentationLayout = lazy(() => import("@/Presentation/pages/Layout"));
 const DetailPage = lazy(() => import("@/Presentation/pages/DetailPage"));
 const AboutUsPage = lazy(() => import("@/Presentation/pages/AboutUsPage"));
@@ -79,8 +82,11 @@ function App(): React.ReactElement {
             <Route path="agu" element={<AGUPage />} />
           </Route>
           <Route path="/presentations/" element={<PresentationLayout />}>
-            {/* test */}
             <Route path="home" element={<PresentationHomePage />} />
+            <Route
+              path=":presentationId"
+              element={<PresentationDetailPage />}
+            />
             <Route path="register" element={<RegisterPage />} />
             <Route path="detail" element={<DetailPage />} />
             <Route path="about" element={<AboutUsPage />} />
