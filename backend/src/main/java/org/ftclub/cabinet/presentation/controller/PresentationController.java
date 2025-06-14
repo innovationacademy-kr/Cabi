@@ -1,21 +1,23 @@
 package org.ftclub.cabinet.presentation.controller;
 
-
 import java.io.IOException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.presentation.dto.DataResponseDto;
+import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
 import org.ftclub.cabinet.presentation.service.PresentationFacadeService;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 
 @Slf4j
 @RestController
@@ -25,6 +27,14 @@ public class PresentationController {
 
 	private final PresentationFacadeService presentationFacadeService;
 
+	/**
+	 * 프레젠테이션을 등록합니다.
+	 *
+	 * @param user      사용자 정보 (USER)
+	 * @param form      프레젠테이션 등록 요청 DTO
+	 * @param thumbnail 썸네일 이미지 파일 (선택)
+	 * @throws IOException 썸네일 이미지 업로드 중 발생할 수 있는 IOException
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void registerPresentation(
 			@AuthenticationPrincipal UserInfoDto user,
@@ -32,10 +42,27 @@ public class PresentationController {
 			@RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
 	) throws IOException {
 		presentationFacadeService.registerPresentation(
-				user,
+				user.getUserId(),
 				form,
 				thumbnail
 		);
+	}
+
+	/**
+	 * 프레젠테이션 상세 정보를 조회합니다.
+	 *
+	 * @param user           사용자 정보 (USER, ANONYMOUS=null)
+	 * @param presentationId 프레젠테이션 ID
+	 * @return 프레젠테이션 상세 정보
+	 */
+	@GetMapping("/{presentationId}")
+	public DataResponseDto<PresentationDetailDto> getPresentationDetail(
+			@AuthenticationPrincipal UserInfoDto user,
+			@PathVariable Long presentationId) {
+		Long userId = user != null ? user.getUserId() : null;
+		PresentationDetailDto detail = presentationFacadeService.getPresentationDetail(
+				userId, presentationId);
+		return new DataResponseDto<>(detail);
 	}
 
 }

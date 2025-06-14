@@ -50,7 +50,7 @@ public class ThumbnailStorageService {
 	public String uploadImage(MultipartFile imageFile) throws IOException {
 		// 1. Check if the file is empty -> static images will be rendered
 		if (imageFile == null || imageFile.isEmpty()) {
-			return "";
+			return null;
 		}
 
 		// 2. Check file size
@@ -117,14 +117,14 @@ public class ThumbnailStorageService {
 	/**
 	 * S3에 저장된 이미지의 Pre-signed URL을 생성합니다. (제한시간: DEFAULT_EXPIRATION)
 	 *
-	 * @param s3Key
+	 * @param s3Key S3에 저장된 이미지의 key (DB에 저장된 값)
 	 * @return Pre-signed URL
 	 */
 	public String generatePresignedUrl(String s3Key) {
 		// 1. Check if the key is null or empty -> static images will be rendered
 		if (!StringUtils.hasText(s3Key)) {
 			log.debug("s3Key is null or empty. Returning empty string.");
-			return "";
+			return null;
 		}
 
 		try {
