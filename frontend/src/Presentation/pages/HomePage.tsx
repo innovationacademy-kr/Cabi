@@ -50,7 +50,7 @@ const HomePage: React.FC = () => {
   const [presentations] = useState<IPresentation[]>(mockData);
 
   return (
-    <div className="h-[calc(100vh-4rem)] w-full overflow-y-auto pb-11">
+    <>
       <div className="relative w-full">
         <Banner className="w-full h-auto block" />
         <div className="w-full h-[30px] bg-white" />
@@ -58,7 +58,7 @@ const HomePage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <PresentationCardContainer presentations={presentations} />
       </div>
-    </div>
+    </> 
   );
 };
 

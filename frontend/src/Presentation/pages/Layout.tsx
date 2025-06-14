@@ -34,7 +34,7 @@ const Layout = (): JSX.Element => {
       setUser(myInfo);
       setIsValidToken(true);
       if (isRootPath || isLoginPage) {
-        navigate("/presentation/home");
+        navigate("/presentations/home");
       }
     } catch (error) {
       navigate("/login");
@@ -96,7 +96,7 @@ const WrapperStyled = styled.div`
 
 const MainStyled = styled.main`
   width: 100%;
-  height: 100%;
+  height: calc(100% - 104px);
   overflow-y: auto;
   user-select: none;
 `;
