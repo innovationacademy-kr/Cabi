@@ -6,17 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
-import org.jetbrains.annotations.NotNull;
 
 @Getter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminPresentationSlotRequestDto {
+public class PresentationSlotResponseDto {
 
-	@NotNull
+	private Long slotId;
 	private LocalDateTime startTime;
-	
-	@NotNull
-	private PresentationLocation presentationLocation;
+	private PresentationLocation location;
 }
