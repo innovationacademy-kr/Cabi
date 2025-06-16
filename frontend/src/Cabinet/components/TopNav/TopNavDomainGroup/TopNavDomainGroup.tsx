@@ -18,14 +18,14 @@ const domains: ITopNavDomain[] = [
     adminPath: "/admin/home",
     logo: CabiLogo,
     title: "Cabi",
-    active: (pathname) => !pathname.includes("presentation"),
+    active: (pathname) => !pathname.includes("presentations"),
   },
   {
-    path: "/presentation/home",
-    adminPath: "/admin/presentation/detail",
+    path: "/presentations/home",
+    adminPath: "/admin/presentations/detail",
     logo: PresentationLogo,
     title: "수요지식회",
-    active: (pathname) => pathname.includes("presentation"),
+    active: (pathname) => pathname.includes("presentations"),
   },
 ];
 
