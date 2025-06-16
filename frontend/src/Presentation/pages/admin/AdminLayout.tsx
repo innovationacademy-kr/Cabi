@@ -4,13 +4,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import LeftNav from "@/Presentation_legacy/components/LeftNav/LeftNav";
 import AdminTopNavContainer from "@/Presentation_legacy/components/TopNav/AdminTopNav.container";
 
 const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
 
-const Layout = (): JSX.Element => {
+const AdminLayout = (): JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
   const isLoginPage: boolean = location.pathname === "/admin/login";
@@ -89,4 +88,4 @@ const MenuBgStyled = styled.div`
   position: none;
 `;
 
-export default Layout;
+export default AdminLayout;
