@@ -57,6 +57,9 @@ const AdminStorePage = lazy(
 const AdminPresentationLayout = lazy(
   () => import("@/Presentation/pages/admin/adminLayout")
 );
+const AdminPresentationHomePage = lazy(
+  () => import("@/Presentation/pages/admin/AdminHomePage")
+);
 
 function App(): React.ReactElement {
   const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
@@ -107,7 +110,7 @@ function App(): React.ReactElement {
             path="/admin/presentations/"
             element={<AdminPresentationLayout />}
           >
-            <Route path="detail" element={<DetailPage />} />
+            <Route path="home" element={<AdminPresentationHomePage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route

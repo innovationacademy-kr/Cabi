@@ -24,7 +24,9 @@ const Layout = (): JSX.Element => {
 
   const token = getCookie("access_token");
 
-  const isRootPath: boolean = location.pathname === "/presentation/";
+  const isRootPath: boolean =
+    location.pathname === "/presentations" ||
+    location.pathname === "/presentations/";
   const isLoginPage: boolean = location.pathname === "/login";
   const isHomePage: boolean = location.pathname === "/home";
 
@@ -34,7 +36,7 @@ const Layout = (): JSX.Element => {
       setUser(myInfo);
       setIsValidToken(true);
       if (isRootPath || isLoginPage) {
-        navigate("/presentations/home");
+        navigate("/presentations/home", { replace: true });
       }
     } catch (error) {
       navigate("/login");
@@ -46,8 +48,11 @@ const Layout = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (!token && !isLoginPage) navigate("/login");
-    else if (token) getMyInfo();
+    if (!token && !isLoginPage) {
+      navigate("/login");
+    } else if (token) {
+      getMyInfo();
+    }
   }, []);
 
   useEffect(() => {
