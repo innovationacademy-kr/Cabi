@@ -54,6 +54,9 @@ const AdminStorePage = lazy(
 const AdminPresentationLayout = lazy(
   () => import("@/Presentation_legacy/pages/admin/AdminLayout")
 );
+const AdminPresentationHomePage = lazy(
+  () => import("@/Presentation/pages/admin/AdminHomePage")
+);
 
 function App(): React.ReactElement {
   const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
@@ -77,6 +80,7 @@ function App(): React.ReactElement {
             <Route path="store/item-use-log" element={<ItemUsageLogPage />} />
             <Route path="store/coin-log" element={<CoinLogPage />} />
             <Route path="agu" element={<AGUPage />} />
+            <Route path="admin-home" element={<AdminPresentationHomePage />} /> // TODO: admin 페이지 접근권한 문제로 임시로 추가
           </Route>
           <Route path="/presentations/" element={<PresentationLayout />}>
             {/* test */}
