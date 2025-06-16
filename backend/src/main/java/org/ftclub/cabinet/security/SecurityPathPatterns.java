@@ -27,7 +27,8 @@ public class SecurityPathPatterns {
 	public static final String[] ADMIN_USER_ENDPOINTS = {
 			"/v4/cabinets/**",
 			"/v4/lent/cabinets/share/cancel/{cabinetId}",
-			"/v5/items"
+			"/v5/items",
+			"/v5/presentation/form/invalid-date"
 	};
 
 	public static final String[] AGU_ENDPOINTS = {
