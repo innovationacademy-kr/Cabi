@@ -9,7 +9,7 @@ import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import TopNavContainer from "@/Presentation_legacy/components/TopNav/TopNav.container";
+import TopNavContainer from "@/Presentation/components/TopNav/TopNav.container";
 
 const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
