@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import DarkModeToggleSwitch from "@/Cabinet/components/Common/DarkModeToggleSwitch";
 import { ReactComponent as CabiLogo } from "@/Cabinet/assets/images/logo.svg";
-import { ReactComponent as PresentationLogo } from "@/Presentation_legacy/assets/images/logo.svg";
+import { ReactComponent as PresentationLogo } from "@/Presentation/assets/images/logo.svg";
 
 interface ITopNavDomain {
   path: string;

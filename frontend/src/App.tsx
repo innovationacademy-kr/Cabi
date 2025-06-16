@@ -52,7 +52,7 @@ const AdminStorePage = lazy(
   () => import("@/Cabinet/pages/admin/AdminStorePage")
 );
 const AdminPresentationLayout = lazy(
-  () => import("@/Presentation_legacy/pages/admin/AdminLayout")
+  () => import("@/Presentation/pages/admin/adminLayout")
 );
 
 function App(): React.ReactElement {
