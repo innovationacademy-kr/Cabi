@@ -31,7 +31,7 @@ public class PresentationCommentService {
 	) {
 		verifyCommentSize(dto.getCommentDetail());
 
-		Presentation presentation = presentationQueryService.getPresentation(
+		Presentation presentation = presentationQueryService.findPresentationByIdWithUser(
 				dto.getPresentationId());
 		User user = userQueryService.getUser(dto.getUserId());
 
@@ -64,7 +64,7 @@ public class PresentationCommentService {
 			Long presentationId
 	) {
 		// Presentation 존재하는지 확인
-		presentationQueryService.getPresentation(presentationId);
+		presentationQueryService.findPresentationByIdWithUser(presentationId);
 
 		List<PresentationComment> comments = commentRepository.findByPresentationIdOrderByCreatedAtAsc(
 				presentationId);
@@ -108,7 +108,7 @@ public class PresentationCommentService {
 
 	private void verifyPresentationAndCommentAssociation(PresentationComment comment,
 			Long presentationId) {
-		presentationQueryService.getPresentation(presentationId);
+		presentationQueryService.findPresentationByIdWithUser(presentationId);
 
 		Presentation presentationOfComment = comment.getPresentation();
 		if (!presentationOfComment.getId().equals(presentationId)) {

@@ -71,7 +71,7 @@ class PresentationCommentServiceTest {
 		// Mock Presentation
 		Presentation mockPresentation = mock(Presentation.class);
 		given(mockPresentation.getId()).willReturn(presentationId);
-		given(presentationQueryService.getPresentation(presentationId)).willReturn(
+		given(presentationQueryService.findPresentationByIdWithUser(presentationId)).willReturn(
 				mockPresentation);
 
 		// Mock Repository Save 동작 정의
@@ -99,7 +99,7 @@ class PresentationCommentServiceTest {
 		// Then
 		// Response DTO 검증
 		assertNotNull(responseDto);
-		assertEquals(expectedCommentId, responseDto.getId());
+		assertEquals(expectedCommentId, responseDto.getPresentationId());
 		assertEquals(mockUser.getName(), responseDto.getUser());
 		assertEquals(commentDetail, responseDto.getDetail());
 		assertEquals(expectedCreatedAt, responseDto.getDateTime());
@@ -185,7 +185,7 @@ class PresentationCommentServiceTest {
 		Long nonExistentPresentationId = 999L;
 		String commentDetail = "Comment on non-existent presentation";
 
-		given(presentationQueryService.getPresentation(nonExistentPresentationId))
+		given(presentationQueryService.findPresentationByIdWithUser(nonExistentPresentationId))
 				.willThrow(ExceptionStatus.NOT_FOUND_PRESENTATION.asServiceException());
 
 		PresentationCommentServiceCreationDto dto =
@@ -211,7 +211,7 @@ class PresentationCommentServiceTest {
 				.willThrow(ExceptionStatus.NOT_FOUND_USER.asServiceException());
 
 		Presentation mockPresentation = mock(Presentation.class);
-		given(presentationQueryService.getPresentation(presentationId)).willReturn(
+		given(presentationQueryService.findPresentationByIdWithUser(presentationId)).willReturn(
 				mockPresentation);
 
 		PresentationCommentServiceCreationDto dto =
@@ -273,7 +273,7 @@ class PresentationCommentServiceTest {
 
 		// 첫 번째 댓글 검증 (내 댓글)
 		PresentationCommentResponseDto dto1 = responseDtos.get(0);
-		assertEquals(comment1.getId(), dto1.getId());
+		assertEquals(comment1.getId(), dto1.getPresentationId());
 		assertEquals(ownerUser.getName(), dto1.getUser());
 		assertEquals(comment1.getDetail(), dto1.getDetail());
 		assertEquals(comment1.getCreatedAt(), dto1.getDateTime());
@@ -283,7 +283,7 @@ class PresentationCommentServiceTest {
 
 		// 두 번째 댓글 검증 (다른 사람 댓글)
 		PresentationCommentResponseDto dto2 = responseDtos.get(1);
-		assertEquals(comment2.getId(), dto2.getId());
+		assertEquals(comment2.getId(), dto2.getPresentationId());
 		assertEquals(anotherUser.getName(), dto2.getUser());
 		assertEquals(comment2.getDetail(), dto2.getDetail());
 		assertEquals(comment2.getCreatedAt(), dto2.getDateTime());
@@ -318,7 +318,7 @@ class PresentationCommentServiceTest {
 		Long requestingUserId = 1L;
 		Long nonExistentPresentationId = 999L;
 
-		given(presentationQueryService.getPresentation(
+		given(presentationQueryService.findPresentationByIdWithUser(
 				nonExistentPresentationId))
 				.willThrow(ExceptionStatus.NOT_FOUND_PRESENTATION.asServiceException());
 
@@ -370,7 +370,7 @@ class PresentationCommentServiceTest {
 
 		// Then
 		assertNotNull(responseDto);
-		assertEquals(commentId, responseDto.getId());
+		assertEquals(commentId, responseDto.getPresentationId());
 		assertEquals(ownerUser.getName(), responseDto.getUser());
 		assertEquals(updatedDetail, responseDto.getDetail());
 		assertEquals(now, responseDto.getDateTime());
@@ -478,7 +478,7 @@ class PresentationCommentServiceTest {
 
 		Presentation presentation = mock(Presentation.class);
 		given(presentation.getId()).willReturn(presentationId);
-		given(presentationQueryService.getPresentation(presentationId)).willReturn(
+		given(presentationQueryService.findPresentationByIdWithUser(presentationId)).willReturn(
 				presentation);
 
 		User user = mock(User.class);
@@ -511,7 +511,7 @@ class PresentationCommentServiceTest {
 		given(presentationCommentRepository.findById(commentId)).willReturn(
 				Optional.of(existingComment));
 
-		given(presentationQueryService.getPresentation(nonExistentPresentationId))
+		given(presentationQueryService.findPresentationByIdWithUser(nonExistentPresentationId))
 				.willThrow(ExceptionStatus.NOT_FOUND_PRESENTATION.asServiceException());
 
 		PresentationCommentServiceUpdateDto dto =
@@ -524,7 +524,7 @@ class PresentationCommentServiceTest {
 		});
 		assertEquals(ExceptionStatus.NOT_FOUND_PRESENTATION, exception.getStatus());
 		verify(presentationCommentRepository).findById(commentId);
-		verify(presentationQueryService).getPresentation(nonExistentPresentationId);
+		verify(presentationQueryService).findPresentationByIdWithUser(nonExistentPresentationId);
 		verify(existingComment, never()).updateDetail(anyString()); // 댓글 내용은 업데이트되면 안 됨
 	}
 
@@ -542,7 +542,8 @@ class PresentationCommentServiceTest {
 		User ownerUser = mock(User.class);
 
 		Presentation presentationInDto = mock(Presentation.class); // DTO ID에 해당하는 발표 Mock
-		given(presentationQueryService.getPresentation(presentationIdInDto)).willReturn(
+		given(presentationQueryService.findPresentationByIdWithUser(
+				presentationIdInDto)).willReturn(
 				presentationInDto);
 
 		Presentation actualPresentation = mock(Presentation.class);// 댓글이 실제 속한 발표 Mock
@@ -566,7 +567,8 @@ class PresentationCommentServiceTest {
 		assertEquals(ExceptionStatus.PRESENTATION_COMMENT_INVALID_ASSOCIATION,
 				exception.getStatus());
 		verify(presentationCommentRepository).findById(commentId);
-		verify(presentationQueryService).getPresentation(presentationIdInDto); // 발표 존재 확인은 통과해야 함
+		verify(presentationQueryService).findPresentationByIdWithUser(
+				presentationIdInDto); // 발표 존재 확인은 통과해야 함
 		verify(existingComment, never()).updateDetail(anyString());
 	}
 
@@ -650,7 +652,8 @@ class PresentationCommentServiceTest {
 		User ownerUser = mock(User.class);
 
 		Presentation presentationInDto = mock(Presentation.class); // DTO ID에 해당하는 발표 Mock
-		given(presentationQueryService.getPresentation(presentationIdInDto)).willReturn(
+		given(presentationQueryService.findPresentationByIdWithUser(
+				presentationIdInDto)).willReturn(
 				presentationInDto);
 
 		Presentation actualPresentation = mock(Presentation.class); // 댓글이 실제 속한 발표 Mock
@@ -672,7 +675,7 @@ class PresentationCommentServiceTest {
 		assertEquals(ExceptionStatus.PRESENTATION_COMMENT_INVALID_ASSOCIATION,
 				exception.getStatus());
 		verify(presentationCommentRepository).findById(commentId);
-		verify(presentationQueryService).getPresentation(presentationIdInDto);
+		verify(presentationQueryService).findPresentationByIdWithUser(presentationIdInDto);
 		verify(existingComment, never()).delete();
 	}
 }
