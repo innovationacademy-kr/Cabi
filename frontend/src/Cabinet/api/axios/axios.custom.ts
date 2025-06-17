@@ -964,7 +964,7 @@ export const axiosGetAvailableCabinets = async (): Promise<any> => {
   }
 };
 
-const axiosSendSlackAlarmToUserURL = "/slack/send";
+const axiosSendSlackAlarmToUserURL = "/v5/admin/slack/send";
 export const axiosSendSlackAlarmToUser = async (
   receiverName: string,
   message: string
