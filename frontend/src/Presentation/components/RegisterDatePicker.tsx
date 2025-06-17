@@ -1,278 +1,290 @@
-
-import * as React from "react"
-import { format } from "date-fns"
-import { ko } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react"
-
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Control } from "react-hook-form"
-import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
+} from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { cn } from "@/lib/utils";
+import { format, parseISO } from "date-fns";
+import { ko } from "date-fns/locale";
+import { CalendarIcon, Clock } from "lucide-react";
+import * as React from "react";
+import { useEffect, useState } from "react";
+import { Control } from "react-hook-form";
 
 interface RegisterDatePickerProps {
-    control: Control<any>;
-    name: string;
-    title: string;
+  control: Control<any>;
+  name: string;
+  title: string;
 }
 
-const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({control, title, name}) => {
-    return (
-        <FormField
-        control={control}
-        name={name}
-        render={({ field }) => (
-            <FormItem className="w-full mb-4 flex flex-col">
-                <FormLabel className="text-base text-black font-medium sm:text-lg">{title}</FormLabel> 
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <FormControl>
-                            <Button
-                            variant={"outline"}
-                            className={cn(
-                                "w-full lg:w-80 md:w-48 pl-3 text-left font-normal bg-white text-xs sm:text-sm text-black",
-                                !field.value && "text-muted-foreground "
-                            )}
-                            >
-                            {field.value ? (
-                                format(field.value, "PPP", {locale: ko})
-                            ) : (
-                                <span className=" text-xs sm:text-sm text-gray-500" >발표 날짜를 선택하세요</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                        </FormControl>                      
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            locale={ko}
-                            initialFocus
-                            // disabled={(date) =>
-                            // date > new Date() || date < new Date("1900-01-01")}  // 불가능 날짜 지정
-                        />
-                    </PopoverContent>                    
-                </Popover>
-            </FormItem>
-            
-            )}
-        />
-    )
+// 발표 가능한 시간 슬롯 타입 정의
+interface TimeSlot {
+  slotId: number;
+  startTime: string;
 }
+
+// API 응답 타입 정의
+interface ApiResponse {
+  results: TimeSlot[];
+}
+
+const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
+  control,
+  title,
+  name,
+}) => {
+  const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
+  const [selectedTimeSlots, setSelectedTimeSlots] = useState<TimeSlot[]>([]);
+  const [selectTime, setSelectTime] = useState<string[]>([]);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // API에서 발표 가능한 날짜 가져오기
+    const fetchAvailableDates = async () => {
+      try {
+        setIsLoading(true);
+
+        // 실제 API 호출 - 여기서는 예시로 모킹합니다
+        // const response = await fetch('/api/available-dates');
+        // const data: ApiResponse = await response.json();
+
+        // 모의 데이터 (실제 구현시 위의 fetch 사용)
+        const mockData: ApiResponse = {
+          results: [
+            { slotId: 5, startTime: "2025-06-15T12:00:00" },
+            { slotId: 6, startTime: "2025-06-15T13:00:00" },
+            { slotId: 7, startTime: "2025-06-15T14:00:00" },
+            { slotId: 8, startTime: "2025-05-29T12:00:00" },
+            { slotId: 9, startTime: "2025-06-05T12:00:00" },
+            { slotId: 10, startTime: "2025-06-12T14:00:00" },
+            { slotId: 11, startTime: "2025-06-19T12:00:00" },
+            { slotId: 12, startTime: "2025-06-26T13:00:00" },
+            { slotId: 13, startTime: "2025-07-03T12:00:00" },
+            { slotId: 14, startTime: "2025-07-10T14:00:00" },
+            { slotId: 15, startTime: "2025-07-17T13:00:00" },
+            { slotId: 16, startTime: "2025-07-24T12:00:00" },
+            { slotId: 17, startTime: "2025-07-31T12:00:00" },
+          ],
+        };
+        setAvailableSlots(mockData.results);
+      } catch (error) {
+        console.error("발표 가능 날짜 로딩 실패:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAvailableDates();
+  }, []);
+
+  // 선택 불가능한 날짜 필터링 함수
+  const disabledDays = (date: Date) => {
+    // 오늘 이전 날짜
+    if (date < new Date(new Date().setHours(0, 0, 0, 0))) {
+      return true;
+    }
+
+    // 2. 현재 월부터 3개월 범위 밖의 날짜는 선택 불가
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const dateMonth = date.getMonth();
+    const currentYear = today.getFullYear();
+    const dateYear = date.getFullYear();
+
+    // 월 차이 계산 (연도 고려)
+    const monthDiff =
+      (dateYear - currentYear) * 12 + (dateMonth - currentMonth);
+    if (monthDiff < 0 || monthDiff >= 3) {
+      return true;
+    }
+
+    // 3. availableDates에 포함되지 않은 날짜는 선택 불가
+    return !availableSlots.some(
+      (slot) =>
+        format(slot.startTime, "yyyy-MM-dd") === format(date, "yyyy-MM-dd")
+    );
+  };
+
+  // const getSelectedSlot = (slotId: number) => {
+  //   return availableSlots.find(slot => slot.slotId === slotId);
+  // }
+
+  const handelDateSelect = (selectedDate: Date | undefined, field: any) => {
+    if (!selectedDate) {
+      field.onChange(null);
+      setSelectedTimeSlots([]);
+      return;
+    }
+    // 선택한 날짜로 timeSlot 찾기
+    const timeSlots = availableSlots.filter(
+      (slot) =>
+        format(slot.startTime, "yyyy-MM-dd") ===
+        format(selectedDate, "yyyy-MM-dd")
+    );
+    setSelectedTimeSlots(timeSlots);
+
+    if (timeSlots.length > 0) {
+      field.onChange(timeSlots[0].slotId);
+      const startTimes = timeSlots.map((slot) => slot.startTime);
+      setSelectTime(startTimes);
+    }
+  };
+
+  const formatTime = (isoString: string): string => {
+    const date = parseISO(isoString);
+    return format(date, "HH:mm", { locale: ko });
+  };
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => {
+        const selectedDate = selectedTimeSlots[0]?.startTime
+          ? new Date(selectedTimeSlots[0].startTime)
+          : undefined;
+        const selectedSlotInfo = availableSlots.find(
+          (slot) => slot.slotId === field.value
+        );
+        return (
+          <FormItem className="w-full mb-4 flex flex-col">
+            <FormLabel className="text-base text-black font-medium sm:text-lg">
+              {title}
+            </FormLabel>
+            <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full lg:w-80 md:w-48 pl-3 text-left font-normal bg-white text-xs sm:text-sm text-black",
+                      !field.value && "text-muted-foreground "
+                    )}
+                  >
+                    {selectedSlotInfo ? (
+                      <span>
+                        {format(
+                          parseISO(selectedSlotInfo.startTime),
+                          "yyyy년 MM월 dd일 HH시",
+                          { locale: ko }
+                        )}
+                      </span>
+                    ) : (
+                      <span className=" text-xs sm:text-sm text-gray-500">
+                        발표 날짜를 선택하세요
+                      </span>
+                    )}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent
+                className="flex flex-row w-auto p-4 bg-neutral-200 rounded-xl shadow-lg border-0 "
+                align="start"
+              >
+                <div className="bg-neutral-100 rounded-2xl overflow-hidden ">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={(date) => handelDateSelect(date, field)}
+                    locale={ko}
+                    initialFocus
+                    disabled={disabledDays}
+                    className="p-4 w-full"
+                    classNames={{
+                      months:
+                        "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+                      month: "space-y-4",
+                      caption: "flex justify-center pt-1 relative items-center",
+                      caption_label: "text-sm font-medium text-gray-900",
+                      nav: "space-x-1 flex items-center",
+                      nav_button:
+                        "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-7 w-7",
+                      nav_button_previous: "absolute left-1",
+                      nav_button_next: "absolute right-1",
+                      table: "w-full border-collapse space-y-1",
+                      head_row: "flex",
+                      head_cell:
+                        "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+                      row: "flex w-full mt-2",
+                      cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                      day: "inline-flex items-center text-black justify-center rounded-md text-sm font-normal ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 aria-selected:opacity-100 h-9 w-9 hover:bg-gray-100",
+                      day_selected:
+                        "bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-600 focus:text-white rounded-full",
+                      day_today: "bg-gray-100 text-gray-900 font-semibold",
+                      day_outside: "text-muted-foreground opacity-50",
+                      day_disabled:
+                        "text-muted-foreground  text-gray-700 opacity-50 bg-white cursor-not-allowed",
+                      day_range_middle:
+                        "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                      day_hidden: "invisible",
+                    }}
+                  />
+                </div>
+                {selectedDate && (
+                  <div className="flex flex-col justify-start p-6 border-l border-gray-100 min-w-[200px]">
+                    <div className="mb-4 text-center">
+                      <h4 className="font-semibold text-base text-gray-900 mb-4">
+                        시작 시간
+                      </h4>
+                    </div>
+                    <div className="space-y-3">
+                      {selectedTimeSlots.map((slot) => (
+                        <div key={slot.slotId} className="flex items-center">
+                          <input
+                            type="radio"
+                            id={`slot-${slot.slotId}`}
+                            name="timeSlot"
+                            value={slot.slotId.toString()}
+                            checked={field.value === slot.slotId}
+                            onChange={() => field.onChange(slot.slotId)}
+                            className="sr-only"
+                          />
+                          <Label
+                            htmlFor={`slot-${slot.slotId}`}
+                            className={cn(
+                              "flex items-center justify-center w-full px-4 py-3 text-sm font-medium rounded-xl cursor-pointer border-2 transition-all duration-200",
+                              field.value === slot.slotId
+                                ? "bg-blue-600 text-white border-blue-600 shadow-md"
+                                : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100 hover:border-gray-300"
+                            )}
+                          >
+                            <Clock className="w-4 h-4 mr-2" />
+                            <span>{formatTime(slot.startTime)}</span>
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-6">
+                      <Button
+                        type="button"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition-colors duration-200"
+                        onClick={() => {
+                          setPopoverOpen(false)
+                        }}
+                      >
+                        완료
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </PopoverContent>
+            </Popover>
+          </FormItem>
+        );
+      }}
+    />
+  );
+};
 
 export default RegisterDatePicker;
-
-
-// import React, { useEffect, useState } from "react";
-// import { format, parseISO } from "date-fns";
-// import { ko } from "date-fns/locale";
-// import { Clock } from "lucide-react";
-// import {
-// FormControl,
-// FormField,
-// FormItem,
-// FormLabel,
-// FormMessage,
-// } from "@/components/ui/form";
-// // import { Button } from "@/components/ui/button";
-// import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-// import { Control } from "react-hook-form";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { ScrollArea } from "@/components/ui/scroll-area";
-// import { TimeSlot, fetchAvailableSlots } from "@/api";
-
-//     interface GroupedSlots {
-//     [date: string]: TimeSlot[];
-//     }
-
-//     interface AvailableSlotsPickerProps {
-//     control: Control<any>;
-//     }
-
-//     const AvailableSlotsPicker: React.FC<AvailableSlotsPickerProps> = ({ control }) => {
-//     const [isLoading, setIsLoading] = useState(true);
-//     const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
-//     const [groupedSlots, setGroupedSlots] = useState<GroupedSlots>({});
-//     const [selectedDate, setSelectedDate] = useState<string | null>(null);
-//     const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
-//     const [error, setError] = useState<string | null>(null);
-
-//     // Function to fetch available slots from API
-//     const getAvailableSlots = async () => {
-//     setIsLoading(true);
-//     setError(null);
-
-//     try {
-//         const data = await fetchAvailableSlots();
-//         setAvailableSlots(data.results);
-        
-//         // Group slots by date
-//         const grouped = groupSlotsByDate(data.results);
-//         setGroupedSlots(grouped);
-        
-//         // Set first date as selected if available
-//         const dates = Object.keys(grouped);
-//         if (dates.length > 0) {
-//         setSelectedDate(dates[0]);
-//         }
-//     } catch (error) {
-//         console.error("Failed to fetch available slots:", error);
-//         setError("일정을 불러오는데 실패했습니다. 다시 시도해주세요.");
-//     } finally {
-//         setIsLoading(false);
-//     }
-//     };
-
-//     // Fetch available slots on component mount
-//     useEffect(() => {
-//     getAvailableSlots();
-//     }, []);
-
-//     // Group slots by date
-//     const groupSlotsByDate = (slots: TimeSlot[]): GroupedSlots => {
-//     return slots.reduce((acc: GroupedSlots, slot) => {
-//         const date = slot.startTime.split('T')[0]; // Extract date part
-//         if (!acc[date]) {
-//         acc[date] = [];
-//         }
-//         acc[date].push(slot);
-//         return acc;
-//     }, {});
-//     };
-
-//     // Format time from ISO string
-//     const formatTime = (isoString: string): string => {
-//     const date = parseISO(isoString);
-//     return format(date, 'HH:mm', { locale: ko });
-//     };
-
-//     // Get day of week
-//     const getDayOfWeek = (dateString: string): string => {
-//     const date = parseISO(dateString);
-//     return format(date, 'EEE', { locale: ko });
-//     };
-
-//     return (
-//     <FormField
-//         control={control}
-//         name="selectedSlot"
-//         render={({ field }) => (
-//         <FormItem className="w-full">
-//             <FormLabel>발표 일정 선택</FormLabel>
-//             <FormControl>
-//             <div className="border rounded-md p-2">
-//                 {isLoading ? (
-//                 <div className="flex justify-center items-center h-40">
-//                     <div className="flex flex-col items-center gap-2">
-//                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-//                     <span>일정을 불러오는 중...</span>
-//                     </div>
-//                 </div>
-//                 ) : error ? (
-//                 <div className="flex flex-col justify-center items-center h-40 text-destructive">
-//                     <p>{error}</p>
-//                     <Button 
-//                     variant="outline" 
-//                     className="mt-4"
-//                     onClick={() => {
-//                         setIsLoading(true);
-//                         setError(null);
-//                         // Re-fetch available slots
-//                         getAvailableSlots();
-//                     }}
-//                     >
-//                     다시 시도
-//                     </Button>
-//                 </div>
-//                 ) : Object.keys(groupedSlots).length === 0 ? (
-//                 <div className="flex justify-center items-center h-40">
-//                     <p className="text-muted-foreground">현재 예약 가능한 발표 일정이 없습니다.</p>
-//                 </div>
-//                 ) : (
-//                 <div className="space-y-4">
-//                     <Tabs 
-//                     defaultValue={selectedDate || undefined}
-//                     onValueChange={(value) => setSelectedDate(value)}
-//                     className="w-full"
-//                     >
-//                     <ScrollArea className="w-full whitespace-nowrap">
-//                         <TabsList className="w-full justify-start">
-//                         {Object.keys(groupedSlots).map((date) => (
-//                             <TabsTrigger key={date} value={date} className="min-w-24">
-//                             <div className="flex flex-col items-center">
-//                                 <span>{format(parseISO(date), 'd', { locale: ko })}</span>
-//                                 <span className="text-xs">{getDayOfWeek(date)}</span>
-//                             </div>
-//                             </TabsTrigger>
-//                         ))}
-//                         </TabsList>
-//                     </ScrollArea>
-                    
-//                     {Object.entries(groupedSlots).map(([date, slots]) => (
-//                         <TabsContent key={date} value={date} className="mt-4">
-//                         <div className="mb-2">
-//                             <span className="font-medium">
-//                             {format(parseISO(date), 'yyyy년 MM월 dd일', { locale: ko })} ({getDayOfWeek(date)})
-//                             </span>
-//                         </div>
-//                         <RadioGroup
-//                             value={field.value?.slot_id?.toString()}
-//                             onValueChange={(value) => {
-//                             const selectedSlot = availableSlots.find(
-//                                 (slot) => slot.slot_id.toString() === value
-//                             );
-//                             if (selectedSlot) {
-//                                 field.onChange(selectedSlot);
-//                                 setSelectedSlotId(parseInt(value));
-//                             }
-//                             }}
-//                             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2"
-//                         >
-//                             {slots.map((slot) => (
-//                             <div key={slot.slot_id} className="flex">
-//                                 <RadioGroupItem
-//                                 value={slot.slot_id.toString()}
-//                                 id={`slot-${slot.slot_id}`}
-//                                 className="peer sr-only"
-//                                 />
-//                                 <label
-//                                 htmlFor={`slot-${slot.slot_id}`}
-//                                 className="flex items-center justify-center gap-2 w-full p-2 border rounded-md 
-//                                         cursor-pointer hover:bg-gray-100 peer-checked:border-primary peer-checked:bg-primary/10"
-//                                 >
-//                                 <Clock className="h-4 w-4" />
-//                                 <span>{formatTime(slot.startTime)}</span>
-//                                 </label>
-//                             </div>
-//                             ))}
-//                         </RadioGroup>
-                        
-//                         {field.value && (
-//                             <div className="mt-4 p-2 bg-primary/10 rounded-md">
-//                             <p className="text-sm">
-//                                 선택한 발표 일정: {format(parseISO(field.value.startTime), 'yyyy년 MM월 dd일 HH:mm', { locale: ko })}
-//                             </p>
-//                             </div>
-//                         )}
-//                         </TabsContent>
-//                     ))}
-//                     </Tabs>
-//                 </div>
-//                 )}
-//             </div>
-//             </FormControl>
-//             <FormMessage />
-//         </FormItem>
-//         )}
-//     />
-//     );
-//     };
-
-// export default AvailableSlotsPicker;

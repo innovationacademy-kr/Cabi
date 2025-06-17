@@ -17,7 +17,7 @@ function Calendar({
     <DayPicker
       // disabled={[new Date(2025, 4, 10), new Date(2025, 4, 15)]} // 날짜 막기
       showOutsideDays={showOutsideDays}
-      className={cn("bg-white p-3", className)}
+      className={cn("bg-white p-3 rounded", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",

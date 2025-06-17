@@ -25,6 +25,9 @@ const StoreMainPage = lazy(() => import("@/Cabinet/pages/StoreMainPage"));
 const PresentationHomePage = lazy(
   () => import("@/Presentation/pages/HomePage")
 );
+const PresentationDetailPage = lazy(
+  () => import("@/Presentation/pages/PresentationDetailPage")
+);
 const PresentationLayout = lazy(() => import("@/Presentation/pages/Layout"));
 const DetailPage = lazy(() => import("@/Presentation/pages/DetailPage"));
 const AboutUsPage = lazy(() => import("@/Presentation/pages/AboutUsPage"));
@@ -52,7 +55,10 @@ const AdminStorePage = lazy(
   () => import("@/Cabinet/pages/admin/AdminStorePage")
 );
 const AdminPresentationLayout = lazy(
-  () => import("@/Presentation_legacy/pages/admin/AdminLayout")
+  () => import("@/Presentation/pages/admin/adminLayout")
+);
+const AdminPresentationHomePage = lazy(
+  () => import("@/Presentation/pages/admin/AdminHomePage")
 );
 
 function App(): React.ReactElement {
@@ -78,9 +84,12 @@ function App(): React.ReactElement {
             <Route path="store/coin-log" element={<CoinLogPage />} />
             <Route path="agu" element={<AGUPage />} />
           </Route>
-          <Route path="/presentation/" element={<PresentationLayout />}>
-            {/* test */}
+          <Route path="/presentations/" element={<PresentationLayout />}>
             <Route path="home" element={<PresentationHomePage />} />
+            <Route
+              path=":presentationId"
+              element={<PresentationDetailPage />}
+            />
             <Route path="register" element={<RegisterPage />} />
             <Route path="detail" element={<DetailPage />} />
             <Route path="about" element={<AboutUsPage />} />
@@ -98,10 +107,10 @@ function App(): React.ReactElement {
             <Route path="store" element={<AdminStorePage />} />
           </Route>
           <Route
-            path="/admin/presentation/"
+            path="/admin/presentations/"
             element={<AdminPresentationLayout />}
           >
-            <Route path="detail" element={<DetailPage />} />
+            <Route path="home" element={<AdminPresentationHomePage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route

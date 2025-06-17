@@ -28,6 +28,7 @@ const RegisterInput: React.FC<RegisterInputProps> = ({ control, name, title, max
               placeholder={placeholder}
               {...field}
               maxLength={maxLength}
+              disabled={true}
               className="bg-white text-black w-full px-3 py-2 text-sm sm:text-base text-black border rounded-md" 
             />
           </FormControl>
