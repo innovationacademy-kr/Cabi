@@ -1,7 +1,7 @@
 export enum PresentationStatusType {
-  EXPECTED = "EXPECTED",
   DONE = "DONE",
-  CANCEL = "CANCEL",
+  UPCOMING = "UPCOMING",
+  CANCELED = "CANCELED",
 }
 
 export enum PresentationPeriodType {
