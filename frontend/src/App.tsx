@@ -55,7 +55,7 @@ const AdminStorePage = lazy(
   () => import("@/Cabinet/pages/admin/AdminStorePage")
 );
 const AdminPresentationLayout = lazy(
-  () => import("@/Presentation/pages/admin/adminLayout")
+  () => import("@/Presentation/pages/admin/AdminLayout")
 );
 const AdminPresentationHomePage = lazy(
   () => import("@/Presentation/pages/admin/AdminHomePage")
