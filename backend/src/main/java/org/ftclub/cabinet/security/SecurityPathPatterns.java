@@ -19,16 +19,15 @@ public class SecurityPathPatterns {
 	};
 
 	public static final String[] ADMIN_ENDPOINTS = {
-			"/slack/**",
 			"/v4/admin/**",
 			"/v5/admin/**"
 	};
 
 	public static final String[] ADMIN_USER_ENDPOINTS = {
-			"/v4/cabinets/**",
-			"/v4/lent/cabinets/share/cancel/{cabinetId}",
-			"/v5/items",
-			"/v5/presentation/form/invalid-date"
+			"/v4/cabinets/**",  // GET
+			"/v4/lent/cabinets/share/cancel/{cabinetId}",   // PATCH
+			"/v5/items",    // GET
+			"/v5/presentation/form/invalid-date"    // GET
 	};
 
 	public static final String[] AGU_ENDPOINTS = {
