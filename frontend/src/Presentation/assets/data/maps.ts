@@ -13,9 +13,9 @@ import { ReactComponent as HobbyIcon } from "@/Cabinet/assets/images/Presentatio
 import { ReactComponent as JobIcon } from "@/Cabinet/assets/images/PresentationJob.svg";
 
 export const PresentationStatusTypeLabelMap = {
-  [PresentationStatusType.EXPECTED]: "발표예정",
-  [PresentationStatusType.DONE]: "발표완료",
-  [PresentationStatusType.CANCEL]: "발표취소",
+  [PresentationStatusType.DONE]: "발표예정",
+  [PresentationStatusType.UPCOMING]: "발표완료",
+  [PresentationStatusType.CANCELED]: "발표취소",
 };
 
 export const PresentationPeriodTypeNumberLabelMap = {
