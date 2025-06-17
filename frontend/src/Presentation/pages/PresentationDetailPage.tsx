@@ -1,6 +1,6 @@
-import { axiosGetPresentationById } from "@/Presentation/api/axios.custom";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { axiosGetPresentationById } from "@/Presentation/api/axios/axios.custom";
 
 interface IPresentationDetail {
   id: number;
