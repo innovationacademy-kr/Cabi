@@ -30,7 +30,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Slf4j
 @Aspect
 @Component
-@Profile({"prod", "dev"})
+@Profile("prod")
 @RequiredArgsConstructor
 public class AdminApiLogAspect {
 
