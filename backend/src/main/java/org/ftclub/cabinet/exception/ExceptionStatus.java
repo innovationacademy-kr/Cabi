@@ -115,7 +115,14 @@ public enum ExceptionStatus {
 	INVALID_OAUTH_CONNECTION(HttpStatus.BAD_REQUEST, "Oauth 연동 기록이 일치하지 않습니다"),
 	INVALID_CSRF(HttpStatus.FORBIDDEN, "잘못된 형식의 CSRF 토큰입니다"),
 	MISSING_CSRF(HttpStatus.FORBIDDEN, "CSRF 토큰이 존재하지 않습니다"),
-	CODE_ALREADY_SENT(HttpStatus.TOO_MANY_REQUESTS, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다.");
+	CODE_ALREADY_SENT(HttpStatus.TOO_MANY_REQUESTS, "링크가 이미 발송되었습니다. 3분 후 재발송 가능합니다."),
+
+	// presentation s3 image error
+	INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "잘못된 파일 확장자입니다."),
+	S3_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 업로드 중 에러가 발생했습니다."),
+	S3_GET_URL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 URL 생성 중 에러가 발생했습니다."),
+	S3_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 삭제 중 에러가 발생했습니다.");
+
 
 	final private int statusCode;
 	final private String message;

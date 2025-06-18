@@ -9,6 +9,7 @@ public class OauthResult {
 
 	private Long userId;
 	private String roles;
+	private String email;
 	private String redirectionUrl;
 
 	public boolean hasRole(String role) {

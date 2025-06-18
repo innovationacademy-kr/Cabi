@@ -80,7 +80,7 @@ public class AuthFacadeService {
 			OauthResult result, String provider) {
 
 		TokenDto tokens = jwtService.createPairTokens(result.getUserId(), result.getRoles(),
-				provider);
+				result.getEmail(), provider);
 		cookieService.setAccessTokenCookiesToClient(res, tokens, req.getServerName());
 
 		Authentication auth = createAuthenticationForUser(result, provider);
@@ -97,7 +97,7 @@ public class AuthFacadeService {
 	 */
 	public Authentication createAuthenticationForUser(OauthResult user, String provider) {
 		UserInfoDto userInfoDto =
-				new UserInfoDto(user.getUserId(), provider, user.getRoles());
+				new UserInfoDto(user.getUserId(), provider, user.getRoles(), user.getEmail());
 
 		List<GrantedAuthority> authorityList = Stream.of(user.getRoles().split(FtRole.DELIMITER))
 				.map(role -> new SimpleGrantedAuthority(FtRole.ROLE + role))
@@ -217,7 +217,7 @@ public class AuthFacadeService {
 			String name) throws IOException {
 		User user = userQueryService.getUserByName(name);
 
-		OauthResult result = new OauthResult(user.getId(), user.getRoles(),
+		OauthResult result = new OauthResult(user.getId(), user.getRoles(), user.getEmail(),
 				authPolicyService.getMainHomeUrl());
 
 		processAuthentication(req, res, result, "Temporary");

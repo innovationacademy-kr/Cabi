@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.slack.dto;
+package org.ftclub.cabinet.admin.slack.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

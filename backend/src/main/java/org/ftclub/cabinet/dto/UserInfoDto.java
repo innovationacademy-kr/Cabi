@@ -16,16 +16,18 @@ public class UserInfoDto {
 	private final Long userId;
 	private final String oauth;
 	private final String roles;
+	private final String email;
 
 	public static UserInfoDto fromClaims(Claims claims) {
 		Long userId = claims.get(JwtTokenConstants.USER_ID, Long.class);
 		String provider = claims.get(JwtTokenConstants.OAUTH, String.class);
 		String roles = claims.get(JwtTokenConstants.ROLES, String.class);
+		String email = claims.get(JwtTokenConstants.EMAIL, String.class);
 
-		if (userId == null || provider == null || roles == null) {
+		if (userId == null || provider == null || roles == null || email == null) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
-		return new UserInfoDto(userId, provider, roles);
+		return new UserInfoDto(userId, provider, roles, email);
 	}
 
 	public boolean hasRole(String otherRole) {
