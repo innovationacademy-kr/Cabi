@@ -1,15 +1,38 @@
 import RegisterForm from "../components/RegisterForm";
-import banner from '../assets/test.png'
 import { RegisterType } from "../types/enum/presentation.type.enum";
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { axiosGetPresentationById } from "../api/axios.custom";
 
 const RegisterPage = () => {
   const { presentationId } = useParams();
-  console.log(presentationId);
+  const [initialData, setInitialData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const isEditMode = !!presentationId;
 
-  console.log("mode edit : ", isEditMode)
+  useEffect(() => {
+    if (isEditMode && presentationId) {
+      fetchPresentationData(presentationId);
+    }
+  }, [presentationId, isEditMode]);
+  
+  const fetchPresentationData = async (presentationId: string) => {
+    setLoading(true);
+    try {
+      const res = await axiosGetPresentationById(presentationId);
+      setInitialData(res.data);
+    } catch (error) {
+      console.error('신청폼 불러오기 실패:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  if (isEditMode && loading) {
+    return <div>로딩 중...</div>;
+  }
+
   return (
       <div className="w-full h-screen flex flex-col justify-start items-center bg-neutral-100 overflow-y-auto">
           <div className="flex flex-col items-center justify-center bg-blue-500 w-full h-64 flex-shrink-0">
@@ -20,7 +43,7 @@ const RegisterPage = () => {
           <div className="flex-1 w-full flex justify-center">
               <RegisterForm
               type={isEditMode ? RegisterType.EDIT : RegisterType.CREATE}
-              presentationId={presentationId}
+              initialData={initialData}
               />
           </div>
       </div>

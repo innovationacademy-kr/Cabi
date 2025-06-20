@@ -27,6 +27,7 @@ interface RegisterDatePickerProps {
   name: string;
   title: string;
   isEditMode?: boolean;
+  startTime?: string;
 }
 
 // 발표 가능한 시간 슬롯 타입 정의
@@ -46,6 +47,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
   title,
   name,
   isEditMode,
+  startTime,
 }) => {
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]); // CHECK : useRef 사용하는게 더 좋은지
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<TimeSlot[]>([]);
@@ -82,6 +84,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
               ],
             };
             setAvailableSlots(mockData.results);
+            // console.log(availableSlots)
     
           } catch (error) {
             console.error("발표 가능 날짜 로딩 실패:", error);
@@ -160,9 +163,9 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
         const selectedDate = selectedTimeSlots[0]?.startTime
           ? new Date(selectedTimeSlots[0].startTime)
           : undefined;
-        const selectedSlotInfo = availableSlots.find(
+        const selectedSlotInfo = isEditMode ? startTime :availableSlots.find(
           (slot) => slot.slotId === field.value
-        );
+        )?.startTime;
         return (
           <FormItem className="w-full mb-4 flex flex-col">
             <FormLabel className="text-base text-black font-medium sm:text-lg">
@@ -181,9 +184,9 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
                     )}
                   >
                     {selectedSlotInfo ? (
-                      <span>
+                      <span className="text-xs sm:text-sm text-black">
                         {format(
-                          parseISO(selectedSlotInfo.startTime),
+                          parseISO(selectedSlotInfo),
                           "yyyy년 MM월 dd일 HH시",
                           { locale: ko }
                         )}

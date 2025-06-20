@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import RegisterCheckboxContainer from "./RegisterCheckboxContainer";
@@ -32,8 +32,8 @@ const contactSchema = z.object({
     .string()
     .min(10, "내용은 10자 이상이어야 합니다")
     .max(300, "내용은 300자 이하여야 합니다"),
-  isRecordingAllowed: z.boolean().optional(),
-  isPublicAllowed: z.boolean().optional(),
+  recordingAllowed: z.boolean().optional(),
+  publicAllowed: z.boolean().optional(),
   category: z.nativeEnum(PresentationCategoryType),
   thumbnail: z
     .instanceof(File)
@@ -49,12 +49,13 @@ const contactSchema = z.object({
 
 interface RegisterFormProps {
   type: RegisterType;
-  presentationId?: string;
+  initialData?: any;
 }
 //구조분해할당으로 바로 사용
-const RegisterForm = ({ type, presentationId }: RegisterFormProps) => {
+const RegisterForm = ({ type, initialData }: RegisterFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [startTime, setStartTime] = useState("");
 
   const form = useForm<z.infer<typeof contactSchema>>({
     resolver: zodResolver(contactSchema),
@@ -65,12 +66,32 @@ const RegisterForm = ({ type, presentationId }: RegisterFormProps) => {
       summary: "",
       outline: "",
       detail: "",
-      isRecordingAllowed: false,
-      isPublicAllowed: false,
+      recordingAllowed: false,
+      publicAllowed: false,
       category: PresentationCategoryType.DEVELOP,
     },
   });
 
+useEffect(() => {
+  if (initialData?.data) {
+    setStartTime(initialData.data.startTime);
+    // console.log("init : " , initialData.data);
+    const formData = {
+      slotId: 0, 
+      duration: initialData.data.duration,
+      title: initialData.data.title,
+      summary: initialData.data.summary,
+      outline: initialData.data.outline,
+      detail: initialData.data.detail,
+      recordingAllowed: initialData.data.recordingAllowed,
+      publicAllowed: initialData.data.publicAllowed,
+      category: initialData.data.category,
+      thumbnail: undefined, // 파일은 초기화 불가
+    };
+    
+    form.reset(formData);
+  }
+}, [initialData]);
 
 
   async function onSubmit(data: any) {
@@ -109,6 +130,7 @@ const RegisterForm = ({ type, presentationId }: RegisterFormProps) => {
             name="slotId"
             title="날짜"
             isEditMode={type === RegisterType.EDIT}
+            startTime={startTime}
           />
           <RegisterTimeSelect
             control={form.control}
@@ -137,7 +159,6 @@ const RegisterForm = ({ type, presentationId }: RegisterFormProps) => {
           title="한 줄 요약"
           maxLength={MAX_TITLE}
           placeholder="한 줄 요약을 입력하세요"
-          // isEditMode={type === RegisterType.EDIT}
         />
         <RegisterTextarea
           control={form.control}
@@ -170,12 +191,12 @@ const RegisterForm = ({ type, presentationId }: RegisterFormProps) => {
             다음 항목에 대하여 각각의 동의 여부를 선택해주세요.`}
           props={[
             {
-              name: "isRecordingAllowed",
+              name: "recordingAllowed",
               description: "촬영된 영상의 다시보기 제공에 동의합니다.",
               isEditMode : type === RegisterType.EDIT
             },
             {
-              name: "isPublicAllowed",
+              name: "publicAllowed",
               description:
                 "촬영된 영상 및 관련 게시물을 본 기관(42 Seoul) 외부 플랫폼 및 채널에 공개하는 것에 동의합니다.",
             },
