@@ -26,7 +26,7 @@ interface RegisterDatePickerProps {
   control: Control<any>;
   name: string;
   title: string;
-  disable: boolean;
+  isEditMode?: boolean;
 }
 
 // 발표 가능한 시간 슬롯 타입 정의
@@ -45,7 +45,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
   control,
   title,
   name,
-  disable,
+  isEditMode,
 }) => {
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]); // CHECK : useRef 사용하는게 더 좋은지
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<TimeSlot[]>([]);
@@ -53,46 +53,46 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-
-  if (!disable) {
-    useEffect(() => {
-      // API에서 발표 가능한 날짜 가져오기
-      const fetchAvailableDates = async () => {
-        try {
-          setIsLoading(true);
-          // const res = await axiosGetPresentationsSlot();
-          // setAvailableSlots(res.data);
-          // console.log(availableSlots);
-  
-          //mockData CHECK : api 완성되면 지우기
-          const mockData: ApiResponse = {
-            results: [
-              { slotId: 5, startTime: "2025-08-15T12:00:00" },
-              { slotId: 6, startTime: "2025-08-15T13:00:00" },
-              { slotId: 7, startTime: "2025-08-15T14:00:00" },
-              { slotId: 8, startTime: "2025-08-29T12:00:00" },
-              { slotId: 9, startTime: "2025-08-05T12:00:00" },
-              { slotId: 10, startTime: "2025-08-12T14:00:00" },
-              { slotId: 11, startTime: "2025-08-19T12:00:00" },
-              { slotId: 12, startTime: "2025-08-26T13:00:00" },
-              { slotId: 13, startTime: "2025-07-03T12:00:00" },
-              { slotId: 14, startTime: "2025-07-10T14:00:00" },
-              { slotId: 15, startTime: "2025-07-17T13:00:00" },
-              { slotId: 16, startTime: "2025-07-24T12:00:00" },
-              { slotId: 17, startTime: "2025-07-31T12:00:00" },
-            ],
-          };
-          setAvailableSlots(mockData.results);
-  
-        } catch (error) {
-          console.error("발표 가능 날짜 로딩 실패:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      fetchAvailableDates();
+  useEffect(() => {
+      if (!isEditMode) {
+        // API에서 발표 가능한 날짜 가져오기
+        const fetchAvailableDates = async () => {
+          try {
+            setIsLoading(true);
+            // const res = await axiosGetPresentationsSlot();
+            // setAvailableSlots(res.data);
+            // console.log(availableSlots);
+    
+            //mockData CHECK : api 완성되면 지우기
+            const mockData: ApiResponse = {
+              results: [
+                { slotId: 5, startTime: "2025-08-15T12:00:00" },
+                { slotId: 6, startTime: "2025-08-15T13:00:00" },
+                { slotId: 7, startTime: "2025-08-15T14:00:00" },
+                { slotId: 8, startTime: "2025-08-29T12:00:00" },
+                { slotId: 9, startTime: "2025-08-05T12:00:00" },
+                { slotId: 10, startTime: "2025-08-12T14:00:00" },
+                { slotId: 11, startTime: "2025-08-19T12:00:00" },
+                { slotId: 12, startTime: "2025-08-26T13:00:00" },
+                { slotId: 13, startTime: "2025-07-03T12:00:00" },
+                { slotId: 14, startTime: "2025-07-10T14:00:00" },
+                { slotId: 15, startTime: "2025-07-17T13:00:00" },
+                { slotId: 16, startTime: "2025-07-24T12:00:00" },
+                { slotId: 17, startTime: "2025-07-31T12:00:00" },
+              ],
+            };
+            setAvailableSlots(mockData.results);
+    
+          } catch (error) {
+            console.error("발표 가능 날짜 로딩 실패:", error);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+        fetchAvailableDates();
+      }
     }, []);
-  }
+
 
   // 선택 불가능한 날짜 필터링 함수
   const disabledDays = (date: Date) => {
@@ -151,8 +151,6 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
   };
 
 
-// 시작시간을 props로 받아야함
-// disable 대신 사용할것인지?
 
   return (
     <FormField
@@ -174,11 +172,12 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
-                    disabled={true}
+                    disabled={isEditMode}
                     variant={"outline"}
                     className={cn(
-                      "w-full lg:w-80 md:w-48 pl-3 text-left font-normal bg-white text-xs sm:text-sm text-black",
-                      !field.value && "text-muted-foreground "
+                      "w-full lg:w-80 md:w-48 pl-3 text-left font-normal bg-white text-xs sm:text-sm text-black ",
+                      !field.value && "text-muted-foreground ",
+                      isEditMode && "!cursor-not-allowed"
                     )}
                   >
                     {selectedSlotInfo ? (

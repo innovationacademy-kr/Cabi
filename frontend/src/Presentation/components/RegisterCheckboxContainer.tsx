@@ -6,6 +6,7 @@ import RegisterCheckBox from "./RegisterCheckbox";
 interface CheckBoxProps {
   name: string;
   description: string;
+  isEditMode?: boolean
 }
   interface RegisterCheckboxContainerProps {
     control: Control<any>;
@@ -30,6 +31,7 @@ const RegisterCheckboxContainer: React.FC<RegisterCheckboxContainerProps> = ({co
                 control={control}
                 name={checkbox.name}
                 description={checkbox.description}
+                isEditMode={checkbox.isEditMode}
                 />
             ))}
         </div>

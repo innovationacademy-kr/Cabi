@@ -6,25 +6,22 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import RegisterCheckboxContainer from "./RegisterCheckboxContainer";
-// import RegisterCheckbox from "./RegisterCheckbox";
 import RegisterDatePicker from "./RegisterDatePicker";
 import RegisterImageUpload from "./RegisterImageUpload";
 // 로딩 아이콘
 import RegisterInput from "./RegisterInput";
 import RegisterRadioGroup from "./RegisterRadioGroup";
 import RegisterTextarea from "./RegisterTextarea";
-// import { PresentationTimeKey } from "@/Presentation_legacy/pages/RegisterPage";
 import { RegisterTimeSelect } from "./RegisterTimeSelect";
-import { Categories, RegisterType, TimeType } from "../types/enum/register.type.enum";
+import { PresentationCategoryType, RegisterType, PresentationPeriodType } from "../types/enum/presentation.type.enum";
 
 const MAX_TITLE = 20;
 const MAX_CONTENT = 300;
 
 
-
 const contactSchema = z.object({
   slotId: z.number({}),
-  duration: z.nativeEnum(TimeType),
+  duration: z.nativeEnum(PresentationPeriodType),
   title: z.string().max(20, "제목은 20자 이하여야 합니다"),
   summary: z.string().max(20, "한 줄 요약은 20자 이하여야 합니다"),
   outline: z
@@ -37,7 +34,7 @@ const contactSchema = z.object({
     .max(300, "내용은 300자 이하여야 합니다"),
   isRecordingAllowed: z.boolean().optional(),
   isPublicAllowed: z.boolean().optional(),
-  category: z.nativeEnum(Categories),
+  category: z.nativeEnum(PresentationCategoryType),
   thumbnail: z
     .instanceof(File)
     .optional()
@@ -47,20 +44,15 @@ const contactSchema = z.object({
 });
 
 
-// const axiosPresentationUrl = "/v6/presentations";
-// const axiosPresentation = async (): Promise<any> => {
-//   try {
-//     const response = await 
-//   }
-// }
 
 
 
 interface RegisterFormProps {
   type: RegisterType;
+  presentationId?: string;
 }
 //구조분해할당으로 바로 사용
-const RegisterForm = ({ type }: RegisterFormProps) => {
+const RegisterForm = ({ type, presentationId }: RegisterFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -68,14 +60,14 @@ const RegisterForm = ({ type }: RegisterFormProps) => {
     resolver: zodResolver(contactSchema),
     defaultValues: {
       slotId: 0,
-      duration: TimeType.HALF, // 시간 기본값
+      duration: PresentationPeriodType.HALF, // 시간 기본값
       title: "",
       summary: "",
       outline: "",
       detail: "",
       isRecordingAllowed: false,
       isPublicAllowed: false,
-      category: Categories.DEVELOP,
+      category: PresentationCategoryType.DEVELOP,
     },
   });
 
@@ -101,6 +93,10 @@ const RegisterForm = ({ type }: RegisterFormProps) => {
     //   setIsSubmitting(false);
     // }
   }
+
+
+
+
   return (
     <Form {...form}>
       <form
@@ -112,17 +108,20 @@ const RegisterForm = ({ type }: RegisterFormProps) => {
             control={form.control}
             name="slotId"
             title="날짜"
-          ></RegisterDatePicker>
+            isEditMode={type === RegisterType.EDIT}
+          />
           <RegisterTimeSelect
             control={form.control}
             name="duration"
             title="소요 시간"
+            isEditMode={type === RegisterType.EDIT}
           />
         </div>
         <RegisterRadioGroup
           control={form.control}
           name="category"
           title="카테고리"
+          isEditMode={type === RegisterType.EDIT}
         />
         <RegisterInput
           control={form.control}
@@ -130,6 +129,7 @@ const RegisterForm = ({ type }: RegisterFormProps) => {
           title="제목"
           maxLength={MAX_TITLE}
           placeholder="제목을 입력하세요"
+          isEditMode={type === RegisterType.EDIT}
         />
         <RegisterInput
           control={form.control}
@@ -137,6 +137,7 @@ const RegisterForm = ({ type }: RegisterFormProps) => {
           title="한 줄 요약"
           maxLength={MAX_TITLE}
           placeholder="한 줄 요약을 입력하세요"
+          // isEditMode={type === RegisterType.EDIT}
         />
         <RegisterTextarea
           control={form.control}
@@ -171,6 +172,7 @@ const RegisterForm = ({ type }: RegisterFormProps) => {
             {
               name: "isRecordingAllowed",
               description: "촬영된 영상의 다시보기 제공에 동의합니다.",
+              isEditMode : type === RegisterType.EDIT
             },
             {
               name: "isPublicAllowed",

@@ -19,12 +19,14 @@ interface RegisterTimeSelectProps {
   control: Control<any>;
   name: string;
   title: string;
+  isEditMode?: boolean;
 }
 
 export const RegisterTimeSelect: React.FC<RegisterTimeSelectProps> = ({
   control,
   title,
   name,
+  isEditMode,
 }) => {
   return (
     <FormField
@@ -37,7 +39,10 @@ export const RegisterTimeSelect: React.FC<RegisterTimeSelectProps> = ({
           </FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
-              <SelectTrigger className="w-full lg:w-80 md:w-48 px-3 py-2 text-sm sm:text-base border rounded-md">
+              <SelectTrigger 
+              disabled={isEditMode}
+              className="w-full lg:w-80 md:w-48 px-3 py-2 text-sm sm:text-base border rounded-md">
+
                 <SelectValue placeholder="Select a verified email to display" />
               </SelectTrigger>
             </FormControl>

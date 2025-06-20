@@ -1,8 +1,15 @@
 import RegisterForm from "../components/RegisterForm";
 import banner from '../assets/test.png'
-import { RegisterType } from "../types/enum/register.type.enum";
+import { RegisterType } from "../types/enum/presentation.type.enum";
+import { useParams } from "react-router-dom";
 
 const RegisterPage = () => {
+  const { presentationId } = useParams();
+  console.log(presentationId);
+
+  const isEditMode = !!presentationId;
+
+  console.log("mode edit : ", isEditMode)
   return (
       <div className="w-full h-screen flex flex-col justify-start items-center bg-neutral-100 overflow-y-auto">
           <div className="flex flex-col items-center justify-center bg-blue-500 w-full h-64 flex-shrink-0">
@@ -12,7 +19,8 @@ const RegisterPage = () => {
           </div>
           <div className="flex-1 w-full flex justify-center">
               <RegisterForm
-              type={RegisterType.CREATE}
+              type={isEditMode ? RegisterType.EDIT : RegisterType.CREATE}
+              presentationId={presentationId}
               />
           </div>
       </div>

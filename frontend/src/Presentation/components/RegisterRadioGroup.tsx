@@ -15,12 +15,14 @@ interface RegisterRadioGroupProps {
   control: Control<any>;
   name: string;
   title: string;
+  isEditMode?: boolean;
 }
 
 const RegisterRadioGroup: React.FC<RegisterRadioGroupProps> = ({
   control,
   name,
   title,
+  isEditMode,
 }) => {
   return (
     <FormField
@@ -34,6 +36,7 @@ const RegisterRadioGroup: React.FC<RegisterRadioGroupProps> = ({
               onValueChange={field.onChange}
               value={field.value}
               className="flex flex-wrap gap-3"
+              disabled={isEditMode}
             >
               {Object.entries(PRESENTATION_CATEGORY_LABELS).map(([value, label]) => (
                 <div key={value} className="flex items-center ">
