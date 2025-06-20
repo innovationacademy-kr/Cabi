@@ -18,13 +18,15 @@ import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 import { CalendarIcon, Clock } from "lucide-react";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Control } from "react-hook-form";
+import { axiosGetPresentationsSlot } from "../api/axios.custom";
 
 interface RegisterDatePickerProps {
   control: Control<any>;
   name: string;
   title: string;
+  disable: boolean;
 }
 
 // 발표 가능한 시간 슬롯 타입 정의
@@ -38,55 +40,59 @@ interface ApiResponse {
   results: TimeSlot[];
 }
 
+
 const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
   control,
   title,
   name,
+  disable,
 }) => {
-  const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
+  const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]); // CHECK : useRef 사용하는게 더 좋은지
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<TimeSlot[]>([]);
   const [selectTime, setSelectTime] = useState<string[]>([]);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // API에서 발표 가능한 날짜 가져오기
-    const fetchAvailableDates = async () => {
-      try {
-        setIsLoading(true);
 
-        // 실제 API 호출 - 여기서는 예시로 모킹합니다
-        // const response = await fetch('/api/available-dates');
-        // const data: ApiResponse = await response.json();
-
-        // 모의 데이터 (실제 구현시 위의 fetch 사용)
-        const mockData: ApiResponse = {
-          results: [
-            { slotId: 5, startTime: "2025-06-15T12:00:00" },
-            { slotId: 6, startTime: "2025-06-15T13:00:00" },
-            { slotId: 7, startTime: "2025-06-15T14:00:00" },
-            { slotId: 8, startTime: "2025-05-29T12:00:00" },
-            { slotId: 9, startTime: "2025-06-05T12:00:00" },
-            { slotId: 10, startTime: "2025-06-12T14:00:00" },
-            { slotId: 11, startTime: "2025-06-19T12:00:00" },
-            { slotId: 12, startTime: "2025-06-26T13:00:00" },
-            { slotId: 13, startTime: "2025-07-03T12:00:00" },
-            { slotId: 14, startTime: "2025-07-10T14:00:00" },
-            { slotId: 15, startTime: "2025-07-17T13:00:00" },
-            { slotId: 16, startTime: "2025-07-24T12:00:00" },
-            { slotId: 17, startTime: "2025-07-31T12:00:00" },
-          ],
-        };
-        setAvailableSlots(mockData.results);
-      } catch (error) {
-        console.error("발표 가능 날짜 로딩 실패:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchAvailableDates();
-  }, []);
+  if (!disable) {
+    useEffect(() => {
+      // API에서 발표 가능한 날짜 가져오기
+      const fetchAvailableDates = async () => {
+        try {
+          setIsLoading(true);
+          // const res = await axiosGetPresentationsSlot();
+          // setAvailableSlots(res.data);
+          // console.log(availableSlots);
+  
+          //mockData CHECK : api 완성되면 지우기
+          const mockData: ApiResponse = {
+            results: [
+              { slotId: 5, startTime: "2025-08-15T12:00:00" },
+              { slotId: 6, startTime: "2025-08-15T13:00:00" },
+              { slotId: 7, startTime: "2025-08-15T14:00:00" },
+              { slotId: 8, startTime: "2025-08-29T12:00:00" },
+              { slotId: 9, startTime: "2025-08-05T12:00:00" },
+              { slotId: 10, startTime: "2025-08-12T14:00:00" },
+              { slotId: 11, startTime: "2025-08-19T12:00:00" },
+              { slotId: 12, startTime: "2025-08-26T13:00:00" },
+              { slotId: 13, startTime: "2025-07-03T12:00:00" },
+              { slotId: 14, startTime: "2025-07-10T14:00:00" },
+              { slotId: 15, startTime: "2025-07-17T13:00:00" },
+              { slotId: 16, startTime: "2025-07-24T12:00:00" },
+              { slotId: 17, startTime: "2025-07-31T12:00:00" },
+            ],
+          };
+          setAvailableSlots(mockData.results);
+  
+        } catch (error) {
+          console.error("발표 가능 날짜 로딩 실패:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchAvailableDates();
+    }, []);
+  }
 
   // 선택 불가능한 날짜 필터링 함수
   const disabledDays = (date: Date) => {
@@ -116,9 +122,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
     );
   };
 
-  // const getSelectedSlot = (slotId: number) => {
-  //   return availableSlots.find(slot => slot.slotId === slotId);
-  // }
+
 
   const handelDateSelect = (selectedDate: Date | undefined, field: any) => {
     if (!selectedDate) {
@@ -145,6 +149,11 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
     const date = parseISO(isoString);
     return format(date, "HH:mm", { locale: ko });
   };
+
+
+// 시작시간을 props로 받아야함
+// disable 대신 사용할것인지?
+
   return (
     <FormField
       control={control}
@@ -165,6 +174,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
+                    disabled={true}
                     variant={"outline"}
                     className={cn(
                       "w-full lg:w-80 md:w-48 pl-3 text-left font-normal bg-white text-xs sm:text-sm text-black",

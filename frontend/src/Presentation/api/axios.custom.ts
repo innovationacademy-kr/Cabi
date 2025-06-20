@@ -15,3 +15,12 @@ export const axiosGetPresentationById = async (
 };
 
 
+const axiosGetPresentationsSlotURL = "/v6/presentations/slots";
+export const axiosGetPresentationsSlot = async () => {
+  try {
+    const response = await instance.get(axiosGetPresentationsSlotURL);
+    return response;
+  } catch (error){
+    throw error;
+  }
+}

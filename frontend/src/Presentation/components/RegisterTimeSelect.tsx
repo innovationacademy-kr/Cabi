@@ -43,7 +43,7 @@ export const RegisterTimeSelect: React.FC<RegisterTimeSelectProps> = ({
             </FormControl>
             <SelectContent>
               {Object.entries(PRESENTATION_PERIOD_LABELS).filter(([value]) => value !== PresentationPeriodType.NONE).map(([value, label]) => (
-                <SelectItem value={value}>
+                <SelectItem key={value} value={value}>
                   {label}
                 </SelectItem>
               ))}
