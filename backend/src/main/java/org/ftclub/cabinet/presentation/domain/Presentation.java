@@ -147,9 +147,6 @@ public class Presentation {
 
 	/**
 	 * 프레젠테이션을 수정합니다.
-	 * <p>
-	 * PresentationUpdateData 내부의 toUpdate 필드에 따라 수정합니다.
-	 * </p>
 	 *
 	 * @param data 프레젠테이션 수정 데이터
 	 */
@@ -173,11 +170,14 @@ public class Presentation {
 	 * </p>
 	 */
 	public void cancel() {
+		// set slot to null
+		this.slot.cancelPresentation();
+		this.slot = null;
+		// set canceled flag to true
 		if (this.canceled) {
 			throw ExceptionStatus.PRESENTATION_ALREADY_CANCELED.asDomainException();
 		}
 		this.canceled = true;
-		this.slot = null;
 	}
 
 	/**

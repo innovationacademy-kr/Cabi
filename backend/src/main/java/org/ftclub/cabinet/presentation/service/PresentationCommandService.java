@@ -90,12 +90,10 @@ public class PresentationCommandService {
 	 * @param presentationId 프레젠테이션 ID
 	 */
 	public void cancelPresentation(Long presentationId) {
-		Presentation presentation = queryService.findPresentationByIdWithSlot(presentationId);
+		Presentation presentation = queryService.findPresentationById(presentationId);
 		if (presentation.isCanceled()) {
 			throw ExceptionStatus.PRESENTATION_ALREADY_CANCELED.asServiceException();
 		}
-		PresentationSlot slot = presentation.getSlot();
-		slot.cancelPresentation();
 		presentation.cancel();
 	}
 
