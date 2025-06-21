@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.presentation.service;
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
@@ -100,10 +101,10 @@ public class PresentationPolicyService {
 		if (updateForm.getCategory() != origin.getCategory()) {
 			throw ExceptionStatus.PRESENTATION_UPDATE_CATEGORY_DENIED.asServiceException();
 		}
-		if (!updateForm.getTitle().equals(origin.getTitle())) {
+		if (!Objects.equals(updateForm.getTitle(), origin.getTitle())) {
 			throw ExceptionStatus.PRESENTATION_UPDATE_TITLE_DENIED.asServiceException();
 		}
-		if (!updateForm.getVideoLink().equals(origin.getVideoLink())) {
+		if (!Objects.equals(updateForm.getVideoLink(), origin.getVideoLink())) {
 			throw ExceptionStatus.PRESENTATION_UPDATE_VIDEO_LINK_DENIED.asServiceException();
 		}
 		if (updateForm.isRecordingAllowed() != origin.isRecordingAllowed()) {
