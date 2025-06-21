@@ -52,10 +52,8 @@ public class PresentationFacadeService {
 		PresentationSlot slot = slotRepository.findById(form.getSlotId())
 				.orElseThrow(ExceptionStatus.SLOT_NOT_FOUND::asServiceException);
 
-		// register presentation and assign presentation to slot
-		Presentation newPresentation =
-				commandService.createPresentation(user, form, slot, thumbnailS3Key);
-		slot.assignPresentation(newPresentation);
+		// register presentation
+		commandService.createPresentation(user, form, slot, thumbnailS3Key);
 	}
 
 	/**

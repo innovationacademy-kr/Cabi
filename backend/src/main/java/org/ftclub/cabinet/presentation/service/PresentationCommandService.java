@@ -30,11 +30,11 @@ public class PresentationCommandService {
 	 * @param thumbnailS3Key 썸네일 이미지 S3 키
 	 * @return 생성된 프레젠테이션
 	 */
-	public Presentation createPresentation(User user,
+	public void createPresentation(User user,
 			PresentationRegisterServiceDto form,
 			PresentationSlot slot,
 			String thumbnailS3Key) {
-		// create
+		// create presentation and assign slot
 		Presentation newPresentation = Presentation.of(
 				user,
 				form.getCategory(),
@@ -49,7 +49,7 @@ public class PresentationCommandService {
 				slot
 		);
 		// save
-		return repository.save(newPresentation);
+		repository.save(newPresentation);
 	}
 
 	/**

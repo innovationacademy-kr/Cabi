@@ -105,6 +105,7 @@ public class Presentation {
 		if (!presentation.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
+		slot.assignPresentation(presentation);
 		return presentation;
 	}
 
