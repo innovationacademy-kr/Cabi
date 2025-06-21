@@ -2,8 +2,8 @@ package org.ftclub.cabinet.mapper;
 
 import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
 import org.ftclub.cabinet.presentation.domain.Presentation;
+import org.ftclub.cabinet.presentation.domain.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
-import org.ftclub.cabinet.presentation.dto.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

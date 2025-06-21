@@ -1,9 +1,7 @@
-package org.ftclub.cabinet.presentation.dto;
+package org.ftclub.cabinet.presentation.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.ftclub.cabinet.presentation.domain.Category;
-import org.ftclub.cabinet.presentation.domain.Duration;
 
 /**
  * 프레젠테이션 도메인 수정 DTO
