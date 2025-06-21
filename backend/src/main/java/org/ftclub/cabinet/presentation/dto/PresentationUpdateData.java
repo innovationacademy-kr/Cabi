@@ -1,19 +1,12 @@
 package org.ftclub.cabinet.presentation.dto;
 
-import java.util.HashSet;
-import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Duration;
 
 /**
- * 프레젠테이션 수정을 위한 공통 DTO
- * <p>
- * USER-toUpdate: summary, outline, detail, publicAllowed
- * </p>
- * <p>
- * ADMIN-toUpdate: USER-toUpdate + { title, category, duration, videoLink, recordingAllowed }
+ * 프레젠테이션 도메인 수정 DTO
  */
 @Getter
 @Builder
@@ -24,6 +17,7 @@ public class PresentationUpdateData {
 	private final String outline;
 	private final String detail;
 	private final boolean publicAllowed;
+	private final String thumbnailS3Key;
 
 	// --- [ADMIN] field ---
 	private final Duration duration;
@@ -31,8 +25,4 @@ public class PresentationUpdateData {
 	private final String title;
 	private final String videoLink;
 	private final boolean recordingAllowed;
-
-	// toUpdate fields hashSet for easy comparison
-	@Builder.Default
-	private final Set<String> toUpdate = new HashSet<>();
 }
