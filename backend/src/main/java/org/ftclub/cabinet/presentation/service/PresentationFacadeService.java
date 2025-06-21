@@ -133,13 +133,10 @@ public class PresentationFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public List<PresentationMyListDto> getMyPresentations(Long userId) {
-		// check verification
-		policyService.verifyMyPresentationsAccess(userId);
-
 		// get user's presentations
 		List<Presentation> presentations =
 				queryService.findPresentationsByUserId(userId);
-		
+
 		return presentations.stream()
 				.map(presentationMapper::toPresentationMyListDto)
 				.collect(Collectors.toList());

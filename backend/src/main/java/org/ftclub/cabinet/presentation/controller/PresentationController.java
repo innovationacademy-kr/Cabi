@@ -128,9 +128,8 @@ public class PresentationController {
 	@GetMapping("/me/histories")
 	public DataListResponseDto<PresentationMyListDto> getMyPresentations(
 			@AuthenticationPrincipal UserInfoDto user) {
-		Long userId = user != null ? user.getUserId() : null;
 		List<PresentationMyListDto> myPresentations =
-				presentationFacadeService.getMyPresentations(userId);
+				presentationFacadeService.getMyPresentations(user.getUserId());
 		return new DataListResponseDto<>(myPresentations);
 	}
 }
