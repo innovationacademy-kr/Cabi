@@ -3,6 +3,7 @@ package org.ftclub.cabinet.presentation.controller;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.presentation.dto.DataResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentRequestDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceDeleteDto;
@@ -35,7 +36,7 @@ public class PresentationCommentController {
 	) {
 		List<PresentationCommentResponseDto> commentList =
 				presentationCommentService.getCommentsByPresentationId(
-						user.getUserId(),
+						(user != null) ? user.getUserId() : null,
 						presentationId
 				);
 
@@ -59,13 +60,13 @@ public class PresentationCommentController {
 	}
 
 	@PatchMapping("/{commentId}")
-	public PresentationCommentResponseDto updatePresentationComment(
+	public DataResponseDto<PresentationCommentResponseDto> updatePresentationComment(
 			@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long presentationId,
 			@PathVariable Long commentId,
 			@RequestBody @Valid PresentationCommentRequestDto requestDto
 	) {
-		return presentationCommentService.updatePresentationComment(
+		PresentationCommentResponseDto response = presentationCommentService.updatePresentationComment(
 				new PresentationCommentServiceUpdateDto(
 						user.getUserId(),
 						presentationId,
@@ -73,6 +74,8 @@ public class PresentationCommentController {
 						requestDto.getDetail()
 				)
 		);
+
+		return new DataResponseDto<>(response);
 	}
 
 	@DeleteMapping("/{commentId}")
