@@ -140,6 +140,12 @@ public enum ExceptionStatus {
 	CANCELED_PRESENTATION(HttpStatus.FORBIDDEN, "취소된 발표입니다.\n해당 글은 작성자만 확인할 수 있습니다."),
 	NOT_PRESENTATION_CREATOR(HttpStatus.FORBIDDEN, "작성자만 수정할 수 있습니다."),
 	CANCELED_PRESENTATION_EDIT_DENIED(HttpStatus.FORBIDDEN, "취소된 발표는 수정할 수 없습니다."),
+	PRESENTATION_UPDATE_DURATION_DENIED(HttpStatus.FORBIDDEN, "발표 시간은 수정할 수 없습니다."),
+	PRESENTATION_UPDATE_CATEGORY_DENIED(HttpStatus.FORBIDDEN, "발표 카테고리는 수정할 수 없습니다."),
+	PRESENTATION_UPDATE_TITLE_DENIED(HttpStatus.FORBIDDEN, "발표 제목은 수정할 수 없습니다."),
+	PRESENTATION_UPDATE_VIDEO_LINK_DENIED(HttpStatus.FORBIDDEN, "발표 영상 링크는 수정할 수 없습니다."),
+	PRESENTATION_UPDATE_RECORDING_ALLOWED_DENIED(HttpStatus.FORBIDDEN, "발표 녹화 허용 여부는 수정할 수 없습니다."),
+
 
 	// REMOVE (just for conflict)
 	REMOVE(HttpStatus.BAD_REQUEST, "삭제할 내용(오로지 마지막 ; 작성 용)");

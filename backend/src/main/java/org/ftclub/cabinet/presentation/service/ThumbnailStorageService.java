@@ -173,4 +173,23 @@ public class ThumbnailStorageService {
 			throw new ServiceException(ExceptionStatus.S3_DELETE_FAILED);
 		}
 	}
+
+	/**
+	 * 프레젠테이션의 썸네일을 수정합니다.
+	 * <p>
+	 * 변경된 이미지를 업로드하고 S3 키를 업데이트합니다.
+	 * </p>
+	 *
+	 * @param oldThumbnailS3Key 기존 썸네일 이미지의 S3 key
+	 * @param thumbnail         썸네일 이미지 파일
+	 */
+	public String updateThumbnail(String oldThumbnailS3Key, MultipartFile thumbnail)
+			throws IOException {
+		// remove old thumbnail if it exists
+		if (oldThumbnailS3Key != null) {
+			deleteImage(oldThumbnailS3Key);
+		}
+		// upload new thumbnail and update key
+		return uploadImage(thumbnail);
+	}
 }

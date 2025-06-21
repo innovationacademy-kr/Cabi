@@ -40,21 +40,6 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 	Optional<Presentation> findByIdJoinUser(@Param("presentationId") Long presentationId);
 
 	/**
-	 * ID에 해당하는 프레젠테이션을 조회합니다.
-	 * <p>
-	 * Slot도 Join 연산으로 함께 조회한다.
-	 * </p>
-	 *
-	 * @param presentationId 프레젠테이션 ID
-	 * @return 프레젠테이션
-	 */
-	@Query("SELECT p "
-			+ "FROM Presentation p "
-			+ "LEFT JOIN FETCH p.slot "
-			+ "WHERE p.id = :presentationId")
-	Optional<Presentation> findByIdJoinSlot(@Param("presentationId") Long presentationId);
-
-	/**
 	 * userId에 해당하는 프레젠테이션들을 최신순으로 조회합니다.
 	 *
 	 * @param userId 사용자 ID

@@ -105,6 +105,7 @@ public class Presentation {
 		if (!presentation.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
+		slot.assignPresentation(presentation);
 		return presentation;
 	}
 
@@ -147,98 +148,20 @@ public class Presentation {
 
 	/**
 	 * 프레젠테이션을 수정합니다.
-	 * <p>
-	 * PresentationUpdateData 내부의 toUpdate 필드에 따라 수정합니다.
-	 * </p>
 	 *
 	 * @param data 프레젠테이션 수정 데이터
 	 */
 	public void update(PresentationUpdateData data) {
-		if (data.getToUpdate().contains("category")) {
-			changeCategory(data.getCategory());
-		}
-		if (data.getToUpdate().contains("duration")) {
-			changeDuration(data.getDuration());
-		}
-		if (data.getToUpdate().contains("title")) {
-			changeTitle(data.getTitle());
-		}
-		if (data.getToUpdate().contains("summary")) {
-			changeSummary(data.getSummary());
-		}
-		if (data.getToUpdate().contains("outline")) {
-			changeOutline(data.getOutline());
-		}
-		if (data.getToUpdate().contains("detail")) {
-			changeDetail(data.getDetail());
-		}
-		if (data.getToUpdate().contains("videoLink")) {
-			changeVideoLink(data.getVideoLink());
-		}
-		if (data.getToUpdate().contains("recordingAllowed")) {
-			changeRecordingAllowed(data.isRecordingAllowed());
-		}
-		if (data.getToUpdate().contains("publicAllowed")) {
-			changePublicAllowed(data.isPublicAllowed());
-		}
-	}
-
-	public void changeCategory(Category category) {
-		if (category == null) {
-			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
-		}
-		this.category = category;
-	}
-
-	public void changeDuration(Duration duration) {
-		if (duration == null) {
-			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
-		}
-		this.duration = duration;
-	}
-
-	public void changeTitle(String title) {
-		if (title == null || title.isBlank() || title.length() > 50) {
-			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
-		}
-		this.title = title;
-	}
-
-	public void changeSummary(String summary) {
-		if (summary == null || summary.isBlank() || summary.length() > 100) {
-			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
-		}
-		this.summary = summary;
-	}
-
-	public void changeOutline(String outline) {
-		if (outline == null || outline.isBlank() || outline.length() > 500) {
-			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
-		}
-		this.outline = outline;
-	}
-
-	public void changeDetail(String detail) {
-		if (detail == null || detail.isBlank() || detail.length() > 10000) {
-			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
-		}
-		this.detail = detail;
-	}
-
-	public void changeThumbnailS3Key(String thumbnailS3Key) {
-		this.thumbnailS3Key = thumbnailS3Key;
-	}
-
-	public void changeVideoLink(String videoLink) {
-		this.videoLink = videoLink;
-	}
-
-	public void changeRecordingAllowed(boolean recordingAllowed) {
-		this.recordingAllowed = recordingAllowed;
-	}
-
-	public void changePublicAllowed(boolean publicAllowed) {
-		this.publicAllowed = publicAllowed;
+		this.category = data.getCategory();
+		this.duration = data.getDuration();
+		this.title = data.getTitle();
+		this.summary = data.getSummary();
+		this.outline = data.getOutline();
+		this.detail = data.getDetail();
+		this.videoLink = data.getVideoLink();
+		this.recordingAllowed = data.isRecordingAllowed();
+		this.publicAllowed = data.isPublicAllowed();
+		this.thumbnailS3Key = data.getThumbnailS3Key();
 	}
 
 	/**
@@ -248,11 +171,14 @@ public class Presentation {
 	 * </p>
 	 */
 	public void cancel() {
+		// set slot to null
+		this.slot.cancelPresentation();
+		this.slot = null;
+		// set canceled flag to true
 		if (this.canceled) {
 			throw ExceptionStatus.PRESENTATION_ALREADY_CANCELED.asDomainException();
 		}
 		this.canceled = true;
-		this.slot = null;
 	}
 
 	/**

@@ -55,19 +55,6 @@ public class PresentationQueryService {
 	}
 
 	/**
-	 * presentationId로 프레젠테이션을 조회합니다.
-	 * <p>
-	 * Slot도 Join 연산으로 함께 조회한다.
-	 * </p>
-	 *
-	 * @param presentationId 프레젠테이션 ID
-	 */
-	public Presentation findPresentationByIdWithSlot(Long presentationId) {
-		return presentationRepository.findByIdJoinSlot(presentationId)
-				.orElseThrow(ExceptionStatus.PRESENTATION_NOT_FOUND::asServiceException);
-	}
-
-	/**
 	 * userId로 프레젠테이션을 조회합니다.
 	 * <p>
 	 * 프레젠테이션을 최신순으로 조회합니다.

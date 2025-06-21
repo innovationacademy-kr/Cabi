@@ -9,7 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
@@ -37,8 +36,7 @@ public class PresentationSlot {
 	@Enumerated(value = EnumType.STRING)
 	private PresentationLocation presentationLocation = PresentationLocation.BASEMENT;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PRESENTATION_ID")
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "slot")
 	private Presentation presentation;
 
 	public PresentationSlot(LocalDateTime startTime, PresentationLocation presentationLocation) {
