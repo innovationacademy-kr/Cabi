@@ -51,11 +51,11 @@ public class PresentationComment {
 	@Column(name = "DETAIL", length = 500, nullable = false)
 	private String detail;
 
-	@Column(name = "IS_DELETED", nullable = false)
-	private boolean isDeleted = false;
+	@Column(name = "DELETED", nullable = false)
+	private boolean deleted = false;
 
-	@Column(name = "IS_BANNED", nullable = false)
-	private boolean isBanned = false;
+	@Column(name = "BANNED", nullable = false)
+	private boolean banned = false;
 
 	public PresentationComment(Presentation presentation, User user, String detail) {
 		this.presentation = presentation;
@@ -68,6 +68,6 @@ public class PresentationComment {
 	}
 
 	public void delete() {
-		this.isDeleted = true;
+		this.deleted = true;
 	}
 }

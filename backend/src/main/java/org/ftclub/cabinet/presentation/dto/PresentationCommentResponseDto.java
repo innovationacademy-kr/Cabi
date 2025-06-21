@@ -19,7 +19,7 @@ public class PresentationCommentResponseDto {
 	private final String detail;
 	@NotNull
 	private final LocalDateTime dateTime;
-	private final boolean isMine;
-	private final boolean isBanned;
-	private final boolean isUpdated;
+	private final boolean mine;
+	private final boolean banned;
+	private final boolean updated;
 }
