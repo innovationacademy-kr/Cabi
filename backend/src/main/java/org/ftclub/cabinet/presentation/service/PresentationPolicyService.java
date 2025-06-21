@@ -100,10 +100,10 @@ public class PresentationPolicyService {
 		if (updateForm.getCategory() != origin.getCategory()) {
 			throw ExceptionStatus.PRESENTATION_UPDATE_CATEGORY_DENIED.asServiceException();
 		}
-		if (updateForm.getTitle() != origin.getTitle()) {
+		if (!updateForm.getTitle().equals(origin.getTitle())) {
 			throw ExceptionStatus.PRESENTATION_UPDATE_TITLE_DENIED.asServiceException();
 		}
-		if (updateForm.getVideoLink() != origin.getVideoLink()) {
+		if (!updateForm.getVideoLink().equals(origin.getVideoLink())) {
 			throw ExceptionStatus.PRESENTATION_UPDATE_VIDEO_LINK_DENIED.asServiceException();
 		}
 		if (updateForm.isRecordingAllowed() != origin.isRecordingAllowed()) {

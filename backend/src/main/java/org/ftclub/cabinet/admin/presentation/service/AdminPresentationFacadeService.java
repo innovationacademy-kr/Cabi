@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
-import org.ftclub.cabinet.admin.dto.AdminPresentationUpdateServiceDto;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateData;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.ftclub.cabinet.presentation.service.PresentationCommandService;
 import org.ftclub.cabinet.presentation.service.PresentationPolicyService;
 import org.ftclub.cabinet.presentation.service.PresentationQueryService;
@@ -79,18 +79,22 @@ public class AdminPresentationFacadeService {
 	 */
 	@Transactional
 	public void updatePresentation(Long presentationId,
-			AdminPresentationUpdateServiceDto updateForm, MultipartFile thumbnail)
-			throws IOException {
+			PresentationUpdateServiceDto updateForm,
+			MultipartFile thumbnail, boolean thumbnailUpdated) throws IOException {
 		Presentation presentation = queryService.findPresentationById(presentationId);
-		// check verification
+		// check verification of access to edit presentation
 		policyService.verifyAdminPresentationEditAccess(presentation);
 
 		// update contents
-		if (updateForm.isThumbnailUpdated()) {
-			commandService.updateThumbnail(presentation, thumbnail);
+		String thumbnailS3Key;
+		if (thumbnailUpdated) {
+			thumbnailS3Key = thumbnailStorageService.updateThumbnail(
+					presentation.getThumbnailS3Key(), thumbnail);
+		} else {
+			thumbnailS3Key = presentation.getThumbnailS3Key();
 		}
 		PresentationUpdateData updateData =
-				presentationMapper.toPresentationUpdateData(updateForm);
+				presentationMapper.toPresentationUpdateData(updateForm, thumbnailS3Key);
 		commandService.updatePresentation(presentation, updateData);
 	}
 

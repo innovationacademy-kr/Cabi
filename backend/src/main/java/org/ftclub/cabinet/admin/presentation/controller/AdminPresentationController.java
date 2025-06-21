@@ -6,12 +6,12 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
-import org.ftclub.cabinet.admin.dto.AdminPresentationUpdateRequestDto;
-import org.ftclub.cabinet.admin.dto.AdminPresentationUpdateServiceDto;
 import org.ftclub.cabinet.admin.presentation.service.AdminPresentationFacadeService;
 import org.ftclub.cabinet.presentation.dto.DataListResponseDto;
 import org.ftclub.cabinet.presentation.dto.DataResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,12 +72,12 @@ public class AdminPresentationController {
 	@PatchMapping("/{presentationId}")
 	public void updatePresentation(
 			@PathVariable Long presentationId,
-			@Valid @RequestPart("form") AdminPresentationUpdateRequestDto updateForm,
+			@Valid @RequestPart("form") PresentationUpdateRequestDto updateForm,
 			@RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
 	) throws IOException {
 		adminPresentationFacadeService.updatePresentation(
 				presentationId,
-				AdminPresentationUpdateServiceDto.builder()
+				PresentationUpdateServiceDto.builder()
 						.category(updateForm.getCategory())
 						.duration(updateForm.getDuration())
 						.title(updateForm.getTitle())
@@ -87,9 +87,9 @@ public class AdminPresentationController {
 						.videoLink(updateForm.getVideoLink())
 						.recordingAllowed(updateForm.isRecordingAllowed())
 						.publicAllowed(updateForm.isPublicAllowed())
-						.thumbnailUpdated(updateForm.isThumbnailUpdated())
 						.build(),
-				thumbnail
+				thumbnail,
+				updateForm.isThumbnailUpdated()
 		);
 	}
 

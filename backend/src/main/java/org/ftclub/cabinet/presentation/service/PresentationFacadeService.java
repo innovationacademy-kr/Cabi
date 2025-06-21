@@ -96,24 +96,31 @@ public class PresentationFacadeService {
 	/**
 	 * 프레젠테이션을 수정합니다.
 	 *
-	 * @param userId         사용자 ID
-	 * @param presentationId 프레젠테이션 ID
-	 * @param updateForm     프레젠테이션 수정 DTO
-	 * @param thumbnail      썸네일 이미지 파일
+	 * @param userId           사용자 ID
+	 * @param presentationId   프레젠테이션 ID
+	 * @param updateForm       프레젠테이션 수정 DTO
+	 * @param thumbnail        썸네일 이미지 파일
+	 * @param thumbnailUpdated 썸네일 이미지가 변경되었는지 여부
 	 */
 	@Transactional
 	public void updatePresentation(Long userId, Long presentationId,
-			PresentationUpdateServiceDto updateForm, MultipartFile thumbnail) throws IOException {
+			PresentationUpdateServiceDto updateForm,
+			MultipartFile thumbnail, boolean thumbnailUpdated) throws IOException {
 		Presentation presentation = queryService.findPresentationById(presentationId);
-		// check verification
+		// check verification of access to edit presentation & user update fields
 		policyService.verifyPresentationEditAccess(userId, presentation);
+		policyService.checkForIllegalFieldModification(updateForm, presentation);
 
 		// update contents
-		if (updateForm.isThumbnailUpdated()) {
-			commandService.updateThumbnail(presentation, thumbnail);
+		String thumbnailS3Key;
+		if (thumbnailUpdated) {
+			thumbnailS3Key = thumbnailStorageService.updateThumbnail(
+					presentation.getThumbnailS3Key(), thumbnail);
+		} else {
+			thumbnailS3Key = presentation.getThumbnailS3Key();
 		}
 		PresentationUpdateData updateData =
-				presentationMapper.toPresentationUpdateData(updateForm);
+				presentationMapper.toPresentationUpdateData(updateForm, thumbnailS3Key);
 		commandService.updatePresentation(presentation, updateData);
 	}
 }

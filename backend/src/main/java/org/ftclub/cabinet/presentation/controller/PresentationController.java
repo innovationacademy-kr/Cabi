@@ -101,13 +101,18 @@ public class PresentationController {
 				user.getUserId(),
 				presentationId,
 				PresentationUpdateServiceDto.builder()
+						.category(updateForm.getCategory())
+						.duration(updateForm.getDuration())
+						.title(updateForm.getTitle())
 						.summary(updateForm.getSummary())
 						.outline(updateForm.getOutline())
 						.detail(updateForm.getDetail())
+						.videoLink(updateForm.getVideoLink())
+						.recordingAllowed(updateForm.isRecordingAllowed())
 						.publicAllowed(updateForm.isPublicAllowed())
-						.thumbnailUpdated(updateForm.isThumbnailUpdated())
 						.build(),
-				thumbnail
+				thumbnail,
+				updateForm.isThumbnailUpdated()
 		);
 	}
 

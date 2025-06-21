@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.presentation.service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -13,7 +12,6 @@ import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -22,7 +20,6 @@ public class PresentationCommandService {
 
 	private final PresentationQueryService queryService;
 	private final PresentationRepository repository;
-	private final ThumbnailStorageService thumbnailStorageService;
 
 	/**
 	 * 프레젠테이션을 생성합니다.
@@ -66,26 +63,6 @@ public class PresentationCommandService {
 	 */
 	public void updatePresentation(Presentation presentation, PresentationUpdateData data) {
 		presentation.update(data);
-	}
-
-	/**
-	 * 프레젠테이션의 썸네일을 수정합니다.
-	 * <p>
-	 * 변경된 이미지를 업로드하고 S3 키를 업데이트합니다.
-	 * </p>
-	 *
-	 * @param presentation 프레젠테이션
-	 * @param thumbnail    썸네일 이미지 파일
-	 */
-	public void updateThumbnail(Presentation presentation, MultipartFile thumbnail)
-			throws IOException {
-		String oldThumbnailS3Key = presentation.getThumbnailS3Key();
-		if (oldThumbnailS3Key != null) {
-			thumbnailStorageService.deleteImage(oldThumbnailS3Key);
-		}
-		// upload new thumbnail and update key
-		String newThumbnailS3Key = thumbnailStorageService.uploadImage(thumbnail);
-		presentation.changeThumbnailS3Key(newThumbnailS3Key);
 	}
 
 	/**
