@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.mapper;
 
 import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
-import org.ftclub.cabinet.admin.dto.AdminPresentationUpdateServiceDto;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateData;
@@ -39,18 +38,12 @@ public interface PresentationMapper {
 	);
 
 	/**
-	 * 유저의 수정 dto를 PresentationUpdateData로 변환합니다.
+	 * 검증이 완료된 수정 dto를 PresentationUpdateData로 변환합니다.
 	 *
 	 * @param updateDto 변환할 PresentationUpdateServiceDto
 	 * @return 변환된 PresentationUpdateData
 	 */
-	PresentationUpdateData toPresentationUpdateData(PresentationUpdateServiceDto updateDto);
-
-	/**
-	 * 어드민의 수정 dto를 PresentationUpdateData로 변환합니다.
-	 *
-	 * @param updateDto 변환할 AdminPresentationUpdateServiceDto
-	 * @return 변환된 PresentationUpdateData
-	 */
-	PresentationUpdateData toPresentationUpdateData(AdminPresentationUpdateServiceDto updateDto);
+	PresentationUpdateData toPresentationUpdateData(
+			PresentationUpdateServiceDto updateDto,
+			String thumbnailS3Key);
 }
