@@ -127,6 +127,9 @@ public class PresentationCommentService {
 		if (!comment.getUser().getId().equals(dto.getUserId())) {
 			throw ExceptionStatus.PRESENTATION_COMMENT_NOT_AUTHORIZED.asServiceException();
 		}
+		if (comment.isBanned()) {
+			throw ExceptionStatus.PRESENTATION_COMMENT_BANNED.asServiceException();
+		}
 
 		comment.delete();
 	}

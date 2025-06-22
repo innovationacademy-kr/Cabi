@@ -137,6 +137,7 @@ public enum ExceptionStatus {
 	CANNOT_SEARCH_PAST_SLOT(HttpStatus.BAD_REQUEST, "과거 슬롯은 조회할 수 없습니다."),
 	NOT_ALLOWED_PERIOD(HttpStatus.BAD_REQUEST, "허용된 기간 외의 슬롯은 존재할 수 없습니다."),
 	PRESENTATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 발표가 존재하지 않습니다."),
+	PRESENTATION_COMMENT_BANNED(HttpStatus.BAD_REQUEST, "밴 당한 댓글은 삭제할 수 없습니다."),
 
 	// Presentation user 권한 관련
 	NOT_LOGGED_IN(HttpStatus.UNAUTHORIZED, "로그인이 필요한 서비스입니다."),
