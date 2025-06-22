@@ -70,4 +70,8 @@ public class PresentationComment {
 	public void delete() {
 		this.deleted = true;
 	}
+
+	public void ban() {
+		this.banned = true;
+	}
 }
