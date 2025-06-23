@@ -4,20 +4,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import * as z from "zod";
 import RegisterCheckboxContainer from "./RegisterCheckboxContainer";
 import RegisterDatePicker from "./RegisterDatePicker";
 import RegisterImageUpload from "./RegisterImageUpload";
-// 로딩 아이콘
 import RegisterInput from "./RegisterInput";
 import RegisterRadioGroup from "./RegisterRadioGroup";
 import RegisterTextarea from "./RegisterTextarea";
 import { RegisterTimeSelect } from "./RegisterTimeSelect";
 import { PresentationCategoryType, RegisterType, PresentationPeriodType } from "../types/enum/presentation.type.enum";
+import { axiosCreatePresentation, axiosUpdatePresentation } from "../api/axios.custom";
+import { RegisterConfirmDialog, RegisterResultDialog } from "./Modals/RegisterModal/PresentationResponseModal";
 
 const MAX_TITLE = 20;
 const MAX_CONTENT = 300;
-
 
 const contactSchema = z.object({
   slotId: z.number({}),
@@ -26,11 +27,11 @@ const contactSchema = z.object({
   summary: z.string().max(20, "한 줄 요약은 20자 이하여야 합니다"),
   outline: z
     .string()
-    .min(10, "목차는 10자 이상이어야 합니다")
+    // .min(10, "목차는 10자 이상이어야 합니다")
     .max(300, "목차는 300자 이하여야 합니다"),
   detail: z
     .string()
-    .min(10, "내용은 10자 이상이어야 합니다")
+    // .min(10, "내용은 10자 이상이어야 합니다")
     .max(300, "내용은 300자 이하여야 합니다"),
   recordingAllowed: z.boolean().optional(),
   publicAllowed: z.boolean().optional(),
@@ -43,25 +44,30 @@ const contactSchema = z.object({
     }),
 });
 
-
-
-
-
 interface RegisterFormProps {
   type: RegisterType;
   initialData?: any;
+  presentationId?: string; // EDIT 모드일 때 필요
 }
-//구조분해할당으로 바로 사용
-const RegisterForm = ({ type, initialData }: RegisterFormProps) => {
+
+const RegisterForm = ({ type, initialData, presentationId }: RegisterFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string>("");
+  const [formDataToSubmit, setFormDataToSubmit] = useState<z.infer<typeof contactSchema> | null>(null);
   const [startTime, setStartTime] = useState("");
+  const [originalThumbnail, setOriginalThumbnail] = useState<string | null>(null);
+  
+  const navigate = useNavigate();
+  const isEditMode = type === RegisterType.EDIT;
 
   const form = useForm<z.infer<typeof contactSchema>>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
       slotId: 0,
-      duration: PresentationPeriodType.HALF, // 시간 기본값
+      duration: PresentationPeriodType.HALF,
       title: "",
       summary: "",
       outline: "",
@@ -72,87 +78,222 @@ const RegisterForm = ({ type, initialData }: RegisterFormProps) => {
     },
   });
 
-useEffect(() => {
-  if (initialData?.data) {
-    setStartTime(initialData.data.startTime);
-    // console.log("init : " , initialData.data);
-    const formData = {
-      slotId: 0, 
-      duration: initialData.data.duration,
-      title: initialData.data.title,
-      summary: initialData.data.summary,
-      outline: initialData.data.outline,
-      detail: initialData.data.detail,
-      recordingAllowed: initialData.data.recordingAllowed,
-      publicAllowed: initialData.data.publicAllowed,
-      category: initialData.data.category,
-      thumbnail: undefined, // 파일은 초기화 불가
-    };
+  useEffect(() => {
+    if (initialData?.data) {
+      setStartTime(initialData.data.startTime);
+      setOriginalThumbnail(initialData.data.thumbnailUrl);
+      
+      const editFormDefaultValues = {
+        slotId: initialData.data.slotId || 0,
+        duration: initialData.data.duration,
+        title: initialData.data.title,
+        summary: initialData.data.summary,
+        outline: initialData.data.outline,
+        detail: initialData.data.detail,
+        recordingAllowed: initialData.data.recordingAllowed,
+        publicAllowed: initialData.data.publicAllowed,
+        category: initialData.data.category,
+        thumbnail: undefined, // 파일은 초기화 불가
+      };
+      form.reset(editFormDefaultValues);
+    } else {
+      const createFormDefaultValues = {
+        slotId: 0,
+        duration: PresentationPeriodType.HALF,
+        title: "",
+        summary: "",
+        outline: "",
+        detail: "",
+        recordingAllowed: false,
+        publicAllowed: false,
+        category: PresentationCategoryType.DEVELOP,
+      };
+      form.reset(createFormDefaultValues);
+    }
+  }, [initialData, form]);
+
+  const createFormData = (data: z.infer<typeof contactSchema>) => {
+    const formData = new FormData();
     
-    form.reset(formData);
+    if (isEditMode) {
+      // EDIT 모드: PATCH 요청용 데이터
+      const requestBody = {
+        category: data.category,
+        title: data.title,
+        summary: data.summary,
+        outline: data.outline,
+        detail: data.detail,
+        videoLink: null, // 현재는 null로 처리
+        isRecordingAllowed: data.recordingAllowed || false,
+        isPublicAllowed: data.publicAllowed || false,
+        thumbnailUpdated: !!data.thumbnail, // 썸네일 변경 여부
+      };
+      
+      formData.append('form', new Blob([JSON.stringify(requestBody)], {
+        type: 'application/json'
+      }));
+      
+      if (data.thumbnail) {
+        formData.append('thumbnail', data.thumbnail);
+      }
+    } else {
+      // CREATE 모드: POST 요청용 데이터
+      const requestBody = {
+        duration: data.duration,
+        category: data.category,
+        title: data.title,
+        summary: data.summary,
+        outline: data.outline,
+        detail: data.detail,
+        isRecordingAllowed: data.recordingAllowed || false,
+        isPublicAllowed: data.publicAllowed || false,
+        slotId: data.slotId,
+      };
+      
+      formData.append('form', new Blob([JSON.stringify(requestBody)], {
+        type: 'application/json'
+      }));
+      
+      if (data.thumbnail) {
+        formData.append('thumbnail', data.thumbnail);
+      }
+    }
+    
+    return formData;
+  };
+
+  // async function onSubmit(data: z.infer<typeof contactSchema>) {
+  //   setIsSubmitting(true);
+    
+  //   try {
+  //     const formData = createFormData(data);
+      
+  //     if (isEditMode && presentationId) {
+  //       // PATCH 요청
+  //       await axiosUpdatePresentation(presentationId, formData);
+  //       console.log('수정 완료');
+  //     } else {
+  //       // POST 요청
+  //       await axiosCreatePresentation(formData);
+  //       console.log('생성 완료');
+  //     }
+      
+  //     // setIsSuccess(true);
+      
+  //     // 성공 후 3초 후 페이지 이동
+  //     setTimeout(() => {
+  //       if (isEditMode) {
+  //         navigate(`/presentations/${presentationId}`); // 상세 페이지로
+  //       } else {
+  //         navigate('/presentations/home'); // 홈으로
+  //       }
+  //     }, 2000);
+      
+  //   } catch (error) {
+  //     console.error('제출 실패:', error);
+  //     // 에러 처리 (토스트 메시지 등)
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // }
+
+  const onCloseResultModal = () => {
+  setShowResultModal(false);
+  
+  if (submitSuccess) {
+    // 성공했을 때만 페이지 이동
+    setTimeout(() => {
+      if (isEditMode) {
+        navigate(`/presentations/${presentationId}`);
+      } else {
+        navigate('/presentations/home');
+      }
+    }, 500);
   }
-}, [initialData]);
+};
+const onFormValidated = (data: z.infer<typeof contactSchema>) => {
+  setFormDataToSubmit(data);
+  setShowConfirmModal(true);
+};
 
+// 모달 취소
+const onCancelSubmit = () => {
+  setShowConfirmModal(false);
+  setFormDataToSubmit(null);
+};
 
-  async function onSubmit(data: any) {
-    // setIsSubmitting(true); // 전송 중 버튼 클릭 막기
-    console.log(data);
-
-    // try {
-    //   // API 호출 시뮬레이션
-    //   // await 
-    //   setIsSuccess(true);
-
-    //   // 성공 후 3초 후 폼 초기화
-    //   setTimeout(() => {
-    //     form.reset();
-    //     setIsSuccess(false);
-    //   }, 3000);
-    // } catch (error) {
-    //   console.error("오류 발생:", error);
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
+// API 호출
+const onConfirmSubmit = async () => {
+  if (!formDataToSubmit) return;
+  
+  setIsSubmitting(true);
+  setShowConfirmModal(false);
+  
+  try {
+    const formData = createFormData(formDataToSubmit);
+    
+    if (isEditMode && presentationId) {
+      await axiosUpdatePresentation(presentationId, formData);
+      console.log('수정 완료');
+    } else {
+      await axiosCreatePresentation(formData);
+      console.log('생성 완료');
+    }
+    
+    setSubmitSuccess(true);
+    setSubmitError("");
+    setShowResultModal(true);
+    
+  } catch (error: any) {
+    console.error('제출 실패:', error);
+    setSubmitSuccess(false);
+    setSubmitError(error.response?.data?.message || '알 수 없는 오류가 발생했습니다.');
+    setShowResultModal(true);
+  } finally {
+    setIsSubmitting(false);
+    setFormDataToSubmit(null);
   }
-
-
-
+}
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="mt-16 mb-64 flex flex-col items-center space-y-6 w-full h-full sm:max-w-lg lg:max-w-3xl p-4 min-w-64 "
-      >
-        <div className=" w-full flex flex-col md:flex-row justify-between gap-4">
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onFormValidated)}
+          className="mt-16 mb-64 flex flex-col items-center space-y-6 w-full h-full sm:max-w-lg lg:max-w-3xl p-4 min-w-64"
+        >
+        <div className="w-full flex flex-col md:flex-row justify-between gap-4">
           <RegisterDatePicker
             control={form.control}
             name="slotId"
             title="날짜"
-            isEditMode={type === RegisterType.EDIT}
+            isEditMode={isEditMode}
             startTime={startTime}
           />
           <RegisterTimeSelect
             control={form.control}
             name="duration"
             title="소요 시간"
-            isEditMode={type === RegisterType.EDIT}
+            isEditMode={isEditMode}
           />
         </div>
+        
         <RegisterRadioGroup
           control={form.control}
           name="category"
           title="카테고리"
-          isEditMode={type === RegisterType.EDIT}
+          isEditMode={isEditMode}
         />
+        
         <RegisterInput
           control={form.control}
           name="title"
           title="제목"
           maxLength={MAX_TITLE}
           placeholder="제목을 입력하세요"
-          isEditMode={type === RegisterType.EDIT}
+          isEditMode={isEditMode}
         />
+        
         <RegisterInput
           control={form.control}
           name="summary"
@@ -160,6 +301,7 @@ useEffect(() => {
           maxLength={MAX_TITLE}
           placeholder="한 줄 요약을 입력하세요"
         />
+        
         <RegisterTextarea
           control={form.control}
           name="outline"
@@ -168,6 +310,7 @@ useEffect(() => {
           placeholder="목차를 입력하세요"
           rows={10}
         />
+        
         <RegisterTextarea
           control={form.control}
           name="detail"
@@ -176,14 +319,16 @@ useEffect(() => {
           placeholder="내용을 입력하세요"
           rows={10}
         />
+        
         <RegisterImageUpload
           control={form.control}
           name="thumbnail"
           title="썸네일"
           maxSize={5}
           accept=".jpg,.jpeg,.png"
-          // multiple={true}
+          // currentImageUrl={originalThumbnail} // 기존 이미지 표시용
         />
+        
         <RegisterCheckboxContainer
           control={form.control}
           title="컨텐츠 촬영 및 공개 동의"
@@ -193,34 +338,49 @@ useEffect(() => {
             {
               name: "recordingAllowed",
               description: "촬영된 영상의 다시보기 제공에 동의합니다.",
-              isEditMode : type === RegisterType.EDIT
             },
             {
               name: "publicAllowed",
-              description:
-                "촬영된 영상 및 관련 게시물을 본 기관(42 Seoul) 외부 플랫폼 및 채널에 공개하는 것에 동의합니다.",
+              description: "촬영된 영상 및 관련 게시물을 본 기관(42 Seoul) 외부 플랫폼 및 채널에 공개하는 것에 동의합니다.",
             },
           ]}
         />
 
         <Button
           type="submit"
-          disabled={isSubmitting || isSuccess}
-          className=" bg-blue-500 w-full py-2 text-sm sm:text-base sm:max-w-lg lg:max-w-56 "
+          disabled={isSubmitting}
+          className="bg-blue-500 w-full py-2 text-sm sm:text-base sm:max-w-lg lg:max-w-56"
         >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              전송 중...
+              {isEditMode ? '수정 중...' : '제출 중...'}
             </>
-          ) : isSuccess ? (
-            "전송 완료!"
           ) : (
-            "신청하기"
+            isEditMode ? '수정하기' : '신청하기'
           )}
         </Button>
       </form>
     </Form>
+
+    <RegisterConfirmDialog
+      open={showConfirmModal}
+      onOpenChange={setShowConfirmModal}
+      isEditMode={isEditMode}
+      // formDataToSubmit={formDataToSubmit}
+      onCancel={onCancelSubmit}
+      onConfirm={onConfirmSubmit}
+    /> 
+
+    <RegisterResultDialog
+      open={showResultModal}
+      onOpenChange={setShowResultModal}
+      isEditMode={isEditMode}
+      submitSuccess={submitSuccess}
+      submitError={submitError}
+      onClose={onCloseResultModal}
+    />
+  </>
   );
 };
 

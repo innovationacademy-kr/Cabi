@@ -3,11 +3,8 @@ import { SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import { FailResponseModalShadcn, SuccessResponseModalShadcn } from "./PresentationResponseModal";
 
 const RegisterModal = ({
   title,
@@ -87,12 +84,12 @@ Cabi 슬랙 채널로 문의해주세요.
       {!showResponseModal && <Modal modalContents={swapModalContents} />}
       {showResponseModal &&
         (hasErrorOnResponse ? (
-          <FailResponseModal
+          <FailResponseModalShadcn
             modalTitle={modalTitle}
             closeModal={closeResponseModal}
           />
         ) : (
-          <SuccessResponseModal
+          <SuccessResponseModalShadcn
             modalTitle={modalTitle}
             closeModal={closeResponseModal}
           />
@@ -100,5 +97,8 @@ Cabi 슬랙 채널로 문의해주세요.
     </ModalPortal>
   );
 };
+
+
+
 
 export default RegisterModal;

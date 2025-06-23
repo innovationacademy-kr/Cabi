@@ -65,26 +65,26 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
             // setAvailableSlots(res.data);
             // console.log(availableSlots);
     
-            //mockData CHECK : api 완성되면 지우기
+            // mockData CHECK : api 완성되면 지우기
             const mockData: ApiResponse = {
               results: [
-                { slotId: 5, startTime: "2025-08-15T12:00:00" },
-                { slotId: 6, startTime: "2025-08-15T13:00:00" },
-                { slotId: 7, startTime: "2025-08-15T14:00:00" },
-                { slotId: 8, startTime: "2025-08-29T12:00:00" },
-                { slotId: 9, startTime: "2025-08-05T12:00:00" },
-                { slotId: 10, startTime: "2025-08-12T14:00:00" },
-                { slotId: 11, startTime: "2025-08-19T12:00:00" },
-                { slotId: 12, startTime: "2025-08-26T13:00:00" },
-                { slotId: 13, startTime: "2025-07-03T12:00:00" },
-                { slotId: 14, startTime: "2025-07-10T14:00:00" },
-                { slotId: 15, startTime: "2025-07-17T13:00:00" },
-                { slotId: 16, startTime: "2025-07-24T12:00:00" },
-                { slotId: 17, startTime: "2025-07-31T12:00:00" },
+                { slotId: 1, startTime: "2025-06-25T12:00:00" },
+                { slotId: 2, startTime: "2025-07-02T12:00:00" },
+                { slotId: 3, startTime: "2025-07-09T12:00:00" },
+                { slotId: 4, startTime: "2025-07-15T12:00:00" },
+                { slotId: 5, startTime: "2025-07-23T12:00:00" },
+                { slotId: 6, startTime: "2025-07-30T12:00:00" },
+                { slotId: 7, startTime: "2025-08-06T12:00:00" },
+                { slotId: 8, startTime: "2025-08-15T12:00:00" },
+                { slotId: 9, startTime: "2025-08-20T12:00:00" },
+                { slotId: 10, startTime: "2025-08-27T12:00:00" },
+                { slotId: 11, startTime: "2025-09-03T12:00:00" },
+                { slotId: 12, startTime: "2025-09-10T12:00:00" },
+                { slotId: 13, startTime: "2025-09-17T12:00:00" } 
               ],
             };
             setAvailableSlots(mockData.results);
-            // console.log(availableSlots)
+            console.log(availableSlots)
     
           } catch (error) {
             console.error("발표 가능 날짜 로딩 실패:", error);
@@ -94,7 +94,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
         };
         fetchAvailableDates();
       }
-    }, []);
+    }, [isEditMode]);
 
 
   // 선택 불가능한 날짜 필터링 함수

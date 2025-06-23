@@ -14,6 +14,8 @@ const RegisterPage = () => {
   useEffect(() => {
     if (isEditMode && presentationId) {
       fetchPresentationData(presentationId);
+    } else {
+      setInitialData(null);
     }
   }, [presentationId, isEditMode]);
   
@@ -44,6 +46,7 @@ const RegisterPage = () => {
               <RegisterForm
               type={isEditMode ? RegisterType.EDIT : RegisterType.CREATE}
               initialData={initialData}
+              presentationId={presentationId}
               />
           </div>
       </div>
