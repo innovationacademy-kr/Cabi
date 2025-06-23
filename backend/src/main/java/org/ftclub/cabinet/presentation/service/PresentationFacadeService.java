@@ -8,8 +8,10 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
+import org.ftclub.cabinet.presentation.domain.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
-import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -41,7 +43,7 @@ public class PresentationFacadeService {
 	 */
 	@Transactional
 	public void registerPresentation(Long userId,
-			PresentationFormRequestDto form,
+			PresentationRegisterServiceDto form,
 			MultipartFile thumbnail) throws IOException {
 		User user = userQueryService.getUser(userId);
 		String thumbnailS3Key = thumbnailStorageService.uploadImage(thumbnail);
@@ -50,10 +52,8 @@ public class PresentationFacadeService {
 		PresentationSlot slot = slotRepository.findById(form.getSlotId())
 				.orElseThrow(ExceptionStatus.SLOT_NOT_FOUND::asServiceException);
 
-		// register presentation and assign presentation to slot
-		Presentation newPresentation =
-				commandService.createPresentation(user, form, slot, thumbnailS3Key);
-		slot.assignPresentation(newPresentation);
+		// register presentation
+		commandService.createPresentation(user, form, slot, thumbnailS3Key);
 	}
 
 	/**
@@ -89,5 +89,36 @@ public class PresentationFacadeService {
 				editAllowed,
 				upcoming
 		);
+	}
+
+	/**
+	 * 프레젠테이션을 수정합니다.
+	 *
+	 * @param userId           사용자 ID
+	 * @param presentationId   프레젠테이션 ID
+	 * @param updateForm       프레젠테이션 수정 DTO
+	 * @param thumbnail        썸네일 이미지 파일
+	 * @param thumbnailUpdated 썸네일 이미지가 변경되었는지 여부
+	 */
+	@Transactional
+	public void updatePresentation(Long userId, Long presentationId,
+			PresentationUpdateServiceDto updateForm,
+			MultipartFile thumbnail, boolean thumbnailUpdated) throws IOException {
+		Presentation presentation = queryService.findPresentationById(presentationId);
+		// check verification of access to edit presentation & user update fields
+		policyService.verifyPresentationEditAccess(userId, presentation);
+		policyService.checkForIllegalFieldModification(updateForm, presentation);
+
+		// update contents
+		String thumbnailS3Key;
+		if (thumbnailUpdated) {
+			thumbnailS3Key = thumbnailStorageService.updateThumbnail(
+					presentation.getThumbnailS3Key(), thumbnail);
+		} else {
+			thumbnailS3Key = presentation.getThumbnailS3Key();
+		}
+		PresentationUpdateData updateData =
+				presentationMapper.toPresentationUpdateData(updateForm, thumbnailS3Key);
+		commandService.updatePresentation(presentation, updateData);
 	}
 }
