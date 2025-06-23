@@ -74,4 +74,8 @@ public class PresentationComment {
 	public void ban() {
 		this.banned = true;
 	}
+
+	public void unban() {
+		this.banned = false;
+	}
 }
