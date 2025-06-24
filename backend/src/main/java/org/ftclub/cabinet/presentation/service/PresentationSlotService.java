@@ -2,6 +2,7 @@ package org.ftclub.cabinet.presentation.service;
 
 import static org.ftclub.cabinet.presentation.domain.PresentationSlot.ALLOWED_PERIOD;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -18,6 +19,7 @@ public class PresentationSlotService {
 
 	private static final int FIRST_DAY_OF_MONTH = 1;
 	private final PresentationSlotRepository presentationSlotRepository;
+	private final Clock clock;
 
 	public static LocalDateTime calculateEndTime(LocalDateTime now) {
 		YearMonth targetMonth = YearMonth.from(now).plusMonths(ALLOWED_PERIOD);
@@ -25,7 +27,7 @@ public class PresentationSlotService {
 	}
 
 	public DataListResponseDto<AvailablePresentationSlotDto> getPresentationSlots() {
-		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime now = LocalDateTime.now(clock);
 		List<AvailablePresentationSlotDto> slotList = presentationSlotRepository.findByStartTimeBetween(
 						now,
 						calculateEndTime(now)).stream().filter(slot -> !slot.hasPresentation()).
