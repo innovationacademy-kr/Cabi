@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.presentation.service;
 
 import org.ftclub.cabinet.dto.PresentationLikeDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationLike;
 import org.ftclub.cabinet.presentation.repository.PresentationLikeRepository;
@@ -34,6 +35,10 @@ public class PresentationLikeService {
 		return (presentationQueryService.getPresentation(id));
 	}
 
+	public boolean isLikedByMe(Presentation presentation, User user) {
+		return presentationLikeQueryService.isLikedByMe(presentation.getId(), user);
+	}
+
 	// 생성자에서 주입
 	public PresentationLikeService(PresentationLikeRepository likeRepository, UserQueryService userQueryService, PresentationQueryService presentationQueryService, PresentationLikeQueryService presentationLikeQueryService) {
 		this.likeRepository = likeRepository;
@@ -46,18 +51,34 @@ public class PresentationLikeService {
 		return presentationLikeQueryService.getLikedCount(presentationId);
 	}
 
-	public  void postLike(PresentationLikeDto presentationLikeDto) {
+	public  void postLike(PresentationLikeDto presentationLikeDto) { // TODO 이미 post되어있는 like면 에러 반환해야해서 if else로 변경 필요
 		User user = getUserById(presentationLikeDto.getUserId());
 		Presentation presentation = getPresentationById(presentationLikeDto.getPresentationId());
-		PresentationLike presentationLike = new PresentationLike(presentation, user);
-		likeRepository.save(presentationLike);
+		if (likeRepository.existsByPresentationIdAndUserId(presentationLikeDto.getPresentationId(), user.getId()))
+		{
+			PresentationLike presentationLike = new PresentationLike(presentation, user);
+			likeRepository.save(presentationLike);
+		}
+		else
+		{
+			throw ExceptionStatus.CANNOT_CREATE_SLOT_IN_PAST.asDomainException(); // TODO likeException 만들어서 던져야함
+		}
+
 	}
 
-	public  void deleteLike(PresentationLikeDto presentationLikeDto) {
+	public  void deleteLike(PresentationLikeDto presentationLikeDto) { // TODO 없는 like라면 에러 반환해야해서 if else로 변경 필요
 		User user = getUserById(presentationLikeDto.getUserId());
 		Presentation presentation = getPresentationById(presentationLikeDto.getPresentationId());
-		PresentationLike presentationLike = new PresentationLike(presentation, user);
-		likeRepository.deleteByPresentationIdAndUserId(presentationLikeDto.getPresentationId(), user.getId());
+		if (likeRepository.existsByPresentationIdAndUserId(presentationLikeDto.getPresentationId(), user.getId()))
+		{
+			PresentationLike presentationLike = new PresentationLike(presentation, user);
+			likeRepository.deleteByPresentationIdAndUserId(presentationLikeDto.getPresentationId(), user.getId());
+		}
+		else
+		{
+			throw ExceptionStatus.CANNOT_CREATE_SLOT_IN_PAST.asDomainException(); // TODO likeException 만들어서 던져야함
+		}
+
 	}
 
 	@Transactional(readOnly = true)
