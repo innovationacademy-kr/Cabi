@@ -56,12 +56,12 @@ public class PresentationLikeService {
 		Presentation presentation = getPresentationById(presentationLikeDto.getPresentationId());
 		if (likeRepository.existsByPresentationIdAndUserId(presentationLikeDto.getPresentationId(), user.getId()))
 		{
-			PresentationLike presentationLike = new PresentationLike(presentation, user);
-			likeRepository.save(presentationLike);
+			throw ExceptionStatus.LIKE_ALREADY_EXISTS.asDomainException(); // TODO likeException 만들어서 던져야함
 		}
 		else
 		{
-			throw ExceptionStatus.CANNOT_CREATE_SLOT_IN_PAST.asDomainException(); // TODO likeException 만들어서 던져야함
+			PresentationLike presentationLike = new PresentationLike(presentation, user);
+			likeRepository.save(presentationLike);
 		}
 
 	}
@@ -76,7 +76,7 @@ public class PresentationLikeService {
 		}
 		else
 		{
-			throw ExceptionStatus.CANNOT_CREATE_SLOT_IN_PAST.asDomainException(); // TODO likeException 만들어서 던져야함
+			throw ExceptionStatus.LIKE_NOT_FOUND.asDomainException(); // TODO likeException 만들어서 던져야함
 		}
 
 	}

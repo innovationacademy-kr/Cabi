@@ -128,6 +128,10 @@ public enum ExceptionStatus {
 	PRESENTATION_ACCESS_DENIED(HttpStatus.FORBIDDEN, "권한이 부족합니다."),
 //	NOT_PUBLIC_PRESENTATION(HttpStatus.FORBIDDEN, "로그인한 유저만 접근할 수 있는 자료입니다."),
 
+	// Like 관련
+	LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 좋아요 표시한 게시글입니다."),
+	LIKE_NOT_FOUND(HttpStatus.BAD_REQUEST, "이미 삭제된 좋아요 표시입니다."),
+
 	// REMOVE (just for conflict)
 	REMOVE(HttpStatus.BAD_REQUEST, "삭제할 내용(오로지 마지막 ; 작성 용)");
 
