@@ -9,7 +9,7 @@ import RegisterInput from "./RegisterInput";
 import RegisterTextarea from "./RegisterTextarea";
 import RegisterCheckbox from "./RegisterCheckbox";
 import RegisterDatePicker from "./DatePicker";
-import { PresentationTimeKey } from "@/Presentation_legacy/pages/RegisterPage";
+import { PresentationTimeKey } from "@/Presentation/pages/RegisterPage";
 import { RegisterTimeSelect, SelectForm } from "./RegisterTimeSelect";
 const MAX_TITLE = 20
 const MAX_CONTENT = 300
