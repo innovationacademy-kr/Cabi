@@ -1,46 +1,43 @@
-import "@toast-ui/calendar/dist/toastui-calendar.min.css";
 import Calendar from "@toast-ui/react-calendar";
-import React, { useRef } from "react";
-import "tui-date-picker/dist/tui-date-picker.css";
-import "tui-time-picker/dist/tui-time-picker.css";
+import "@toast-ui/calendar/dist/toastui-calendar.min.css";
+import { useRef } from "react";
 
-const AdminCalendar: React.FC = () => {
-  const calendarRef = useRef<Calendar>(null);
+export function AdminCalendar() {
+  const calendarRef = useRef(null);
 
-  const calendars = [
+  // TODO: Mock 데이터 수정하기
+  const events = [
     {
       id: "1",
-      name: "발표 슬롯",
-      backgroundColor: "#03bd9e",
-      borderColor: "#03bd9e",
+      calendarId: "1",
+      title: "회의",
+      category: "time",
+      start: new Date().toISOString(),
+      end: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
     },
     {
       id: "2",
-      name: "발표 슬롯2",
-      backgroundColor: "#4ab4f2",
-      borderColor: "#4ab4f2",
-    },
-    {
-      id: "3",
-      name: "발표 슬롯3",
-      backgroundColor: "#f24a4a",
-      borderColor: "#f24a4a",
+      calendarId: "1",
+      title: "워크샵",
+      category: "allday",
+      start: new Date().toISOString(),
+      end: new Date().toISOString(),
+      isAllday: true,
     },
   ];
 
   return (
-    <div style={{ height: "700px", padding: "20px" }}>
+    <div style={{ maxWidth: 900, margin: "0 auto", background: "#fff", borderRadius: 8, boxShadow: "0 2px 8px #0001", padding: 24 }}>
       <Calendar
         ref={calendarRef}
-        height="100%"
+        height="700px"
         view="month"
-        useFormPopup={true}
-        useDetailPopup={true}
-        calendars={calendars}
         usageStatistics={false}
+        isReadOnly={true}
+        events={events}
+        month={{ startDayOfWeek: 0 }}
+        week={{ showTimezoneCollapseButton: true }}
       />
     </div>
   );
-};
-
-export default AdminCalendar;
+}
