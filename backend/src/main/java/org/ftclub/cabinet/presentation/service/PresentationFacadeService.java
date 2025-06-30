@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.presentation.service;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -82,15 +81,13 @@ public class PresentationFacadeService {
 //			likedByMe = likeQueryService.isLikedByUser(userId, presentationId);   // TODO: likeQueryService
 			editAllowed = userId.equals(presentation.getUser().getId());
 		}
-		boolean upcoming = presentation.getStartTime().isAfter(LocalDateTime.now());
 
 		return presentationMapper.toPresentationDetailDto(
 				presentation,
 				thumbnailLink,
 				likesCount,
 				likedByMe,
-				editAllowed,
-				upcoming
+				editAllowed
 		);
 	}
 

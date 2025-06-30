@@ -29,13 +29,13 @@ public interface PresentationMapper {
 	 * @return 변환된 PresentationDetailDto
 	 */
 	@Mapping(target = "userName", source = "presentation.user.name")
+	@Mapping(target = "presentationStatus", source = "presentation.currentStatus")
 	PresentationDetailDto toPresentationDetailDto(
 			Presentation presentation,
 			String thumbnailLink,
 			Long likeCount,
 			boolean likedByMe,
-			boolean editAllowed,
-			boolean upcoming
+			boolean editAllowed
 	);
 
 	/**
