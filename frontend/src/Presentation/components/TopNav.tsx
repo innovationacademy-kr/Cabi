@@ -1,4 +1,4 @@
-import { ReactComponent as Logo } from "@/Presentation/assets/logo.svg";
+import { ReactComponent as Logo } from "@/Presentation/assets/images/mainLogo.svg";
 import {
   NavigationMenu,
   NavigationMenuItem,

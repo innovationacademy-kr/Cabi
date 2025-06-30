@@ -6,8 +6,8 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
+import org.ftclub.cabinet.presentation.domain.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
-import org.ftclub.cabinet.presentation.dto.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,6 @@ public class PresentationCommandService {
 	 * @param form           프레젠테이션 등록 DTO
 	 * @param slot           슬롯
 	 * @param thumbnailS3Key 썸네일 이미지 S3 키
-	 * @return 생성된 프레젠테이션
 	 */
 	public void createPresentation(User user,
 			PresentationRegisterServiceDto form,
