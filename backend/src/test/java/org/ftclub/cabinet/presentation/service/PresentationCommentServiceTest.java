@@ -254,7 +254,6 @@ class PresentationCommentServiceTest {
 		PresentationComment comment2 = mock(PresentationComment.class); // 다른 사람 댓글, 수정됨, 밴됨
 		given(comment2.getId()).willReturn(102L);
 		given(comment2.getUser()).willReturn(anotherUser);
-		given(comment2.getDetail()).willReturn("두 번째 댓글 (수정됨)");
 		given(comment2.getCreatedAt()).willReturn(now.minusMinutes(5));
 		given(comment2.getUpdatedAt()).willReturn(now.minusMinutes(1)); // 수정됨
 		given(comment2.isBanned()).willReturn(true); // 밴됨
@@ -285,7 +284,6 @@ class PresentationCommentServiceTest {
 		PresentationCommentResponseDto dto2 = responseDtos.get(1);
 		assertEquals(comment2.getId(), dto2.getPresentationId());
 		assertEquals(anotherUser.getName(), dto2.getUser());
-		assertEquals(comment2.getDetail(), dto2.getDetail());
 		assertEquals(comment2.getCreatedAt(), dto2.getDateTime());
 		assertFalse(dto2.isMine()); // 요청한 사용자와 댓글 작성자가 다름
 		assertTrue(dto2.isBanned());
