@@ -73,7 +73,7 @@ public class PresentationCommentService {
 				.map(comment -> new PresentationCommentResponseDto(
 						comment.getId(),
 						comment.getUser().getName(),
-						comment.getDetail(),
+						(comment.isBanned()) ? "....." : comment.getDetail(),
 						comment.getCreatedAt(),
 						comment.getUser().getId().equals(userId),
 						comment.isBanned(),
