@@ -91,7 +91,7 @@ public class PresentationCommentService {
 		verifyCommentSize(dto.getCommentDetail());
 
 		// 수정 권한 확인
-		if (!comment.getUser().getId().equals(dto.getUserId())) {
+		if (!comment.getUser().getId().equals(dto.getUserId()) || comment.isBanned()) {
 			throw ExceptionStatus.PRESENTATION_COMMENT_NOT_AUTHORIZED.asServiceException();
 		}
 
