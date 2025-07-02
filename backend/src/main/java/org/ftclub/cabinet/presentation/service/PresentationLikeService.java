@@ -51,12 +51,12 @@ public class PresentationLikeService {
 		return presentationLikeQueryService.getLikedCount(presentationId);
 	}
 
-	public  void postLike(PresentationLikeDto presentationLikeDto) { // TODO 이미 post되어있는 like면 에러 반환해야해서 if else로 변경 필요
+	public  void postLike(PresentationLikeDto presentationLikeDto) {
 		User user = getUserById(presentationLikeDto.getUserId());
 		Presentation presentation = getPresentationById(presentationLikeDto.getPresentationId());
 		if (likeRepository.existsByPresentationIdAndUserId(presentationLikeDto.getPresentationId(), user.getId()))
 		{
-			throw ExceptionStatus.LIKE_ALREADY_EXISTS.asDomainException(); // TODO likeException 만들어서 던져야함
+			throw ExceptionStatus.LIKE_ALREADY_EXISTS.asDomainException();
 		}
 		else
 		{
@@ -66,7 +66,7 @@ public class PresentationLikeService {
 
 	}
 
-	public  void deleteLike(PresentationLikeDto presentationLikeDto) { // TODO 없는 like라면 에러 반환해야해서 if else로 변경 필요
+	public  void deleteLike(PresentationLikeDto presentationLikeDto) {
 		User user = getUserById(presentationLikeDto.getUserId());
 		Presentation presentation = getPresentationById(presentationLikeDto.getPresentationId());
 		if (likeRepository.existsByPresentationIdAndUserId(presentationLikeDto.getPresentationId(), user.getId()))
@@ -76,7 +76,7 @@ public class PresentationLikeService {
 		}
 		else
 		{
-			throw ExceptionStatus.LIKE_NOT_FOUND.asDomainException(); // TODO likeException 만들어서 던져야함
+			throw ExceptionStatus.LIKE_NOT_FOUND.asDomainException();
 		}
 
 	}
