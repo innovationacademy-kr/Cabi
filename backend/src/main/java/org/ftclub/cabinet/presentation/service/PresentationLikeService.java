@@ -34,7 +34,7 @@ public class PresentationLikeService {
 	}
 
 	public Presentation getPresentationById(Long id){
-		return (presentationQueryService.getPresentation(id));
+		return (presentationQueryService.findPresentationById(id));
 	}
 
 	public boolean isLikedByMe(Presentation presentation, User user) {

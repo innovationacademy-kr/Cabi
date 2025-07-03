@@ -16,13 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PresentationQueryService {
 	private final PresentationRepository presentationRepository;
 
-	public Presentation getPresentation(Long id){
-		return presentationRepository.findById(id) //optional은 객체가 있거나 널이거나
-				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
-	}
-
-	private final PresentationRepository presentationRepository;
-
 	/**
 	 * 주어진 기간 안에 등록되어 있는 프레젠테이션을 시간순으로 조회합니다.
 	 *
