@@ -3,6 +3,7 @@ package org.ftclub.cabinet.presentation.domain;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,8 +18,10 @@ import lombok.NoArgsConstructor;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Table(name = "PRESENTATION_COMMENT")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -48,15 +51,31 @@ public class PresentationComment {
 	@Column(name = "DETAIL", length = 500, nullable = false)
 	private String detail;
 
-	@Column(name = "IS_DELETED", nullable = false)
-	private boolean isDeleted = false;
+	@Column(name = "DELETED", nullable = false)
+	private boolean deleted = false;
 
-	@Column(name = "IS_BANNED", nullable = false)
-	private boolean isBanned = false;
+	@Column(name = "BANNED", nullable = false)
+	private boolean banned = false;
 
 	public PresentationComment(Presentation presentation, User user, String detail) {
 		this.presentation = presentation;
 		this.user = user;
 		this.detail = detail;
+	}
+
+	public void updateDetail(String detail) {
+		this.detail = detail;
+	}
+
+	public void delete() {
+		this.deleted = true;
+	}
+
+	public void ban() {
+		this.banned = true;
+	}
+
+	public void unban() {
+		this.banned = false;
 	}
 }
