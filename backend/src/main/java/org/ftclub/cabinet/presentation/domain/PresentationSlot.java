@@ -9,7 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
@@ -23,6 +22,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PresentationSlot {
 
+	public static final int ALLOWED_PERIOD = 3; // month
 	public static final int PRESENTATION_SLOT_DURATION = 30; // 30분
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,8 +36,7 @@ public class PresentationSlot {
 	@Enumerated(value = EnumType.STRING)
 	private PresentationLocation presentationLocation = PresentationLocation.BASEMENT;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PRESENTATION_ID")
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "slot")
 	private Presentation presentation;
 
 	public PresentationSlot(LocalDateTime startTime, PresentationLocation presentationLocation) {
@@ -66,6 +65,13 @@ public class PresentationSlot {
 			throw ExceptionStatus.PRESENTATION_SLOT_ALREADY_ASSIGNED.asDomainException();
 		}
 		this.presentation = presentation;
+	}
+
+	public void cancelPresentation() {
+		if (this.presentation == null) {
+			throw ExceptionStatus.PRESENTATION_SLOT_ALREADY_CANCELED.asDomainException();
+		}
+		this.presentation = null;
 	}
 
 }

@@ -2,7 +2,6 @@ package org.ftclub.cabinet.presentation.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,10 +21,4 @@ public interface PresentationSlotRepository extends JpaRepository<PresentationSl
 			+ "WHERE ps.startTime > :startTime AND ps.startTime < :endTime")
 	List<PresentationSlot> findByStartTimeBetween(@Param("startTime") LocalDateTime startTime,
 			@Param("endTime") LocalDateTime endTime);
-
-	/**
-	 * 슬롯 아이디에 해당하는 프레젠테이션 슬롯을 조회합니다.
-	 */
-	@Query("SELECT ps FROM PresentationSlot ps WHERE ps.id = :slotId")
-	Optional<PresentationSlot> findById(@Param("slotId") Long slotId);
 }

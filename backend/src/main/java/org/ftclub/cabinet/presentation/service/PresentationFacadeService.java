@@ -1,13 +1,17 @@
 package org.ftclub.cabinet.presentation.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.auth.service.OauthPolicyService;
-import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
-import org.ftclub.cabinet.presentation.dto.PresentationFormRequestDto;
+import org.ftclub.cabinet.presentation.domain.PresentationUpdateData;
+import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
+import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -18,40 +22,103 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class PresentationFacadeService {
 
 	private final PresentationCommandService commandService;
 	private final PresentationQueryService queryService;
 	private final PresentationPolicyService policyService;
 	private final UserQueryService userQueryService;
-	private final OauthPolicyService oauthPolicyService;
-	private final PresentationSlotRepository slotRepository; // TODO: service로 변경 필요
-//	private final PresentationSlotFacadeService slotFacadeService;  // TODO: 구현 후 연결 필요
+	private final ThumbnailStorageService thumbnailStorageService;
+	private final PresentationSlotRepository slotRepository;        // TODO
+	//	private final PresentationSlotFacadeService slotFacadeService;  // TODO
+//	private final PresentationLikeQueryService likeQueryService;    // TODO
+	private final PresentationMapper presentationMapper;
 
 	/**
 	 * 프레젠테이션을 등록합니다.
 	 *
-	 * @param userInfo  사용자 정보
+	 * @param userId    사용자 ID
 	 * @param form      프레젠테이션 등록 요청 DTO
 	 * @param thumbnail 썸네일 이미지 파일
 	 */
-	public void registerPresentation(UserInfoDto userInfo,
-			PresentationFormRequestDto form,
+	@Transactional
+	public void registerPresentation(Long userId,
+			PresentationRegisterServiceDto form,
 			MultipartFile thumbnail) throws IOException {
+		User user = userQueryService.getUser(userId);
+		String thumbnailS3Key = thumbnailStorageService.uploadImage(thumbnail);
 
-		// check user role
-		oauthPolicyService.validatePresentationUser(userInfo);
-		User user = userQueryService.getUser(userInfo.getUserId());
-
-		// TODO: slot 검증 및 slotService에서 slotId 가져오는 것으로 변경 (현재의 orElseThrow 제거)
+		// TODO: slot 검증로직으로 대체
 		PresentationSlot slot = slotRepository.findById(form.getSlotId())
-				.orElseThrow(() -> new IllegalArgumentException("Invalid slot ID"));
+				.orElseThrow(ExceptionStatus.SLOT_NOT_FOUND::asServiceException);
 
-		Presentation newPresentation =
-				commandService.createPresentation(user, form, slot, thumbnail);
+		// register presentation
+		commandService.createPresentation(user, form, slot, thumbnailS3Key);
+	}
 
-		// TODO: 검증된 slot에 presentation id 등록
-//		slotFacadeService.registerSlot(newPresentation);
+	/**
+	 * 프레젠테이션 상세 정보를 조회합니다.
+	 *
+	 * @param userId         사용자 ID (ANONYMOUS=null)
+	 * @param presentationId 프레젠테이션 ID
+	 */
+	@Transactional(readOnly = true)
+	public PresentationDetailDto getPresentationDetail(Long userId,
+			Long presentationId) {
+		Presentation presentation = queryService.findPresentationByIdWithUser(presentationId);
+
+		// check verification of access to presentation detail
+		policyService.verifyPresentationDetailAccess(userId, presentation);
+
+		String thumbnailLink = thumbnailStorageService.generatePresignedUrl(
+				presentation.getThumbnailS3Key());
+		Long likesCount = 0L;   // likeQueryService.getLikesCount(presentationId);    // TODO: likeQueryService
+		boolean likedByMe = false;
+		boolean editAllowed = false;
+		if (userId != null) {
+//			likedByMe = likeQueryService.isLikedByUser(userId, presentationId);   // TODO: likeQueryService
+			editAllowed = userId.equals(presentation.getUser().getId());
+		}
+		boolean upcoming = presentation.getStartTime().isAfter(LocalDateTime.now());
+
+		return presentationMapper.toPresentationDetailDto(
+				presentation,
+				thumbnailLink,
+				likesCount,
+				likedByMe,
+				editAllowed,
+				upcoming
+		);
+	}
+
+	/**
+	 * 프레젠테이션을 수정합니다.
+	 *
+	 * @param userId           사용자 ID
+	 * @param presentationId   프레젠테이션 ID
+	 * @param updateForm       프레젠테이션 수정 DTO
+	 * @param thumbnail        썸네일 이미지 파일
+	 * @param thumbnailUpdated 썸네일 이미지가 변경되었는지 여부
+	 */
+	@Transactional
+	public void updatePresentation(Long userId, Long presentationId,
+			PresentationUpdateServiceDto updateForm,
+			MultipartFile thumbnail, boolean thumbnailUpdated) throws IOException {
+		Presentation presentation = queryService.findPresentationById(presentationId);
+		// check verification of access to edit presentation & user update fields
+		policyService.verifyPresentationEditAccess(userId, presentation);
+		policyService.checkForIllegalFieldModification(updateForm, presentation);
+
+		// update contents
+		String thumbnailS3Key;
+		if (thumbnailUpdated) {
+			thumbnailS3Key = thumbnailStorageService.updateThumbnail(
+					presentation.getThumbnailS3Key(), thumbnail);
+		} else {
+			thumbnailS3Key = presentation.getThumbnailS3Key();
+		}
+		PresentationUpdateData updateData =
+				presentationMapper.toPresentationUpdateData(updateForm, thumbnailS3Key);
+		commandService.updatePresentation(presentation, updateData);
 	}
 }

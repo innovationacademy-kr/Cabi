@@ -3,7 +3,6 @@ package org.ftclub.cabinet.presentation.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -21,6 +20,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
 
 @Entity
@@ -56,26 +56,24 @@ public class Presentation {
 	@Column(name = "OUTLINE", length = 500, nullable = false)
 	private String outline;
 
-	// TODO: TEXT로 명시적 변경 필요 여부 및 fetchtype 설정이 맞는지 확인
 	@Lob
-	@Basic(fetch = FetchType.LAZY)
 	@Column(name = "DETAIL", length = 10000, nullable = false)
 	private String detail;
 
 	@Column(name = "CANCELED", nullable = false)
 	private boolean canceled = false;
 
-	@Column(name = "THUMBNAIL_LINK", length = 2048)
-	private String thumbnailLink;
+	@Column(name = "THUMBNAIL_S3_KEY", length = 2048)
+	private String thumbnailS3Key;
 
 	@Column(name = "VIDEO_LINK", length = 2048)
 	private String videoLink;
 
-	@Column(name = "IS_RECORDING_ALLOWED", nullable = false)
-	private boolean isRecordingAllowed = false;
+	@Column(name = "RECORDING_ALLOWED", nullable = false)
+	private boolean recordingAllowed = false;
 
-	@Column(name = "IS_PUBLIC_ALLOWED", nullable = false)
-	private boolean isPublicAllowed = false;
+	@Column(name = "PUBLIC_ALLOWED", nullable = false)
+	private boolean publicAllowed = false;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PRESENTATION_SLOT_ID")
@@ -90,24 +88,30 @@ public class Presentation {
 
 
 	@OneToMany(mappedBy = "presentation")
-	private List<PresentationComment> presentationComments = new ArrayList<>();
+	private final List<PresentationComment> presentationComments = new ArrayList<>();
 
 	@OneToMany(mappedBy = "presentation")
-	private List<PresentationLike> presentationLikes = new ArrayList<>();
+	private final List<PresentationLike> presentationLikes = new ArrayList<>();
 
 	public static Presentation of(User user, Category category, Duration duration,
 			String title, String summary, String outline, String detail,
-			String thumbnailLink, boolean isRecodingAllowed, boolean isPublicAllowed,
+			String thumbnailS3Key, boolean recodingAllowed, boolean publicAllowed,
 			PresentationSlot slot) {
-		return new Presentation(user, category, duration, title, summary, outline,
-				detail, thumbnailLink, null, isRecodingAllowed, isPublicAllowed,
+		Presentation presentation = new Presentation(user, category, duration,
+				title, summary, outline, detail,
+				thumbnailS3Key, null, recodingAllowed, publicAllowed,
 				slot, slot.getStartTime(), slot.getPresentationLocation());
+		if (!presentation.isValid()) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		slot.assignPresentation(presentation);
+		return presentation;
 	}
 
 	protected Presentation(User user, Category category, Duration duration,
 			String title, String summary, String outline, String detail,
-			String thumbnailLink, String videoLink,
-			boolean isRecordingAllowed, boolean isPublicAllowed,
+			String thumbnailS3Key, String videoLink,
+			boolean recordingAllowed, boolean publicAllowed,
 			PresentationSlot slot,
 			LocalDateTime startTime, PresentationLocation presentationLocation) {
 		this.user = user;
@@ -117,12 +121,79 @@ public class Presentation {
 		this.summary = summary;
 		this.outline = outline;
 		this.detail = detail;
-		this.thumbnailLink = thumbnailLink;
+		this.thumbnailS3Key = thumbnailS3Key;
 		this.videoLink = videoLink;
-		this.isRecordingAllowed = isRecordingAllowed;
-		this.isPublicAllowed = isPublicAllowed;
+		this.recordingAllowed = recordingAllowed;
+		this.publicAllowed = publicAllowed;
 		this.slot = slot;
 		this.startTime = startTime;
 		this.presentationLocation = presentationLocation;
+	}
+
+	/**
+	 * 프레젠테이션의 슬롯과 연결된 내용을 변경합니다.
+	 * <p>
+	 * 변경된 슬롯의 시작 시간과 발표 장소를 프레젠테이션에 반영합니다. (중복 엔티티)
+	 * </p>
+	 *
+	 * @param startTime            시작 시간
+	 * @param presentationLocation 발표 장소
+	 */
+	public void changeSlotContents(LocalDateTime startTime,
+			PresentationLocation presentationLocation) {
+		this.startTime = startTime;
+		this.presentationLocation = presentationLocation;
+	}
+
+	/**
+	 * 프레젠테이션을 수정합니다.
+	 *
+	 * @param data 프레젠테이션 수정 데이터
+	 */
+	public void update(PresentationUpdateData data) {
+		this.category = data.getCategory();
+		this.duration = data.getDuration();
+		this.title = data.getTitle();
+		this.summary = data.getSummary();
+		this.outline = data.getOutline();
+		this.detail = data.getDetail();
+		this.videoLink = data.getVideoLink();
+		this.recordingAllowed = data.isRecordingAllowed();
+		this.publicAllowed = data.isPublicAllowed();
+		this.thumbnailS3Key = data.getThumbnailS3Key();
+	}
+
+	/**
+	 * 프레젠테이션을 취소합니다.
+	 * <p>
+	 * 연결된 slot을 삭제합니다. 취소 시, 되돌릴 수 없습니다.
+	 * </p>
+	 */
+	public void cancel() {
+		// set slot to null
+		this.slot.cancelPresentation();
+		this.slot = null;
+		// set canceled flag to true
+		if (this.canceled) {
+			throw ExceptionStatus.PRESENTATION_ALREADY_CANCELED.asDomainException();
+		}
+		this.canceled = true;
+	}
+
+	/**
+	 * 프레젠테이션이 유효한지 검사합니다.
+	 * <p>
+	 * 객체가 생성될 때에만 유효성을 검사합니다.
+	 * </p>
+	 *
+	 * @return 유효성 검사 결과
+	 */
+	private boolean isValid() {
+		return (user != null && category != null && duration != null
+				&& title != null && !title.isBlank() && title.length() <= 50
+				&& summary != null && !summary.isBlank() && summary.length() <= 100
+				&& outline != null && !outline.isBlank() && outline.length() <= 500
+				&& detail != null && !detail.isBlank() && detail.length() <= 10000
+				&& slot != null);
 	}
 }

@@ -13,5 +13,5 @@ public class PresentationSlotUpdateServiceDto {
 
 	private Long slotId;
 	private LocalDateTime startTime;
-	private PresentationLocation location;
+	private PresentationLocation presentationLocation;
 }

@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import DarkModeToggleSwitch from "@/Cabinet/components/Common/DarkModeToggleSwitch";
 import { ReactComponent as CabiLogo } from "@/Cabinet/assets/images/logo.svg";
-import { ReactComponent as PresentationLogo } from "@/Presentation_legacy/assets/images/logo.svg";
+import { ReactComponent as PresentationLogo } from "@/Presentation/assets/images/logo.svg";
 
 interface ITopNavDomain {
   path: string;
@@ -18,14 +18,14 @@ const domains: ITopNavDomain[] = [
     adminPath: "/admin/home",
     logo: CabiLogo,
     title: "Cabi",
-    active: (pathname) => !pathname.includes("presentation"),
+    active: (pathname) => !pathname.includes("presentations"),
   },
   {
-    path: "/presentation/home",
-    adminPath: "/admin/presentation/detail",
+    path: "/presentations/home",
+    adminPath: "/admin/presentations/detail",
     logo: PresentationLogo,
     title: "수요지식회",
-    active: (pathname) => pathname.includes("presentation"),
+    active: (pathname) => pathname.includes("presentations"),
   },
 ];
 

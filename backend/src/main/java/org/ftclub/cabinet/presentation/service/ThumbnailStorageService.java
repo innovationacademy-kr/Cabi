@@ -12,7 +12,6 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -50,7 +49,7 @@ public class ThumbnailStorageService {
 	public String uploadImage(MultipartFile imageFile) throws IOException {
 		// 1. Check if the file is empty -> static images will be rendered
 		if (imageFile == null || imageFile.isEmpty()) {
-			return "";
+			return null;
 		}
 
 		// 2. Check file size
@@ -117,14 +116,13 @@ public class ThumbnailStorageService {
 	/**
 	 * S3에 저장된 이미지의 Pre-signed URL을 생성합니다. (제한시간: DEFAULT_EXPIRATION)
 	 *
-	 * @param s3Key
+	 * @param s3Key S3에 저장된 이미지의 key (DB에 저장된 값)
 	 * @return Pre-signed URL
 	 */
 	public String generatePresignedUrl(String s3Key) {
 		// 1. Check if the key is null or empty -> static images will be rendered
-		if (!StringUtils.hasText(s3Key)) {
-			log.debug("s3Key is null or empty. Returning empty string.");
-			return "";
+		if (s3Key == null || s3Key.isEmpty()) {
+			return null;
 		}
 
 		try {
@@ -174,5 +172,24 @@ public class ThumbnailStorageService {
 			log.error("Error deleting file from S3: Bucket={}, Key={}", bucket, s3Key, e);
 			throw new ServiceException(ExceptionStatus.S3_DELETE_FAILED);
 		}
+	}
+
+	/**
+	 * 프레젠테이션의 썸네일을 수정합니다.
+	 * <p>
+	 * 변경된 이미지를 업로드하고 S3 키를 업데이트합니다.
+	 * </p>
+	 *
+	 * @param oldThumbnailS3Key 기존 썸네일 이미지의 S3 key
+	 * @param thumbnail         썸네일 이미지 파일
+	 */
+	public String updateThumbnail(String oldThumbnailS3Key, MultipartFile thumbnail)
+			throws IOException {
+		// remove old thumbnail if it exists
+		if (oldThumbnailS3Key != null) {
+			deleteImage(oldThumbnailS3Key);
+		}
+		// upload new thumbnail and update key
+		return uploadImage(thumbnail);
 	}
 }

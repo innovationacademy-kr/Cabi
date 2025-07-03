@@ -9,7 +9,7 @@ import { UserDto } from "@/Cabinet/types/dto/user.dto";
 import { axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import TopNavContainer from "@/Presentation_legacy/components/TopNav/TopNav.container";
+import TopNavContainer from "@/Presentation/components/TopNav/TopNav.container";
 
 const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
@@ -24,7 +24,9 @@ const Layout = (): JSX.Element => {
 
   const token = getCookie("access_token");
 
-  const isRootPath: boolean = location.pathname === "/presentation/";
+  const isRootPath: boolean =
+    location.pathname === "/presentations" ||
+    location.pathname === "/presentations/";
   const isLoginPage: boolean = location.pathname === "/login";
   const isHomePage: boolean = location.pathname === "/home";
 
@@ -34,7 +36,7 @@ const Layout = (): JSX.Element => {
       setUser(myInfo);
       setIsValidToken(true);
       if (isRootPath || isLoginPage) {
-        navigate("/presentation/home");
+        navigate("/presentations/home", { replace: true });
       }
     } catch (error) {
       navigate("/login");
@@ -46,8 +48,11 @@ const Layout = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (!token && !isLoginPage) navigate("/login");
-    else if (token) getMyInfo();
+    if (!token && !isLoginPage) {
+      navigate("/login");
+    } else if (token) {
+      getMyInfo();
+    }
   }, []);
 
   useEffect(() => {
@@ -96,7 +101,7 @@ const WrapperStyled = styled.div`
 
 const MainStyled = styled.main`
   width: 100%;
-  height: 100%;
+  height: calc(100% - 104px);
   overflow-y: auto;
   user-select: none;
 `;

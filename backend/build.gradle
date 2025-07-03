@@ -8,6 +8,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 
@@ -18,6 +19,7 @@ sourceCompatibility = '11'
 ext {
     set('springCloudVersion', "2021.0.8")
     set('awsSdkVersion', "2.25.20")
+    set('snippetsDir', file("${buildDir}/generated-snippets"))
 }
 
 configurations {
@@ -27,6 +29,7 @@ configurations {
     configureEach {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
+    asciidoctorExt
 }
 
 repositories {
@@ -101,6 +104,10 @@ dependencies {
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     testImplementation 'org.modelmapper:modelmapper:3.1.1'
     testRuntimeOnly 'com.h2database:h2'
+
+    // springdoc
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 dependencyManagement {
@@ -144,8 +151,15 @@ test {
     useJUnitPlatform()
     failFast = true
     systemProperty 'spring.profiles.active', 'test'
+    outputs.dir snippetsDir
 }
 
 jar {
     enabled = false
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
 }

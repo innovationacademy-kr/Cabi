@@ -114,6 +114,7 @@ public enum ExceptionStatus {
 	// Presentation 관련
 	CANNOT_CREATE_SLOT_IN_PAST(HttpStatus.BAD_REQUEST, "과거 시간으로는 발표 슬롯을 생성할 수 없습니다."),
 	SLOT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 시간에는 이미 발표 슬롯이 존재합니다."),
+	NOT_FOUND_PRESENTATION(HttpStatus.NOT_FOUND, "발표가 존재하지 않습니다"),
 	SLOT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 발표 슬롯이 존재하지 않습니다."),
 	CANNOT_DELETE_SLOT_WITH_PRESENTATION(HttpStatus.BAD_REQUEST, "발표가 있는 슬롯은 삭제할 수 없습니다."),
 	FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 크기가 너무 큽니다."),
@@ -122,11 +123,32 @@ public enum ExceptionStatus {
 	S3_GET_URL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 URL 생성 중 에러가 발생했습니다."),
 	S3_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 삭제 중 에러가 발생했습니다."),
 	PRESENTATION_SLOT_ALREADY_ASSIGNED(HttpStatus.BAD_REQUEST, "이미 발표 슬롯에 발표가 할당되어 있습니다."),
+	PRESENTATION_SLOT_ALREADY_CANCELED(HttpStatus.BAD_REQUEST, "이미 발표 슬롯이 취소되었습니다."),
+	CANNOT_SEARCH_PAST_SLOT(HttpStatus.BAD_REQUEST, "과거 슬롯은 조회할 수 없습니다."),
+	NOT_ALLOWED_PERIOD(HttpStatus.BAD_REQUEST, "허용된 기간 외의 슬롯은 존재할 수 없습니다."),
+	PRESENTATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 발표가 존재하지 않습니다."),
+	PRESENTATION_ALREADY_CANCELED(HttpStatus.BAD_REQUEST, "이미 취소된 발표입니다."),
+
+	// Presentation Comment 관련
+	PRESENTATION_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다"),
+	PRESENTATION_COMMENT_TOO_LONG(HttpStatus.BAD_REQUEST, "댓글은 500자 이내로 작성해야 합니다"),
+	PRESENTATION_COMMENT_EMPTY(HttpStatus.BAD_REQUEST, "댓글은 비어있을 수 없습니다"),
+	PRESENTATION_COMMENT_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "댓글 작성자가 아닙니다"),
+	PRESENTATION_COMMENT_INVALID_ASSOCIATION(HttpStatus.BAD_REQUEST, "수정하려는 댓글이 해당 발표에 속하지 않습니다."),
+	PRESENTATION_COMMENT_BANNED(HttpStatus.BAD_REQUEST, "밴 당한 댓글은 삭제할 수 없습니다."),
 
 	// Presentation user 권한 관련
 	NOT_LOGGED_IN(HttpStatus.UNAUTHORIZED, "로그인이 필요한 서비스입니다."),
 	PRESENTATION_ACCESS_DENIED(HttpStatus.FORBIDDEN, "권한이 부족합니다."),
-//	NOT_PUBLIC_PRESENTATION(HttpStatus.FORBIDDEN, "로그인한 유저만 접근할 수 있는 자료입니다."),
+	CANCELED_PRESENTATION(HttpStatus.FORBIDDEN, "취소된 발표입니다.\n해당 글은 작성자만 확인할 수 있습니다."),
+	NOT_PRESENTATION_CREATOR(HttpStatus.FORBIDDEN, "작성자만 수정할 수 있습니다."),
+	CANCELED_PRESENTATION_EDIT_DENIED(HttpStatus.FORBIDDEN, "취소된 발표는 수정할 수 없습니다."),
+	PRESENTATION_UPDATE_DURATION_DENIED(HttpStatus.FORBIDDEN, "발표 시간은 수정할 수 없습니다."),
+	PRESENTATION_UPDATE_CATEGORY_DENIED(HttpStatus.FORBIDDEN, "발표 카테고리는 수정할 수 없습니다."),
+	PRESENTATION_UPDATE_TITLE_DENIED(HttpStatus.FORBIDDEN, "발표 제목은 수정할 수 없습니다."),
+	PRESENTATION_UPDATE_VIDEO_LINK_DENIED(HttpStatus.FORBIDDEN, "발표 영상 링크는 수정할 수 없습니다."),
+	PRESENTATION_UPDATE_RECORDING_ALLOWED_DENIED(HttpStatus.FORBIDDEN, "발표 녹화 허용 여부는 수정할 수 없습니다."),
+
 
 	// Like 관련
 	LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 좋아요 표시한 게시글입니다."),
