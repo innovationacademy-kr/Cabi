@@ -12,7 +12,7 @@ import lombok.ToString;
 public class PresentationCommentResponseDto {
 
 	@NotNull
-	private final Long presentationId;
+	private final Long commentId;
 	@NotNull
 	private final String user;
 	@NotNull
