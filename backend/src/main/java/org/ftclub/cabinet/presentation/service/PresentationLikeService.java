@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.presentation.service;
 
+import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.PresentationLikeDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class PresentationLikeService {
 
 	private final PresentationLikeRepository likeRepository;
@@ -37,14 +39,6 @@ public class PresentationLikeService {
 
 	public boolean isLikedByMe(Presentation presentation, User user) {
 		return presentationLikeQueryService.isLikedByMe(presentation.getId(), user);
-	}
-
-	// 생성자에서 주입
-	public PresentationLikeService(PresentationLikeRepository likeRepository, UserQueryService userQueryService, PresentationQueryService presentationQueryService, PresentationLikeQueryService presentationLikeQueryService) {
-		this.likeRepository = likeRepository;
-		this.userQueryService = userQueryService;
-		this.presentationQueryService = presentationQueryService;
-		this.presentationLikeQueryService = presentationLikeQueryService;
 	}
 
 	public Long getLikedCount(long presentationId){
