@@ -60,6 +60,8 @@ public class SecurityConfig {
 						.hasAnyRole("USER", "ADMIN", "MASTER")
 						.mvcMatchers(SecurityPathPatterns.AGU_ENDPOINTS)
 						.hasAnyRole("AGU", "USER")
+						.mvcMatchers(HttpMethod.GET, SecurityPathPatterns.NON_ANONYMOUS_ENDPOINTS)
+						.hasRole("USER")
 						.mvcMatchers(HttpMethod.GET, SecurityPathPatterns.ANONYMOUS_ENDPOINTS)
 						.hasAnyRole("ANONYMOUS", "USER")
 						.anyRequest().hasRole("USER")
