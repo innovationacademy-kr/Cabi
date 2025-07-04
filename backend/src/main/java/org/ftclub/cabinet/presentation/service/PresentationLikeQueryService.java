@@ -8,10 +8,10 @@ import org.ftclub.cabinet.presentation.domain.PresentationLike;
 import org.ftclub.cabinet.presentation.repository.PresentationLikeRepository;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +31,8 @@ public class PresentationLikeQueryService {
 		return presentationLikeRepository.existsByPresentationIdAndUserId(presentationId, user.getUserId());
 	}
 
-	public List<PresentationLike> getPostsLikedByUser(Long userId, Pageable pageable){
-		return presentationLikeRepository.findByUserId(userId, pageable);
+	public Page<PresentationLike> getPostsLikedByUser(Long userId, Pageable pageable){
+		return (Page<PresentationLike>) presentationLikeRepository.findByUser_Id(userId, pageable);
 	}
 
 

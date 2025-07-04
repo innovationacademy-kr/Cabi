@@ -10,6 +10,7 @@ import org.ftclub.cabinet.presentation.dto.PresentationLikeDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -66,6 +67,8 @@ public interface PresentationMapper {
 	@Mapping(source = "presentation.user.name",   target = "userName")
 	PresentationCardDto toPresentationCardDto(PresentationLike like);
 
-	// List<PresentationLike> → List<PresentationCardDto>
-	List<PresentationCardDto> toPresentationCardDtoList(List<PresentationLike> likes);
+	// Page<PresentationLike> → List<PresentationCardDto>
+	List<PresentationCardDto> toPresentationCardDtoList(Page<PresentationLike> likes);
+
+
 }

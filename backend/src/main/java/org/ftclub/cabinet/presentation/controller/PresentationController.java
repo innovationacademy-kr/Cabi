@@ -1,16 +1,19 @@
 package org.ftclub.cabinet.presentation.controller;
 
 
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.PresentationLike;
 import org.ftclub.cabinet.presentation.dto.*;
 import org.ftclub.cabinet.presentation.service.PresentationFacadeService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -116,11 +119,7 @@ public class PresentationController {
 			@AuthenticationPrincipal UserInfoDto user){
 
 		//내가 좋아요한 게시글의 list를 받아서 반환 DTO에 저장.
-		List<PresentationCardDto> page = presentationFacadeService.getPostsLikedByUser(user, pageable);
-		// PresentationLike 도메인을 이용해서 PresentationCardDto를 채우고 리스트로 반환한 뒤 매퍼로 반환
-		PresentationPagenationDto<PresentationCardDto> response = PagedResponseDto.fromPage(page);
-		// TODO PageList 받아서 필요한 정보들 넣고 data객체 반환 -> mapper 활용해보기
-		return response;
+		return presentationFacadeService.getPostsLikedByUser(user, pageable);
 	}
 
 }

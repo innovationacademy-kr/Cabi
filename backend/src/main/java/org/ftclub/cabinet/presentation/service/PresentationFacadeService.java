@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.presentation.service;
 
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +18,8 @@ import org.ftclub.cabinet.presentation.dto.*;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -126,8 +127,20 @@ public class PresentationFacadeService {
 		commandService.updatePresentation(presentation, updateData);
 	}
 
-	public List<PresentationCardDto> getPostsLikedByUser(UserInfoDto user , Pageable pageable) {
-		List<PresentationLike> presentationLikeList = likeQueryService.getPostsLikedByUser(user.getUserId(), pageable);
-		return presentationMapper.toPresentationCardDtoList(presentationLikeList);
+	public PresentationPagenationDto<PresentationCardDto> getPostsLikedByUser(UserInfoDto user , Pageable pageable) {
+		Page<PresentationLike> pageLikes =  likeQueryService.getPostsLikedByUser(user.getUserId(), pageable);
+		List<PresentationCardDto> content =  presentationMapper.toPresentationCardDtoList(pageLikes);
+		// PresentationLike 도메인을 이용해서 PresentationCardDto를 채우고 리스트로 반환한 뒤 매퍼로 반환
+		return new PresentationPagenationDto<>(
+				content,
+				pageLikes.getNumber() + 1,               // 1-based 페이지 번호
+				pageLikes.getTotalPages(),
+				(int) pageLikes.getTotalElements(),
+				pageLikes.isLast()
+		);
+
+
+
+
 	}
 }
