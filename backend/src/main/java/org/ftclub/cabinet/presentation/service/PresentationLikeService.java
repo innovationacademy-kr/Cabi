@@ -27,7 +27,7 @@ public class PresentationLikeService {
 
 	private final PresentationQueryService presentationQueryService;
 
-	private final PresentationLikeQueryService   presentationLikeQueryService;
+	private final PresentationLikeQueryService presentationLikeQueryService;
 
 	public User getUserById(Long id){
 		return (userQueryService.getUser(id));
@@ -81,4 +81,3 @@ public class PresentationLikeService {
 	}
 
 }
-//파사드 패턴 도입해야함 -> 이걸 파사드 하위에 쿼리 컨트롤러와 정책 컨트롤러 두기
