@@ -12,6 +12,7 @@ import org.ftclub.cabinet.dto.AvailablePresentationSlotDto;
 import org.ftclub.cabinet.presentation.dto.DataListResponseDto;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class PresentationSlotService {
 		return targetMonth.atDay(FIRST_DAY_OF_MONTH).atStartOfDay();
 	}
 
+	@Transactional(readOnly = true)
 	public DataListResponseDto<AvailablePresentationSlotDto> getPresentationSlots() {
 		LocalDateTime now = LocalDateTime.now(clock);
 		List<AvailablePresentationSlotDto> slotList = presentationSlotRepository.findByStartTimeBetween(
