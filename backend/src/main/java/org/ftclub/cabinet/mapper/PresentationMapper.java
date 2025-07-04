@@ -2,11 +2,16 @@ package org.ftclub.cabinet.mapper;
 
 import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
 import org.ftclub.cabinet.presentation.domain.Presentation;
+import org.ftclub.cabinet.presentation.domain.PresentationLike;
 import org.ftclub.cabinet.presentation.domain.PresentationUpdateData;
+import org.ftclub.cabinet.presentation.dto.PresentationCardDto;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
+import org.ftclub.cabinet.presentation.dto.PresentationLikeDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface PresentationMapper {
@@ -46,4 +51,21 @@ public interface PresentationMapper {
 	PresentationUpdateData toPresentationUpdateData(
 			PresentationUpdateServiceDto updateDto,
 			String thumbnailS3Key);
+
+//	@Mapping(target = "presentationId", source = "presentation.id")
+//	PresentationCardDto toPresentationCardDto(
+//			Presentation presentation,
+//			String thumbnailS3Key,
+//			Long likeCount,
+//			boolean likedByMe,
+//			String userName
+//	);
+
+	// PresentationLike → PresentationCardDto 변환
+	@Mapping(source = "presentation.id",           target = "presentationId")
+	@Mapping(source = "presentation.user.name",   target = "userName")
+	PresentationCardDto toPresentationCardDto(PresentationLike like);
+
+	// List<PresentationLike> → List<PresentationCardDto>
+	List<PresentationCardDto> toPresentationCardDtoList(List<PresentationLike> likes);
 }

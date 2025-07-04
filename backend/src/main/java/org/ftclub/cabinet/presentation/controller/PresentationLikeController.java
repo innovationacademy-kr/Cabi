@@ -1,14 +1,11 @@
 package org.ftclub.cabinet.presentation.controller;
 
-import org.ftclub.cabinet.dto.PresentationLikeDto;
+import org.ftclub.cabinet.presentation.dto.PresentationLikeDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
-import org.ftclub.cabinet.presentation.domain.PresentationLike;
 import org.ftclub.cabinet.presentation.service.PresentationLikeService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 
 @RestController
@@ -39,12 +36,12 @@ public class PresentationLikeController {
 		presentationLikeService.deleteLike(new PresentationLikeDto(presentationId, userId, now));
 	}
 
-	@GetMapping("/me/likes")
-	public void getPostsLikedByUser(
-			@PathVariable Long presentationId,
-			@AuthenticationPrincipal UserInfoDto userInfoDto) {
-		Long userId = userInfoDto.getUserId();
-		LocalDateTime now = LocalDateTime.now();
-		presentationLikeService.getPostsLikedByUser(new PresentationLikeDto(presentationId, userId, now));
-	}
+//	@GetMapping("/me/likes")
+//	public void getPostsLikedByUser(
+//			@PathVariable Long presentationId,
+//			@AuthenticationPrincipal UserInfoDto userInfoDto) {
+//		Long userId = userInfoDto.getUserId();
+//		LocalDateTime now = LocalDateTime.now();
+//		presentationLikeService.getPostsLikedByUser(new PresentationLikeDto(presentationId, userId, now));
+//	}
 }

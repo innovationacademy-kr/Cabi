@@ -2,6 +2,7 @@ package org.ftclub.cabinet.presentation.dto;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
@@ -9,6 +10,7 @@ import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class PresentationCardDto {
 
 	// presentation entity info
@@ -20,8 +22,8 @@ public class PresentationCardDto {
 	private final Category category;
 
 	// calculated info from presentation
-	private final String thumbnailLink;
-	private final PresentationStatus presentationStatus; //Enum type -> get current status로 만들어두셨는데 아직 push안됨.
+	private final String thumbnailS3Key;
+	private final PresentationStatus presentationStatus;
 	// user info
 	private final String userName;
 

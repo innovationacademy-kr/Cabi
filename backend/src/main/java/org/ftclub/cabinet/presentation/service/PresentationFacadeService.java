@@ -1,17 +1,21 @@
 package org.ftclub.cabinet.presentation.service;
 
+import java.awt.print.Pageable;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
+import org.ftclub.cabinet.presentation.domain.PresentationLike;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.domain.PresentationUpdateData;
-import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
-import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
-import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
+import org.ftclub.cabinet.presentation.dto.*;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -31,7 +35,7 @@ public class PresentationFacadeService {
 	private final ThumbnailStorageService thumbnailStorageService;
 	private final PresentationSlotRepository slotRepository;        // TODO
 	//	private final PresentationSlotFacadeService slotFacadeService;  // TODO
-//	private final PresentationLikeQueryService likeQueryService;    // TODO
+	private final PresentationLikeQueryService likeQueryService;    // TODO
 	private final PresentationMapper presentationMapper;
 
 	/**
@@ -120,5 +124,10 @@ public class PresentationFacadeService {
 		PresentationUpdateData updateData =
 				presentationMapper.toPresentationUpdateData(updateForm, thumbnailS3Key);
 		commandService.updatePresentation(presentation, updateData);
+	}
+
+	public List<PresentationCardDto> getPostsLikedByUser(UserInfoDto user , Pageable pageable) {
+		List<PresentationLike> presentationLikeList = likeQueryService.getPostsLikedByUser(user.getUserId(), pageable);
+		return presentationMapper.toPresentationCardDtoList(presentationLikeList);
 	}
 }

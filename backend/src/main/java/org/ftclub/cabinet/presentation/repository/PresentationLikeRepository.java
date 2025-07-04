@@ -4,6 +4,8 @@ import org.ftclub.cabinet.presentation.domain.PresentationLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.awt.print.Pageable;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -11,6 +13,6 @@ public interface PresentationLikeRepository extends JpaRepository<PresentationLi
 	void deleteByPresentationIdAndUserId(Long presentationId, Long userId);
 	boolean existsByPresentationIdAndUserId(Long presentationId, Long userId);
 
-	Optional<Object> countByid(Long id);
+	List<PresentationLike> findByUserId(Long presentationId,  Pageable pageable);
 	Long    countByPresentationId(Long presentationId);
 }

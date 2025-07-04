@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.presentation.service;
 
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationLike;
@@ -8,6 +9,9 @@ import org.ftclub.cabinet.presentation.repository.PresentationLikeRepository;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
+
+import java.awt.print.Pageable;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +27,12 @@ public class PresentationLikeQueryService {
 		return presentationLikeRepository.countByPresentationId(presentationId); //.orElseThrow(ExceptionStatus.SLOT_NOT_FOUND::asServiceException);
 	}
 
-	public boolean isLikedByMe(Long presentationId, User user){
-		return presentationLikeRepository.existsByPresentationIdAndUserId(presentationId, user.getId());
+	public boolean isLikedByMe(Long presentationId, UserInfoDto user){
+		return presentationLikeRepository.existsByPresentationIdAndUserId(presentationId, user.getUserId());
+	}
+
+	public List<PresentationLike> getPostsLikedByUser(Long userId, Pageable pageable){
+		return presentationLikeRepository.findByUserId(userId, pageable);
 	}
 
 

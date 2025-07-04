@@ -1,20 +1,15 @@
 package org.ftclub.cabinet.presentation.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.dto.PresentationLikeDto;
+import org.ftclub.cabinet.presentation.dto.PresentationLikeDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationLike;
 import org.ftclub.cabinet.presentation.repository.PresentationLikeRepository;
-import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.repository.UserRepository;
 import org.ftclub.cabinet.user.service.UserQueryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -33,21 +28,21 @@ public class PresentationLikeService {
 		return (userQueryService.getUser(id));
 	}
 
-	public Presentation getPresentationById(Long id){
-		return (presentationQueryService.findPresentationById(id));
-	}
-
-	public boolean isLikedByMe(Presentation presentation, User user) {
-		return presentationLikeQueryService.isLikedByMe(presentation.getId(), user);
-	}
-
-	public Long getLikedCount(long presentationId){
-		return presentationLikeQueryService.getLikedCount(presentationId);
-	}
+//	public Presentation getPresentationById(Long id){
+//		return (presentationQueryService.findPresentationById(id));
+//	}
+//
+//	public boolean isLikedByMe(Presentation presentation, User user) {
+//		return presentationLikeQueryService.isLikedByMe(presentation.getId(), user);
+//	}
+//
+//	public Long getLikedCount(long presentationId){
+//		return presentationLikeQueryService.getLikedCount(presentationId);
+//	}
 
 	public  void postLike(PresentationLikeDto presentationLikeDto) {
 		User user = getUserById(presentationLikeDto.getUserId());
-		Presentation presentation = getPresentationById(presentationLikeDto.getPresentationId());
+		Presentation presentation = presentationQueryService.findPresentationById(presentationLikeDto.getPresentationId());
 		if (likeRepository.existsByPresentationIdAndUserId(presentationLikeDto.getPresentationId(), user.getId()))
 		{
 			throw ExceptionStatus.LIKE_ALREADY_EXISTS.asDomainException();
@@ -62,7 +57,7 @@ public class PresentationLikeService {
 
 	public  void deleteLike(PresentationLikeDto presentationLikeDto) {
 		User user = getUserById(presentationLikeDto.getUserId());
-		Presentation presentation = getPresentationById(presentationLikeDto.getPresentationId());
+		Presentation presentation = presentationQueryService.findPresentationById(presentationLikeDto.getPresentationId());
 		if (likeRepository.existsByPresentationIdAndUserId(presentationLikeDto.getPresentationId(), user.getId()))
 		{
 			PresentationLike presentationLike = new PresentationLike(presentation, user);
@@ -75,9 +70,9 @@ public class PresentationLikeService {
 
 	}
 
-	@Transactional(readOnly = true)
-	public void getPostsLikedByUser(PresentationLikeDto presentationLikeDto){
-
-	}
+//	@Transactional(readOnly = true)
+//	public void getPostsLikedByUser(PresentationLikeDto presentationLikeDto){
+//
+//	}
 
 }
