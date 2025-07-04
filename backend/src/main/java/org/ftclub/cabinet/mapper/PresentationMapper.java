@@ -3,6 +3,7 @@ package org.ftclub.cabinet.mapper;
 import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationLike;
+import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.domain.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.PresentationCardDto;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
@@ -12,6 +13,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -63,9 +65,26 @@ public interface PresentationMapper {
 //	);
 
 	// PresentationLike → PresentationCardDto 변환
-	@Mapping(source = "presentation.id",           target = "presentationId")
-	@Mapping(source = "presentation.user.name",   target = "userName")
+	@Mapping(source = "presentation.id",                   target = "presentationId")
+	@Mapping(source = "presentation.startTime",            target = "startTime")
+	@Mapping(source = "presentation.presentationLocation", target = "presentationLocation")
+	@Mapping(source = "presentation.title",                target = "title")
+	@Mapping(source = "presentation.summary",              target = "summary")
+	@Mapping(source = "presentation.category",             target = "category")
+	@Mapping(source = "presentation.thumbnailS3Key",       target = "thumbnailS3Key")
+	// 전체 소스 객체를 mapStatus()에 넘겨서 presentationStatus를 채워준다
+	@Mapping(target = "presentationStatus", source = ".")
+	@Mapping(source = "presentation.user.name",            target = "userName")
 	PresentationCardDto toPresentationCardDto(PresentationLike like);
+
+	/** startTime 기준으로 상태를 계산하는 커스텀 매핑 메서드 */
+	default PresentationStatus mapStatus(PresentationLike like) {
+		LocalDateTime now = LocalDateTime.now();
+		return like.getPresentation().getStartTime().isAfter(now)
+				? PresentationStatus.EXPECTED
+				: PresentationStatus.DONE;
+	}
+	//TODO : CANCEL은 애초에 검색이 안돼서 예외처리 하지 않아도 되는지 확인하기.
 
 	// Page<PresentationLike> → List<PresentationCardDto>
 	List<PresentationCardDto> toPresentationCardDtoList(Page<PresentationLike> likes);
