@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PresentationQueryService {
+
 	private final PresentationRepository presentationRepository;
 
 	/**
