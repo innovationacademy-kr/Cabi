@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import CommentSection from "@/Presentation/components/CommentSection";
 import {
   PresentationCategoryTypeLabelMap,
   PresentationLocationLabelMap,
@@ -161,6 +162,9 @@ const PresentationDetailPage: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="max-w-6xl mx-auto px-6 pb-20">
+        {presentationId && <CommentSection presentationId={presentationId} />}
       </div>
     </>
   );

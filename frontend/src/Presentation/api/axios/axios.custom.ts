@@ -138,3 +138,63 @@ export const axiosGetPresentationById = async (
     throw error;
   }
 };
+
+/**
+ * 수요지식회 리뉴얼 API
+ */
+const axiosGetPresentationCommentsURL = "/v6/presentations/";
+export const axiosGetPresentationComments = async (presentationId: string) => {
+  try {
+    const response = await instance.get(
+      `${axiosGetPresentationCommentsURL}${presentationId}/comments`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosPostPresentationComment = async (
+  presentationId: string,
+  detail: string
+) => {
+  try {
+    const response = await instance.post(
+      `${axiosGetPresentationCommentsURL}${presentationId}/comments`,
+      { detail }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosPatchPresentationComment = async (
+  presentationId: string,
+  commentId: number,
+  detail: string
+) => {
+  try {
+    const response = await instance.patch(
+      `/v6/presentations/${presentationId}/comments/${commentId}`,
+      { detail }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosDeletePresentationComment = async (
+  presentationId: string,
+  commentId: number
+) => {
+  try {
+    const response = await instance.delete(
+      `/v6/presentations/${presentationId}/comments/${commentId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
