@@ -38,16 +38,4 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 			+ "LEFT JOIN FETCH p.user "
 			+ "WHERE p.id = :presentationId")
 	Optional<Presentation> findByIdJoinUser(@Param("presentationId") Long presentationId);
-
-	/**
-	 * userId에 해당하는 프레젠테이션들을 최신순으로 조회합니다.
-	 *
-	 * @param userId 사용자 ID
-	 * @return 프레젠테이션 목록
-	 */
-	@Query("SELECT p "
-			+ "FROM Presentation p "
-			+ "WHERE p.user.id = :userId "
-			+ "ORDER BY p.startTime DESC")
-	List<Presentation> findAllByUserIdAtDesc(@Param("userId") Long userId);
 }

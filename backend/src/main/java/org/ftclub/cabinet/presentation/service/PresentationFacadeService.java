@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.UserInfoDto;
@@ -17,10 +15,6 @@ import org.ftclub.cabinet.presentation.domain.PresentationLike;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.domain.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.*;
-import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
-import org.ftclub.cabinet.presentation.dto.PresentationMyListDto;
-import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
-import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -90,13 +84,15 @@ public class PresentationFacadeService {
 //			likedByMe = likeQueryService.isLikedByUser(userId, presentationId);   // TODO: likeQueryService
 			editAllowed = userId.equals(presentation.getUser().getId());
 		}
+		boolean upcoming = presentation.getStartTime().isAfter(LocalDateTime.now());
 
 		return presentationMapper.toPresentationDetailDto(
 				presentation,
 				thumbnailLink,
 				likesCount,
 				likedByMe,
-				editAllowed
+				editAllowed,
+				upcoming
 		);
 	}
 
@@ -129,23 +125,6 @@ public class PresentationFacadeService {
 		PresentationUpdateData updateData =
 				presentationMapper.toPresentationUpdateData(updateForm, thumbnailS3Key);
 		commandService.updatePresentation(presentation, updateData);
-	}
-
-	/**
-	 * 나의 프레젠테이션 기록을 조회합니다.
-	 *
-	 * @param userId 사용자 ID (ANONYMOUS=null)
-	 * @return 프레젠테이션 기록 목록
-	 */
-	@Transactional(readOnly = true)
-	public List<PresentationMyListDto> getMyPresentations(Long userId) {
-		// get user's presentations
-		List<Presentation> presentations =
-				queryService.findPresentationsByUserId(userId);
-
-		return presentations.stream()
-				.map(presentationMapper::toPresentationMyListDto)
-				.collect(Collectors.toList());
 	}
 
 	public PresentationPagenationDto<PresentationCardDto> getPostsLikedByUser(UserInfoDto user , Pageable pageable) {

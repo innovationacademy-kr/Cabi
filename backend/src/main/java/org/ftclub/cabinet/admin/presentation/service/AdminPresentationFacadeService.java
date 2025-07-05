@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.admin.presentation.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,13 +58,15 @@ public class AdminPresentationFacadeService {
 		String thumbnailLink = thumbnailStorageService.generatePresignedUrl(
 				presentation.getThumbnailS3Key());
 		Long likesCount = 0L;   // likeQueryService.getLikesCount(presentationId);    // TODO: likeQueryService
+		boolean upcoming = presentation.getStartTime().isAfter(LocalDateTime.now());
 
 		return presentationMapper.toPresentationDetailDto(
 				presentation,
 				thumbnailLink,
 				likesCount,
 				false,
-				false
+				false,
+				upcoming
 		);
 	}
 

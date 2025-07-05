@@ -181,21 +181,6 @@ public class Presentation {
 	}
 
 	/**
-	 * 현재 프레젠테이션의 상태(완료, 예정, 취소)를 반환합니다.
-	 *
-	 * @return {@link PresentationStatus} 현재 프레젠테이션의 상태
-	 */
-	public PresentationStatus getCurrentStatus() {
-		if (this.canceled) {
-			return PresentationStatus.CANCELED;
-		}
-		if (this.startTime.isBefore(LocalDateTime.now())) {
-			return PresentationStatus.DONE;
-		}
-		return PresentationStatus.UPCOMING;
-	}
-
-	/**
 	 * 프레젠테이션이 유효한지 검사합니다.
 	 * <p>
 	 * 객체가 생성될 때에만 유효성을 검사합니다.

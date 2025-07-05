@@ -50,19 +50,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			FilterChain filterChain) throws ServletException, IOException {
 		String token = jwtService.extractToken(request);
 		if (token != null) {
-			try {
-				UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(token);
-				Authentication auth = getAuthentication(userInfoDto);
+			UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(token);
+			Authentication auth = getAuthentication(userInfoDto);
 
-				log.debug("JWT Filter: userId = {}, role = {}",
-						userInfoDto.getUserId(),
-						userInfoDto.getRoles()
-				);
-				SecurityContextHolder.getContext().setAuthentication(auth);
-			} catch (Exception e) {
-				log.warn("JWT token validation failed: {}. Proceeding as anonymous.",
-						e.getMessage());
-			}
+			log.debug("JWT Filter: userId = {}, role = {}",
+					userInfoDto.getUserId(),
+					userInfoDto.getRoles()
+			);
+			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
 		filterChain.doFilter(request, response);
 	}

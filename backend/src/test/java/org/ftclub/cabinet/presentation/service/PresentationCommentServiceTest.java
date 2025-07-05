@@ -99,7 +99,7 @@ class PresentationCommentServiceTest {
 		// Then
 		// Response DTO 검증
 		assertNotNull(responseDto);
-		assertEquals(expectedCommentId, responseDto.getCommentId());
+		assertEquals(expectedCommentId, responseDto.getPresentationId());
 		assertEquals(mockUser.getName(), responseDto.getUser());
 		assertEquals(commentDetail, responseDto.getDetail());
 		assertEquals(expectedCreatedAt, responseDto.getDateTime());
@@ -272,7 +272,7 @@ class PresentationCommentServiceTest {
 
 		// 첫 번째 댓글 검증 (내 댓글)
 		PresentationCommentResponseDto dto1 = responseDtos.get(0);
-		assertEquals(comment1.getId(), dto1.getCommentId());
+		assertEquals(comment1.getId(), dto1.getPresentationId());
 		assertEquals(ownerUser.getName(), dto1.getUser());
 		assertEquals(comment1.getDetail(), dto1.getDetail());
 		assertEquals(comment1.getCreatedAt(), dto1.getDateTime());
@@ -282,7 +282,7 @@ class PresentationCommentServiceTest {
 
 		// 두 번째 댓글 검증 (다른 사람 댓글)
 		PresentationCommentResponseDto dto2 = responseDtos.get(1);
-		assertEquals(comment2.getId(), dto2.getCommentId());
+		assertEquals(comment2.getId(), dto2.getPresentationId());
 		assertEquals(anotherUser.getName(), dto2.getUser());
 		assertEquals(comment2.getCreatedAt(), dto2.getDateTime());
 		assertFalse(dto2.isMine()); // 요청한 사용자와 댓글 작성자가 다름
@@ -368,7 +368,7 @@ class PresentationCommentServiceTest {
 
 		// Then
 		assertNotNull(responseDto);
-		assertEquals(commentId, responseDto.getCommentId());
+		assertEquals(commentId, responseDto.getPresentationId());
 		assertEquals(ownerUser.getName(), responseDto.getUser());
 		assertEquals(updatedDetail, responseDto.getDetail());
 		assertEquals(now, responseDto.getDateTime());
