@@ -29,6 +29,13 @@ public class SecurityPathPatterns {
 	};
 
 	/**
+	 * endpoints for user services not anonymous
+	 */
+	public static final String[] NON_ANONYMOUS_ENDPOINTS = {
+			"/v6/presentations/me/**",
+	};
+
+	/**
 	 * endpoints for admin services
 	 */
 	public static final String[] ADMIN_ENDPOINTS = {

@@ -8,6 +8,7 @@ import org.ftclub.cabinet.presentation.domain.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.PresentationCardDto;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.ftclub.cabinet.presentation.dto.PresentationLikeDto;
+import org.ftclub.cabinet.presentation.dto.PresentationMyListDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -36,13 +37,13 @@ public interface PresentationMapper {
 	 * @return 변환된 PresentationDetailDto
 	 */
 	@Mapping(target = "userName", source = "presentation.user.name")
+	@Mapping(target = "presentationStatus", source = "presentation.currentStatus")
 	PresentationDetailDto toPresentationDetailDto(
 			Presentation presentation,
 			String thumbnailLink,
 			Long likeCount,
 			boolean likedByMe,
-			boolean editAllowed,
-			boolean upcoming
+			boolean editAllowed
 	);
 
 	/**
@@ -54,6 +55,20 @@ public interface PresentationMapper {
 	PresentationUpdateData toPresentationUpdateData(
 			PresentationUpdateServiceDto updateDto,
 			String thumbnailS3Key);
+
+	/**
+	 * Presentation 엔티티를 PresentationMyListDto로 변환합니다.
+	 * <p>
+	 * 상태에 대한 정보는 엔티티 내부에 선언된 getCurrentStatus 함수를 통해 계산합니다.
+	 * </p>
+	 *
+	 * @param presentation 변환할 Presentation 엔티티
+	 * @return 변환된 PresentationMyListDto
+	 */
+	@Mapping(target = "presentationId", source = "id")
+	@Mapping(target = "presentationStatus", source = "currentStatus")
+	PresentationMyListDto toPresentationMyListDto(Presentation presentation);
+
 
 //	@Mapping(target = "presentationId", source = "presentation.id")
 //	PresentationCardDto toPresentationCardDto(

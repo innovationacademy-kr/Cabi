@@ -11,6 +11,14 @@ import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.PresentationLike;
 import org.ftclub.cabinet.presentation.dto.*;
+import org.ftclub.cabinet.presentation.dto.DataListResponseDto;
+import org.ftclub.cabinet.presentation.dto.DataResponseDto;
+import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
+import org.ftclub.cabinet.presentation.dto.PresentationMyListDto;
+import org.ftclub.cabinet.presentation.dto.PresentationRegisterRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateRequestDto;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.ftclub.cabinet.presentation.service.PresentationFacadeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -113,6 +121,19 @@ public class PresentationController {
 		);
 	}
 
+	/**
+	 * 나의 프레젠테이션 기록을 조회합니다.
+	 *
+	 * @param user 사용자 정보 (USER)
+	 * @return 프레젠테이션 기록 목록
+	 */
+	@GetMapping("/me/histories")
+	public DataListResponseDto<PresentationMyListDto> getMyPresentations(
+			@AuthenticationPrincipal UserInfoDto user) {
+		List<PresentationMyListDto> myPresentations =
+				presentationFacadeService.getMyPresentations(user.getUserId());
+		return new DataListResponseDto<>(myPresentations);
+	}
 	@GetMapping("/me/likes")
 	public PresentationPagenationDto<PresentationCardDto> getLikes(
 			@PageableDefault(page = 0, size = 6) Pageable pageable,
