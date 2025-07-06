@@ -35,7 +35,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 @Transactional
-@ActiveProfiles("local")
 class AdminPresentationCommentServiceTest {
 
 	@Autowired
