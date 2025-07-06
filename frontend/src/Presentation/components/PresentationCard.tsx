@@ -1,4 +1,5 @@
 import { ReactComponent as Like } from "@/Presentation/assets/heart.svg";
+import { PresentationStatusTypeLabelMap } from "@/Presentation/assets/data/maps";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import React, { useState } from "react";
@@ -7,7 +8,7 @@ export interface IPresentation {
   id: number;
   thumbnailLink: string;
   category: string;
-  isUpcoming: boolean;
+  presentationStatus: string;
   likeCount: number;
   title: string;
   startTime: string;
@@ -28,7 +29,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
     id,
     thumbnailLink,
     category,
-    isUpcoming,
+    presentationStatus,
     likeCount,
     title,
     startTime,
@@ -68,7 +69,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
         <div className="absolute bottom-0 left-0 w-full h-[80px] bg-gradient-to-t from-black/60 to-black/0 z-10" />
         <div className="absolute bottom-[10px] left-[16px] flex space-x-2 z-10 ">
           <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
-            {isUpcoming ? "발표 예정" : "발표 완료"}
+            {PresentationStatusTypeLabelMap[presentationStatus]}
           </Badge>
           <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
             {category}

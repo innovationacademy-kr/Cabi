@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
@@ -7,12 +8,13 @@ import {
   PresentationPeriodTypeNumberLabelMap,
   PresentationStatusTypeLabelMap,
 } from "@/Presentation/assets/data/maps";
+import { ReactComponent as LikeIcon } from "@/Presentation/assets/heart.svg";
 import type {
   PresentationCategoryType,
   PresentationLocation,
   PresentationPeriodType,
-  PresentationStatusType,
 } from "@/Presentation/types/enum/presentation.type.enum";
+import { PresentationStatusType } from "@/Presentation/types/enum/presentation.type.enum";
 import { axiosGetPresentationById } from "@/Presentation/api/axios/axios.custom";
 
 interface IPresentationDetail {
@@ -32,8 +34,9 @@ interface IPresentationDetail {
   publicAllowed: boolean;
   likeCount: number;
   likedByMe: boolean;
-  presentationStatus: PresentationStatusType;
+  canceled: boolean;
   editAllowed: boolean;
+  presentationStatus: string;
 }
 
 const PresentationDetailPage: React.FC = () => {
@@ -55,6 +58,7 @@ const PresentationDetailPage: React.FC = () => {
       if (!presentationId) return;
       try {
         const res = await axiosGetPresentationById(presentationId);
+        console.log("Presentation Detail:", res.data.data);
         setPresentation(res.data.data);
       } catch (error) {
         console.error("Error fetching presentation:", error);
@@ -73,7 +77,7 @@ const PresentationDetailPage: React.FC = () => {
           style={{
             backgroundImage: `url(${
               presentation.thumbnailLink ||
-              "http://localhost:9000/local-cabi-bucket/presentation-thumbnail/ecc344ea-6d56-4c2b-b3f6-08c4c95e43ff_testImg.jp.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250617T064951Z&X-Amz-SignedHeaders=host&X-Amz-Credential=minio_root%2F20250617%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Expires=59940&X-Amz-Signature=559ded6f0f7fd4fe7d282bb989cf9dc4fb59303208f29d5925c8bdd3b43c8a11"
+              "https://fastly.picsum.photos/id/110/5000/3333.jpg?hmac=AvUBrnXG4ebvrtC08T95vEzD1I9SryZ8KSQ4iJ9tb9s"
             })`,
           }}
         >
@@ -81,51 +85,85 @@ const PresentationDetailPage: React.FC = () => {
         </div>
 
         <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-16 z-10">
-          <div className="flex flex-col md:flex-row items-start gap-10 relative">
-            <img
-              src={
-                presentation.thumbnailLink ||
-                "http://localhost:9000/local-cabi-bucket/presentation-thumbnail/ecc344ea-6d56-4c2b-b3f6-08c4c95e43ff_testImg.jp.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250617T064951Z&X-Amz-SignedHeaders=host&X-Amz-Credential=minio_root%2F20250617%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Expires=59940&X-Amz-Signature=559ded6f0f7fd4fe7d282bb989cf9dc4fb59303208f29d5925c8bdd3b43c8a11"
-              }
-              alt="발표 이미지"
-              className="w-full md:w-[430px] rounded-lg shadow-lg aspect-video object-cover"
-            />
-
-            <div className="flex flex-col flex-1 h-full md:pt-[10px]">
-              <div>
-                <h1 className="text-3xl md:text-3xl font-semibold leading-snug tracking-tight">
-                  {presentation.title}
-                </h1>
-                <p className="mt-4 text-neutral-300 text-base leading-relaxed">
-                  {presentation.summary}
-                </p>
+          <div className="flex flex-col md:flex-row items-start gap-10">
+            <div className="relative w-full md:w-[430px] shrink-0">
+              <img
+                src={
+                  presentation.thumbnailLink ||
+                  "https://fastly.picsum.photos/id/110/5000/3333.jpg?hmac=AvUBrnXG4ebvrtC08T95vEzD1I9SryZ8KSQ4iJ9tb9s"
+                }
+                alt="발표 이미지"
+                className="w-full rounded-lg shadow-lg aspect-video object-cover"
+              />
+              <div className="absolute bottom-0 left-0 w-full h-[80px] bg-gradient-to-t from-black/60 to-black/0 z-10 rounded-b-lg" />
+              <div className="absolute bottom-[10px] left-[16px] flex space-x-2 z-20">
+                <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
+                  {PresentationStatusTypeLabelMap[presentation.presentationStatus]}
+                </Badge>
+                <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
+                  {PresentationCategoryTypeLabelMap[presentation.category]}
+                </Badge>
+                <div className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md rounded-full inline-flex items-center gap-1">
+                  <LikeIcon className="w-[14px] h-[14px] fill-[#b7b7b7] stroke-[#b7b7b7]" />
+                  <span className="text-white text-xs">
+                    {presentation.likeCount}
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="flex md:absolute bottom-2 md:bottom-[10px] md:ml-[470px] mt-6 md:mt-0 text-sm text-neutral-300 gap-2">
-              <span>{formatDate(presentation.startTime)}</span>
-              <span>|</span>
-              <span>{presentation.userName}</span>
+
+            <div className="flex flex-col flex-1 md:pt-[10px]">
+              <h1 className="text-3xl font-semibold leading-snug tracking-tight">
+                {presentation.title}
+              </h1>
+              <p className="mt-4 text-neutral-300 text-base leading-relaxed">
+                {presentation.summary}
+              </p>
+              <div className="mt-6 flex flex-col gap-2 text-sm text-neutral-300">
+                <div className="flex gap-2 items-center">
+                  <span>{formatDate(presentation.startTime)}</span>
+                  <span>|</span>
+                  <span>{presentation.userName}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-20 space-y-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
-          <p>
-            📂 카테고리:{" "}
-            {PresentationCategoryTypeLabelMap[presentation.category]}
-          </p>
-          <p>
-            ⏱ 발표 시간:{" "}
-            {PresentationPeriodTypeNumberLabelMap[presentation.duration]}분
-          </p>
-          <p>
-            📍 장소:{" "}
-            {PresentationLocationLabelMap[presentation.presentationLocation]}
-          </p>
+      <div className="max-w-3xl mx-auto pt-14 pb-6 text-base text-gray-600">
+        <div className="flex flex-wrap gap-6">
+          <div>
+            <span className="text-gray-400 mr-2">일시</span>
+            <span className="font-semibold text-gray-500">
+              {`${new Date(presentation.startTime).getMonth() + 1}월 ${new Date(
+                presentation.startTime
+              ).getDate()}일 오후 ${new Date(
+                presentation.startTime
+              ).getHours()}:${
+                new Date(presentation.startTime).getMinutes() === 0
+                  ? "00"
+                  : new Date(presentation.startTime).getMinutes()
+              }`}
+            </span>
+          </div>
+          <div>
+            <span className="text-gray-400 mr-2">소요시간</span>
+            <span className="font-semibold text-gray-500">
+              {PresentationPeriodTypeNumberLabelMap[presentation.duration]}분
+            </span>
+          </div>
+          <div>
+            <span className="text-gray-400 mr-2">장소</span>
+            <span className="font-semibold text-gray-500">
+              {PresentationLocationLabelMap[presentation.presentationLocation]}
+            </span>
+          </div>
         </div>
+        <div className="mt-6 h-px bg-gray-200" />
+      </div>
 
+      <div className="max-w-6xl mx-auto px-6 py-20 space-y-10">
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <h2 className="text-2xl font-semibold mb-2">목차</h2>
           <p>{presentation.outline}</p>
@@ -135,6 +173,7 @@ const PresentationDetailPage: React.FC = () => {
           <h2 className="text-2xl font-semibold mb-2">상세 내용</h2>
           <p>{presentation.detail}</p>
 
+          {/* TODO: 유튜브 플레이어 구현 */}
           <div className="grid grid-cols-2 gap-4 text-sm text-gray-700 mt-4">
             <div>
               <p>📽 영상 링크:</p>
@@ -150,14 +189,6 @@ const PresentationDetailPage: React.FC = () => {
               ) : (
                 <span className="text-gray-400">없음</span>
               )}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between mt-6">
-            <div className="text-lg">👍 좋아요: {presentation.likeCount}</div>
-            <div className="text-lg">
-              🟢 상태:{" "}
-              {PresentationStatusTypeLabelMap[presentation.presentationStatus]}
             </div>
           </div>
         </div>
