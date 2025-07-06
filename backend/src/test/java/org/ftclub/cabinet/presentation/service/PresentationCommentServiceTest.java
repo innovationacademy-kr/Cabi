@@ -229,18 +229,18 @@ class PresentationCommentServiceTest {
 	@DisplayName("특정 발표 댓글 목록 조회 성공 - 여러 댓글")
 	void getCommentsByPresentationId_성공_여러_댓글() {
 		// Given
-		Long requestingUserId = 1L; // 조회 요청하는 사용자 ID
 		Long presentationId = 10L;
-		Long commentOwnerId = 1L;
-		Long anotherUserId = 2L;
+		Long user1Id = 1L;
+		Long user2Id = 2L;
+		Long requestingUserId = user1Id; // 조회 요청하는 사용자 ID
 
 		User ownerUser = mock(User.class);
-		given(ownerUser.getId()).willReturn(commentOwnerId);
+		given(ownerUser.getId()).willReturn(user1Id);
 		given(ownerUser.getName()).willReturn("owner");
 
-		User anotherUser = mock(User.class);
-		given(anotherUser.getId()).willReturn(anotherUserId);
-		given(anotherUser.getName()).willReturn("another");
+		User user2 = mock(User.class);
+		given(user2.getId()).willReturn(user2Id);
+		given(user2.getName()).willReturn("user2");
 
 		LocalDateTime now = LocalDateTime.now();
 		PresentationComment comment1 = mock(PresentationComment.class); // 내 댓글, 수정 안됨, 밴 안됨
@@ -253,13 +253,14 @@ class PresentationCommentServiceTest {
 
 		PresentationComment comment2 = mock(PresentationComment.class); // 다른 사람 댓글, 수정됨, 밴됨
 		given(comment2.getId()).willReturn(102L);
-		given(comment2.getUser()).willReturn(anotherUser);
+		given(comment2.getUser()).willReturn(user2);
 		given(comment2.getCreatedAt()).willReturn(now.minusMinutes(5));
 		given(comment2.getUpdatedAt()).willReturn(now.minusMinutes(1)); // 수정됨
 		given(comment2.isBanned()).willReturn(true); // 밴됨
 
 		List<PresentationComment> mockComments = Arrays.asList(comment1, comment2);
-		given(presentationCommentRepository.findByPresentationIdOrderByCreatedAtAsc(presentationId))
+		given(presentationCommentRepository.findByPresentationIdAndDeletedFalseOrderByCreatedAtAsc(
+				presentationId))
 				.willReturn(mockComments);
 
 		// When
@@ -283,7 +284,7 @@ class PresentationCommentServiceTest {
 		// 두 번째 댓글 검증 (다른 사람 댓글)
 		PresentationCommentResponseDto dto2 = responseDtos.get(1);
 		assertEquals(comment2.getId(), dto2.getCommentId());
-		assertEquals(anotherUser.getName(), dto2.getUser());
+		assertEquals(user2.getName(), dto2.getUser());
 		assertEquals(comment2.getCreatedAt(), dto2.getDateTime());
 		assertFalse(dto2.isMine()); // 요청한 사용자와 댓글 작성자가 다름
 		assertTrue(dto2.isBanned());
@@ -297,7 +298,8 @@ class PresentationCommentServiceTest {
 		Long requestingUserId = 1L;
 		Long presentationId = 11L;
 
-		given(presentationCommentRepository.findByPresentationIdOrderByCreatedAtAsc(presentationId))
+		given(presentationCommentRepository.findByPresentationIdAndDeletedFalseOrderByCreatedAtAsc(
+				presentationId))
 				.willReturn(Collections.emptyList());
 
 		// When
