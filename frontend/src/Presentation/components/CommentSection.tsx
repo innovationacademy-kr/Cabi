@@ -114,14 +114,11 @@ const CommentSection = ({ presentationId }: { presentationId: string }) => {
 
   return (
     <div className="mt-10">
-      <h3 className="font-bold mb-4 text-lg">댓글</h3>
+      <h3 className="font-bold mb-4 text-xl">댓글</h3>
       {loading ? (
         <LoadingAnimation />
       ) : (
         <ul className="space-y-4 mb-6">
-          {comments.length === 0 && (
-            <li className="text-gray-400">아직 댓글이 없습니다.</li>
-          )}
           {comments.map((c) => {
             const isEditing = editingCommentId === c.commentId;
 

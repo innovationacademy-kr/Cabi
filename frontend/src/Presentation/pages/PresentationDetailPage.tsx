@@ -136,7 +136,7 @@ const PresentationDetailPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-10 text-base text-black">
+      <div className="max-w-4xl mx-auto px-6 py-10 text-base text-black">
         {presentation.videoLink && (
           <div className="space-y-2">
             {presentation.videoLink.includes("youtube.com/watch?v=") && (
@@ -187,17 +187,18 @@ const PresentationDetailPage: React.FC = () => {
         <div className="mb-10 mt-3 h-[1.5px] bg-gray-100 w-full" />
 
         <div className="pb-10">
-          <h2 className="text-2xl font-semibold mb-3">목차</h2>
+          <h2 className="text-xl font-bold mb-3">목차</h2>
           <p>{presentation.outline}</p>
         </div>
 
         <div className="pb-10">
-          <h2 className="text-2xl font-semibold mb-3">상세 내용</h2>
+          <h2 className="text-xl font-bold mb-3">상세 내용</h2>
           <p>{presentation.detail}</p>
         </div>
-      </div>
-      <div className="max-w-6xl mx-auto px-6 pb-20">
-        {presentationId && <CommentSection presentationId={presentationId} />}
+
+        <div className="pb-10">
+          {presentationId && <CommentSection presentationId={presentationId} />}
+        </div>
       </div>
     </>
   );
