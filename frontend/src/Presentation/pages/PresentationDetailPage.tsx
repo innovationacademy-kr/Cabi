@@ -59,7 +59,6 @@ const PresentationDetailPage: React.FC = () => {
       if (!presentationId) return;
       try {
         const res = await axiosGetPresentationById(presentationId);
-        console.log("Presentation Detail:", res.data.data);
         setPresentation(res.data.data);
       } catch (error) {
         console.error("Error fetching presentation:", error);
@@ -78,7 +77,7 @@ const PresentationDetailPage: React.FC = () => {
           style={{
             backgroundImage: `url(${
               presentation.thumbnailLink ||
-              "https://fastly.picsum.photos/id/171/2048/1536.jpg?hmac=16eVtfmqTAEcr8VwTREQX4kV8dzZKcGWI5ouMlhRBuk"
+              "https://fastly.picsum.photos/id/36/4179/2790.jpg?hmac=OCuYYm0PkDCMwxWhrtoSefG5UDir4O0XCcR2x-aSPjs"
             })`,
           }}
         >
@@ -91,7 +90,7 @@ const PresentationDetailPage: React.FC = () => {
               <img
                 src={
                   presentation.thumbnailLink ||
-                  "https://fastly.picsum.photos/id/171/2048/1536.jpg?hmac=16eVtfmqTAEcr8VwTREQX4kV8dzZKcGWI5ouMlhRBuk"
+                  "https://fastly.picsum.photos/id/36/4179/2790.jpg?hmac=OCuYYm0PkDCMwxWhrtoSefG5UDir4O0XCcR2x-aSPjs"
                 }
                 alt="발표 이미지"
                 className="w-full rounded-lg shadow-lg aspect-video object-cover"

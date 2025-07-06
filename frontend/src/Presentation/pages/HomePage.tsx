@@ -8,15 +8,15 @@ const mockData: IPresentation[] = [
   {
     id: 1,
     thumbnailLink:
-      "https://fastly.picsum.photos/id/171/2048/1536.jpg?hmac=16eVtfmqTAEcr8VwTREQX4kV8dzZKcGWI5ouMlhRBuk",
+      "https://fastly.picsum.photos/id/36/4179/2790.jpg?hmac=OCuYYm0PkDCMwxWhrtoSefG5UDir4O0XCcR2x-aSPjs",
     category: "학술",
     presentationStatus: "UPCOMING",
     likeCount: 16,
-    title: "Generative AI를 활용한 개발 생산성 향상",
+    title: "생성형 AI 잘 사용하기",
     startTime: "2025-02-25T15:30:00",
     userName: "jusohn",
     summary:
-      "Cabi 수요지식회에서 발표했던 내용에 대해서 Cabi 수요지식회에서 발표했던 내용에 대해서 Cabi 수요지식회에서 발표했던 내용에 대해서 Cabi 수요지식회에서 Cabi 수요지식회에서 발표했던 내용에 대해서 Cabi 수요지식회에서",
+      "최신 Generative AI 기술을 활용하여 개발 워크플로우를 최적화하고 생산성을 극대화하는 방법에 대해 알아봅니다. 코딩, 테스트, 문서화 등 다양한 개발 단계에서 AI가 어떻게 도움을 줄 수 있는지 실제 사례와 함께 소개합니다.",
   },
   {
     id: 2,
