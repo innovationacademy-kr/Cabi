@@ -117,13 +117,13 @@ const PresentationDetailPage: React.FC = () => {
             </div>
 
             <div className="flex flex-col flex-1 md:pt-[10px]">
-              <h1 className="text-3xl font-semibold leading-snug tracking-tight">
+              <h1 className="text-3xl font-semibold leading-snug tracking-tight text-white">
                 {presentation.title}
               </h1>
-              <p className="mt-4 text-neutral-300 text-base leading-relaxed">
+              <p className="mt-4 text-white text-base leading-relaxed">
                 {presentation.summary}
               </p>
-              <div className="mt-6 flex flex-col gap-2 text-sm text-neutral-300">
+              <div className="mt-6 flex flex-col gap-2 text-base text-white">
                 <div className="flex gap-2 items-center">
                   <span>{formatDate(presentation.startTime)}</span>
                   <span>|</span>
@@ -135,9 +135,9 @@ const PresentationDetailPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-20 space-y-10">
+      <div className="max-w-5xl mx-auto px-6 py-10 text-base text-black">
         {presentation.videoLink && (
-          <div className="mt-6 space-y-2">
+          <div className="space-y-2">
             {presentation.videoLink.includes("youtube.com/watch?v=") && (
               <div className="aspect-video w-full mt-4">
                 <iframe
@@ -154,44 +154,44 @@ const PresentationDetailPage: React.FC = () => {
             )}
           </div>
         )}
-        <div className="bg-white rounded-lg pb-6 shadow-sm border">
-          <div className="flex flex-wrap gap-6">
-            <div>
-              <span className="text-gray-400 mr-2">일시</span>
-              <span className="font-semibold text-gray-500">
-                {`${new Date(presentation.startTime).getMonth() + 1}월 ${new Date(
-                  presentation.startTime
-                ).getDate()}일 오후 ${new Date(
-                  presentation.startTime
-                ).getHours()}:${
-                  new Date(presentation.startTime).getMinutes() === 0
-                    ? "00"
-                    : new Date(presentation.startTime).getMinutes()
-                }`}
-              </span>
-            </div>
-            <div>
-              <span className="text-gray-400 mr-2">소요시간</span>
-              <span className="font-semibold text-gray-500">
-                {PresentationPeriodTypeNumberLabelMap[presentation.duration]}분
-              </span>
-            </div>
-            <div>
-              <span className="text-gray-400 mr-2">장소</span>
-              <span className="font-semibold text-gray-500">
-                {PresentationLocationLabelMap[presentation.presentationLocation]}
-              </span>
-            </div>
+
+        <div className="flex flex-wrap gap-6 mt-4">
+          <div className="flex items-center gap-2">
+            <span className="text-base text-gray-500">일시</span>
+            <span className="text-base text-black">
+              {`${new Date(presentation.startTime).getMonth() + 1}월 ${new Date(
+                presentation.startTime
+              ).getDate()}일 오후 ${new Date(
+                presentation.startTime
+              ).getHours()}:${
+                new Date(presentation.startTime).getMinutes() === 0
+                  ? "00"
+                  : new Date(presentation.startTime).getMinutes()
+              }`}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-base text-gray-500">소요시간</span>
+            <span className="text-base text-black">
+              {PresentationPeriodTypeNumberLabelMap[presentation.duration]}분
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-base text-gray-500">장소</span>
+            <span className="text-base text-black">
+              {PresentationLocationLabelMap[presentation.presentationLocation]}
+            </span>
           </div>
         </div>
+        <div className="mb-10 mt-3 h-[1.5px] bg-gray-100 w-full" />
 
-        <div className="bg-white rounded-lg shadow-sm border">
-          <h2 className="text-2xl font-semibold mb-2">목차</h2>
+        <div className="pb-10">
+          <h2 className="text-2xl font-semibold mb-3">목차</h2>
           <p>{presentation.outline}</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border">
-          <h2 className="text-2xl font-semibold mb-2">상세 내용</h2>
+        <div className="pb-10">
+          <h2 className="text-2xl font-semibold mb-3">상세 내용</h2>
           <p>{presentation.detail}</p>
         </div>
       </div>
