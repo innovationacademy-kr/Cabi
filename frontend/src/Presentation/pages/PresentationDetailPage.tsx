@@ -77,7 +77,7 @@ const PresentationDetailPage: React.FC = () => {
           style={{
             backgroundImage: `url(${
               presentation.thumbnailLink ||
-              "https://fastly.picsum.photos/id/110/5000/3333.jpg?hmac=AvUBrnXG4ebvrtC08T95vEzD1I9SryZ8KSQ4iJ9tb9s"
+              "https://fastly.picsum.photos/id/171/2048/1536.jpg?hmac=16eVtfmqTAEcr8VwTREQX4kV8dzZKcGWI5ouMlhRBuk"
             })`,
           }}
         >
@@ -90,7 +90,7 @@ const PresentationDetailPage: React.FC = () => {
               <img
                 src={
                   presentation.thumbnailLink ||
-                  "https://fastly.picsum.photos/id/110/5000/3333.jpg?hmac=AvUBrnXG4ebvrtC08T95vEzD1I9SryZ8KSQ4iJ9tb9s"
+                  "https://fastly.picsum.photos/id/171/2048/1536.jpg?hmac=16eVtfmqTAEcr8VwTREQX4kV8dzZKcGWI5ouMlhRBuk"
                 }
                 alt="발표 이미지"
                 className="w-full rounded-lg shadow-lg aspect-video object-cover"
@@ -98,7 +98,11 @@ const PresentationDetailPage: React.FC = () => {
               <div className="absolute bottom-0 left-0 w-full h-[80px] bg-gradient-to-t from-black/60 to-black/0 z-10 rounded-b-lg" />
               <div className="absolute bottom-[10px] left-[16px] flex space-x-2 z-20">
                 <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
-                  {PresentationStatusTypeLabelMap[presentation.presentationStatus]}
+                  {
+                    PresentationStatusTypeLabelMap[
+                      presentation.presentationStatus
+                    ]
+                  }
                 </Badge>
                 <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
                   {PresentationCategoryTypeLabelMap[presentation.category]}
@@ -131,66 +135,64 @@ const PresentationDetailPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto pt-14 pb-6 text-base text-gray-600">
-        <div className="flex flex-wrap gap-6">
-          <div>
-            <span className="text-gray-400 mr-2">일시</span>
-            <span className="font-semibold text-gray-500">
-              {`${new Date(presentation.startTime).getMonth() + 1}월 ${new Date(
-                presentation.startTime
-              ).getDate()}일 오후 ${new Date(
-                presentation.startTime
-              ).getHours()}:${
-                new Date(presentation.startTime).getMinutes() === 0
-                  ? "00"
-                  : new Date(presentation.startTime).getMinutes()
-              }`}
-            </span>
+      <div className="max-w-5xl mx-auto px-6 py-20 space-y-10">
+        {presentation.videoLink && (
+          <div className="mt-6 space-y-2">
+            {presentation.videoLink.includes("youtube.com/watch?v=") && (
+              <div className="aspect-video w-full mt-4">
+                <iframe
+                  className="w-full h-full rounded-md"
+                  src={`https://www.youtube.com/embed/${new URLSearchParams(
+                    new URL(presentation.videoLink).search
+                  ).get("v")}`}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            )}
           </div>
-          <div>
-            <span className="text-gray-400 mr-2">소요시간</span>
-            <span className="font-semibold text-gray-500">
-              {PresentationPeriodTypeNumberLabelMap[presentation.duration]}분
-            </span>
-          </div>
-          <div>
-            <span className="text-gray-400 mr-2">장소</span>
-            <span className="font-semibold text-gray-500">
-              {PresentationLocationLabelMap[presentation.presentationLocation]}
-            </span>
+        )}
+        <div className="bg-white rounded-lg pb-6 shadow-sm border">
+          <div className="flex flex-wrap gap-6">
+            <div>
+              <span className="text-gray-400 mr-2">일시</span>
+              <span className="font-semibold text-gray-500">
+                {`${new Date(presentation.startTime).getMonth() + 1}월 ${new Date(
+                  presentation.startTime
+                ).getDate()}일 오후 ${new Date(
+                  presentation.startTime
+                ).getHours()}:${
+                  new Date(presentation.startTime).getMinutes() === 0
+                    ? "00"
+                    : new Date(presentation.startTime).getMinutes()
+                }`}
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-400 mr-2">소요시간</span>
+              <span className="font-semibold text-gray-500">
+                {PresentationPeriodTypeNumberLabelMap[presentation.duration]}분
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-400 mr-2">장소</span>
+              <span className="font-semibold text-gray-500">
+                {PresentationLocationLabelMap[presentation.presentationLocation]}
+              </span>
+            </div>
           </div>
         </div>
-        <div className="mt-6 h-px bg-gray-200" />
-      </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-20 space-y-10">
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
+        <div className="bg-white rounded-lg shadow-sm border">
           <h2 className="text-2xl font-semibold mb-2">목차</h2>
           <p>{presentation.outline}</p>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
+        <div className="bg-white rounded-lg shadow-sm border">
           <h2 className="text-2xl font-semibold mb-2">상세 내용</h2>
           <p>{presentation.detail}</p>
-
-          {/* TODO: 유튜브 플레이어 구현 */}
-          <div className="grid grid-cols-2 gap-4 text-sm text-gray-700 mt-4">
-            <div>
-              <p>📽 영상 링크:</p>
-              {presentation.videoLink ? (
-                <a
-                  href={presentation.videoLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline break-all"
-                >
-                  {presentation.videoLink}
-                </a>
-              ) : (
-                <span className="text-gray-400">없음</span>
-              )}
-            </div>
-          </div>
         </div>
       </div>
     </>

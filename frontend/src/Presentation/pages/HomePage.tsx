@@ -8,11 +8,11 @@ const mockData: IPresentation[] = [
   {
     id: 1,
     thumbnailLink:
-      "https://fastly.picsum.photos/id/110/5000/3333.jpg?hmac=AvUBrnXG4ebvrtC08T95vEzD1I9SryZ8KSQ4iJ9tb9s",
+      "https://fastly.picsum.photos/id/171/2048/1536.jpg?hmac=16eVtfmqTAEcr8VwTREQX4kV8dzZKcGWI5ouMlhRBuk",
     category: "학술",
     presentationStatus: "UPCOMING",
     likeCount: 16,
-    title: "이노콘 수요지식회 발표를 마치며",
+    title: "Generative AI를 활용한 개발 생산성 향상",
     startTime: "2025-02-25T15:30:00",
     userName: "jusohn",
     summary:
