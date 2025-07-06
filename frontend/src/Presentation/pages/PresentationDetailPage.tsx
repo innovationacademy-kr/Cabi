@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
+import CommentSection from "@/Presentation/components/CommentSection";
 import {
   PresentationCategoryTypeLabelMap,
   PresentationLocationLabelMap,
@@ -194,6 +195,9 @@ const PresentationDetailPage: React.FC = () => {
           <h2 className="text-2xl font-semibold mb-3">상세 내용</h2>
           <p>{presentation.detail}</p>
         </div>
+      </div>
+      <div className="max-w-6xl mx-auto px-6 pb-20">
+        {presentationId && <CommentSection presentationId={presentationId} />}
       </div>
     </>
   );
