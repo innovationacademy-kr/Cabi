@@ -263,7 +263,7 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:;MODE=MySQL
+    url: jdbc:h2:mem:testdb;MODE=MySQL
     username: root
     password: test_password
 
@@ -274,11 +274,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
       hibernate:
-        globally_quoted_identifiers: true
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        auto_quote_keyword: true
         format_sql: true
     defer-datasource-initialization: true
 
