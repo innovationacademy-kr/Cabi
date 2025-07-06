@@ -16,6 +16,7 @@ import org.ftclub.cabinet.admin.dto.PresentationSlotUpdateServiceDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
+import org.ftclub.cabinet.presentation.service.PresentationCommandService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminPresentationSlotService {
 
 	private final PresentationSlotRepository slotRepository;
+	private final PresentationCommandService presentationCommandService;
 
 	/**
 	 * 프레젠테이션 슬롯이 허용된 기간 내에 있는지 확인합니다.
@@ -121,7 +123,8 @@ public class AdminPresentationSlotService {
 		validateSlotUpdateOverlap(serviceDto.getSlotId(), serviceDto.getStartTime());
 		slot.changeSlotStartTime(serviceDto.getStartTime());
 		slot.changeSlotLocation(serviceDto.getPresentationLocation());
-		// TODO : 프레젠테이션에 연결된 발표 정보도 수정해야 한다면 발표 수정 기능 개발 후에 추가
+		presentationCommandService.updateSlotDetails(slot.getPresentation().getId(),
+				slot.getStartTime(), slot.getPresentationLocation());
 	}
 
 	/**
