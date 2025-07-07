@@ -197,8 +197,10 @@ input {
 }
 
 .presentation-root {
-font-family: var(--presentation-main-font);
-height: 100%;
+  font-family: var(--presentation-main-font);
+  height: 100%;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
 }
 
 .modal {

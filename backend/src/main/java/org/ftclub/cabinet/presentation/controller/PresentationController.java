@@ -118,7 +118,7 @@ public class PresentationController {
 	 * @param thumbnail      썸네일 이미지 파일 (변경 시)
 	 * @throws IOException 썸네일 이미지 업로드 중 발생할 수 있는 IOException
 	 */
-	@PatchMapping("/{presentationId}")
+	@PatchMapping(value = "/{presentationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void updatePresentation(
 			@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable Long presentationId,

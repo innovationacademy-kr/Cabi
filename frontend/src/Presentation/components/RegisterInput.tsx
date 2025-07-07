@@ -9,9 +9,10 @@ interface RegisterInputProps {
   title: string;
   maxLength: number;
   placeholder: string;
+  isEditMode?: boolean;
 }
 
-const RegisterInput: React.FC<RegisterInputProps> = ({ control, name, title, maxLength, placeholder }) => {
+const RegisterInput: React.FC<RegisterInputProps> = ({ control, name, title, maxLength, placeholder, isEditMode }) => {
   const { watch } = useFormContext();
   const value = watch(name);
   const textCounter = value?.length || 0;
@@ -25,10 +26,11 @@ const RegisterInput: React.FC<RegisterInputProps> = ({ control, name, title, max
           <FormLabel className="text-base text-black font-medium sm:text-lg">{title}</FormLabel> {/* 모바일 뷰에서 텍스트 크기 조정 */}
           <FormControl>
             <Input
+              disabled={isEditMode}
               placeholder={placeholder}
               {...field}
               maxLength={maxLength}
-              className="text-black w-full px-3 py-2 text-sm sm:text-base border rounded-md" 
+              className="bg-white text-black w-full px-3 py-2 text-sm sm:text-base text-black border rounded-md" 
             />
           </FormControl>
           <div className="flex justify-between text-xs sm:text-sm text-gray-500 mt-1">

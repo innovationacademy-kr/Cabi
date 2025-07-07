@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
+import org.ftclub.cabinet.event.RedisExpirationEventListener;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Duration;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -60,6 +62,9 @@ class AdminPresentationControllerTest {
 
 	@Autowired
 	private EntityManager entityManager;
+
+	@MockBean
+	private RedisExpirationEventListener redisExpirationEventListener;
 
 	// sample data for realistic tests -> setUp
 	private User testUser1, testUser2;
