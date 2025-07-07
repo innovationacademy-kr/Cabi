@@ -1,13 +1,9 @@
-import { axiosPostPresentationForm } from "@/Presentation/api/axios/axios.custom";
 import { SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal, { IModalContents } from "@/Cabinet/components/Modals/Modal";
 import ModalPortal from "@/Cabinet/components/Modals/ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/Cabinet/components/Modals/ResponseModal/ResponseModal";
 import IconType from "@/Cabinet/types/enum/icon.type.enum";
+import { axiosPostPresentationForm } from "@/Presentation/api/axios/axios.custom";
 
 const RegisterModal = ({
   title,
@@ -85,18 +81,12 @@ Cabi 슬랙 채널로 문의해주세요.
   return (
     <ModalPortal>
       {!showResponseModal && <Modal modalContents={swapModalContents} />}
-      {showResponseModal &&
-        (hasErrorOnResponse ? (
-          <FailResponseModal
-            modalTitle={modalTitle}
-            closeModal={closeResponseModal}
-          />
-        ) : (
-          <SuccessResponseModal
-            modalTitle={modalTitle}
-            closeModal={closeResponseModal}
-          />
-        ))}
+      {showResponseModal && (
+        <div>
+          <div>{modalTitle}</div>
+          <button onClick={closeResponseModal}>닫기</button>
+        </div>
+      )}
     </ModalPortal>
   );
 };
