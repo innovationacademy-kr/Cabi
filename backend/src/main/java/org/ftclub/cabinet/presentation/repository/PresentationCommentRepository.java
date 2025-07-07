@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PresentationCommentRepository extends JpaRepository<PresentationComment, Long> {
 
-	List<PresentationComment> findByPresentationIdOrderByCreatedAtAsc(Long presentationId);
+	List<PresentationComment> findByPresentationIdAndDeletedFalseOrderByCreatedAtAsc(
+			Long presentationId);
+
 }

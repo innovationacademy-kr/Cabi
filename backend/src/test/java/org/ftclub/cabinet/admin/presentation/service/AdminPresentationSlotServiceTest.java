@@ -3,8 +3,6 @@ package org.ftclub.cabinet.admin.presentation.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +10,7 @@ import org.ftclub.cabinet.admin.dto.PresentationSlotRegisterServiceDto;
 import org.ftclub.cabinet.admin.dto.PresentationSlotResponseDto;
 import org.ftclub.cabinet.admin.dto.PresentationSlotSearchServiceDto;
 import org.ftclub.cabinet.admin.dto.PresentationSlotUpdateServiceDto;
+import org.ftclub.cabinet.event.RedisExpirationEventListener;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Duration;
@@ -28,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -44,8 +42,11 @@ class AdminPresentationSlotServiceTest {
 	@Autowired
 	private PresentationRepository presentationRepository;
 
-	@MockBean
+	@Autowired
 	private UserRepository userRepository;
+
+	@MockBean
+	private RedisExpirationEventListener redisExpirationEventListener;
 
 	private User testUser1;
 
@@ -54,13 +55,13 @@ class AdminPresentationSlotServiceTest {
 		User userToSave1 = User.of("jongmlee", "jongmlee@gmail.com",
 				LocalDateTime.now().plusMonths(10),
 				"MEMBER");
-		when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
-			User userArg = invocation.getArgument(0);
-			if (userArg.getId() == null) { // ID가 아직 없는 새 엔티티라면
-				ReflectionTestUtils.setField(userArg, "id", 1L); // 임의의 ID (testUser1 용)
-			}
-			return userArg;
-		});
+//		when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+//			User userArg = invocation.getArgument(0);
+//			if (userArg.getId() == null) { // ID가 아직 없는 새 엔티티라면
+//				ReflectionTestUtils.setField(userArg, "id", 1L); // 임의의 ID (testUser1 용)
+//			}
+//			return userArg;
+//		});
 		testUser1 = userRepository.save(userToSave1);
 	}
 
@@ -274,7 +275,7 @@ class AdminPresentationSlotServiceTest {
 
 		presentationRepository.save(presentation);
 
-		slot1.assignPresentation(presentation);
+//		slot1.assignPresentation(presentation);
 
 		// when
 		int year = now.getYear();
@@ -375,7 +376,7 @@ class AdminPresentationSlotServiceTest {
 				null, false, false, slot);
 
 		presentationRepository.save(presentation);
-		slot.assignPresentation(presentation);
+//		slot.assignPresentation(presentation);
 
 		// when & then
 		assertThatThrownBy(() -> slotService.validateSlotEligibleForRegistration(slot.getId()))

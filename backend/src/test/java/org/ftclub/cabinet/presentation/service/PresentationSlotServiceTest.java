@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import org.ftclub.cabinet.dto.AvailablePresentationSlotDto;
+import org.ftclub.cabinet.event.RedisExpirationEventListener;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 import org.ftclub.cabinet.presentation.dto.DataListResponseDto;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
@@ -34,6 +35,9 @@ class PresentationSlotServiceTest {
 
 	@Autowired
 	private PresentationRepository presentationRepository;
+
+	@MockBean
+	private RedisExpirationEventListener redisExpirationEventListener;
 
 	@MockBean
 	private Clock clock;

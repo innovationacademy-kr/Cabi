@@ -26,7 +26,8 @@ public class AdminPresentationCommentService {
 		presentationQueryService.findPresentationByIdWithUser(presentationId);
 
 		List<PresentationComment> comments =
-				commentRepository.findByPresentationIdOrderByCreatedAtAsc(presentationId);
+				commentRepository.findByPresentationIdAndDeletedFalseOrderByCreatedAtAsc(
+						presentationId);
 
 		return comments.stream()
 				.map(comment -> new PresentationCommentResponseDto(
