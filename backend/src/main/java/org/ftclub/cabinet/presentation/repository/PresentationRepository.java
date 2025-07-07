@@ -8,7 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface PresentationRepository extends JpaRepository<Presentation, Long> {
+public interface PresentationRepository extends JpaRepository<Presentation, Long>,
+		PresentationComplexRepository {
 
 	/**
 	 * 주어진 기간 안에 등록되어 있는 프레젠테이션을 시간순으로 조회합니다.

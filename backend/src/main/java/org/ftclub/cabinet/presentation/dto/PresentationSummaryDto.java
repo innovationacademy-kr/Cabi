@@ -2,6 +2,7 @@ package org.ftclub.cabinet.presentation.dto;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
@@ -9,6 +10,7 @@ import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class PresentationSummaryDto {
 
 	private final Long presentationId;

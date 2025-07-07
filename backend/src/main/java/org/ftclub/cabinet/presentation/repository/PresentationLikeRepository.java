@@ -26,19 +26,37 @@ public interface PresentationLikeRepository extends JpaRepository<PresentationLi
 
 	boolean existsByPresentationIdAndUserId(Long presentationId, Long userId);
 
-//	// 사용자가 누른 좋아요를 최신순으로 페이징 조회
-//	Page<PresentationLike> findByUserIdOrderByPresentationStartTimeDesc(Long userId,
-//			Pageable pageable);
-//
-//	// 여러 발표의 좋아요 개수를 한 번에 조회
-//	@Query("SELECT pl.presentation.id, COUNT(pl.id) " +
-//			"FROM PresentationLike pl " +
-//			"WHERE pl.presentation.id IN :presentationIds " +
-//			"GROUP BY pl.presentation.id")
-//	List<Object[]> findLikeCountsByPresentationIds(
-//			@Param("presentationIds") List<Long> presentationIds);
+	/**
+	 * 사용자가 '좋아요' 누른 발표(취소되지 않은)를 최신순으로 페이징하여 조회합니다.
+	 *
+	 * @param userId   사용자 ID
+	 * @param pageable 페이징 정보
+	 * @return PresentationLike 페이지
+	 */
+	Page<PresentationLike> findByUserIdAndPresentationCanceledFalseOrderByPresentationStartTimeDesc(
+			Long userId,
+			Pageable pageable);
 
-	// 특정 사용자가 좋아요를 누른 발표의 ID를 조회
+	/**
+	 * 여러 발표의 '좋아요' 개수를 한 번의 쿼리로 조회합니다.
+	 *
+	 * @param presentationIds 발표 ID 목록
+	 * @return [발표 ID, 좋아요 개수] 형태의 Object 배열 리스트
+	 */
+	@Query("SELECT pl.presentation.id, COUNT(pl.id) " +
+			"FROM PresentationLike pl " +
+			"WHERE pl.presentation.id IN :presentationIds " +
+			"GROUP BY pl.presentation.id")
+	List<Object[]> findLikeCountsByPresentationIds(
+			@Param("presentationIds") List<Long> presentationIds);
+
+	/**
+	 * 주어진 발표 목록 중에서 현재 사용자가 '좋아요'를 누른 발표의 ID 목록을 조회합니다. 자신이 좋아요 누른 발표 ID를 확인할 때 사용합니다.
+	 *
+	 * @param userId          사용자 ID
+	 * @param presentationIds 확인할 발표 ID 목록
+	 * @return '좋아요'를 누른 발표 ID 집합
+	 */
 	@Query("SELECT pl.presentation.id " +
 			"FROM PresentationLike pl " +
 			"WHERE pl.user.id = :userId AND pl.presentation.id IN :presentationIds")
