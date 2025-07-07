@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.admin.presentation.service;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,17 +8,24 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminPresentationCalendarItemDto;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Presentation;
+import org.ftclub.cabinet.presentation.domain.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
+import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
+import org.ftclub.cabinet.presentation.service.PresentationCommandService;
+import org.ftclub.cabinet.presentation.service.PresentationPolicyService;
 import org.ftclub.cabinet.presentation.service.PresentationQueryService;
 import org.ftclub.cabinet.presentation.service.ThumbnailStorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class AdminPresentationFacadeService {
 
 	private final PresentationQueryService queryService;
+	private final PresentationCommandService commandService;
+	private final PresentationPolicyService policyService;
 	private final ThumbnailStorageService thumbnailStorageService;
 	private final PresentationMapper presentationMapper;
 
@@ -50,15 +57,51 @@ public class AdminPresentationFacadeService {
 		String thumbnailLink = thumbnailStorageService.generatePresignedUrl(
 				presentation.getThumbnailS3Key());
 		Long likesCount = 0L;   // likeQueryService.getLikesCount(presentationId);    // TODO: likeQueryService
-		boolean upcoming = presentation.getStartTime().isAfter(LocalDateTime.now());
 
 		return presentationMapper.toPresentationDetailDto(
 				presentation,
 				thumbnailLink,
 				likesCount,
 				false,
-				false,
-				upcoming
+				false
 		);
+	}
+
+	/**
+	 * 프레젠테이션을 수정합니다. (User보다 더 넓은 범위의 내용 수정)
+	 *
+	 * @param presentationId 프레젠테이션 ID
+	 * @param updateForm     프레젠테이션 수정 DTO
+	 * @param thumbnail      썸네일 이미지 파일
+	 */
+	@Transactional
+	public void updatePresentation(Long presentationId,
+			PresentationUpdateServiceDto updateForm,
+			MultipartFile thumbnail, boolean thumbnailUpdated) throws IOException {
+		Presentation presentation = queryService.findPresentationById(presentationId);
+		// check verification of access to edit presentation
+		policyService.verifyAdminPresentationEditAccess(presentation);
+
+		// update contents
+		String thumbnailS3Key;
+		if (thumbnailUpdated) {
+			thumbnailS3Key = thumbnailStorageService.updateThumbnail(
+					presentation.getThumbnailS3Key(), thumbnail);
+		} else {
+			thumbnailS3Key = presentation.getThumbnailS3Key();
+		}
+		PresentationUpdateData updateData =
+				presentationMapper.toPresentationUpdateData(updateForm, thumbnailS3Key);
+		commandService.updatePresentation(presentation, updateData);
+	}
+
+	/**
+	 * 프레젠테이션을 취소합니다.
+	 *
+	 * @param presentationId 프레젠테이션 ID
+	 */
+	@Transactional
+	public void cancelPresentation(Long presentationId) {
+		commandService.cancelPresentation(presentationId);
 	}
 }

@@ -14,11 +14,9 @@ import org.hibernate.validator.constraints.Length;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class PresentationFormRequestDto {
+public class PresentationRegisterRequestDto {
 
-	@NotNull
 	private Duration duration;
-	@NotNull
 	private Category category;
 
 	@NotBlank
@@ -34,10 +32,8 @@ public class PresentationFormRequestDto {
 	@Length(min = 1, max = 10000)
 	private String detail;
 
-	@NotNull
-	private Boolean isRecordingAllowed;
-	@NotNull
-	private Boolean isPublicAllowed;
+	private boolean recordingAllowed;
+	private boolean publicAllowed;
 
 	@NotNull
 	private Long slotId;
