@@ -3,6 +3,7 @@ package org.ftclub.cabinet.presentation.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -90,7 +91,7 @@ public class Presentation {
 	@OneToMany(mappedBy = "presentation")
 	private final List<PresentationComment> presentationComments = new ArrayList<>();
 
-	@OneToMany(mappedBy = "presentation")
+	@OneToMany(mappedBy = "presentation", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<PresentationLike> presentationLikes = new ArrayList<>();
 
 	public static Presentation of(User user, Category category, Duration duration,
@@ -210,5 +211,23 @@ public class Presentation {
 				&& outline != null && !outline.isBlank() && outline.length() <= 500
 				&& detail != null && !detail.isBlank() && detail.length() <= 10000
 				&& slot != null);
+	}
+
+	/**
+	 * 프레젠테이션에 '좋아요'를 추가합니다.
+	 *
+	 * @param like 추가할 PresentationLike
+	 */
+	public void addLike(PresentationLike like) {
+		this.presentationLikes.add(like);
+	}
+
+	/**
+	 * 프레젠테이션에서 '좋아요'를 제거합니다.
+	 *
+	 * @param like 제거할 PresentationLike
+	 */
+	public void removeLike(PresentationLike like) {
+		this.presentationLikes.remove(like);
 	}
 }

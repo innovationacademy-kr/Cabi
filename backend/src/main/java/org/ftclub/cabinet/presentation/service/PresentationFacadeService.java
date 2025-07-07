@@ -33,7 +33,7 @@ public class PresentationFacadeService {
 	private final ThumbnailStorageService thumbnailStorageService;
 	private final PresentationSlotRepository slotRepository;        // TODO
 	//	private final PresentationSlotFacadeService slotFacadeService;  // TODO
-//	private final PresentationLikeQueryService likeQueryService;    // TODO
+	private final PresentationLikeService likeService;
 	private final PresentationMapper presentationMapper;
 
 	/**
@@ -74,11 +74,11 @@ public class PresentationFacadeService {
 
 		String thumbnailLink = thumbnailStorageService.generatePresignedUrl(
 				presentation.getThumbnailS3Key());
-		Long likesCount = 0L;   // likeQueryService.getLikesCount(presentationId);    // TODO: likeQueryService
+		Long likesCount = likeService.countLikes(presentationId);
 		boolean likedByMe = false;
 		boolean editAllowed = false;
 		if (userId != null) {
-//			likedByMe = likeQueryService.isLikedByUser(userId, presentationId);   // TODO: likeQueryService
+			likedByMe = likeService.isLikedByUser(presentationId, userId);
 			editAllowed = userId.equals(presentation.getUser().getId());
 		}
 
