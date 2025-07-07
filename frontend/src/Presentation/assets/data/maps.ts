@@ -10,10 +10,10 @@ import { ReactComponent as EtcIcon } from "@/Cabinet/assets/images/PresentationE
 import { ReactComponent as FortyTwoIcon } from "@/Cabinet/assets/images/PresentationFortyTwo.svg";
 import { ReactComponent as JobIcon } from "@/Cabinet/assets/images/PresentationJob.svg";
 
-export const PresentationStatusTypeLabelMap = {
-  [PresentationStatusType.DONE]: "발표예정",
-  [PresentationStatusType.UPCOMING]: "발표완료",
-  [PresentationStatusType.CANCELED]: "발표취소",
+export const PresentationStatusTypeLabelMap: { [key: string]: string } = {
+  DONE: "발표 완료",
+  UPCOMING: "발표 예정",
+  CANCELED: "발표 취소",
 };
 
 export const PresentationPeriodTypeNumberLabelMap = {
@@ -25,10 +25,10 @@ export const PresentationPeriodTypeNumberLabelMap = {
 };
 
 
-export const PresentationLocationLabelMap = {
-  [PresentationLocation.BASEMENT]: "지하 1층 오픈스튜디오",
-  [PresentationLocation.FIRST]: "1층 오픈스튜디오",
-  [PresentationLocation.THIRD]: "3층 세미나실",
+export const PresentationLocationLabelMap: { [key: string]: string } = {
+  BASEMENT: "지하 1층 오픈스튜디오",
+  FIRST: "1층 오픈스튜디오",
+  THIRD: "3층 세미나실",
 };
 
 export const PresentationCategoryTypeLabelMap = {
