@@ -799,8 +799,17 @@ CREATE TABLE `section_alarm`
 -- Table structure for table `presentation` & `presentation slot`
 --
 
+DROP TABLE IF EXISTS `presentation_slot`;
 DROP TABLE IF EXISTS `presentation`;
-DROP TABLE IF EXISTS presentation_slot;
+
+CREATE TABLE presentation_slot
+(
+    id                    BIGINT AUTO_INCREMENT PRIMARY KEY,
+    start_time            DATETIME(6)  NOT NULL,
+    presentation_location VARCHAR(255) NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
 
 CREATE TABLE presentation
 (
@@ -822,19 +831,9 @@ CREATE TABLE presentation
     presentation_location VARCHAR(20)  NOT NULL,
 
     CONSTRAINT fk_presentation_user
-        FOREIGN KEY (user_id) REFERENCES user (id)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_general_ci;
-
-CREATE TABLE presentation_slot
-(
-    id                    BIGINT AUTO_INCREMENT PRIMARY KEY,
-    start_time            DATETIME(6)  NOT NULL,
-    presentation_location VARCHAR(255) NOT NULL,
-    presentation_id       BIGINT UNIQUE,
-    CONSTRAINT fk_slot_presentation
-        FOREIGN KEY (presentation_id) REFERENCES presentation (id)
+        FOREIGN KEY (user_id) REFERENCES user (id),
+    CONSTRAINT fk_presentation_slot
+        FOREIGN KEY (presentation_slot_id) REFERENCES presentation_slot (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -902,24 +901,6 @@ VALUES (
         '5월 3번 유저 발표: 취소됨, 전체 공개', '5월 요약', '5월 아웃라인', '5월 상세 내용',
         1, NULL, NULL, 0, 1,
         null, '2025-05-15 14:00:00', 'BASEMENT');
-
---
--- UPDATE presentation_id in presentation_slot table
---
-
-UPDATE presentation_slot ps
-    JOIN presentation p ON ps.id = p.presentation_slot_id
-SET ps.presentation_id = p.id
-WHERE p.presentation_slot_id IS NOT NULL;
-
---
--- Adding foreign key constraint to presentation table
---
-
-ALTER TABLE presentation
-    ADD CONSTRAINT fk_presentation_slot
-        FOREIGN KEY (presentation_slot_id)
-            REFERENCES presentation_slot (id);
 
 /*!40000 ALTER TABLE `presentation`
     ENABLE KEYS */;

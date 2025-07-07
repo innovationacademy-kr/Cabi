@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Duration;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
+import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 
 @Getter
 @AllArgsConstructor
@@ -26,10 +27,9 @@ public class PresentationDetailDto {
 
 	private final boolean recordingAllowed;
 	private final boolean publicAllowed;
-	private final boolean canceled;
 
 	private final Long likeCount;
 	private final boolean likedByMe;
 	private final boolean editAllowed;
-	private final boolean upcoming;
+	private final PresentationStatus presentationStatus;
 }
