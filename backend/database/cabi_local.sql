@@ -633,7 +633,7 @@ CREATE TABLE `user`
 
 -- LOCK TABLES `user` WRITE;
 INSERT INTO `user`
-VALUES (1, null, null, 'test1@student.42seoul.kr', 'test1', 1, 1, 0, 0, 'USER'),
+VALUES (1, null, null, 'test1@student.42seoul.kr', 'gykoh', 1, 1, 0, 0, 'USER'),
        (2, null, null, 'test2@student.42seoul.kr', 'test2', 1, 1, 0, 0, 'USER'),
        (3, null, null, 'test3@student.42seoul.kr', 'test3', 1, 1, 0, 0, 'USER');
 UNLOCK TABLES;
@@ -869,10 +869,19 @@ INSERT INTO presentation (id, user_id, category, duration,
                           canceled, thumbnail_s3_key, video_link,
                           recording_allowed, public_allowed,
                           presentation_slot_id, start_time, presentation_location)
-VALUES (1, 1, 'DEVELOP', 'HALF',
-        '1월 1번 유저 발표: 전체 공개', '1월 요약', '1월 아웃라인', '1월 상세 내용',
-        0, NULL, NULL, 0, 1,
-        1, '2025-01-15 14:00:00', 'BASEMENT'),
+VALUES (
+    1, 1, 'DEVELOP', 'HALF',
+    '생성형 AI 잘 사용하기',
+    '최신 Generative AI 기술을 활용하여 개발 워크플로우를 최적화하고 생산성을 극대화하는 방법에 대해 알아봅니다.',
+    '1. 서론: Generative AI의 부상과 개발 생산성\n
+3. 테스트 자동화: 테스트 케이스 생성 및 실행\n
+4. 문서화 자동화: API 문서, 사용자 가이드 생성\n
+5. 실제 적용 사례 및 데모\n
+6. Q&A',
+    '본 발표에서는 Generative AI, 특히 대규모 언어 모델(LLM)이 소프트웨어 개발 과정에 어떻게 혁신을 가져오고 있는지 심층적으로 다룹니다. 개발자들이 일상적으로 직면하는 문제점들을 AI가 어떻게 해결해 줄 수 있는지 구체적인 기술과 도구를 중심으로 설명합니다. 예를 들어, GitHub Copilot과 같은 AI 기반 코딩 도구가 개발자의 코딩 속도를 어떻게 향상시키는지, AI가 자동으로 테스트 코드를 생성하여 버그를 조기에 발견하는 방법, 그리고 복잡한 기술 문서를 AI가 자동으로 생성하여 개발 시간을 단축하는 사례 등을 소개합니다. 또한, 실제 프로젝트에 Generative AI를 도입할 때 고려해야 할 사항들과 잠재적인 위험 요소에 대해서도 논의합니다. 발표 후에는 실제 AI 도구를 활용한 라이브 데모를 통해 참석자들이 직접 AI의 강력한 기능을 체험할 수 있는 기회를 제공합니다. 이 발표를 통해 개발자들이 Generative AI를 자신의 워크플로우에 효과적으로 통합하여 더욱 효율적이고 창의적인 개발을 할 수 있도록 돕는 것이 목표입니다.',
+    0, NULL,'https://www.youtube.com/watch?v=4ec6WoHoSjs', 0, 1,
+    1, '2025-01-15 14:00:00', 'BASEMENT'
+),
 
        (2, 1, 'JOB', 'HOUR',
         '2월 1번 유저 발표: 로그인 유저만 열람 가능', '2월 요약', '2월 아웃라인', '2월 상세 내용',

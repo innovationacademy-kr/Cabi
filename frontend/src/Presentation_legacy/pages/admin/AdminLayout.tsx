@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import LeftNav from "@/Presentation_legacy/components/LeftNav/LeftNav";
 import AdminTopNavContainer from "@/Presentation_legacy/components/TopNav/AdminTopNav.container";
 
 const body: HTMLElement = document.body;
@@ -27,11 +26,19 @@ const Layout = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (!token && !isLoginPage) navigate("/admin/login");
-    else if (token) {
-      if (checkPath()) navigate("/admin/presentation/detail");
+    if (!token && !isLoginPage) {
+      navigate("/admin/login");
+    } else if (token) {
+      if (
+        location.pathname === "/admin" ||
+        location.pathname === "/admin/" ||
+        location.pathname === "/admin/presentations" ||
+        location.pathname === "/admin/presentations/"
+      ) {
+        navigate("/admin/presentations/home");
+      }
     }
-  }, []);
+  }, [location.pathname, token, isLoginPage, navigate]);
 
   useEffect(() => {
     root.style.setProperty(

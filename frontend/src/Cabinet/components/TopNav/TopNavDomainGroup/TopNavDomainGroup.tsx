@@ -22,7 +22,7 @@ const domains: ITopNavDomain[] = [
   },
   {
     path: "/presentations/home",
-    adminPath: "/admin/presentations/detail",
+    adminPath: "/admin/presentations/home",
     logo: PresentationLogo,
     title: "수요지식회",
     active: (pathname) => pathname.includes("presentations"),

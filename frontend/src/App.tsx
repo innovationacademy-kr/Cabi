@@ -103,6 +103,7 @@ function App(): React.ReactElement {
             path="/admin/presentations/"
             element={<AdminPresentationLayout />}
           >
+            <Route index element={<AdminPresentationHomePage />} />
             <Route path="home" element={<AdminPresentationHomePage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
