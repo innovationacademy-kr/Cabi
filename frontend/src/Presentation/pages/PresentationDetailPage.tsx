@@ -15,7 +15,6 @@ import type {
   PresentationLocation,
   PresentationPeriodType,
 } from "@/Presentation/types/enum/presentation.type.enum";
-import { PresentationStatusType } from "@/Presentation/types/enum/presentation.type.enum";
 import { axiosGetPresentationById } from "@/Presentation/api/axios/axios.custom";
 
 interface IPresentationDetail {
@@ -187,7 +186,7 @@ const PresentationDetailPage: React.FC = () => {
 
         <div className="pb-10">
           <h2 className="text-xl font-bold mb-3">목차</h2>
-          <p>{presentation.outline}</p>
+          <div className="whitespace-pre-line">{presentation.outline}</div>
         </div>
 
         <div className="pb-10">
