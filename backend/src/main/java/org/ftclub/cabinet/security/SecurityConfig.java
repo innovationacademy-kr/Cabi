@@ -63,7 +63,7 @@ public class SecurityConfig {
 						.mvcMatchers(HttpMethod.GET, SecurityPathPatterns.NON_ANONYMOUS_ENDPOINTS)
 						.hasRole("USER")
 						.mvcMatchers(HttpMethod.GET, SecurityPathPatterns.ANONYMOUS_ENDPOINTS)
-						.hasAnyRole("ANONYMOUS", "USER")
+						.permitAll()
 						.anyRequest().hasRole("USER")
 				)
 				.oauth2Login(oauth -> oauth
