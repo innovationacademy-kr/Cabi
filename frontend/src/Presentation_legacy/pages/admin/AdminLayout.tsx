@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import AdminTopNavContainer from "@/Presentation_legacy/components/TopNav/AdminTopNav.container";
+import AdminTopNavContainer from "@/Presentation/components/TopNav/AdminTopNav.container";
 
 const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
