@@ -1,4 +1,3 @@
-import { PresentationTimeKey } from "@/Presentation/pages/RegisterPage";
 import {
   PresentationCategoryType,
   PresentationLocation,
@@ -9,7 +8,6 @@ import { ReactComponent as AcademicIcon } from "@/Cabinet/assets/images/Presenta
 import { ReactComponent as DevelopIcon } from "@/Cabinet/assets/images/PresentationDevelop.svg";
 import { ReactComponent as EtcIcon } from "@/Cabinet/assets/images/PresentationEtc.svg";
 import { ReactComponent as FortyTwoIcon } from "@/Cabinet/assets/images/PresentationFortyTwo.svg";
-import { ReactComponent as HobbyIcon } from "@/Cabinet/assets/images/PresentationHobby.svg";
 import { ReactComponent as JobIcon } from "@/Cabinet/assets/images/PresentationJob.svg";
 
 export const PresentationStatusTypeLabelMap = {
@@ -26,15 +24,6 @@ export const PresentationPeriodTypeNumberLabelMap = {
   [PresentationPeriodType.TWO_HOUR]: 120,
 };
 
-export const PresentationTimeMap: {
-  [key in PresentationTimeKey]: PresentationPeriodType;
-} = {
-  "": PresentationPeriodType.NONE,
-  "30분": PresentationPeriodType.HALF,
-  "1시간": PresentationPeriodType.HOUR,
-  "1시간 30분": PresentationPeriodType.HOUR_HALF,
-  "2시간": PresentationPeriodType.TWO_HOUR,
-};
 
 export const PresentationLocationLabelMap = {
   [PresentationLocation.BASEMENT]: "지하 1층 오픈스튜디오",
@@ -45,7 +34,7 @@ export const PresentationLocationLabelMap = {
 export const PresentationCategoryTypeLabelMap = {
   [PresentationCategoryType.DEVELOP]: "개발",
   [PresentationCategoryType.STUDY]: "학술",
-  [PresentationCategoryType.HOBBY]: "취미",
+  [PresentationCategoryType.DISCUSSION]: "토의",
   [PresentationCategoryType.JOB]: "취업",
   [PresentationCategoryType.TASK]: "42",
   [PresentationCategoryType.ETC]: "기타",
@@ -60,7 +49,7 @@ type presentationCategoryIconMap = {
 export const presentationCategoryIconMap = {
   [PresentationCategoryType.DEVELOP]: DevelopIcon,
   [PresentationCategoryType.STUDY]: AcademicIcon,
-  [PresentationCategoryType.HOBBY]: HobbyIcon,
+  // [PresentationCategoryType.HOBBY]: HobbyIcon,
   [PresentationCategoryType.JOB]: JobIcon,
   [PresentationCategoryType.TASK]: FortyTwoIcon,
   [PresentationCategoryType.ETC]: EtcIcon,
