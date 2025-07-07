@@ -29,7 +29,6 @@ const PresentationDetailPage = lazy(
   () => import("@/Presentation/pages/PresentationDetailPage")
 );
 const PresentationLayout = lazy(() => import("@/Presentation/pages/Layout"));
-const DetailPage = lazy(() => import("@/Presentation/pages/DetailPage"));
 const AboutUsPage = lazy(() => import("@/Presentation/pages/AboutUsPage"));
 const RegisterPage = lazy(() => import("@/Presentation/pages/RegisterPage"));
 const PresentationProfilePage = lazy(
@@ -95,7 +94,6 @@ function App(): React.ReactElement {
               path="register/:presentationId"
               element={<RegisterPage />}
             />
-            <Route path="detail" element={<DetailPage />} />
             <Route path="about" element={<AboutUsPage />} />
             <Route path="profile" element={<PresentationProfilePage />} />
           </Route>

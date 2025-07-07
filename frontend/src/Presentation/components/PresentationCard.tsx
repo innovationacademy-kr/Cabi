@@ -7,7 +7,7 @@ export interface IPresentation {
   id: number;
   thumbnailLink: string;
   category: string;
-  isUpcomming: boolean;
+  isUpcoming: boolean;
   likeCount: number;
   title: string;
   startTime: string;
@@ -28,7 +28,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
     id,
     thumbnailLink,
     category,
-    isUpcomming,
+    isUpcoming,
     likeCount,
     title,
     startTime,
@@ -68,7 +68,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
         <div className="absolute bottom-0 left-0 w-full h-[80px] bg-gradient-to-t from-black/60 to-black/0 z-10" />
         <div className="absolute bottom-[10px] left-[16px] flex space-x-2 z-10 ">
           <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
-            {isUpcomming ? "발표 예정" : "발표 완료"}
+            {isUpcoming ? "발표 예정" : "발표 완료"}
           </Badge>
           <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
             {category}

@@ -10,7 +10,7 @@ const mockData: IPresentation[] = [
     thumbnailLink:
       "https://fastly.picsum.photos/id/238/2560/1440.jpg?hmac=wKo4dLHwDntZmO_fdtnKtsnmRcPMACca3m5J5vx2AVc",
     category: "학술",
-    isUpcomming: true,
+    isUpcoming: true,
     likeCount: 16,
     title: "이노콘 수요지식회 발표를 마치며",
     startTime: "2025-02-25T15:30:00",
@@ -23,7 +23,7 @@ const mockData: IPresentation[] = [
     thumbnailLink:
       "https://fastly.picsum.photos/id/201/5000/3333.jpg?hmac=NE8fOMa8u9PBfkq4AVwEoJdRqoPTNwUsyKvKWuXyNCk",
     category: "개발",
-    isUpcomming: false,
+    isUpcoming: false,
     likeCount: 23,
     title: "Cabi 프론트엔드 개발기",
     startTime: "2025-02-26T14:00:00",
@@ -36,7 +36,7 @@ const mockData: IPresentation[] = [
     thumbnailLink:
       "https://fastly.picsum.photos/id/160/3200/2119.jpg?hmac=cz68HnnDt3XttIwIFu5ymcvkCp-YbkEBAM-Zgq-4DHE",
     category: "토의",
-    isUpcomming: false,
+    isUpcoming: false,
     likeCount: 8,
     title: "ft_transcendance 회고",
     startTime: "2025-03-01T10:00:00",
