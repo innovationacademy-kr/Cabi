@@ -91,6 +91,10 @@ function App(): React.ReactElement {
               element={<PresentationDetailPage />}
             />
             <Route path="register" element={<RegisterPage />} />
+            <Route
+              path="register/:presentationId"
+              element={<RegisterPage />}
+            />
             <Route path="detail" element={<DetailPage />} />
             <Route path="about" element={<AboutUsPage />} />
             <Route path="profile" element={<PresentationProfilePage />} />
