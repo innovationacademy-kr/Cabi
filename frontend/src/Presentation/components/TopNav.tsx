@@ -30,6 +30,14 @@ const TopNav = () => {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link
+              to="register/1"
+              className="p-3 text-foreground font-semibold h-full flex items-center"
+            >
+              수정하기
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link
               to="about"
               className="p-3 text-foreground font-semibold h-full flex items-center"
             >
