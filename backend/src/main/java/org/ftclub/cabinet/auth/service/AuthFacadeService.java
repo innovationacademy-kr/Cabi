@@ -80,8 +80,8 @@ public class AuthFacadeService {
 			OauthResult result, String provider) {
 
 		TokenDto tokens = jwtService.createPairTokens(result.getUserId(), result.getRoles(),
-				provider);
-		cookieService.setPairTokenCookiesToClient(res, tokens, req.getServerName());
+				result.getEmail(), provider);
+		cookieService.setAccessTokenCookiesToClient(res, tokens, req.getServerName());
 
 		Authentication auth = createAuthenticationForUser(result, provider);
 		SecurityContextHolder.getContext().setAuthentication(auth);
@@ -97,7 +97,7 @@ public class AuthFacadeService {
 	 */
 	public Authentication createAuthenticationForUser(OauthResult user, String provider) {
 		UserInfoDto userInfoDto =
-				new UserInfoDto(user.getUserId(), provider, user.getRoles());
+				new UserInfoDto(user.getUserId(), provider, user.getRoles(), user.getEmail());
 
 		List<GrantedAuthority> authorityList = Stream.of(user.getRoles().split(FtRole.DELIMITER))
 				.map(role -> new SimpleGrantedAuthority(FtRole.ROLE + role))
@@ -116,18 +116,16 @@ public class AuthFacadeService {
 	public void userLogout(HttpServletRequest request, HttpServletResponse response) {
 
 		String accessToken = jwtService.extractToken(request);
-		String refreshToken =
-				cookieService.getCookieValue(request, JwtTokenConstants.REFRESH_TOKEN);
-		if (accessToken == null || refreshToken == null) {
+
+		if (accessToken == null) {
 			throw new SpringSecurityException(ExceptionStatus.JWT_TOKEN_NOT_FOUND);
 		}
-		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(refreshToken);
+		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(accessToken);
 		if (!userInfoDto.hasRole(FtRole.USER.name())) {
 			throw new SpringSecurityException(ExceptionStatus.FORBIDDEN_USER);
 		}
 		// 내부 모든 쿠키 및 토큰 삭제
-		jwtRedisService.addUsedUserTokensToBlackList(userInfoDto.getUserId(), accessToken,
-				refreshToken);
+		jwtRedisService.handleLogoutUserTokens(userInfoDto.getUserId(), accessToken);
 		cookieService.deleteAllCookies(request.getCookies(),
 				request.getHeader(HttpHeaders.HOST), response);
 	}
@@ -219,7 +217,7 @@ public class AuthFacadeService {
 			String name) throws IOException {
 		User user = userQueryService.getUserByName(name);
 
-		OauthResult result = new OauthResult(user.getId(), user.getRoles(),
+		OauthResult result = new OauthResult(user.getId(), user.getRoles(), user.getEmail(),
 				authPolicyService.getMainHomeUrl());
 
 		processAuthentication(req, res, result, "Temporary");

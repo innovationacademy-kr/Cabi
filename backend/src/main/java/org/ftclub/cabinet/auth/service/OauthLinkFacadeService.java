@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.auth.service;
 
-import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.auth.domain.CustomOAuth2User;
@@ -9,9 +9,10 @@ import org.ftclub.cabinet.auth.domain.FtOauthProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.OauthLink;
 import org.ftclub.cabinet.auth.domain.OauthResult;
-import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.dto.LinkOauthRedirectUrlServiceDto;
+import org.ftclub.cabinet.dto.LinkOauthTokenDto;
+import org.ftclub.cabinet.dto.StateInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
@@ -32,37 +33,10 @@ public class OauthLinkFacadeService {
 	private final OauthLinkQueryService oauthLinkQueryService;
 	private final OauthLinkCommandService oauthLinkCommandService;
 	private final OauthProfileService oauthProfileService;
-	private final JwtService jwtService;
 	private final UserQueryService userQueryService;
 	private final AuthPolicyService authPolicyService;
-	private final CookieService cookieService;
 	private final UserCommandService userCommandService;
-
-	/**
-	 * providerId(unique), type을 기준으로 계정 연동 상태를 확인한 후,
-	 * <p>
-	 * 새로 연동하거나 유저 정보(role, blackholedAt)를 업데이트 합니다
-	 *
-	 * @param req
-	 * @param oauth2User
-	 * @return
-	 */
-	public OauthResult handleLinkUser(HttpServletRequest req,
-			CustomOAuth2User oauth2User) {
-		String oauthMail = oauth2User.getEmail();
-		String providerId = oauth2User.getName();
-		String providerType = oauth2User.getProvider();
-		Optional<OauthLink> result = oauthLinkQueryService.findByProviderIdAndProviderType(
-				providerId, providerType);
-		String refreshToken = cookieService.getCookieValue(req, JwtTokenConstants.REFRESH_TOKEN);
-
-		// 계정 연동 클릭했는디 이미 연동당한 계정임
-		if (refreshToken != null && result.isPresent()) {
-			throw new SpringSecurityException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
-		}
-		return result.map(this::handleExistingLinkedUser)
-				.orElseGet(() -> handleNewLinkUser(req, providerType, providerId, oauthMail));
-	}
+	private final JwtService jwtService;
 
 	/**
 	 * 기존 계정 연동 유저
@@ -86,38 +60,35 @@ public class OauthLinkFacadeService {
 					user.getName(), e.getMessage());
 		}
 		return new OauthResult(
-				user.getId(), user.getRoles(),
+				user.getId(), user.getRoles(), connection.getEmail(),
 				authPolicyService.getMainHomeUrl());
 	}
 
 	/**
-	 * 신규 계정 연동 유저 생성
-	 * <p>
-	 * refreshToken으로부터 서비스에 가입한 유저인지 확인 및 loginStatus 확인
+	 * 신규 계정 연동
 	 *
-	 * @param req
-	 * @param providerType
-	 * @param providerId
-	 * @param oauthMail
+	 * @param oAuth2User   로그인 성공 후 oauth 로부터 받은 유저 정보
+	 * @param stateInfoDto state 파라미터로부터 얻은 서비스 DB의 userPK 값
 	 * @return
 	 */
-	public OauthResult handleNewLinkUser(HttpServletRequest req, String providerType,
-			String providerId, String oauthMail) {
+	public OauthResult handleNewLinkUser(CustomOAuth2User oAuth2User,
+			StateInfoDto stateInfoDto) {
 
-		String refreshToken = cookieService.getCookieValue(req, JwtTokenConstants.REFRESH_TOKEN);
-		if (refreshToken == null) {
-			throw new SpringSecurityException(ExceptionStatus.NOT_FT_LINK_STATUS);
-		}
-
-		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(refreshToken);
-		User user = userQueryService.getUser(userInfoDto.getUserId());
-		if (oauthLinkQueryService.isExistByUserId(userInfoDto.getUserId())) {
+		User user = userQueryService.getUser(stateInfoDto.getUserId());
+		if (oauthLinkQueryService.isExistByUserId(stateInfoDto.getUserId())) {
 			throw new SpringSecurityException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
 		}
+		oauthLinkQueryService.findByProviderIdAndProviderType(
+				oAuth2User.getName(),
+				oAuth2User.getProvider()).ifPresent(link -> {
+			throw new SpringSecurityException(ExceptionStatus.OAUTH_EMAIL_ALREADY_LINKED);
+		});
 		OauthLink connection =
-				OauthLink.of(user, providerType, providerId, oauthMail);
+				OauthLink.of(user, oAuth2User.getProvider(), oAuth2User.getName(),
+						oAuth2User.getEmail());
 		oauthLinkCommandService.save(connection);
-		return new OauthResult(user.getId(), user.getRoles(), authPolicyService.getProfileUrl());
+		return new OauthResult(user.getId(), user.getRoles(), oAuth2User.getEmail(),
+				authPolicyService.getProfileUrl());
 	}
 
 	/**
@@ -135,5 +106,23 @@ public class OauthLinkFacadeService {
 			throw ExceptionStatus.INVALID_OAUTH_CONNECTION.asServiceException();
 		}
 		oauthLinkCommandService.softDelete(connection);
+	}
+
+	/**
+	 * 계정 연동 시, 유저의 정보가 담긴 임시 토큰을 발급합니다.
+	 *
+	 * @param linkOauthRedirectUrlServiceDto
+	 * @return
+	 */
+	public LinkOauthTokenDto generateRedirectUrl(
+			LinkOauthRedirectUrlServiceDto linkOauthRedirectUrlServiceDto) {
+		Long userId = linkOauthRedirectUrlServiceDto.getUserId();
+
+		Claims claims = Jwts.claims();
+		claims.put("userId", userId);
+		claims.put("mode", "connect");
+		String stateToken = jwtService.generateToken(claims, (long) 30 * 60 * 1000);
+
+		return new LinkOauthTokenDto(stateToken);
 	}
 }

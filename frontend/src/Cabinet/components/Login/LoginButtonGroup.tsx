@@ -1,41 +1,14 @@
 import styled from "styled-components";
-import FTLoginButton from "@/Cabinet/components/Login/FTLoginButton";
-import { ILoginStatus } from "@/Cabinet/components/Login/LoginButtonGroup.container";
-import SocialLoginButton from "@/Cabinet/components/Login/SocialLoginButton";
-import { TOAuthProvider } from "@/Cabinet/assets/data/oAuth";
-import { getOAuthDisplayInfo } from "@/Cabinet/utils/oAuthUtils";
+import LoginButton from "@/Cabinet/components/Login/LoginButton";
+import { ftProvider, socialOAuthProviders } from "@/Cabinet/assets/data/oAuth";
 
-const LoginButtonGroup = ({
-  ftProvider,
-  onLoginButtonClick,
-  loginStatus,
-  socialProviderAry,
-}: {
-  ftProvider: TOAuthProvider;
-  onLoginButtonClick: (provider: TOAuthProvider) => void;
-  loginStatus: ILoginStatus;
-  socialProviderAry: TOAuthProvider[];
-}) => {
+const LoginButtonGroup = () => {
   return (
     <LoginButtonGroupStyled>
-      <FTLoginButton
-        key={ftProvider}
-        onLoginButtonClick={() => onLoginButtonClick(ftProvider)}
-        display={getOAuthDisplayInfo(ftProvider)}
-        isClicked={loginStatus.isClicked}
-        isTarget={loginStatus.target === ftProvider}
-        provider={ftProvider}
-      />
+      <LoginButton provider={ftProvider} />
       <SocialLoginButtonGroupWrapper>
-        {socialProviderAry.map((provider) => (
-          <SocialLoginButton
-            key={provider}
-            onLoginButtonClick={() => onLoginButtonClick(provider)}
-            display={getOAuthDisplayInfo(provider)}
-            isClicked={loginStatus.isClicked}
-            isTarget={loginStatus.target === provider}
-            provider={provider}
-          />
+        {socialOAuthProviders.map((provider) => (
+          <LoginButton key={provider} provider={provider} isSocial={true} />
         ))}
       </SocialLoginButtonGroupWrapper>
     </LoginButtonGroupStyled>

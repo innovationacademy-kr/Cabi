@@ -35,7 +35,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 		try {
 			filterChain.doFilter(request, response);
 		} finally {
-			log.info("Response - IP: {}, URI: {}, Status: {}, Method : {}",
+			log.debug("Response - IP: {}, URI: {}, Status: {}, Method : {}",
 					ipAddress, requestURI, response.getStatus(), request.getMethod());
 		}
 	}

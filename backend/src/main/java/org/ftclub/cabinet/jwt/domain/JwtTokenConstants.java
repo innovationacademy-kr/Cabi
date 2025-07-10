@@ -8,6 +8,7 @@ public class JwtTokenConstants {
 	public static final String OAUTH = "oauth";
 	public static final String USER_ID = "userId";
 	public static final String ROLES = "roles";
+	public static final String EMAIL = "email";
 	public static final String BEARER = "Bearer ";
 
 	private JwtTokenConstants() {
