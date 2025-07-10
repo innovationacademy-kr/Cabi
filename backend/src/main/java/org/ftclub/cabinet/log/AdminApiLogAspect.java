@@ -11,8 +11,10 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.alarm.discord.DiscordAlarmMessage;
 import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
+import org.ftclub.cabinet.dto.UserInfoDto;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
@@ -32,10 +34,14 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @RequiredArgsConstructor
 public class AdminApiLogAspect {
 
-	private final static String ADMIN_CUD_POINTCUT = "@target(org.springframework.web.bind.annotation.RestController) && !@annotation(org.springframework.web.bind.annotation.GetMapping)";
+	private final static String ADMIN_CUD_POINTCUT =
+			"@target(org.springframework.web.bind.annotation.RestController) && " +
+					"!@annotation(org.springframework.web.bind.annotation.GetMapping) && " +
+					"within(org.ftclub.cabinet.admin..controller.*)"; // 특정 패키지로 제한
 	private final ParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
 	private final LogParser logParser;
 	private final DiscordWebHookMessenger discordWebHookMessenger;
+	private final AdminQueryService adminQueryService;
 
 	/**
 	 * 어드민 유저가 Get 요청을 제외한 API 호출 및 요청 정상 처리 시 로그를 남기는 메소드
@@ -75,13 +81,18 @@ public class AdminApiLogAspect {
 	 */
 	private void sendLogMessage(JoinPoint joinPoint, String responseString) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
-				.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN")
-						|| grantedAuthority.getAuthority().equals("ROLE_MASTER"));
-		if (!isAdmin) {
+		if (authentication == null || !(authentication.getPrincipal() instanceof UserInfoDto)) {
 			return;
 		}
-		String name = authentication.getName() != null ? authentication.getName() : "Unknown User";
+		UserInfoDto adminInfoFromToken
+				= (UserInfoDto) authentication.getPrincipal();
+		if (!adminInfoFromToken.isAdmin()) {
+			return;
+		}
+
+		// 어드민 계정의 이메일 (발생된 로그를 실행한 주체)
+		String name = adminInfoFromToken.getEmail();
+
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
 

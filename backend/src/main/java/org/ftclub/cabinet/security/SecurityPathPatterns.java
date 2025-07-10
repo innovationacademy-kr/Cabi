@@ -39,7 +39,6 @@ public class SecurityPathPatterns {
 	 * endpoints for admin services
 	 */
 	public static final String[] ADMIN_ENDPOINTS = {
-			"/slack/**",
 			"/v4/admin/**",
 			"/v5/admin/**",
 			"/v6/admin/**"
@@ -49,9 +48,10 @@ public class SecurityPathPatterns {
 	 * endpoints for admin and user shared services
 	 */
 	public static final String[] ADMIN_USER_ENDPOINTS = {
-			"/v4/cabinets/**",
-			"/v4/lent/cabinets/share/cancel/{cabinetId}",
-			"/v5/items"
+			"/v4/cabinets/**",  // GET
+			"/v4/lent/cabinets/share/cancel/{cabinetId}",   // PATCH
+			"/v5/items",    // GET
+			"/v5/presentation/form/invalid-date"    // GET
 	};
 
 	/**

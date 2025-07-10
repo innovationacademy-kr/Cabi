@@ -45,15 +45,7 @@ public class CookieService {
 		setToClient(cookie, cookieInfo, res);
 	}
 
-	public void deleteAdminCookie(Cookie[] cookies, String serverName, HttpServletResponse res) {
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals(LOGIN_SOURCE)) {
-				cookieManager.deleteCookie(res, serverName, cookie.getName());
-			}
-		}
-	}
-
-	public void setPairTokenCookiesToClient(HttpServletResponse res, TokenDto tokens,
+	public void setAccessTokenCookiesToClient(HttpServletResponse res, TokenDto tokens,
 			String serverName) {
 
 		boolean isSecure = !cookieManager.isLocalEnvironment(serverName);
@@ -68,18 +60,6 @@ public class CookieService {
 		);
 		cookieManager.setDomainByEnv(accessTokenCookie, serverName);
 		res.addCookie(accessTokenCookie);
-
-		Cookie refreshTokenCookie = cookieManager.createCookie(
-				JwtTokenConstants.REFRESH_TOKEN,
-				tokens.getRefreshToken(),
-				jwtTokenProperties.getRefreshExpirySeconds() + 180,
-				"/",
-				true,
-				isSecure
-		);
-
-		cookieManager.setDomainByEnv(refreshTokenCookie, serverName);
-		res.addCookie(refreshTokenCookie);
 	}
 
 	/**

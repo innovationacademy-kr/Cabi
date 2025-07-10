@@ -1,10 +1,10 @@
-package org.ftclub.cabinet.slack.service;
+package org.ftclub.cabinet.admin.slack.service;
 
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.admin.slack.dto.SlackMessageDto;
 import org.ftclub.cabinet.alarm.slack.SlackApiManager;
 import org.ftclub.cabinet.alarm.slack.dto.SlackUserInfo;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.slack.dto.SlackMessageDto;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;

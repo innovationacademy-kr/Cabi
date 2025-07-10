@@ -28,4 +28,8 @@ public class AdminQueryService {
 		return adminRepository.findById(userId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 	}
+
+	public Optional<Admin> findById(Long userId) {
+		return adminRepository.findById(userId);
+	}
 }

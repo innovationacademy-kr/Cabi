@@ -5,6 +5,7 @@ import { ReactComponent as GoogleLogo } from "@/Cabinet/assets/images/googleLogo
 import { ReactComponent as KakaoLogo } from "@/Cabinet/assets/images/kakaoLogo.svg";
 
 export type TOAuthProvider = "42" | "google" | "kakao" | "github";
+export type TOAuthProviderOrEmpty = TOAuthProvider | "";
 
 export interface IOAuthDisplay {
   text: string;
@@ -34,7 +35,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}google`,
     display: {
       text: "Google",
-      backgroundColor: "var(--ref-gray-100)",
+      backgroundColor: "var(--google-bg-color)",
       icon: React.createElement(GoogleLogo, {
         "aria-label": "google",
       }),
@@ -44,7 +45,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}kakao`,
     display: {
       text: "kakao",
-      backgroundColor: "var(--ref-yellow-100)",
+      backgroundColor: "var(--kakao-bg-color)",
       icon: React.createElement(KakaoLogo, {
         "aria-label": "kakao",
       }),
@@ -54,7 +55,7 @@ export const OAUTH_CONFIG: Record<TOAuthProvider, IOAuthConfig> = {
     oAuthRedirectUrl: `${OAUTH_BASE_URL}github`,
     display: {
       text: "gitHub",
-      backgroundColor: "var(--ref-gray-100)",
+      backgroundColor: "var(--google-bg-color)",
       icon: React.createElement(GithubLogo, {
         "aria-label": "github",
       }),

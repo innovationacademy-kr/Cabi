@@ -17,7 +17,6 @@ import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.dto.TokenDto;
 import org.ftclub.cabinet.dto.UserInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.jwt.domain.JwtTokenConstants;
 import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.security.exception.SpringSecurityException;
@@ -71,8 +70,9 @@ public class AdminAuthService {
 		Admin master = adminQueryService.findByEmail(authPolicyService.getMasterEmail())
 				.orElseThrow(ExceptionStatus.UNAUTHORIZED_ADMIN::asServiceException);
 		TokenDto masterToken =
-				jwtService.createPairTokens(master.getId(), master.getRole().name(), "master");
-		cookieService.setPairTokenCookiesToClient(res, masterToken, req.getServerName());
+				jwtService.createPairTokens(master.getId(), master.getRole().name(),
+						master.getEmail(), "master");
+		cookieService.setAccessTokenCookiesToClient(res, masterToken, req.getServerName());
 		return new AccessTokenDto(masterToken.getAccessToken());
 	}
 
@@ -87,19 +87,17 @@ public class AdminAuthService {
 	public void adminLogout(HttpServletRequest request, HttpServletResponse response) {
 
 		String accessToken = jwtService.extractToken(request);
-		String refreshToken =
-				cookieService.getCookieValue(request, JwtTokenConstants.REFRESH_TOKEN);
-		if (accessToken == null || refreshToken == null) {
+
+		if (accessToken == null) {
 			throw new SpringSecurityException(ExceptionStatus.JWT_TOKEN_NOT_FOUND);
 		}
-		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(refreshToken);
+		UserInfoDto userInfoDto = jwtService.validateTokenAndGetUserInfo(accessToken);
 		if (!userInfoDto.hasRole(AdminRole.ADMIN.name())
 				&& !userInfoDto.hasRole(AdminRole.MASTER.name())) {
 			throw new SpringSecurityException(ExceptionStatus.FORBIDDEN_USER);
 		}
 		// 내부 모든 쿠키 및 토큰 삭제
-		jwtRedisService.addUsedAdminTokensToBlackList(userInfoDto.getUserId(), accessToken,
-				refreshToken);
+		jwtRedisService.handleLogoutAdminTokens(userInfoDto.getUserId(), accessToken);
 		cookieService.deleteAllCookies(request.getCookies(),
 				request.getHeader(HttpHeaders.HOST), response);
 	}
@@ -110,6 +108,7 @@ public class AdminAuthService {
 				.orElseGet(() -> adminCommandService.createAdminByEmail(adminMail));
 		return new OauthResult(admin.getId(),
 				admin.getRole().name(),
+				admin.getEmail(),
 				authPolicyService.getAdminHomeUrl());
 	}
 
