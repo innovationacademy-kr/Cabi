@@ -12,12 +12,10 @@ cabinet:
   #------------------------------JWT, TOKEN------------------------------
   jwt:
     jwt-secret-key: JWT_SECRET_KEY_JWT_SECRET_KEY_JWT_SECRET_KEY_JWT_SECRET_KEY_JWT_SECRET_KEY
-    token:
-      main-token-name: access_token
-      admin-token-name: admin_access_token
-      expiry: 28 #days
-      main-provider: ft
-      admin-provider: google
+    main-provider: ft
+    google-provider: google
+    access-expiry: 1h # 1시간
+    refresh-expiry: 30d # 30일
   #------------------------------DOMAIN, URL------------------------------
   domain-name:
     cookie-domain: cabi.42seoul.io

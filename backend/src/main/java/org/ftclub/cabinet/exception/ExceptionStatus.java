@@ -139,7 +139,7 @@ public enum ExceptionStatus {
 	PRESENTATION_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다"),
 	PRESENTATION_COMMENT_TOO_LONG(HttpStatus.BAD_REQUEST, "댓글은 500자 이내로 작성해야 합니다"),
 	PRESENTATION_COMMENT_EMPTY(HttpStatus.BAD_REQUEST, "댓글은 비어있을 수 없습니다"),
-	PRESENTATION_COMMENT_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "댓글 작성자가 아닙니다"),
+	PRESENTATION_COMMENT_NOT_AUTHORIZED(HttpStatus.UNAUTHORIZED, "댓글 작성자가 아닙니다"),
 	PRESENTATION_COMMENT_INVALID_ASSOCIATION(HttpStatus.BAD_REQUEST, "수정하려는 댓글이 해당 발표에 속하지 않습니다."),
 	PRESENTATION_COMMENT_BANNED(HttpStatus.BAD_REQUEST, "밴 당한 댓글은 삭제할 수 없습니다."),
 
@@ -154,6 +154,10 @@ public enum ExceptionStatus {
 	PRESENTATION_UPDATE_TITLE_DENIED(HttpStatus.FORBIDDEN, "발표 제목은 수정할 수 없습니다."),
 	PRESENTATION_UPDATE_VIDEO_LINK_DENIED(HttpStatus.FORBIDDEN, "발표 영상 링크는 수정할 수 없습니다."),
 	PRESENTATION_UPDATE_RECORDING_ALLOWED_DENIED(HttpStatus.FORBIDDEN, "발표 녹화 허용 여부는 수정할 수 없습니다."),
+
+	// Presentation Like 관련
+	PRESENTATION_LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 좋아요 표시한 게시글입니다."),
+	PRESENTATION_LIKE_NOT_FOUND(HttpStatus.BAD_REQUEST, "이미 삭제된 좋아요 입니다."),
 
 
 	// REMOVE (just for conflict)

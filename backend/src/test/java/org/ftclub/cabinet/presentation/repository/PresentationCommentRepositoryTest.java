@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.presentation.repository;
 
 import java.time.LocalDateTime;
+import javax.transaction.Transactional;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.domain.PresentationComment;
 import org.ftclub.cabinet.user.domain.User;
@@ -23,7 +24,7 @@ import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.ftclub.cabinet.presentation.domain.PresentationSlot;
 
 @DataJpaTest
-@EntityScan("org.ftclub.cabinet")
+@Transactional
 class PresentationCommentRepositoryTest {
 
 	@Autowired
