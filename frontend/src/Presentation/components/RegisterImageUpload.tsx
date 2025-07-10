@@ -1,9 +1,15 @@
-import React, { useRef, useState } from "react";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Control, useFormContext } from "react-hook-form";
-import { Upload, X } from "lucide-react";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { cn } from "@/lib/utils";
+import { Upload, X } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { Control, useFormContext } from "react-hook-form";
 
 interface RegisterImageUploadProps {
   control: Control<any>;
@@ -11,24 +17,40 @@ interface RegisterImageUploadProps {
   title: string;
   maxSize?: number; // MB
   accept?: string;
+  currentImageUrl?: string | null; // 기존 이미지 URL 추가
+  onRemoveFile?: () => void;
+  onFileUpload?: () => void;
 }
 
-const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({ 
-  control, 
-  name, 
-  title, 
+const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
+  control,
+  name,
+  title,
   maxSize = 5,
-  accept = "image/*"
+  accept = "image/*",
+  currentImageUrl, // 추가
+  onRemoveFile,
+  onFileUpload,
 }) => {
   const { watch, setValue } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
   const [preview, setPreview] = useState<string>("");
-  
-  // 🔥 변경: 단일 파일
+
   const currentFile = watch(name) as File | null;
 
-  // 🔥 변경: 단일 파일 처리
+  // 모드에서 기존 이미지 미리보기
+  useEffect(() => {
+    if (!currentFile && currentImageUrl) {
+      setPreview(currentImageUrl);
+      // console.log("기존이미지",currentImageUrl )
+    }
+    if (!currentFile && !currentImageUrl) {
+      setPreview("");
+    }
+  }, [currentFile, currentImageUrl]);
+
+  // 단일 파일 처리
   const handleFileSelect = (files: FileList | null) => {
     if (!files || files.length === 0) return;
 
@@ -39,30 +61,34 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
       // toast.error(`파일 크기는 ${maxSize}MB 이하여야 합니다.`);
       return;
     }
-    
-    if (!file.type.startsWith('image/')) {
+
+    if (!file.type.startsWith("image/")) {
       // toast.error('이미지 파일만 업로드 가능합니다.');
       return;
     }
 
-    // 🔥 변경: 단일 파일 설정
+    //  단일 파일 설정
     setValue(name, file);
-    
+
     // 미리보기 생성
     const reader = new FileReader();
     reader.onload = (e) => {
       setPreview(e.target?.result as string);
     };
     reader.readAsDataURL(file);
+
+    onFileUpload?.();
   };
 
   const removeFile = () => {
+
+    console.log("d왜 두번")
     setValue(name, null);
     setPreview("");
-    
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    onRemoveFile?.();
   };
 
   return (
@@ -76,11 +102,13 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
           </FormLabel>
           <FormControl>
             <div className="space-y-4">
-              {!currentFile && (
+              {!currentFile && !preview && (
                 <div
                   className={cn(
                     "border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors",
-                    dragActive ? "border-blue-500 bg-blue-50" : "border-gray-300",
+                    dragActive
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-300",
                     "hover:border-gray-400"
                   )}
                   onDragEnter={(e) => {
@@ -118,7 +146,7 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
                 onChange={(e) => handleFileSelect(e.target.files)}
               />
 
-              {preview && currentFile && (
+              {preview && (
                 <div className="relative">
                   <img
                     src={preview}
@@ -133,31 +161,18 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
                     onClick={removeFile}
                   >
                     <X className="h-3 w-3 text-black" />
-                    
                   </Button>
-                  
-                  {/* 파일 정보 표시 */}
-                  <div className="mt-2 text-sm text-gray-600 text-center">
-                    <p>{currentFile.name}</p>
-                    <p>{(currentFile.size / 1024 / 1024).toFixed(2)}MB</p>
-                  </div>
-                  
-                  {/* 다시 업로드 버튼 */}
-                  {/* <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="mt-2 w-full text-gray-400"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    다른 이미지 선택
-                  </Button> */}
+                  {currentFile && (
+                    <div className="mt-2 text-sm text-gray-600 text-center">
+                      <p>{currentFile.name}</p>
+                      <p>{(currentFile.size / 1024 / 1024).toFixed(2)}MB</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           </FormControl>
-          
-          {/* 🔥 변경: 상태 표시 */}
+
           <div className="flex justify-between text-xs sm:text-sm text-gray-500 mt-1">
             <span>
               <FormMessage />

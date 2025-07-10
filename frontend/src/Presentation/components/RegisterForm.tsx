@@ -12,13 +12,12 @@ import {
 } from "../api/axios.custom";
 import {
   PresentationCategoryType,
-  PresentationPeriodType,
   RegisterType,
 } from "../types/enum/presentation.type.enum";
 import {
   RegisterConfirmDialog,
   RegisterResultDialog,
-} from "./Modals/RegisterModal/PresentationResponseModal";
+} from "./Modals/PresentationResponseModal";
 import RegisterCheckboxContainer from "./RegisterCheckboxContainer";
 import RegisterDatePicker from "./RegisterDatePicker";
 import RegisterImageUpload from "./RegisterImageUpload";
@@ -30,29 +29,54 @@ import { RegisterTimeSelect } from "./RegisterTimeSelect";
 const MAX_TITLE = 20;
 const MAX_CONTENT = 300;
 
-const contactSchema = z.object({
-  slotId: z.number({}).min(1, "날짜를 선택해 주세요"),
-  duration: z.nativeEnum(PresentationPeriodType),
-  title: z.string().max(50, "제목은 50자 이하여야 합니다").min(1, "입력해"),
-  summary: z
-    .string()
-    .max(100, "한 줄 요약은 100자 이하여야 합니다")
-    .min(1, "입력해"),
-  outline: z.string().min(1, "입력해").max(500, "목차는 500자 이하여야 합니다"),
-  detail: z
-    .string()
-    .min(1, "입력해")
-    .max(10000, "내용은 10000자 이하여야 합니다"),
-  recordingAllowed: z.boolean().optional(),
-  publicAllowed: z.boolean().optional(),
-  category: z.nativeEnum(PresentationCategoryType),
-  thumbnail: z
-    .instanceof(File)
-    .optional()
-    .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
-      message: "이미지는 5MB 이하여야 합니다",
-    }),
-});
+const contactSchema = z
+  .object({
+    mode: z.enum(["CREATE", "EDIT"]), 
+    slotId: z.number().optional(),
+    duration: z.string().optional(),
+    title: z.string().max(50, "제목은 50자 이하여야 합니다").min(1, "입력없음"),
+    summary: z
+      .string()
+      .max(100, "한 줄 요약은 100자 이하여야 합니다")
+      .min(1, "입력없음"),
+    outline: z
+      .string()
+      .min(1, "입력없음")
+      .max(500, "목차는 500자 이하여야 합니다"),
+    detail: z
+      .string()
+      .min(1, "입력없음")
+      .max(10000, "내용은 10000자 이하여야 합니다"),
+    recordingAllowed: z.boolean().optional(),
+    publicAllowed: z.boolean().optional(),
+    category: z.nativeEnum(PresentationCategoryType),
+    thumbnail: z
+      .instanceof(File)
+      .optional()
+      .nullable()
+      .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
+        message: "이미지는 5MB 이하여야 합니다",
+      }),
+  })
+  .superRefine((data, ctx) => {
+    if (data.mode === "CREATE") {
+      if (!data.slotId || data.slotId < 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["slotId"],
+          message: "날짜를 선택해 주세요",
+        });
+      }
+      if (!data.duration) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["duration"],
+          message: "발표 소요 시간을 선택하세요",
+        });
+      }
+    }
+    // EDIT 모드에서는 slotId, duration이 없어도 에러 없음
+  });
 
 interface RegisterFormProps {
   type: RegisterType;
@@ -77,15 +101,18 @@ const RegisterForm = ({
   const [originalThumbnail, setOriginalThumbnail] = useState<string | null>(
     null
   );
+  const [thumbnailChanged, setThumbnailChanged] = useState(false);
+  const [thumbnailUpdated, setThumbnailUpdated] = useState(false);
 
   const navigate = useNavigate();
   const isEditMode = type === RegisterType.EDIT;
 
-  const form = useForm<z.infer<typeof contactSchema>>({
+  const form = useForm({
     resolver: zodResolver(contactSchema),
     defaultValues: {
+      mode: isEditMode ? "EDIT" : "CREATE",
       slotId: 0,
-      duration: PresentationPeriodType.HALF,
+      duration: undefined,
       title: "",
       summary: "",
       outline: "",
@@ -99,25 +126,27 @@ const RegisterForm = ({
   useEffect(() => {
     if (initialData?.data) {
       setStartTime(initialData.data.startTime);
-      setOriginalThumbnail(initialData.data.thumbnailUrl);
+      setOriginalThumbnail(initialData.data.thumbnailLink);
 
       const editFormDefaultValues = {
-        slotId: initialData.data.slotId || 0,
-        duration: initialData.data.duration,
-        title: initialData.data.title,
-        summary: initialData.data.summary,
-        outline: initialData.data.outline,
-        detail: initialData.data.detail,
-        recordingAllowed: initialData.data.recordingAllowed,
-        publicAllowed: initialData.data.publicAllowed,
-        category: initialData.data.category,
+        mode: "EDIT" as const, // 타입을 명확히 지정
+        slotId: initialData.data.slotId ?? 0,
+        duration: initialData.data.duration ?? undefined,
+        title: initialData.data.title ?? "",
+        summary: initialData.data.summary ?? "",
+        outline: initialData.data.outline ?? "",
+        detail: initialData.data.detail ?? "",
+        recordingAllowed: Boolean(initialData.data.recordingAllowed),
+        publicAllowed: Boolean(initialData.data.publicAllowed),
+        category: initialData.data.category as PresentationCategoryType,
         thumbnail: undefined, // 파일은 초기화 불가
       };
       form.reset(editFormDefaultValues);
     } else {
       const createFormDefaultValues = {
+        mode: "CREATE" as const, // 모드 추가, 타입 명확히 지정
         slotId: 0,
-        duration: PresentationPeriodType.HALF,
+        duration: undefined,
         title: "",
         summary: "",
         outline: "",
@@ -125,14 +154,22 @@ const RegisterForm = ({
         recordingAllowed: false,
         publicAllowed: false,
         category: PresentationCategoryType.DEVELOP,
+        thumbnail: undefined,
       };
       form.reset(createFormDefaultValues);
     }
   }, [initialData, form]);
 
+  useEffect(() => {
+    if (form.watch("thumbnail")) {
+      setThumbnailChanged(true);
+    }
+  }, [form.watch("thumbnail")]);
+
   const createFormData = (data: z.infer<typeof contactSchema>) => {
     const formData = new FormData();
-
+    const isThumbnailChanged =
+      thumbnailChanged || !!formDataToSubmit?.thumbnail;
     if (isEditMode) {
       // EDIT 모드: PATCH 요청용 데이터
       const requestBody = {
@@ -141,10 +178,12 @@ const RegisterForm = ({
         summary: data.summary,
         outline: data.outline,
         detail: data.detail,
-        videoLink: null, // 현재는 null로 처리
+        videoLink: null,
         isRecordingAllowed: data.recordingAllowed || false,
         isPublicAllowed: data.publicAllowed || false,
-        thumbnailUpdated: !!data.thumbnail, // 썸네일 변경 여부
+        thumbnailUpdated: isThumbnailChanged,
+        slotId: data.slotId, // ← 추가
+        duration: data.duration, // ← 추가
       };
 
       formData.append(
@@ -219,16 +258,71 @@ const RegisterForm = ({
     setShowConfirmModal(false);
 
     try {
-      const formData = createFormData(formDataToSubmit);
-
+      //EDIT 
       if (isEditMode && presentationId) {
-        await axiosUpdatePresentation(presentationId, formData);
+        // PATCH 요청용 body와 파일 분리
+        const body = {
+          category: formDataToSubmit.category,
+          title: formDataToSubmit.title,
+          summary: formDataToSubmit.summary,
+          outline: formDataToSubmit.outline,
+          detail: formDataToSubmit.detail,
+          videoLink: null,
+          recordingAllowed: formDataToSubmit.recordingAllowed || false,
+          publicAllowed: formDataToSubmit.publicAllowed || false,
+          thumbnailUpdated: isEditMode ? thumbnailUpdated : undefined,
+          duration: formDataToSubmit.duration,
+          slotId: 0,
+        };
+        const thumbnailFile: File | null = formDataToSubmit.thumbnail
+          ? (formDataToSubmit.thumbnail as File)
+          : null;
+
+        await axiosUpdatePresentation(presentationId, body, thumbnailFile);
         console.log("수정 완료");
       } else {
+        // CREATE 로직
+        const formData = createFormData(formDataToSubmit);
         await axiosCreatePresentation(formData);
         console.log("생성 완료");
       }
 
+      setSubmitSuccess(true);
+      setSubmitError("");
+      setShowResultModal(true);
+    } catch (error: any) {
+      console.error("제출 실패:", error);
+      setSubmitSuccess(false);
+      setSubmitError(
+        error.response?.data?.message || "알 수 없는 오류가 발생했습니다."
+      );
+      setShowResultModal(true);
+    } finally {
+      setIsSubmitting(false);
+      setFormDataToSubmit(null);
+    }
+  };
+
+  const onSubmit = async (data: z.infer<typeof contactSchema>) => {
+    setIsSubmitting(true);
+    setShowConfirmModal(false);
+
+    try {
+      const body = {
+        category: data.category,
+        title: data.title,
+        summary: data.summary,
+        outline: data.outline,
+        detail: data.detail,
+        videoLink: null,
+        recordingAllowed: data.recordingAllowed,
+        publicAllowed: data.publicAllowed,
+        thumbnailUpdated: !thumbnailChanged && !!data.thumbnail,
+        duration: data.duration, // ← 반드시 포함!
+        // slotId 등도 필요하다면 추가
+      };
+      const thumbnailFile = !thumbnailChanged ? data.thumbnail ?? null : null;
+      await axiosUpdatePresentation(presentationId!, body, thumbnailFile);
       setSubmitSuccess(true);
       setSubmitError("");
       setShowResultModal(true);
@@ -279,7 +373,7 @@ const RegisterForm = ({
             control={form.control}
             name="title"
             title="제목"
-            maxLength={MAX_TITLE}
+            maxLength={50}
             placeholder="제목을 입력하세요"
             isEditMode={isEditMode}
           />
@@ -288,7 +382,7 @@ const RegisterForm = ({
             control={form.control}
             name="summary"
             title="한 줄 요약"
-            maxLength={MAX_TITLE}
+            maxLength={100}
             placeholder="한 줄 요약을 입력하세요"
           />
 
@@ -296,7 +390,7 @@ const RegisterForm = ({
             control={form.control}
             name="outline"
             title="목차"
-            maxLength={MAX_CONTENT}
+            maxLength={500}
             placeholder="목차를 입력하세요"
             rows={10}
           />
@@ -305,7 +399,7 @@ const RegisterForm = ({
             control={form.control}
             name="detail"
             title="내용"
-            maxLength={MAX_CONTENT}
+            maxLength={10000}
             placeholder="내용을 입력하세요"
             rows={10}
           />
@@ -316,7 +410,14 @@ const RegisterForm = ({
             title="썸네일"
             maxSize={5}
             accept=".jpg,.jpeg,.png"
-            // currentImageUrl={originalThumbnail} // 기존 이미지 표시용
+            currentImageUrl={originalThumbnail}
+            onRemoveFile={() => {
+              if (isEditMode) setThumbnailUpdated(true);
+              // 기존의 setValue(name, null) 등은 RegisterImageUpload에서 처리
+            }}
+            onFileUpload={() => {
+              if (isEditMode) setThumbnailUpdated(true);
+            }}
           />
 
           <RegisterCheckboxContainer
@@ -328,11 +429,13 @@ const RegisterForm = ({
               {
                 name: "recordingAllowed",
                 description: "촬영된 영상의 다시보기 제공에 동의합니다.",
+                isEditMode: isEditMode, // edit mode 에서 비활성화
               },
               {
                 name: "publicAllowed",
                 description:
-                  "촬영된 영상 및 관련 게시물을 본 기관(42 Seoul) 외부 플랫폼 및 채널에 공개하는 것에 동의합니다.",
+                  "본 영상 및 게시물을 온라인상에 공개하는 것에 동의합니다.",
+                  // "촬영된 영상 및 관련 게시물을 본 기관(42 Seoul) 외부 플랫폼 및 채널에 공개하는 것에 동의합니다.",
               },
             ]}
           />

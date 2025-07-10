@@ -37,12 +37,14 @@ export const RegisterConfirmDialog: React.FC<RegisterConfirmDialogProps> = ({
   <Dialog open={open} onOpenChange={onOpenChange}>
     <DialogContent className="text-center p-8 bg-white flex flex-col items-center w-96">
       <DialogTitle className="text-xl font-semibold text-gray-900 mb-6">
-        ㅅㄷㄴㅅ
+        {isEditMode
+          ? "발표 정보를 수정하시겠습니까?"
+          : "발표를 신청하시겠습니까? "}
       </DialogTitle>
       <DialogDescription>
-        {isEditMode
+        {/* {isEditMode
           ? "발표 정보를 수정하시겠습니까? 아래 안내를 확인하세요."
-          : "발표를 신청하시겠습니까? 아래 안내를 확인하세요."}
+          : "발표를 신청하시겠습니까? 아래 안내를 확인하세요."} */}
       </DialogDescription>
 
       {/* Content */}
@@ -81,19 +83,43 @@ export const RegisterResultDialog: React.FC<RegisterResultDialogProps> = ({
   onClose,
 }) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="text-center p-8 bg-white flex flex-col items-center w-96">
-      {/* Check Icon */}
-      {/* <div className="flex justify-center mb-6">
-        <div className="w-18 h-18 rounded-full border-2 border-blue-500 flex items-center justify-center">
-          <CheckIcon stroke="blue"/>
-        </div>
-      </div> */}
-
-      {/* Title */}
-      {/* <h2 className="text-xl font-semibold text-gray-900 mb-6 cursor-none	">
-          {submitSuccess ? '성공!' : '실패'}
-      </h2> */}
+    <DialogContent
+      hideCloseButton
+      className="text-center p-8 bg-white flex flex-col items-center w-96"
+    >
       <DialogTitle className="text-xl font-semibold text-gray-900 mb-6">
+        {submitSuccess ? "성공!" : "실패"}
+      </DialogTitle>
+      {/* Content */}
+      <div className="space-y-4 text-sm text-gray-600 mb-8">
+        <p className="text-lg font-medium mb-2">
+          {submitSuccess
+            ? isEditMode
+              ? "수정되었습니다"
+              : "신청되었습니다"
+            : "처리에 실패했습니다"}
+        </p>
+        {!submitSuccess && (
+          <p className="text-sm text-gray-600">{submitError}</p>
+        )}
+      </div>
+    </DialogContent>
+  </Dialog>
+);
+export const RegisterDialog: React.FC<RegisterResultDialogProps> = ({
+  open,
+  onOpenChange,
+  isEditMode,
+  submitSuccess,
+  submitError,
+  onClose,
+}) => (
+  <Dialog open={open} onOpenChange={onOpenChange}>
+    <DialogContent
+      hideCloseButton
+      className="text-center p-8 bg-white flex flex-col items-center w-96"
+    >
+      <DialogTitle className="text-xl font-semibold text-gray-900 mb-6 cursor-none">
         {submitSuccess ? "성공!" : "실패"}
       </DialogTitle>
       {/* Content */}

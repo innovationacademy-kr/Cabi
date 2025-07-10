@@ -60,6 +60,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
           setIsLoading(true);
           const res = await axiosGetPresentationsSlot();
           setAvailableSlots(res.data.data); // api 명세와 달리 results 가 아닌 data 로 옴
+          // console.log("availableSlots : ", availableSlots);
         } catch (error) {
           console.error("발표 가능 날짜 로딩 실패:", error);
         } finally {
@@ -206,7 +207,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
                         caption_label: "text-sm font-medium text-gray-900",
                         nav: "space-x-1 flex items-center",
                         nav_button:
-                          "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-7 w-7",
+                          "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-7 w-7 stroke-black text-black",
                         nav_button_previous: "absolute left-1",
                         nav_button_next: "absolute right-1",
                         table: "w-full border-collapse space-y-1",
