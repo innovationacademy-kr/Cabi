@@ -3,7 +3,6 @@ import * as SelectPrimitive from "@radix-ui/react-select"
 import { Check, ChevronDown, ChevronUp } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-// className=" text-xs sm:text-sm text-gray-500"
 const Select = SelectPrimitive.Root
 
 const SelectGroup = SelectPrimitive.Group
@@ -17,7 +16,8 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "text-xs sm:text-sm text-gray-500 flex h-9 w-auto items-center justify-between bg-white text-black text-xs sm:text-sm rounded-md border border-input  px-3 py-2 shadow-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      // 폰트 스타일 통일
+      "text-sm font-medium text-black flex h-9 w-auto items-center justify-between bg-white rounded-md border border-input px-3 py-2 shadow-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className
     )}
     {...props}
@@ -116,12 +116,13 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full bg-white cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-xs sm:text-sm text-black outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 ",
+      // 폰트 스타일 통일
+      "text-sm font-medium text-black relative flex cursor-default select-none items-center rounded-sm py-2 pl-8 pr-2 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     {...props}
   >
-    <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
         <Check className="h-4 w-4" />
       </SelectPrimitive.ItemIndicator>

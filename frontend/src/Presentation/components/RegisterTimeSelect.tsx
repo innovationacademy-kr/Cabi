@@ -58,7 +58,7 @@ export const RegisterTimeSelect: React.FC<RegisterTimeSelectProps> = ({
                 <FormControl>
                   <SelectTrigger
                     disabled={isEditMode}
-                    className="w-full lg:w-80 md:w-48 px-3 py-2 text-xs sm:text-sm text-black border rounded-md bg-white"
+                    className="w-full lg:w-80 md:w-48 px-3 py-2 text-xs sm:text-sm text-black border rounded-md bg-white data-[placeholder]:text-gray-500"
                   >
                     <SelectValue placeholder="발표 소요 시간을 선택하세요" />
                   </SelectTrigger>

@@ -177,7 +177,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
                           )}
                         </span>
                       ) : (
-                        <span className=" text-xs sm:text-sm text-gray-500">
+                        <span className="text-sm font-medium text-gray-500">
                           발표 날짜를 선택하세요
                         </span>
                       )}

@@ -82,7 +82,7 @@ export const RegisterResultDialog: React.FC<RegisterResultDialogProps> = ({
   submitError,
   onClose,
 }) => (
-  <Dialog open={open} onOpenChange={onOpenChange}>
+  <Dialog open={open} onOpenChange={onClose}>
     <DialogContent
       hideCloseButton
       className="text-center p-8 bg-white flex flex-col items-center w-96"

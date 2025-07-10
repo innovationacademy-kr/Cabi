@@ -178,7 +178,7 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
               <FormMessage />
             </span>
             <span className="text-green-600">
-              {currentFile ? "업로드 완료" : "파일을 선택해주세요"}
+              {currentFile ? "업로드 완료" : preview ? "" :"파일을 선택해주세요" }
             </span>
           </div>
         </FormItem>
