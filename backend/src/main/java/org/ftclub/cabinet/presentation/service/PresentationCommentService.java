@@ -66,7 +66,7 @@ public class PresentationCommentService {
 		// Presentation 존재하는지 확인
 		presentationQueryService.findPresentationByIdWithUser(presentationId);
 
-		List<PresentationComment> comments = commentRepository.findByPresentationIdOrderByCreatedAtAsc(
+		List<PresentationComment> comments = commentRepository.findByPresentationIdAndDeletedFalseOrderByCreatedAtAsc(
 				presentationId);
 
 		return comments.stream()

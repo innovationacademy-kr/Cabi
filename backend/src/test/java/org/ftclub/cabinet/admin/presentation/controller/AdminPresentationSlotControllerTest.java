@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import org.ftclub.cabinet.admin.dto.AdminPresentationSlotRequestDto;
 import org.ftclub.cabinet.admin.presentation.service.AdminPresentationSlotService;
+import org.ftclub.cabinet.event.RedisExpirationEventListener;
 import org.ftclub.cabinet.presentation.domain.PresentationLocation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ class AdminPresentationSlotControllerTest {
 
 	@MockBean
 	private AdminPresentationSlotService adminPresentationSlotService;
+
+	@MockBean
+	private RedisExpirationEventListener redisExpirationEventListener;
 
 	@DisplayName("어드민이 프레젠테이션 슬롯을 생성하여 등록한다.")
 	@WithMockUser(roles = "ADMIN")
