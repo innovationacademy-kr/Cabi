@@ -1,8 +1,8 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import PresentationCard, {
   IPresentation,
 } from "@/Presentation/components/PresentationCard";
-import React from "react";
-import { useNavigate } from "react-router-dom";
 
 interface PresentationCardContainerProps {
   presentations: IPresentation[];
@@ -16,10 +16,10 @@ const PresentationCardContainer: React.FC<PresentationCardContainerProps> = ({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {presentations.map((p) => (
-        <div key={p.id} className="w-full flex justify-center">
+        <div key={p.presentationId} className="w-full flex justify-center">
           <div
             className="w-full max-w-[360px] aspect-[4/5] cursor-pointer"
-            onClick={() => navigate(`/presentations/${p.id}`)}
+            onClick={() => navigate(`/presentations/${p.presentationId}`)}
           >
             <PresentationCard presentation={p} />
           </div>

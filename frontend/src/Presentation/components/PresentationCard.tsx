@@ -1,11 +1,18 @@
-import { ReactComponent as Like } from "@/Presentation/assets/heart.svg";
-import { PresentationStatusTypeLabelMap } from "@/Presentation/assets/data/maps";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import React, { useState } from "react";
+import {
+  PresentationCategoryTypeLabelMap,
+  PresentationStatusTypeLabelMap,
+} from "@/Presentation/assets/data/maps";
+import { ReactComponent as Like } from "@/Presentation/assets/heart.svg";
+import {
+  axiosDeletePresentationLike,
+  axiosPostPresentationLike,
+} from "@/Presentation/api/axios.custom";
 
 export interface IPresentation {
-  id: number;
+  presentationId: number;
   thumbnailLink: string;
   category: string;
   presentationStatus: string;
@@ -18,15 +25,13 @@ export interface IPresentation {
 
 interface PresentationCardProps {
   presentation: IPresentation;
-  onLike?: (id: number, liked: boolean) => void;
 }
 
 export const PresentationCard: React.FC<PresentationCardProps> = ({
   presentation,
-  onLike,
 }) => {
   const {
-    id,
+    presentationId,
     thumbnailLink,
     category,
     presentationStatus,
@@ -45,11 +50,28 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
   const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(likeCount);
 
-  const handleLike = () => {
-    const next = !liked;
-    setLiked(next);
-    setCount((prev) => prev + (next ? 1 : -1));
-    onLike?.(id, next);
+  const handleLike = async () => {
+    try {
+      if (liked) {
+        const response = await axiosDeletePresentationLike(
+          presentationId.toString()
+        );
+        if (response.status === 200) {
+          setLiked(false);
+          setCount((prev) => prev - 1);
+        }
+      } else {
+        const response = await axiosPostPresentationLike(
+          presentationId.toString()
+        );
+        if (response.status === 200) {
+          setLiked(true);
+          setCount((prev) => prev + 1);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -72,7 +94,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
             {PresentationStatusTypeLabelMap[presentationStatus]}
           </Badge>
           <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
-            {category}
+            {PresentationCategoryTypeLabelMap[category]}
           </Badge>
         </div>
       </div>
