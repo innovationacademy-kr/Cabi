@@ -198,3 +198,25 @@ export const axiosDeletePresentationComment = async (
     throw error;
   }
 };
+
+const axiosGetPresentationsURL = "/v6/presentations";
+export const axiosGetPresentations = async (
+  category: string,
+  sort: string,
+  page: number,
+  size: number
+) => {
+  try {
+    const response = await instance.get(axiosGetPresentationsURL, {
+      params: {
+        category,
+        sort,
+        page,
+        size,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
