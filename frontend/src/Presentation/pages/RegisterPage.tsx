@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { axiosGetPresentationById } from "../api/axios.custom";
+import { useLocation, useParams } from "react-router-dom";
+import { axiosGetPresentationById } from "../api/axios/axios.custom";
 import { RegisterResultDialog } from "../components/Modals/PresentationResponseModal";
 import RegisterForm from "../components/RegisterForm";
 import { RegisterType } from "../types/enum/presentation.type.enum";
 
 const RegisterPage = () => {
   const { presentationId } = useParams();
+  const location = useLocation();
   const [initialData, setInitialData] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -16,6 +17,8 @@ const RegisterPage = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const isEditMode = !!presentationId;
+  // admin 경로 판별
+  const isAdminMode = location.pathname.includes("/admin/");
 
   useEffect(() => {
     if (isEditMode && presentationId) {
@@ -46,18 +49,15 @@ const RegisterPage = () => {
 
   return (
     <div className="w-full h-screen flex flex-col justify-start items-center bg-neutral-100 overflow-y-auto">
-      {/*배너 */}
-      {/* <div className="flex flex-col items-center justify-center bg-blue-500 w-full h-64 flex-shrink-0">
-        <h1 className="font-bold text-4xl text-white">
-          당신의 지식이 누군가의 영감이 됩니다
-        </h1>
-        <p className="font-bold text-xl text-white">
-          모든 지식이 소중합니다. 부담 없이 시작해보세요
-        </p>
-      </div> */}
       <div className="flex-1 w-full flex justify-center">
         <RegisterForm
-          type={isEditMode ? RegisterType.EDIT : RegisterType.CREATE}
+          type={
+            isAdminMode
+              ? RegisterType.ADMIN
+              : isEditMode
+              ? RegisterType.EDIT
+              : RegisterType.CREATE
+          }
           initialData={initialData}
           presentationId={presentationId}
         />
