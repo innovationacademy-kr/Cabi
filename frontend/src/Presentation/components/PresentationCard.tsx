@@ -17,6 +17,7 @@ export interface IPresentation {
   category: string;
   presentationStatus: string;
   likeCount: number;
+  likedByMe: boolean;
   title: string;
   startTime: string;
   userName: string;
@@ -36,6 +37,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
     category,
     presentationStatus,
     likeCount,
+    likedByMe,
     title,
     startTime,
     userName,
@@ -47,10 +49,13 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
     date.getMonth() + 1
   }월 ${date.getDate()}일`;
 
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(likedByMe);
   const [count, setCount] = useState(likeCount);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLike = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
     try {
       if (liked) {
         const response = await axiosDeletePresentationLike(
@@ -71,6 +76,8 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -115,6 +122,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
               e.stopPropagation();
               handleLike();
             }}
+            disabled={isLoading}
             className="
               inline-flex flex-none w-auto items-center justify-center
               h-6 space-x-1 text-xs font-normal leading-none group
