@@ -31,7 +31,7 @@ const MAX_CONTENT = 300;
 
 const contactSchema = z
   .object({
-    mode: z.enum(["CREATE", "EDIT"]), 
+    mode: z.enum(["CREATE", "EDIT"]),
     slotId: z.number().optional(),
     duration: z.string().optional(),
     title: z.string().max(50, "제목은 50자 이하여야 합니다").min(1, "입력없음"),
@@ -179,8 +179,8 @@ const RegisterForm = ({
         outline: data.outline,
         detail: data.detail,
         videoLink: null,
-        isRecordingAllowed: data.recordingAllowed || false,
-        isPublicAllowed: data.publicAllowed || false,
+        recordingAllowed: data.recordingAllowed || false,
+        publicAllowed: data.publicAllowed || false,
         thumbnailUpdated: isThumbnailChanged,
         slotId: data.slotId, // ← 추가
         duration: data.duration, // ← 추가
@@ -205,8 +205,8 @@ const RegisterForm = ({
         summary: data.summary,
         outline: data.outline,
         detail: data.detail,
-        isRecordingAllowed: data.recordingAllowed || false,
-        isPublicAllowed: data.publicAllowed || false,
+        recordingAllowed: data.recordingAllowed || false,
+        publicAllowed: data.publicAllowed || false,
         slotId: data.slotId,
       };
 
@@ -240,6 +240,7 @@ const RegisterForm = ({
     }
   };
   const onFormValidated = (data: z.infer<typeof contactSchema>) => {
+    // console.log("폼 제출 데이터:", data);
     setFormDataToSubmit(data);
     setShowConfirmModal(true);
   };
@@ -258,7 +259,7 @@ const RegisterForm = ({
     setShowConfirmModal(false);
 
     try {
-      //EDIT 
+      //EDIT
       if (isEditMode && presentationId) {
         // PATCH 요청용 body와 파일 분리
         const body = {
@@ -429,13 +430,13 @@ const RegisterForm = ({
               {
                 name: "recordingAllowed",
                 description: "촬영된 영상의 다시보기 제공에 동의합니다.",
-                isEditMode: isEditMode, // edit mode 에서 비활성화
+                isEdit: isEditMode, // EDIT 모드에서만 비활성화
               },
               {
                 name: "publicAllowed",
                 description:
                   "본 영상 및 게시물을 온라인상에 공개하는 것에 동의합니다.",
-                  // "촬영된 영상 및 관련 게시물을 본 기관(42 Seoul) 외부 플랫폼 및 채널에 공개하는 것에 동의합니다.",
+                isEdit: false, // 항상 수정 가능!
               },
             ]}
           />

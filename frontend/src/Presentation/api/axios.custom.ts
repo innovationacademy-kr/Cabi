@@ -64,16 +64,7 @@ export const axiosUpdatePresentation = async (
     );
     if (thumbnailFile) {
       formData.append("thumbnail", thumbnailFile);
-      // console.log("추가됨")
-      // formData.append("thumbnailUpdated", "true");
     } 
-    for (const [key, value] of formData.entries()) {
-      if (value instanceof File) {
-        console.log(`${key}: [File] ${value.name}`);
-      } else {
-        console.log(`${key}:`, value);
-      }
-    }
     const response = await instance.patch(
       `/v6/presentations/${presentationId}`,
       formData,
