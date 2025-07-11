@@ -51,8 +51,11 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
 
   const [liked, setLiked] = useState(likedByMe);
   const [count, setCount] = useState(likeCount);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLike = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
     try {
       if (liked) {
         const response = await axiosDeletePresentationLike(
@@ -73,6 +76,8 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -117,6 +122,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
               e.stopPropagation();
               handleLike();
             }}
+            disabled={isLoading}
             className="
               inline-flex flex-none w-auto items-center justify-center
               h-6 space-x-1 text-xs font-normal leading-none group
