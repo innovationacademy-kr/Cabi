@@ -139,7 +139,7 @@ public enum ExceptionStatus {
 	PRESENTATION_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다"),
 	PRESENTATION_COMMENT_TOO_LONG(HttpStatus.BAD_REQUEST, "댓글은 500자 이내로 작성해야 합니다"),
 	PRESENTATION_COMMENT_EMPTY(HttpStatus.BAD_REQUEST, "댓글은 비어있을 수 없습니다"),
-	PRESENTATION_COMMENT_NOT_AUTHORIZED(HttpStatus.UNAUTHORIZED, "댓글 작성자가 아닙니다"),
+	PRESENTATION_COMMENT_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "댓글 작성자가 아닙니다"),
 	PRESENTATION_COMMENT_INVALID_ASSOCIATION(HttpStatus.BAD_REQUEST, "수정하려는 댓글이 해당 발표에 속하지 않습니다."),
 	PRESENTATION_COMMENT_BANNED(HttpStatus.BAD_REQUEST, "밴 당한 댓글은 삭제할 수 없습니다."),
 
