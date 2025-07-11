@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { axiosGetPresentationById } from "../api/axios/axios.custom";
 import { RegisterResultDialog } from "../components/Modals/PresentationResponseModal";
 import RegisterForm from "../components/RegisterForm";
@@ -8,6 +8,7 @@ import { RegisterType } from "../types/enum/presentation.type.enum";
 const RegisterPage = () => {
   const { presentationId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [initialData, setInitialData] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -26,12 +27,18 @@ const RegisterPage = () => {
     } else {
       setInitialData(null);
     }
+    // eslint-disable-next-line
   }, [presentationId, isEditMode]);
 
   const fetchPresentationData = async (presentationId: string) => {
     setLoading(true);
     try {
       const res = await axiosGetPresentationById(presentationId);
+      // editAllowed가 false이고, admin 경로가 아니면 홈으로 리다이렉트
+      if (!res.data.editAllowed && !isAdminMode) {
+        navigate("/presentations/home");
+        return;
+      }
       setInitialData(res.data);
     } catch (error) {
       console.error("신청폼 불러오기 실패:", error);

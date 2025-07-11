@@ -259,7 +259,7 @@ const RegisterForm = ({
         if (isAdminMode) {
           navigate(`/admin/presentations/${presentationId}`);
         } else if (isCreateMode) {
-          navigate(`/presentations/home`);
+          navigate(`/presentations/profile`);
         } else {
           navigate(`/presentations/${presentationId}`);
         }
