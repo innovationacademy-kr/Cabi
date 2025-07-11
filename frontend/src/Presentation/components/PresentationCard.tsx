@@ -9,7 +9,7 @@ import { ReactComponent as Like } from "@/Presentation/assets/heart.svg";
 import {
   axiosDeletePresentationLike,
   axiosPostPresentationLike,
-} from "@/Presentation/api/axios.custom";
+} from "@/Presentation/api/axios/axios.custom";
 
 export interface IPresentation {
   presentationId: number;
