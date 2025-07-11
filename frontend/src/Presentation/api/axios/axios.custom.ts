@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
@@ -135,15 +136,24 @@ export const axiosGetPresentationById = async (
   presentationId: string
 ): Promise<any> => {
   try {
+    const accessToken = getCookie("access_token");
+    // console.log("axiosGetPresentationById");
+    // // const location = useLocation();
+    // console.log("location.pathname : ",location.pathname)
+    // const isAdminPage: boolean = location.pathname === "/admin/presentations/";
     const response = await instance.get(
-      `${axiosGetPresentationByIdURL}${presentationId}`
+      `${axiosGetPresentationByIdURL}${presentationId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     return response;
   } catch (error) {
     throw error;
   }
 };
-
 
 const axiosGetPresentationCommentsURL = "/v6/presentations/";
 export const axiosGetPresentationComments = async (presentationId: string) => {
@@ -224,7 +234,6 @@ export const axiosGetPresentations = async (
   }
 };
 
-
 const axiosGetPresentationsSlotURL = "/v6/presentations/slots";
 // const axiosGetPresentationsSlotURL = "/v6/presentations?type=slots";
 export const axiosGetPresentationsSlot = async () => {
@@ -275,7 +284,7 @@ export const axiosUpdatePresentation = async (
     );
     if (thumbnailFile) {
       formData.append("thumbnail", thumbnailFile);
-    } 
+    }
     const response = await instance.patch(
       `${axiosUpdatePresentationURL}${presentationId}`,
       formData,
@@ -287,7 +296,7 @@ export const axiosUpdatePresentation = async (
     );
     return response;
   } catch (error) {
-    console.log("에러여기걸리나")
+    console.log("에러여기걸리나");
     const err = error as any;
     console.error("API Error Details:", {
       status: err.response?.status,
@@ -315,14 +324,14 @@ export const axiosUpdateAdminPresentation = async (
     );
     if (thumbnailFile) {
       formData.append("thumbnail", thumbnailFile);
-    } 
+    }
     const response = await instance.patch(
       `${axiosUpdateAdminPresentationURL}${presentationId}`,
       formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -354,7 +363,7 @@ export const axiosUpdateAdminPresentation = async (
 //   }
 // };
 
-const axiosPostPresentationLikeURL = "/v6/presentations";;
+const axiosPostPresentationLikeURL = "/v6/presentations";
 export const axiosPostPresentationLike = async (
   presentationId: string
 ): Promise<any> => {
@@ -366,7 +375,7 @@ export const axiosPostPresentationLike = async (
   } catch (error) {
     throw error;
   }
-}
+};
 
 const axiosDeletePresentationLikeURL = "/v6/presentations";
 export const axiosDeletePresentationLike = async (
@@ -380,4 +389,4 @@ export const axiosDeletePresentationLike = async (
   } catch (error) {
     throw error;
   }
-}
+};
