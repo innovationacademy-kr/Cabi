@@ -84,11 +84,13 @@ public class PresentationFacadeService {
 		String thumbnailLink = thumbnailStorageService.generatePresignedUrl(
 				presentation.getThumbnailS3Key());
 		Long likesCount = likeService.countLikes(presentationId);
-		boolean likedByMe = false;
-		boolean editAllowed = false;
+		boolean likedByMe, editAllowed;
 		if (userId != null) {
 			likedByMe = likeService.isLikedByUser(presentationId, userId);
 			editAllowed = userId.equals(presentation.getUser().getId());
+		} else {
+			likedByMe = false;
+			editAllowed = false;
 		}
 
 		return presentationMapper.toPresentationDetailDto(
