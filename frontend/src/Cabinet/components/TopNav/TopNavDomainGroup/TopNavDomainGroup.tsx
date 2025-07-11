@@ -22,7 +22,8 @@ const domains: ITopNavDomain[] = [
   },
   {
     path: "/presentations/home",
-    adminPath: "/admin/presentations/detail",
+    // adminPath: "/admin/presentations/detail", // detail 페이지에서 axiosGetPresentationById 호출 시 권한부족으로 에러
+    adminPath: "/admin/presentations/home",
     logo: PresentationLogo,
     title: "수요지식회",
     active: (pathname) => pathname.includes("presentations"),

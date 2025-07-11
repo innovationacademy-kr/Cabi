@@ -47,4 +47,5 @@ export const PRESENTATION_CATEGORY_LABELS: Record<PresentationCategoryType, stri
 export enum RegisterType {
   CREATE = "CREATE",
   EDIT = "EDIT",
+  ADMIN = "ADMIN",
 } 
