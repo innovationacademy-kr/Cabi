@@ -121,7 +121,7 @@ const RegisterForm = ({
     outline: isCreateMode || isEditMode || isAdminMode,
     detail: isCreateMode || isEditMode || isAdminMode,
     thumbnail: isCreateMode || isEditMode || isAdminMode,
-    videoLink: isAdminMode || isEditMode,
+    videoLink: isAdminMode ,
     recordingAllowed: isCreateMode || isAdminMode,
     publicAllowed: isCreateMode || isEditMode || isAdminMode,
   };
@@ -203,7 +203,7 @@ const RegisterForm = ({
         summary: data.summary,
         outline: data.outline,
         detail: data.detail,
-        videoLink: null,
+        videoLink: null, // CHECK :
         recordingAllowed: data.recordingAllowed || false,
         publicAllowed: data.publicAllowed || false,
         thumbnailUpdated: isThumbnailChanged,
@@ -295,8 +295,8 @@ const RegisterForm = ({
           summary: formDataToSubmit.summary,
           outline: formDataToSubmit.outline,
           detail: formDataToSubmit.detail,
-          // videoLink: isAdminMode ? formDataToSubmit.videoLink : null,
-          videoLink: formDataToSubmit.videoLink,
+          videoLink: isAdminMode ? formDataToSubmit.videoLink : null, // CHECK :
+          // videoLink: formDataToSubmit.videoLink,
           recordingAllowed: formDataToSubmit.recordingAllowed || false,
           publicAllowed: formDataToSubmit.publicAllowed || false,
           thumbnailUpdated: thumbnailChanged || undefined,
