@@ -1,7 +1,12 @@
 import { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
+import PresentationCardContainer from "@/Presentation/pages/PresentationCardContainer";
 import LogTable from "@/Presentation/components/LogTable";
-import { axiosMyPresentationLog } from "@/Presentation/api/axios/axios.custom";
+import { IPresentation } from "@/Presentation/components/PresentationCard";
+import {
+  axiosMyLikedPresentations,
+  axiosMyPresentationLog,
+} from "@/Presentation/api/axios/axios.custom";
 
 export interface PresentationHistoryDto {
   presentationId: number;
@@ -18,37 +23,52 @@ export type PresentationHistoryResponseType =
 const ProfilePage = () => {
   const [presentationLog, setPresentationLog] =
     useState<PresentationHistoryResponseType>(undefined);
+  const [likedPresentations, setLikedPresentations] = useState<IPresentation[]>(
+    []
+  );
 
-  const getPresentationLog = async () => {
-    try {
-      const response = await axiosMyPresentationLog();
-      // 실제 데이터는 response.data.data에 있음
-      setTimeout(() => {
-        setPresentationLog(response.data.data);
-        console.log("불러오기 성공 : ", response.data.data)
-      }, 500);
-    } catch {
-      setTimeout(() => {
-        setPresentationLog(HttpStatusCode.BadRequest);
-        console.log("불러오기 실패 : ")
-
-      }, 500);
-    }
-  };
-
+  // 나의 발표 기록 불러오기
   useEffect(() => {
+    const getPresentationLog = async () => {
+      try {
+        const response = await axiosMyPresentationLog();
+        setPresentationLog(response.data.data);
+      } catch {
+        setPresentationLog(HttpStatusCode.BadRequest);
+      }
+    };
     getPresentationLog();
   }, []);
 
+  // 내가 좋아요한 발표 불러오기
+  useEffect(() => {
+    const getLikedPresentations = async () => {
+      try {
+        // page: 0, size: 6 등 원하는 값으로 지정
+        const response = await axiosMyLikedPresentations(0, 100);
+        setLikedPresentations(response.data.content); // 명세에 맞게 content 사용
+      } catch {
+        setLikedPresentations([]);
+      }
+    };
+    getLikedPresentations();
+  }, []);
+
   return (
-    <div className="flex flex-col justify-center items-center py-[70px] px-0 md:py-[40px] md:px-5">
+    <div className="flex flex-col justify-center items-center py-[70px] px-0 md:py-[40px] md:px-5 mt-12 ">
       <div className="text-center text-2xl font-bold tracking-tight mb-8">
         발표 기록
       </div>
-      <div className="text-center text-lg tracking-tight mb-6 text-gray-500">
+      {/* <div className="text-center text-lg tracking-tight mb-6 text-gray-500">
         나의 발표 기록을 확인할 수 있습니다.
-      </div>
+      </div> */}
       <LogTable presentationHistory={presentationLog} />
+
+      {/* 내가 좋아요한 발표 */}
+      <div className="text-center text-2xl font-bold tracking-tight mt-16 mb-8">
+        내가 좋아요한 발표
+      </div>
+      <PresentationCardContainer presentations={likedPresentations} maxCols={2} />
     </div>
   );
 };

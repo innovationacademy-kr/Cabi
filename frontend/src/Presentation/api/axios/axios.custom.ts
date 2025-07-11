@@ -218,3 +218,22 @@ export const axiosGetPresentations = async (
     throw error;
   }
 };
+
+
+const axiosMyLikedPresentationsURL = "/v6/presentations/me/likes";
+export const axiosMyLikedPresentations = async (
+  page: number,
+  size: number
+) => {
+  try {
+    const response = await instance.get(axiosMyLikedPresentationsURL, {
+      params: {
+        page,
+        size,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
