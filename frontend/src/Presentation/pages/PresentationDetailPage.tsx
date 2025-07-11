@@ -16,6 +16,7 @@ import type {
   PresentationPeriodType,
 } from "@/Presentation/types/enum/presentation.type.enum";
 import { axiosGetPresentationById } from "@/Presentation/api/axios/axios.custom";
+import { ReactComponent as EditIcon } from "@/Presentation/assets/edit.svg";
 
 // Heroicons 사용 예시(설치 필요: @heroicons/react)
 
@@ -86,16 +87,14 @@ const PresentationDetailPage: React.FC = () => {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
           {presentation.editAllowed && (
             <button
-              className="w-24 absolute top-2 right-2 z-30 px-2 py-0.5  rounded-[16px]  inline-flex justify-center items-center gap-1.5"
+              className="w-12 h-12 absolute top-2 right-2 z-30 px-2 py-0.5 "
               onClick={() =>
                 navigate(`/presentations/register/${presentationId}`)
               }
               title="수정하기"
             >
-              {/* <PencilSquareIcon className="w-3.5 h-3.5 text-white" /> */}
-              <span className="text-white text-[16px] font-semibold font-['Pretendard'] leading-none hover:text-blue-300">
-                수정하기
-              </span>
+              <EditIcon style={{ width: 24, height: 24 }} />
+              {/* 수정하기 */}
             </button>
           )}
         </div>
