@@ -63,12 +63,10 @@ export const axiosGetInvalidDates = async (): Promise<any> => {
   }
 };
 
-const axiosMyPresentationLogURL = "/v5/presentation/me/histories";
-export const axiosMyPresentationLog = async (page: number): Promise<any> => {
+const axiosMyPresentationLogURL = "/v6/presentations/me/histories";
+export const axiosMyPresentationLog = async () => {
   try {
-    const response = await instance.get(
-      `${axiosMyPresentationLogURL}?page=${page}&size=10&sort=dateTime,desc`
-    );
+    const response = await instance.get(axiosMyPresentationLogURL);
     return response;
   } catch (error) {
     throw error;
