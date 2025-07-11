@@ -88,3 +88,53 @@ export const axiosUpdatePresentation = async (
     throw error;
   }
 };
+
+const axiosGetPresentationsURL = "/v6/presentations";
+export const axiosGetPresentations = async (
+  category: string = "ALL",
+  sort: string = "TIME",
+  page: number = 0,
+  size: number = 6
+): Promise<any> => {
+  try {
+    const response = await instance.get(axiosGetPresentationsURL, {
+      params: {
+        category,
+        sort,
+        page,
+        size,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosPostPresentationLikeURL = "/v6/presentations";;
+export const axiosPostPresentationLike = async (
+  presentationId: string
+): Promise<any> => {
+  try {
+    const response = await instance.post(
+      `${axiosPostPresentationLikeURL}/${presentationId}/likes`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+const axiosDeletePresentationLikeURL = "/v6/presentations";
+export const axiosDeletePresentationLike = async (
+  presentationId: string
+): Promise<any> => {
+  try {
+    const response = await instance.delete(
+      `${axiosDeletePresentationLikeURL}/${presentationId}/likes`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

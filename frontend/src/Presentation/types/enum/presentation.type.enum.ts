@@ -19,7 +19,6 @@ export enum PresentationLocation {
 }
 
 export enum PresentationCategoryType {
-  // HOBBY = "HOBBY",
   DEVELOP = "DEVELOP",
   DISCUSSION = "DISCUSSION",
   STUDY = "STUDY",
