@@ -20,6 +20,7 @@ const RegisterCheckBox: React.FC<RegisterCheckBoxProps> = ({control, name, descr
             <FormItem className="flex flex-row items-center  space-x-3 space-y-0 rounded-md border p-2">
                 <FormControl>
                   <Checkbox
+                    // disabled=
                     checked={field.value || false} 
                     onCheckedChange={isEditMode ? undefined : (checked) => field.onChange(checked)}
                     className={cn(

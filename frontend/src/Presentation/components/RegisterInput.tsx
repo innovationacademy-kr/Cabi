@@ -22,8 +22,8 @@ const RegisterInput: React.FC<RegisterInputProps> = ({ control, name, title, max
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="w-full mb-4"> {/* 모바일 뷰에서 너비를 100%로 설정 */}
-          <FormLabel className="text-base text-black font-medium sm:text-lg">{title}</FormLabel> {/* 모바일 뷰에서 텍스트 크기 조정 */}
+        <FormItem className="w-full mb-4">
+          <FormLabel className="text-base text-black font-medium sm:text-lg">{title}</FormLabel> 
           <FormControl>
             <Input
               disabled={isEditMode}
