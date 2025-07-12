@@ -195,7 +195,7 @@ const PresentationDetailPage: React.FC = () => {
         </div>
 
         <div className="pb-10">
-          {presentationId && <CommentSection presentationId={presentationId} />}
+          {presentationId && <CommentSection presentationId={presentationId} isAdmin={false} />}
         </div>
       </div>
     </>

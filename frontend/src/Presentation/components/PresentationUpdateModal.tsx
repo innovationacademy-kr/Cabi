@@ -142,15 +142,17 @@ export const PresentationUpdateModal: React.FC<
                 등록된 발표가 없습니다
               </div>
             ) : (
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
-                autoFocus
+              <div
+                className="w-full h-12 flex items-center rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200 cursor-pointer"
+                onClick={() => {
+                  if (eventData && eventData.id) {
+                    window.location.href = `/admin/presentations/${eventData.id}`;
+                  }
+                }}
                 style={{ letterSpacing: "-0.5px" }}
-                required
-              />
+              >
+                {title}
+              </div>
             )}
           </div>
           {/* 시작 시간 */}
