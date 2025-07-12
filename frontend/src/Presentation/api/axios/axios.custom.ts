@@ -65,12 +65,10 @@ export const axiosGetInvalidDates = async (): Promise<any> => {
   }
 };
 
-const axiosMyPresentationLogURL = "/v5/presentation/me/histories";
-export const axiosMyPresentationLog = async (page: number): Promise<any> => {
+const axiosMyPresentationLogURL = "/v6/presentations/me/histories";
+export const axiosMyPresentationLog = async () => {
   try {
-    const response = await instance.get(
-      `${axiosMyPresentationLogURL}?page=${page}&size=10&sort=dateTime,desc`
-    );
+    const response = await instance.get(axiosMyPresentationLogURL);
     return response;
   } catch (error) {
     throw error;
@@ -234,6 +232,7 @@ export const axiosGetPresentations = async (
   }
 };
 
+
 const axiosGetPresentationsSlotURL = "/v6/presentations/slots";
 // const axiosGetPresentationsSlotURL = "/v6/presentations?type=slots";
 export const axiosGetPresentationsSlot = async () => {
@@ -261,12 +260,14 @@ export const axiosCreatePresentation = async (
     const response = await instance.post(axiosCreatePresentationURL, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+
       },
     });
     return response;
   } catch (error) {
     throw error;
   }
+
 };
 
 const axiosUpdatePresentationURL = "/v6/presentations/";
@@ -406,6 +407,25 @@ export const axiosDeletePresentationLike = async (
     const response = await instance.delete(
       `${axiosDeletePresentationLikeURL}/${presentationId}/likes`
     );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+const axiosMyLikedPresentationsURL = "/v6/presentations/me/likes";
+export const axiosMyLikedPresentations = async (
+  page: number,
+  size: number
+) => {
+  try {
+    const response = await instance.get(axiosMyLikedPresentationsURL, {
+      params: {
+        page,
+        size,
+      },
+    });
     return response;
   } catch (error) {
     throw error;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { axiosGetPresentationById } from "../api/axios/axios.custom";
 import { axiosGetAdminPresentationById } from "../api/axios/axios.custom";
 import { RegisterResultDialog } from "../components/Modals/PresentationResponseModal";
@@ -9,6 +9,7 @@ import { RegisterType } from "../types/enum/presentation.type.enum";
 const RegisterPage = () => {
   const { presentationId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [initialData, setInitialData] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -27,6 +28,7 @@ const RegisterPage = () => {
     } else {
       setInitialData(null);
     }
+    // eslint-disable-next-line
   }, [presentationId, isEditMode]);
 
   const fetchPresentationData = async (presentationId: string) => {
@@ -35,6 +37,12 @@ const RegisterPage = () => {
       const res = await (isAdminMode
         ? axiosGetAdminPresentationById(presentationId)
         : axiosGetPresentationById(presentationId));
+      // editAllowed == false면 수정 불가 (not admin, not owner)
+      if (!res.data.data.editAllowed) {
+        alert("수정 권한이 없습니다.");
+        navigate("/presentations/" + presentationId);
+        return;
+      }
       setInitialData(res.data);
     } catch (error) {
       console.error("신청폼 불러오기 실패:", error);

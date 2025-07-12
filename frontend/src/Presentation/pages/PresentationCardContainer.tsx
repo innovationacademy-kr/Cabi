@@ -6,15 +6,19 @@ import PresentationCard, {
 
 interface PresentationCardContainerProps {
   presentations: IPresentation[];
+  maxCols?: number;
 }
 
 const PresentationCardContainer: React.FC<PresentationCardContainerProps> = ({
   presentations,
+  maxCols = 3,
 }) => {
   const navigate = useNavigate();
 
+  const xlGridColsClass = `xl:grid-cols-${maxCols}`;
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className={`grid grid-cols-1 lg:grid-cols-2 ${xlGridColsClass} gap-8`}>
       {presentations.map((p) => (
         <div key={p.presentationId} className="w-full flex justify-center">
           <div
