@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +50,21 @@ public class JwtService {
 		} catch (ExpiredJwtException e) {
 			throw new SpringSecurityException(ExceptionStatus.EXPIRED_JWT_TOKEN);
 		} catch (JwtException e) {
-			log.info("JwtException : {}", e.getMessage(), e);
+			log.info("JwtException : {}", e.getMessage());
+			throw new SpringSecurityException(ExceptionStatus.JWT_EXCEPTION);
+		} catch (DomainException e) {
+			log.info("Claims has null value : {}", e.getMessage());
+			throw new SpringSecurityException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+	}
+
+	public Claims validateAndParseToken(String token) {
+		try {
+			return tokenProvider.parseToken(token);
+		} catch (ExpiredJwtException e) {
+			throw new SpringSecurityException(ExceptionStatus.EXPIRED_JWT_TOKEN);
+		} catch (JwtException e) {
+			log.info("JwtException : {}", e.getMessage());
 			throw new SpringSecurityException(ExceptionStatus.JWT_EXCEPTION);
 		} catch (DomainException e) {
 			log.info("Claims has null value : {}", e.getMessage());
@@ -80,14 +96,26 @@ public class JwtService {
 	 * @param provider
 	 * @return
 	 */
-	public TokenDto createPairTokens(Long userId, String roles, String provider) {
+	public TokenDto createPairTokens(Long userId, String roles, String email, String provider) {
 		Claims claims = Jwts.claims();
 
 		claims.put(JwtTokenConstants.USER_ID, userId);
 		claims.put(JwtTokenConstants.ROLES, roles);
+		claims.put(JwtTokenConstants.EMAIL, email);
 		claims.put(JwtTokenConstants.OAUTH, provider);
 
-		return tokenProvider.createAccessAndRefreshToken(claims);
+		TokenDto tokens = tokenProvider.createAccessAndRefreshToken(claims);
+
+		if (roles.contains(AdminRole.ADMIN.name()) || roles.contains(AdminRole.MASTER.name())) {
+			jwtRedisService.addAdminRefreshToken(userId, tokens.getRefreshToken());
+		} else {
+			jwtRedisService.addRefreshToken(userId, tokens.getRefreshToken());
+		}
+		return tokens;
+	}
+
+	public String generateToken(Claims claims, Long validity) {
+		return tokenProvider.createToken(claims, validity);
 	}
 
 
@@ -102,34 +130,53 @@ public class JwtService {
 	 *
 	 * @param req
 	 * @param res
-	 * @param refreshToken
 	 * @return
 	 */
-	public TokenDto reissueToken(HttpServletRequest req, HttpServletResponse res,
-			String refreshToken) {
+	public TokenDto reissueToken(HttpServletRequest req, HttpServletResponse res) {
 		String accessToken = extractToken(req);
-		if (accessToken == null || refreshToken == null) {
+		if (accessToken == null) {
 			throw ExceptionStatus.JWT_TOKEN_NOT_FOUND.asServiceException();
 		}
 
 		try {
-			Claims claims = tokenProvider.parseToken(refreshToken);
+			Claims claims = parseClaimsEvenIfExpired(accessToken);
 			UserInfoDto userInfoDto = UserInfoDto.fromClaims(claims);
-			TokenDto currentTokens = new TokenDto(accessToken, refreshToken);
+			log.info("Role = {}", userInfoDto.getRoles());
 
 			if (userInfoDto.hasRole(AdminRole.ADMIN.name())
 					|| userInfoDto.hasRole(AdminRole.MASTER.name())) {
-				return reissueAdminToken(req, res, currentTokens, userInfoDto);
+				return reissueAdminToken(req, res, accessToken, userInfoDto);
 			}
 
-			return reissueUserToken(req, res, currentTokens, userInfoDto);
-		} catch (ExpiredJwtException e) {
-			cookieService.deleteAllCookies(req.getCookies(), req.getServerName(), res);
-			throw ExceptionStatus.EXPIRED_JWT_TOKEN.asServiceException();
+			return reissueUserToken(req, res, accessToken, userInfoDto);
 		} catch (JwtException e) {
 			cookieService.deleteAllCookies(req.getCookies(), req.getServerName(), res);
 			throw ExceptionStatus.JWT_EXCEPTION.asServiceException();
 		}
+	}
+
+	public Claims parseClaimsEvenIfExpired(String token) {
+		try {
+			return tokenProvider.parseToken(token);
+		} catch (ExpiredJwtException e) {
+			return e.getClaims();
+		}
+	}
+
+	public boolean isValidToken(String token) {
+		try {
+			tokenProvider.parseToken(token);
+			return true;
+		} catch (SecurityException | MalformedJwtException e) {
+			log.warn("Invalid JWT signature or malformed token: {}", e.getMessage());
+		} catch (ExpiredJwtException e) {
+			log.warn("Expired JWT token: {}", e.getMessage());
+		} catch (UnsupportedJwtException e) {
+			log.warn("Unsupported JWT token: {}", e.getMessage());
+		} catch (IllegalArgumentException e) {
+			log.warn("JWT claims string is empty: {}", e.getMessage());
+		}
+		return false;
 	}
 
 	/**
@@ -139,25 +186,28 @@ public class JwtService {
 	 *
 	 * @param req
 	 * @param res
-	 * @param currentTokens reissue 이전 입력받은 토큰
-	 * @param userInfoDto   refreshToken parse를 통해 생성한 유저 정보
+	 * @param userInfoDto refreshToken parse를 통해 생성한 유저 정보
 	 * @return {@link TokenDto} 새로 생성한 토큰 객체
 	 */
 	private TokenDto reissueAdminToken(HttpServletRequest req, HttpServletResponse res,
-			TokenDto currentTokens, UserInfoDto userInfoDto) {
+			String accessToken,
+			UserInfoDto userInfoDto) {
 		Admin admin = adminQueryService.getById(userInfoDto.getUserId());
 
-		if (jwtRedisService.isUsedAdminAccessToken(admin.getId(), currentTokens.getAccessToken())
-				|| jwtRedisService.isUsedAdminRefreshToken(admin.getId(),
-				currentTokens.getRefreshToken())) {
+		if (jwtRedisService.isUsedAdminAccessToken(admin.getId(), accessToken)) {
 			throw ExceptionStatus.JWT_ALREADY_USED.asServiceException();
 		}
-		TokenDto tokens =
-				createPairTokens(admin.getId(), admin.getRole().name(), userInfoDto.getOauth());
+		String activeRefreshToken = jwtRedisService.getAdminRefreshToken(admin.getId());
+		if (!isValidToken(activeRefreshToken)) {
+			throw ExceptionStatus.JWT_EXPIRED.asServiceException();
+		}
 
-		cookieService.setPairTokenCookiesToClient(res, tokens, req.getServerName());
-		jwtRedisService.addUsedAdminTokensToBlackList(
-				admin.getId(), currentTokens.getAccessToken(), currentTokens.getRefreshToken());
+		TokenDto tokens = createPairTokens(admin.getId(), admin.getRole().name(),
+				admin.getEmail(), userInfoDto.getOauth());
+
+		cookieService.setAccessTokenCookiesToClient(res, tokens, req.getServerName());
+		jwtRedisService.addAdminAccessTokenToBlackList(admin.getId(), accessToken);
+		jwtRedisService.addAdminRefreshToken(admin.getId(), tokens.getRefreshToken());
 		return tokens;
 	}
 
@@ -168,24 +218,28 @@ public class JwtService {
 	 *
 	 * @param req
 	 * @param res
-	 * @param currentTokens reissue 이전 입력받은 토큰
-	 * @param userInfoDto   refreshToken parse를 통해 생성한 유저 정보
+	 * @param userInfoDto refreshToken parse를 통해 생성한 유저 정보
 	 * @return {@link TokenDto} 새로 생성한 토큰 객체
 	 */
 	private TokenDto reissueUserToken(HttpServletRequest req, HttpServletResponse res,
-			TokenDto currentTokens, UserInfoDto userInfoDto) {
+			String accessToken,
+			UserInfoDto userInfoDto) {
 		User user = userQueryService.getUser(userInfoDto.getUserId());
 
-		if (jwtRedisService.isUsedAccessToken(user.getId(), currentTokens.getAccessToken())
-				|| jwtRedisService.isUsedRefreshToken(user.getId(),
-				currentTokens.getRefreshToken())) {
+		if (jwtRedisService.isUsedAccessToken(user.getId(), accessToken)) {
 			throw ExceptionStatus.JWT_ALREADY_USED.asServiceException();
 		}
-		TokenDto tokens = createPairTokens(user.getId(), user.getRoles(), userInfoDto.getOauth());
+		String activeRefreshToken = jwtRedisService.getUserRefreshToken(user.getId());
+		if (!isValidToken(activeRefreshToken)) {
+			throw ExceptionStatus.JWT_EXPIRED.asServiceException();
+		}
 
-		cookieService.setPairTokenCookiesToClient(res, tokens, req.getServerName());
-		jwtRedisService.addUsedUserTokensToBlackList(
-				user.getId(), currentTokens.getAccessToken(), currentTokens.getRefreshToken());
+		TokenDto tokens = createPairTokens(user.getId(), user.getRoles(),
+				userInfoDto.getEmail(), userInfoDto.getOauth());
+
+		cookieService.setAccessTokenCookiesToClient(res, tokens, req.getServerName());
+		jwtRedisService.addUserAccessTokenToBlackList(user.getId(), accessToken);
+		jwtRedisService.addUserRefreshToken(user.getId(), tokens.getRefreshToken());
 		return tokens;
 	}
 
@@ -203,6 +257,7 @@ public class JwtService {
 
 		return header.substring(JwtTokenConstants.BEARER.length());
 	}
+
 }
 
 

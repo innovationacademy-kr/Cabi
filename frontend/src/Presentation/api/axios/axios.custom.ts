@@ -213,3 +213,99 @@ export const axiosDeletePresentationComment = async (
     throw error;
   }
 };
+
+const axiosGetPresentationByIdURL = "/v6/presentations/";
+export const axiosGetPresentationById = async (
+  presentationId: string
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      `${axiosGetPresentationByIdURL}${presentationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * 수요지식회 리뉴얼 API
+ */
+const axiosGetPresentationCommentsURL = "/v6/presentations/";
+export const axiosGetPresentationComments = async (presentationId: string) => {
+  try {
+    const response = await instance.get(
+      `${axiosGetPresentationCommentsURL}${presentationId}/comments`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosPostPresentationComment = async (
+  presentationId: string,
+  detail: string
+) => {
+  try {
+    const response = await instance.post(
+      `${axiosGetPresentationCommentsURL}${presentationId}/comments`,
+      { detail }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosPatchPresentationComment = async (
+  presentationId: string,
+  commentId: number,
+  detail: string
+) => {
+  try {
+    const response = await instance.patch(
+      `/v6/presentations/${presentationId}/comments/${commentId}`,
+      { detail }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosDeletePresentationComment = async (
+  presentationId: string,
+  commentId: number
+) => {
+  try {
+    const response = await instance.delete(
+      `/v6/presentations/${presentationId}/comments/${commentId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetPresentationsURL = "/v6/presentations";
+export const axiosGetPresentations = async (
+  category: string,
+  sort: string,
+  page: number,
+  size: number
+) => {
+  try {
+    const response = await instance.get(axiosGetPresentationsURL, {
+      params: {
+        category,
+        sort,
+        page,
+        size,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

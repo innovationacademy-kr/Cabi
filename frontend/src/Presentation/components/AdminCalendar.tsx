@@ -46,13 +46,14 @@ const calendars = [
 ];
 
 export function AdminCalendar() {
-  const calendarRef = useRef(null);
+  const calendarRef = useRef<any>(null);
   const [events, setEvents] = useState<any[]>([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     const fetchCalendarData = async () => {
       try {
-        const yearMonth = new Date().toISOString().slice(0, 7);
+        const yearMonth = currentDate.toISOString().slice(0, 7);
 
         const [presentationsResponse, slotsResponse] = await Promise.all([
           getAdminPresentationsByYearMonth(yearMonth),
@@ -62,13 +63,13 @@ export function AdminCalendar() {
         const presentationEvents = presentationsResponse.data.map(
           (item: AdminPresentationCalendarItemDto) => ({
             id: item.presentationId.toString(),
-            calendarId: item.canceled ? "3" : "1", // Canceled or Scheduled
+            calendarId: item.canceled ? "3" : "1",
             title: item.title,
             category: "time",
             start: item.startTime,
             end: new Date(
               new Date(item.startTime).getTime() + 60 * 60 * 1000
-            ).toISOString(), // Assuming 1 hour duration
+            ).toISOString(),
             location: item.presentationLocation,
             state: item.canceled ? "Canceled" : "Scheduled",
           })
@@ -77,7 +78,7 @@ export function AdminCalendar() {
         const availableSlotsEvents = slotsResponse.data.map(
           (item: AdminAvailableSlotDto) => ({
             id: `slot-${item.slotId}`,
-            calendarId: "2", // 열려있는 발표
+            calendarId: "2",
             title: new Date(item.startTime).toLocaleTimeString("ko-KR", {
               hour: "2-digit",
               minute: "2-digit",
@@ -97,7 +98,21 @@ export function AdminCalendar() {
     };
 
     fetchCalendarData();
-  }, []);
+  }, [currentDate]);
+
+  const handlePrevClick = () => {
+    if (calendarRef.current) {
+      calendarRef.current.getInstance().prev();
+      setCurrentDate(new Date(calendarRef.current.getInstance().getDate()));
+    }
+  };
+
+  const handleNextClick = () => {
+    if (calendarRef.current) {
+      calendarRef.current.getInstance().next();
+      setCurrentDate(new Date(calendarRef.current.getInstance().getDate()));
+    }
+  };
 
   return (
     <div
@@ -110,6 +125,41 @@ export function AdminCalendar() {
         padding: 24,
       }}
     >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "10px",
+        }}
+      >
+        <button
+          onClick={handlePrevClick}
+          style={{
+            padding: "8px 12px",
+            cursor: "pointer",
+            backgroundColor: "#f0f0f0",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        >
+          &lt;
+        </button>
+        <h2>
+          {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
+        </h2>
+        <button
+          onClick={handleNextClick}
+          style={{
+            padding: "2px 2px",
+            cursor: "pointer",
+            backgroundColor: "#f0f0f0",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        >
+          &gt;
+        </button>
+      </div>
       <Calendar
         ref={calendarRef}
         height="700px"

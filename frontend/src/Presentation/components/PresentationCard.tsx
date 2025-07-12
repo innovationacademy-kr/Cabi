@@ -1,14 +1,23 @@
-import { ReactComponent as Like } from "@/Presentation/assets/heart.svg";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import React, { useState } from "react";
+import {
+  PresentationCategoryTypeLabelMap,
+  PresentationStatusTypeLabelMap,
+} from "@/Presentation/assets/data/maps";
+import { ReactComponent as Like } from "@/Presentation/assets/heart.svg";
+import {
+  axiosDeletePresentationLike,
+  axiosPostPresentationLike,
+} from "@/Presentation/api/axios.custom";
 
 export interface IPresentation {
-  id: number;
+  presentationId: number;
   thumbnailLink: string;
   category: string;
-  isUpcomming: boolean;
+  presentationStatus: string;
   likeCount: number;
+  likedByMe: boolean;
   title: string;
   startTime: string;
   userName: string;
@@ -17,19 +26,18 @@ export interface IPresentation {
 
 interface PresentationCardProps {
   presentation: IPresentation;
-  onLike?: (id: number, liked: boolean) => void;
 }
 
 export const PresentationCard: React.FC<PresentationCardProps> = ({
   presentation,
-  onLike,
 }) => {
   const {
-    id,
+    presentationId,
     thumbnailLink,
     category,
-    isUpcomming,
+    presentationStatus,
     likeCount,
+    likedByMe,
     title,
     startTime,
     userName,
@@ -41,14 +49,36 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
     date.getMonth() + 1
   }월 ${date.getDate()}일`;
 
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(likedByMe);
   const [count, setCount] = useState(likeCount);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLike = () => {
-    const next = !liked;
-    setLiked(next);
-    setCount((prev) => prev + (next ? 1 : -1));
-    onLike?.(id, next);
+  const handleLike = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    try {
+      if (liked) {
+        const response = await axiosDeletePresentationLike(
+          presentationId.toString()
+        );
+        if (response.status === 200) {
+          setLiked(false);
+          setCount((prev) => prev - 1);
+        }
+      } else {
+        const response = await axiosPostPresentationLike(
+          presentationId.toString()
+        );
+        if (response.status === 200) {
+          setLiked(true);
+          setCount((prev) => prev + 1);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -68,10 +98,10 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
         <div className="absolute bottom-0 left-0 w-full h-[80px] bg-gradient-to-t from-black/60 to-black/0 z-10" />
         <div className="absolute bottom-[10px] left-[16px] flex space-x-2 z-10 ">
           <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
-            {isUpcomming ? "발표 예정" : "발표 완료"}
+            {PresentationStatusTypeLabelMap[presentationStatus]}
           </Badge>
           <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
-            {category}
+            {PresentationCategoryTypeLabelMap[category]}
           </Badge>
         </div>
       </div>
@@ -92,6 +122,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
               e.stopPropagation();
               handleLike();
             }}
+            disabled={isLoading}
             className="
               inline-flex flex-none w-auto items-center justify-center
               h-6 space-x-1 text-xs font-normal leading-none group

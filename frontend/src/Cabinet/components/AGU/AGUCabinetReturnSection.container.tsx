@@ -3,13 +3,15 @@ import { MouseEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { myCabinetInfoState } from "@/Cabinet/recoil/atoms";
+import AGUCabinetReturnSection from "@/Cabinet/components/AGU/AGUCabinetReturnSection";
 import { MyCabinetInfoResponseDto } from "@/Cabinet/types/dto/cabinet.dto";
 import {
   axiosAGUReturnCancel,
   axiosReturn,
 } from "@/Cabinet/api/axios/axios.custom";
+import { removeCookie } from "@/Cabinet/api/react_cookie/cookies";
 import { formatDate } from "@/Cabinet/utils/dateUtils";
-import AGUCabinetReturnSection from "./AGUCabinetReturnSection";
+import { getDomain } from "@/Cabinet/utils/domainUtils";
 
 export type TAGUReturnPageExitEvent =
   | BeforeUnloadEvent
@@ -71,6 +73,10 @@ const AGUCabinetReturnSectionContainer = ({
       const response = await axiosAGUReturnCancel();
 
       if (response.status === HttpStatusCode.Ok) {
+        removeCookie("agu_token", {
+          path: "/",
+          domain: getDomain(),
+        });
         resetMyLentInfo();
       }
     } catch (error: any) {

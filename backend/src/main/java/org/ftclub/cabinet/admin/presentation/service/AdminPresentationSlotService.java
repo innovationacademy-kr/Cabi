@@ -123,8 +123,10 @@ public class AdminPresentationSlotService {
 		validateSlotUpdateOverlap(serviceDto.getSlotId(), serviceDto.getStartTime());
 		slot.changeSlotStartTime(serviceDto.getStartTime());
 		slot.changeSlotLocation(serviceDto.getPresentationLocation());
-		presentationCommandService.updateSlotDetails(slot.getPresentation().getId(),
-				slot.getStartTime(), slot.getPresentationLocation());
+		if (slot.hasPresentation()) {
+			presentationCommandService.updateSlotDetails(slot.getPresentation().getId(),
+					slot.getStartTime(), slot.getPresentationLocation());
+		}
 	}
 
 	/**

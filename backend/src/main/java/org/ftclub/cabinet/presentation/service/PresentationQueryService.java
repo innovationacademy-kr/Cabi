@@ -5,8 +5,11 @@ import java.time.YearMonth;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Presentation;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,5 +67,13 @@ public class PresentationQueryService {
 	 */
 	public List<Presentation> findPresentationsByUserId(Long userId) {
 		return presentationRepository.findAllByUserIdAtDesc(userId);
+	}
+
+	public Page<Presentation> findPresentationsWithConditions(
+			Category category,
+			String sort,
+			Pageable pageable,
+			boolean publicOnly) {
+		return presentationRepository.findPresentations(category, sort, pageable, publicOnly);
 	}
 }

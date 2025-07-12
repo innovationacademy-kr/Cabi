@@ -8,27 +8,11 @@ import { ErrorType } from "@/Cabinet/types/enum/error.type.enum";
 import { CoinLogToggleType } from "@/Cabinet/types/enum/store.enum";
 import instance from "@/Cabinet/api/axios/axios.instance";
 import { logAxiosError } from "@/Cabinet/api/axios/axios.log";
-import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
-
-const axiosCSRFTokenURL = "/v5/auth/csrf";
-export const axiosGetCSRFToken = async (): Promise<any> => {
-  try {
-    const response = await instance.get(axiosCSRFTokenURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
 
 const axiosLogoutUrl = "/logout";
 export const axiosLogout = async (): Promise<any> => {
   try {
-    await axiosGetCSRFToken();
-    const csrfToken = getCookie("XSRF-TOKEN");
-    const response = await instance.post(axiosLogoutUrl, null, {
-      headers: { "X-XSRF-TOKEN": csrfToken },
-      withCredentials: true,
-    });
+    const response = await instance.post(axiosLogoutUrl);
     return response;
   } catch (error) {
     throw error;
@@ -450,20 +434,21 @@ export const axiosUseItem = async (
 };
 
 // Admin API
-const axiosAdminAuthURL = "/v4/admin/auth";
+const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
 export const axiosAdminAuthLogin = async (
   id: string,
   password: string
 ): Promise<any> => {
   try {
     const response = await instance.post(
-      axiosAdminAuthURL + "/login",
+      axiosAdminAuthLoginURL,
       {
         id,
         password,
       },
       { withCredentials: true }
     );
+
     return response;
   } catch (error) {
     throw error;
@@ -524,13 +509,23 @@ export const axiosUnlinkSocialAccount = async (
   }
 };
 
+export const axiosLinkSocialAccount = async (
+  provider: TOAuthProvider
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      axiosSocialAccountLinkURL + `/${provider}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosReissueTokenURL = "/jwt/reissue";
 export const axiosReissueToken = async (): Promise<any> => {
   try {
-    await axiosGetCSRFToken();
-    const csrfToken = getCookie("XSRF-TOKEN");
     const response = await instance.post(axiosReissueTokenURL, null, {
-      headers: { "X-XSRF-TOKEN": csrfToken },
       withCredentials: true,
     });
     return response;
@@ -969,7 +964,7 @@ export const axiosGetAvailableCabinets = async (): Promise<any> => {
   }
 };
 
-const axiosSendSlackAlarmToUserURL = "/slack/send";
+const axiosSendSlackAlarmToUserURL = "/v5/admin/slack/send";
 export const axiosSendSlackAlarmToUser = async (
   receiverName: string,
   message: string

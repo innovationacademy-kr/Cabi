@@ -2,6 +2,7 @@ package org.ftclub.cabinet.item.controller;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.dto.CoinCollectionRewardResponseDto;
 import org.ftclub.cabinet.dto.CoinHistoryPaginationDto;
 import org.ftclub.cabinet.dto.CoinMonthlyCollectionDto;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v5/items")
@@ -121,7 +123,7 @@ public class ItemController {
 	 * @param sku  아이템 고유 식별 값
 	 * @param data sku 에 따라 다르게 필요한 정보
 	 */
-	@PostMapping("{sku}/use")
+	@PostMapping("/{sku}/use")
 	public void useItem(@AuthenticationPrincipal UserInfoDto user,
 			@PathVariable("sku") Sku sku,
 			@Valid @RequestBody ItemUseRequestDto data) {

@@ -155,6 +155,10 @@ public enum ExceptionStatus {
 	PRESENTATION_UPDATE_VIDEO_LINK_DENIED(HttpStatus.FORBIDDEN, "발표 영상 링크는 수정할 수 없습니다."),
 	PRESENTATION_UPDATE_RECORDING_ALLOWED_DENIED(HttpStatus.FORBIDDEN, "발표 녹화 허용 여부는 수정할 수 없습니다."),
 
+	// Presentation Like 관련
+	PRESENTATION_LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 좋아요 표시한 게시글입니다."),
+	PRESENTATION_LIKE_NOT_FOUND(HttpStatus.BAD_REQUEST, "이미 삭제된 좋아요 입니다."),
+
 
 	// REMOVE (just for conflict)
 	REMOVE(HttpStatus.BAD_REQUEST, "삭제할 내용(오로지 마지막 ; 작성 용)");

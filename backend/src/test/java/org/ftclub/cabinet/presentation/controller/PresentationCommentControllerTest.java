@@ -46,10 +46,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(
-		controllers = PresentationCommentController.class,
-		properties = {"cabinet.local=true"}
-)
+@WebMvcTest(controllers = PresentationCommentController.class)
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "api.cabi.42seoul.io") // Adjust host/port
 public class PresentationCommentControllerTest {
 

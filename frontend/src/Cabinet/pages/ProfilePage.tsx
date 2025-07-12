@@ -12,16 +12,19 @@ import DisplayStyleCardContainer from "@/Cabinet/components/Card/DisplayStyleCar
 import LentInfoCardContainer from "@/Cabinet/components/Card/LentInfoCard/LentInfoCard.container";
 import PointColorCardContainer from "@/Cabinet/components/Card/PointColorCard/PointColorCard.container";
 import ProfileCardContainer from "@/Cabinet/components/Card/ProfileCard/ProfileCard.container";
-import SocialAccountLinkCardContainer from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard.container";
+import SocialAccountLinkCard from "@/Cabinet/components/Card/SocialAccountLinkCard/SocialAccountLinkCard";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import {
   axiosMyInfo,
   axiosUpdateDeviceToken,
 } from "@/Cabinet/api/axios/axios.custom";
+import useOAuthStatus from "@/Cabinet/hooks/useOAuthStatus";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [myInfo, setMyInfo] = useRecoilState(userState);
+
+  useOAuthStatus();
 
   const getMyInfo = async () => {
     try {
@@ -60,7 +63,7 @@ const ProfilePage = () => {
           <DisplayStyleCardContainer />
           <PointColorCardContainer />
           <AlarmCardContainer alarm={myInfo.alarmTypes} />
-          <SocialAccountLinkCardContainer />
+          <SocialAccountLinkCard />
         </CardGridWrapper>
       )}
     </>

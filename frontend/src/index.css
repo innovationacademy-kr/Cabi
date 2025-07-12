@@ -91,15 +91,19 @@
   --custom-green-100: var(--ref-green-300);
   --custom-green-200: var(--ref-green-400);
 
-  /* component variable */
+  /* system variable */
   --sys-sub-color: var(--ref-purple-400);
   --sys-default-sub-color: var(--ref-purple-400);
   --sys-presentation-sub-color: var(--ref-blue-300);
+
+  /* component variable */
   --tooltip-shadow-color: var(--ref-black-shadow-400);
   --color-picker-border-shadow-color: var(--ref-black-shadow-200);
   --presentation-detail-available-color: var(--ref-blue-200);
   --presentation-blue-pagination-btn-color: var(--ref-blue-500);
   --mine-text-color: var(--ref-black);
+  --google-bg-color: var(--ref-gray-100);
+  --kakao-bg-color: var(--ref-yellow-100);
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;
@@ -197,8 +201,10 @@ input {
 }
 
 .presentation-root {
-font-family: var(--presentation-main-font);
-height: 100%;
+  font-family: var(--presentation-main-font);
+  height: 100%;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
 }
 
 .modal {
