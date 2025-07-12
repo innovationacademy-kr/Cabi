@@ -1,10 +1,12 @@
 import "@toast-ui/calendar/dist/toastui-calendar.min.css";
 import Calendar from "@toast-ui/react-calendar";
-import { useEffect, useRef, useState } from "react";
+import { toZonedTime } from "date-fns-tz";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   getAdminAvailableSlots,
   getAdminPresentationsByYearMonth,
 } from "@/Presentation/api/axios/axios.custom";
+import { PresentationRegistrationModal } from "./PresentationRegistrationModal";
 
 interface AdminPresentationCalendarItemDto {
   presentationId: number;
@@ -49,86 +51,121 @@ export function AdminCalendar() {
   const calendarRef = useRef<any>(null);
   const [events, setEvents] = useState<any[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  useEffect(() => {
-    const fetchCalendarData = async () => {
-      try {
-        const yearMonth = currentDate.toISOString().slice(0, 7);
+  const handleOpenModal = useCallback((date: Date) => {
+    setSelectedDate(date);
+    setIsModalOpen(true);
+  }, []);
 
-        const now = new Date();
-        const isPastMonth =
-          currentDate.getFullYear() < now.getFullYear() ||
-          (currentDate.getFullYear() === now.getFullYear() &&
-            currentDate.getMonth() < now.getMonth());
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+    setSelectedDate(null);
+    const inst = calendarRef.current?.getInstance?.();
+    if (inst?.clearGridSelections) {
+      inst.clearGridSelections();
+    }
+  }, []);
 
-        let presentationsResponse;
-        let slotsResponse;
+  const fetchCalendarData = useCallback(async () => {
+    try {
+      const yearMonth = currentDate.toISOString().slice(0, 7);
+      const now = new Date();
+      const isPastMonth =
+        currentDate.getFullYear() < now.getFullYear() ||
+        (currentDate.getFullYear() === now.getFullYear() &&
+          currentDate.getMonth() < now.getMonth());
 
-        if (isPastMonth) {
-          presentationsResponse = await getAdminPresentationsByYearMonth(
-            yearMonth
-          );
-          slotsResponse = { data: [] };
-        } else {
-          [presentationsResponse, slotsResponse] = await Promise.all([
-            getAdminPresentationsByYearMonth(yearMonth),
-            getAdminAvailableSlots(yearMonth),
-          ]);
-        }
+      let presentationsResponse;
+      let slotsResponse;
 
-        const presentationEvents = presentationsResponse.data.map(
-          (item: AdminPresentationCalendarItemDto) => ({
-            id: item.presentationId.toString(),
-            calendarId: item.canceled ? "3" : "1",
-            title: item.title,
-            category: "time",
-            start: item.startTime,
-            end: new Date(
-              new Date(item.startTime).getTime() + 60 * 60 * 1000
-            ).toISOString(),
-            location: item.presentationLocation,
-            state: item.canceled ? "Canceled" : "Scheduled",
-          })
+      if (isPastMonth) {
+        presentationsResponse = await getAdminPresentationsByYearMonth(
+          yearMonth
         );
-
-        const availableSlotsEvents = slotsResponse.data.map(
-          (item: AdminAvailableSlotDto) => ({
-            id: `slot-${item.slotId}`,
-            calendarId: "2",
-            title: new Date(item.startTime).toLocaleTimeString("ko-KR", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-            }),
-            category: "allday",
-            start: item.startTime,
-            end: item.startTime,
-            isAllday: true,
-          })
-        );
-
-        setEvents([...presentationEvents, ...availableSlotsEvents]);
-      } catch (error) {
-        console.error("Error fetching calendar data:", error);
+        slotsResponse = { data: [] };
+      } else {
+        [presentationsResponse, slotsResponse] = await Promise.all([
+          getAdminPresentationsByYearMonth(yearMonth),
+          getAdminAvailableSlots(yearMonth),
+        ]);
       }
-    };
 
-    fetchCalendarData();
+      const presentationEvents = presentationsResponse.data.map(
+        (item: AdminPresentationCalendarItemDto) => ({
+          id: item.presentationId.toString(),
+          calendarId: item.canceled ? "3" : "1",
+          title: item.title,
+          category: "time",
+          start: item.startTime,
+          end: new Date(
+            new Date(item.startTime).getTime() + 60 * 60 * 1000
+          ).toISOString(),
+          location: item.presentationLocation,
+          state: item.canceled ? "Canceled" : "Scheduled",
+        })
+      );
+
+      const availableSlotsEvents = slotsResponse.data.map(
+        (item: AdminAvailableSlotDto) => ({
+          id: `slot-${item.slotId}`,
+          calendarId: "2",
+          title: new Date(item.startTime).toLocaleTimeString("ko-KR", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }),
+          category: "allday",
+          start: item.startTime,
+          end: item.startTime,
+          isAllday: true,
+        })
+      );
+
+      setEvents([...presentationEvents, ...availableSlotsEvents]);
+    } catch (error) {}
   }, [currentDate]);
 
+  useEffect(() => {
+    fetchCalendarData();
+  }, [fetchCalendarData]);
+
   const handlePrevClick = () => {
-    if (calendarRef.current) {
-      calendarRef.current.getInstance().prev();
-      setCurrentDate(new Date(calendarRef.current.getInstance().getDate()));
+    const inst = calendarRef.current?.getInstance?.();
+    if (inst) {
+      inst.prev();
+      setCurrentDate(new Date(inst.getDate()));
     }
   };
 
   const handleNextClick = () => {
-    if (calendarRef.current) {
-      calendarRef.current.getInstance().next();
-      setCurrentDate(new Date(calendarRef.current.getInstance().getDate()));
+    const inst = calendarRef.current?.getInstance?.();
+    if (inst) {
+      inst.next();
+      setCurrentDate(new Date(inst.getDate()));
     }
   };
+
+  const handleSelectDateTime = useCallback(
+    (selectInfo: any) => {
+      if (selectInfo.start) {
+        const kstDate = toZonedTime(selectInfo.start, "Asia/Seoul");
+        handleOpenModal(kstDate);
+      }
+    },
+    [handleOpenModal]
+  );
+
+  useEffect(() => {
+    const inst = calendarRef.current?.getInstance?.();
+    if (inst) {
+      inst.on("beforeCreateSchedule", (e: any) => {
+        handleOpenModal(new Date(e.start));
+        return false;
+      });
+    }
+  }, [handleOpenModal]);
 
   return (
     <div className="max-w-[1200px] mx-auto bg-white rounded-lg shadow-md p-6">
@@ -171,13 +208,22 @@ export function AdminCalendar() {
       </div>
       <Calendar
         ref={calendarRef}
+        height="800px"
         view="month"
         usageStatistics={false}
-        isReadOnly={true}
+        isReadOnly={false}
         events={events}
         calendars={calendars}
         month={{ startDayOfWeek: 0 }}
         week={{ showTimezoneCollapseButton: true }}
+        useDetailPopup={false}
+        onSelectDateTime={handleSelectDateTime}
+      />
+      <PresentationRegistrationModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        selectedDate={selectedDate}
+        onSuccess={fetchCalendarData}
       />
     </div>
   );

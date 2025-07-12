@@ -236,6 +236,22 @@ export const axiosGetPresentationsSlot = async () => {
   }
 };
 
+const axiosCreateAdminPresentationSlotURL = "/v6/admin/presentations/slots";
+export const axiosCreateAdminPresentationSlot = async (
+  startTime: string,
+  presentationLocation: string
+): Promise<any> => {
+  try {
+    const response = await instance.post(axiosCreateAdminPresentationSlotURL, {
+      startTime,
+      presentationLocation,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosCreatePresentationURL = "/v6/presentations";
 export const axiosCreatePresentation = async (
   formData: FormData
