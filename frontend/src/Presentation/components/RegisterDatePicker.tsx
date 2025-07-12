@@ -18,7 +18,7 @@ import { ko } from "date-fns/locale";
 import { CalendarIcon, Clock } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Control } from "react-hook-form";
-import { axiosGetPresentationsSlot } from "../api/axios.custom";
+import { axiosGetPresentationsSlot } from "@/Presentation/api/axios/axios.custom";
 
 interface RegisterDatePickerProps {
   control: Control<any>;

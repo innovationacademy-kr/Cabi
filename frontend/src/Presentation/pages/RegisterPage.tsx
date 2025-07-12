@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { axiosGetPresentationById } from "../api/axios.custom";
+import { axiosGetPresentationById } from "@/Presentation/api/axios/axios.custom";
 import { RegisterResultDialog } from "../components/Modals/PresentationResponseModal";
 import RegisterForm from "../components/RegisterForm";
 import { RegisterType } from "../types/enum/presentation.type.enum";

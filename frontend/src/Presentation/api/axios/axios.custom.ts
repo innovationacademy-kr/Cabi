@@ -126,17 +126,23 @@ export const getAdminPresentationSchedule = async (
 };
 
 export const getAdminPresentationsByYearMonth = async (yearMonth: string) => {
-  const response = await instance.get(`/v6/admin/presentations?yearMonth=${yearMonth}`);
+  const response = await instance.get(
+    `/v6/admin/presentations?yearMonth=${yearMonth}`
+  );
   return response.data;
 };
 
 export const getAdminAvailableSlots = async (yearMonth: string) => {
-  const response = await instance.get(`/v6/admin/presentations/slots?yearMonth=${yearMonth}&status=available`);
+  const response = await instance.get(
+    `/v6/admin/presentations/slots?yearMonth=${yearMonth}&status=available`
+  );
   return response.data;
 };
 
 export const getAdminPresentationDetail = async (presentationId: number) => {
-  const response = await instance.get(`/v6/admin/presentations/${presentationId}`);
+  const response = await instance.get(
+    `/v6/admin/presentations/${presentationId}`
+  );
   return response.data;
 };
 
@@ -154,9 +160,6 @@ export const axiosGetPresentationById = async (
   }
 };
 
-/**
- * 수요지식회 리뉴얼 API
- */
 const axiosGetPresentationCommentsURL = "/v6/presentations/";
 export const axiosGetPresentationComments = async (presentationId: string) => {
   try {
@@ -214,73 +217,74 @@ export const axiosDeletePresentationComment = async (
   }
 };
 
-const axiosGetPresentationByIdURL = "/v6/presentations/";
-export const axiosGetPresentationById = async (
-  presentationId: string
+const axiosGetPresentationsSlotURL = "/v6/presentations/slots";
+// const axiosGetPresentationsSlotURL = "/v6/presentations?type=slots";
+export const axiosGetPresentationsSlot = async () => {
+  try {
+    const response = await instance.get(axiosGetPresentationsSlotURL);
+    return response;
+  } catch (error: any) {
+    // 상세한 에러 정보 로깅
+    console.error("API Error Details:", {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      headers: error.response?.headers,
+      config: error.config,
+    });
+    throw error;
+  }
+};
+
+const axiosCreatePresentationURL = "/v6/presentations";
+export const axiosCreatePresentation = async (
+  formData: FormData
 ): Promise<any> => {
   try {
-    const response = await instance.get(
-      `${axiosGetPresentationByIdURL}${presentationId}`
-    );
+    const response = await instance.post(axiosCreatePresentationURL, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response;
   } catch (error) {
     throw error;
   }
 };
 
-/**
- * 수요지식회 리뉴얼 API
- */
-const axiosGetPresentationCommentsURL = "/v6/presentations/";
-export const axiosGetPresentationComments = async (presentationId: string) => {
-  try {
-    const response = await instance.get(
-      `${axiosGetPresentationCommentsURL}${presentationId}/comments`
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const axiosPostPresentationComment = async (
+const axiosUpdatePresentationURL = "/v6/presentations/";
+export const axiosUpdatePresentation = async (
   presentationId: string,
-  detail: string
-) => {
+  body: any,
+  thumbnailFile: File | null
+): Promise<any> => {
   try {
-    const response = await instance.post(
-      `${axiosGetPresentationCommentsURL}${presentationId}/comments`,
-      { detail }
+    // console.log("body : ", body);
+    const formData = new FormData();
+    formData.append(
+      "form",
+      new Blob([JSON.stringify(body)], { type: "application/json" })
     );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const axiosPatchPresentationComment = async (
-  presentationId: string,
-  commentId: number,
-  detail: string
-) => {
-  try {
+    if (thumbnailFile) {
+      formData.append("thumbnail", thumbnailFile);
+      // console.log("추가됨")
+      // formData.append("thumbnailUpdated", "true");
+    }
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        console.log(`${key}: [File] ${value.name}`);
+      } else {
+        console.log(`${key}:`, value);
+      }
+    }
     const response = await instance.patch(
-      `/v6/presentations/${presentationId}/comments/${commentId}`,
-      { detail }
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const axiosDeletePresentationComment = async (
-  presentationId: string,
-  commentId: number
-) => {
-  try {
-    const response = await instance.delete(
-      `/v6/presentations/${presentationId}/comments/${commentId}`
+      `/v6/presentations/${presentationId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
     return response;
   } catch (error) {
@@ -290,11 +294,11 @@ export const axiosDeletePresentationComment = async (
 
 const axiosGetPresentationsURL = "/v6/presentations";
 export const axiosGetPresentations = async (
-  category: string,
-  sort: string,
-  page: number,
-  size: number
-) => {
+  category: string = "ALL",
+  sort: string = "TIME",
+  page: number = 0,
+  size: number = 6
+): Promise<any> => {
   try {
     const response = await instance.get(axiosGetPresentationsURL, {
       params: {
@@ -304,6 +308,34 @@ export const axiosGetPresentations = async (
         size,
       },
     });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosPostPresentationLikeURL = "/v6/presentations";
+export const axiosPostPresentationLike = async (
+  presentationId: string
+): Promise<any> => {
+  try {
+    const response = await instance.post(
+      `${axiosPostPresentationLikeURL}/${presentationId}/likes`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosDeletePresentationLikeURL = "/v6/presentations";
+export const axiosDeletePresentationLike = async (
+  presentationId: string
+): Promise<any> => {
+  try {
+    const response = await instance.delete(
+      `${axiosDeletePresentationLikeURL}/${presentationId}/likes`
+    );
     return response;
   } catch (error) {
     throw error;

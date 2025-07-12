@@ -24,7 +24,7 @@ import PresentationCardContainer from "@/Presentation/pages/PresentationCardCont
 import { IPresentation } from "@/Presentation/components/PresentationCard";
 import { PresentationCategoryTypeLabelMap } from "@/Presentation/assets/data/maps";
 import { ReactComponent as Banner } from "@/Presentation/assets/mainBanner.svg";
-import { axiosGetPresentations } from "@/Presentation/api/axios.custom";
+import { axiosGetPresentations } from "@/Presentation/api/axios/axios.custom";
 
 const HomePage: React.FC = () => {
   const [presentations, setPresentations] = useState<IPresentation[]>([]);

@@ -9,7 +9,7 @@ import * as z from "zod";
 import {
   axiosCreatePresentation,
   axiosUpdatePresentation,
-} from "../api/axios.custom";
+} from "@/Presentation/api/axios/axios.custom";
 import {
   PresentationCategoryType,
   RegisterType,
