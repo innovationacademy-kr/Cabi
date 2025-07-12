@@ -505,8 +505,8 @@ class PresentationIntegrationTest {
 	}
 
 	@Nested
-	@DisplayName("Presentation API 권한 없는 요청 테스트")
-	class PresentationUnauthorizedAccessTests {
+	@DisplayName("익명 유저의 API 권한 없는 요청 테스트")
+	class AnonymousUnauthorizedAccessTests {
 
 		@ParameterizedTest
 		@MethodSource("org.ftclub.cabinet.presentation.PresentationIntegrationTest#provideLoginRedirectApiEndpoints")
