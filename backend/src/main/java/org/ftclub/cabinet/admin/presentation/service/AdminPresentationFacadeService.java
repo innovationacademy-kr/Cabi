@@ -59,13 +59,14 @@ public class AdminPresentationFacadeService {
 		String thumbnailLink = thumbnailStorageService.generatePresignedUrl(
 				presentation.getThumbnailS3Key());
 		Long likesCount = likeService.countLikes(presentationId);
+		boolean editAllowed = presentation.isCanceled() ? false : true;
 
 		return presentationMapper.toPresentationDetailDto(
 				presentation,
 				thumbnailLink,
 				likesCount,
 				false,
-				true
+				editAllowed
 		);
 	}
 
