@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.event.RedisExpirationEventListener;
+import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Duration;
@@ -51,6 +52,8 @@ class PresentationIntegrationTest {
 	private PresentationLikeRepository presentationLikeRepository;
 
 	@MockBean
+	private JwtRedisService jwtRedisService;
+	@MockBean
 	private RedisExpirationEventListener redisExpirationEventListener;
 
 	private User user, otherUser, otherUser2, otherUser3;
@@ -85,13 +88,17 @@ class PresentationIntegrationTest {
 		otherUser3 = userRepository.save(User.of("otheruser3", "otheruser3@student.42seoul.kr",
 				LocalDateTime.now().plusDays(100), "USER"));
 
-		userToken = jwtService.createPairTokens(user.getId(), "USER", "ft").getAccessToken();
-		otherUserToken = jwtService.createPairTokens(otherUser.getId(), "USER", "ft")
+		userToken = jwtService.createPairTokens(user.getId(), "USER", user.getEmail(), "ft")
+				.getAccessToken();
+		otherUserToken = jwtService.createPairTokens(otherUser.getId(), "USER", user.getEmail(),
+						"ft")
 				.getAccessToken();
 		// [수정] 테스트용 사용자 및 토큰 추가
-		otherUser2Token = jwtService.createPairTokens(otherUser2.getId(), "USER", "ft")
+		otherUser2Token = jwtService.createPairTokens(otherUser2.getId(), "USER", user.getEmail(),
+						"ft")
 				.getAccessToken();
-		otherUser3Token = jwtService.createPairTokens(otherUser3.getId(), "USER", "ft")
+		otherUser3Token = jwtService.createPairTokens(otherUser3.getId(), "USER", user.getEmail(),
+						"ft")
 				.getAccessToken();
 	}
 
