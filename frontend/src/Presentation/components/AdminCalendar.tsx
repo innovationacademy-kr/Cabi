@@ -55,10 +55,26 @@ export function AdminCalendar() {
       try {
         const yearMonth = currentDate.toISOString().slice(0, 7);
 
-        const [presentationsResponse, slotsResponse] = await Promise.all([
-          getAdminPresentationsByYearMonth(yearMonth),
-          getAdminAvailableSlots(yearMonth),
-        ]);
+        const now = new Date();
+        const isPastMonth =
+          currentDate.getFullYear() < now.getFullYear() ||
+          (currentDate.getFullYear() === now.getFullYear() &&
+            currentDate.getMonth() < now.getMonth());
+
+        let presentationsResponse;
+        let slotsResponse;
+
+        if (isPastMonth) {
+          presentationsResponse = await getAdminPresentationsByYearMonth(
+            yearMonth
+          );
+          slotsResponse = { data: [] };
+        } else {
+          [presentationsResponse, slotsResponse] = await Promise.all([
+            getAdminPresentationsByYearMonth(yearMonth),
+            getAdminAvailableSlots(yearMonth),
+          ]);
+        }
 
         const presentationEvents = presentationsResponse.data.map(
           (item: AdminPresentationCalendarItemDto) => ({
@@ -134,11 +150,9 @@ export function AdminCalendar() {
             />
           </svg>
         </button>
-        {/* Month/Year Title */}
         <h2 className="my-0 text-lg leading-tight font-semibold select-none">
           {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
         </h2>
-        {/* Next Button */}
         <button
           onClick={handleNextClick}
           className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 hover:bg-gray-200 transition-all shadow"
