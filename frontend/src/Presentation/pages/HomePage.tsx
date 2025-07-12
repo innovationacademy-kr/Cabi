@@ -103,7 +103,9 @@ const HomePage: React.FC = () => {
             </SelectContent>
           </Select>
         </div>
-        <PresentationCardContainer presentations={presentations} />
+        <div className="flex items-center justify-center">
+          <PresentationCardContainer presentations={presentations} />
+        </div>
         <Pagination className="mt-8">
           <PaginationContent>
             <PaginationItem>

@@ -8,8 +8,10 @@ import { useNavigate } from "react-router-dom";
 import * as z from "zod";
 import {
   axiosCreatePresentation,
+  axiosUpdateAdminPresentation,
   axiosUpdatePresentation,
 } from "@/Presentation/api/axios/axios.custom";
+} from "../api/axios/axios.custom";
 import {
   PresentationCategoryType,
   RegisterType,
@@ -31,7 +33,7 @@ const MAX_CONTENT = 300;
 
 const contactSchema = z
   .object({
-    mode: z.enum(["CREATE", "EDIT"]), 
+    mode: z.nativeEnum(RegisterType),
     slotId: z.number().optional(),
     duration: z.string().optional(),
     title: z.string().max(50, "제목은 50자 이하여야 합니다").min(1, "입력없음"),
@@ -57,6 +59,7 @@ const contactSchema = z
       .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
         message: "이미지는 5MB 이하여야 합니다",
       }),
+    videoLink: z.string().nullable().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.mode === "CREATE") {
@@ -102,17 +105,39 @@ const RegisterForm = ({
     null
   );
   const [thumbnailChanged, setThumbnailChanged] = useState(false);
-  const [thumbnailUpdated, setThumbnailUpdated] = useState(false);
+  // const [thumbnailUpdated, setThumbnailUpdated] = useState(false);
 
   const navigate = useNavigate();
-  const isEditMode = type === RegisterType.EDIT;
+  const isCreateMode = type === RegisterType.CREATE;
+  const isEditMode = type === RegisterType.EDIT || type === RegisterType.ADMIN;
+  const isAdminMode = type === RegisterType.ADMIN;
+
+  // 각 항목별 수정 가능 여부
+  const canEdit = {
+    date: isCreateMode,
+    time: isCreateMode || isAdminMode,
+    category: isCreateMode || isAdminMode,
+    title: isCreateMode || isAdminMode,
+    summary: isCreateMode || isEditMode || isAdminMode,
+    outline: isCreateMode || isEditMode || isAdminMode,
+    detail: isCreateMode || isEditMode || isAdminMode,
+    thumbnail: isCreateMode || isEditMode || isAdminMode,
+    videoLink: isAdminMode,
+    recordingAllowed: isCreateMode || isAdminMode,
+    publicAllowed: isCreateMode || isEditMode || isAdminMode,
+  };
 
   const form = useForm({
     resolver: zodResolver(contactSchema),
     defaultValues: {
-      mode: isEditMode ? "EDIT" : "CREATE",
+      mode: isEditMode
+        ? RegisterType.EDIT
+        : isAdminMode
+        ? RegisterType.ADMIN
+        : RegisterType.CREATE,
       slotId: 0,
       duration: undefined,
+      videoLink: "",
       title: "",
       summary: "",
       outline: "",
@@ -129,9 +154,11 @@ const RegisterForm = ({
       setOriginalThumbnail(initialData.data.thumbnailLink);
 
       const editFormDefaultValues = {
-        mode: "EDIT" as const, // 타입을 명확히 지정
+        // mode: "EDIT" as const, // 타입을 명확히 지정
+        mode: isEditMode ? RegisterType.EDIT : RegisterType.ADMIN, // 타입을 명확히 지정
         slotId: initialData.data.slotId ?? 0,
         duration: initialData.data.duration ?? undefined,
+        videoLink: initialData.data.videoLink ?? undefined,
         title: initialData.data.title ?? "",
         summary: initialData.data.summary ?? "",
         outline: initialData.data.outline ?? "",
@@ -144,7 +171,7 @@ const RegisterForm = ({
       form.reset(editFormDefaultValues);
     } else {
       const createFormDefaultValues = {
-        mode: "CREATE" as const, // 모드 추가, 타입 명확히 지정
+        mode: RegisterType.CREATE,
         slotId: 0,
         duration: undefined,
         title: "",
@@ -168,8 +195,7 @@ const RegisterForm = ({
 
   const createFormData = (data: z.infer<typeof contactSchema>) => {
     const formData = new FormData();
-    const isThumbnailChanged =
-      thumbnailChanged || !!formDataToSubmit?.thumbnail;
+    const isThumbnailChanged = thumbnailChanged || !!data?.thumbnail;
     if (isEditMode) {
       // EDIT 모드: PATCH 요청용 데이터
       const requestBody = {
@@ -178,9 +204,9 @@ const RegisterForm = ({
         summary: data.summary,
         outline: data.outline,
         detail: data.detail,
-        videoLink: null,
-        isRecordingAllowed: data.recordingAllowed || false,
-        isPublicAllowed: data.publicAllowed || false,
+        videoLink: null, // CHECK :
+        recordingAllowed: data.recordingAllowed || false,
+        publicAllowed: data.publicAllowed || false,
         thumbnailUpdated: isThumbnailChanged,
         slotId: data.slotId, // ← 추가
         duration: data.duration, // ← 추가
@@ -205,8 +231,8 @@ const RegisterForm = ({
         summary: data.summary,
         outline: data.outline,
         detail: data.detail,
-        isRecordingAllowed: data.recordingAllowed || false,
-        isPublicAllowed: data.publicAllowed || false,
+        recordingAllowed: data.recordingAllowed || false,
+        publicAllowed: data.publicAllowed || false,
         slotId: data.slotId,
       };
 
@@ -231,15 +257,18 @@ const RegisterForm = ({
     if (submitSuccess) {
       // 성공했을 때만 페이지 이동
       setTimeout(() => {
-        if (isEditMode) {
-          navigate(`/presentations/${presentationId}`);
+        if (isAdminMode) {
+          navigate(`/admin/presentations/${presentationId}`);
+        } else if (isCreateMode) {
+          navigate(`/presentations/profile`);
         } else {
-          navigate("/presentations/home");
+          navigate(`/presentations/${presentationId}`);
         }
       }, 500);
     }
   };
   const onFormValidated = (data: z.infer<typeof contactSchema>) => {
+    // console.log("폼 제출 데이터:", data);
     setFormDataToSubmit(data);
     setShowConfirmModal(true);
   };
@@ -258,8 +287,8 @@ const RegisterForm = ({
     setShowConfirmModal(false);
 
     try {
-      //EDIT 
-      if (isEditMode && presentationId) {
+      //EDIT
+      if (!isCreateMode && presentationId) {
         // PATCH 요청용 body와 파일 분리
         const body = {
           category: formDataToSubmit.category,
@@ -267,18 +296,26 @@ const RegisterForm = ({
           summary: formDataToSubmit.summary,
           outline: formDataToSubmit.outline,
           detail: formDataToSubmit.detail,
-          videoLink: null,
+          videoLink: isAdminMode ? formDataToSubmit.videoLink : null, // CHECK :
+          // videoLink: formDataToSubmit.videoLink,
           recordingAllowed: formDataToSubmit.recordingAllowed || false,
           publicAllowed: formDataToSubmit.publicAllowed || false,
-          thumbnailUpdated: isEditMode ? thumbnailUpdated : undefined,
+          thumbnailUpdated: thumbnailChanged || undefined,
           duration: formDataToSubmit.duration,
           slotId: 0,
         };
         const thumbnailFile: File | null = formDataToSubmit.thumbnail
           ? (formDataToSubmit.thumbnail as File)
           : null;
-
-        await axiosUpdatePresentation(presentationId, body, thumbnailFile);
+        if (isEditMode) {
+          await axiosUpdatePresentation(presentationId, body, thumbnailFile);
+        } else if (isAdminMode) {
+          await axiosUpdateAdminPresentation(
+            presentationId,
+            body,
+            thumbnailFile
+          );
+        }
         console.log("수정 완료");
       } else {
         // CREATE 로직
@@ -287,42 +324,6 @@ const RegisterForm = ({
         console.log("생성 완료");
       }
 
-      setSubmitSuccess(true);
-      setSubmitError("");
-      setShowResultModal(true);
-    } catch (error: any) {
-      console.error("제출 실패:", error);
-      setSubmitSuccess(false);
-      setSubmitError(
-        error.response?.data?.message || "알 수 없는 오류가 발생했습니다."
-      );
-      setShowResultModal(true);
-    } finally {
-      setIsSubmitting(false);
-      setFormDataToSubmit(null);
-    }
-  };
-
-  const onSubmit = async (data: z.infer<typeof contactSchema>) => {
-    setIsSubmitting(true);
-    setShowConfirmModal(false);
-
-    try {
-      const body = {
-        category: data.category,
-        title: data.title,
-        summary: data.summary,
-        outline: data.outline,
-        detail: data.detail,
-        videoLink: null,
-        recordingAllowed: data.recordingAllowed,
-        publicAllowed: data.publicAllowed,
-        thumbnailUpdated: !thumbnailChanged && !!data.thumbnail,
-        duration: data.duration, // ← 반드시 포함!
-        // slotId 등도 필요하다면 추가
-      };
-      const thumbnailFile = !thumbnailChanged ? data.thumbnail ?? null : null;
-      await axiosUpdatePresentation(presentationId!, body, thumbnailFile);
       setSubmitSuccess(true);
       setSubmitError("");
       setShowResultModal(true);
@@ -351,14 +352,14 @@ const RegisterForm = ({
               control={form.control}
               name="slotId"
               title="날짜"
-              isEditMode={isEditMode}
+              isEditMode={!canEdit.date}
               startTime={startTime}
             />
             <RegisterTimeSelect
               control={form.control}
               name="duration"
               title="소요 시간"
-              isEditMode={isEditMode}
+              isEditMode={!canEdit.time}
             />
           </div>
 
@@ -366,8 +367,19 @@ const RegisterForm = ({
             control={form.control}
             name="category"
             title="카테고리"
-            isEditMode={isEditMode}
+            isEditMode={!canEdit.category}
           />
+
+          {canEdit.videoLink && (
+            <RegisterInput
+              control={form.control}
+              name="videoLink"
+              title="유튜브 링크"
+              maxLength={200}
+              placeholder="발표 영상의 유튜브 url을 입력하세요"
+              isEditMode={!canEdit.videoLink}
+            />
+          )}
 
           <RegisterInput
             control={form.control}
@@ -375,7 +387,7 @@ const RegisterForm = ({
             title="제목"
             maxLength={50}
             placeholder="제목을 입력하세요"
-            isEditMode={isEditMode}
+            isEditMode={!canEdit.title}
           />
 
           <RegisterInput
@@ -384,6 +396,7 @@ const RegisterForm = ({
             title="한 줄 요약"
             maxLength={100}
             placeholder="한 줄 요약을 입력하세요"
+            isEditMode={!canEdit.summary}
           />
 
           <RegisterTextarea
@@ -393,6 +406,7 @@ const RegisterForm = ({
             maxLength={500}
             placeholder="목차를 입력하세요"
             rows={10}
+            isEditMode={!canEdit.outline}
           />
 
           <RegisterTextarea
@@ -402,6 +416,7 @@ const RegisterForm = ({
             maxLength={10000}
             placeholder="내용을 입력하세요"
             rows={10}
+            isEditMode={!canEdit.detail}
           />
 
           <RegisterImageUpload
@@ -411,12 +426,19 @@ const RegisterForm = ({
             maxSize={5}
             accept=".jpg,.jpeg,.png"
             currentImageUrl={originalThumbnail}
+            isEditMode={!canEdit.thumbnail}
             onRemoveFile={() => {
-              if (isEditMode) setThumbnailUpdated(true);
-              // 기존의 setValue(name, null) 등은 RegisterImageUpload에서 처리
+              if (canEdit.thumbnail) {
+                form.setValue("thumbnail", null, {
+                  shouldDirty: true,
+                  shouldTouch: true,
+                  shouldValidate: true,
+                });
+                setThumbnailChanged(true);
+              }
             }}
             onFileUpload={() => {
-              if (isEditMode) setThumbnailUpdated(true);
+              if (canEdit.thumbnail) setThumbnailChanged(true);
             }}
           />
 
@@ -424,18 +446,18 @@ const RegisterForm = ({
             control={form.control}
             title="컨텐츠 촬영 및 공개 동의"
             subtitle={`본 영상 촬영 서비스를 신청하시면, 촬영된 영상은 향후 서비스 이용자들을 위한 다시보기 콘텐츠로 제공됩니다.
-            다음 항목에 대하여 각각의 동의 여부를 선택해주세요.`}
+    다음 항목에 대하여 각각의 동의 여부를 선택해주세요.`}
             props={[
               {
                 name: "recordingAllowed",
                 description: "촬영된 영상의 다시보기 제공에 동의합니다.",
-                isEditMode: isEditMode, // edit mode 에서 비활성화
+                isEdit: !canEdit.recordingAllowed,
               },
               {
                 name: "publicAllowed",
                 description:
                   "본 영상 및 게시물을 온라인상에 공개하는 것에 동의합니다.",
-                  // "촬영된 영상 및 관련 게시물을 본 기관(42 Seoul) 외부 플랫폼 및 채널에 공개하는 것에 동의합니다.",
+                isEdit: !canEdit.publicAllowed,
               },
             ]}
           />
