@@ -309,6 +309,27 @@ export const axiosUpdatePresentation = async (
     throw error;
   }
 };
+
+const axiosGetAdminPresentationByIdURL = "/v6/admin/presentations/";
+export const axiosGetAdminPresentationById = async (
+  presentationId: string
+): Promise<any> => {
+  try {
+    const accessToken = getCookie("access_token");
+    const response = await instance.get(
+      `${axiosGetAdminPresentationByIdURL}${presentationId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosUpdateAdminPresentationURL = "/v6/admin/presentations/";
 export const axiosUpdateAdminPresentation = async (
   presentationId: string,

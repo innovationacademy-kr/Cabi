@@ -108,20 +108,20 @@ const RegisterForm = ({
 
   const navigate = useNavigate();
   const isCreateMode = type === RegisterType.CREATE;
-  const isEditMode = type === RegisterType.EDIT;
+  const isEditMode = type === RegisterType.EDIT || type === RegisterType.ADMIN;
   const isAdminMode = type === RegisterType.ADMIN;
 
   // 각 항목별 수정 가능 여부
   const canEdit = {
     date: isCreateMode,
-    time: isCreateMode,
-    category: isCreateMode,
+    time: isCreateMode || isAdminMode,
+    category: isCreateMode || isAdminMode,
     title: isCreateMode || isAdminMode,
     summary: isCreateMode || isEditMode || isAdminMode,
     outline: isCreateMode || isEditMode || isAdminMode,
     detail: isCreateMode || isEditMode || isAdminMode,
     thumbnail: isCreateMode || isEditMode || isAdminMode,
-    videoLink: isAdminMode ,
+    videoLink: isAdminMode,
     recordingAllowed: isCreateMode || isAdminMode,
     publicAllowed: isCreateMode || isEditMode || isAdminMode,
   };
