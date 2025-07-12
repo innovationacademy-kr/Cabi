@@ -46,6 +46,7 @@ const AdminPresentationDetailPage: React.FC = () => {
     null
   );
   const navigate = useNavigate();
+  const isEditAllowed = presentation?.editAllowed ?? true;
 
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
@@ -69,7 +70,6 @@ const AdminPresentationDetailPage: React.FC = () => {
   }, [presentationId]);
 
   if (!presentation) return <LoadingAnimation />;
-
   return (
     <>
       <div className="relative w-full h-auto text-white">
@@ -83,15 +83,17 @@ const AdminPresentationDetailPage: React.FC = () => {
           }}
         >
           <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
-          <button
-            className="w-12 h-12 absolute top-2 right-2 z-30 px-2 py-0.5"
-            onClick={() =>
-              navigate(`/admin/presentations/register/${presentationId}`)
-            }
-            title="수정하기"
-          >
-            <EditIcon style={{ width: 24, height: 24 }} />
-          </button>
+          {isEditAllowed && (
+            <button
+              className="w-12 h-12 absolute top-2 right-2 z-30 px-2 py-0.5"
+              onClick={() =>
+                navigate(`/admin/presentations/register/${presentationId}`)
+              }
+              title="수정하기"
+            >
+              <EditIcon style={{ width: 24, height: 24 }} />
+            </button>
+          )}
         </div>
 
         <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-16 z-10">
