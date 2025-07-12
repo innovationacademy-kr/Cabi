@@ -131,9 +131,8 @@ export function AdminCalendar() {
   };
 
   return (
-    <div className="max-w-[900px] mx-auto bg-white rounded-lg shadow-md p-6">
+    <div className="max-w-[1200px] mx-auto bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-4">
-        {/* Prev Button */}
         <button
           onClick={handlePrevClick}
           className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 hover:bg-gray-200 transition-all shadow"
@@ -172,7 +171,6 @@ export function AdminCalendar() {
       </div>
       <Calendar
         ref={calendarRef}
-        height="700px"
         view="month"
         usageStatistics={false}
         isReadOnly={true}
