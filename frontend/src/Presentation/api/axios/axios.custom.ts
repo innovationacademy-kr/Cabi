@@ -387,10 +387,13 @@ export const axiosUpdateAdminSlot = async (
   startTime: string,
   location: string
 ) => {
-  const response = await instance.patch(`/v6/admin/presentations/slots/${slotId}`, {
-    startTime,
-    presentationLocation: location,
-  });
+  const response = await instance.patch(
+    `/v6/admin/presentations/slots/${slotId}`,
+    {
+      startTime,
+      presentationLocation: location,
+    }
+  );
   return response.data;
 };
 
@@ -399,4 +402,32 @@ export const axiosDeleteAdminSlot = async (slotId: string) => {
     `/v6/admin/presentations/slots/${slotId}`
   );
   return response.data;
+};
+
+const axiosAdminGetPresentationByIdURL = "/v6/admin/presentations/";
+export const axiosAdminGetPresentationById = async (
+  presentationId: string
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      `${axiosAdminGetPresentationByIdURL}${presentationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosAdminGetPresentationCommentsURL = "/v6/admin/presentations/";
+export const axiosAdminGetPresentationComments = async (
+  presentationId: string
+) => {
+  try {
+    const response = await instance.get(
+      `${axiosAdminGetPresentationCommentsURL}${presentationId}/comments`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
 };
