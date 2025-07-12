@@ -37,9 +37,10 @@ const RegisterPage = () => {
       const res = await (isAdminMode
         ? axiosGetAdminPresentationById(presentationId)
         : axiosGetPresentationById(presentationId));
-      // editAllowed가 false이고, admin 경로가 아니면 홈으로 리다이렉트
-      if (!res.data.editAllowed && !isAdminMode) {
-        navigate("/presentations/home");
+      // editAllowed == false면 수정 불가 (not admin, not owner)
+      if (!res.data.data.editAllowed) {
+        alert("수정 권한이 없습니다.");
+        navigate("/presentations/" + presentationId);
         return;
       }
       setInitialData(res.data);
