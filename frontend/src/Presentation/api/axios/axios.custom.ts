@@ -357,3 +357,46 @@ export const axiosDeletePresentationLike = async (
     throw error;
   }
 };
+
+export const axiosUpdateAdminPresentation = async (
+  presentationId: string,
+  startTime: string,
+  location: string,
+  title: string
+) => {
+  const response = await instance.patch(
+    `/v6/admin/presentations/${presentationId}`,
+    {
+      startTime,
+      presentationLocation: location,
+      title,
+    }
+  );
+  return response.data;
+};
+
+export const axiosDeleteAdminPresentation = async (presentationId: string) => {
+  const response = await instance.delete(
+    `/v6/admin/presentations/${presentationId}`
+  );
+  return response.data;
+};
+
+export const axiosUpdateAdminSlot = async (
+  slotId: string,
+  startTime: string,
+  location: string
+) => {
+  const response = await instance.patch(`/v6/admin/presentations/slots/${slotId}`, {
+    startTime,
+    presentationLocation: location,
+  });
+  return response.data;
+};
+
+export const axiosDeleteAdminSlot = async (slotId: string) => {
+  const response = await instance.delete(
+    `/v6/admin/presentations/slots/${slotId}`
+  );
+  return response.data;
+};
