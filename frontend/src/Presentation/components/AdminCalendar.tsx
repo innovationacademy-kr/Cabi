@@ -7,21 +7,7 @@ import {
   getAdminPresentationsByYearMonth,
 } from "@/Presentation/api/axios/axios.custom";
 import { PresentationRegistrationModal } from "./PresentationRegistrationModal";
-
-interface AdminPresentationCalendarItemDto {
-  presentationId: number;
-  slotId: number;
-  startTime: string;
-  title: string;
-  presentationLocation: string;
-  canceled: boolean;
-}
-
-interface AdminAvailableSlotDto {
-  slotId: number;
-  startTime: string;
-  presentationLocation: string;
-}
+import { PresentationUpdateModal } from "./PresentationUpdateModal";
 
 const calendars = [
   {
@@ -53,6 +39,8 @@ export function AdminCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
   const handleOpenModal = useCallback((date: Date) => {
     setSelectedDate(date);
@@ -66,6 +54,16 @@ export function AdminCalendar() {
     if (inst?.clearGridSelections) {
       inst.clearGridSelections();
     }
+  }, []);
+
+  const handleOpenUpdateModal = useCallback((event: any) => {
+    setSelectedEvent(event);
+    setIsUpdateModalOpen(true);
+  }, []);
+
+  const handleCloseUpdateModal = useCallback(() => {
+    setIsUpdateModalOpen(false);
+    setSelectedEvent(null);
   }, []);
 
   const fetchCalendarData = useCallback(async () => {
@@ -93,7 +91,7 @@ export function AdminCalendar() {
       }
 
       const presentationEvents = presentationsResponse.data.map(
-        (item: AdminPresentationCalendarItemDto) => ({
+        (item: any) => ({
           id: item.presentationId.toString(),
           calendarId: item.canceled ? "3" : "1",
           title: item.title,
@@ -107,24 +105,24 @@ export function AdminCalendar() {
         })
       );
 
-      const availableSlotsEvents = slotsResponse.data.map(
-        (item: AdminAvailableSlotDto) => ({
-          id: `slot-${item.slotId}`,
-          calendarId: "2",
-          title: new Date(item.startTime).toLocaleTimeString("ko-KR", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-          }),
-          category: "allday",
-          start: item.startTime,
-          end: item.startTime,
-          isAllday: true,
-        })
-      );
+      const availableSlotsEvents = slotsResponse.data.map((item: any) => ({
+        id: `slot-${item.slotId}`,
+        calendarId: "2",
+        title: new Date(item.startTime).toLocaleTimeString("ko-KR", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }),
+        category: "allday",
+        start: item.startTime,
+        end: item.startTime,
+        isAllday: true,
+      }));
 
       setEvents([...presentationEvents, ...availableSlotsEvents]);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error fetching calendar data:", error);
+    }
   }, [currentDate]);
 
   useEffect(() => {
@@ -157,15 +155,16 @@ export function AdminCalendar() {
     [handleOpenModal]
   );
 
-  useEffect(() => {
-    const inst = calendarRef.current?.getInstance?.();
-    if (inst) {
-      inst.on("beforeCreateSchedule", (e: any) => {
-        handleOpenModal(new Date(e.start));
-        return false;
-      });
-    }
-  }, [handleOpenModal]);
+  const handleClickEvent = useCallback(
+    (eventInfo: any) => {
+      console.log("eventInfo:", eventInfo);
+      const event = eventInfo.event;
+      if (event && ["1", "2", "3"].includes(event.calendarId)) {
+        handleOpenUpdateModal(event);
+      }
+    },
+    [handleOpenUpdateModal]
+  );
 
   return (
     <div className="max-w-[1200px] mx-auto bg-white rounded-lg shadow-md p-6">
@@ -218,11 +217,18 @@ export function AdminCalendar() {
         week={{ showTimezoneCollapseButton: true }}
         useDetailPopup={false}
         onSelectDateTime={handleSelectDateTime}
+        onClickEvent={handleClickEvent}
       />
       <PresentationRegistrationModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         selectedDate={selectedDate}
+        onSuccess={fetchCalendarData}
+      />
+      <PresentationUpdateModal
+        isOpen={isUpdateModalOpen}
+        onClose={handleCloseUpdateModal}
+        eventData={selectedEvent}
         onSuccess={fetchCalendarData}
       />
     </div>
