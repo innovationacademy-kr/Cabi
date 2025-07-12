@@ -115,49 +115,45 @@ export function AdminCalendar() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: 900,
-        margin: "0 auto",
-        background: "#fff",
-        borderRadius: 8,
-        boxShadow: "0 2px 8px #0001",
-        padding: 24,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "10px",
-        }}
-      >
+    <div className="max-w-[900px] mx-auto bg-white rounded-lg shadow-md p-6">
+      <div className="flex justify-between items-center mb-4">
+        {/* Prev Button */}
         <button
           onClick={handlePrevClick}
-          style={{
-            padding: "8px 12px",
-            cursor: "pointer",
-            backgroundColor: "#f0f0f0",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-          }}
+          className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 hover:bg-gray-200 transition-all shadow"
+          aria-label="이전 달"
+          type="button"
         >
-          &lt;
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M15 6L9 12L15 18"
+              stroke="#222"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </button>
-        <h2>
+        {/* Month/Year Title */}
+        <h2 className="my-0 text-lg leading-tight font-semibold select-none">
           {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
         </h2>
+        {/* Next Button */}
         <button
           onClick={handleNextClick}
-          style={{
-            padding: "2px 2px",
-            cursor: "pointer",
-            backgroundColor: "#f0f0f0",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-          }}
+          className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 hover:bg-gray-200 transition-all shadow"
+          aria-label="다음 달"
+          type="button"
         >
-          &gt;
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M9 6L15 12L9 18"
+              stroke="#222"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </button>
       </div>
       <Calendar
