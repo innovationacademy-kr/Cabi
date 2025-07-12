@@ -9,7 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Upload, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import { Control, useFormContext } from "react-hook-form";
+import { Control, useFormContext, useWatch } from "react-hook-form";
 
 interface RegisterImageUploadProps {
   control: Control<any>;
@@ -17,9 +17,10 @@ interface RegisterImageUploadProps {
   title: string;
   maxSize?: number; // MB
   accept?: string;
-  currentImageUrl?: string | null; // 기존 이미지 URL 추가
+  currentImageUrl?: string | null;
   onRemoveFile?: () => void;
   onFileUpload?: () => void;
+  isEditMode?: boolean; // 추가
 }
 
 const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
@@ -28,30 +29,34 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
   title,
   maxSize = 5,
   accept = "image/*",
-  currentImageUrl, // 추가
+  currentImageUrl,
   onRemoveFile,
   onFileUpload,
+  isEditMode = false, // 기본값 false
 }) => {
-  const { watch, setValue } = useFormContext();
+  const { setValue } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
   const [preview, setPreview] = useState<string>("");
 
-  const currentFile = watch(name) as File | null;
-
-  // 모드에서 기존 이미지 미리보기
+  const currentFile = useWatch({ control, name }) as File | null;
   useEffect(() => {
-    if (!currentFile && currentImageUrl) {
+    if (currentFile) {
+      console.log("currentFile");
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreview(e.target?.result as string);
+      };
+    } else if (currentImageUrl && !preview) {
       setPreview(currentImageUrl);
-      // console.log("기존이미지",currentImageUrl )
-    }
-    if (!currentFile && !currentImageUrl) {
+    } else {
       setPreview("");
     }
   }, [currentFile, currentImageUrl]);
 
   // 단일 파일 처리
   const handleFileSelect = (files: FileList | null) => {
+    if (isEditMode) return; // 수정 불가 시 동작 막기
     if (!files || files.length === 0) return;
 
     const file = files[0]; // 첫 번째 파일만 사용
@@ -81,13 +86,16 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
   };
 
   const removeFile = () => {
-
-    console.log("d왜 두번")
-    setValue(name, null);
-    setPreview("");
+    if (isEditMode) return;
+    setValue(name, null, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+
     onRemoveFile?.();
   };
 
@@ -105,27 +113,38 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
               {!currentFile && !preview && (
                 <div
                   className={cn(
-                    "border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors",
+                    "border-2 border-dashed rounded-lg p-6 text-center transition-colors",
                     dragActive
                       ? "border-blue-500 bg-blue-50"
                       : "border-gray-300",
-                    "hover:border-gray-400"
+                    "hover:border-gray-400",
+                    isEditMode && "cursor-not-allowed opacity-60"
                   )}
                   onDragEnter={(e) => {
+                    if (isEditMode) return;
                     e.preventDefault();
                     setDragActive(true);
                   }}
                   onDragLeave={(e) => {
+                    if (isEditMode) return;
                     e.preventDefault();
                     setDragActive(false);
                   }}
-                  onDragOver={(e) => e.preventDefault()}
+                  onDragOver={(e) => {
+                    if (isEditMode) return;
+                    e.preventDefault();
+                  }}
                   onDrop={(e) => {
+                    if (isEditMode) return;
                     e.preventDefault();
                     setDragActive(false);
                     handleFileSelect(e.dataTransfer.files);
                   }}
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => {
+                    if (isEditMode) return;
+                    fileInputRef.current?.click();
+                  }}
+                  style={isEditMode ? { pointerEvents: "none" } : {}}
                 >
                   <Upload className="mx-auto h-12 w-12 text-gray-400 mb-2" />
                   <p className="text-sm text-gray-600">
@@ -137,13 +156,14 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
                 </div>
               )}
 
-              {/* 숨겨진 파일 입력 - multiple 제거 */}
+              {/* 숨겨진 파일 입력 */}
               <input
                 ref={fileInputRef}
                 type="file"
                 accept={accept}
                 className="hidden"
                 onChange={(e) => handleFileSelect(e.target.files)}
+                disabled={isEditMode}
               />
 
               {preview && (
@@ -159,6 +179,7 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
                     variant="destructive"
                     className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
                     onClick={removeFile}
+                    disabled={isEditMode}
                   >
                     <X className="h-3 w-3 text-black" />
                   </Button>
@@ -178,7 +199,11 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
               <FormMessage />
             </span>
             <span className="text-green-600">
-              {currentFile ? "업로드 완료" : preview ? "" :"파일을 선택해주세요" }
+              {currentFile
+                ? "업로드 완료"
+                : preview
+                ? ""
+                : "파일을 선택해주세요"}
             </span>
           </div>
         </FormItem>

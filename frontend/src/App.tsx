@@ -90,10 +90,7 @@ function App(): React.ReactElement {
               element={<PresentationDetailPage />}
             />
             <Route path="register" element={<RegisterPage />} />
-            <Route
-              path="register/:presentationId"
-              element={<RegisterPage />}
-            />
+            <Route path="register/:presentationId" element={<RegisterPage />} />
             <Route path="about" element={<AboutUsPage />} />
             <Route path="profile" element={<PresentationProfilePage />} />
           </Route>
@@ -113,6 +110,11 @@ function App(): React.ReactElement {
             element={<AdminPresentationLayout />}
           >
             <Route path="home" element={<AdminPresentationHomePage />} />
+            <Route
+              path=":presentationId"
+              element={<PresentationDetailPage />}
+            />
+            <Route path="register/:presentationId" element={<RegisterPage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route
