@@ -9,6 +9,7 @@ import {
   PresentationPeriodTypeNumberLabelMap,
   PresentationStatusTypeLabelMap,
 } from "@/Presentation/assets/data/maps";
+import { ReactComponent as EditIcon } from "@/Presentation/assets/edit.svg";
 import { ReactComponent as LikeIcon } from "@/Presentation/assets/heart.svg";
 import type {
   PresentationCategoryType,
@@ -16,7 +17,6 @@ import type {
   PresentationPeriodType,
 } from "@/Presentation/types/enum/presentation.type.enum";
 import { axiosGetPresentationById } from "@/Presentation/api/axios/axios.custom";
-import { ReactComponent as EditIcon } from "@/Presentation/assets/edit.svg";
 
 // Heroicons 사용 예시(설치 필요: @heroicons/react)
 
@@ -211,7 +211,9 @@ const PresentationDetailPage: React.FC = () => {
         </div>
 
         <div className="pb-10">
-          {presentationId && <CommentSection presentationId={presentationId} isAdmin={false} />}
+          {presentationId && (
+            <CommentSection presentationId={presentationId} isAdmin={false} />
+          )}
         </div>
       </div>
     </>

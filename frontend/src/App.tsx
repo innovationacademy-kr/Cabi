@@ -118,6 +118,7 @@ function App(): React.ReactElement {
               path=":presentationId"
               element={<AdminPresentationDetailPage />}
             />
+            <Route path="register/:presentationId" element={<RegisterPage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route

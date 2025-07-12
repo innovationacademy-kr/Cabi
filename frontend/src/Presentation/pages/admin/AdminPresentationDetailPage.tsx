@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import CommentSection from "@/Presentation/components/CommentSection";
 import {
@@ -9,6 +9,7 @@ import {
   PresentationPeriodTypeNumberLabelMap,
   PresentationStatusTypeLabelMap,
 } from "@/Presentation/assets/data/maps";
+import { ReactComponent as EditIcon } from "@/Presentation/assets/edit.svg";
 import { ReactComponent as LikeIcon } from "@/Presentation/assets/heart.svg";
 import type {
   PresentationCategoryType,
@@ -44,6 +45,7 @@ const AdminPresentationDetailPage: React.FC = () => {
   const [presentation, setPresentation] = useState<IPresentationDetail | null>(
     null
   );
+  const navigate = useNavigate();
 
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
@@ -81,6 +83,15 @@ const AdminPresentationDetailPage: React.FC = () => {
           }}
         >
           <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+          <button
+            className="w-12 h-12 absolute top-2 right-2 z-30 px-2 py-0.5"
+            onClick={() =>
+              navigate(`/admin/presentations/register/${presentationId}`)
+            }
+            title="수정하기"
+          >
+            <EditIcon style={{ width: 24, height: 24 }} />
+          </button>
         </div>
 
         <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-16 z-10">
@@ -182,6 +193,7 @@ const AdminPresentationDetailPage: React.FC = () => {
             </span>
           </div>
         </div>
+
         <div className="mb-10 mt-3 h-[1.5px] bg-gray-100 w-full" />
 
         <div className="pb-10">
@@ -195,7 +207,9 @@ const AdminPresentationDetailPage: React.FC = () => {
         </div>
 
         <div className="pb-10">
-          {presentationId && <CommentSection presentationId={presentationId} isAdmin={true} />}
+          {presentationId && (
+            <CommentSection presentationId={presentationId} isAdmin={true} />
+          )}
         </div>
       </div>
     </>
