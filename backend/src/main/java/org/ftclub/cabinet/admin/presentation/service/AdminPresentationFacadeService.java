@@ -12,6 +12,7 @@ import org.ftclub.cabinet.presentation.domain.PresentationUpdateData;
 import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.ftclub.cabinet.presentation.service.PresentationCommandService;
+import org.ftclub.cabinet.presentation.service.PresentationLikeService;
 import org.ftclub.cabinet.presentation.service.PresentationPolicyService;
 import org.ftclub.cabinet.presentation.service.PresentationQueryService;
 import org.ftclub.cabinet.presentation.service.ThumbnailStorageService;
@@ -27,6 +28,7 @@ public class AdminPresentationFacadeService {
 	private final PresentationCommandService commandService;
 	private final PresentationPolicyService policyService;
 	private final ThumbnailStorageService thumbnailStorageService;
+	private final PresentationLikeService likeService;
 	private final PresentationMapper presentationMapper;
 
 	/**
@@ -56,14 +58,14 @@ public class AdminPresentationFacadeService {
 		Presentation presentation = queryService.findPresentationByIdWithUser(presentationId);
 		String thumbnailLink = thumbnailStorageService.generatePresignedUrl(
 				presentation.getThumbnailS3Key());
-		Long likesCount = 0L;   // likeQueryService.getLikesCount(presentationId);    // TODO: likeQueryService
+		Long likesCount = likeService.countLikes(presentationId);
 
 		return presentationMapper.toPresentationDetailDto(
 				presentation,
 				thumbnailLink,
 				likesCount,
 				false,
-				false
+				true
 		);
 	}
 
