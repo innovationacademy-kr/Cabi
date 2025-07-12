@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { axiosGetPresentationById } from "../api/axios/axios.custom";
+import { axiosGetAdminPresentationById } from "../api/axios/axios.custom";
 import { RegisterResultDialog } from "../components/Modals/PresentationResponseModal";
 import RegisterForm from "../components/RegisterForm";
 import { RegisterType } from "../types/enum/presentation.type.enum";
@@ -31,7 +32,9 @@ const RegisterPage = () => {
   const fetchPresentationData = async (presentationId: string) => {
     setLoading(true);
     try {
-      const res = await axiosGetPresentationById(presentationId);
+      const res = await (isAdminMode
+        ? axiosGetAdminPresentationById(presentationId)
+        : axiosGetPresentationById(presentationId));
       setInitialData(res.data);
     } catch (error) {
       console.error("신청폼 불러오기 실패:", error);
