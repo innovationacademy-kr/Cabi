@@ -46,13 +46,14 @@ export const PresentationRegistrationModal: React.FC<
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50">
-      <div className="w-full max-w-md rounded-2xl bg-white px-6 py-8 shadow-xl">
-        <h2 className="mb-6 text-xl font-semibold text-gray-900">일정 추가</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 시작 시간 */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+      <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl p-0 animate-fade-in">
+        <form onSubmit={handleSubmit} className="px-6 pt-6 pb-4">
+          <h2 className="mb-6 text-2xl font-semibold text-gray-900 tracking-tight">
+            일정 추가
+          </h2>
+          <div className="mb-5">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               시작 시간
             </label>
             <div className="flex gap-3">
@@ -60,24 +61,24 @@ export const PresentationRegistrationModal: React.FC<
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="flex-1 h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
                 required
               />
               <input
                 type="time"
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="w-28 h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-32 h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
                 required
               />
             </div>
           </div>
 
           {/* 장소 */}
-          <div>
+          <div className="mb-5">
             <label
               htmlFor="location"
-              className="mb-2 block text-sm font-medium text-gray-700"
+              className="mb-1 block text-sm font-medium text-gray-700"
             >
               장소
             </label>
@@ -85,7 +86,7 @@ export const PresentationRegistrationModal: React.FC<
               id="location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
               required
             >
               <option value="">장소를 선택하세요</option>
@@ -98,25 +99,38 @@ export const PresentationRegistrationModal: React.FC<
               )}
             </select>
           </div>
-
-          {/* 버튼 */}
-          <div className="flex justify-end gap-3 pt-2">
+          {/* 버튼 영역 */}
+          <div className="flex justify-end items-center pt-4 border-t border-gray-100 gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="h-10 rounded-lg bg-gray-200 px-5 text-sm font-medium text-gray-700 hover:bg-gray-300"
+              className="rounded-lg px-5 py-2 font-medium text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 transition shadow-none"
+              style={{ minWidth: 80 }}
             >
               취소
             </button>
             <button
               type="submit"
-              className="h-10 rounded-lg bg-blue-600 px-5 text-sm font-medium text-white hover:bg-blue-700"
+              className="rounded-lg px-5 py-2 font-medium text-sm text-white transition shadow-none"
+              style={{
+                minWidth: 80,
+                backgroundColor: "#1A73E8",
+              }}
             >
               완료
             </button>
           </div>
         </form>
       </div>
+      <style>{`
+        @keyframes fade-in {
+          0% { opacity: 0; transform: scale(0.97);}
+          100% { opacity: 1; transform: scale(1);}
+        }
+        .animate-fade-in {
+          animation: fade-in 0.16s cubic-bezier(.2,.8,.4,1) 1;
+        }
+      `}</style>
     </div>
   );
 };
