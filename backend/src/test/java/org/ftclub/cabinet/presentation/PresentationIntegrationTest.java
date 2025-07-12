@@ -96,14 +96,17 @@ class PresentationIntegrationTest {
 
 		userToken = jwtService.createPairTokens(user.getId(), "USER", user.getEmail(), "ft")
 				.getAccessToken();
-		otherUserToken = jwtService.createPairTokens(otherUser.getId(), "USER", user.getEmail(),
+		otherUserToken = jwtService.createPairTokens(otherUser.getId(), "USER",
+						otherUser.getEmail(),
 						"ft")
 				.getAccessToken();
 		// [수정] 테스트용 사용자 및 토큰 추가
-		otherUser2Token = jwtService.createPairTokens(otherUser2.getId(), "USER", user.getEmail(),
+		otherUser2Token = jwtService.createPairTokens(otherUser2.getId(), "USER",
+						otherUser2.getEmail(),
 						"ft")
 				.getAccessToken();
-		otherUser3Token = jwtService.createPairTokens(otherUser3.getId(), "USER", user.getEmail(),
+		otherUser3Token = jwtService.createPairTokens(otherUser3.getId(), "USER",
+						otherUser3.getEmail(),
 						"ft")
 				.getAccessToken();
 	}
