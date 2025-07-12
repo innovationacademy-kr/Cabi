@@ -11,7 +11,6 @@ import {
   axiosUpdateAdminPresentation,
   axiosUpdatePresentation,
 } from "@/Presentation/api/axios/axios.custom";
-} from "../api/axios/axios.custom";
 import {
   PresentationCategoryType,
   RegisterType,

@@ -5,7 +5,6 @@ import { axiosGetAdminPresentationById } from "../api/axios/axios.custom";
 import { RegisterResultDialog } from "../components/Modals/PresentationResponseModal";
 import RegisterForm from "../components/RegisterForm";
 import { RegisterType } from "../types/enum/presentation.type.enum";
-import { axiosGetAdminPresentationById } from "@/Presentation/api/axios/axios.custom";
 
 const RegisterPage = () => {
   const { presentationId } = useParams();
