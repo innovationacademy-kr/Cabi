@@ -157,7 +157,6 @@ export function AdminCalendar() {
 
   const handleClickEvent = useCallback(
     (eventInfo: any) => {
-      console.log("eventInfo:", eventInfo);
       const event = eventInfo.event;
       if (event && ["1", "2", "3"].includes(event.calendarId)) {
         handleOpenUpdateModal(event);

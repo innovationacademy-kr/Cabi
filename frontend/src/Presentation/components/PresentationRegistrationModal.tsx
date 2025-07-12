@@ -13,7 +13,8 @@ export const PresentationRegistrationModal: React.FC<
   PresentationRegistrationModalProps
 > = ({ isOpen, onClose, selectedDate, onSuccess }) => {
   const [date, setDate] = useState<string>("");
-  const [time, setTime] = useState<string>("");
+  const [currentHour, setCurrentHour] = useState<string>("09");
+  const [currentMinute, setCurrentMinute] = useState<string>("00");
   const [location, setLocation] = useState<string>("");
 
   useEffect(() => {
@@ -25,15 +26,31 @@ export const PresentationRegistrationModal: React.FC<
         timeZone: "Asia/Seoul",
       });
       setDate(kstDateString);
+      const kstTime = selectedDate.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      const [hour, minute] = kstTime.split(":");
+      setCurrentHour(hour);
+      setCurrentMinute(minute);
     }
   }, [selectedDate]);
 
   if (!isOpen) return null;
 
+  const handleHourChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCurrentHour(e.target.value);
+  };
+
+  const handleMinuteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCurrentMinute(e.target.value);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!date || !time) return;
-    const dateTimeString = `${date}T${time}:00`;
+    if (!date || !currentHour || !currentMinute) return;
+    const dateTimeString = `${date}T${currentHour}:${currentMinute}:00`;
     try {
       await axiosCreateAdminPresentationSlot(dateTimeString, location);
       alert("일정이 추가되었습니다.");
@@ -64,13 +81,28 @@ export const PresentationRegistrationModal: React.FC<
                 className="flex-1 h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
                 required
               />
-              <input
-                type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                className="w-32 h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
+              <select
+                value={currentHour}
+                onChange={handleHourChange}
+                className="w-16 h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
                 required
-              />
+              >
+                {Array.from({ length: 14 }, (_, i) => 9 + i).map((hour) => (
+                  <option key={hour} value={String(hour).padStart(2, "0")}>
+                    {String(hour).padStart(2, "0")}
+                  </option>
+                ))}
+              </select>
+              <span className="flex items-center text-lg font-medium">:</span>
+              <select
+                value={currentMinute}
+                onChange={handleMinuteChange}
+                className="w-16 h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
+                required
+              >
+                <option value="00">00</option>
+                <option value="30">30</option>
+              </select>
             </div>
           </div>
 

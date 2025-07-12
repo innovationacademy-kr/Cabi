@@ -2,6 +2,7 @@ import { toZonedTime } from "date-fns-tz";
 import React, { useEffect, useState } from "react";
 import { PresentationLocationLabelMap } from "@/Presentation/assets/data/maps";
 import {
+  axiosDeleteAdminSlot,
   axiosUpdateAdminPresentation,
   axiosUpdateAdminSlot,
 } from "@/Presentation/api/axios/axios.custom";
@@ -86,6 +87,25 @@ export const PresentationUpdateModal: React.FC<
     }
   };
 
+  const handleDelete = async () => {
+    if (!eventData.id) return;
+
+    if (!window.confirm("해당 슬롯을 삭제하시겠습니까?")) {
+      return;
+    }
+
+    const slotId = eventData.id.replace("slot-", "");
+    try {
+      await axiosDeleteAdminSlot(slotId);
+      alert("슬롯이 삭제되었습니다.");
+      onSuccess();
+      onClose();
+    } catch (error) {
+      console.error("슬롯 삭제 실패:", error);
+      alert("슬롯 삭제에 실패했습니다.");
+    }
+  };
+
   const handleHourChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrentHour(e.target.value);
   };
@@ -98,10 +118,19 @@ export const PresentationUpdateModal: React.FC<
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
       <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl p-0 animate-fade-in">
         <form onSubmit={handleUpdate} className="px-6 pt-6 pb-4">
-          <div className="flex justify-between items-start mb-6">
+          <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">
-              {isSlot ? "일정 수정 - 슬롯" : "일정 수정 - 발표"}
+              {isSlot ? "일정 수정" : "발표 수정"}
             </h2>
+            {isSlot && (
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="h-7 w-[72px] px-2 py-1 text-xs font-medium text-red-600 bg-red-100 hover:bg-red-200 rounded shadow-none whitespace-nowrap leading-none flex-shrink-0 self-center transition"
+              >
+                일정 삭제
+              </button>
+            )}
           </div>
           {/* 제목 */}
           <div className="mb-5">
