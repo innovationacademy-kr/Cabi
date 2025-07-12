@@ -7,6 +7,7 @@ import {
   axiosGetPresentationComments,
   axiosPatchPresentationComment,
   axiosPostPresentationComment,
+  axiosAdminGetPresentationComments,
 } from "@/Presentation/api/axios/axios.custom";
 
 interface IPresentationComment {
@@ -19,7 +20,12 @@ interface IPresentationComment {
   updated: boolean;
 }
 
-const CommentSection = ({ presentationId }: { presentationId: string }) => {
+interface CommentSectionProps {
+  presentationId: string;
+  isAdmin: boolean;
+}
+
+const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState<IPresentationComment[]>([]);
   const [input, setInput] = useState("");
@@ -30,7 +36,9 @@ const CommentSection = ({ presentationId }: { presentationId: string }) => {
   const fetchComments = async () => {
     setLoading(true);
     try {
-      const res = await axiosGetPresentationComments(presentationId);
+      const res = isAdmin
+        ? await axiosAdminGetPresentationComments(presentationId)
+        : await axiosGetPresentationComments(presentationId);
       setComments(res.data.data);
     } catch (e) {
       console.error("댓글 로딩 실패", e);
