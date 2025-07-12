@@ -34,6 +34,9 @@ const RegisterPage = lazy(() => import("@/Presentation/pages/RegisterPage"));
 const PresentationProfilePage = lazy(
   () => import("@/Presentation/pages/ProfilePage")
 );
+const CommunityRulesPage = lazy(
+  () => import("@/Presentation/pages/CommunityRules")
+);
 
 // NOTE : admin
 const AdminLayout = lazy(() => import("@/Cabinet/pages/admin/AdminLayout"));
@@ -96,6 +99,7 @@ function App(): React.ReactElement {
             <Route path="register/:presentationId" element={<RegisterPage />} />
             <Route path="about" element={<AboutUsPage />} />
             <Route path="profile" element={<PresentationProfilePage />} />
+            <Route path="community" element={<CommunityRulesPage />} />
           </Route>
           {/* admin용 라우터 */}
           <Route path="/admin/" element={<AdminLayout />}>
