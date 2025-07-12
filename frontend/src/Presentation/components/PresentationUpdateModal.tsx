@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { PresentationLocationLabelMap } from "@/Presentation/assets/data/maps";
 import {
   axiosDeleteAdminSlot,
-  axiosUpdateAdminPresentation,
+  axiosPatchAdminPresentation,
   axiosUpdateAdminSlot,
 } from "@/Presentation/api/axios/axios.custom";
 
@@ -71,7 +71,7 @@ export const PresentationUpdateModal: React.FC<
         const slotId = eventData.id.replace("slot-", "");
         await axiosUpdateAdminSlot(slotId, dateTimeString, location);
       } else {
-        await axiosUpdateAdminPresentation(
+        await axiosPatchAdminPresentation(
           eventData.id,
           dateTimeString,
           location,

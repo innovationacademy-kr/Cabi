@@ -339,22 +339,22 @@ export const axiosDeletePresentationLike = async (
   }
 };
 
-// export const axiosUpdateAdminPresentation = async (
-//   presentationId: string,
-//   startTime: string,
-//   location: string,
-//   title: string
-// ) => {
-//   const response = await instance.patch(
-//     `/v6/admin/presentations/${presentationId}`,
-//     {
-//       startTime,
-//       presentationLocation: location,
-//       title,
-//     }
-//   );
-//   return response.data;
-// };
+export const axiosPatchAdminPresentation = async (
+  presentationId: string,
+  startTime: string,
+  location: string,
+  title: string
+) => {
+  const response = await instance.patch(
+    `/v6/admin/presentations/${presentationId}`,
+    {
+      startTime,
+      presentationLocation: location,
+      title,
+    }
+  );
+  return response.data;
+};
 
 export const axiosDeleteAdminPresentation = async (presentationId: string) => {
   const response = await instance.delete(
