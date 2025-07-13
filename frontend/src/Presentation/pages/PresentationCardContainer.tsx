@@ -18,7 +18,7 @@ const PresentationCardContainer: React.FC<PresentationCardContainerProps> = ({
   if (!presentations?.length) {
     return (
       <div className="w-full flex flex-col items-center justify-center min-h-[220px]">
-        <div className="text-lg text-gray-500 font-medium text-center">
+        <div className="text-base text-gray-500 font-normal text-center">
           해당 카테고리의 발표가 아직 없습니다. <br />
           지금 바로 첫 발표의 주인공이 되어보세요!
         </div>
