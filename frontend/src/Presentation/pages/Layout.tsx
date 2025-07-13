@@ -1,108 +1,96 @@
-import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import Footer from "@/components/ui/footer";
+import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { userState } from "@/Cabinet/recoil/atoms";
 import TopNavDomainGroup from "@/Cabinet/components/TopNav/TopNavDomainGroup/TopNavDomainGroup";
-import { UserDto } from "@/Cabinet/types/dto/user.dto";
-import { axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import TopNavContainer from "@/Presentation/components/TopNav/TopNav.container";
 
-const body: HTMLElement = document.body;
-const root: HTMLElement = document.documentElement;
+
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isValidToken, setIsValidToken] = useState<boolean>(false);
-  const setUser = useSetRecoilState<UserDto>(userState);
-  const navigate = useNavigate();
   const location = useLocation();
   const { closeAll } = useMenu();
 
   const token = getCookie("access_token");
+  const isLoginPage = location.pathname === "/login";
 
-  const isRootPath: boolean =
-    location.pathname === "/presentations" ||
-    location.pathname === "/presentations/";
-  const isLoginPage: boolean = location.pathname === "/login";
-  const isHomePage: boolean = location.pathname === "/home";
+  const [isValidToken, setIsValidToken] = useState<boolean>(false);
+  // const setUser = useSetRecoilState<UserDto>(userState);
+  const navigate = useNavigate();
 
-  const getMyInfo = async () => {
-    try {
-      const { data: myInfo } = await axiosMyInfo();
-      setUser(myInfo);
-      setIsValidToken(true);
-      if (isRootPath || isLoginPage) {
-        navigate("/presentations/home", { replace: true });
-      }
-    } catch (error) {
-      navigate("/login");
-    }
-  };
+  // const token = getCookie("access_token");
+
+  useEffect(() => {
+    // if (!token && !isLoginPage) {
+    //   navigate("/login");
+    // } else if (token) {
+    //   navigate("/presentation/home");
+    // }
+    navigate("/presentations/home");
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
+    root.style.setProperty(
+      "--sys-main-color",
+      "var(--sys-presentation-main-color)"
+    );
+    root.style.setProperty(
+      "--sys-sub-color",
+      "var(--sys-presentation-sub-color)"
+    );
+    body.style.setProperty(
+      "--sys-main-color",
+      "var(--sys-presentation-main-color)"
+    );
+    body.style.setProperty(
+      "--sys-sub-color",
+      "var(--sys-presentation-sub-color)"
+    );
+  }, []);
 
   const handleClickBg = () => {
     closeAll();
   };
 
-  useEffect(() => {
-    if (!token && !isLoginPage) {
-      navigate("/login");
-    } else if (token) {
-      getMyInfo();
-    }
-  }, []);
+  if (isLoginPage) {
+    return <Outlet />;
+  }
 
-  // useEffect(() => {
-  //   root.style.setProperty(
-  //     "--sys-main-color",
-  //     "var(--sys-presentation-main-color)"
-  //   );
-  //   root.style.setProperty(
-  //     "--sys-sub-color",
-  //     "var(--sys-presentation-sub-color)"
-  //   );
-  //   body.style.setProperty(
-  //     "--sys-main-color",
-  //     "var(--sys-presentation-main-color)"
-  //   );
-  //   body.style.setProperty(
-  //     "--sys-sub-color",
-  //     "var(--sys-presentation-sub-color)"
-  //   );
-  // }, []);
-
-  return isLoginPage ? (
-    <Outlet />
-  ) : (
-    <React.Fragment>
+  return (
+    <PageContainer>
       <TopNavDomainGroup />
-      <div className="presentation-root">
-        <TopNavContainer setIsLoading={setIsLoading} />
-        <WrapperStyled>
-          <MainStyled>
-            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
-            <Outlet />
-          </MainStyled>
-        </WrapperStyled>
-      </div>
-    </React.Fragment>
+      <TopNavContainer setIsLoading={setIsLoading} />
+      <ScrollArea onClick={handleClickBg}>
+        <MainStyled>
+          <MenuBgStyled id="menuBg" />
+          <Outlet />
+        </MainStyled>
+        <Footer />
+      </ScrollArea>
+    </PageContainer>
   );
 };
 
-const WrapperStyled = styled.div`
-  width: 100%;
-  height: 100%;
+const PageContainer = styled.div`
   display: flex;
-  overflow: hidden;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+const ScrollArea = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
 `;
 
 const MainStyled = styled.main`
   width: 100%;
-  height: calc(100% - 104px);
-  overflow-y: auto;
   user-select: none;
 `;
 

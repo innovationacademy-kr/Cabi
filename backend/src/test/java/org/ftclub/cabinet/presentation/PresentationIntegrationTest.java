@@ -3,13 +3,16 @@ package org.ftclub.cabinet.presentation;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.event.RedisExpirationEventListener;
+import org.ftclub.cabinet.jwt.service.JwtRedisService;
 import org.ftclub.cabinet.jwt.service.JwtService;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Duration;
@@ -25,10 +28,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
@@ -50,6 +57,8 @@ class PresentationIntegrationTest {
 	@Autowired
 	private PresentationLikeRepository presentationLikeRepository;
 
+	@MockBean
+	private JwtRedisService jwtRedisService;
 	@MockBean
 	private RedisExpirationEventListener redisExpirationEventListener;
 
@@ -85,17 +94,20 @@ class PresentationIntegrationTest {
 		otherUser3 = userRepository.save(User.of("otheruser3", "otheruser3@student.42seoul.kr",
 				LocalDateTime.now().plusDays(100), "USER"));
 
-		userToken = jwtService.createPairTokens(user.getId(), "USER", "testuser.42seoul.kr", "ft")
+		userToken = jwtService.createPairTokens(user.getId(), "USER", user.getEmail(), "ft")
 				.getAccessToken();
 		otherUserToken = jwtService.createPairTokens(otherUser.getId(), "USER",
-						"otheruser.42seoul.kr", "ft")
+						otherUser.getEmail(),
+						"ft")
 				.getAccessToken();
 		// [수정] 테스트용 사용자 및 토큰 추가
 		otherUser2Token = jwtService.createPairTokens(otherUser2.getId(), "USER",
-						"otheruser2.42seoul.kr", "ft")
+						otherUser2.getEmail(),
+						"ft")
 				.getAccessToken();
 		otherUser3Token = jwtService.createPairTokens(otherUser3.getId(), "USER",
-						"otheruser3.42seoul.kr", "ft")
+						otherUser3.getEmail(),
+						"ft")
 				.getAccessToken();
 	}
 
@@ -313,13 +325,6 @@ class PresentationIntegrationTest {
 		}
 
 		@Test
-		@DisplayName("실패: 비로그인 유저가 접근 시 302 에러")
-		void 실패_비로그인_유저_접근() throws Exception {
-			mockMvc.perform(get("/v6/presentations/me/likes"))
-					.andExpect(status().isFound());
-		}
-
-		@Test
 		@DisplayName("성공: 내가 좋아요 한 발표가 취소되면 목록에서 제외")
 		void 성공_내가_좋아요_한_발표가_취소되면_목록에서_제외() throws Exception {
 			// given
@@ -430,6 +435,102 @@ class PresentationIntegrationTest {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$.totalElements").value(25))
 					.andExpect(jsonPath("$.content[?(@.title == '취소된 발표')]").doesNotExist());
+		}
+	}
+
+	private static Stream<Arguments> provideLoginRedirectApiEndpoints() {
+		// 예시로 사용할 경로 변수 값들
+		String provider = "foo";
+		String sku = "item_sku_123"; // 아이템 SKU (Stock Keeping Unit)
+		long userId = 99L;
+		long presentationId = 1L; // 예시로 사용할 발표 ID
+		long commentId = 1L; // 예시로 사용할 댓글 ID
+
+		return Stream.of(
+				// --- v5/auth/ 관련 API ---
+				Arguments.of(HttpMethod.DELETE, "/v5/auth/link"),
+				Arguments.of(HttpMethod.GET, "/v5/auth/link/" + provider), // {provider} 변수 포함
+				Arguments.of(HttpMethod.POST, "/v5/auth/logout"),
+
+				// --- v5/items/ 관련 API ---
+				Arguments.of(HttpMethod.GET, "/v5/items/"),
+				Arguments.of(HttpMethod.GET, "/v5/items/coin"),
+				Arguments.of(HttpMethod.POST, "/v5/items/coin"),
+				Arguments.of(HttpMethod.GET, "/v5/items/coin/history"),
+				Arguments.of(HttpMethod.GET, "/v5/items/history"),
+				Arguments.of(HttpMethod.GET, "/v5/items/me"),
+				Arguments.of(HttpMethod.POST, "/v5/items/" + sku + "/purchase"), // {sku} 변수 포함
+				Arguments.of(HttpMethod.POST, "/v5/items/" + sku + "/use"), // {sku} 변수 포함
+
+				// --- v5/admin/items/ 관련 API ---
+				Arguments.of(HttpMethod.GET, "/v5/admin/items/"),
+				Arguments.of(HttpMethod.POST, "/v5/admin/items/"),
+				Arguments.of(HttpMethod.POST, "/v5/admin/items/assign"),
+				Arguments.of(HttpMethod.GET, "/v5/admin/items/users/" + userId), // {userId} 변수 포함
+
+				// --- v5/admin/statistics/ 관련 API ---
+				Arguments.of(HttpMethod.GET, "/v5/admin/statistics/coins"),
+				Arguments.of(HttpMethod.GET, "/v5/admin/statistics/coins/collect"),
+				Arguments.of(HttpMethod.GET, "/v5/admin/statistics/coins/use"),
+
+				// --- v6/admin/presentations/ 관련 API ---
+				Arguments.of(HttpMethod.GET, "/v6/admin/presentations"),
+				Arguments.of(HttpMethod.GET, "/v6/admin/presentations/" + presentationId),
+				Arguments.of(HttpMethod.POST, "/v6/admin/presentations/slots"),
+				Arguments.of(HttpMethod.GET,
+						"/v6/admin/presentations/" + presentationId + "/comments"),
+				Arguments.of(HttpMethod.DELETE,
+						"/v6/admin/presentations/" + presentationId + "/comments"),
+				Arguments.of(HttpMethod.PATCH,
+						"/v6/admin/presentations/" + presentationId + "/comments/" + commentId),
+				Arguments.of(HttpMethod.DELETE,
+						"/v6/admin/presentations/" + presentationId + "/comments/" + commentId)
+		);
+	}
+
+	private static Stream<Arguments> provideUnauthorizedApiEndpoints() {
+		long presentationId = 1L; // 예시로 사용할 발표 ID
+		long commentId = 1L; // 예시로 사용할 댓글 ID
+		return Stream.of(
+				// --- v6/presentations/ 관련 API ---
+				Arguments.of(HttpMethod.POST, "/v6/presentations"),
+				Arguments.of(HttpMethod.PATCH, "/v6/presentations/" + presentationId),
+				Arguments.of(HttpMethod.POST, "/v6/presentations/" + presentationId + "/likes"),
+				Arguments.of(HttpMethod.DELETE, "/v6/presentations/" + presentationId + "/likes"),
+				Arguments.of(HttpMethod.POST, "/v6/presentations/" + presentationId + "/comments"),
+				Arguments.of(HttpMethod.PATCH,
+						"/v6/presentations/" + presentationId + "/comments/" + commentId),
+				Arguments.of(HttpMethod.DELETE,
+						"/v6/presentations/" + presentationId + "/comments/" + commentId),
+				Arguments.of(HttpMethod.GET, "/v6/presentations/me/histories"),
+				Arguments.of(HttpMethod.GET, "/v6/presentations/me/likes")
+		);
+	}
+
+	@Nested
+	@DisplayName("익명 유저의 API 권한 없는 요청 테스트")
+	class AnonymousUnauthorizedAccessTests {
+
+		@ParameterizedTest
+		@MethodSource("org.ftclub.cabinet.presentation.PresentationIntegrationTest#provideLoginRedirectApiEndpoints")
+		@DisplayName("실패: 익명 유저가 권한 없는 API 요청 시 302 리다이렉트")
+		void 실패_익명_유저_요청_302_리다이렉트(HttpMethod method, String path) throws Exception {
+			// Given: Security 설정 확인이 목적임. Request Body는 필요 없음.
+
+			// When & Then: 각 API에 대해 302 리다이렉트 상태 코드가 반환되는지 확인
+			mockMvc.perform(request(method, path))
+					.andExpect(status().isFound());
+		}
+
+		@ParameterizedTest
+		@MethodSource("org.ftclub.cabinet.presentation.PresentationIntegrationTest#provideUnauthorizedApiEndpoints")
+		@DisplayName("실패: 익명 유저가 권한 없는 API 요청 시 401 에러")
+		void 실패_익명_유저_요청_401_에러(HttpMethod method, String path) throws Exception {
+			// Given: Security 설정 확인이 목적임. Request Body는 필요 없음.
+
+			// When & Then: 각 API에 대해 401 Unauthorized 상태 코드가 반환되는지 확인
+			mockMvc.perform(request(method, path))
+					.andExpect(status().isUnauthorized());
 		}
 	}
 
