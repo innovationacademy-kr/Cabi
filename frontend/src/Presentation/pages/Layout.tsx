@@ -1,5 +1,5 @@
 import Footer from "@/components/ui/footer";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -12,11 +12,10 @@ const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const location = useLocation();
   const { closeAll } = useMenu();
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const token = getCookie("access_token");
   const isLoginPage = location.pathname === "/login";
-
-  const [isValidToken, setIsValidToken] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +43,12 @@ const Layout = (): JSX.Element => {
     );
   }, []);
 
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
+
   const handleClickBg = () => {
     closeAll();
   };
@@ -59,7 +64,7 @@ const Layout = (): JSX.Element => {
         <TopNavContainer setIsLoading={setIsLoading} />
       </HeaderSection>
       <ContentArea>
-        <ScrollArea onClick={handleClickBg}>
+        <ScrollArea ref={scrollAreaRef} onClick={handleClickBg}>
           <MainStyled>
             <MenuBgStyled id="menuBg" />
             <Outlet />
