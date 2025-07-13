@@ -3,11 +3,13 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import {
+  axiosAdminDeletePresentationComment,
+  axiosAdminGetPresentationComments,
+  axiosAdminPatchPresentationComment,
   axiosDeletePresentationComment,
   axiosGetPresentationComments,
   axiosPatchPresentationComment,
   axiosPostPresentationComment,
-  axiosAdminGetPresentationComments,
 } from "@/Presentation/api/axios/axios.custom";
 
 interface IPresentationComment {
@@ -87,7 +89,7 @@ const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
   };
 
   const handleDelete = async (commentId: number) => {
-    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    const confirmDelete = window.confirm("댓글을 삭제하시겠습니까?");
     if (!confirmDelete) return;
 
     const originalComments = [...comments];
@@ -102,6 +104,50 @@ const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
     }
   };
 
+  const handleBan = async (commentId: number, currentBannedStatus: boolean) => {
+    const confirmAction = window.confirm(
+      currentBannedStatus ? "차단을 해제하시겠습니까?" : "차단하시겠습니까?"
+    );
+    if (!confirmAction) return;
+
+    try {
+      const res = await axiosAdminPatchPresentationComment(
+        presentationId,
+        commentId,
+        !currentBannedStatus
+      );
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.commentId === commentId
+            ? {
+                ...comment,
+                banned: res.data.data.banned,
+                detail: res.data.data.detail,
+              }
+            : comment
+        )
+      );
+    } catch (e) {
+      console.error("댓글 차단/해제 실패", e);
+      alert("댓글 차단/해제에 실패했습니다.");
+    }
+  };
+
+  const handleAdminDelete = async (commentId: number) => {
+    const confirmDelete = window.confirm("댓글을 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+
+    try {
+      await axiosAdminDeletePresentationComment(presentationId, commentId);
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.commentId !== commentId)
+      );
+    } catch (e) {
+      console.error("관리자 댓글 삭제 실패", e);
+      alert("관리자 댓글 삭제에 실패했습니다.");
+    }
+  };
+
   const formatToSimpleDateTime = (isoString?: string): string => {
     if (!isoString) return "날짜 없음";
     const date = new Date(isoString);
@@ -111,9 +157,8 @@ const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
     const dd = String(date.getDate()).padStart(2, "0");
     const hh = String(date.getHours()).padStart(2, "0");
     const mi = String(date.getMinutes()).padStart(2, "0");
-    const ss = String(date.getSeconds()).padStart(2, "0");
 
-    return `${mm}.${dd} ${hh}:${mi}:${ss}`;
+    return `${mm}.${dd} ${hh}:${mi}`;
   };
 
   useEffect(() => {
@@ -150,7 +195,7 @@ const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
                     {c.banned && (
                       <span className="text-xs text-red-500">차단됨</span>
                     )}
-                    {c.updated && (
+                    {c.updated && !c.banned && (
                       <span className="text-xs text-gray-400">(수정됨)</span>
                     )}
                   </div>
@@ -189,12 +234,12 @@ const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
                     </form>
                   ) : (
                     <div className="text-sm whitespace-pre-line break-words">
-                      {c.detail}
+                      {c.banned ? "관리자에 의해 삭제된 댓글입니다" : c.detail}
                     </div>
                   )}
                 </div>
 
-                {c.mine && !isEditing && (
+                {c.mine && !isEditing && !c.banned && !isAdmin && (
                   <div className="absolute top-0 right-0 text-xs text-gray-400 space-x-2">
                     <span
                       onClick={() => handleEdit(c.commentId, c.detail)}
@@ -204,6 +249,23 @@ const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
                     </span>
                     <span
                       onClick={() => handleDelete(c.commentId)}
+                      className="cursor-pointer hover:underline"
+                    >
+                      삭제
+                    </span>
+                  </div>
+                )}
+
+                {isAdmin && !isEditing && (
+                  <div className="absolute top-0 right-0 text-xs text-gray-400 space-x-2">
+                    <span
+                      onClick={() => handleBan(c.commentId, c.banned)}
+                      className="cursor-pointer hover:underline"
+                    >
+                      {c.banned ? "차단 해제" : "차단"}
+                    </span>
+                    <span
+                      onClick={() => handleAdminDelete(c.commentId)}
                       className="cursor-pointer hover:underline"
                     >
                       삭제

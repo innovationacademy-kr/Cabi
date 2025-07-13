@@ -413,6 +413,35 @@ export const axiosAdminGetPresentationComments = async (
   }
 };
 
+export const axiosAdminPatchPresentationComment = async (
+  presentationId: string,
+  commentId: number,
+  banned: boolean
+) => {
+  try {
+    const response = await instance.patch(
+      `/v6/admin/presentations/${presentationId}/comments/${commentId}`,
+      { banned }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosAdminDeletePresentationComment = async (
+  presentationId: string,
+  commentId: number
+) => {
+  try {
+    const response = await instance.delete(
+      `/v6/admin/presentations/${presentationId}/comments/${commentId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const axiosGetPresentationsSlotURL = "/v6/presentations/slots";
 // const axiosGetPresentationsSlotURL = "/v6/presentations?type=slots";
@@ -579,3 +608,4 @@ export const axiosMyLikedPresentations = async (
     throw error;
   }
 };
+
