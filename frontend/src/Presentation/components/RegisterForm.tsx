@@ -108,7 +108,7 @@ const RegisterForm = ({
 
   const navigate = useNavigate();
   const isCreateMode = type === RegisterType.CREATE;
-  const isEditMode = type === RegisterType.EDIT || type === RegisterType.ADMIN;
+  const isEditMode = type === RegisterType.EDIT;
   const isAdminMode = type === RegisterType.ADMIN;
 
   // 각 항목별 수정 가능 여부
@@ -444,16 +444,17 @@ const RegisterForm = ({
           <RegisterCheckboxContainer
             control={form.control}
             title="컨텐츠 촬영 및 공개 동의"
-            subtitle={`본 영상 촬영 서비스를 신청하시면, 촬영된 영상은 향후 서비스 이용자들을 위한 다시보기 콘텐츠로 제공됩니다.
-    다음 항목에 대하여 각각의 동의 여부를 선택해주세요.`}
+            subtitle={``}
             props={[
               {
                 name: "recordingAllowed",
+                subtitle:"💡 영상 촬영 다시보기 제공 동의 시, 촬영된 영상은 향후 서비스 이용자들을 위한 다시보기 콘텐츠로 제공됩니다.",
                 description: "촬영된 영상의 다시보기 제공에 동의합니다.",
                 isEdit: !canEdit.recordingAllowed,
               },
               {
                 name: "publicAllowed",
+                subtitle : "💡 온라인 공개 동의 시, 로그인하지 않은 사용자도 귀하의 게시물을 볼 수 있어 개인 포트폴리오나 홍보 자료로 활용하실 수 있습니다.",
                 description:
                   "본 영상 및 게시물을 온라인상에 공개하는 것에 동의합니다.",
                 isEdit: !canEdit.publicAllowed,
@@ -469,9 +470,9 @@ const RegisterForm = ({
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {isEditMode ? "수정 중..." : "제출 중..."}
+                {isEditMode || isAdminMode ? "수정 중..." : "제출 중..."}
               </>
-            ) : isEditMode ? (
+            ) : isEditMode || isAdminMode ? (
               "수정하기"
             ) : (
               "신청하기"

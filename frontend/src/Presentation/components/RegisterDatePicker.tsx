@@ -168,7 +168,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
                       variant={"outline"}
                       className={cn(
                         "w-full lg:w-80 md:w-48 pl-3 text-left font-normal bg-white text-xs sm:text-sm text-black ",
-                        !field.value && "text-muted-foreground ",
+                        !field.value && "text-muted-black ",
                         isEditMode && "!cursor-not-allowed"
                       )}
                     >
@@ -210,27 +210,27 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
                         month: "space-y-4",
                         caption:
                           "flex justify-center pt-1 relative items-center",
-                        caption_label: "text-sm font-medium text-gray-900",
+                        caption_label: "text-sm font-medium text-[#222222]",
                         nav: "space-x-1 flex items-center",
                         nav_button:
-                          "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-7 w-7 stroke-black text-black",
+                          "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-[#e5e5e5] bg-[#ffffff] hover:bg-[#f5f5f5] hover:text-[#1a1a1a] h-7 w-7 stroke-black text-black",
                         nav_button_previous: "absolute left-1",
                         nav_button_next: "absolute right-1",
                         table: "w-full border-collapse space-y-1",
                         head_row: "flex",
                         head_cell:
-                          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+                          "rounded-md w-9 font-normal text-[0.8rem] text-[#737373]",
                         row: "flex w-full mt-2",
-                        cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                        day: "inline-flex items-center text-black justify-center rounded-md text-sm font-normal ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 aria-selected:opacity-100 h-9 w-9 hover:bg-gray-100",
+                        cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-[#f5f5f5] first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                        day: "inline-flex items-center text-black justify-center rounded-md text-sm font-normal transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 aria-selected:opacity-100 h-9 w-9 hover:bg-[#f5f5f5]",
                         day_selected:
-                          "bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-600 focus:text-white rounded-full",
-                        day_today: "bg-gray-100 text-gray-900 font-semibold",
-                        day_outside: "text-muted-foreground opacity-50",
+                          "bg-[#2563eb] text-white hover:bg-[#1d4ed8] focus:bg-[#2563eb] focus:text-white rounded-full",
+                        day_today: "bg-[#f5f5f5] text-[#222222] font-semibold",
+                        day_outside: "opacity-50 text-[#737373]",
                         day_disabled:
-                          "text-muted-foreground  text-gray-700 opacity-50 bg-white cursor-not-allowed",
+                          "text-[#737373] text-[#888888] opacity-50 bg-[#ffffff] cursor-not-allowed",
                         day_range_middle:
-                          "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                          "aria-selected:bg-[#f5f5f5] aria-selected:text-[#1a1a1a]",
                         day_hidden: "invisible",
                       }}
                     />

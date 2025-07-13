@@ -6,6 +6,7 @@ import { RegisterType } from "../types/enum/presentation.type.enum";
 
 interface CheckBoxProps {
   name: string;
+  subtitle: string;
   description: string;
   isEdit: boolean;
 }
@@ -29,15 +30,16 @@ const RegisterCheckboxContainer: React.FC<RegisterCheckboxContainerProps> = ({
       </Label>
       <div className="w-full rounded-md bg-white mt-2">
         <div className="p-4 text-sm sm:text-bas">
-          <Label className="block mb-4 text-gray-600 p-3 text-wrap whitespace-pre-line">
+          {/* <Label className="block mb-4 text-gray-600 p-3 text-wrap whitespace-pre-line">
             {subtitle}
-          </Label>
+          </Label> */}
           {/* CHECK: whitespace-pre-line 적용이 안됨 */}
           {props.map((checkbox, index) => (
             <RegisterCheckBox
               key={index}
               control={control}
               name={checkbox.name}
+              subtitle={checkbox.subtitle}
               description={checkbox.description}
               isEdit={checkbox.isEdit} // RegisterType을 그대로 전달
             />

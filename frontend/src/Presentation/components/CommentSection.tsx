@@ -233,7 +233,7 @@ const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
                       </div>
                     </form>
                   ) : (
-                    <div className="text-sm whitespace-pre-line break-words">
+                    <div className="text-sm whitespace-pre-line break-all">
                       {c.banned ? "관리자에 의해 삭제된 댓글입니다" : c.detail}
                     </div>
                   )}

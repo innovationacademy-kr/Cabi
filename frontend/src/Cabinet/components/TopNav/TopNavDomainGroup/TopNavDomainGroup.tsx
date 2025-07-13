@@ -35,7 +35,9 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
   const { pathname } = useLocation();
 
   return (
-    <DomainGroupContainerStyled>
+    <DomainGroupContainerStyled
+      isPresentation={pathname.includes("presentations")}
+    >
       {domains.map((domain, index) => (
         <DomainWrapperStyled key={domain.title}>
           <DomainContainerStyled
@@ -52,7 +54,17 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
               />
             </LogoContainerStyled>
             <DomainTitleStyled
-              className={domain.active(pathname) ? "domainButtonActive" : ""}
+              className={
+                domain.active(pathname)
+                  ? `domainButtonActive ${
+                      domain.title === "Cabi"
+                        ? "cabi"
+                        : domain.title === "수요지식회"
+                        ? "presentation"
+                        : ""
+                    }`
+                  : ""
+              }
               fontWeight="bold"
             >
               {domain.title}
@@ -71,7 +83,7 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
   );
 };
 
-const DomainGroupContainerStyled = styled.div`
+const DomainGroupContainerStyled = styled.div<{ isPresentation: boolean }>`
   display: flex;
   align-items: center;
   width: 100%;
@@ -82,9 +94,11 @@ const DomainGroupContainerStyled = styled.div`
 
   border-bottom: 1px solid var(--line-color);
   padding: 0 28px;
-  color: var(--gray-line-btn-color);
+  color: ${({ isPresentation }) =>
+    isPresentation ? "#7b7b7b" : "var(--gray-line-btn-color)"};
   font-size: 0.875rem;
-  background-color: var(--bg-color);
+  background-color: ${({ isPresentation }) =>
+    isPresentation ? "#ffffff" : "var(--bg-color)"};
 `;
 
 const DomainWrapperStyled = styled.div`

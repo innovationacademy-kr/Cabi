@@ -85,7 +85,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
   return (
     <Card
       className="
-        w-[360px] flex flex-col relative group cursor-pointer
+        w-[360px] h-[450px] flex flex-col relative group cursor-pointer
         transition-all duration-300 ease-in-out
         hover:-translate-y-1 hover:shadow-lg
       "
@@ -94,7 +94,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
         <img
           src={thumbnailLink || defaultThumbnailMap[category]}
           alt={title}
-          className="aspect-[9/16] object-cover w-full h-full transition-transform duration-300 ease-in-out"
+          className="aspect-[9/16] object-cover w-full h-full transition-transform duration-300 ease-in-out "
         />
         <div className="absolute bottom-0 left-0 w-full h-[80px] bg-gradient-to-t from-black/60 to-black/0 z-10" />
         <div className="absolute bottom-[10px] left-[16px] flex space-x-2 z-10 ">
@@ -107,7 +107,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
         </div>
       </div>
       <CardContent className="pt-4 pb-4 flex-1 flex flex-col">
-        <h2 className="text-lg font-semibold leading-snug mb-1">{title}</h2>
+        <h2 className="text-black text-lg font-semibold leading-snug mb-1">{title}</h2>
         <p className="text-sm text-[#495057] mt-1 text-muted-foreground leading-relaxed line-clamp-4 mb-2">
           {summary}
         </p>
@@ -125,7 +125,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
             }}
             disabled={isLoading}
             className="
-              inline-flex flex-none w-auto items-center justify-center
+              bg-white inline-flex flex-none w-auto items-center justify-center
               h-6 space-x-1 text-xs font-normal leading-none group p-0
             "
             aria-pressed={liked}

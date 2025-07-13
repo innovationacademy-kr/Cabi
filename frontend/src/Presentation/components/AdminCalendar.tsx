@@ -184,7 +184,7 @@ export function AdminCalendar() {
             />
           </svg>
         </button>
-        <h2 className="my-0 text-lg leading-tight font-semibold select-none">
+        <h2 className="my-0 text-black text-lg leading-tight font-semibold select-none">
           {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
         </h2>
         <button

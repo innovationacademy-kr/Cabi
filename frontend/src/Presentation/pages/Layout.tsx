@@ -58,7 +58,7 @@ const Layout = (): JSX.Element => {
   }
 
   return (
-    <PageContainer>
+    <PageContainer className="bg-white">
       <HeaderSection>
         <TopNavDomainGroup />
         <TopNavContainer setIsLoading={setIsLoading} />

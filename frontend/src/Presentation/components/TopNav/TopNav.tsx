@@ -39,7 +39,7 @@ const TopNavContainerStyled = styled.nav`
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg-color);
+  background-color: #ffffff;
   z-index: 10;
 `;
 
@@ -50,9 +50,9 @@ const TopNavWrapperStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--line-color);
+  border-bottom: 1px solid #bcbcbc; /* var(--line-color) → #bcbcbc */
   padding: 0 28px;
-  color: var(--gray-line-btn-color);
+  color: #7b7b7b; /* var(--gray-line-btn-color) → #7b7b7b */
 `;
 
 const LogoStyled = styled.div`
@@ -81,7 +81,7 @@ const BuildingSelectBoxStyled = styled.span`
   position: relative;
   margin-left: 40px;
   font-size: 1.5rem;
-  font-family: var(--building-font);
+  font-family: "Do Hyeon", sans-serif; /* var(--building-font) → 실제 폰트명 */
   & > div {
     user-select: none !important;
     -webkit-user-select: none !important;
