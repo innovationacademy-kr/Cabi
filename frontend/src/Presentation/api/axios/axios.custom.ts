@@ -529,7 +529,6 @@ export const axiosUpdateAdminPresentation = async (
   thumbnailFile: File | null
 ): Promise<any> => {
   try {
-    console.log("body : ", body);
     const accessToken = getCookie("access_token");
     const formData = new FormData();
     formData.append(

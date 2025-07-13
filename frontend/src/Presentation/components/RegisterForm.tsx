@@ -108,7 +108,7 @@ const RegisterForm = ({
 
   const navigate = useNavigate();
   const isCreateMode = type === RegisterType.CREATE;
-  const isEditMode = type === RegisterType.EDIT || type === RegisterType.ADMIN;
+  const isEditMode = type === RegisterType.EDIT;
   const isAdminMode = type === RegisterType.ADMIN;
 
   // 각 항목별 수정 가능 여부
@@ -469,9 +469,9 @@ const RegisterForm = ({
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {isEditMode ? "수정 중..." : "제출 중..."}
+                {isEditMode || isAdminMode ? "수정 중..." : "제출 중..."}
               </>
-            ) : isEditMode ? (
+            ) : isEditMode || isAdminMode ? (
               "수정하기"
             ) : (
               "신청하기"
