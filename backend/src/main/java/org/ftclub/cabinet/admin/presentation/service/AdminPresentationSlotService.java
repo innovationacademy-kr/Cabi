@@ -151,6 +151,7 @@ public class AdminPresentationSlotService {
 	 */
 	public List<PresentationSlotResponseDto> getAvailableSlots(
 			@Valid PresentationSlotSearchServiceDto slotSearchServiceDto) {
+
 		int year = slotSearchServiceDto.getYear();
 		int month = slotSearchServiceDto.getMonth();
 		LocalDateTime now = LocalDateTime.now();
@@ -160,11 +161,16 @@ public class AdminPresentationSlotService {
 			throw ExceptionStatus.CANNOT_SEARCH_PAST_SLOT.asServiceException();
 		}
 
+		// 조회할 월의 시작과 끝을 계산합니다.
+		YearMonth targetMonth = YearMonth.of(year, month);
+		LocalDateTime start = targetMonth.atDay(1).atStartOfDay();
+		LocalDateTime end = targetMonth.plusMonths(1).atDay(1).atStartOfDay();
+
 		// 주어진 월에 있는 슬롯을 전부 조회해서, 현재 날짜 이후이면서 발표가 없는 슬롯만 모아 List로 반환합니다.
 		List<PresentationSlotResponseDto> responseDtoList = slotRepository.findByStartTimeBetween(
-						LocalDateTime.of(year, month, 1, 0, 0),
-						LocalDateTime.of(year, month + 1, 1, 0, 0)
-				).stream().filter(slot -> slot.getStartTime().isAfter(now) && !slot.hasPresentation())
+						start, end)
+				.stream()
+				.filter(slot -> slot.getStartTime().isAfter(now) && !slot.hasPresentation())
 				.map(slot -> new PresentationSlotResponseDto(
 						slot.getId(),
 						slot.getStartTime(),
