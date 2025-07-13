@@ -98,7 +98,13 @@ const HomePage: React.FC = () => {
             </NavigationMenuList>
           </NavigationMenu>
 
-          <Select onValueChange={setSortType} defaultValue={sortType}>
+          <Select
+            onValueChange={(value) => {
+              setSortType(value);
+              setCurrentPage(0);
+            }}
+            defaultValue={sortType}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="정렬 기준" />
             </SelectTrigger>
