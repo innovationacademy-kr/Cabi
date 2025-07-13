@@ -1,4 +1,4 @@
-import AdminCalendar from "@/Presentation/components/AdminCalendar";
+import { AdminCalendar } from "@/Presentation/components/AdminCalendar"
 
 const AdminHomePage = () => {
   return (

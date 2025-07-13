@@ -1,3 +1,4 @@
+import Footer from "@/components/ui/footer";
 import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -11,40 +12,26 @@ import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import TopNavContainer from "@/Presentation/components/TopNav/TopNav.container";
 
-const body: HTMLElement = document.body;
-const root: HTMLElement = document.documentElement;
-
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isValidToken, setIsValidToken] = useState<boolean>(false);
   const setUser = useSetRecoilState<UserDto>(userState);
   const navigate = useNavigate();
   const location = useLocation();
   const { closeAll } = useMenu();
 
   const token = getCookie("access_token");
-
-  const isRootPath: boolean =
-    location.pathname === "/presentations" ||
-    location.pathname === "/presentations/";
-  const isLoginPage: boolean = location.pathname === "/login";
-  const isHomePage: boolean = location.pathname === "/home";
+  const isLoginPage = location.pathname === "/login";
 
   const getMyInfo = async () => {
     try {
       const { data: myInfo } = await axiosMyInfo();
       setUser(myInfo);
-      setIsValidToken(true);
-      if (isRootPath || isLoginPage) {
+      if (isLoginPage) {
         navigate("/presentations/home", { replace: true });
       }
-    } catch (error) {
+    } catch {
       navigate("/login");
     }
-  };
-
-  const handleClickBg = () => {
-    closeAll();
   };
 
   useEffect(() => {
@@ -53,9 +40,11 @@ const Layout = (): JSX.Element => {
     } else if (token) {
       getMyInfo();
     }
-  }, []);
+  }, [token, isLoginPage, navigate]);
 
   useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
     root.style.setProperty(
       "--sys-main-color",
       "var(--sys-presentation-main-color)"
@@ -74,35 +63,43 @@ const Layout = (): JSX.Element => {
     );
   }, []);
 
-  return isLoginPage ? (
-    <Outlet />
-  ) : (
-    <React.Fragment>
+  const handleClickBg = () => {
+    closeAll();
+  };
+
+  if (isLoginPage) {
+    return <Outlet />;
+  }
+
+  return (
+    <PageContainer>
       <TopNavDomainGroup />
-      <div className="presentation-root">
-        <TopNavContainer setIsLoading={setIsLoading} />
-        <WrapperStyled>
-          <MainStyled>
-            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
-            <Outlet />
-          </MainStyled>
-        </WrapperStyled>
-      </div>
-    </React.Fragment>
+      <TopNavContainer setIsLoading={setIsLoading} />
+      <ScrollArea onClick={handleClickBg}>
+        <MainStyled>
+          <MenuBgStyled id="menuBg" />
+          <Outlet />
+        </MainStyled>
+        <Footer />
+      </ScrollArea>
+    </PageContainer>
   );
 };
 
-const WrapperStyled = styled.div`
-  width: 100%;
-  height: 100%;
+const PageContainer = styled.div`
   display: flex;
-  overflow: hidden;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+const ScrollArea = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
 `;
 
 const MainStyled = styled.main`
   width: 100%;
-  height: calc(100% - 104px);
-  overflow-y: auto;
   user-select: none;
 `;
 
