@@ -119,12 +119,6 @@ const AdminPresentationDetailPage: React.FC = () => {
                 <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
                   {PresentationCategoryTypeLabelMap[presentation.category]}
                 </Badge>
-                <div className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md rounded-full inline-flex items-center gap-1">
-                  <LikeIcon className="w-[14px] h-[14px] fill-[#b7b7b7] stroke-[#b7b7b7]" />
-                  <span className="text-white text-xs">
-                    {presentation.likeCount}
-                  </span>
-                </div>
               </div>
             </div>
 

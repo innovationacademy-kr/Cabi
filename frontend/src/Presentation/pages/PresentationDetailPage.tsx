@@ -88,9 +88,7 @@ const PresentationDetailPage: React.FC = () => {
           {presentation.editAllowed && (
             <button
               className="w-12 h-12 absolute top-2 right-2 z-30 px-2 py-0.5 "
-              onClick={() =>
-                navigate(`/presentations/edit/${presentationId}`)
-              }
+              onClick={() => navigate(`/presentations/edit/${presentationId}`)}
               title="수정하기"
             >
               <EditIcon style={{ width: 24, height: 24 }} />
@@ -122,12 +120,6 @@ const PresentationDetailPage: React.FC = () => {
                 <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
                   {PresentationCategoryTypeLabelMap[presentation.category]}
                 </Badge>
-                <div className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md rounded-full inline-flex items-center gap-1">
-                  <LikeIcon className="w-[14px] h-[14px] fill-[#b7b7b7] stroke-[#b7b7b7]" />
-                  <span className="text-white text-xs">
-                    {presentation.likeCount}
-                  </span>
-                </div>
               </div>
             </div>
 
