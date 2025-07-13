@@ -129,7 +129,7 @@ export const PresentationUpdateModal: React.FC<
           </div>
           <div className="mb-5">
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              예정된 발표
+              {eventData?.state === "Canceled" ? "취소된 발표" : "예정된 발표"}
             </label>
             {isSlot ? (
               <div className="w-full h-12 flex items-center rounded-lg border border-gray-100 bg-gray-50 px-3 text-base text-gray-500">
