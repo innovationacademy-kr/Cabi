@@ -54,7 +54,7 @@ export const RegisterTimeSelect: React.FC<RegisterTimeSelectProps> = ({
               <FormLabel className="text-base text-black font-medium sm:text-lg">
                 {title}
               </FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
+              <Select onValueChange={field.onChange} value={field.value || ""}>
                 <FormControl>
                   <SelectTrigger
                     disabled={isEditMode}
