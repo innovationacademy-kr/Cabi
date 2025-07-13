@@ -1,17 +1,17 @@
-<svg width="1200" height="300" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
-    <rect width="1200" height="300" fill="#2b4490"/>
+<svg width="1600" height="300" viewBox="0 0 1600 300" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1600" height="300" fill="#2b4490"/>
     
-    <!-- 장식 원들 -->
-    <circle cx="1000" cy="70" r="4" fill="rgba(255,255,255,0.1)"/>
-    <circle cx="120" cy="230" r="10" fill="rgba(255,255,255,0.1)"/>
+    <!-- 장식 원들 (좌우 비율 유지 위해 일부 위치 조정) -->
+    <circle cx="1200" cy="70" r="4" fill="rgba(255,255,255,0.1)"/>
+    <circle cx="320" cy="230" r="10" fill="rgba(255,255,255,0.1)"/>
     
-    <!-- 텍스트 -->
-    <text x="100" y="120" font-family="Noto Sans KR, sans-serif" font-size="42" font-weight="300" fill="white">새로운 도전, 새로운 기회</text>
-    <text x="100" y="170" font-family="Noto Sans KR, sans-serif" font-size="18" fill="#B8C0E0">매주 수요일, 다양한 주제로 펼쳐지는 지식의 향연</text>
-    <text x="100" y="200" font-family="Noto Sans KR, sans-serif" font-size="18" fill="#B8C0E0">여러분의 이야기를 들려주세요</text>
+    <!-- 텍스트 (중앙 정렬) -->
+    <text x="400" y="120" font-family="Noto Sans KR, sans-serif" font-size="42" font-weight="300" fill="white">새로운 도전, 새로운 기회</text>
+    <text x="400" y="170" font-family="Noto Sans KR, sans-serif" font-size="18" fill="#B8C0E0">매주 수요일, 다양한 주제로 펼쳐지는 지식의 향연</text>
+    <text x="400" y="200" font-family="Noto Sans KR, sans-serif" font-size="18" fill="#B8C0E0">여러분의 이야기를 들려주세요</text>
     
-    <!-- 일러스트 -->
-    <g transform="translate(800, 150)">
+    <!-- 일러스트 (중앙 정렬) -->
+    <g transform="translate(1000, 150)">
         <!-- 로켓 -->
         <g transform="rotate(-45)">
             <ellipse cx="0" cy="0" rx="30" ry="60" fill="#FF6B6B"/>
