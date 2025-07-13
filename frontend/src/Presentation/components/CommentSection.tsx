@@ -59,7 +59,6 @@ const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
       await fetchComments();
       setInput("");
     } catch (e) {
-      console.error("댓글 등록 실패", e);
     } finally {
       setSubmitting(false);
     }
