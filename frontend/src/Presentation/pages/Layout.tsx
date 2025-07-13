@@ -8,8 +8,6 @@ import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import TopNavContainer from "@/Presentation/components/TopNav/TopNav.container";
 
-
-
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const location = useLocation();
@@ -19,17 +17,9 @@ const Layout = (): JSX.Element => {
   const isLoginPage = location.pathname === "/login";
 
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
-  // const setUser = useSetRecoilState<UserDto>(userState);
   const navigate = useNavigate();
 
-  // const token = getCookie("access_token");
-
   useEffect(() => {
-    // if (!token && !isLoginPage) {
-    //   navigate("/login");
-    // } else if (token) {
-    //   navigate("/presentation/home");
-    // }
     navigate("/presentations/home");
   }, []);
 
@@ -64,15 +54,19 @@ const Layout = (): JSX.Element => {
 
   return (
     <PageContainer>
-      <TopNavDomainGroup />
-      <TopNavContainer setIsLoading={setIsLoading} />
-      <ScrollArea onClick={handleClickBg}>
-        <MainStyled>
-          <MenuBgStyled id="menuBg" />
-          <Outlet />
-        </MainStyled>
-        <Footer />
-      </ScrollArea>
+      <HeaderSection>
+        <TopNavDomainGroup />
+        <TopNavContainer setIsLoading={setIsLoading} />
+      </HeaderSection>
+      <ContentArea>
+        <ScrollArea onClick={handleClickBg}>
+          <MainStyled>
+            <MenuBgStyled id="menuBg" />
+            <Outlet />
+          </MainStyled>
+          <Footer />
+        </ScrollArea>
+      </ContentArea>
     </PageContainer>
   );
 };
@@ -81,21 +75,44 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
+  overflow: hidden;
+`;
+
+const HeaderSection = styled.header`
+  position: relative;
+  z-index: 100;
+  flex-shrink: 0;
+  background: white;
+  border-bottom: 1px solid #bcbcbc;
+`;
+
+const ContentArea = styled.div`
+  flex: 1;
+  position: relative;
+  overflow: hidden;
 `;
 
 const ScrollArea = styled.div`
-  flex: 1;
+  height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
 `;
 
 const MainStyled = styled.main`
   width: 100%;
   user-select: none;
+  min-height: calc(100vh - 120px);
 `;
 
 const MenuBgStyled = styled.div`
-  position: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
 `;
 
 export default Layout;
