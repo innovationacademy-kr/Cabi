@@ -137,7 +137,7 @@ const PresentationDetailPage: React.FC = () => {
             </button>
           )}
         </div>
-        <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-16 z-10">
+        <div className="relative max-w-6xl mx-auto px-6 py-10 md:py-16 z-10">
           <div className="flex flex-col md:flex-row items-start gap-10">
             {/* 썸네일, Badge, 좋아요 버튼 */}
             <div className="relative w-full md:w-[430px] shrink-0">
