@@ -10,7 +10,7 @@ import {
   axiosCreatePresentation,
   axiosUpdateAdminPresentation,
   axiosUpdatePresentation,
-} from "../api/axios/axios.custom";
+} from "@/Presentation/api/axios/axios.custom";
 import {
   PresentationCategoryType,
   RegisterType,
