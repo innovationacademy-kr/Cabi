@@ -5,7 +5,9 @@ import {
   PresentationCategoryTypeLabelMap,
   PresentationStatusTypeLabelMap,
 } from "@/Presentation/assets/data/maps";
+import { defaultThumbnailMap } from "@/Presentation/assets/data/maps";
 import { ReactComponent as Like } from "@/Presentation/assets/heart.svg";
+import { PresentationCategoryType } from "@/Presentation/types/enum/presentation.type.enum";
 import {
   axiosDeletePresentationLike,
   axiosPostPresentationLike,
@@ -14,7 +16,7 @@ import {
 export interface IPresentation {
   presentationId: number;
   thumbnailLink: string;
-  category: string;
+  category: PresentationCategoryType;
   presentationStatus: string;
   likeCount: number;
   likedByMe: boolean;
@@ -90,7 +92,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
     >
       <div className="w-[360px] aspect-[16/9] overflow-hidden rounded-t-lg relative">
         <img
-          src={thumbnailLink}
+          src={thumbnailLink || defaultThumbnailMap[category]}
           alt={title}
           className="aspect-[9/16] object-cover w-full h-full transition-transform duration-300 ease-in-out"
         />

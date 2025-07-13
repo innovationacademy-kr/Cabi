@@ -39,3 +39,14 @@ type presentationCategoryIconMap = {
     React.SVGProps<SVGSVGElement>
   >;
 };
+
+export const defaultThumbnailMap: {
+  [key in PresentationCategoryType]: string;
+} = {
+  DEVELOP: "https://i.imgur.com/2gobOis.png",
+  DISCUSSION: "https://i.imgur.com/NXm2bfU.png",
+  STUDY: "https://i.imgur.com/QQiHu69.png",
+  JOB: "https://i.imgur.com/Lj8b60F.png",
+  TASK: "https://i.imgur.com/bRoUtVr.jpeg",
+  ETC: "https://i.imgur.com/ViJLyiR.png",
+};
