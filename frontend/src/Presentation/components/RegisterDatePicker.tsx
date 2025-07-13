@@ -149,6 +149,10 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
           ? startTime
           : availableSlots.find((slot) => slot.slotId === field.value)
               ?.startTime;
+        // RegisterDatePicker.tsx 내부
+        const today = new Date();
+        const fromMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const toMonth = new Date(today.getFullYear(), today.getMonth() + 3, 0); // 3개월 뒤의 마지막 날
 
         return (
           <div ref={itemRef}>
@@ -197,6 +201,8 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
                       locale={ko}
                       initialFocus
                       disabled={disabledDays}
+                      fromMonth={fromMonth}
+                      toMonth={toMonth}
                       className="p-4 w-full"
                       classNames={{
                         months:

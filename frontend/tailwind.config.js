@@ -3,7 +3,7 @@ export default {
   corePlugins: {
     preflight: false,
   },
-  darkMode: ["class"],
+  // darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {

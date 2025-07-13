@@ -96,7 +96,8 @@ function App(): React.ReactElement {
               element={<PresentationDetailPage />}
             />
             <Route path="register" element={<RegisterPage />} />
-            <Route path="register/:presentationId" element={<RegisterPage />} />
+            {/* <Route path="register/:presentationId" element={<RegisterPage />} /> */}
+            <Route path="edit/:presentationId" element={<RegisterPage />} />
             <Route path="about" element={<AboutUsPage />} />
             <Route path="profile" element={<PresentationProfilePage />} />
             <Route path="community" element={<CommunityRulesPage />} />
@@ -122,7 +123,8 @@ function App(): React.ReactElement {
               path=":presentationId"
               element={<AdminPresentationDetailPage />}
             />
-            <Route path="register/:presentationId" element={<RegisterPage />} />
+            {/* <Route path="register/:presentationId" element={<RegisterPage />} /> */}
+            <Route path="edit/:presentationId" element={<RegisterPage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route

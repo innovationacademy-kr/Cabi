@@ -150,9 +150,14 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
                   <p className="text-sm text-gray-600">
                     클릭하거나 파일을 드래그해서 업로드
                   </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    최대 {maxSize}MB 이하
+                  <p className="text-xs text-red-300 mt-1">
+                    ※ 최대 {maxSize}MB 이하, 16:9 비율의 이미지를 권장합니다. 비율이 다르면 이미지가
+                    잘릴 수 있습니다. 
                   </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    이미지를 업로드하지 않으면 기본 이미지가 사용됩니다.
+                  </p>
+
                 </div>
               )}
 
@@ -203,7 +208,7 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
                 ? "업로드 완료"
                 : preview
                 ? ""
-                : "파일을 선택해주세요"}
+                : "파일을 선택해주세요 "}
             </span>
           </div>
         </FormItem>

@@ -1,12 +1,14 @@
 import Footer from "@/components/ui/footer";
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import TopNavDomainGroup from "@/Cabinet/components/TopNav/TopNavDomainGroup/TopNavDomainGroup";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
 import TopNavContainer from "@/Presentation/components/TopNav/TopNav.container";
+
+
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -15,6 +17,21 @@ const Layout = (): JSX.Element => {
 
   const token = getCookie("access_token");
   const isLoginPage = location.pathname === "/login";
+
+  const [isValidToken, setIsValidToken] = useState<boolean>(false);
+  // const setUser = useSetRecoilState<UserDto>(userState);
+  const navigate = useNavigate();
+
+  // const token = getCookie("access_token");
+
+  useEffect(() => {
+    // if (!token && !isLoginPage) {
+    //   navigate("/login");
+    // } else if (token) {
+    //   navigate("/presentation/home");
+    // }
+    navigate("/presentations/home");
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;

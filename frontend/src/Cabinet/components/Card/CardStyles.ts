@@ -13,6 +13,7 @@ export const CardContentWrapper = styled.div`
 
 export const CardContentStyled = styled.div`
   display: flex;
+  height: 32px;
   justify-content: space-between;
   align-items: center;
   margin: 5px 0 5px 0;

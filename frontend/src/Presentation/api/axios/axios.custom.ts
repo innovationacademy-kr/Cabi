@@ -469,7 +469,7 @@ export const axiosUpdatePresentation = async (
   thumbnailFile: File | null
 ): Promise<any> => {
   try {
-    console.log("body : ", body);
+    // console.log("body : ", body);
     const formData = new FormData();
     formData.append(
       "form",
