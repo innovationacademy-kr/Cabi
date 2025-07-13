@@ -278,24 +278,26 @@ const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
         </ul>
       )}
 
-      <form onSubmit={handleSubmit} className="flex items-start gap-2 mt-4">
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="댓글을 입력하세요"
-          disabled={submitting}
-          rows={3}
-          maxLength={500}
-          className="flex-grow min-w-0 text-sm border border-gray-300 bg-white px-3 py-2 rounded resize-none shadow-sm disabled:bg-gray-100"
-        />
-        <button
-          type="submit"
-          disabled={submitting || !input.trim()}
-          className="w-16 h-8 text-xs bg-blue-500 text-white font-semibold rounded disabled:bg-blue-200"
-        >
-          {submitting ? "등록중..." : "등록"}
-        </button>
-      </form>
+      {!isAdmin && (
+        <form onSubmit={handleSubmit} className="flex items-start gap-2 mt-4">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="댓글을 입력하세요"
+            disabled={submitting}
+            rows={3}
+            maxLength={500}
+            className="flex-grow min-w-0 text-sm border border-gray-300 bg-white px-3 py-2 rounded resize-none shadow-sm disabled:bg-gray-100"
+          />
+          <button
+            type="submit"
+            disabled={submitting || !input.trim()}
+            className="w-16 h-8 text-xs bg-blue-500 text-white font-semibold rounded disabled:bg-blue-200"
+          >
+            {submitting ? "등록중..." : "등록"}
+          </button>
+        </form>
+      )}
     </div>
   );
 };
