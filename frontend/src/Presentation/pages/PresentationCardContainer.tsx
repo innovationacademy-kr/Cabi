@@ -14,18 +14,19 @@ const PresentationCardContainer: React.FC<PresentationCardContainerProps> = ({
   maxCols = 3,
 }) => {
   const navigate = useNavigate();
-  const maxView = `xl:grid-cols-${maxCols}`;
 
   return presentations && presentations.length > 0 ? (
-    <div className={`grid ${maxView} lg:grid-cols-2 sm:grid-cols-1 gap-8`}>
+    <div
+      className="w-full flex flex-wrap gap-8 justify-center px-4"
+      style={{ minHeight: 440 }}
+    >
       {presentations.map((p) => (
-        <div key={p.presentationId} className="w-full flex justify-center">
-          <div
-            className="w-full max-w-[360px] aspect-[4/5] cursor-pointer"
-            onClick={() => navigate(`/presentations/${p.presentationId}`)}
-          >
-            <PresentationCard presentation={p} />
-          </div>
+        <div
+          key={p.presentationId}
+          className="w-[360px] min-h-[420px] flex-shrink-0"
+          onClick={() => navigate(`/presentations/${p.presentationId}`)}
+        >
+          <PresentationCard presentation={p} />
         </div>
       ))}
     </div>
