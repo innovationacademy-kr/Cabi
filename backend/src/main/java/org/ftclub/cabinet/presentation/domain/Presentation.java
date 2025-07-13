@@ -53,7 +53,6 @@ public class Presentation {
 	@Column(name = "SUMMARY", length = 100, nullable = false)
 	private String summary;
 
-	// TODO: 추가된 column으로 dev to main 시, main-db의 data 넣어야 함
 	@Column(name = "OUTLINE", length = 500, nullable = false)
 	private String outline;
 
