@@ -1,16 +1,19 @@
 import React from "react";
+import { ReactComponent as AboutUsMent } from "@/Presentation/assets/images/aboutUs.svg";
+import { ReactComponent as IntroduceMent } from "@/Presentation/assets/images/introduce.svg";
 
 const AboutUsPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white py-20">
       <div className="max-w-4xl mx-auto p-8 space-y-12">
         <div className="text-gray-800 text-left space-y-6 text-lg leading-relaxed">
           <h1 className="text-3xl font-light mb-10">
             <span className="bg-gradient-to-r font-medium from-gray-800 to-gray-600 bg-clip-text text-transparent">
-              우리는 늘 고민해왔습니다.
+              <AboutUsMent />
+              {/* 우리는 늘 고민해 왔습니다 */}
             </span>
           </h1>
-          <p className="text-base">
+          <p className="text-base mt-20">
             매주 수요일마다 42서울에서 오가는 깊이 있는 개발 이야기들, 그 소중한
             경험들이 단순한 발표로 끝나버리는 건 아쉽다고 느꼈습니다. 발표가
             끝나면 박수와 함께 사라지기보다는, 누구나 다시 찾아보고 나눌 수 있는
@@ -82,7 +85,8 @@ const AboutUsPage = () => {
           <div className="flex items-center mb-12 justify-center">
             <h2 className="text-2xl font-light text-gray-800 text-center w-full">
               <span className="bg-gradient-to-r from-gray-800 to-gray-600 font-medium bg-clip-text text-transparent">
-                수요지식회의 주요 기능을 소개합니다.
+                <IntroduceMent />
+                {/* 수요지식회의 주요 기능을 소개합니다 */}
               </span>
             </h2>
           </div>
