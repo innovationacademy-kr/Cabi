@@ -202,12 +202,12 @@ const PresentationDetailPage: React.FC = () => {
 
         <div className="pb-10">
           <h2 className="text-xl font-bold mb-3">목차</h2>
-          <div className="whitespace-pre-line">{presentation.outline}</div>
+          <div className="whitespace-pre-line break-all">{presentation.outline}</div>
         </div>
 
         <div className="pb-10">
           <h2 className="text-xl font-bold mb-3">상세 내용</h2>
-          <div className="whitespace-pre-line">{presentation.detail}</div>
+          <div className="whitespace-pre-line break-all">{presentation.detail}</div>
         </div>
 
         <div className="pb-10">

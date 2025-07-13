@@ -83,7 +83,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
   return (
     <Card
       className="
-        w-[360px] flex flex-col relative group cursor-pointer
+        w-[360px] h-[450px] flex flex-col relative group cursor-pointer
         transition-all duration-300 ease-in-out
         hover:-translate-y-1 hover:shadow-lg
       "
