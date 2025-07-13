@@ -102,7 +102,7 @@ const ScrollArea = styled.div`
 const MainStyled = styled.main`
   width: 100%;
   user-select: none;
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 110px);
 `;
 
 const MenuBgStyled = styled.div`
