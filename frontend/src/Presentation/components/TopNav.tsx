@@ -27,7 +27,7 @@ const TopNav = () => {
           <NavigationMenuItem>
             <Link
               to="/presentations/home"
-              className="p-3 text-foreground font-semibold h-full flex items-center"
+              className="p-3 text-black font-semibold h-full flex items-center"
             >
               모아보기
             </Link>
@@ -35,7 +35,7 @@ const TopNav = () => {
           <NavigationMenuItem>
             <Link
               to="/presentations/register"
-              className="p-3 text-foreground font-semibold h-full flex items-center"
+              className="p-3 text-black font-semibold h-full flex items-center"
             >
               신청하기
             </Link>
@@ -43,7 +43,7 @@ const TopNav = () => {
           <NavigationMenuItem>
             <Link
               to="/presentations/about"
-              className="p-3 text-foreground font-semibold h-full flex items-center"
+              className="p-3 text-black font-semibold h-full flex items-center"
             >
               수요지식회란?
             </Link>
@@ -52,7 +52,7 @@ const TopNav = () => {
             <NavigationMenuItem>
               <Link
                 to="/presentations/profile"
-                className="p-3 text-foreground font-semibold h-full flex items-center"
+                className="p-3 text-black font-semibold h-full flex items-center"
               >
                 마이페이지
               </Link>
@@ -120,7 +120,7 @@ const TopNav = () => {
             <li>
               <Link
                 to="/presentations/home"
-                className="block py-3 text-lg font-semibold text-foreground"
+                className="block py-3 text-lg font-semibold text-black dark:text-black"
                 onClick={() => setOpen(false)}
               >
                 모아보기
@@ -129,7 +129,7 @@ const TopNav = () => {
             <li>
               <Link
                 to="/presentations/register"
-                className="block py-3 text-lg font-semibold text-foreground"
+                className="block py-3 text-lg font-semibold text-black dark:text-black"
                 onClick={() => setOpen(false)}
               >
                 신청하기
@@ -138,7 +138,7 @@ const TopNav = () => {
             <li>
               <Link
                 to="/presentations/about"
-                className="block py-3 text-lg font-semibold text-foreground"
+                className="block py-3 text-lg font-semibold text-black dark:text-black"
                 onClick={() => setOpen(false)}
               >
                 수요지식회란?
@@ -148,7 +148,7 @@ const TopNav = () => {
               <li>
                 <Link
                   to="/presentations/profile"
-                  className="block py-3 text-lg font-semibold text-foreground"
+                  className="block py-3 text-lg font-semibold text-black dark:text-black"
                   onClick={() => setOpen(false)}
                 >
                   마이페이지

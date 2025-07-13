@@ -70,7 +70,11 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
               {domain.title}
             </DomainTitleStyled>
           </DomainContainerStyled>
-          {index < domains.length - 1 && <DomainSeparatorStyled />}
+          {index < domains.length - 1 && (
+            <DomainSeparatorStyled
+              isPresentation={pathname.includes("presentations")}
+            />
+          )}
         </DomainWrapperStyled>
       ))}
 
@@ -92,7 +96,9 @@ const DomainGroupContainerStyled = styled.div<{ isPresentation: boolean }>`
   flex-shrink: 0;
   box-sizing: border-box;
 
-  border-bottom: 1px solid var(--line-color);
+  border-bottom: 1px solid
+    ${({ isPresentation }) =>
+      isPresentation ? "#bcbcbc" : "var(--line-color)"};
   padding: 0 28px;
   color: ${({ isPresentation }) =>
     isPresentation ? "#7b7b7b" : "var(--gray-line-btn-color)"};
@@ -150,11 +156,12 @@ const DomainTitleStyled = styled.div<{ fontWeight: string }>`
   flex-shrink: 0;
 `;
 
-const DomainSeparatorStyled = styled.div`
+const DomainSeparatorStyled = styled.div<{ isPresentation?: boolean }>`
   width: 1px;
   height: 20px;
   margin: 0 8px;
-  background-color: var(--service-man-title-border-btm-color);
+  background-color: ${({ isPresentation }) =>
+    isPresentation ? "#bcbcbc" : "var(--line-color)"};
   flex-shrink: 0;
 `;
 
