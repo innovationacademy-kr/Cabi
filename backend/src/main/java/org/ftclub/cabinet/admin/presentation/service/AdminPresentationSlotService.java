@@ -37,7 +37,7 @@ public class AdminPresentationSlotService {
 	 * @param startTime 시작 시간
 	 */
 
-	private static void validateSlotWithinAllowedPeriod(LocalDateTime startTime) {
+	public void validateSlotWithinAllowedPeriod(LocalDateTime startTime) {
 		YearMonth nowMonth = YearMonth.now();
 		YearMonth allowedLimit = nowMonth.plusMonths(ALLOWED_PERIOD);
 		YearMonth targetMonth = YearMonth.from(startTime);
@@ -66,7 +66,7 @@ public class AdminPresentationSlotService {
 	 *
 	 * @param startTime
 	 */
-	private void validateSlotPassed(LocalDateTime startTime) {
+	public void validateSlotPassed(LocalDateTime startTime) {
 		if (startTime.isBefore(java.time.LocalDateTime.now())) {
 			throw ExceptionStatus.CANNOT_CREATE_SLOT_IN_PAST.asServiceException();
 		}
