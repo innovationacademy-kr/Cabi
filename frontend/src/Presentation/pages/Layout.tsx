@@ -19,8 +19,10 @@ const Layout = (): JSX.Element => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/presentations/home");
-  }, []);
+    if (location.pathname === "/presentations" || location.pathname === "/presentations/") {
+      navigate("/presentations/home", { replace: true });
+    }
+  }, [location.pathname, navigate]);
 
   useEffect(() => {
     const root = document.documentElement;
