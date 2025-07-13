@@ -22,7 +22,7 @@ export const PresentationUpdateModal: React.FC<
   const [location, setLocation] = useState<string>("BASEMENT");
   const [title, setTitle] = useState<string>("");
   const [isSlot, setIsSlot] = useState<boolean>(false);
-  const [currentHour, setCurrentHour] = useState<string>("09");
+  const [currentHour, setCurrentHour] = useState<string>("14");
   const [currentMinute, setCurrentMinute] = useState<string>("00");
 
   useEffect(() => {
@@ -40,14 +40,9 @@ export const PresentationUpdateModal: React.FC<
       });
 
       setDate(dateString);
-
-      // calendarId "2" == Open Slot, "1" == Scheduled, "3" == Canceled
       const slot = eventData.calendarId === "2";
       setIsSlot(slot);
-
       setTitle(!slot ? eventData.title || "" : "");
-
-      // 시간은 slot이면 eventData.title(예: "14:00"), 아니면 timeString
       const effectiveTimeString = slot ? eventData.title : timeString;
       setTime(effectiveTimeString);
       const [hour, minute] = effectiveTimeString.split(":");
@@ -132,7 +127,6 @@ export const PresentationUpdateModal: React.FC<
               </button>
             )}
           </div>
-          {/* 제목 */}
           <div className="mb-5">
             <label className="mb-1 block text-sm font-medium text-gray-700">
               예정된 발표
@@ -155,7 +149,6 @@ export const PresentationUpdateModal: React.FC<
               </div>
             )}
           </div>
-          {/* 시작 시간 */}
           <div className="mb-5">
             <label className="mb-1 block text-sm font-medium text-gray-700">
               시작 시간
@@ -174,7 +167,7 @@ export const PresentationUpdateModal: React.FC<
                 className="w-16 h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
                 required
               >
-                {Array.from({ length: 14 }, (_, i) => 9 + i).map((hour) => (
+                {Array.from({ length: 13 }, (_, i) => 9 + i).map((hour) => (
                   <option key={hour} value={String(hour).padStart(2, "0")}>
                     {String(hour).padStart(2, "0")}
                   </option>
@@ -192,7 +185,6 @@ export const PresentationUpdateModal: React.FC<
               </select>
             </div>
           </div>
-          {/* 장소 */}
           <div className="mb-5">
             <label
               htmlFor="location"
@@ -243,7 +235,6 @@ export const PresentationUpdateModal: React.FC<
           </div>
         </form>
       </div>
-      {/* 애니메이션 */}
       <style>{`
         @keyframes fade-in {
           0% { opacity: 0; transform: scale(0.97);}

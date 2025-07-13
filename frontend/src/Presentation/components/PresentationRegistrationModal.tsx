@@ -1,3 +1,4 @@
+import { format } from "date-fns-tz";
 import React, { useEffect, useState } from "react";
 import { PresentationLocationLabelMap } from "@/Presentation/assets/data/maps";
 import { axiosCreateAdminPresentationSlot } from "@/Presentation/api/axios/axios.custom";
@@ -8,15 +9,13 @@ interface PresentationRegistrationModalProps {
   selectedDate: Date | null;
   onSuccess: () => void;
 }
-
 export const PresentationRegistrationModal: React.FC<
   PresentationRegistrationModalProps
 > = ({ isOpen, onClose, selectedDate, onSuccess }) => {
   const [date, setDate] = useState<string>("");
-  const [currentHour, setCurrentHour] = useState<string>("09");
+  const [currentHour, setCurrentHour] = useState<string>("14");
   const [currentMinute, setCurrentMinute] = useState<string>("00");
-  const [location, setLocation] = useState<string>("");
-
+  const [location, setLocation] = useState<string>("BASEMENT");
   useEffect(() => {
     if (selectedDate) {
       const kstDateString = selectedDate.toLocaleDateString("en-CA", {
@@ -32,21 +31,17 @@ export const PresentationRegistrationModal: React.FC<
         hour12: false,
       });
       const [hour, minute] = kstTime.split(":");
-      setCurrentHour(hour);
+      setCurrentHour("14");
       setCurrentMinute(minute);
     }
   }, [selectedDate]);
-
   if (!isOpen) return null;
-
   const handleHourChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrentHour(e.target.value);
   };
-
   const handleMinuteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrentMinute(e.target.value);
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!date || !currentHour || !currentMinute) return;
@@ -61,7 +56,6 @@ export const PresentationRegistrationModal: React.FC<
       alert("일정 추가에 실패했습니다.");
     }
   };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
       <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl p-0 animate-fade-in">
@@ -87,7 +81,7 @@ export const PresentationRegistrationModal: React.FC<
                 className="w-16 h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
                 required
               >
-                {Array.from({ length: 14 }, (_, i) => 9 + i).map((hour) => (
+                {Array.from({ length: 13 }, (_, i) => 9 + i).map((hour) => (
                   <option key={hour} value={String(hour).padStart(2, "0")}>
                     {String(hour).padStart(2, "0")}
                   </option>
@@ -105,8 +99,6 @@ export const PresentationRegistrationModal: React.FC<
               </select>
             </div>
           </div>
-
-          {/* 장소 */}
           <div className="mb-5">
             <label
               htmlFor="location"
@@ -131,7 +123,6 @@ export const PresentationRegistrationModal: React.FC<
               )}
             </select>
           </div>
-          {/* 버튼 영역 */}
           <div className="flex justify-end items-center pt-4 border-t border-gray-100 gap-2">
             <button
               type="button"
