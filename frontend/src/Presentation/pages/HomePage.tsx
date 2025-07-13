@@ -20,7 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import React, { useEffect, useState } from "react";
-import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
 import PresentationCardContainer from "@/Presentation/pages/PresentationCardContainer";
 import { IPresentation } from "@/Presentation/components/PresentationCard";
 import { PresentationCategoryTypeLabelMap } from "@/Presentation/assets/data/maps";
