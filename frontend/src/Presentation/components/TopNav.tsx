@@ -63,7 +63,7 @@ const TopNav = () => {
       <div className="flex items-center ml-auto gap-2">
         {!token && (
           <button
-            className="ml-2 w-20 h-9 px-0 py-0 rounded-lg font-medium text-white bg-blue-800 hover:bg-blue-900 transition-all text-sm whitespace-nowrap flex items-center justify-center"
+            className="ml-2 w-20 h-9 px-0 py-0 rounded-lg font-medium text-white bg-blue-500 hover:bg-blue-600 transition-all text-sm whitespace-nowrap flex items-center justify-center"
             onClick={() => navigate("/login")}
           >
             로그인
