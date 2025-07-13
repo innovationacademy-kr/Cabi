@@ -114,10 +114,10 @@ const HomePage: React.FC = () => {
                 }}
                 defaultValue={sortType}
               >
-                <SelectTrigger className="w-[110px]">
+                <SelectTrigger className="w-[110px] bg-white">
                   <SelectValue placeholder="정렬 기준" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="TIME">최신순</SelectItem>
                   <SelectItem value="LIKE">좋아요순</SelectItem>
                 </SelectContent>
