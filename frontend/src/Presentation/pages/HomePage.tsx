@@ -33,6 +33,11 @@ const HomePage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
 
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory);
+    setCurrentPage(0);
+  };
+
   useEffect(() => {
     const fetchPresentations = async () => {
       try {
@@ -69,7 +74,7 @@ const HomePage: React.FC = () => {
                       ? "bg-gray-200 text-gray-900"
                       : "text-gray-700 hover:bg-gray-50"
                   }`}
-                  onClick={() => setCategory("ALL")}
+                  onClick={() => handleCategoryChange("ALL")}
                 >
                   전체
                 </NavigationMenuLink>
@@ -83,7 +88,7 @@ const HomePage: React.FC = () => {
                           ? "bg-gray-200 text-gray-900"
                           : "text-gray-700 hover:bg-gray-50"
                       }`}
-                      onClick={() => setCategory(name)}
+                      onClick={() => handleCategoryChange(name)}
                     >
                       {label}
                     </NavigationMenuLink>
