@@ -33,7 +33,6 @@ const HomePage: React.FC = () => {
   const [sortType, setSortType] = useState<string>("TIME");
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
@@ -42,7 +41,6 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const fetchPresentations = async () => {
-      setIsLoading(true);
       try {
         const response = await axiosGetPresentations(
           category,
@@ -54,19 +52,13 @@ const HomePage: React.FC = () => {
         setTotalPages(response.data.totalPage);
       } catch (error) {
         console.error("Failed to fetch presentations:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     fetchPresentations();
   }, [category, sortType, currentPage]);
 
-  return isLoading ? (
-    <div className="w-full h-full flex justify-center items-center min-h-[calc(100vh-200px)]">
-      <LoadingAnimation />
-    </div>
-  ) : (
+  return (
     <>
       <div className="relative w-full">
         <Banner className="w-full h-auto block" />
@@ -114,7 +106,7 @@ const HomePage: React.FC = () => {
             }}
             defaultValue={sortType}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[110px]">
               <SelectValue placeholder="정렬 기준" />
             </SelectTrigger>
             <SelectContent>
