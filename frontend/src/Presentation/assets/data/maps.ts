@@ -27,8 +27,8 @@ export const PresentationLocationLabelMap: { [key: string]: string } = {
 
 export const PresentationCategoryTypeLabelMap: { [key: string]: string } = {
   [PresentationCategoryType.DEVELOP]: "개발",
-  [PresentationCategoryType.STUDY]: "학술",
   [PresentationCategoryType.DISCUSSION]: "토의",
+  [PresentationCategoryType.STUDY]: "학술",
   [PresentationCategoryType.JOB]: "취업",
   [PresentationCategoryType.TASK]: "42",
   [PresentationCategoryType.ETC]: "기타",
