@@ -17,9 +17,11 @@ import type {
   PresentationLocation,
   PresentationPeriodType,
 } from "@/Presentation/types/enum/presentation.type.enum";
-import { axiosGetPresentationById } from "@/Presentation/api/axios/axios.custom";
-
-// Heroicons 사용 예시(설치 필요: @heroicons/react)
+import {
+  axiosDeletePresentationLike,
+  axiosGetPresentationById,
+  axiosPostPresentationLike,
+} from "@/Presentation/api/axios/axios.custom";
 
 interface IPresentationDetail {
   id: number;
@@ -48,15 +50,17 @@ const PresentationDetailPage: React.FC = () => {
   const [presentation, setPresentation] = useState<IPresentationDetail | null>(
     null
   );
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
-  const formatDate = (isoString: string) => {
-    const date = new Date(isoString);
-    return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(
-      2,
-      "0"
-    )}월 ${String(date.getDate()).padStart(2, "0")}일`;
-  };
+  useEffect(() => {
+    if (!presentation) return;
+    setLiked(presentation.likedByMe);
+    setLikeCount(presentation.likeCount);
+  }, [presentation]);
 
   useEffect(() => {
     const fetchPresentation = async () => {
@@ -71,10 +75,47 @@ const PresentationDetailPage: React.FC = () => {
     fetchPresentation();
   }, [presentationId]);
 
+  const handleLike = async () => {
+    if (isLoading || !presentation) return;
+    setIsLoading(true);
+    try {
+      if (liked) {
+        const response = await axiosDeletePresentationLike(
+          presentation.id.toString()
+        );
+        if (response.status === 200) {
+          setLiked(false);
+          setLikeCount((prev) => prev - 1);
+        }
+      } else {
+        const response = await axiosPostPresentationLike(
+          presentation.id.toString()
+        );
+        if (response.status === 200) {
+          setLiked(true);
+          setLikeCount((prev) => prev + 1);
+        }
+      }
+    } catch (error) {
+      // 에러 핸들링 필요시 추가
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const formatDate = (isoString: string) => {
+    const date = new Date(isoString);
+    return `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}월 ${String(date.getDate()).padStart(2, "0")}일`;
+  };
+
   if (!presentation) return <LoadingAnimation />;
 
   return (
     <>
+      {/* 상단 배너 */}
       <div className="relative w-full h-auto text-white">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -88,18 +129,17 @@ const PresentationDetailPage: React.FC = () => {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
           {presentation.editAllowed && (
             <button
-              className="w-12 h-12 absolute top-2 right-2 z-30 px-2 py-0.5 "
+              className="w-12 h-12 absolute top-2 right-2 z-30 px-2 py-0.5"
               onClick={() => navigate(`/presentations/edit/${presentationId}`)}
               title="수정하기"
             >
               <EditIcon style={{ width: 24, height: 24 }} />
-              {/* 수정하기 */}
             </button>
           )}
         </div>
-
         <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-16 z-10">
           <div className="flex flex-col md:flex-row items-start gap-10">
+            {/* 썸네일, Badge, 좋아요 버튼 */}
             <div className="relative w-full md:w-[430px] shrink-0">
               <img
                 src={
@@ -109,7 +149,9 @@ const PresentationDetailPage: React.FC = () => {
                 alt="발표 이미지"
                 className="w-full rounded-lg shadow-lg aspect-video object-cover"
               />
+              {/* 아래쪽 블러 처리 */}
               <div className="absolute bottom-0 left-0 w-full h-[80px] bg-gradient-to-t from-black/60 to-black/0 z-10 rounded-b-lg" />
+              {/* Badge (좌측 하단) */}
               <div className="absolute bottom-[10px] left-[16px] flex space-x-2 z-20">
                 <Badge className="bg-black/50 text-white font-normal px-3 py-1 leading-none text-xs shadow-md">
                   {
@@ -122,8 +164,42 @@ const PresentationDetailPage: React.FC = () => {
                   {PresentationCategoryTypeLabelMap[presentation.category]}
                 </Badge>
               </div>
+              {/* 좋아요 버튼 (우측 하단, 짧고 컴팩트하게!) */}
+              <div className="absolute bottom-[10px] right-[16px] z-20">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleLike();
+                  }}
+                  disabled={isLoading}
+                  className="
+      inline-flex items-center
+      bg-black/50 text-white text-xs font-normal
+      rounded-full shadow-md
+      h-6 px-3
+      transition focus:outline-none
+    "
+                  style={{
+                    width: "auto",
+                    minWidth: 0,
+                    flex: "none",
+                    justifyContent: "center",
+                  }}
+                  aria-pressed={liked}
+                  aria-label={liked ? "좋아요 취소" : "좋아요"}
+                >
+                  <LikeIcon
+                    className={`w-[14px] h-[14px] mr-1 transition-colors duration-200 ${
+                      liked
+                        ? "fill-[#ff6b5a] stroke-[#ff6b5a]"
+                        : "fill-[#b7b7b7] stroke-[#b7b7b7]"
+                    }`}
+                  />
+                  <span>{likeCount}</span>
+                </button>
+              </div>
             </div>
-
+            {/* 오른쪽 상세 정보 영역 */}
             <div className="flex flex-col flex-1 md:pt-[10px]">
               <h1 className="text-3xl font-semibold leading-snug tracking-tight text-white">
                 {presentation.title}
@@ -143,6 +219,7 @@ const PresentationDetailPage: React.FC = () => {
         </div>
       </div>
 
+      {/* 아래 상세 영역 */}
       <div className="max-w-4xl mx-auto px-6 py-10 text-base text-black">
         {presentation.videoLink && (
           <div className="space-y-2">
