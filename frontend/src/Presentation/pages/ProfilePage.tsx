@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import PresentationCardContainer from "@/Presentation/pages/PresentationCardContainer";
 import LogTable from "@/Presentation/components/LogTable";
 import { IPresentation } from "@/Presentation/components/PresentationCard";
+import { ReactComponent as MyPageBanner } from "@/Presentation/assets/images/myPageBanner.svg";
 import {
   axiosMyLikedPresentations,
   axiosMyPresentationLog,
@@ -55,28 +56,31 @@ const ProfilePage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center py-[70px] px-0 md:py-[40px] md:px-5 mt-12 ">
-      <div className="text-center text-2xl font-bold tracking-tight mb-8">
-        발표 기록
-      </div>
-      {/* <div className="text-center text-lg tracking-tight mb-6 text-gray-500">
+    <>
+      <MyPageBanner className="w-full block aspect-16-3" />
+      <div className="flex flex-col justify-center items-center py-[70px] px-0 md:py-[40px] md:px-5 mt-12 ">
+        <div className="text-center text-2xl font-bold tracking-tight mb-8">
+          발표 기록
+        </div>
+        {/* <div className="text-center text-lg tracking-tight mb-6 text-gray-500">
         나의 발표 기록을 확인할 수 있습니다.
       </div> */}
-      <LogTable presentationHistory={presentationLog} />
+        <LogTable presentationHistory={presentationLog} />
 
-      {/* 내가 좋아요한 발표 */}
-      <div className="text-center text-2xl font-bold tracking-tight mt-16 mb-8">
-        즐겨찾는 발표
+        {/* 내가 좋아요한 발표 */}
+        <div className="text-center text-2xl font-bold tracking-tight mt-16 mb-8">
+          즐겨찾는 발표
+        </div>
+        {likedPresentations.length === 0 ? (
+          <div>좋아요를 누른 발표가 없습니다</div>
+        ) : (
+          <PresentationCardContainer
+            presentations={likedPresentations}
+            maxCols={2}
+          />
+        )}
       </div>
-      {likedPresentations.length === 0 ? (
-        <div>좋아요를 누른 발표가 없습니다</div>
-      ) : (
-        <PresentationCardContainer
-          presentations={likedPresentations}
-          maxCols={2}
-        />
-      )}
-    </div>
+    </>
   );
 };
 
