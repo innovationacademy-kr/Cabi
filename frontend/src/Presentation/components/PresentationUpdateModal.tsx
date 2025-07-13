@@ -105,7 +105,11 @@ export const PresentationUpdateModal: React.FC<
   const handlePresentationDelete = async () => {
     if (!eventData.id) return;
 
-    if (!window.confirm("해당 발표를 삭제하시겠습니까?")) {
+    if (
+      !window.confirm(
+        "해당 발표를 삭제하시겠습니까? 삭제한 발표는 되돌릴 수 없습니다."
+      )
+    ) {
       return;
     }
 
