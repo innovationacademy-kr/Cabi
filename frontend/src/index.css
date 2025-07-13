@@ -256,3 +256,9 @@ input {
 .domainButtonActive {
   color: var(--sys-main-color) !important;
 }
+.domainButtonActive.cabi {
+  color: var(--sys-main-color) !important;
+}
+.domainButtonActive.presentation {
+  color: oklch(62.3% 0.214 259.815) !important;
+}
