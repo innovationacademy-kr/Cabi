@@ -88,10 +88,10 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
         w-[360px] h-[420px] flex flex-col relative group cursor-pointer
         transition-all duration-300 ease-in-out
         hover:-translate-y-1 hover:shadow-lg
-        overflow-hidden
+        overflow-hidden rounded-lg
       "
     >
-      <div className="w-[360px] h-[200px] overflow-hidden rounded-t-lg relative flex-shrink-0">
+      <div className="w-[360px] h-[200px] overflow-hidden relative flex-shrink-0">
         <img
           src={thumbnailLink || defaultThumbnailMap[category]}
           alt={title}
