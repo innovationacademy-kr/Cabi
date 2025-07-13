@@ -85,13 +85,17 @@ class PresentationIntegrationTest {
 		otherUser3 = userRepository.save(User.of("otheruser3", "otheruser3@student.42seoul.kr",
 				LocalDateTime.now().plusDays(100), "USER"));
 
-		userToken = jwtService.createPairTokens(user.getId(), "USER", "ft").getAccessToken();
-		otherUserToken = jwtService.createPairTokens(otherUser.getId(), "USER", "ft")
+		userToken = jwtService.createPairTokens(user.getId(), "USER", "testuser.42seoul.kr", "ft")
+				.getAccessToken();
+		otherUserToken = jwtService.createPairTokens(otherUser.getId(), "USER",
+						"otheruser.42seoul.kr", "ft")
 				.getAccessToken();
 		// [수정] 테스트용 사용자 및 토큰 추가
-		otherUser2Token = jwtService.createPairTokens(otherUser2.getId(), "USER", "ft")
+		otherUser2Token = jwtService.createPairTokens(otherUser2.getId(), "USER",
+						"otheruser2.42seoul.kr", "ft")
 				.getAccessToken();
-		otherUser3Token = jwtService.createPairTokens(otherUser3.getId(), "USER", "ft")
+		otherUser3Token = jwtService.createPairTokens(otherUser3.getId(), "USER",
+						"otheruser3.42seoul.kr", "ft")
 				.getAccessToken();
 	}
 
