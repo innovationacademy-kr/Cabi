@@ -1,4 +1,6 @@
+import { useLocation } from "react-router-dom";
 import instance from "@/Cabinet/api/axios/axios.instance";
+import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 /**
  * 수요지식회 (구 까비지식회) API
@@ -63,12 +65,10 @@ export const axiosGetInvalidDates = async (): Promise<any> => {
   }
 };
 
-const axiosMyPresentationLogURL = "/v5/presentation/me/histories";
-export const axiosMyPresentationLog = async (page: number): Promise<any> => {
+const axiosMyPresentationLogURL = "/v6/presentations/me/histories";
+export const axiosMyPresentationLog = async () => {
   try {
-    const response = await instance.get(
-      `${axiosMyPresentationLogURL}?page=${page}&size=10&sort=dateTime,desc`
-    );
+    const response = await instance.get(axiosMyPresentationLogURL);
     return response;
   } catch (error) {
     throw error;
@@ -125,13 +125,48 @@ export const getAdminPresentationSchedule = async (
   }
 };
 
+export const getAdminPresentationsByYearMonth = async (yearMonth: string) => {
+  const response = await instance.get(
+    `/v6/admin/presentations?yearMonth=${yearMonth}`
+  );
+  return response.data;
+};
+
+export const getAdminAvailableSlots = async (yearMonth: string) => {
+  const response = await instance.get(
+    `/v6/admin/presentations/slots?yearMonth=${yearMonth}&status=available`
+  );
+  return response.data;
+};
+
+export const getAdminPresentationDetail = async (presentationId: number) => {
+  const response = await instance.get(
+    `/v6/admin/presentations/${presentationId}`
+  );
+  return response.data;
+};
+
+/**
+ * 수요지식회 리뉴얼 API
+ */
+
 const axiosGetPresentationByIdURL = "/v6/presentations/";
 export const axiosGetPresentationById = async (
   presentationId: string
 ): Promise<any> => {
   try {
+    const accessToken = getCookie("access_token");
+    // console.log("axiosGetPresentationById");
+    // // const location = useLocation();
+    // console.log("location.pathname : ",location.pathname)
+    // const isAdminPage: boolean = location.pathname === "/admin/presentations/";
     const response = await instance.get(
-      `${axiosGetPresentationByIdURL}${presentationId}`
+      `${axiosGetPresentationByIdURL}${presentationId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     return response;
   } catch (error) {
@@ -139,9 +174,6 @@ export const axiosGetPresentationById = async (
   }
 };
 
-/**
- * 수요지식회 리뉴얼 API
- */
 const axiosGetPresentationCommentsURL = "/v6/presentations/";
 export const axiosGetPresentationComments = async (presentationId: string) => {
   try {
@@ -199,13 +231,85 @@ export const axiosDeletePresentationComment = async (
   }
 };
 
+const axiosCreateAdminPresentationSlotURL = "/v6/admin/presentations/slots";
+export const axiosCreateAdminPresentationSlot = async (
+  startTime: string,
+  presentationLocation: string
+): Promise<any> => {
+  try {
+    const response = await instance.post(axiosCreateAdminPresentationSlotURL, {
+      startTime,
+      presentationLocation,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCreatePresentationURL = "/v6/presentations";
+export const axiosCreatePresentation = async (
+  formData: FormData
+): Promise<any> => {
+  try {
+    const response = await instance.post(axiosCreatePresentationURL, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// const axiosUpdatePresentationURL = "/v6/presentations/";
+// export const axiosUpdatePresentation = async (
+//   presentationId: string,
+//   body: any,
+//   thumbnailFile: File | null
+// ): Promise<any> => {
+//   try {
+//     // console.log("body : ", body);
+//     const formData = new FormData();
+//     formData.append(
+//       "form",
+//       new Blob([JSON.stringify(body)], { type: "application/json" })
+//     );
+//     if (thumbnailFile) {
+//       formData.append("thumbnail", thumbnailFile);
+//       // console.log("추가됨")
+//       // formData.append("thumbnailUpdated", "true");
+//     }
+//     for (const [key, value] of formData.entries()) {
+//       if (value instanceof File) {
+//         console.log(`${key}: [File] ${value.name}`);
+//       } else {
+//         console.log(`${key}:`, value);
+//       }
+//     }
+//     const response = await instance.patch(
+//       `/v6/presentations/${presentationId}`,
+//       formData,
+//       {
+//         headers: {
+//           "Content-Type": "multipart/form-data",
+//         },
+//       }
+//     );
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
 const axiosGetPresentationsURL = "/v6/presentations";
 export const axiosGetPresentations = async (
-  category: string,
-  sort: string,
-  page: number,
-  size: number
-) => {
+  category: string = "ALL",
+  sort: string = "TIME",
+  page: number = 0,
+  size: number = 6
+): Promise<any> => {
   try {
     const response = await instance.get(axiosGetPresentationsURL, {
       params: {
@@ -220,3 +324,288 @@ export const axiosGetPresentations = async (
     throw error;
   }
 };
+
+const axiosDeletePresentationLikeURL = "/v6/presentations";
+export const axiosDeletePresentationLike = async (
+  presentationId: string
+): Promise<any> => {
+  try {
+    const response = await instance.delete(
+      `${axiosDeletePresentationLikeURL}/${presentationId}/likes`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosPatchAdminPresentation = async (
+  presentationId: string,
+  startTime: string,
+  location: string,
+  title: string
+) => {
+  const response = await instance.patch(
+    `/v6/admin/presentations/${presentationId}`,
+    {
+      startTime,
+      presentationLocation: location,
+      title,
+    }
+  );
+  return response.data;
+};
+
+export const axiosDeleteAdminPresentation = async (presentationId: string) => {
+  const response = await instance.delete(
+    `/v6/admin/presentations/${presentationId}`
+  );
+  return response.data;
+};
+
+export const axiosUpdateAdminSlot = async (
+  slotId: string,
+  startTime: string,
+  location: string
+) => {
+  const response = await instance.patch(
+    `/v6/admin/presentations/slots/${slotId}`,
+    {
+      startTime,
+      presentationLocation: location,
+    }
+  );
+  return response.data;
+};
+
+export const axiosDeleteAdminSlot = async (slotId: string) => {
+  const response = await instance.delete(
+    `/v6/admin/presentations/slots/${slotId}`
+  );
+  return response.data;
+};
+
+const axiosAdminGetPresentationByIdURL = "/v6/admin/presentations/";
+export const axiosAdminGetPresentationById = async (
+  presentationId: string
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      `${axiosAdminGetPresentationByIdURL}${presentationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosAdminGetPresentationCommentsURL = "/v6/admin/presentations/";
+export const axiosAdminGetPresentationComments = async (
+  presentationId: string
+) => {
+  try {
+    const response = await instance.get(
+      `${axiosAdminGetPresentationCommentsURL}${presentationId}/comments`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosAdminPatchPresentationComment = async (
+  presentationId: string,
+  commentId: number,
+  banned: boolean
+) => {
+  try {
+    const response = await instance.patch(
+      `/v6/admin/presentations/${presentationId}/comments/${commentId}`,
+      { banned }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const axiosAdminDeletePresentationComment = async (
+  presentationId: string,
+  commentId: number
+) => {
+  try {
+    const response = await instance.delete(
+      `/v6/admin/presentations/${presentationId}/comments/${commentId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetPresentationsSlotURL = "/v6/presentations/slots";
+// const axiosGetPresentationsSlotURL = "/v6/presentations?type=slots";
+export const axiosGetPresentationsSlot = async () => {
+  try {
+    const response = await instance.get(axiosGetPresentationsSlotURL);
+    return response;
+  } catch (error: any) {
+    // 상세한 에러 정보 로깅
+    console.error("API Error Details:", {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      headers: error.response?.headers,
+      config: error.config,
+    });
+    throw error;
+  }
+};
+
+const axiosUpdatePresentationURL = "/v6/presentations/";
+export const axiosUpdatePresentation = async (
+  presentationId: string,
+  body: any,
+  thumbnailFile: File | null
+): Promise<any> => {
+  try {
+    console.log("body : ", body);
+    const formData = new FormData();
+    formData.append(
+      "form",
+      new Blob([JSON.stringify(body)], { type: "application/json" })
+    );
+    if (thumbnailFile) {
+      formData.append("thumbnail", thumbnailFile);
+    }
+    const response = await instance.patch(
+      `${axiosUpdatePresentationURL}${presentationId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log("에러여기걸리나");
+    const err = error as any;
+    console.error("API Error Details:", {
+      status: err.response?.status,
+      statusText: err.response?.statusText,
+      data: err.response?.data,
+      headers: err.response?.headers,
+      config: err.config,
+    });
+    throw error;
+  }
+};
+
+const axiosGetAdminPresentationByIdURL = "/v6/admin/presentations/";
+export const axiosGetAdminPresentationById = async (
+  presentationId: string
+): Promise<any> => {
+  try {
+    const accessToken = getCookie("access_token");
+    const response = await instance.get(
+      `${axiosGetAdminPresentationByIdURL}${presentationId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosUpdateAdminPresentationURL = "/v6/admin/presentations/";
+export const axiosUpdateAdminPresentation = async (
+  presentationId: string,
+  body: any,
+  thumbnailFile: File | null
+): Promise<any> => {
+  try {
+    console.log("body : ", body);
+    const accessToken = getCookie("access_token");
+    const formData = new FormData();
+    formData.append(
+      "form",
+      new Blob([JSON.stringify(body)], { type: "application/json" })
+    );
+    if (thumbnailFile) {
+      formData.append("thumbnail", thumbnailFile);
+    }
+    const response = await instance.patch(
+      `${axiosUpdateAdminPresentationURL}${presentationId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// const axiosGetPresentationsURL = "/v6/presentations";
+// export const axiosGetPresentations = async (
+//   category: string = "ALL",
+//   sort: string = "TIME",
+//   page: number = 0,
+//   size: number = 6
+// ): Promise<any> => {
+//   try {
+//     const response = await instance.get(axiosGetPresentationsURL, {
+//       params: {
+//         category,
+//         sort,
+//         page,
+//         size,
+//       },
+//     });
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+const axiosPostPresentationLikeURL = "/v6/presentations";
+export const axiosPostPresentationLike = async (
+  presentationId: string
+): Promise<any> => {
+  try {
+    const response = await instance.post(
+      `${axiosPostPresentationLikeURL}/${presentationId}/likes`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosMyLikedPresentationsURL = "/v6/presentations/me/likes";
+export const axiosMyLikedPresentations = async (
+  page: number,
+  size: number
+) => {
+  try {
+    const response = await instance.get(axiosMyLikedPresentationsURL, {
+      params: {
+        page,
+        size,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+

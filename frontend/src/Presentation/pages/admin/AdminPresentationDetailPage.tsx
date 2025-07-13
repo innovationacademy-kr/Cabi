@@ -16,9 +16,7 @@ import type {
   PresentationLocation,
   PresentationPeriodType,
 } from "@/Presentation/types/enum/presentation.type.enum";
-import { axiosGetPresentationById } from "@/Presentation/api/axios/axios.custom";
-
-// Heroicons 사용 예시(설치 필요: @heroicons/react)
+import { axiosAdminGetPresentationById } from "@/Presentation/api/axios/axios.custom";
 
 interface IPresentationDetail {
   id: number;
@@ -42,12 +40,13 @@ interface IPresentationDetail {
   presentationStatus: string;
 }
 
-const PresentationDetailPage: React.FC = () => {
+const AdminPresentationDetailPage: React.FC = () => {
   const { presentationId } = useParams<{ presentationId: string }>();
   const [presentation, setPresentation] = useState<IPresentationDetail | null>(
     null
   );
   const navigate = useNavigate();
+  const isEditAllowed = presentation?.editAllowed ?? true;
 
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
@@ -61,7 +60,7 @@ const PresentationDetailPage: React.FC = () => {
     const fetchPresentation = async () => {
       if (!presentationId) return;
       try {
-        const res = await axiosGetPresentationById(presentationId);
+        const res = await axiosAdminGetPresentationById(presentationId);
         setPresentation(res.data.data);
       } catch (error) {
         console.error("Error fetching presentation:", error);
@@ -71,7 +70,6 @@ const PresentationDetailPage: React.FC = () => {
   }, [presentationId]);
 
   if (!presentation) return <LoadingAnimation />;
-
   return (
     <>
       <div className="relative w-full h-auto text-white">
@@ -85,16 +83,15 @@ const PresentationDetailPage: React.FC = () => {
           }}
         >
           <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
-          {presentation.editAllowed && (
+          {isEditAllowed && (
             <button
-              className="w-12 h-12 absolute top-2 right-2 z-30 px-2 py-0.5 "
+              className="w-12 h-12 absolute top-2 right-2 z-30 px-2 py-0.5"
               onClick={() =>
-                navigate(`/presentations/register/${presentationId}`)
+                navigate(`/admin/presentations/register/${presentationId}`)
               }
               title="수정하기"
             >
               <EditIcon style={{ width: 24, height: 24 }} />
-              {/* 수정하기 */}
             </button>
           )}
         </div>
@@ -198,6 +195,7 @@ const PresentationDetailPage: React.FC = () => {
             </span>
           </div>
         </div>
+
         <div className="mb-10 mt-3 h-[1.5px] bg-gray-100 w-full" />
 
         <div className="pb-10">
@@ -212,7 +210,7 @@ const PresentationDetailPage: React.FC = () => {
 
         <div className="pb-10">
           {presentationId && (
-            <CommentSection presentationId={presentationId} isAdmin={false} />
+            <CommentSection presentationId={presentationId} isAdmin={true} />
           )}
         </div>
       </div>
@@ -220,4 +218,4 @@ const PresentationDetailPage: React.FC = () => {
   );
 };
 
-export default PresentationDetailPage;
+export default AdminPresentationDetailPage;

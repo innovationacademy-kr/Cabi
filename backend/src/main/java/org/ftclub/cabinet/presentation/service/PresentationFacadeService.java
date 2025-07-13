@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.PresentationMapper;
 import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Presentation;
@@ -21,7 +20,6 @@ import org.ftclub.cabinet.presentation.dto.PresentationPageResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationRegisterServiceDto;
 import org.ftclub.cabinet.presentation.dto.PresentationSummaryDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
-import org.ftclub.cabinet.presentation.repository.PresentationSlotRepository;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.data.domain.Page;
@@ -40,8 +38,7 @@ public class PresentationFacadeService {
 	private final PresentationPolicyService policyService;
 	private final UserQueryService userQueryService;
 	private final ThumbnailStorageService thumbnailStorageService;
-	private final PresentationSlotRepository slotRepository;        // TODO
-	//	private final PresentationSlotFacadeService slotFacadeService;  // TODO
+	private final PresentationSlotService slotService;
 	private final PresentationLikeService likeService;
 	private final PresentationMapper presentationMapper;
 
@@ -59,11 +56,10 @@ public class PresentationFacadeService {
 		User user = userQueryService.getUser(userId);
 		String thumbnailS3Key = thumbnailStorageService.uploadImage(thumbnail);
 
-		// TODO: slot 검증로직으로 대체
-		PresentationSlot slot = slotRepository.findById(form.getSlotId())
-				.orElseThrow(ExceptionStatus.SLOT_NOT_FOUND::asServiceException);
+		PresentationSlot slot = slotService.findPresentationSlotById(form.getSlotId());
 
-		// register presentation
+		slotService.validateSlotAvailable(slot);
+
 		commandService.createPresentation(user, form, slot, thumbnailS3Key);
 	}
 
