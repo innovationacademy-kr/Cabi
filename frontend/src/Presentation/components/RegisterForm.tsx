@@ -344,7 +344,7 @@ const RegisterForm = ({
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onFormValidated)}
-          className="mt-16 mb-64 flex flex-col items-center space-y-6 w-full h-full sm:max-w-lg lg:max-w-3xl p-4 min-w-64"
+          className="mt-10 mb-64 flex flex-col items-center space-y-6 w-full h-full sm:max-w-lg lg:max-w-3xl p-4 min-w-64"
         >
           <div className="w-full flex flex-col md:flex-row justify-between gap-4">
             <RegisterDatePicker
