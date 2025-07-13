@@ -32,24 +32,24 @@ const AdminLayout = (): JSX.Element => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   root.style.setProperty(
-  //     "--sys-main-color",
-  //     "var(--sys-presentation-main-color)"
-  //   );
-  //   root.style.setProperty(
-  //     "--sys-sub-color",
-  //     "var(--sys-presentation-sub-color)"
-  //   );
-  //   body.style.setProperty(
-  //     "--sys-main-color",
-  //     "var(--sys-presentation-main-color)"
-  //   );
-  //   body.style.setProperty(
-  //     "--sys-sub-color",
-  //     "var(--sys-presentation-sub-color)"
-  //   );
-  // }, []);
+  useEffect(() => {
+    root.style.setProperty(
+      "--sys-main-color",
+      "var(--sys-presentation-main-color)"
+    );
+    root.style.setProperty(
+      "--sys-sub-color",
+      "var(--sys-presentation-sub-color)"
+    );
+    body.style.setProperty(
+      "--sys-main-color",
+      "var(--sys-presentation-main-color)"
+    );
+    body.style.setProperty(
+      "--sys-sub-color",
+      "var(--sys-presentation-sub-color)"
+    );
+  }, []);
 
   const handleClickBg = () => {
     closeAll();
@@ -60,7 +60,7 @@ const AdminLayout = (): JSX.Element => {
   ) : (
     <React.Fragment>
       {token && <AdminTopNavContainer />}
-      <WrapperStyled>
+      <WrapperStyled className="bg-white">
         <MainStyled>
           <MenuBgStyled onClick={handleClickBg} id="menuBg" />
           <Outlet />

@@ -67,12 +67,12 @@ export const PresentationRegistrationModal: React.FC<
             <label className="mb-1 block text-sm font-medium text-gray-700">
               시작 시간
             </label>
-            <div className="flex gap-3">
+            <div className="flex gap-3 text-black">
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="flex-1 h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
+                className="text-black flex-1 h-12 rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200"
                 required
               />
               <select
