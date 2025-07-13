@@ -58,7 +58,7 @@ const ProfilePage = () => {
   return (
     <>
       <MyPageBanner className="w-full block aspect-16-3" />
-      <div className="flex flex-col justify-center items-center py-[70px] px-0 md:py-[40px] md:px-5 mt-12 ">
+      <div className="flex flex-col justify-center items-center py-[70px] px-0 md:py-[40px] md:px-5 m-6">
         <div className="text-black text-center text-2xl font-bold tracking-tight mb-8">
           발표 기록
         </div>
