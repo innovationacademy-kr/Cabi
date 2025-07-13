@@ -2,6 +2,7 @@ import { toZonedTime } from "date-fns-tz";
 import React, { useEffect, useState } from "react";
 import { PresentationLocationLabelMap } from "@/Presentation/assets/data/maps";
 import {
+  axiosDeleteAdminPresentation,
   axiosDeleteAdminSlot,
   axiosPatchAdminPresentation,
   axiosUpdateAdminSlot,
@@ -101,6 +102,24 @@ export const PresentationUpdateModal: React.FC<
     }
   };
 
+  const handlePresentationDelete = async () => {
+    if (!eventData.id) return;
+
+    if (!window.confirm("해당 발표를 삭제하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      await axiosDeleteAdminPresentation(eventData.id);
+      alert("발표가 삭제되었습니다.");
+      onSuccess();
+      onClose();
+    } catch (error) {
+      console.error("발표 삭제 실패:", error);
+      alert("발표 삭제에 실패했습니다.");
+    }
+  };
+
   const handleHourChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrentHour(e.target.value);
   };
@@ -117,13 +136,21 @@ export const PresentationUpdateModal: React.FC<
             <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">
               {isSlot ? "일정 수정" : "발표 수정"}
             </h2>
-            {isSlot && (
+            {isSlot ? (
               <button
                 type="button"
                 onClick={handleDelete}
-                className="h-7 w-[72px] px-2 py-1 text-xs font-medium text-red-600 bg-red-100 hover:bg-red-200 rounded shadow-none whitespace-nowrap leading-none flex-shrink-0 self-center transition"
+                className="h-7 w-[72px] px-2 py-1 text-xs font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded shadow-none whitespace-nowrap leading-none flex-shrink-0 self-center transition"
               >
                 일정 삭제
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handlePresentationDelete}
+                className="h-7 w-[72px] px-2 py-1 text-xs font-medium text-red-600 bg-red-100 hover:bg-red-200 rounded shadow-none whitespace-nowrap leading-none flex-shrink-0 self-center transition"
+              >
+                발표 삭제
               </button>
             )}
           </div>
