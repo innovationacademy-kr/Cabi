@@ -135,6 +135,7 @@ public enum ExceptionStatus {
 	PRESENTATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 발표가 존재하지 않습니다."),
 	PRESENTATION_ALREADY_CANCELED(HttpStatus.BAD_REQUEST, "이미 취소된 발표입니다."),
 	PRESENTATION_SLOT_ALREADY_HAS_PRESENTATION(HttpStatus.BAD_REQUEST, "이미 발표가 등록된 슬롯입니다."),
+	ANONYMOUS_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "익명 사용자는 사용할 수 없습니다."),
 
 	// Presentation Comment 관련
 	PRESENTATION_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다"),
