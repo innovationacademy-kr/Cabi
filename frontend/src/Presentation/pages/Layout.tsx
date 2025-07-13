@@ -33,26 +33,26 @@ const Layout = (): JSX.Element => {
     navigate("/presentations/home");
   }, []);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    const body = document.body;
-    root.style.setProperty(
-      "--sys-main-color",
-      "var(--sys-presentation-main-color)"
-    );
-    root.style.setProperty(
-      "--sys-sub-color",
-      "var(--sys-presentation-sub-color)"
-    );
-    body.style.setProperty(
-      "--sys-main-color",
-      "var(--sys-presentation-main-color)"
-    );
-    body.style.setProperty(
-      "--sys-sub-color",
-      "var(--sys-presentation-sub-color)"
-    );
-  }, []);
+  // useEffect(() => {
+  //   const root = document.documentElement;
+  //   const body = document.body;
+  //   root.style.setProperty(
+  //     "--sys-main-color",
+  //     "var(--sys-presentation-main-color)"
+  //   );
+  //   root.style.setProperty(
+  //     "--sys-sub-color",
+  //     "var(--sys-presentation-sub-color)"
+  //   );
+  //   body.style.setProperty(
+  //     "--sys-main-color",
+  //     "var(--sys-presentation-main-color)"
+  //   );
+  //   body.style.setProperty(
+  //     "--sys-sub-color",
+  //     "var(--sys-presentation-sub-color)"
+  //   );
+  // }, []);
 
   const handleClickBg = () => {
     closeAll();
@@ -63,7 +63,7 @@ const Layout = (): JSX.Element => {
   }
 
   return (
-    <PageContainer>
+    <PageContainer className="bg-white">
       <TopNavDomainGroup />
       <TopNavContainer setIsLoading={setIsLoading} />
       <ScrollArea onClick={handleClickBg}>

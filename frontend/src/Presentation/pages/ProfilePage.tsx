@@ -56,7 +56,7 @@ const ProfilePage = () => {
 
   return (
     <div className="flex flex-col justify-center items-center py-[70px] px-0 md:py-[40px] md:px-5 mt-12 ">
-      <div className="text-center text-2xl font-bold tracking-tight mb-8">
+      <div className="text-black text-center text-2xl font-bold tracking-tight mb-8">
         발표 기록
       </div>
       {/* <div className="text-center text-lg tracking-tight mb-6 text-gray-500">
@@ -65,7 +65,7 @@ const ProfilePage = () => {
       <LogTable presentationHistory={presentationLog} />
 
       {/* 내가 좋아요한 발표 */}
-      <div className="text-center text-2xl font-bold tracking-tight mt-16 mb-8">
+      <div className="text-black text-center text-2xl font-bold tracking-tight mt-16 mb-8">
         즐겨찾는 발표
       </div>
       {likedPresentations.length === 0 ? (

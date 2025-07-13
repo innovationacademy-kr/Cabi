@@ -115,7 +115,7 @@ const HomePage: React.FC = () => {
           </Select>
         </div>
         <div className="flex items-center justify-center">
-          <PresentationCardContainer presentations={presentations} />
+          <PresentationCardContainer presentations={presentations} maxCols={3}/>
         </div>
         <Pagination className="mt-8">
           <PaginationContent>

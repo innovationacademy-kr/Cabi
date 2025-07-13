@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import React from "react";
 import { Control } from "react-hook-form";
-import { PRESENTATION_CATEGORY_LABELS } from "../types/enum/presentation.type.enum"
+import { PRESENTATION_CATEGORY_LABELS } from "../types/enum/presentation.type.enum";
 
 interface RegisterRadioGroupProps {
   control: Control<any>;
@@ -38,25 +38,27 @@ const RegisterRadioGroup: React.FC<RegisterRadioGroupProps> = ({
               className="flex flex-wrap gap-3"
               disabled={isEditMode}
             >
-              {Object.entries(PRESENTATION_CATEGORY_LABELS).map(([value, label]) => (
-                <div key={value} className="flex items-center ">
-                  <RadioGroupItem
-                  value={value}
-                    id={value}
-                    className="sr-only peer"
-                  />
-                  <Label
-                    htmlFor={value}
-                    className="lg:w-28 sm:w-24 text-center px-4 py-2 bg-white rounded-lg cursor-pointer border border-gray-200 
-                                hover:bg-blue-50 transition-colors
-                                peer-data-[state=checked]:bg-blue-600 
-                                peer-data-[state=checked]:text-white 
-                                peer-data-[state=checked]:border-blue-600"
-                  >
-                    {label}
-                  </Label>
-                </div>
-              ))}
+              {Object.entries(PRESENTATION_CATEGORY_LABELS).map(
+                ([value, label]) => (
+                  <div key={value} className="flex items-center ">
+                    <RadioGroupItem
+                      value={value}
+                      id={value}
+                      className="sr-only peer"
+                    />
+                    <Label
+                      htmlFor={value}
+                      className="lg:w-28 sm:w-24 text-center px-4 py-2 bg-[#ffffff] text-black rounded-lg cursor-pointer border border-[#e5e5e5]
+                                hover:bg-[#e0edff] transition-colors
+                                peer-data-[state=checked]:bg-[#2563eb]
+                                peer-data-[state=checked]:text-[#ffffff]
+                                peer-data-[state=checked]:border-[#2563eb]"
+                    >
+                      {label}
+                    </Label>
+                  </div>
+                )
+              )}
             </RadioGroup>
           </FormControl>
           <FormMessage />

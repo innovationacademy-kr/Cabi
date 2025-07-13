@@ -19,7 +19,7 @@ interface LogTableProps {
 }
 
 const locationMap = {
-  BASEMENT: "지하",
+  BASEMENT: "지하 1층 ",
   FIRST: "1층",
   THIRD: "3층",
 };
@@ -86,12 +86,12 @@ const LogTable = ({ presentationHistory }: LogTableProps) => {
                 } hover:bg-blue-100`}
                 onClick={() => navigate(`/presentations/${presentationId}`)}
               >
-                <td className="text-center pl-6 py-3">{title}</td>
-                <td className="text-center py-3">{formatDate(startTime)}</td>
-                <td className="text-center py-3">
+                <td className="text-black text-center pl-6 py-3">{title}</td>
+                <td className="text-black text-center py-3">{formatDate(startTime)}</td>
+                <td className="text-black text-center py-3">
                   {locationMap[presentationLocation]}
                 </td>
-                <td className="text-center py-3">
+                <td className="text-black text-center py-3">
                   {statusMap[presentationStatus]}
                 </td>
               </tr>

@@ -17,7 +17,7 @@ const TopNav = () => {
           <NavigationMenuItem>
             <Link
               to="home"
-              className="ml-3 p-3 text-foreground font-semibold h-full flex items-center"
+              className="ml-3 p-3 text-black font-semibold h-full flex items-center"
             >
               모아보기
             </Link>
@@ -25,7 +25,7 @@ const TopNav = () => {
           <NavigationMenuItem>
             <Link
               to="register"
-              className="p-3 text-foreground font-semibold h-full flex items-center"
+              className="p-3 text-black font-semibold h-full flex items-center"
             >
               신청하기
             </Link>
@@ -33,7 +33,7 @@ const TopNav = () => {
           <NavigationMenuItem>
             <Link
               to="about"
-              className="p-3 text-foreground font-semibold h-full flex items-center"
+              className="p-3 text-black font-semibold h-full flex items-center"
             >
               수요지식회란?
             </Link>
@@ -42,7 +42,7 @@ const TopNav = () => {
             <NavigationMenuItem>
               <Link
                 to="profile"
-                className="p-3 text-foreground font-semibold h-full flex items-center"
+                className="p-3 text-black font-semibold h-full flex items-center"
               >
                 마이페이지
               </Link>
