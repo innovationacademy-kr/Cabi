@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { ReactComponent as RegisterBanner } from "@/Presentation/assets/images/registerBanner.svg";
 import { axiosGetPresentationById } from "../api/axios/axios.custom";
 import { axiosGetAdminPresentationById } from "../api/axios/axios.custom";
 import { RegisterResultDialog } from "../components/Modals/PresentationResponseModal";
@@ -59,30 +60,36 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="w-full h-screen flex flex-col justify-start items-center bg-neutral-100 overflow-y-auto">
-      <div className="flex-1 w-full flex justify-center">
-        <RegisterForm
-          type={
-            isAdminMode
-              ? RegisterType.ADMIN
-              : isEditMode
-              ? RegisterType.EDIT
-              : RegisterType.CREATE
-          }
-          initialData={initialData}
-          presentationId={presentationId}
+    <>
+      <div className="relative w-full">
+        <RegisterBanner className="w-full block aspect-16-3" />
+        <div className="w-full bg-white" />
+      </div>
+      <div className="w-full flex flex-col justify-start items-center bg-neutral-100">
+        <div className="flex-1 w-full flex justify-center">
+          <RegisterForm
+            type={
+              isAdminMode
+                ? RegisterType.ADMIN
+                : isEditMode
+                ? RegisterType.EDIT
+                : RegisterType.CREATE
+            }
+            initialData={initialData}
+            presentationId={presentationId}
+          />
+        </div>
+        {/* 에러 모달 */}
+        <RegisterResultDialog
+          open={showResultModal}
+          onOpenChange={setShowResultModal}
+          isEditMode={isEditMode}
+          submitSuccess={submitSuccess}
+          submitError={submitError}
+          onClose={() => setShowResultModal(false)}
         />
       </div>
-      {/* 에러 모달 */}
-      <RegisterResultDialog
-        open={showResultModal}
-        onOpenChange={setShowResultModal}
-        isEditMode={isEditMode}
-        submitSuccess={submitSuccess}
-        submitError={submitError}
-        onClose={() => setShowResultModal(false)}
-      />
-    </div>
+    </>
   );
 };
 

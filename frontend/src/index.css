@@ -260,5 +260,5 @@ input {
   color: var(--sys-main-color) !important;
 }
 .domainButtonActive.presentation {
-  color: oklch(62.3% 0.214 259.815) !important;
+  color: #5270cb !important;
 }

@@ -63,59 +63,73 @@ const HomePage: React.FC = () => {
         <Banner className="w-full h-auto block" />
         <div className="w-full h-[30px] bg-white" />
       </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-        <div className="flex justify-between items-center mb-6 mt-1">
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem key="ALL">
-                <NavigationMenuLink
-                  className={`px-3 py-2 rounded-md text-sm font-medium cursor-pointer ${
-                    category === "ALL"
-                      ? "bg-gray-200 text-gray-900"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
-                  onClick={() => handleCategoryChange("ALL")}
-                >
-                  전체
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              {Object.entries(PresentationCategoryTypeLabelMap).map(
-                ([name, label]) => (
-                  <NavigationMenuItem key={name}>
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 pb-8">
+        <div className="w-full mb-6 mt-1">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full gap-2">
+            <div className="w-full">
+              <NavigationMenu>
+                <NavigationMenuList className="flex w-full">
+                  <NavigationMenuItem className="flex-1 min-w-0">
                     <NavigationMenuLink
-                      className={`px-3 py-2 rounded-md text-sm font-medium cursor-pointer ${
-                        category === name
-                          ? "bg-gray-200 text-gray-900"
-                          : "text-gray-700 hover:bg-gray-50"
-                      }`}
-                      onClick={() => handleCategoryChange(name)}
+                      className={`
+                        ${"flex-1 min-w-0 px-3 py-2 rounded-md text-sm font-medium cursor-pointer text-center overflow-hidden text-ellipsis whitespace-nowrap transition-all duration-200"}
+                        ${
+                          category === "ALL"
+                            ? "bg-gray-200 text-gray-900"
+                            : "text-gray-700 hover:bg-gray-50"
+                        }
+                      `}
+                      onClick={() => handleCategoryChange("ALL")}
                     >
-                      {label}
+                      전체
                     </NavigationMenuLink>
                   </NavigationMenuItem>
-                )
-              )}
-            </NavigationMenuList>
-          </NavigationMenu>
-
-          <Select
-            onValueChange={(value) => {
-              setSortType(value);
-              setCurrentPage(0);
-            }}
-            defaultValue={sortType}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="정렬 기준" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="TIME">최신순</SelectItem>
-              <SelectItem value="LIKE">좋아요순</SelectItem>
-            </SelectContent>
-          </Select>
+                  {Object.entries(PresentationCategoryTypeLabelMap).map(
+                    ([name, label]) => (
+                      <NavigationMenuItem key={name} className="flex-1 min-w-0">
+                        <NavigationMenuLink
+                          className={`
+                            ${"flex-1 min-w-0 px-3 py-2 rounded-md text-sm font-medium cursor-pointer text-center overflow-hidden text-ellipsis whitespace-nowrap transition-all duration-200"}
+                            ${
+                              category === name
+                                ? "bg-gray-200 text-gray-900"
+                                : "text-gray-700 hover:bg-gray-50"
+                            }
+                          `}
+                          onClick={() => handleCategoryChange(name)}
+                        >
+                          {label}
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )
+                  )}
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
+            <div className="w-full md:w-auto flex justify-end mt-2 md:mt-0">
+              <Select
+                onValueChange={(value) => {
+                  setSortType(value);
+                  setCurrentPage(0);
+                }}
+                defaultValue={sortType}
+              >
+                <SelectTrigger className="w-[110px] bg-white">
+                  <SelectValue placeholder="정렬 기준" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  <SelectItem value="TIME">최신순</SelectItem>
+                  <SelectItem value="LIKE">좋아요순</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
         <div className="flex items-center justify-center">
-          <PresentationCardContainer presentations={presentations} maxCols={3}/>
+          <PresentationCardContainer
+            presentations={presentations}
+            maxCols={3}
+          />
         </div>
         <Pagination className="mt-8">
           <PaginationContent>

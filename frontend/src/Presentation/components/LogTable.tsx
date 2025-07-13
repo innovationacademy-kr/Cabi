@@ -60,7 +60,7 @@ const LogTable = ({ presentationHistory }: LogTableProps) => {
     <div className="w-full max-w-3xl rounded-xl overflow-hidden shadow-md">
       <table className="w-full bg-white">
         <thead>
-          <tr className="bg-blue-600 text-white h-12">
+          <tr className="bg-[#4464c6] text-white h-12">
             <th className="text-center pl-6 align-middle w-2/5">제목</th>
             <th className="text-center align-middle w-1/5">발표일</th>
             <th className="text-center align-middle w-1/5">장소</th>
@@ -87,7 +87,9 @@ const LogTable = ({ presentationHistory }: LogTableProps) => {
                 onClick={() => navigate(`/presentations/${presentationId}`)}
               >
                 <td className="text-black text-center pl-6 py-3">{title}</td>
-                <td className="text-black text-center py-3">{formatDate(startTime)}</td>
+                <td className="text-black text-center py-3">
+                  {formatDate(startTime)}
+                </td>
                 <td className="text-black text-center py-3">
                   {locationMap[presentationLocation]}
                 </td>

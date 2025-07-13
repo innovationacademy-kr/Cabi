@@ -27,8 +27,8 @@ export const PresentationLocationLabelMap: { [key: string]: string } = {
 
 export const PresentationCategoryTypeLabelMap: { [key: string]: string } = {
   [PresentationCategoryType.DEVELOP]: "개발",
-  [PresentationCategoryType.STUDY]: "학술",
   [PresentationCategoryType.DISCUSSION]: "토의",
+  [PresentationCategoryType.STUDY]: "학술",
   [PresentationCategoryType.JOB]: "취업",
   [PresentationCategoryType.TASK]: "42",
   [PresentationCategoryType.ETC]: "기타",
@@ -38,4 +38,15 @@ type presentationCategoryIconMap = {
   [key in PresentationCategoryType]: React.ComponentType<
     React.SVGProps<SVGSVGElement>
   >;
+};
+
+export const defaultThumbnailMap: {
+  [key in PresentationCategoryType]: string;
+} = {
+  DEVELOP: "https://i.imgur.com/2gobOis.png",
+  DISCUSSION: "https://i.imgur.com/NXm2bfU.png",
+  STUDY: "https://i.imgur.com/QQiHu69.png",
+  JOB: "https://i.imgur.com/Lj8b60F.png",
+  TASK: "https://i.imgur.com/bRoUtVr.jpeg",
+  ETC: "https://i.imgur.com/ViJLyiR.png",
 };
