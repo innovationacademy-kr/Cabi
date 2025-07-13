@@ -75,7 +75,6 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
         }
       }
     } catch (error) {
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
