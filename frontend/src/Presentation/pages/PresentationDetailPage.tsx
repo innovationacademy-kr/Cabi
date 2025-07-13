@@ -8,6 +8,7 @@ import {
   PresentationLocationLabelMap,
   PresentationPeriodTypeNumberLabelMap,
   PresentationStatusTypeLabelMap,
+  defaultThumbnailMap,
 } from "@/Presentation/assets/data/maps";
 import { ReactComponent as EditIcon } from "@/Presentation/assets/edit.svg";
 import { ReactComponent as LikeIcon } from "@/Presentation/assets/heart.svg";
@@ -80,7 +81,7 @@ const PresentationDetailPage: React.FC = () => {
           style={{
             backgroundImage: `url(${
               presentation.thumbnailLink ||
-              "https://fastly.picsum.photos/id/36/4179/2790.jpg?hmac=OCuYYm0PkDCMwxWhrtoSefG5UDir4O0XCcR2x-aSPjs"
+              defaultThumbnailMap[presentation.category]
             })`,
           }}
         >
@@ -103,7 +104,7 @@ const PresentationDetailPage: React.FC = () => {
               <img
                 src={
                   presentation.thumbnailLink ||
-                  "https://fastly.picsum.photos/id/36/4179/2790.jpg?hmac=OCuYYm0PkDCMwxWhrtoSefG5UDir4O0XCcR2x-aSPjs"
+                  defaultThumbnailMap[presentation.category]
                 }
                 alt="발표 이미지"
                 className="w-full rounded-lg shadow-lg aspect-video object-cover"
