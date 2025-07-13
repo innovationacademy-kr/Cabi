@@ -55,24 +55,24 @@ const Layout = (): JSX.Element => {
     }
   }, []);
 
-  useEffect(() => {
-    root.style.setProperty(
-      "--sys-main-color",
-      "var(--sys-presentation-main-color)"
-    );
-    root.style.setProperty(
-      "--sys-sub-color",
-      "var(--sys-presentation-sub-color)"
-    );
-    body.style.setProperty(
-      "--sys-main-color",
-      "var(--sys-presentation-main-color)"
-    );
-    body.style.setProperty(
-      "--sys-sub-color",
-      "var(--sys-presentation-sub-color)"
-    );
-  }, []);
+  // useEffect(() => {
+  //   root.style.setProperty(
+  //     "--sys-main-color",
+  //     "var(--sys-presentation-main-color)"
+  //   );
+  //   root.style.setProperty(
+  //     "--sys-sub-color",
+  //     "var(--sys-presentation-sub-color)"
+  //   );
+  //   body.style.setProperty(
+  //     "--sys-main-color",
+  //     "var(--sys-presentation-main-color)"
+  //   );
+  //   body.style.setProperty(
+  //     "--sys-sub-color",
+  //     "var(--sys-presentation-sub-color)"
+  //   );
+  // }, []);
 
   return isLoginPage ? (
     <Outlet />

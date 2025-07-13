@@ -16,7 +16,7 @@ const PresentationCardContainer: React.FC<PresentationCardContainerProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div className={`grid xl:grid-cols-${maxCols} lg:grid-cols-2 sm:grid-cols-1ㅓ gap-8`}>
+    <div className={`grid xl:grid-cols-${maxCols} lg:grid-cols-2 sm:grid-cols-1 gap-8`}>
       {presentations.map((p) => (
         <div key={p.presentationId} className="w-full flex justify-center">
           <div
