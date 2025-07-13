@@ -1,43 +1,45 @@
-<svg width="1600" height="300" viewBox="0 0 1600 300" xmlns="http://www.w3.org/2000/svg">
-    <rect width="1600" height="300" fill="#2b4490"/>
-    
-    <!-- 장식 원들 (좌우 비율 유지 위해 일부 위치 조정) -->
-    <circle cx="1200" cy="70" r="4" fill="rgba(255,255,255,0.1)"/>
-    <circle cx="320" cy="230" r="10" fill="rgba(255,255,255,0.1)"/>
-    
-    <!-- 텍스트 (중앙 정렬) -->
-    <text x="400" y="120" font-family="Noto Sans KR, sans-serif" font-size="42" font-weight="300" fill="white">새로운 도전, 새로운 기회</text>
-    <text x="400" y="170" font-family="Noto Sans KR, sans-serif" font-size="18" fill="#B8C0E0">매주 수요일, 다양한 주제로 펼쳐지는 지식의 향연</text>
-    <text x="400" y="200" font-family="Noto Sans KR, sans-serif" font-size="18" fill="#B8C0E0">여러분의 이야기를 들려주세요</text>
-    
-    <!-- 일러스트 (중앙 정렬) -->
-    <g transform="translate(1000, 150)">
-        <!-- 로켓 -->
-        <g transform="rotate(-45)">
-            <ellipse cx="0" cy="0" rx="30" ry="60" fill="#FF6B6B"/>
-            <ellipse cx="0" cy="-20" rx="30" ry="40" fill="#FFD93D"/>
-            <path d="M-30 20 L-40 40 L-20 30 Z" fill="#4ECDC4"/>
-            <path d="M30 20 L40 40 L20 30 Z" fill="#4ECDC4"/>
-            <circle cx="0" cy="-20" r="15" fill="#ECF0F1"/>
-            <circle cx="0" cy="-20" r="10" fill="#3498DB"/>
-        </g>
-        
-        <!-- 별들 -->
-        <g opacity="0.8">
-            <circle cx="-120" cy="-70" r="3" fill="white"/>
-            <circle cx="120" cy="-90" r="4" fill="white"/>
-            <circle cx="150" cy="30" r="3" fill="white"/>
-            <circle cx="-140" cy="20" r="2" fill="white"/>
-            <circle cx="-100" cy="-110" r="2" fill="white"/>
-        </g>
-        
-        <!-- 구름 효과 -->
-        <g transform="translate(-80, 30)" opacity="0.6">
-            <circle cx="0" cy="0" r="20" fill="white"/>
-            <circle cx="20" cy="0" r="25" fill="white"/>
-            <circle cx="40" cy="0" r="20" fill="white"/>
-            <circle cx="10" cy="-10" r="15" fill="white"/>
-            <circle cx="30" cy="-10" r="18" fill="white"/>
-        </g>
+<svg
+  viewBox="0 0 1600 300"
+  xmlns="http://www.w3.org/2000/svg"
+  style="width:100%; height:auto; display:block;"
+>
+  <rect width="1600" height="300" fill="#2b4490"/>
+  
+  <!-- 장식 원들 (좌우 비율 유지 위해 일부 위치 조정) -->
+  <circle cx="1200" cy="70" r="4" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="320" cy="230" r="10" fill="rgba(255,255,255,0.1)"/>
+  
+  <!-- 텍스트 (중앙 정렬) -->
+  <text x="400" y="120" font-family="Noto Sans KR, sans-serif" font-size="42" font-weight="300" fill="white">새로운 도전, 새로운 기회</text>
+  <text x="400" y="170" font-family="Noto Sans KR, sans-serif" font-size="18" fill="#B8C0E0">매주 수요일, 다양한 주제로 펼쳐지는 지식의 향연</text>
+  <text x="400" y="200" font-family="Noto Sans KR, sans-serif" font-size="18" fill="#B8C0E0">여러분의 이야기를 들려주세요</text>
+  
+  <!-- 일러스트 (중앙 정렬) -->
+  <g transform="translate(1000, 150)">
+    <!-- 로켓 -->
+    <g transform="rotate(-45)">
+      <ellipse cx="0" cy="0" rx="30" ry="60" fill="#FF6B6B"/>
+      <ellipse cx="0" cy="-20" rx="30" ry="40" fill="#FFD93D"/>
+      <path d="M-30 20 L-40 40 L-20 30 Z" fill="#4ECDC4"/>
+      <path d="M30 20 L40 40 L20 30 Z" fill="#4ECDC4"/>
+      <circle cx="0" cy="-20" r="15" fill="#ECF0F1"/>
+      <circle cx="0" cy="-20" r="10" fill="#3498DB"/>
     </g>
+    <!-- 별들 -->
+    <g opacity="0.8">
+      <circle cx="-120" cy="-70" r="3" fill="white"/>
+      <circle cx="120" cy="-90" r="4" fill="white"/>
+      <circle cx="150" cy="30" r="3" fill="white"/>
+      <circle cx="-140" cy="20" r="2" fill="white"/>
+      <circle cx="-100" cy="-110" r="2" fill="white"/>
+    </g>
+    <!-- 구름 효과 -->
+    <g transform="translate(-80, 30)" opacity="0.6">
+      <circle cx="0" cy="0" r="20" fill="white"/>
+      <circle cx="20" cy="0" r="25" fill="white"/>
+      <circle cx="40" cy="0" r="20" fill="white"/>
+      <circle cx="10" cy="-10" r="15" fill="white"/>
+      <circle cx="30" cy="-10" r="18" fill="white"/>
+    </g>
+  </g>
 </svg>
