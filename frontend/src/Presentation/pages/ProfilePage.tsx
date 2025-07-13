@@ -66,9 +66,16 @@ const ProfilePage = () => {
 
       {/* 내가 좋아요한 발표 */}
       <div className="text-center text-2xl font-bold tracking-tight mt-16 mb-8">
-        내가 좋아요한 발표
+        즐겨찾는 발표
       </div>
-      <PresentationCardContainer presentations={likedPresentations} maxCols={2} />
+      {likedPresentations.length === 0 ? (
+        <div>좋아요를 누른 발표가 없습니다</div>
+      ) : (
+        <PresentationCardContainer
+          presentations={likedPresentations}
+          maxCols={2}
+        />
+      )}
     </div>
   );
 };
