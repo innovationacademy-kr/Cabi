@@ -180,7 +180,7 @@ const CommentSection = ({ presentationId }: { presentationId: string }) => {
                       </div>
                     </form>
                   ) : (
-                    <div className="text-sm whitespace-pre-line break-words">
+                    <div className="text-sm whitespace-pre-line break-all">
                       {c.detail}
                     </div>
                   )}
