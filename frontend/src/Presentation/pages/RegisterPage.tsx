@@ -59,7 +59,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="w-full h-screen flex flex-col justify-start items-center bg-neutral-100 overflow-y-auto">
+    <div className="w-full flex flex-col justify-start items-center bg-neutral-100">
       <div className="flex-1 w-full flex justify-center">
         <RegisterForm
           type={
