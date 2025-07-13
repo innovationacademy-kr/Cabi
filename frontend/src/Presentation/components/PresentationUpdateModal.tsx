@@ -110,7 +110,7 @@ export const PresentationUpdateModal: React.FC<
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 font-normal">
       <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl p-0 animate-fade-in">
         <form onSubmit={handleUpdate} className="px-6 pt-6 pb-4">
           <div className="flex justify-between items-center mb-6">
@@ -136,8 +136,9 @@ export const PresentationUpdateModal: React.FC<
                 등록된 발표가 없습니다
               </div>
             ) : (
-              <div
-                className="w-full h-12 flex items-center rounded-lg border border-gray-300 bg-transparent px-3 text-base transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200 cursor-pointer"
+              <button
+                type="button"
+                className="w-full h-12 flex items-center justify-between rounded-lg border border-gray-300 bg-gray-50 px-3 text-base text-gray-600 transition focus:border-primary-600 focus:ring-2 focus:ring-primary-200 hover:bg-gray-100 font-medium"
                 onClick={() => {
                   if (eventData && eventData.id) {
                     window.location.href = `/admin/presentations/${eventData.id}`;
@@ -145,8 +146,9 @@ export const PresentationUpdateModal: React.FC<
                 }}
                 style={{ letterSpacing: "-0.5px" }}
               >
-                {title}
-              </div>
+                <span>{title}</span>
+                <span className="text-gray-500">→</span>
+              </button>
             )}
           </div>
           <div className="mb-5">
