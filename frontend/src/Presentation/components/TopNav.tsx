@@ -4,13 +4,14 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import { ReactComponent as Logo } from "@/Presentation/assets/images/mainLogo.svg";
 
 const TopNav = () => {
   const token = getCookie("access_token");
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <header className="h-16 w-full bg-white border-b-8 border-gray-300 flex items-center px-4 z-50 relative">
@@ -59,16 +60,25 @@ const TopNav = () => {
           )}
         </NavigationMenuList>
       </NavigationMenu>
-      <div className="hidden lg:block w-10" />
-      <button
-        className="flex flex-col justify-center items-center w-10 h-10 lg:hidden ml-auto"
-        aria-label="메뉴 열기"
-        onClick={() => setOpen(true)}
-      >
-        <span className="block w-7 h-0.5 bg-black mb-1 rounded transition" />
-        <span className="block w-7 h-0.5 bg-black mb-1 rounded transition" />
-        <span className="block w-7 h-0.5 bg-black rounded transition" />
-      </button>
+      <div className="flex items-center ml-auto gap-2">
+        {!token && (
+          <button
+            className="ml-2 w-20 h-9 px-0 py-0 rounded-lg font-medium text-white bg-blue-800 hover:bg-blue-900 transition-all text-sm whitespace-nowrap flex items-center justify-center"
+            onClick={() => navigate("/login")}
+          >
+            로그인
+          </button>
+        )}
+        <button
+          className="flex flex-col justify-center items-center w-8 h-8 lg:hidden"
+          aria-label="메뉴 열기"
+          onClick={() => setOpen(true)}
+        >
+          <span className="block w-5 h-0.5 bg-black mb-1 rounded transition" />
+          <span className="block w-5 h-0.5 bg-black mb-1 rounded transition" />
+          <span className="block w-5 h-0.5 bg-black rounded transition" />
+        </button>
+      </div>
       {open && (
         <div
           className="fixed inset-0 bg-black/30 z-40 lg:hidden"
