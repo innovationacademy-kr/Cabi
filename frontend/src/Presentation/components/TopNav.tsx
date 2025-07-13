@@ -13,9 +13,11 @@ const TopNav = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="h-16 w-full bg-white border-b border-[#BCBCBC] flex items-center px-4 z-50 relative">
-
-      <Link to="/home" className="flex items-center h-full shrink-0">
+    <header className="h-16 w-full bg-white border-b-8 border-gray-300 flex items-center px-4 z-50 relative">
+      <Link
+        to="/presentations/home"
+        className="flex items-center h-full shrink-0"
+      >
         <Logo className="scale-[90%]" />
       </Link>
 
@@ -48,7 +50,7 @@ const TopNav = () => {
           {token && (
             <NavigationMenuItem>
               <Link
-                to="/profile"
+                to="/presentations/profile"
                 className="p-3 text-foreground font-semibold h-full flex items-center"
               >
                 마이페이지
@@ -57,11 +59,7 @@ const TopNav = () => {
           )}
         </NavigationMenuList>
       </NavigationMenu>
-
-      {/* PC에서 오른쪽 공간 확보용 (햄버거 가려지지 않게) */}
       <div className="hidden lg:block w-10" />
-
-      {/* 모바일 햄버거 (lg 미만) */}
       <button
         className="flex flex-col justify-center items-center w-10 h-10 lg:hidden ml-auto"
         aria-label="메뉴 열기"
@@ -71,22 +69,18 @@ const TopNav = () => {
         <span className="block w-7 h-0.5 bg-black mb-1 rounded transition" />
         <span className="block w-7 h-0.5 bg-black rounded transition" />
       </button>
-
-      {/* 모바일 메뉴 오버레이 */}
       {open && (
         <div
           className="fixed inset-0 bg-black/30 z-40 lg:hidden"
           onClick={() => setOpen(false)}
         />
       )}
-
-      {/* 모바일 슬라이드 메뉴 */}
       {open && (
         <nav
           className={`fixed top-0 right-0 h-full w-64 bg-white shadow-2xl z-50 transition-transform duration-300 lg:hidden
           ${open ? "translate-x-0" : "translate-x-full"} flex flex-col`}
           style={{ willChange: "transform" }}
-          onClick={(e) => e.stopPropagation()} // 메뉴 내부 클릭 시 오버레이로 전파 방지
+          onClick={(e) => e.stopPropagation()}
         >
           <button
             className="self-end m-4 w-8 h-8 flex items-center justify-center"
