@@ -124,7 +124,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
             disabled={isLoading}
             className="
               inline-flex flex-none w-auto items-center justify-center
-              h-6 space-x-1 text-xs font-normal leading-none group
+              h-6 space-x-1 text-xs font-normal leading-none group p-0
             "
             aria-pressed={liked}
             aria-label={liked ? "좋아요 취소" : "좋아요"}
