@@ -16,8 +16,8 @@
   
   <!-- 일러스트 (중앙 정렬) -->
   <g transform="translate(1000, 150)">
-    <!-- 로켓 -->
-    <g transform="rotate(-45)">
+    <!-- 로켓만 오른쪽 100px 이동 -->
+    <g transform="translate(100, 0) rotate(-45)">
       <ellipse cx="0" cy="0" rx="30" ry="60" fill="#FF6B6B"/>
       <ellipse cx="0" cy="-20" rx="30" ry="40" fill="#FFD93D"/>
       <path d="M-30 20 L-40 40 L-20 30 Z" fill="#4ECDC4"/>
@@ -25,16 +25,16 @@
       <circle cx="0" cy="-20" r="15" fill="#ECF0F1"/>
       <circle cx="0" cy="-20" r="10" fill="#3498DB"/>
     </g>
-    <!-- 별들 -->
-    <g opacity="0.8">
+    <!-- 별들도 오른쪽 100px, 아래 10px 이동 -->
+    <g transform="translate(100, 10)" opacity="0.8">
       <circle cx="-120" cy="-70" r="3" fill="white"/>
       <circle cx="120" cy="-90" r="4" fill="white"/>
       <circle cx="150" cy="30" r="3" fill="white"/>
       <circle cx="-140" cy="20" r="2" fill="white"/>
       <circle cx="-100" cy="-110" r="2" fill="white"/>
     </g>
-    <!-- 구름 효과 -->
-    <g transform="translate(-80, 30)" opacity="0.6">
+    <!-- 구름 효과도 오른쪽 100px, 아래 10px 이동 -->
+    <g transform="translate(20, 40)" opacity="0.6">
       <circle cx="0" cy="0" r="20" fill="white"/>
       <circle cx="20" cy="0" r="25" fill="white"/>
       <circle cx="40" cy="0" r="20" fill="white"/>
