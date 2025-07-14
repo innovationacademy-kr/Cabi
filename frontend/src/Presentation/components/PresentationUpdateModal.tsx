@@ -4,7 +4,6 @@ import { PresentationLocationLabelMap } from "@/Presentation/assets/data/maps";
 import {
   axiosDeleteAdminPresentation,
   axiosDeleteAdminSlot,
-  axiosPatchAdminPresentation,
   axiosUpdateAdminSlot,
 } from "@/Presentation/api/axios/axios.custom";
 
@@ -28,7 +27,12 @@ export const PresentationUpdateModal: React.FC<
 
   useEffect(() => {
     if (eventData) {
-      const kstDate = toZonedTime(new Date(eventData.start), "Asia/Seoul");
+      const kstDate = toZonedTime(
+        eventData.start instanceof Date
+          ? eventData.start
+          : new Date(eventData.start),
+        "Asia/Seoul"
+      );
       const dateString = kstDate.toLocaleDateString("en-CA", {
         year: "numeric",
         month: "2-digit",
@@ -60,51 +64,58 @@ export const PresentationUpdateModal: React.FC<
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!date || !eventData.id) return;
+    if (!date || !eventData) return;
+    if (!location) {
+      alert("장소를 선택해주세요.");
+      return;
+    }
+
+    let slotId = "";
+    if (isSlot) {
+      slotId = eventData.id.replace("slot-", "");
+    } else {
+      slotId = eventData.raw?.slotId;
+    }
+    if (!slotId) {
+      alert("슬롯 ID를 찾을 수 없습니다.");
+      return;
+    }
+
     const dateTimeString = `${date}T${currentHour}:${currentMinute}:00`;
     try {
-      if (isSlot) {
-        const slotId = eventData.id.replace("slot-", "");
-        await axiosUpdateAdminSlot(slotId, dateTimeString, location);
-      } else {
-        await axiosPatchAdminPresentation(
-          eventData.id,
-          dateTimeString,
-          location,
-          title
-        );
-      }
+      await axiosUpdateAdminSlot(slotId, dateTimeString, location);
       alert("일정이 수정되었습니다.");
       onSuccess();
       onClose();
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        alert("해당 발표 슬롯이 존재하지 않습니다.");
+      } else {
+        alert("일정 수정에 실패했습니다.");
+      }
       console.error("일정 수정 실패:", error);
-      alert("일정 수정에 실패했습니다.");
     }
   };
 
   const handleDelete = async () => {
-    if (!eventData.id) return;
-
-    if (!window.confirm("해당 슬롯을 삭제하시겠습니까?")) {
+    if (!eventData?.id) return;
+    if (!window.confirm("해당 일정을 삭제하시겠습니까?")) {
       return;
     }
-
     const slotId = eventData.id.replace("slot-", "");
     try {
       await axiosDeleteAdminSlot(slotId);
-      alert("슬롯이 삭제되었습니다.");
+      alert("일정이 삭제되었습니다.");
       onSuccess();
       onClose();
     } catch (error) {
-      console.error("슬롯 삭제 실패:", error);
-      alert("슬롯 삭제에 실패했습니다.");
+      console.error("일정 삭제 실패:", error);
+      alert("일정 삭제에 실패했습니다.");
     }
   };
 
   const handlePresentationDelete = async () => {
-    if (!eventData.id) return;
-
+    if (!eventData?.id) return;
     if (
       !window.confirm(
         "해당 발표를 취소하시겠습니까? 취소한 발표는 되돌릴 수 없습니다."
@@ -112,7 +123,6 @@ export const PresentationUpdateModal: React.FC<
     ) {
       return;
     }
-
     try {
       await axiosDeleteAdminPresentation(eventData.id);
       alert("발표가 취소되었습니다.");
