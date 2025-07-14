@@ -72,7 +72,7 @@ const ProfilePage = () => {
           즐겨찾는 발표
         </div>
         {likedPresentations.length === 0 ? (
-          <div>좋아요를 누른 발표가 없습니다</div>
+          <div className="text-gray-500">좋아요를 누른 발표가 없습니다</div>
         ) : (
           <PresentationCardContainer
             presentations={likedPresentations}

@@ -132,7 +132,7 @@ const HomePage: React.FC = () => {
           />
         </div>
         <Pagination className="mt-8">
-          <PaginationContent>
+          <PaginationContent className="text-black">
             <PaginationItem>
               <PaginationPrevious
                 onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}

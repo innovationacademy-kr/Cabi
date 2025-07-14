@@ -140,7 +140,7 @@ const PresentationDetailPage: React.FC = () => {
           {presentation.editAllowed && (
             <button
               className="w-12 h-12 absolute top-2 right-2 z-30 px-2 py-0.5"
-              onClick={() => navigate(`/presentations/edit/${presentationId}`)}
+              onClick={() => navigate(`/presentations/${presentationId}/edit`)}
               title="수정하기"
             >
               <EditIcon style={{ width: 24, height: 24 }} />

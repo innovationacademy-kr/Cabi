@@ -98,7 +98,7 @@ const AdminPresentationDetailPage: React.FC = () => {
             <button
               className="w-12 h-12 absolute top-2 right-2 z-30 px-2 py-0.5"
               onClick={() =>
-                navigate(`/admin/presentations/edit/${presentationId}`)
+                navigate(`/admin/presentations/${presentationId}/edit`)
               }
               title="수정하기"
             >
