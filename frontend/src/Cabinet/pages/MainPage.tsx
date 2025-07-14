@@ -235,7 +235,7 @@ const AlertStyled = styled.div<{ currentFloor: number }>`
   height: 30px;
   display: flex;
   justify-content: end;
-  align-items: end;
+  align-items: center;
   padding-right: 14px;
 `;
 
