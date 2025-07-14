@@ -69,7 +69,18 @@ const AdminPresentationDetailPage: React.FC = () => {
     fetchPresentation();
   }, [presentationId]);
 
+  const getYouTubeVideoId = (url: string): string | null => {
+    if (!url) return null;
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
+
   if (!presentation) return <LoadingAnimation />;
+
+  const videoId = getYouTubeVideoId(presentation.videoLink || "");
+
   return (
     <>
       <div className="relative w-full h-auto text-white">
@@ -142,22 +153,15 @@ const AdminPresentationDetailPage: React.FC = () => {
       </div>
 
       <div className="max-w-4xl mx-auto px-6 py-10 text-base text-black">
-        {presentation.videoLink && (
-          <div className="space-y-2">
-            {presentation.videoLink.includes("youtube.com/watch?v=") && (
-              <div className="aspect-video w-full mt-4">
-                <iframe
-                  className="w-full h-full rounded-md"
-                  src={`https://www.youtube.com/embed/${new URLSearchParams(
-                    new URL(presentation.videoLink).search
-                  ).get("v")}`}
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            )}
+        {videoId && (
+          <div className="aspect-video w-full mt-4">
+            <iframe
+              className="w-full h-full rounded-md"
+              src={`https://www.youtube.com/embed/${videoId}`}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
         )}
 
