@@ -50,7 +50,7 @@ const LogTable = ({ presentationHistory }: LogTableProps) => {
     (Array.isArray(presentationHistory) && presentationHistory.length === 0)
   ) {
     return (
-      <div className="w-full text-center text-base py-6">
+      <div className="w-full text-center text-base py-6 text-gray-500">
         발표 기록이 없습니다.
       </div>
     );
