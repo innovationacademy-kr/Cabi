@@ -107,7 +107,7 @@ export const PresentationUpdateModal: React.FC<
 
     if (
       !window.confirm(
-        "해당 발표를 삭제하시겠습니까? 삭제한 발표는 되돌릴 수 없습니다."
+        "해당 발표를 취소하시겠습니까? 취소한 발표는 되돌릴 수 없습니다."
       )
     ) {
       return;
@@ -115,12 +115,12 @@ export const PresentationUpdateModal: React.FC<
 
     try {
       await axiosDeleteAdminPresentation(eventData.id);
-      alert("발표가 삭제되었습니다.");
+      alert("발표가 취소되었습니다.");
       onSuccess();
       onClose();
     } catch (error) {
-      console.error("발표 삭제 실패:", error);
-      alert("발표 삭제에 실패했습니다.");
+      console.error("발표 취소 실패:", error);
+      alert("발표 취소에 실패했습니다.");
     }
   };
 
@@ -151,10 +151,11 @@ export const PresentationUpdateModal: React.FC<
             ) : (
               <button
                 type="button"
+                disabled={eventData?.state === "Canceled"}
                 onClick={handlePresentationDelete}
-                className="h-7 w-[72px] px-2 py-1 text-xs font-medium text-red-600 bg-red-100 hover:bg-red-200 rounded shadow-none whitespace-nowrap leading-none flex-shrink-0 self-center transition"
+                className="h-7 w-[72px] px-2 py-1 text-xs font-medium text-red-600 bg-red-100 hover:bg-red-200 rounded shadow-none whitespace-nowrap leading-none flex-shrink-0 self-center transition disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
               >
-                발표 삭제
+                발표 취소
               </button>
             )}
           </div>
@@ -256,7 +257,8 @@ export const PresentationUpdateModal: React.FC<
               </button>
               <button
                 type="submit"
-                className="rounded-lg px-5 py-2 font-medium text-sm text-white bg-primary-600 hover:bg-primary-700 transition shadow-none"
+                disabled={eventData?.state === "Canceled"}
+                className="rounded-lg px-5 py-2 font-medium text-sm text-white bg-primary-600 hover:bg-primary-700 transition shadow-none disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
                 style={{
                   minWidth: 80,
                   backgroundColor: "#1A73E8",
