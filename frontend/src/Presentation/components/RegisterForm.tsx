@@ -295,8 +295,7 @@ const RegisterForm = ({
           summary: formDataToSubmit.summary,
           outline: formDataToSubmit.outline,
           detail: formDataToSubmit.detail,
-          videoLink: isAdminMode ? formDataToSubmit.videoLink : null, // CHECK :
-          // videoLink: formDataToSubmit.videoLink,
+          videoLink:formDataToSubmit.videoLink,
           recordingAllowed: formDataToSubmit.recordingAllowed || false,
           publicAllowed: formDataToSubmit.publicAllowed || false,
           thumbnailUpdated: thumbnailChanged || undefined,
