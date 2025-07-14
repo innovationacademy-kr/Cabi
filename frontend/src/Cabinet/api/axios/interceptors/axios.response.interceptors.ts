@@ -64,11 +64,11 @@ const handleReissueToken = async (error: any) => {
 };
 
 const handleUnauthorizedError = (error: any) => {
-  const requestUrl = error.config?.url || "";
   const token = getCookie("access_token");
   if (token) return handleReissueToken(error);
 
   const isAGUPage = window.location.pathname === "/agu";
+  const requestUrl = error.config?.url || "";
   if (isAGUPage) {
     removeCookie("agu_token", {
       path: "/",
@@ -89,7 +89,6 @@ const handleForbiddenError = (error: any) => {
 
 const handleErrorResponse = (error: any) => {
   const status = error.response?.status;
-  const requestUrl = error.config?.url || "";
 
   if (status === HttpStatusCode.Unauthorized) {
     return handleUnauthorizedError(error);

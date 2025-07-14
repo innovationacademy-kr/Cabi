@@ -79,7 +79,9 @@ const AdminPresentationDetailPage: React.FC = () => {
 
   if (!presentation) return <LoadingAnimation />;
 
-  const videoId = getYouTubeVideoId(presentation.videoLink || "");
+  const videoId = presentation.recordingAllowed
+    ? getYouTubeVideoId(presentation.videoLink || "")
+    : null;
 
   return (
     <>
