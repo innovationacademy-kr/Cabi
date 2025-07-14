@@ -263,46 +263,6 @@ export const axiosCreatePresentation = async (
   }
 };
 
-// const axiosUpdatePresentationURL = "/v6/presentations/";
-// export const axiosUpdatePresentation = async (
-//   presentationId: string,
-//   body: any,
-//   thumbnailFile: File | null
-// ): Promise<any> => {
-//   try {
-//     // console.log("body : ", body);
-//     const formData = new FormData();
-//     formData.append(
-//       "form",
-//       new Blob([JSON.stringify(body)], { type: "application/json" })
-//     );
-//     if (thumbnailFile) {
-//       formData.append("thumbnail", thumbnailFile);
-//       // console.log("추가됨")
-//       // formData.append("thumbnailUpdated", "true");
-//     }
-//     for (const [key, value] of formData.entries()) {
-//       if (value instanceof File) {
-//         console.log(`${key}: [File] ${value.name}`);
-//       } else {
-//         console.log(`${key}:`, value);
-//       }
-//     }
-//     const response = await instance.patch(
-//       `/v6/presentations/${presentationId}`,
-//       formData,
-//       {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//       }
-//     );
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-
 const axiosGetPresentationsURL = "/v6/presentations";
 export const axiosGetPresentations = async (
   category: string = "ALL",
@@ -337,23 +297,6 @@ export const axiosDeletePresentationLike = async (
   } catch (error) {
     throw error;
   }
-};
-
-export const axiosPatchAdminPresentation = async (
-  presentationId: string,
-  startTime: string,
-  location: string,
-  title: string
-) => {
-  const response = await instance.patch(
-    `/v6/admin/presentations/${presentationId}`,
-    {
-      startTime,
-      presentationLocation: location,
-      title,
-    }
-  );
-  return response.data;
 };
 
 export const axiosDeleteAdminPresentation = async (presentationId: string) => {
@@ -554,28 +497,6 @@ export const axiosUpdateAdminPresentation = async (
   }
 };
 
-// const axiosGetPresentationsURL = "/v6/presentations";
-// export const axiosGetPresentations = async (
-//   category: string = "ALL",
-//   sort: string = "TIME",
-//   page: number = 0,
-//   size: number = 6
-// ): Promise<any> => {
-//   try {
-//     const response = await instance.get(axiosGetPresentationsURL, {
-//       params: {
-//         category,
-//         sort,
-//         page,
-//         size,
-//       },
-//     });
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-
 const axiosPostPresentationLikeURL = "/v6/presentations";
 export const axiosPostPresentationLike = async (
   presentationId: string
@@ -591,10 +512,7 @@ export const axiosPostPresentationLike = async (
 };
 
 const axiosMyLikedPresentationsURL = "/v6/presentations/me/likes";
-export const axiosMyLikedPresentations = async (
-  page: number,
-  size: number
-) => {
+export const axiosMyLikedPresentations = async (page: number, size: number) => {
   try {
     const response = await instance.get(axiosMyLikedPresentationsURL, {
       params: {
@@ -607,4 +525,3 @@ export const axiosMyLikedPresentations = async (
     throw error;
   }
 };
-

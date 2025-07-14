@@ -102,11 +102,15 @@ export function AdminCalendar() {
           ).toISOString(),
           location: item.presentationLocation,
           state: item.canceled ? "Canceled" : "Scheduled",
+          raw: {
+            slotId: item.slotId,
+          },
         })
       );
 
       const availableSlotsEvents = slotsResponse.data.map((item: any) => ({
         id: `slot-${item.slotId}`,
+        slotId: item.slotId,
         calendarId: "2",
         title: new Date(item.startTime).toLocaleTimeString("ko-KR", {
           hour: "2-digit",
