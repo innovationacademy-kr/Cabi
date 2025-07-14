@@ -190,7 +190,9 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="flex flex-row w-auto p-4 bg-neutral-200 rounded-xl shadow-lg border-0 "
+                  side="bottom"
+                  avoidCollisions={false}
+                  className="flex flex-col lg:flex-row w-auto p-4 bg-neutral-200 rounded-xl shadow-lg border-0"
                   align="start"
                 >
                   <div className="bg-neutral-100 rounded-2xl overflow-hidden ">

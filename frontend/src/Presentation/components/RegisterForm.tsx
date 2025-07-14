@@ -203,7 +203,7 @@ const RegisterForm = ({
         summary: data.summary,
         outline: data.outline,
         detail: data.detail,
-        videoLink: null, // CHECK :
+        videoLink: data.videoLink,
         recordingAllowed: data.recordingAllowed || false,
         publicAllowed: data.publicAllowed || false,
         thumbnailUpdated: isThumbnailChanged,
