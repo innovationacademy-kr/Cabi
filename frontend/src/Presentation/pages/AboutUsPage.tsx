@@ -4,15 +4,13 @@ import { ReactComponent as IntroduceMent } from "@/Presentation/assets/images/in
 
 const AboutUsPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white py-20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white py-14">
       <div className="max-w-4xl mx-auto p-8 space-y-12">
         <div className="text-gray-800 text-left space-y-6 text-lg leading-relaxed">
-          <h1 className="text-3xl font-light mb-10">
-            <span className="bg-gradient-to-r font-medium from-gray-800 to-gray-600 bg-clip-text text-transparent">
-              <AboutUsMent />
-              {/* 우리는 늘 고민해 왔습니다 */}
-            </span>
-          </h1>
+          <div className="flex items-center mb-10">
+            <AboutUsMent className="w-full max-w-[95vw] sm:max-w-[360px] md:w-1/2 md:max-w-[320px] lg:max-w-[380px]" />
+          </div>
+
           <p className="text-base mt-20">
             매주 수요일마다 42서울에서 오가는 깊이 있는 개발 이야기들, 그 소중한
             경험들이 단순한 발표로 끝나버리는 건 아쉽다고 느꼈습니다. 발표가
@@ -61,7 +59,7 @@ const AboutUsPage = () => {
           </p>
         </div>
 
-        <div className="text-gray-800  text-base leading-relaxed px-2 text-left">
+        <div className="text-gray-800 text-base leading-relaxed px-2 text-left">
           그리고 이 공간이, 더 멀리, 더 함께 나아가는 우리 모두의 도약판이
           되기를 바랍니다.
         </div>
@@ -82,13 +80,8 @@ const AboutUsPage = () => {
         </div>
 
         <div className="space-y-12">
-          <div className="flex items-center mb-12 justify-center">
-            <h2 className="text-2xl font-light text-gray-800 text-center w-full">
-              <span className="bg-gradient-to-r from-gray-800 to-gray-600 font-medium bg-clip-text text-transparent">
-                <IntroduceMent />
-                {/* 수요지식회의 주요 기능을 소개합니다 */}
-              </span>
-            </h2>
+          <div className="flex justify-center mb-12">
+            <IntroduceMent className="w-full max-w-[95vw] sm:max-w-[360px] md:w-1/2 md:max-w-[320px] lg:max-w-[380px]" />
           </div>
 
           <div className="space-y-12">
