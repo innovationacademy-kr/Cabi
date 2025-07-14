@@ -64,6 +64,7 @@ const handleReissueToken = async (error: any) => {
 };
 
 const handleUnauthorizedError = (error: any) => {
+  const requestUrl = error.config?.url || "";
   const token = getCookie("access_token");
   if (token) return handleReissueToken(error);
 
@@ -73,6 +74,8 @@ const handleUnauthorizedError = (error: any) => {
       path: "/",
       domain: getDomain(),
     });
+  } else if (requestUrl.includes("v6/presentations/")) {
+    return handlePresentationsUnauthorized(error);
   }
 
   return Promise.reject(error);
@@ -89,9 +92,6 @@ const handleErrorResponse = (error: any) => {
   const requestUrl = error.config?.url || "";
 
   if (status === HttpStatusCode.Unauthorized) {
-    if (requestUrl.includes("v6/presentations/")) {
-      return handlePresentationsUnauthorized(error);
-    }
     return handleUnauthorizedError(error);
   } else if (status === HttpStatusCode.InternalServerError) {
     logAxiosError(error, ErrorType.INTERNAL_SERVER_ERROR, "서버 에러");
