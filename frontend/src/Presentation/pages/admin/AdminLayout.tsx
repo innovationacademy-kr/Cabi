@@ -28,7 +28,7 @@ const AdminLayout = (): JSX.Element => {
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/admin/login");
     else if (token) {
-      if (checkPath()) navigate("/admin/presentation/detail");
+      if (checkPath()) navigate("/admin/presentations/home");
     }
   }, []);
 
