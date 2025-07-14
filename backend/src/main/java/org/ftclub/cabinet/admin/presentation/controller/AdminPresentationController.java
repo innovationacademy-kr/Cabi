@@ -13,6 +13,7 @@ import org.ftclub.cabinet.presentation.dto.PresentationDetailDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateRequestDto;
 import org.ftclub.cabinet.presentation.dto.PresentationUpdateServiceDto;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -69,7 +70,7 @@ public class AdminPresentationController {
 	 * @param thumbnail      썸네일 이미지 파일 (변경 시)
 	 * @throws IOException 썸네일 이미지 업로드 중 오류가 발생할 경우
 	 */
-	@PatchMapping("/{presentationId}")
+	@PatchMapping(value = "/{presentationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void updatePresentation(
 			@PathVariable Long presentationId,
 			@Valid @RequestPart("form") PresentationUpdateRequestDto updateForm,
