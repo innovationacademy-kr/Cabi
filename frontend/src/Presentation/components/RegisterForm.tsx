@@ -484,7 +484,7 @@ const RegisterForm = ({
       <RegisterConfirmDialog
         open={showConfirmModal}
         onOpenChange={setShowConfirmModal}
-        isEditMode={isEditMode}
+        isEditMode={isEditMode || isAdminMode }
         // formDataToSubmit={formDataToSubmit}
         onCancel={onCancelSubmit}
         onConfirm={onConfirmSubmit}
@@ -493,7 +493,7 @@ const RegisterForm = ({
       <RegisterResultDialog
         open={showResultModal}
         onOpenChange={setShowResultModal}
-        isEditMode={isEditMode}
+        isEditMode={isEditMode || isAdminMode}
         submitSuccess={submitSuccess}
         submitError={submitError}
         onClose={onCloseResultModal}
