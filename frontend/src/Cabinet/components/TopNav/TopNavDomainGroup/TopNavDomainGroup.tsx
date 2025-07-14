@@ -137,6 +137,8 @@ const LogoContainerStyled = styled.div<{
           ? "var(--sys-main-color)"
           : "var(--sys-default-main-color)"};
     }
+    width: 14px;
+    height: 14px;
   }
 
   & > svg > path {
