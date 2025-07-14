@@ -3,75 +3,77 @@ package org.ftclub.cabinet.presentation.service;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.presentation.domain.Category;
 import org.ftclub.cabinet.presentation.domain.Presentation;
-import org.ftclub.cabinet.presentation.domain.PresentationStatus;
 import org.ftclub.cabinet.presentation.repository.PresentationRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PresentationQueryService {
 
-	private static final Integer START_DAY = 1;
-
 	private final PresentationRepository presentationRepository;
 
-	public List<Presentation> getRegisteredPresentations(LocalDateTime start, LocalDateTime end) {
-		List<Presentation> presentations =
-				presentationRepository.findAllByDateTimeBetween(start, end);
-
-		return presentations.stream()
-				.filter(presentation ->
-						presentation.getPresentationStatus().equals(PresentationStatus.EXPECTED)
-								&& presentation.getUser() != null
-				)
-				.collect(Collectors.toList());
+	/**
+	 * 주어진 기간 안에 등록되어 있는 프레젠테이션을 시간순으로 조회합니다.
+	 *
+	 * @param yearMonth yyyy-MM 형식의 연월
+	 * @return 프레젠테이션 리스트
+	 */
+	public List<Presentation> findPresentationsByYearMonth(YearMonth yearMonth) {
+		LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();
+		LocalDateTime endDate = startDate.plusMonths(1);
+		return presentationRepository.findAllWithinPeriod(startDate, endDate);
 	}
 
-	public List<Presentation> getPresentationsByYearMonth(YearMonth yearMonth) {
-		LocalDateTime startDate = yearMonth.atDay(START_DAY).atStartOfDay();
-		LocalDateTime endDayDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
-
-		return presentationRepository.findAllByDateTimeBetweenOrderByDateTime(startDate,
-				endDayDate);
+	/**
+	 * presentationId로 프레젠테이션을 조회합니다. (no join)
+	 *
+	 * @param presentationId 프레젠테이션 ID
+	 * @return 프레젠테이션
+	 */
+	public Presentation findPresentationById(Long presentationId) {
+		return presentationRepository.findById(presentationId)
+				.orElseThrow(ExceptionStatus.PRESENTATION_NOT_FOUND::asServiceException);
 	}
 
-	public Presentation getOneDummyByDate(LocalDateTime dateTime) {
-		LocalDateTime startOfDate = dateTime.withHour(0).withMinute(0).withSecond(0);
-		LocalDateTime endOfDate = dateTime.withHour(23).withMinute(59).withSecond(59);
-		return presentationRepository.findAllByDateTimeBetween(startOfDate, endOfDate)
-				.stream()
-				.filter(p -> p.getUser() == null)
-				.findFirst()
-				.orElseThrow(ExceptionStatus.INVALID_PRESENTATION_DATE::asServiceException);
+	/**
+	 * presetnationId로 프레젠테이션을 조회합니다.
+	 * <p>
+	 * User도 Join 연산으로 함께 조회한다.
+	 * </p>
+	 *
+	 * @param presentationId 프레젠테이션 ID
+	 * @return 프레젠테이션
+	 */
+	public Presentation findPresentationByIdWithUser(Long presentationId) {
+		return presentationRepository.findByIdJoinUser(presentationId)
+				.orElseThrow(ExceptionStatus.PRESENTATION_NOT_FOUND::asServiceException);
 	}
 
-	public Page<Presentation> getPresentationsById(Long id, Pageable pageable) {
-		return presentationRepository.findPaginationById(id, pageable);
+	/**
+	 * userId로 프레젠테이션을 조회합니다.
+	 * <p>
+	 * 프레젠테이션을 최신순으로 조회합니다.
+	 * </p>
+	 *
+	 * @param userId 프레젠테이션 유저 ID
+	 */
+	public List<Presentation> findPresentationsByUserId(Long userId) {
+		return presentationRepository.findAllByUserIdAtDesc(userId);
 	}
 
-	public List<Presentation> getDummyDateBetweenMonth(
-			LocalDateTime now,
-			LocalDateTime localDateTime) {
-
-		List<Presentation> presentations =
-				presentationRepository.findAllByDateTimeBetweenOrderByDateTime(now, localDateTime);
-
-		return presentations.stream()
-				.filter(presentation -> presentation.getUser() == null)
-				.collect(Collectors.toList());
-	}
-
-	public List<Presentation> findUserFormsWithinPeriod(
-			LocalDateTime start,
-			LocalDateTime end,
-			PageRequest pageRequest) {
-		return presentationRepository.findAllBetweenAndNotNullUser(start, end, pageRequest);
+	public Page<Presentation> findPresentationsWithConditions(
+			Category category,
+			String sort,
+			Pageable pageable,
+			boolean publicOnly) {
+		return presentationRepository.findPresentations(category, sort, pageable, publicOnly);
 	}
 }

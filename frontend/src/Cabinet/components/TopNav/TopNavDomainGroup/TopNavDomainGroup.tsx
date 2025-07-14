@@ -18,26 +18,30 @@ const domains: ITopNavDomain[] = [
     adminPath: "/admin/home",
     logo: CabiLogo,
     title: "Cabi",
-    active: (pathname) => !pathname.includes("presentation"),
+    active: (pathname) => !pathname.includes("presentations"),
   },
   {
-    path: "/presentation/home",
-    adminPath: "/admin/presentation/detail",
+    path: "/presentations/home",
+    // adminPath: "/admin/presentations/detail", // detail 페이지에서 axiosGetPresentationById 호출 시 권한부족으로 에러
+    adminPath: "/admin/presentations/home",
     logo: PresentationLogo,
     title: "수요지식회",
-    active: (pathname) => pathname.includes("presentation"),
+    active: (pathname) => pathname.includes("presentations"),
   },
 ];
 
 const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
+
   return (
-    <DomainGroupContainerStyled>
+    <DomainGroupContainerStyled
+      isPresentation={pathname.includes("presentations")}
+    >
       {domains.map((domain, index) => (
         <DomainWrapperStyled key={domain.title}>
           <DomainContainerStyled
-            onClick={() => navigator(isAdmin ? domain.adminPath : domain.path)}
+            onClick={() => navigate(isAdmin ? domain.adminPath : domain.path)}
           >
             <LogoContainerStyled
               domainTitle={domain.title}
@@ -50,42 +54,70 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
               />
             </LogoContainerStyled>
             <DomainTitleStyled
-              className={domain.active(pathname) ? "domainButtonActive" : ""}
+              className={
+                domain.active(pathname)
+                  ? `domainButtonActive ${
+                      domain.title === "Cabi"
+                        ? "cabi"
+                        : domain.title === "수요지식회"
+                        ? "presentation"
+                        : ""
+                    }`
+                  : ""
+              }
               fontWeight="bold"
             >
               {domain.title}
             </DomainTitleStyled>
           </DomainContainerStyled>
-          {index < domains.length - 1 && <DomainSeparatorStyled />}
+          {index < domains.length - 1 && (
+            <DomainSeparatorStyled
+              isPresentation={pathname.includes("presentations")}
+            />
+          )}
         </DomainWrapperStyled>
       ))}
-      <ToggleWrapperStyled>
-        <DarkModeToggleSwitch id="darkModeToggleSwitch" />
-      </ToggleWrapperStyled>
+
+      {!pathname.includes("presentation") && (
+        <ToggleWrapperStyled>
+          <DarkModeToggleSwitch id="darkModeToggleSwitch" />
+        </ToggleWrapperStyled>
+      )}
     </DomainGroupContainerStyled>
   );
 };
 
-const DomainGroupContainerStyled = styled.div`
+const DomainGroupContainerStyled = styled.div<{ isPresentation: boolean }>`
   display: flex;
   align-items: center;
   width: 100%;
   height: 40px;
-  border-bottom: 1px solid var(--line-color);
+  min-height: 40px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+
+  border-bottom: 1px solid
+    ${({ isPresentation }) =>
+      isPresentation ? "#bcbcbc" : "var(--line-color)"};
   padding: 0 28px;
-  color: var(--gray-line-btn-color);
+  color: ${({ isPresentation }) =>
+    isPresentation ? "#7b7b7b" : "var(--gray-line-btn-color)"};
   font-size: 0.875rem;
-  background-color: var(--bg-color);
+  background-color: ${({ isPresentation }) =>
+    isPresentation ? "#ffffff" : "var(--bg-color)"};
 `;
 
 const DomainWrapperStyled = styled.div`
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 `;
 
 const DomainContainerStyled = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
 `;
 
 const LogoContainerStyled = styled.div<{
@@ -96,17 +128,15 @@ const LogoContainerStyled = styled.div<{
   align-items: center;
   width: 14px;
   height: 14px;
-  cursor: pointer;
+  flex-shrink: 0;
 
   svg {
     .logo_svg__currentPath {
       fill: ${(props) =>
         props.isCabi
-          ? "var(--sys-main-color);"
-          : " var(--sys-default-main-color);"};
+          ? "var(--sys-main-color)"
+          : "var(--sys-default-main-color)"};
     }
-    width: 14px;
-    height: 14px;
   }
 
   & > svg > path {
@@ -122,13 +152,17 @@ const DomainTitleStyled = styled.div<{ fontWeight: string }>`
   font-weight: ${(props) => props.fontWeight};
   margin-left: 4px;
   cursor: pointer;
+  line-height: 1;
+  flex-shrink: 0;
 `;
 
-const DomainSeparatorStyled = styled.div`
+const DomainSeparatorStyled = styled.div<{ isPresentation?: boolean }>`
   width: 1px;
   height: 20px;
   margin: 0 8px;
-  background-color: var(--service-man-title-border-btm-color);
+  background-color: ${({ isPresentation }) =>
+    isPresentation ? "#bcbcbc" : "var(--line-color)"};
+  flex-shrink: 0;
 `;
 
 const ToggleWrapperStyled = styled.div`
@@ -136,6 +170,7 @@ const ToggleWrapperStyled = styled.div`
   right: 18px;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 `;
 
 export default TopNavDomainGroup;

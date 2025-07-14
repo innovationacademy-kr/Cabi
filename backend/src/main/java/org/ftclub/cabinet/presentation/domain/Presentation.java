@@ -1,6 +1,9 @@
 package org.ftclub.cabinet.presentation.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,12 +13,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
 
 @Entity
@@ -29,71 +35,198 @@ public class Presentation {
 	@Column(name = "ID")
 	private Long id;
 
-	@Enumerated(value = EnumType.STRING)
-	@Column(name = "PRESENTATION_STATUS")
-	private PresentationStatus presentationStatus;
-
-	@Enumerated(value = EnumType.STRING)
-	@Column(name = "PRESENTATION_TIME")
-	private PresentationTime presentationTime;
-
-	@Column(name = "SUBJECT", length = 25)
-	private String subject;
-
-	@Column(name = "SUMMARY", length = 40)
-	private String summary;
-
-	@Column(name = "DETAIL", length = 500)
-	private String detail;
-
-	@Enumerated(value = EnumType.STRING)
-	@Column(name = "CATEGORY")
-	private Category category;
-
-	@Column(name = "DATE_TIME")
-	private LocalDateTime dateTime;
-
-	@Enumerated(value = EnumType.STRING)
-	private PresentationLocation presentationLocation;
-
-	@Setter
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_ID", nullable = true)
+	@JoinColumn(name = "USER_ID", nullable = false)
 	private User user;
 
-	protected Presentation(LocalDateTime dateTime,
-			PresentationTime presentationTime, String subject, String summary, String detail) {
-		this.dateTime = dateTime;
-		this.presentationTime = presentationTime;
-		this.subject = subject;
-		this.detail = detail;
-		this.summary = summary;
-		this.presentationStatus = PresentationStatus.EXPECTED;
-		this.presentationLocation = PresentationLocation.BASEMENT;
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "CATEGORY", nullable = false)
+	private Category category;
+
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "DURATION", nullable = false)
+	private Duration duration;
+
+	@Column(name = "TITLE", length = 50, nullable = false)
+	private String title;
+
+	@Column(name = "SUMMARY", length = 100, nullable = false)
+	private String summary;
+
+	@Column(name = "OUTLINE", length = 500, nullable = false)
+	private String outline;
+
+	@Lob
+	@Column(name = "DETAIL", length = 10000, nullable = false)
+	private String detail;
+
+	@Column(name = "CANCELED", nullable = false)
+	private boolean canceled = false;
+
+	@Column(name = "THUMBNAIL_S3_KEY", length = 2048)
+	private String thumbnailS3Key;
+
+	@Column(name = "VIDEO_LINK", length = 2048)
+	private String videoLink;
+
+	@Column(name = "RECORDING_ALLOWED", nullable = false)
+	private boolean recordingAllowed = false;
+
+	@Column(name = "PUBLIC_ALLOWED", nullable = false)
+	private boolean publicAllowed = false;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PRESENTATION_SLOT_ID")
+	private PresentationSlot slot;
+
+	@Column(name = "START_TIME", nullable = false)
+	private LocalDateTime startTime;
+
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "PRESENTATION_LOCATION", nullable = false)
+	private PresentationLocation presentationLocation;
+
+
+	@OneToMany(mappedBy = "presentation")
+	private final List<PresentationComment> presentationComments = new ArrayList<>();
+
+	@OneToMany(mappedBy = "presentation", cascade = CascadeType.ALL, orphanRemoval = true)
+	private final List<PresentationLike> presentationLikes = new ArrayList<>();
+
+	public static Presentation of(User user, Category category, Duration duration,
+			String title, String summary, String outline, String detail,
+			String thumbnailS3Key, boolean recodingAllowed, boolean publicAllowed,
+			PresentationSlot slot) {
+		Presentation presentation = new Presentation(user, category, duration,
+				title, summary, outline, detail,
+				thumbnailS3Key, null, recodingAllowed, publicAllowed,
+				slot, slot.getStartTime(), slot.getPresentationLocation());
+		if (!presentation.isValid()) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		slot.assignPresentation(presentation);
+		return presentation;
 	}
 
-	public static Presentation of(LocalDateTime dateTime,
-			PresentationTime presentationTime, String subject, String summary, String detail) {
-
-		return new Presentation(dateTime, presentationTime, subject, summary, detail);
-	}
-
-	public void adminUpdate(PresentationStatus newStatus, LocalDateTime newDateTime,
-			PresentationLocation newLocation) {
-		this.presentationStatus = newStatus;
-		this.dateTime = newDateTime;
-		this.presentationLocation = newLocation;
-	}
-
-	public void updateDummyToUserForm(Category category,
-			PresentationTime presentationTime, LocalDateTime presentationDateTime,
-			String subject, String summary, String detail) {
+	protected Presentation(User user, Category category, Duration duration,
+			String title, String summary, String outline, String detail,
+			String thumbnailS3Key, String videoLink,
+			boolean recordingAllowed, boolean publicAllowed,
+			PresentationSlot slot,
+			LocalDateTime startTime, PresentationLocation presentationLocation) {
+		this.user = user;
 		this.category = category;
-		this.presentationTime = presentationTime;
-		this.dateTime = presentationDateTime;
-		this.subject = subject;
+		this.duration = duration;
+		this.title = title;
 		this.summary = summary;
+		this.outline = outline;
 		this.detail = detail;
-		this.presentationStatus = PresentationStatus.EXPECTED;
+		this.thumbnailS3Key = thumbnailS3Key;
+		this.videoLink = videoLink;
+		this.recordingAllowed = recordingAllowed;
+		this.publicAllowed = publicAllowed;
+		this.slot = slot;
+		this.startTime = startTime;
+		this.presentationLocation = presentationLocation;
+	}
+
+	/**
+	 * 프레젠테이션의 슬롯과 연결된 내용을 변경합니다.
+	 * <p>
+	 * 변경된 슬롯의 시작 시간과 발표 장소를 프레젠테이션에 반영합니다. (중복 엔티티)
+	 * </p>
+	 *
+	 * @param startTime            시작 시간
+	 * @param presentationLocation 발표 장소
+	 */
+	public void changeSlotContents(LocalDateTime startTime,
+			PresentationLocation presentationLocation) {
+		this.startTime = startTime;
+		this.presentationLocation = presentationLocation;
+	}
+
+	/**
+	 * 프레젠테이션을 수정합니다.
+	 *
+	 * @param data 프레젠테이션 수정 데이터
+	 */
+	public void update(PresentationUpdateData data) {
+		this.category = data.getCategory();
+		this.duration = data.getDuration();
+		this.title = data.getTitle();
+		this.summary = data.getSummary();
+		this.outline = data.getOutline();
+		this.detail = data.getDetail();
+		this.videoLink = data.getVideoLink();
+		this.recordingAllowed = data.isRecordingAllowed();
+		this.publicAllowed = data.isPublicAllowed();
+		this.thumbnailS3Key = data.getThumbnailS3Key();
+	}
+
+	/**
+	 * 프레젠테이션을 취소합니다.
+	 * <p>
+	 * 연결된 slot을 삭제합니다. 취소 시, 되돌릴 수 없습니다.
+	 * </p>
+	 */
+	public void cancel() {
+		// set slot to null
+		this.slot.cancelPresentation();
+		this.slot = null;
+		// set canceled flag to true
+		if (this.canceled) {
+			throw ExceptionStatus.PRESENTATION_ALREADY_CANCELED.asDomainException();
+		}
+		this.canceled = true;
+	}
+
+	/**
+	 * 현재 프레젠테이션의 상태(완료, 예정, 취소)를 반환합니다.
+	 *
+	 * @return {@link PresentationStatus} 현재 프레젠테이션의 상태
+	 */
+	public PresentationStatus getCurrentStatus() {
+		if (this.canceled) {
+			return PresentationStatus.CANCELED;
+		}
+		if (this.startTime.isBefore(LocalDateTime.now())) {
+			return PresentationStatus.DONE;
+		}
+		return PresentationStatus.UPCOMING;
+	}
+
+	/**
+	 * 프레젠테이션이 유효한지 검사합니다.
+	 * <p>
+	 * 객체가 생성될 때에만 유효성을 검사합니다.
+	 * </p>
+	 *
+	 * @return 유효성 검사 결과
+	 */
+	private boolean isValid() {
+		return (user != null && category != null && duration != null
+				&& title != null && !title.isBlank() && title.length() <= 50
+				&& summary != null && !summary.isBlank() && summary.length() <= 100
+				&& outline != null && !outline.isBlank() && outline.length() <= 500
+				&& detail != null && !detail.isBlank() && detail.length() <= 10000
+				&& slot != null);
+	}
+
+	/**
+	 * 프레젠테이션에 '좋아요'를 추가합니다.
+	 *
+	 * @param like 추가할 PresentationLike
+	 */
+	public void addLike(PresentationLike like) {
+		this.presentationLikes.add(like);
+	}
+
+	/**
+	 * 프레젠테이션에서 '좋아요'를 제거합니다.
+	 *
+	 * @param like 제거할 PresentationLike
+	 */
+	public void removeLike(PresentationLike like) {
+		this.presentationLikes.remove(like);
 	}
 }

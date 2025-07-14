@@ -4,18 +4,18 @@ server:
 #------------------------------CABINET------------------------------
 cabinet:
   production: false # 배포 환경에서는 true
+  local: false
+
   server:
     fe-host: http://localhost
     be-host: http://localhost
   #------------------------------JWT, TOKEN------------------------------
   jwt:
     jwt-secret-key: JWT_SECRET_KEY_JWT_SECRET_KEY_JWT_SECRET_KEY_JWT_SECRET_KEY_JWT_SECRET_KEY
-    token:
-      main-token-name: access_token
-      admin-token-name: admin_access_token
-      expiry: 28 #days
-      main-provider: ft
-      admin-provider: google
+    main-provider: ft
+    google-provider: google
+    access-expiry: 1h # 1시간
+    refresh-expiry: 30d # 30일
   #------------------------------DOMAIN, URL------------------------------
   domain-name:
     cookie-domain: cabi.42seoul.io
@@ -98,7 +98,7 @@ cabinet:
       extension-delete-time: 0 */5 * * * * # 5분마다
       extension-issue-time: 0 0 0 2 * * # 매월 2일 0시 0분 0초
       section-alarm-time: 0 */5 * * * * # 5분마다
-      generate-presentation-form: 0 0 0 1 * * # 매월 1일 0시 0분 0초
+      generate-presentation-slot: 0 0 0 1 * * # 매월 1일 0시 0분 0초
   #------------------------------CABINET POLICY------------------------------
   policy:
     in-session:
@@ -240,6 +240,7 @@ spring:
             authorization-uri: https://api.intra.42.fr/oauth/authorize
             token-uri: https://api.intra.42.fr/oauth/token
             user-info-uri: https://api.intra.42.fr/v2/me
+            users-info-uri: https://api.intra.42.fr/v2/users
             user-name-attribute: login
 
           kakao:
@@ -260,7 +261,7 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:;MODE=MySQL
+    url: jdbc:h2:mem:testdb;MODE=MySQL
     username: root
     password: test_password
 
@@ -271,11 +272,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
       hibernate:
-        globally_quoted_identifiers: true
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        auto_quote_keyword: true
         format_sql: true
     defer-datasource-initialization: true
 
@@ -333,3 +332,18 @@ slack:
 logging:
   level:
     org.springframework.security: DEBUG
+
+#------------------------------AWS(MinIO)------------------------------
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+      auto: false
+    s3:
+      endpoint: http://localhost:9000
+      path-style-access-enabled: true
+      bucket: test-bucket
+      image-folder: test-folder
+    credentials:
+      access-key: test-access-key
+      secret-key: test-secret-key

@@ -133,7 +133,7 @@ const ToggleKnobStyled = styled.span<{ isChecked: boolean }>`
 const MoonIconWrapperStyled = styled.div`
   position: absolute;
   left: 5px;
-  top: 50%;
+  top: 45%;
   transform: translateY(-50%);
   width: 16px;
   height: 16px;

@@ -1,503 +1,96 @@
-import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
-import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { toggleItem } from "@/Cabinet/components/Common/MultiToggleSwitch";
-import MultiToggleSwitchSeparated from "@/Cabinet/components/Common/MultiToggleSwitchSeparated";
-import { NotificationModal } from "@/Cabinet/components/Modals/NotificationModal/NotificationModal";
-import CautionIcon from "@/Cabinet/assets/images/cautionSign.svg";
-import IconType from "@/Cabinet/types/enum/icon.type.enum";
-import RegisterModal from "@/Presentation/components/Modals/RegisterModal/RegisterModal";
-import DropdownDateMenu from "@/Presentation/components/Register/DropdownDateMenu";
-import DropdownTimeMenu from "@/Presentation/components/Register/DropdownTimeMenu";
-import InputField from "@/Presentation/components/Register/InputField";
-import {
-  PresentationCategoryTypeLabelMap,
-  PresentationTimeMap,
-} from "@/Presentation/assets/data/maps";
-import { PresentationCategoryType } from "@/Presentation/types/enum/presentation.type.enum";
-import { axiosGetPresentationAbleDates } from "@/Presentation/api/axios/axios.custom";
-import useInput, { IValidationResult } from "@/Presentation/hooks/useInput";
-import useInvalidDates from "@/Presentation/hooks/useInvalidDates";
-import {
-  MAX_CONTENT_LENGTH,
-  MAX_SUMMARY_LENGTH,
-  MAX_TITLE_LENGTH,
-} from "@/Presentation/constants/policy";
-
-export type PresentationTimeKey =
-  | ""
-  | "30분"
-  | "1시간"
-  | "1시간 30분"
-  | "2시간";
-
-const toggleList: toggleItem[] = Object.entries(
-  PresentationCategoryTypeLabelMap
-).map(([key, name]) => ({ name, key }));
-
-const NotificationTimeDetail = `발표 시작 시간은 수요일 오후 2시이며
-추후에 변경될 수 있습니다.
-`;
-
-const NotificationDateDetail = `현재 달부터 두 달 후까지의 날짜 중에서
-선택이 가능합니다. 각 월별로 신청 가능한
-일정이 업데이트됩니다.
-`;
-
-// TODO: implement error handling for each input field
-const requiredValidator = (value: string): IValidationResult => ({
-  isValid: value.trim().length > 0,
-  message: "* 필수 항목입니다.",
-});
-
-const validateFields = (fields: { name: string; value: string }[]) => {
-  return fields.reduce(
-    (acc, field) => {
-      if (field.value.trim() === "") {
-        acc.missingFields.push(field.name);
-      }
-      return acc;
-    },
-    { missingFields: [] as string[] }
-  );
-};
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { ReactComponent as RegisterBanner } from "@/Presentation/assets/images/registerBanner.svg";
+import { axiosGetPresentationById } from "../api/axios/axios.custom";
+import { axiosGetAdminPresentationById } from "../api/axios/axios.custom";
+import { RegisterResultDialog } from "../components/Modals/PresentationResponseModal";
+import RegisterForm from "../components/RegisterForm";
+import { RegisterType } from "../types/enum/presentation.type.enum";
 
 const RegisterPage = () => {
-  const [toggleType, setToggleType] = useState<PresentationCategoryType>(
-    PresentationCategoryType.DEVELOP
-  );
-  const [date, setDate] = useState<string>("");
-  const [time, setTime] = useState<PresentationTimeKey>("");
-  const [focusedSection, setFocusedSection] = useState<string | null>(null);
-  const [isClicked, setIsClicked] = useState<boolean>(false);
-  const [isFinished, setIsFinished] = useState<boolean>(false);
-  const [availableDates, setAvailableDates] = useState<string[]>([]);
-  const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
-  const [errorDetails, setErrorDetails] = useState("");
-  const [title, setTitle, titleError] = useInput(
-    "",
-    MAX_TITLE_LENGTH,
-    requiredValidator
-  );
-  const [summary, setSummary, summaryError] = useInput(
-    "",
-    MAX_SUMMARY_LENGTH,
-    requiredValidator
-  );
-  const [content, setContent, contentError] = useInput(
-    "",
-    MAX_CONTENT_LENGTH,
-    requiredValidator
-  );
+  const { presentationId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [initialData, setInitialData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const invalidDates: string[] = useInvalidDates()?.map((date) =>
-    format(date, "y/M/d")
-  );
+  // 추가: 에러 모달 상태
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const handleFocus = (sectionName: string) => {
-    setFocusedSection(sectionName);
-  };
-
-  const handleBlur = () => {
-    setFocusedSection(null);
-  };
-
-  const handleMouseEnter = () => {
-    setShowTooltip(true);
-  };
-
-  const handleMouseLeave = () => {
-    setShowTooltip(false);
-  };
-
-  const tryRegister = () => {
-    // TODO: implement error handling for each input field
-    if (titleError || summaryError || contentError) {
-      return;
-    }
-    const fields = [
-      { name: "날짜", value: date },
-      { name: "시간", value: time },
-      { name: "제목", value: title },
-      { name: "한 줄 요약", value: summary },
-      { name: "내용", value: content },
-    ];
-    const { missingFields } = validateFields(fields);
-    if (missingFields.length > 0) {
-      const errorMessage = `<strong>${missingFields.join(
-        ", "
-      )}</strong> 을(를)\n입력하지 않았습니다.
-      해당 항목을 입력한 후 다시 제출해주세요.`;
-      setErrorDetails(errorMessage);
-      setShowErrorModal(true);
-      return;
-    }
-    setIsClicked(true);
-    setShowResponseModal(true);
-  };
+  const isEditMode = !!presentationId;
+  // admin 경로 판별
+  const isAdminMode = location.pathname.includes("/admin/");
 
   useEffect(() => {
-    const fetchPresentationAbleDates = async () => {
-      try {
-        const response = await axiosGetPresentationAbleDates();
-        const availableDates = response.data.results;
-        availableDates.sort();
-        const formattedAvailableDates = availableDates.map(
-          (dateTime: string) => {
-            return format(new Date(dateTime), "y/M/d");
-          }
-        );
-        setAvailableDates(formattedAvailableDates);
-      } catch (error) {
-        console.error("Failed to get able dates", error);
+    if (isEditMode && presentationId) {
+      fetchPresentationData(presentationId);
+    } else {
+      setInitialData(null);
+    }
+    // eslint-disable-next-line
+  }, [presentationId, isEditMode]);
+
+  const fetchPresentationData = async (presentationId: string) => {
+    setLoading(true);
+    try {
+      const res = await (isAdminMode
+        ? axiosGetAdminPresentationById(presentationId)
+        : axiosGetPresentationById(presentationId));
+      // editAllowed == false면 수정 불가 (not admin, not owner)
+      if (!res.data.data.editAllowed) {
+        alert("수정 권한이 없습니다.");
+        navigate("/presentations/" + presentationId);
+        return;
       }
-    };
-    fetchPresentationAbleDates();
-  }, []);
+      setInitialData(res.data);
+    } catch (error) {
+      console.error("신청폼 불러오기 실패:", error);
+      setSubmitSuccess(false);
+      setSubmitError("신청 정보를 불러오지 못했습니다.");
+      setShowResultModal(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (isEditMode && loading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <>
-      <RegisterPageStyled>
-        <MainTitleStyled>수요지식회 신청</MainTitleStyled>
-        <BackgroundStyled>
-          <SubSectionStyled>
-            <SubNameFirstStyled>카테고리</SubNameFirstStyled>
-            <MultiToggleSwitchSeparated
-              initialState={toggleType}
-              setState={setToggleType}
-              toggleList={toggleList}
-              fontSize={"1rem"}
-            />
-          </SubSectionStyled>
-          <DateTimeContainer>
-            <SubSectionStyled>
-              <SubNameStyled>
-                날짜
-                <CautionIconStyled
-                  src={CautionIcon}
-                  alt="Notification Icon"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                />
-                {showTooltip && (
-                  <TooltipBoxDateStyled
-                    onMouseEnter={() => handleMouseEnter()}
-                    onMouseLeave={() => handleMouseLeave()}
-                  >
-                    {NotificationDateDetail}
-                  </TooltipBoxDateStyled>
-                )}
-              </SubNameStyled>
-              <DropdownStyled>
-                <DropdownDateMenu
-                  onClick={setDate}
-                  data={availableDates}
-                  invalidDates={invalidDates}
-                />
-              </DropdownStyled>
-            </SubSectionStyled>
-            <SubSectionStyled>
-              <SubNameStyled>
-                시간
-                <CautionIconStyled
-                  src={CautionIcon}
-                  alt="Notification Icon"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                />
-                {showTooltip && (
-                  <TooltipBoxTimeStyled
-                    onMouseEnter={() => handleMouseEnter()}
-                    onMouseLeave={() => handleMouseLeave()}
-                  >
-                    {NotificationTimeDetail}
-                  </TooltipBoxTimeStyled>
-                )}
-              </SubNameStyled>
-              <DropdownStyled>
-                <DropdownTimeMenu onClick={setTime} />
-              </DropdownStyled>
-            </SubSectionStyled>
-          </DateTimeContainer>
-          <SubSectionStyled>
-            <InputField
-              title="제목"
-              value={title}
-              onChange={setTitle}
-              onFocus={() => handleFocus("title")}
-              onBlur={handleBlur}
-              maxLength={MAX_TITLE_LENGTH}
-              placeholder="제목을 입력해주세요"
-              isFocused={focusedSection === "title"}
-              isInputArea={true}
-            />
-          </SubSectionStyled>
-          <SubSectionStyled>
-            <InputField
-              title="한 줄 요약"
-              value={summary}
-              onChange={setSummary}
-              onFocus={() => handleFocus("summary")}
-              onBlur={handleBlur}
-              maxLength={MAX_SUMMARY_LENGTH}
-              placeholder="한 줄 요약을 입력해주세요"
-              isFocused={focusedSection === "summary"}
-              isInputArea={true}
-            />
-          </SubSectionStyled>
-          <SubSectionStyled>
-            <InputField
-              title="내용"
-              value={content}
-              onChange={setContent}
-              onFocus={() => handleFocus("content")}
-              onBlur={handleBlur}
-              maxLength={MAX_CONTENT_LENGTH}
-              placeholder="내용을 입력해주세요"
-              isFocused={focusedSection === "content"}
-              isInputArea={false}
-            />
-          </SubSectionStyled>
-          <RegisterButtonStyled
-            onClick={tryRegister}
-            disabled={isClicked || isFinished}
-          >
-            {isClicked || isFinished ? <LoadingAnimation /> : "신청하기"}
-          </RegisterButtonStyled>
-        </BackgroundStyled>
-      </RegisterPageStyled>
-      {showResponseModal && (
-        <RegisterModal
-          title={title}
-          summary={summary}
-          content={content}
-          date={date}
-          time={PresentationTimeMap[time]}
-          toggleType={toggleType}
-          closeModal={() => {
-            setShowResponseModal(false);
-            setIsClicked(false);
-          }}
-          setIsFinished={setIsFinished}
+      <div className="relative w-full">
+        <RegisterBanner className="w-full block aspect-16-3" />
+        <div className="w-full bg-white" />
+      </div>
+      <div className="w-full flex flex-col justify-start items-center bg-neutral-100">
+        <div className="flex-1 w-full flex justify-center">
+          <RegisterForm
+            type={
+              isAdminMode
+                ? RegisterType.ADMIN
+                : isEditMode
+                ? RegisterType.EDIT
+                : RegisterType.CREATE
+            }
+            initialData={initialData}
+            presentationId={presentationId}
+          />
+        </div>
+        {/* 에러 모달 */}
+        <RegisterResultDialog
+          open={showResultModal}
+          onOpenChange={setShowResultModal}
+          isEditMode={isEditMode}
+          submitSuccess={submitSuccess}
+          submitError={submitError}
+          onClose={() => setShowResultModal(false)}
         />
-      )}
-      {showErrorModal && (
-        <NotificationModal
-          title="입력 오류"
-          detail={errorDetails}
-          closeModal={() => setShowErrorModal(false)}
-          iconType={IconType.ERRORICON}
-        />
-      )}
+      </div>
     </>
   );
 };
-
-const RegisterPageStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  min-height: 100%;
-  overflow-y: auto;
-  input::-webkit-contacts-auto-fill-button {
-    visibility: hidden;
-    display: none !important;
-    pointer-events: none;
-    position: absolute;
-    right: 0;
-  }
-  @media (max-width: 700px) {
-    background-color: var(--card-bg-color);
-  }
-`;
-
-const MainTitleStyled = styled.h1`
-  margin-top: 40px;
-  font-size: 1.8rem;
-  font-weight: 700;
-  line-height: 3rem;
-  @media (max-width: 700px) {
-    display: none;
-  }
-`;
-
-const BackgroundStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 700px;
-  border-radius: 10px;
-  background-color: var(--card-bg-color);
-  margin-top: 20px;
-  padding: 20px;
-  margin-bottom: 20px;
-  @media (max-width: 700px) {
-    margin-top: 0;
-  }
-`;
-
-const SubNameFirstStyled = styled.div`
-  margin-left: 5px;
-  margin-bottom: 2px;
-  font-weight: 700;
-  font-size: 1.125rem;
-  line-height: 2.25rem;
-  width: fit-content;
-  @media (max-width: 700px) {
-    width: 100%;
-  }
-`;
-
-export const SubNameStyled = styled.div`
-  margin-left: 5px;
-  margin-bottom: 2px;
-  margin-top: 24px;
-  font-weight: 700;
-  font-size: 1.125rem;
-  line-height: 2.25rem;
-  width: fit-content;
-  display: flex;
-  align-items: center;
-  position: relative;
-  @media (max-width: 700px) {
-    display: flex;
-    flex-wrap: wrap;
-  }
-`;
-
-const SubSectionStyled = styled.div`
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const DropdownStyled = styled.div`
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  background-color: var(--bg-color);
-  border: none;
-  resize: none;
-  outline: none;
-  /* cursor: pointer; */
-`;
-
-const RegisterButtonStyled = styled.button`
-  width: 180px;
-  height: 48px;
-  font-size: 1rem;
-  font-weight: 480;
-  margin-top: 1rem;
-  background-color: var(--sys-main-color);
-  @media (max-width: 700px) {
-    width: 100%;
-  }
-`;
-
-const DateTimeContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  width: 100%;
-  @media (max-width: 700px) {
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-  }
-`;
-
-const CautionIconStyled = styled.img`
-  margin-top: 2px;
-  margin-left: 5px;
-  width: 16px;
-  height: 16px;
-  opacity: 0.6;
-  :hover {
-    cursor: pointer;
-    opacity: 1;
-  }
-`;
-
-const TooltipBoxDateStyled = styled.div`
-  position: absolute;
-  top: -50px;
-  left: 340%;
-  transform: translateX(-50%);
-  font-weight: 400;
-  color: var(--white-text-with-bg-color);
-  background-color: var(--tooltip-shadow-color);
-  width: 240px;
-  padding: 10px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  text-align: center;
-  line-height: 1.25rem;
-  letter-spacing: -0.02rem;
-  white-space: pre-line;
-  z-index: 100;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 82%;
-    right: 100%;
-    margin-top: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent var(--tooltip-shadow-color) transparent
-      transparent;
-  }
-
-  ${SubNameStyled}:hover & {
-    opacity: 1;
-  }
-`;
-
-const TooltipBoxTimeStyled = styled.div`
-  position: absolute;
-  top: -32px;
-  left: 320%;
-  transform: translateX(-50%);
-  font-weight: 400;
-  color: var(--white-text-with-bg-color);
-  background-color: var(--tooltip-shadow-color);
-  width: 220px;
-  padding: 10px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  text-align: center;
-  line-height: 1.25rem;
-  letter-spacing: -0.02rem;
-  white-space: pre-line;
-  z-index: 100;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 82%;
-    right: 100%;
-    margin-top: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent var(--tooltip-shadow-color) transparent
-      transparent;
-  }
-
-  ${SubNameStyled}:hover & {
-    opacity: 1;
-  }
-`;
 
 export default RegisterPage;

@@ -12,7 +12,18 @@ import { setAuthorizationHeader } from "@/Cabinet/utils/axiosUtils";
 import { getDomain } from "@/Cabinet/utils/domainUtils";
 
 let isRefreshing = false;
-// NOTE : 토큰 재발급 시도 중인지 확인하는 플래그
+const handlePresentationsUnauthorized = (error: any) => {
+  const message =
+    "로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?";
+  const shouldRedirect = window.confirm(message);
+
+  if (shouldRedirect) {
+    const isAdmin = window.location.pathname.includes("/admin");
+    const redirectUrl = `${isAdmin ? "/admin" : ""}/login`;
+    window.location.replace(redirectUrl);
+  }
+  return Promise.reject(error);
+};
 
 const redirectToLoginWithAlert = (error: any) => {
   const loginUrl = "/login";
@@ -53,6 +64,7 @@ const handleReissueToken = async (error: any) => {
 };
 
 const handleUnauthorizedError = (error: any) => {
+  const requestUrl = error.config?.url || "";
   const token = getCookie("access_token");
   if (token) return handleReissueToken(error);
 
@@ -62,6 +74,8 @@ const handleUnauthorizedError = (error: any) => {
       path: "/",
       domain: getDomain(),
     });
+  } else if (requestUrl.includes("v6/presentations/")) {
+    return handlePresentationsUnauthorized(error);
   }
 
   return Promise.reject(error);
@@ -74,11 +88,14 @@ const handleForbiddenError = (error: any) => {
 };
 
 const handleErrorResponse = (error: any) => {
-  if (error.response?.status === HttpStatusCode.Unauthorized) {
+  const status = error.response?.status;
+  const requestUrl = error.config?.url || "";
+
+  if (status === HttpStatusCode.Unauthorized) {
     return handleUnauthorizedError(error);
-  } else if (error.response?.status === HttpStatusCode.InternalServerError) {
+  } else if (status === HttpStatusCode.InternalServerError) {
     logAxiosError(error, ErrorType.INTERNAL_SERVER_ERROR, "서버 에러");
-  } else if (error.response?.status === HttpStatusCode.Forbidden) {
+  } else if (status === HttpStatusCode.Forbidden) {
     handleForbiddenError(error);
   }
 

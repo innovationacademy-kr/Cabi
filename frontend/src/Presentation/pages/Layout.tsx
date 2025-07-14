@@ -1,111 +1,125 @@
-import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import Footer from "@/components/ui/footer";
+import { useEffect, useRef, useState } from "react";
+import { Outlet, useNavigate } from "react-router";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { userState } from "@/Cabinet/recoil/atoms";
-import LoadingAnimation from "@/Cabinet/components/Common/LoadingAnimation";
-import { UserDto } from "@/Cabinet/types/dto/user.dto";
-import { axiosMyInfo } from "@/Cabinet/api/axios/axios.custom";
+import TopNavDomainGroup from "@/Cabinet/components/TopNav/TopNavDomainGroup/TopNavDomainGroup";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import LeftNav from "@/Presentation/components/LeftNav/LeftNav";
 import TopNavContainer from "@/Presentation/components/TopNav/TopNav.container";
-
-const body: HTMLElement = document.body;
-const root: HTMLElement = document.documentElement;
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isValidToken, setIsValidToken] = useState<boolean>(false);
-  const setUser = useSetRecoilState<UserDto>(userState);
-  const navigate = useNavigate();
   const location = useLocation();
   const { closeAll } = useMenu();
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const token = getCookie("access_token");
+  const isLoginPage = location.pathname === "/login";
+  const navigate = useNavigate();
 
-  const isRootPath: boolean = location.pathname === "/presentation/";
-  const isLoginPage: boolean = location.pathname === "/login";
-  const isHomePage: boolean = location.pathname === "/home";
-
-  const getMyInfo = async () => {
-    try {
-      const { data: myInfo } = await axiosMyInfo();
-      setUser(myInfo);
-      setIsValidToken(true);
-      if (isRootPath || isLoginPage) {
-        navigate("/presentation/home");
-      }
-    } catch (error) {
-      navigate("/login");
+  useEffect(() => {
+    if (location.pathname === "/presentations" || location.pathname === "/presentations/") {
+      navigate("/presentations/home", { replace: true });
     }
-  };
+  }, [location.pathname, navigate]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
+    root.style.setProperty(
+      "--sys-main-color",
+      "var(--sys-presentation-main-color)"
+    );
+    root.style.setProperty(
+      "--sys-sub-color",
+      "var(--sys-presentation-sub-color)"
+    );
+    body.style.setProperty(
+      "--sys-main-color",
+      "var(--sys-presentation-main-color)"
+    );
+    body.style.setProperty(
+      "--sys-sub-color",
+      "var(--sys-presentation-sub-color)"
+    );
+  }, []);
+
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
 
   const handleClickBg = () => {
     closeAll();
   };
 
-  useEffect(() => {
-    if (!token && !isLoginPage) navigate("/login");
-    else if (token) getMyInfo();
-  }, []);
+  if (isLoginPage) {
+    return <Outlet />;
+  }
 
-  useEffect(() => {
-    root.style.setProperty(
-      "--sys-main-color",
-      "var(--sys-presentation-main-color)"
-    );
-    root.style.setProperty(
-      "--sys-sub-color",
-      "var(--sys-presentation-sub-color)"
-    );
-    body.style.setProperty(
-      "--sys-main-color",
-      "var(--sys-presentation-main-color)"
-    );
-    body.style.setProperty(
-      "--sys-sub-color",
-      "var(--sys-presentation-sub-color)"
-    );
-  }, []);
-
-  return isLoginPage ? (
-    <Outlet />
-  ) : (
-    <React.Fragment>
-      {isValidToken && <TopNavContainer setIsLoading={setIsLoading} />}
-      {isLoading ? (
-        <LoadingAnimation />
-      ) : (
-        <WrapperStyled>
-          <LeftNav isVisible={isHomePage} />
+  return (
+    <PageContainer className="bg-white">
+      <HeaderSection>
+        <TopNavDomainGroup />
+        <TopNavContainer setIsLoading={setIsLoading} />
+      </HeaderSection>
+      <ContentArea>
+        <ScrollArea ref={scrollAreaRef} onClick={handleClickBg}>
           <MainStyled>
-            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
+            <MenuBgStyled id="menuBg" />
             <Outlet />
           </MainStyled>
-        </WrapperStyled>
-      )}
-    </React.Fragment>
+          <Footer />
+        </ScrollArea>
+      </ContentArea>
+    </PageContainer>
   );
 };
 
-const WrapperStyled = styled.div`
-  width: 100%;
-  height: 100%;
+const PageContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  height: 100vh;
   overflow: hidden;
+`;
+
+const HeaderSection = styled.header`
+  position: relative;
+  z-index: 100;
+  flex-shrink: 0;
+  background: white;
+  border-bottom: 1px solid #bcbcbc;
+`;
+
+const ContentArea = styled.div`
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+`;
+
+const ScrollArea = styled.div`
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
 `;
 
 const MainStyled = styled.main`
   width: 100%;
-  height: 100%;
-  overflow-y: auto;
   user-select: none;
+  min-height: calc(100vh - 110px);
 `;
 
 const MenuBgStyled = styled.div`
-  position: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
 `;
 
 export default Layout;

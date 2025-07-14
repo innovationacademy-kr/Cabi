@@ -5,7 +5,6 @@ const lightValues = css`
   --sys-main-color: var(--ref-purple-500);
   --sys-default-main-color: var(--ref-purple-500);
   --sys-default-mine-color: var(--ref-green-100);
-  --sys-presentation-main-color: var(--ref-blue-600);
 
   /* component variable */
   --white-text-with-bg-color: var(--ref-white);
@@ -15,7 +14,6 @@ const lightValues = css`
   --color-picker-hash-bg-color: var(--ref-gray-200);
   --capsule-btn-border-color: var(--ref-gray-200);
   --map-floor-color: var(--ref-gray-200);
-  --presentation-no-event-past-color: var(--ref-gray-200);
   --agu-form-input-border-color: var(--ref-gray-200);
   --inventory-item-title-border-btm-color: var(--ref-gray-300);
   --service-man-title-border-btm-color: var(--ref-gray-300);
@@ -28,14 +26,9 @@ const lightValues = css`
 
   --button-line-color: var(--sys-main-color);
   --capsule-btn-hover-bg-color: var(--ref-transparent-purple-100);
-  --presentation-no-event-cur-color: var(--bg-color);
   --color-picker-bg-color: var(--bg-color);
   --extension-card-active-btn-color: var(--sys-main-color);
-  --presentation-card-speaker-name-color: var(--ref-gray-500);
-  --presentation-card-sub-title-color: var(--ref-gray-800);
   --table-even-row-bg-color: var(--ref-purple-100);
-  --presentation-table-even-row-bg-color: var(--ref-blue-100);
-  --presentation-dropdown-select-color: var(--ref-blue-200);
   --color-picker-hash-color: var(--ref-gray-400);
 
   /* cabinet */
@@ -66,7 +59,6 @@ const darkValues = css`
   --sys-main-color: var(--ref-purple-600);
   --sys-default-main-color: var(--ref-purple-600);
   --sys-default-mine-color: var(--ref-green-200);
-  --sys-presentation-main-color: var(--ref-blue-700);
 
   /* component variable */
   --white-text-with-bg-color: var(--ref-gray-100);
@@ -76,7 +68,6 @@ const darkValues = css`
   --color-picker-hash-bg-color: var(--ref-gray-700);
   --capsule-btn-border-color: var(--ref-gray-700);
   --map-floor-color: var(--ref-gray-800);
-  --presentation-no-event-past-color: var(--ref-gray-900);
   --agu-form-input-border-color: var(--ref-gray-500);
   --inventory-item-title-border-btm-color: var(--ref-gray-500);
   --line-color: var(--ref-gray-500);
@@ -89,14 +80,9 @@ const darkValues = css`
 
   --button-line-color: var(--sys-main-color);
   --capsule-btn-hover-bg-color: var(--ref-transparent-purple-200);
-  --presentation-no-event-cur-color: var(--ref-gray-700);
   --color-picker-bg-color: var(--ref-gray-600);
   --extension-card-active-btn-color: var(--gray-line-btn-color);
-  --presentation-card-speaker-name-color: var(--ref-gray-400);
-  --presentation-card-sub-title-color: var(--ref-gray-300);
   --table-even-row-bg-color: var(--ref-purple-900);
-  --presentation-table-even-row-bg-color: var(--ref-blue-900);
-  --presentation-dropdown-select-color: var(--ref-blue-800);
   --color-picker-hash-color: var(--ref-gray-500);
 
   /* cabinet */
