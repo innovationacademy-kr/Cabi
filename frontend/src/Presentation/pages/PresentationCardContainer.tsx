@@ -14,12 +14,11 @@ const PresentationCardContainer: React.FC<PresentationCardContainerProps> = ({
   maxCols = 3,
 }) => {
   const navigate = useNavigate();
+  const maxView = `xl:grid-cols-${maxCols}`;
 
   return presentations && presentations.length > 0 ? (
-    <div
-      className="w-full flex flex-wrap gap-8 justify-center px-4"
-      style={{ minHeight: 440 }}
-    >
+    <div className={` grid ${maxView} lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-8`}
+    style={{ minHeight: 440 }} >
       {presentations.map((p) => (
         <div
           key={p.presentationId}
