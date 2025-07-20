@@ -230,7 +230,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
                         day_today: "bg-[#f5f5f5] text-[#222222] font-semibold",
                         day_outside: "opacity-50 text-[#737373]",
                         day_disabled:
-                          "text-[#737373] text-[#888888] opacity-50 bg-[#ffffff] cursor-not-allowed",
+                          "text-[#b0b0b0] opacity-50 bg-[#ffffff] cursor-not-allowed",
                         day_range_middle:
                           "aria-selected:bg-[#f5f5f5] aria-selected:text-[#1a1a1a]",
                         day_hidden: "invisible",
