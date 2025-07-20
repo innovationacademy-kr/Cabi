@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -26,9 +25,6 @@ import RegisterInput from "./RegisterInput";
 import RegisterRadioGroup from "./RegisterRadioGroup";
 import RegisterTextarea from "./RegisterTextarea";
 import { RegisterTimeSelect } from "./RegisterTimeSelect";
-
-const MAX_TITLE = 20;
-const MAX_CONTENT = 300;
 
 const contactSchema = z
   .object({
@@ -104,7 +100,6 @@ const RegisterForm = ({
     null
   );
   const [thumbnailChanged, setThumbnailChanged] = useState(false);
-  // const [thumbnailUpdated, setThumbnailUpdated] = useState(false);
 
   const navigate = useNavigate();
   const isCreateMode = type === RegisterType.CREATE;
@@ -153,11 +148,10 @@ const RegisterForm = ({
       setOriginalThumbnail(initialData.data.thumbnailLink);
 
       const editFormDefaultValues = {
-        // mode: "EDIT" as const, // 타입을 명확히 지정
         mode: isEditMode ? RegisterType.EDIT : RegisterType.ADMIN, // 타입을 명확히 지정
         slotId: initialData.data.slotId ?? 0,
-        duration: initialData.data.duration ?? undefined,
-        videoLink: initialData.data.videoLink ?? undefined,
+        duration: initialData.data.duration ,
+        videoLink: initialData.data.videoLink || "",
         title: initialData.data.title ?? "",
         summary: initialData.data.summary ?? "",
         outline: initialData.data.outline ?? "",
@@ -194,35 +188,6 @@ const RegisterForm = ({
 
   const createFormData = (data: z.infer<typeof contactSchema>) => {
     const formData = new FormData();
-    const isThumbnailChanged = thumbnailChanged || !!data?.thumbnail;
-    if (isEditMode) {
-      // EDIT 모드: PATCH 요청용 데이터
-      const requestBody = {
-        category: data.category,
-        title: data.title,
-        summary: data.summary,
-        outline: data.outline,
-        detail: data.detail,
-        videoLink: data.videoLink,
-        recordingAllowed: data.recordingAllowed || false,
-        publicAllowed: data.publicAllowed || false,
-        thumbnailUpdated: isThumbnailChanged,
-        slotId: data.slotId, // ← 추가
-        duration: data.duration, // ← 추가
-      };
-
-      formData.append(
-        "form",
-        new Blob([JSON.stringify(requestBody)], {
-          type: "application/json",
-        })
-      );
-
-      if (data.thumbnail) {
-        formData.append("thumbnail", data.thumbnail);
-      }
-    } else {
-      // CREATE 모드: POST 요청용 데이터
       const requestBody = {
         duration: data.duration,
         category: data.category,
@@ -234,7 +199,7 @@ const RegisterForm = ({
         publicAllowed: data.publicAllowed || false,
         slotId: data.slotId,
       };
-
+      // console.log("requestBody", requestBody); // CHECK :
       formData.append(
         "form",
         new Blob([JSON.stringify(requestBody)], {
@@ -245,8 +210,6 @@ const RegisterForm = ({
       if (data.thumbnail) {
         formData.append("thumbnail", data.thumbnail);
       }
-    }
-
     return formData;
   };
 
@@ -265,11 +228,6 @@ const RegisterForm = ({
         }
       }, 500);
     }
-  };
-  const onFormValidated = (data: z.infer<typeof contactSchema>) => {
-    // console.log("폼 제출 데이터:", data);
-    setFormDataToSubmit(data);
-    setShowConfirmModal(true);
   };
 
   // 모달 취소
@@ -295,10 +253,10 @@ const RegisterForm = ({
           summary: formDataToSubmit.summary,
           outline: formDataToSubmit.outline,
           detail: formDataToSubmit.detail,
-          videoLink:formDataToSubmit.videoLink,
+          videoLink: formDataToSubmit.videoLink === "" ? null : formDataToSubmit.videoLink,
           recordingAllowed: formDataToSubmit.recordingAllowed || false,
           publicAllowed: formDataToSubmit.publicAllowed || false,
-          thumbnailUpdated: thumbnailChanged || undefined,
+          thumbnailUpdated: thumbnailChanged || false,
           duration: formDataToSubmit.duration,
           slotId: 0,
         };
@@ -314,12 +272,10 @@ const RegisterForm = ({
             thumbnailFile
           );
         }
-        console.log("수정 완료");
       } else {
         // CREATE 로직
         const formData = createFormData(formDataToSubmit);
         await axiosCreatePresentation(formData);
-        console.log("생성 완료");
       }
 
       setSubmitSuccess(true);
@@ -335,6 +291,35 @@ const RegisterForm = ({
     } finally {
       setIsSubmitting(false);
       setFormDataToSubmit(null);
+    }
+  };
+
+  const onFormValidated = (data: z.infer<typeof contactSchema>) => {
+    if (isEditMode || isAdminMode ) {
+      if (!(thumbnailChanged || isChangedForm(data))) {
+        alert("수정된 내용이 없습니다.");
+        return;
+      }
+    }
+    setFormDataToSubmit(data);
+    setShowConfirmModal(true);
+  };
+
+  const isChangedForm = (data: z.infer<typeof contactSchema>) => {
+    const prev = initialData.data;
+    if(prev) {
+      return (
+        data.title !== prev.title ||
+        data.summary !== prev.summary ||
+        data.outline !== prev.outline ||
+        data.detail !== prev.detail ||
+        data.category !== prev.category ||
+        (data.videoLink) !== (prev.videoLink || "") ||
+        data.recordingAllowed !== prev.recordingAllowed ||
+        data.publicAllowed !== prev.publicAllowed ||
+        (data.slotId && data.slotId !== prev.slotId) ||
+        (data.duration && data.duration !== prev.duration)
+      );
     }
   };
 
@@ -432,9 +417,12 @@ const RegisterForm = ({
                   shouldTouch: true,
                   shouldValidate: true,
                 });
-                setThumbnailChanged(true);
+                if (originalThumbnail) {
+                  setThumbnailChanged(true);
+                } else {
+                  setThumbnailChanged(false); 
               }
-            }}
+            }}}
             onFileUpload={() => {
               if (canEdit.thumbnail) setThumbnailChanged(true);
             }}
@@ -447,13 +435,15 @@ const RegisterForm = ({
             props={[
               {
                 name: "recordingAllowed",
-                subtitle:"💡 영상 촬영 다시보기 제공 동의 시, 촬영된 영상은 향후 서비스 이용자들을 위한 다시보기 콘텐츠로 제공됩니다.",
+                subtitle:
+                  "💡 영상 촬영 다시보기 제공 동의 시, 촬영된 영상은 향후 서비스 이용자들을 위한 다시보기 콘텐츠로 제공됩니다.",
                 description: "촬영된 영상의 다시보기 제공에 동의합니다.",
                 isEdit: !canEdit.recordingAllowed,
               },
               {
                 name: "publicAllowed",
-                subtitle : "💡 온라인 공개 동의 시, 로그인하지 않은 사용자도 귀하의 게시물을 볼 수 있어 개인 포트폴리오나 홍보 자료로 활용하실 수 있습니다.",
+                subtitle:
+                  "💡 온라인 공개 동의 시, 로그인하지 않은 사용자도 귀하의 게시물을 볼 수 있어 개인 포트폴리오나 홍보 자료로 활용하실 수 있습니다.",
                 description:
                   "본 영상 및 게시물을 온라인상에 공개하는 것에 동의합니다.",
                 isEdit: !canEdit.publicAllowed,
@@ -483,7 +473,7 @@ const RegisterForm = ({
       <RegisterConfirmDialog
         open={showConfirmModal}
         onOpenChange={setShowConfirmModal}
-        isEditMode={isEditMode || isAdminMode }
+        isEditMode={isEditMode || isAdminMode}
         // formDataToSubmit={formDataToSubmit}
         onCancel={onCancelSubmit}
         onConfirm={onConfirmSubmit}

@@ -42,7 +42,6 @@ const RegisterImageUpload: React.FC<RegisterImageUploadProps> = ({
   const currentFile = useWatch({ control, name }) as File | null;
   useEffect(() => {
     if (currentFile) {
-      console.log("currentFile");
       const reader = new FileReader();
       reader.onload = (e) => {
         setPreview(e.target?.result as string);

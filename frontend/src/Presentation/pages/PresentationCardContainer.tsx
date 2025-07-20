@@ -17,7 +17,7 @@ const PresentationCardContainer: React.FC<PresentationCardContainerProps> = ({
   const maxView = `xl:grid-cols-${maxCols}`;
 
   return presentations && presentations.length > 0 ? (
-    <div className={` grid ${maxView} lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-8`}
+    <div className={` grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-8`}
     style={{ minHeight: 440 }} >
       {presentations.map((p) => (
         <div
