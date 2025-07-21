@@ -215,7 +215,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
                         caption_label: "text-sm font-medium text-[#222222]",
                         nav: "space-x-1 flex items-center",
                         nav_button:
-                          "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-[#e5e5e5] bg-[#ffffff] hover:bg-[#f5f5f5] hover:text-[#1a1a1a] h-7 w-7 stroke-black text-black",
+                          "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-20 border border-[#e5e5e5] bg-[#ffffff] hover:bg-[#f5f5f5] hover:text-[#1a1a1a] h-7 w-7 stroke-black text-black",
                         nav_button_previous: "absolute left-1",
                         nav_button_next: "absolute right-1",
                         table: "w-full border-collapse space-y-1",
@@ -230,7 +230,7 @@ const RegisterDatePicker: React.FC<RegisterDatePickerProps> = ({
                         day_today: "bg-[#f5f5f5] text-[#222222] font-semibold",
                         day_outside: "opacity-50 text-[#737373]",
                         day_disabled:
-                          "text-[#b0b0b0] opacity-50 bg-[#ffffff] cursor-not-allowed",
+                          "text-[#c3c3c3] opacity-10 bg-[#ffffff] cursor-not-allowed",
                         day_range_middle:
                           "aria-selected:bg-[#f5f5f5] aria-selected:text-[#1a1a1a]",
                         day_hidden: "invisible",
