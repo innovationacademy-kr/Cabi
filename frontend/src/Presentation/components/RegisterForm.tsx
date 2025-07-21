@@ -402,7 +402,7 @@ const RegisterForm = ({
             isEditMode={!canEdit.detail}
           />
 
-          <RegisterImageUpload
+          {/* <RegisterImageUpload
             control={form.control}
             name="thumbnail"
             title="썸네일"
@@ -426,7 +426,7 @@ const RegisterForm = ({
             onFileUpload={() => {
               if (canEdit.thumbnail) setThumbnailChanged(true);
             }}
-          />
+          /> */}
 
           <RegisterCheckboxContainer
             control={form.control}
