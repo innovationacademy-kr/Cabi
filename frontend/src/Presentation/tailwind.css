@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+    --card: #ffffff;
+    --card-foreground: #000000;
+    --popover: #ffffff;
+    --popover-foreground: #000000;
+    --primary: #1a1a1a;
+    --primary-foreground: #fafafa;
+    --secondary: #f5f5f5;
+    --secondary-foreground: #1a1a1a;
+    --muted: #f5f5f5;
+    --muted-foreground: #737373;
+    --accent: #f5f5f5;
+    --accent-foreground: #1a1a1a;
+    --destructive: #ef4444;
+    --destructive-foreground: #fafafa;
+    --border: #e5e5e5;
+    --input: #e5e5e5;
+    --ring: #000000;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: #ffffff;
+    --foreground: #000000;
+    --card: #ffffff;
+    --card-foreground: #000000;
+    --popover: #ffffff;
+    --popover-foreground: #000000;
+    --primary: #1a1a1a;
+    --primary-foreground: #fafafa;
+    --secondary: #f5f5f5;
+    --secondary-foreground: #1a1a1a;
+    --muted: #f5f5f5;
+    --muted-foreground: #737373;
+    --accent: #f5f5f5;
+    --accent-foreground: #1a1a1a;
+    --destructive: #ef4444;
+    --destructive-foreground: #fafafa;
+    --border: #e5e5e5;
+    --input: #e5e5e5;
+    --ring: #000000;
+    --radius: 0.5rem;
+  }
+
+  .PresentationRoot,
+  .PresentationRoot.dark {
+    --background: #ffffff !important;
+    --foreground: #000000 !important;
+    --card: #ffffff !important;
+    --card-foreground: #000000 !important;
+    --popover: #ffffff !important;
+    --popover-foreground: #000000 !important;
+    --primary: #1a1a1a !important;
+    --primary-foreground: #fafafa !important;
+    --secondary: #f5f5f5 !important;
+    --secondary-foreground: #1a1a1a !important;
+    --muted: #f5f5f5 !important;
+    --muted-foreground: #737373 !important;
+    --accent: #f5f5f5 !important;
+    --accent-foreground: #1a1a1a !important;
+    --destructive: #ef4444 !important;
+    --destructive-foreground: #fafafa !important;
+    --border: #e5e5e5 !important;
+    --input: #e5e5e5 !important;
+    --ring: #000000 !important;
+    --radius: 0.5rem !important;
+  }
+}

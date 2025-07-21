@@ -25,10 +25,18 @@ const StoreMainPage = lazy(() => import("@/Cabinet/pages/StoreMainPage"));
 const PresentationHomePage = lazy(
   () => import("@/Presentation/pages/HomePage")
 );
+const PresentationDetailPage = lazy(
+  () => import("@/Presentation/pages/PresentationDetailPage")
+);
 const PresentationLayout = lazy(() => import("@/Presentation/pages/Layout"));
-const DetailPage = lazy(() => import("@/Presentation/pages/DetailPage"));
-const PresentationLogPage = lazy(() => import("@/Presentation/pages/LogPage"));
+const AboutUsPage = lazy(() => import("@/Presentation/pages/AboutUsPage"));
 const RegisterPage = lazy(() => import("@/Presentation/pages/RegisterPage"));
+const PresentationProfilePage = lazy(
+  () => import("@/Presentation/pages/ProfilePage")
+);
+const CommunityRulesPage = lazy(
+  () => import("@/Presentation/pages/CommunityRules")
+);
 
 // NOTE : admin
 const AdminLayout = lazy(() => import("@/Cabinet/pages/admin/AdminLayout"));
@@ -50,6 +58,12 @@ const AdminStorePage = lazy(
 );
 const AdminPresentationLayout = lazy(
   () => import("@/Presentation/pages/admin/AdminLayout")
+);
+const AdminPresentationHomePage = lazy(
+  () => import("@/Presentation/pages/admin/AdminHomePage")
+);
+const AdminPresentationDetailPage = lazy(
+  () => import("@/Presentation/pages/admin/AdminPresentationDetailPage")
 );
 
 function App(): React.ReactElement {
@@ -75,11 +89,18 @@ function App(): React.ReactElement {
             <Route path="store/coin-log" element={<CoinLogPage />} />
             <Route path="agu" element={<AGUPage />} />
           </Route>
-          <Route path="/presentation/" element={<PresentationLayout />}>
+          <Route path="/presentations/" element={<PresentationLayout />}>
             <Route path="home" element={<PresentationHomePage />} />
+            <Route
+              path=":presentationId"
+              element={<PresentationDetailPage />}
+            />
             <Route path="register" element={<RegisterPage />} />
-            <Route path="detail" element={<DetailPage />} />
-            <Route path="log" element={<PresentationLogPage />} />
+            {/* <Route path="register/:presentationId" element={<RegisterPage />} /> */}
+            <Route path=":presentationId/edit" element={<RegisterPage />} />
+            <Route path="about" element={<AboutUsPage />} />
+            <Route path="profile" element={<PresentationProfilePage />} />
+            <Route path="community" element={<CommunityRulesPage />} />
           </Route>
           {/* admin용 라우터 */}
           <Route path="/admin/" element={<AdminLayout />}>
@@ -93,10 +114,17 @@ function App(): React.ReactElement {
             <Route path="store" element={<AdminStorePage />} />
           </Route>
           <Route
-            path="/admin/presentation/"
+            path="/admin/presentations/"
             element={<AdminPresentationLayout />}
           >
-            <Route path="detail" element={<DetailPage />} />
+            <Route index element={<AdminPresentationHomePage />} />
+            <Route path="home" element={<AdminPresentationHomePage />} />
+            <Route
+              path=":presentationId"
+              element={<AdminPresentationDetailPage />}
+            />
+            {/* <Route path="register/:presentationId" element={<RegisterPage />} /> */}
+            <Route path=":presentationId/edit" element={<RegisterPage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route

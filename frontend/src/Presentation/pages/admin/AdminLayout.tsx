@@ -4,13 +4,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import useMenu from "@/Cabinet/hooks/useMenu";
-import LeftNav from "@/Presentation/components/LeftNav/LeftNav";
 import AdminTopNavContainer from "@/Presentation/components/TopNav/AdminTopNav.container";
 
 const body: HTMLElement = document.body;
 const root: HTMLElement = document.documentElement;
 
-const Layout = (): JSX.Element => {
+const AdminLayout = (): JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
   const isLoginPage: boolean = location.pathname === "/admin/login";
@@ -29,7 +28,7 @@ const Layout = (): JSX.Element => {
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/admin/login");
     else if (token) {
-      if (checkPath()) navigate("/admin/presentation/detail");
+      if (checkPath()) navigate("/admin/presentations/home");
     }
   }, []);
 
@@ -61,8 +60,7 @@ const Layout = (): JSX.Element => {
   ) : (
     <React.Fragment>
       {token && <AdminTopNavContainer />}
-      <WrapperStyled>
-        <LeftNav isAdmin={true} isVisible={isMainPage} />
+      <WrapperStyled className="bg-white">
         <MainStyled>
           <MenuBgStyled onClick={handleClickBg} id="menuBg" />
           <Outlet />
@@ -90,4 +88,4 @@ const MenuBgStyled = styled.div`
   position: none;
 `;
 
-export default Layout;
+export default AdminLayout;

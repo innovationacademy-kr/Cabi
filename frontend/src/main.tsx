@@ -13,6 +13,7 @@ import "@/Cabinet/assets/css/reset.css";
 import "@/index.css";
 import App from "@/App";
 import { GlobalStyle } from "@/Cabinet/assets/data/ColorTheme";
+import '@/Presentation/tailwind.css';
 import "@/Cabinet/api/axios/interceptors/axios.request.interceptors.ts";
 import "@/Cabinet/api/axios/interceptors/axios.response.interceptors.ts";
 

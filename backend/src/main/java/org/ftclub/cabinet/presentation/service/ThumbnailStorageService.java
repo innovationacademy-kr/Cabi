@@ -12,7 +12,6 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -32,6 +31,7 @@ public class ThumbnailStorageService {
 
 	private static final List<String> ALLOWED_EXTENSIONS = List.of(".jpg", ".jpeg", ".png");
 	private static final Duration DEFAULT_EXPIRATION = Duration.ofMinutes(5);
+	private static final long MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
 
 	private final S3Client s3Client;
 	private final S3Presigner s3Presigner;
@@ -49,25 +49,28 @@ public class ThumbnailStorageService {
 	public String uploadImage(MultipartFile imageFile) throws IOException {
 		// 1. Check if the file is empty -> static images will be rendered
 		if (imageFile == null || imageFile.isEmpty()) {
-			return "";
+			return null;
 		}
 
-		// 2. Check extension type
+		// 2. Check file size
+		checkFileSize(imageFile);
+
+		// 3. Check extension type
 		String originalFilename = imageFile.getOriginalFilename();
 		String extension = originalFilename.contains(".") ? originalFilename.substring(
 				originalFilename.lastIndexOf(".")) : "";
 		verifyExtensionType(extension);
 
-		// 3. create unique file name
+		// 4. Create unique file name and s3 key
 		String safeFileNameBase = (originalFilename.length() > 10
 				? originalFilename.substring(0, 10) : originalFilename)
 				.replaceAll("[^a-zA-Z0-9.-]", "_");
 		String uniqueFileName = UUID.randomUUID() + "_" + safeFileNameBase + extension;
 
-		// 4. create s3 key = {folder}/{uniqueFileName}
+		// 5. Create s3 key = {folder}/{uniqueFileName}
 		String s3Key = thumbnailFolder + "/" + uniqueFileName;
 
-		// 5. upload file to S3 (sdk v2)
+		// 6. Upload file to S3 (sdk v2)
 		try (InputStream inputStream = imageFile.getInputStream()) {
 			PutObjectRequest putObjectRequest = PutObjectRequest.builder()
 					.bucket(bucket)
@@ -82,16 +85,22 @@ public class ThumbnailStorageService {
 			log.error("AWS S3 Error Details: {}, Key={}", e.awsErrorDetails().errorMessage(),
 					s3Key);
 			throw new ServiceException(ExceptionStatus.S3_UPLOAD_FAILED);
-
 		} catch (SdkException e) {
 			log.error("SDK Error during upload (non-S3): Bucket={}, Key={}, Error={}", bucket,
 					s3Key, e.getMessage());
 			throw new ServiceException(ExceptionStatus.S3_UPLOAD_FAILED);
-
 		}
 
 		log.debug("Successfully uploaded file. Bucket: {}, Key: {}", bucket, s3Key);
 		return s3Key;
+	}
+
+	private void checkFileSize(MultipartFile imageFile) {
+		if (imageFile.getSize() > MAX_FILE_SIZE_BYTES) {
+			log.error("Uploaded file size ({}) exceeds the limit of {} bytes.",
+					imageFile.getSize(), MAX_FILE_SIZE_BYTES);
+			throw new ServiceException(ExceptionStatus.FILE_SIZE_EXCEEDED);
+		}
 	}
 
 	private void verifyExtensionType(String extension) {
@@ -107,14 +116,13 @@ public class ThumbnailStorageService {
 	/**
 	 * S3에 저장된 이미지의 Pre-signed URL을 생성합니다. (제한시간: DEFAULT_EXPIRATION)
 	 *
-	 * @param s3Key
+	 * @param s3Key S3에 저장된 이미지의 key (DB에 저장된 값)
 	 * @return Pre-signed URL
 	 */
 	public String generatePresignedUrl(String s3Key) {
 		// 1. Check if the key is null or empty -> static images will be rendered
-		if (!StringUtils.hasText(s3Key)) {
-			log.debug("s3Key is null or empty. Returning empty string.");
-			return "";
+		if (s3Key == null || s3Key.isEmpty()) {
+			return null;
 		}
 
 		try {
@@ -151,18 +159,37 @@ public class ThumbnailStorageService {
 	 */
 	public void deleteImage(String s3Key) {
 		try {
-			// Create DeleteObjectRequest (sdk v2)
+			// 1. Create DeleteObjectRequest (sdk v2)
 			DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
 					.bucket(bucket)
 					.key(s3Key)
 					.build();
 
-			// Delete the object
+			// 2. Delete the object
 			s3Client.deleteObject(deleteObjectRequest);
 			log.debug("Successfully deleted file from S3. Bucket: {}, Key: {}", bucket, s3Key);
 		} catch (S3Exception e) {
 			log.error("Error deleting file from S3: Bucket={}, Key={}", bucket, s3Key, e);
 			throw new ServiceException(ExceptionStatus.S3_DELETE_FAILED);
 		}
+	}
+
+	/**
+	 * 프레젠테이션의 썸네일을 수정합니다.
+	 * <p>
+	 * 변경된 이미지를 업로드하고 S3 키를 업데이트합니다.
+	 * </p>
+	 *
+	 * @param oldThumbnailS3Key 기존 썸네일 이미지의 S3 key
+	 * @param thumbnail         썸네일 이미지 파일
+	 */
+	public String updateThumbnail(String oldThumbnailS3Key, MultipartFile thumbnail)
+			throws IOException {
+		// remove old thumbnail if it exists
+		if (oldThumbnailS3Key != null) {
+			deleteImage(oldThumbnailS3Key);
+		}
+		// upload new thumbnail and update key
+		return uploadImage(thumbnail);
 	}
 }

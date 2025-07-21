@@ -39,6 +39,7 @@
     "@typescript-eslint/no-empty-function": 0,
     "no-use-before-define": "off",
     "camelcase": 0,
+    "no-var": "error",
     "import/extensions": [
       "off",
       "always",

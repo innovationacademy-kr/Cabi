@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.utils.scheduler;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,12 +12,12 @@ import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.FtClubCabinetException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
-import org.ftclub.cabinet.presentation.service.PresentationService;
 import org.ftclub.cabinet.user.service.LentExtensionManager;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
 import org.ftclub.cabinet.utils.overdue.manager.OverdueManager;
 import org.ftclub.cabinet.utils.release.ReleaseManager;
+import org.ftclub.cabinet.utils.slot.manager.PresentationSlotManager;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -41,7 +40,8 @@ public class SystemScheduler {
 	private final BlackholeManager blackholeManager;
 	private final ReleaseManager releaseManager;
 	private final DiscordWebHookMessenger discordWebHookMessenger;
-	private final PresentationService presentationService;
+	private final SectionAlarmManager sectionAlarmManager;
+	private final PresentationSlotManager presentationSlotManager;
 
 	private void errorHandle(Exception e, DiscordScheduleAlarmMessage message) {
 		if (!(e instanceof FtClubCabinetException)) {
@@ -51,8 +51,6 @@ public class SystemScheduler {
 			log.warn("Handled FtClubCabinetException, no notification sent: ", e);
 		}
 	}
-
-	private final SectionAlarmManager sectionAlarmManager;
 
 	/**
 	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거
@@ -188,10 +186,19 @@ public class SystemScheduler {
 		sectionAlarmManager.sendSectionAlarm();
 	}
 
-	@Scheduled(cron = "${cabinet.schedule.cron.generate-presentation-form}") // dev yml에도 추가하기
-	public void generatePresentationForm() {
-		log.info("generate presentation forms every 3 months");
-		LocalDate nowDate = LocalDate.now();
-		presentationService.generatePresentationFormsEveryThreeMonth(nowDate);
+	@Scheduled(cron = "${cabinet.schedule.cron.generate-presentation-slot}")
+	public void generatePresentationSlots() {
+		LocalDateTime now = LocalDateTime.now();
+		log.info("Called createMonthlyPresentationSlots at {}", now);
+		try {
+			presentationSlotManager.generatePresentationSlotsMonthly();
+		} catch (Exception e) {
+			errorHandle(e, DiscordScheduleAlarmMessage.builder()
+					.subject(DEFAULT_ERROR_TITLE)
+					.taskName("월간 발표 슬롯 생성 작업")
+					.taskMethodName("generatePresentationSlots")
+					.taskParameters("Target month: " + now.plusMonths(3).getMonth())
+					.build());
+		}
 	}
 }
