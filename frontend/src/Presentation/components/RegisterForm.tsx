@@ -151,7 +151,7 @@ const RegisterForm = ({
       const editFormDefaultValues = {
         mode: isEditMode ? RegisterType.EDIT : RegisterType.ADMIN, // 타입을 명확히 지정
         slotId: initialData.data.slotId ?? 0,
-        duration: initialData.data.duration ,
+        duration: initialData.data.duration,
         videoLink: initialData.data.videoLink || "",
         title: initialData.data.title ?? "",
         summary: initialData.data.summary ?? "",
@@ -189,28 +189,28 @@ const RegisterForm = ({
 
   const createFormData = (data: z.infer<typeof contactSchema>) => {
     const formData = new FormData();
-      const requestBody = {
-        duration: data.duration,
-        category: data.category,
-        title: data.title,
-        summary: data.summary,
-        outline: data.outline,
-        detail: data.detail,
-        recordingAllowed: data.recordingAllowed || false,
-        publicAllowed: data.publicAllowed || false,
-        slotId: data.slotId,
-      };
-      // console.log("requestBody", requestBody); // CHECK :
-      formData.append(
-        "form",
-        new Blob([JSON.stringify(requestBody)], {
-          type: "application/json",
-        })
-      );
+    const requestBody = {
+      duration: data.duration,
+      category: data.category,
+      title: data.title,
+      summary: data.summary,
+      outline: data.outline,
+      detail: data.detail,
+      recordingAllowed: data.recordingAllowed || false,
+      publicAllowed: data.publicAllowed || false,
+      slotId: data.slotId,
+    };
+    // console.log("requestBody", requestBody); // CHECK :
+    formData.append(
+      "form",
+      new Blob([JSON.stringify(requestBody)], {
+        type: "application/json",
+      })
+    );
 
-      if (data.thumbnail) {
-        formData.append("thumbnail", data.thumbnail);
-      }
+    if (data.thumbnail) {
+      formData.append("thumbnail", data.thumbnail);
+    }
     return formData;
   };
 
@@ -254,7 +254,10 @@ const RegisterForm = ({
           summary: formDataToSubmit.summary,
           outline: formDataToSubmit.outline,
           detail: formDataToSubmit.detail,
-          videoLink: formDataToSubmit.videoLink === "" ? null : formDataToSubmit.videoLink,
+          videoLink:
+            formDataToSubmit.videoLink === ""
+              ? null
+              : formDataToSubmit.videoLink,
           recordingAllowed: formDataToSubmit.recordingAllowed || false,
           publicAllowed: formDataToSubmit.publicAllowed || false,
           thumbnailUpdated: thumbnailChanged || false,
@@ -296,7 +299,7 @@ const RegisterForm = ({
   };
 
   const onFormValidated = (data: z.infer<typeof contactSchema>) => {
-    if (isEditMode || isAdminMode ) {
+    if (isEditMode || isAdminMode) {
       if (!(thumbnailChanged || isChangedForm(data))) {
         alert("수정된 내용이 없습니다.");
         return;
@@ -308,14 +311,14 @@ const RegisterForm = ({
 
   const isChangedForm = (data: z.infer<typeof contactSchema>) => {
     const prev = initialData.data;
-    if(prev) {
+    if (prev) {
       return (
         data.title !== prev.title ||
         data.summary !== prev.summary ||
         data.outline !== prev.outline ||
         data.detail !== prev.detail ||
         data.category !== prev.category ||
-        (data.videoLink) !== (prev.videoLink || "") ||
+        data.videoLink !== (prev.videoLink || "") ||
         data.recordingAllowed !== prev.recordingAllowed ||
         data.publicAllowed !== prev.publicAllowed ||
         (data.slotId && data.slotId !== prev.slotId) ||
@@ -402,32 +405,34 @@ const RegisterForm = ({
             rows={10}
             isEditMode={!canEdit.detail}
           />
-
-          <RegisterImageUpload
-            control={form.control}
-            name="thumbnail"
-            title="썸네일"
-            maxSize={5}
-            accept=".jpg,.jpeg,.png"
-            currentImageUrl={originalThumbnail}
-            isEditMode={!canEdit.thumbnail}
-            onRemoveFile={() => {
-              if (canEdit.thumbnail) {
-                form.setValue("thumbnail", null, {
-                  shouldDirty: true,
-                  shouldTouch: true,
-                  shouldValidate: true,
-                });
-                if (originalThumbnail) {
-                  setThumbnailChanged(true);
-                } else {
-                  setThumbnailChanged(false); 
-              }
-            }}}
-            onFileUpload={() => {
-              if (canEdit.thumbnail) setThumbnailChanged(true);
-            }}
-          />
+          {isAdminMode && (
+            <RegisterImageUpload
+              control={form.control}
+              name="thumbnail"
+              title="썸네일"
+              maxSize={5}
+              accept=".jpg,.jpeg,.png"
+              currentImageUrl={originalThumbnail}
+              isEditMode={!canEdit.thumbnail}
+              onRemoveFile={() => {
+                if (canEdit.thumbnail) {
+                  form.setValue("thumbnail", null, {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                    shouldValidate: true,
+                  });
+                  if (originalThumbnail) {
+                    setThumbnailChanged(true);
+                  } else {
+                    setThumbnailChanged(false);
+                  }
+                }
+              }}
+              onFileUpload={() => {
+                if (canEdit.thumbnail) setThumbnailChanged(true);
+              }}
+            />
+          )}
 
           <RegisterCheckboxContainer
             control={form.control}
