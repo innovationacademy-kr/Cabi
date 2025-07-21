@@ -45,7 +45,7 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
           >
             <LogoContainerStyled
               domainTitle={domain.title}
-              isCabi={!pathname.includes("presentation")}
+              isCabi={!pathname.includes("presentations")}
             >
               <domain.logo
                 viewBox={
@@ -60,7 +60,7 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
                       domain.title === "Cabi"
                         ? "cabi"
                         : domain.title === "수요지식회"
-                        ? "presentation"
+                        ? "presentations"
                         : ""
                     }`
                   : ""
@@ -78,7 +78,7 @@ const TopNavDomainGroup = ({ isAdmin = false }: { isAdmin?: boolean }) => {
         </DomainWrapperStyled>
       ))}
 
-      {!pathname.includes("presentation") && (
+      {!pathname.includes("presentations") && (
         <ToggleWrapperStyled>
           <DarkModeToggleSwitch id="darkModeToggleSwitch" />
         </ToggleWrapperStyled>
