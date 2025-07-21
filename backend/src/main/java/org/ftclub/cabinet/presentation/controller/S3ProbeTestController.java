@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
-@RequestMapping("/v5/presentation/test-s3-probe")
+@RequestMapping("/v6/presentations/test-s3-probe")
 @RequiredArgsConstructor
 public class S3ProbeTestController {
 
