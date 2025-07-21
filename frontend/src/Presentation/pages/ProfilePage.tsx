@@ -30,30 +30,36 @@ const ProfilePage = () => {
 
   // 나의 발표 기록 불러오기
   useEffect(() => {
-    const getPresentationLog = async () => {
-      try {
-        const response = await axiosMyPresentationLog();
-        setPresentationLog(response.data.data);
-      } catch {
-        setPresentationLog(HttpStatusCode.BadRequest);
-      }
-    };
-    getPresentationLog();
+    try {
+      getPresentationLog();
+      getLikedPresentations();
+
+    } catch (error) {
+      setPresentationLog(HttpStatusCode.BadRequest);
+      setLikedPresentations([]);
+      window.location.href = "/presentations";
+    }
   }, []);
 
-  // 내가 좋아요한 발표 불러오기
-  useEffect(() => {
-    const getLikedPresentations = async () => {
-      try {
-        // page: 0, size: 6 등 원하는 값으로 지정
-        const response = await axiosMyLikedPresentations(0, 100);
-        setLikedPresentations(response.data.content); // 명세에 맞게 content 사용
-      } catch {
-        setLikedPresentations([]);
-      }
-    };
-    getLikedPresentations();
-  }, []);
+  const getPresentationLog = async () => {
+    try {
+      const response = await axiosMyPresentationLog();
+      setPresentationLog(response.data.data);
+    } catch {
+      setPresentationLog(HttpStatusCode.BadRequest);
+      window.location.href = "/presentations";
+    }
+  };
+
+  const getLikedPresentations = async () => {
+    try {
+      const response = await axiosMyLikedPresentations(0, 100);
+      setLikedPresentations(response.data.content); // 명세에 맞게 content 사용
+    } catch {
+      setLikedPresentations([]);
+      window.location.href = "/presentations";
+    }
+  };
 
   return (
     <>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 import { ReactComponent as RegisterBanner } from "@/Presentation/assets/images/registerBanner.svg";
 import { axiosGetPresentationById } from "../api/axios/axios.custom";
 import { axiosGetAdminPresentationById } from "../api/axios/axios.custom";
@@ -7,21 +8,40 @@ import { RegisterResultDialog } from "../components/Modals/PresentationResponseM
 import RegisterForm from "../components/RegisterForm";
 import { RegisterType } from "../types/enum/presentation.type.enum";
 
+
 const RegisterPage = () => {
   const { presentationId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const [initialData, setInitialData] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  
   // 추가: 에러 모달 상태
   const [showResultModal, setShowResultModal] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
-
+  
   const isEditMode = !!presentationId;
   // admin 경로 판별
   const isAdminMode = location.pathname.includes("/admin/");
+  
+  useEffect(() => {
+    // console.log(location.state?.from);
+    const token = getCookie("access_token");
+    if (!token) {
+      const message =
+        "로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?";
+      const shouldRedirect = window.confirm(message);
+      if (shouldRedirect) {
+        window.location.href = '/login';
+      } else {
+        // 이전 히스토리에 남아있는 주소 가져오기
+        const previousPath = location.state?.from || '/presentations';
+        // 이전 주소가 있다면 해당 주소로 이동
+          window.location.href = previousPath;
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (isEditMode && presentationId) {

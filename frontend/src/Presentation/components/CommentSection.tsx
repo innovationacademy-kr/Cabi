@@ -11,6 +11,7 @@ import {
   axiosPatchPresentationComment,
   axiosPostPresentationComment,
 } from "@/Presentation/api/axios/axios.custom";
+import { getCookie } from "@/Cabinet/api/react_cookie/cookies";
 
 interface IPresentationComment {
   commentId: number;
@@ -34,6 +35,20 @@ const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
   const [editingInput, setEditingInput] = useState("");
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [placeholder, setPlaceholder] = useState("댓글을 입력하세요");
+  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    const token = getCookie("access_token");
+    if (!token) {
+      setPlaceholder(
+        "로그인이 필요한 서비스입니다. 로그인 후 댓글을 작성할 수 있습니다."
+      );
+      setIsLogin(false);
+    } else {
+      setPlaceholder("댓글을 입력하세요");
+      setIsLogin(true);
+    }
+  }, []);
 
   const fetchComments = async () => {
     setLoading(true);
@@ -284,8 +299,9 @@ const CommentSection = ({ presentationId, isAdmin }: CommentSectionProps) => {
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="댓글을 입력하세요"
-            disabled={submitting}
+            placeholder={placeholder}
+            // disabled={true}
+            disabled={submitting || !isLogin}
             rows={3}
             maxLength={500}
             className="flex-grow min-w-0 text-sm border border-gray-300 bg-white px-3 py-2 rounded resize-none shadow-sm disabled:bg-gray-100"

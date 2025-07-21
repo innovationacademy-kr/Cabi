@@ -129,6 +129,7 @@ const TopNav = () => {
             <li>
               <Link
                 to="/presentations/register"
+                state={{ from: location.pathname }}
                 className="block py-3 text-lg font-semibold text-black dark:text-black"
                 onClick={() => setOpen(false)}
               >

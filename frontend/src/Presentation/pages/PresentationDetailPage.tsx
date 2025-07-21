@@ -70,6 +70,8 @@ const PresentationDetailPage: React.FC = () => {
         setPresentation(res.data.data);
       } catch (error) {
         console.error("Error fetching presentation:", error);
+        // navigate("/presentations");
+        window.location.href = "/presentations";
       }
     };
     fetchPresentation();
@@ -119,7 +121,12 @@ const PresentationDetailPage: React.FC = () => {
     return match && match[2].length === 11 ? match[2] : null;
   };
 
-  if (!presentation) return <LoadingAnimation />;
+  if (!presentation)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingAnimation />
+      </div>
+    );
 
   const videoId = presentation.recordingAllowed
     ? getYouTubeVideoId(presentation.videoLink || "")
