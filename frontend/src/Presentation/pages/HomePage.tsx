@@ -69,10 +69,10 @@ const HomePage: React.FC = () => {
             <div className="w-full">
               <NavigationMenu>
                 <NavigationMenuList className="flex w-full">
-                  <NavigationMenuItem className="flex-1 min-w-0">
+                  <NavigationMenuItem className="min-w-0">
                     <NavigationMenuLink
                       className={`
-                        ${"flex-1 min-w-0 px-3 py-2 rounded-md text-sm font-medium cursor-pointer text-center overflow-hidden text-ellipsis whitespace-nowrap transition-all duration-200"}
+                        ${"min-w-0 px-3 py-2 rounded-md text-sm font-medium cursor-pointer text-center overflow-hidden text-ellipsis whitespace-nowrap transition-all duration-200"}
                         ${
                           category === "ALL"
                             ? "bg-gray-200 text-gray-900"
@@ -86,10 +86,10 @@ const HomePage: React.FC = () => {
                   </NavigationMenuItem>
                   {Object.entries(PresentationCategoryTypeLabelMap).map(
                     ([name, label]) => (
-                      <NavigationMenuItem key={name} className="flex-1 min-w-0">
+                      <NavigationMenuItem key={name} className="min-w-0">
                         <NavigationMenuLink
                           className={`
-                            ${"flex-1 min-w-0 px-3 py-2 rounded-md text-sm font-medium cursor-pointer text-center overflow-hidden text-ellipsis whitespace-nowrap transition-all duration-200"}
+                            ${"min-w-0 px-3 py-2 rounded-md text-sm font-medium cursor-pointer text-center overflow-hidden text-ellipsis whitespace-nowrap transition-all duration-200"}
                             ${
                               category === name
                                 ? "bg-gray-200 text-gray-900"
