@@ -115,7 +115,8 @@ const RegisterForm = ({
     summary: isCreateMode || isEditMode || isAdminMode,
     outline: isCreateMode || isEditMode || isAdminMode,
     detail: isCreateMode || isEditMode || isAdminMode,
-    thumbnail: isCreateMode || isEditMode || isAdminMode,
+    // thumbnail: isCreateMode || isEditMode || isAdminMode,
+    thumbnail: isAdminMode,
     videoLink: isAdminMode,
     recordingAllowed: isCreateMode || isAdminMode,
     publicAllowed: isCreateMode || isEditMode || isAdminMode,
@@ -402,7 +403,7 @@ const RegisterForm = ({
             isEditMode={!canEdit.detail}
           />
 
-          {/* <RegisterImageUpload
+          <RegisterImageUpload
             control={form.control}
             name="thumbnail"
             title="썸네일"
@@ -426,7 +427,7 @@ const RegisterForm = ({
             onFileUpload={() => {
               if (canEdit.thumbnail) setThumbnailChanged(true);
             }}
-          /> */}
+          />
 
           <RegisterCheckboxContainer
             control={form.control}
