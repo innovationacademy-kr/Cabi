@@ -18,6 +18,7 @@ services:
       - $HOME/server-config/backend/src/main/resources:/resources/
     environment:
       JAVA_OPTS: "-javaagent:/pinpoint-agent/pinpoint-bootstrap-${PINPOINT_VERSION}.jar -Dpinpoint.agentId=${AGENT_ID} -Dpinpoint.applicationName=${APP_NAME} -Dpinpoint.profiler.profiles.active=${SPRING_PROFILES}"
+      NO_PROXY: 169.254.169.254
     networks:
       - pinpoint
     depends_on:
