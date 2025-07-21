@@ -19,7 +19,7 @@ const Layout = (): JSX.Element => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (location.pathname === "/presentations" || location.pathname === "/presentations/") {
+    if (location.pathname === "/presentations" || location.pathname === "/presentations/" || location.pathname.includes('/presentation/')) {
       navigate("/presentations/home", { replace: true });
     }
   }, [location.pathname, navigate]);

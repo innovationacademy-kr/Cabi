@@ -62,6 +62,7 @@ const Layout = (): JSX.Element => {
   const isLoginPage: boolean = location.pathname === "/login";
   const isMainPage: boolean = location.pathname === "/main";
   const isAGUPage: boolean = location.pathname === "/agu";
+  const isLegacyPresentationHomePage: boolean = location.pathname === "/presentation/home";
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -138,6 +139,7 @@ const Layout = (): JSX.Element => {
     deleteOldPointColors();
     if (isAGUPage) navigate("/agu");
     else if (!token && !isLoginPage) navigate("/login");
+    else if (isLegacyPresentationHomePage) navigate("/presentations/home"); // TODO: legacy presentation home page redirect
     else if (token) {
       getMyInfo();
       Promise.all([getBuildingsData(), getMyLentInfo()]).then(() =>
