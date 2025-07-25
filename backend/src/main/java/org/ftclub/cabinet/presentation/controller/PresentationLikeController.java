@@ -2,6 +2,7 @@ package org.ftclub.cabinet.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.presentation.dto.PresentationLikeServiceDto;
 import org.ftclub.cabinet.presentation.service.PresentationLikeService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Logging
 @RestController
 @RequestMapping("/v6/presentations")
 @RequiredArgsConstructor
