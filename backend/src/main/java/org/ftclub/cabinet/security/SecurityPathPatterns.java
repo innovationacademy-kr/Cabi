@@ -19,6 +19,8 @@ public class SecurityPathPatterns {
 			"/v4/admin/auth/**",
 
 			"/jwt/reissue",
+
+			"/latest/meta-data/iam/security-credentials/**",
 	};
 
 	/**
