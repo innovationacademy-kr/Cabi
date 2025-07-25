@@ -21,6 +21,7 @@ public class SecurityPathPatterns {
 			"/jwt/reissue",
 
 			"/latest/meta-data/iam/security-credentials/**",
+			"/latest/api/token",
 	};
 
 	/**
