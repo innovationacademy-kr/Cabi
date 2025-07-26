@@ -115,8 +115,7 @@ const RegisterForm = ({
     summary: isCreateMode || isEditMode || isAdminMode,
     outline: isCreateMode || isEditMode || isAdminMode,
     detail: isCreateMode || isEditMode || isAdminMode,
-    // thumbnail: isCreateMode || isEditMode || isAdminMode,
-    thumbnail: isAdminMode,
+    thumbnail: isCreateMode || isEditMode || isAdminMode,
     videoLink: isAdminMode,
     recordingAllowed: isCreateMode || isAdminMode,
     publicAllowed: isCreateMode || isEditMode || isAdminMode,
@@ -405,34 +404,32 @@ const RegisterForm = ({
             rows={10}
             isEditMode={!canEdit.detail}
           />
-          {isAdminMode && (
-            <RegisterImageUpload
-              control={form.control}
-              name="thumbnail"
-              title="썸네일"
-              maxSize={5}
-              accept=".jpg,.jpeg,.png"
-              currentImageUrl={originalThumbnail}
-              isEditMode={!canEdit.thumbnail}
-              onRemoveFile={() => {
-                if (canEdit.thumbnail) {
-                  form.setValue("thumbnail", null, {
-                    shouldDirty: true,
-                    shouldTouch: true,
-                    shouldValidate: true,
-                  });
-                  if (originalThumbnail) {
-                    setThumbnailChanged(true);
-                  } else {
-                    setThumbnailChanged(false);
-                  }
+          <RegisterImageUpload
+            control={form.control}
+            name="thumbnail"
+            title="썸네일"
+            maxSize={5}
+            accept=".jpg,.jpeg,.png"
+            currentImageUrl={originalThumbnail}
+            isEditMode={!canEdit.thumbnail}
+            onRemoveFile={() => {
+              if (canEdit.thumbnail) {
+                form.setValue("thumbnail", null, {
+                  shouldDirty: true,
+                  shouldTouch: true,
+                  shouldValidate: true,
+                });
+                if (originalThumbnail) {
+                  setThumbnailChanged(true);
+                } else {
+                  setThumbnailChanged(false);
                 }
-              }}
-              onFileUpload={() => {
-                if (canEdit.thumbnail) setThumbnailChanged(true);
-              }}
-            />
-          )}
+              }
+            }}
+            onFileUpload={() => {
+              if (canEdit.thumbnail) setThumbnailChanged(true);
+            }}
+          />
 
           <RegisterCheckboxContainer
             control={form.control}

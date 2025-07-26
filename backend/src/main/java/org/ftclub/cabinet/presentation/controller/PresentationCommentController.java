@@ -3,14 +3,15 @@ package org.ftclub.cabinet.presentation.controller;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.presentation.dto.DataResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentRequestDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentResponseDto;
-import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceDeleteDto;
-import org.ftclub.cabinet.presentation.dto.PresentationCommentsResponseDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceCreationDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceDeleteDto;
 import org.ftclub.cabinet.presentation.dto.PresentationCommentServiceUpdateDto;
-import org.ftclub.cabinet.dto.UserInfoDto;
+import org.ftclub.cabinet.presentation.dto.PresentationCommentsResponseDto;
 import org.ftclub.cabinet.presentation.service.PresentationCommentService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Logging
 @RestController
 @RequestMapping("/v6/presentations/{presentationId}/comments")
 @RequiredArgsConstructor
