@@ -16,4 +16,4 @@ cd pinpoint-application
 
 docker compose down --rmi all
 docker compose pull
-docker compose up -d
+docker compose up -d --force-recreate

@@ -83,5 +83,6 @@ jobs:
           mkdir -p dist/src/Presentation/assets
           cp -r src/Cabinet/assets/images dist/src/Cabinet/assets
           cp -r src/Presentation/assets/images dist/src/Presentation/assets
-          aws s3 sync ./dist s3://42cabi
+          aws s3 sync ./dist s3://42cabi --delete --exclude 'index.html'
+          aws s3 cp ./dist/index.html s3://42cabi/index.html --cache-control 'no-cache, no-store, must-revalidate' --content-type 'text/html'
           aws cloudfront create-invalidation --distribution-id E12WMB9HCNB1DT --paths '/*'
