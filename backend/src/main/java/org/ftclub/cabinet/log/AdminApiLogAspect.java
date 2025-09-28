@@ -11,7 +11,6 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.alarm.discord.DiscordAlarmMessage;
 import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
 import org.ftclub.cabinet.dto.UserInfoDto;
@@ -41,7 +40,6 @@ public class AdminApiLogAspect {
 	private final ParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
 	private final LogParser logParser;
 	private final DiscordWebHookMessenger discordWebHookMessenger;
-	private final AdminQueryService adminQueryService;
 
 	/**
 	 * 어드민 유저가 Get 요청을 제외한 API 호출 및 요청 정상 처리 시 로그를 남기는 메소드
