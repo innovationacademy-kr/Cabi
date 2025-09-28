@@ -158,20 +158,21 @@ public class SystemScheduler {
 		}
 	}
 
-	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
-	public void lentExtensionIssue() {
-		log.info("called lentExtensionIssue");
-		try {
-			lentExtensionManager.issueLentExtension();
-		} catch (Exception e) {
-			errorHandle(e, DiscordScheduleAlarmMessage.builder()
-					.subject(DEFAULT_ERROR_TITLE)
-					.taskName("연장권 발급 작업")
-					.taskMethodName("lentExtensionIssue")
-					.taskParameters("")
-					.build());
-		}
-	}
+	// 24 HANE 서비스가 종료됨에 따라 연관된 로직 주석 처리
+//	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
+//	public void lentExtensionIssue() {
+//		log.info("called lentExtensionIssue");
+//		try {
+//			lentExtensionManager.issueLentExtension();
+//		} catch (Exception e) {
+//			errorHandle(e, DiscordScheduleAlarmMessage.builder()
+//					.subject(DEFAULT_ERROR_TITLE)
+//					.taskName("연장권 발급 작업")
+//					.taskMethodName("lentExtensionIssue")
+//					.taskParameters("")
+//					.build());
+//		}
+//	}
 
 //	@Scheduled(cron = "${cabinet.schedule.cron.extensible-user-check}")
 //	public void checkUserQualifyForExtensible(){
